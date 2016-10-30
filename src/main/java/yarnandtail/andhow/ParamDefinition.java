@@ -11,13 +11,24 @@ import org.apache.commons.lang3.StringUtils;
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
-public interface ParamDefinition<E extends Enum<E> & ParamDefinition> {
+public interface ParamDefinition<E extends Enum<E> & ParamDefinition> extends ParamDefinitionCore {
 	
 	static List<Enum> EMPTY_ENUM_LIST = Arrays.asList(new Enum[0]);
 	static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
 	
-	public ParamType getParamType();
+	/**
+	 * Returns a core storage object for the details of this parameter.
+	 * This is the one method that ParamDefinition classes must implement.
+	 * This is generally not used by application code, but simplifies user constructed
+	 * ParamDefinitions because nearly all code can be contained in the 'core'
+	 * object and nearly all public methods can be created as default methods in
+	 * the interface.
+	 * @return 
+	 */
+	public ParamDefinitionCore getCore();
 	
+	
+	//What to do with these???
 	/**
 	 * Name of the entire set of parameters, i.e., for this entire enum and all its values.
 	 * @return May be empty, but not null.
@@ -31,33 +42,6 @@ public interface ParamDefinition<E extends Enum<E> & ParamDefinition> {
 	public String getEntireSetDescription();
 	
 	/**
-	 * Long-form option name.  Similar to the full name nix options (dashes not required).
-	 * @return 
-	 */
-	public String getFullName();
-	
-	/**
-	 * A short sentence description.
-	 * @return 
-	 */
-	public String getShortDescription();
-	
-	/**
-	 * Added details that might be shown if the user requests help.
-	 * Assume that the short description is already shown.
-	 * @return 
-	 */
-	public String getHelpText();
-
-	
-	/**
-	 * Alias (short) form.  Similar to nix single letter options (dashes not required).
-	 * @return 
-	 */
-	public List<String> getAlias();
-
-	
-	/**
 	 * Returns all instances (even non-real ones) as a list.
 	 * A 'non-real' param is a placeholder one (named PLACEHOLDER by convention)
 	 * that is used to pass an instance that has no meaning, but provides access
@@ -67,40 +51,57 @@ public interface ParamDefinition<E extends Enum<E> & ParamDefinition> {
 	 * @return 
 	 */
 	List<E> getAllConfigParamsIncludingNonRealOnes();
+	//
+	//
 	
-	/**
-	 * Some parameters may have a defined set of possible values, which
-	 * are specified as a list of enums.  This returns that list.
-	 * 
-	 * @return A non-null list of Enums.
-	 */
-	List<Enum> getPossibleValueEnums();
+	@Override
+	default ParamType getParamType() {
+		return getCore().getParamType();
+	}
 	
-	/**
-	 * If the parameter is unspecified, the effective value is considered to be this default value.
-	 * For name-value pairs, this will be a string.
-	 * Flags, which are normally considered to be true if specified, can be
-	 * converted to be true _unless_ specified w/ a false value by setting a
-	 * Boolean False here.
-	 * @return 
-	 */
-	Object getDefaultValue();
+	@Override
+	default String getFullName() {
+		return getCore().getFullName();
+	}
 	
+	@Override
+	default String getShortDescription() {
+		return getCore().getShortDescription();
+	}
 	
-	/**
-	 * Some parameters may have a defined set of possible values.
-	 * If that is the case, this will get that list as a list of strings.
-	 * 
-	 * @return a non-null String list.
-	 */
+	@Override
+	default String getHelpText() {
+		return getCore().getHelpText();
+	}
+
+	@Override
+	default List<String> getAlias() {
+		return getCore().getAlias();
+	}
+
+	@Override
+	default List<Enum> getPossibleValueEnums() {
+		return getCore().getPossibleValueEnums();
+	}
+	
+	@Override
 	default List<String> getPossibleValues() {
-		List<Enum> allowedValueEnumList = getPossibleValueEnums();
-		List<String> domainStrings = new ArrayList(allowedValueEnumList.size());
-		for (Enum e : allowedValueEnumList) {
-			domainStrings.add(e.toString());
-		}
-		
-		return domainStrings;
+		return getCore().getPossibleValues();
+	}
+	
+	@Override
+	default Object getDefaultValue() {
+		return getCore().getDefaultValue();
+	}
+	
+	@Override
+	default boolean isReal() {
+		return this.getParamType().isReal();
+	}
+	
+	@Override
+	default boolean isNotReal() {
+		return this.getParamType().isNotReal();
 	}
 	
 
