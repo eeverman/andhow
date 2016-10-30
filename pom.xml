@@ -6,7 +6,7 @@
 	<groupId>yarnandtail</groupId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Application Configuration</name>
+	<name>AndHow</name>
 	<description>
 	Simple typed and validated configutation loading for web apps, command line or any environment application.
 	</description>
