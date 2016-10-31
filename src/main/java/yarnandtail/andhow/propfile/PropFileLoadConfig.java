@@ -174,7 +174,7 @@ public enum PropFileLoadConfig implements ConfigParamDefinition<PropFileLoadConf
 	}
 
 	@Override
-	public String getFullName() {
+	public String getExplicitName() {
 		return fullName;
 	}
 	

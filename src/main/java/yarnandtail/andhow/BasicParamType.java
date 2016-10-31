@@ -5,8 +5,7 @@ package yarnandtail.andhow;
  * @author eeverman
  */
 enum BasicParamType {
-	/** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning */
-	NON_PARAM(false, false),
+
 	/** An application related flag that is true just by its presence.  May also be explicitly set true */
 	FLAG(true, false),
 	/** A single-value application related name-value parameter.  Multiple values or multiple instances of the parameter are not allowed.  */
@@ -28,14 +27,6 @@ enum BasicParamType {
 
 	public boolean isMultipleOk() {
 		return multipleOk;
-	}
-	
-	public boolean isReal() {
-		return ! this.equals(NON_PARAM);
-	}
-	
-	public boolean isNotReal() {
-		return this.equals(NON_PARAM);
 	}
 
 }

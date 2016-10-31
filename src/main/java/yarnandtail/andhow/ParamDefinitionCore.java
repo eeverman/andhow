@@ -1,77 +1,121 @@
 package yarnandtail.andhow;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import static yarnandtail.andhow.ParamDefinition.EMPTY_ENUM_LIST;
+import static yarnandtail.andhow.ParamDefinition.EMPTY_STRING_LIST;
 
 /**
- * Interface for an enum representing command line arguments and/or configuration parameters.
+ *
  * @author eeverman
  */
-public interface ParamDefinitionCore {
-	
-	static List<Enum> EMPTY_ENUM_LIST = Arrays.asList(new Enum[0]);
-	static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
-	
-	ParamType getParamType();
-	
-	/**
-	 * Long-form option name.  Similar to the full name nix options (dashes not required).
-	 * @return 
-	 */
-	String getFullName();
-	
-	/**
-	 * A short sentence description.
-	 * @return 
-	 */
-	String getShortDescription();
-	
-	/**
-	 * Added details that might be shown if the user requests help.
-	 * Assume that the short description is already shown.
-	 * @return 
-	 */
-	String getHelpText();
+public class ParamDefinitionCore implements ParamDefinitionInterface {
 
+	private final Class<? extends ParamDefinition> enumClass;
+	private final String explicitName;
+	private final ParamType paramType;
+	private final Object defaultValue;
+	private final String shortDesc;
+	private final String helpText;
+	private final List<String> alias;
+	private final List<Enum> allowedValueEnum;
 	
-	/**
-	 * Alias (short) form.  Similar to nix single letter options (dashes not required).
-	 * @return 
-	 */
-	List<String> getAlias();
+	public ParamDefinitionCore(Class<? extends ParamDefinition> enumClass, String explicitName, ParamType paramType, Object defaultValue,
+			String shortDesc, String helpText, String[] aliases,
+			Enum[] allowedValues) {
+		
+		List<String> aliasList;
+		if (aliases != null && aliases.length > 0) {
+			aliasList = Collections.unmodifiableList(Arrays.asList(aliases));
+		} else {
+			aliasList = EMPTY_STRING_LIST;
+		}
+		
+		
+		List<Enum> allowedValueEnumList;
+		if (allowedValues != null && allowedValues.length > 0) {
+			allowedValueEnumList = Collections.unmodifiableList(Arrays.asList(allowedValues));
+		} else {
+			allowedValueEnumList = EMPTY_ENUM_LIST;
+		}
+	
+				
+		//Clean all values to be non-null
+		this.enumClass = enumClass;
+		this.explicitName = StringUtils.trimToNull(explicitName);
+		this.paramType = paramType;
+		this.defaultValue = defaultValue;
+		this.shortDesc = (shortDesc != null)?shortDesc:"";
+		this.helpText = (helpText != null)?helpText:"";
+		this.alias = aliasList;
+		this.allowedValueEnum = allowedValueEnumList;
 
-	/**
-	 * If the parameter is unspecified, the effective value is considered to be this default value.
-	 * For name-value pairs, this will be a string.
-	 * Flags, which are normally considered to be true if specified, can be
-	 * converted to be true _unless_ specified w/ a false value by setting a
-	 * Boolean False here.
-	 * @return 
-	 */
-	Object getDefaultValue();
+		
+		if (this.enumClass == null) {
+			throw new RuntimeException("All parameters must be constructed by passing the enclosing Enum class in.");
+		}
+	}
 	
-	/**
-	 * Some parameters may have a defined set of possible values, which
-	 * are specified as a list of enums.  This returns that list.
-	 * 
-	 * @return A non-null list of Enums.
-	 */
-	List<Enum> getPossibleValueEnums();
+	@Override
+	public Class<? extends ParamDefinition> getEnumClass() {
+		return enumClass;
+	}
 	
+	@Override
+	public String getEntireSetName() {
+		if (enumClass.getAnnotation(ParamDefinitionAnnotation.class) != null) {
+			return StringUtils.trimToEmpty(enumClass.getAnnotation(ParamDefinitionAnnotation.class).groupName());
+		} else {
+			return "";
+		}
+	}
+
+	@Override
+	public String getEntireSetDescription() {
+		if (enumClass.getAnnotation(ParamDefinitionAnnotation.class) != null) {
+			return StringUtils.trimToEmpty(enumClass.getAnnotation(ParamDefinitionAnnotation.class).groupDescription());
+		} else {
+			return "";
+		}
+	}
 	
-	/**
-	 * Some parameters may have a defined set of possible values.
-	 * If that is the case, this will get that list as a list of strings.
-	 * 
-	 * @return a non-null String list.
-	 */
-	List<String> getPossibleValues();
+	@Override
+	public ParamType getParamType() {
+		return paramType;
+	}
+
+	@Override
+	public String getExplicitName() {
+		return explicitName;
+	}
+
+	@Override
+	public String getShortDescription() {
+		return shortDesc;
+	}
+
+	@Override
+	public String getHelpText() {
+		return helpText;
+	}
+
+	@Override
+	public List<String> getAlias() {
+		return alias;
+	}
+
+	@Override
+	public List<Enum> getPossibleValueEnums() {
+		return allowedValueEnum;
+	}
+
+	@Override
+	public Object getDefaultValue() {
+		return defaultValue;
+	}
 	
-	boolean isReal();
-	
-	boolean isNotReal();
 }

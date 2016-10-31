@@ -164,7 +164,7 @@ public class ConfigParamUtil {
 					"|" + p.getOriginalText() +
 					"|" + p.getName() +
 					"|" + p.getEffectiveValue() +
-					"|" + p.getParamDefinition().getFullName() +
+					"|" + p.getParamDefinition().getExplicitName() +
 					"|" + p.getParamType() +
 					"|"
 				)
@@ -194,7 +194,7 @@ public class ConfigParamUtil {
 			
 			for (ParamDefinition pd : subList) {
 				if (pd.getParamType().isReal()) {
-					ps.print(pd.getFullName());
+					ps.print(pd.getExplicitName());
 					if (! pd.getParamType().isFlag()) {
 						ps.print("=[value]");
 					}

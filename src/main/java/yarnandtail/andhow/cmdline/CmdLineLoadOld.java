@@ -149,7 +149,7 @@ public enum CmdLineLoadOld implements ConfigParamDefinition<CmdLineLoadOld> {
 	}
 
 	@Override
-	public String getFullName() {
+	public String getExplicitName() {
 		return fullName;
 	}
 	
