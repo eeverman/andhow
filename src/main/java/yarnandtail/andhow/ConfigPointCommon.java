@@ -34,6 +34,16 @@ public interface ConfigPointCommon {
 	ParamType getParamType();
 	
 	/**
+	 * If true, indicates that this parameter is not intended to be exposed.
+	 * Creates a fixed value, documented parameter that has a hardcoded value
+	 * set via the default value of the ConfigPoint.
+	 * 
+	 * These values can take advantage of expressions in the default value.
+	 * @return 
+	 */
+	boolean isPrivate();
+	
+	/**
 	 * Long-form option name as explicitly set during in the constructor.
 	 * This may be null, in which case the implicit base name is just the name of
 	 * the enum itself, typically of the form: SOME_CONFIG_PARAM_NAME.
