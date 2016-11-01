@@ -25,7 +25,7 @@ public class AppConfig {
 	
 	
 	/** A List of Lists of ConfigParamEnums */
-	List<List<ParamDefinition>> configParamEnumLists;
+	List<List<ConfigPoint>> configParamEnumLists;
 	
 	List<String> configParamListNames;
 	
@@ -34,7 +34,7 @@ public class AppConfig {
 	boolean copyToSysProps;
 	boolean verboseConfig;
 	
-	public AppConfig(List<List<ParamDefinition>> configParamEnumLists, String[] configParamSetNames, 
+	public AppConfig(List<List<ConfigPoint>> configParamEnumLists, String[] configParamSetNames, 
 			String[] args, boolean copyToSysProps) {
 		
 		PrintStream ps = System.out;
@@ -120,7 +120,7 @@ public class AppConfig {
 	
 	/**
 	 * Search all supplied params, in order, and return a list of ones of the
-	 * specified ParamDefinition.
+ specified ConfigPoint.
 	 * 
 	 * @param params
 	 * @return 
@@ -133,7 +133,7 @@ public class AppConfig {
 	
 	/**
 	 * Search all supplied params, in order, and return a list of the values of
-	 * ones of the specified ParamDefinition.
+ ones of the specified ConfigPoint.
 	 * Only non-null values or flags are returned.  Name/value types w/ no value
 	 * are skipped.
 	 * This uses the effectiveValue, so Flag values will return a Boolean true if present.

@@ -9,10 +9,10 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigParamDefinition;
 import yarnandtail.andhow.ConfigParamType;
-import yarnandtail.andhow.ParamDefinition;
 import yarnandtail.andhow.ParamType;
-import static yarnandtail.andhow.ParamDefinition.EMPTY_ENUM_LIST;
-import static yarnandtail.andhow.ParamDefinition.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.ConfigPoint.EMPTY_ENUM_LIST;
+import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
+import yarnandtail.andhow.ConfigPoint;
 
 /**
  * MAY NEED TO ADD A 2ND INTERFACE SPECIFICALLLY FOR CONFIG PARAMS SO THAT

@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ParamImm implements Param {
 
-	private ParamDefinition def;
+	private ConfigPoint def;
 	private String fullArg;
 	private String name;
 	private String value;
 	private Boolean valid;
 
-	public ParamImm(ParamDefinition def, String fullArg, String name, String value, Boolean valid) {
+	public ParamImm(ConfigPoint def, String fullArg, String name, String value, Boolean valid) {
 		this.def = def;
 		this.fullArg = fullArg;
 		this.name = name;
@@ -27,7 +27,7 @@ public class ParamImm implements Param {
 	}
 	
 	@Override
-	public ParamDefinition getParamDefinition() {
+	public ConfigPoint getParamDefinition() {
 		return def;
 	}
 

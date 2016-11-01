@@ -3,7 +3,7 @@ package yarnandtail.andhow;
 /**
  * @author eeverman
  */
-@ParamDefinitionAnnotation (
+@ConfigGroupDescription (
 	groupName = "Global AndHow configuration parameters",
 	groupDescription = "Configures the most basic aspects of how configuration is done, such as " +
 			"printing help info (like this), or turning on detailed logging during configuration loading."
@@ -16,20 +16,20 @@ public enum GlobalLoadConfEnum implements GlobalLoadConfInt<GlobalLoadConfEnum> 
 
 	
 	
-	private final ParamDefinitionCore core;
+	private final ConfigPointHelper core;
 
 	
 	private GlobalLoadConfEnum(String fullName, ParamType paramType, Object defaultValue,
 			String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues) {
 		
-		core = new ParamDefinitionCore(GlobalLoadConfEnum.class, fullName, paramType, defaultValue,
+		core = new ConfigPointHelper(GlobalLoadConfEnum.class, fullName, paramType, defaultValue,
 			shortDesc, helpText, aliases, allowedValues);
 
 	}
 
 	@Override
-	public ParamDefinitionInterface getCore() {
+	public ConfigPointCommon getCore() {
 		return core;
 	}
 	

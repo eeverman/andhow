@@ -6,16 +6,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import static yarnandtail.andhow.ParamDefinition.EMPTY_ENUM_LIST;
-import static yarnandtail.andhow.ParamDefinition.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.ConfigPoint.EMPTY_ENUM_LIST;
+import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
 
 /**
  *
  * @author eeverman
  */
-public class ParamDefinitionCore implements ParamDefinitionInterface {
+public class ConfigPointHelper implements ConfigPointCommon {
 
-	private final Class<? extends ParamDefinition> enumClass;
+	private final Class<? extends ConfigPoint> enumClass;
 	private final String explicitName;
 	private final ParamType paramType;
 	private final Object defaultValue;
@@ -24,7 +24,7 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 	private final List<String> alias;
 	private final List<Enum> allowedValueEnum;
 	
-	public ParamDefinitionCore(Class<? extends ParamDefinition> enumClass, String explicitName, ParamType paramType, Object defaultValue,
+	public ConfigPointHelper(Class<? extends ConfigPoint> enumClass, String explicitName, ParamType paramType, Object defaultValue,
 			String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues) {
 		
@@ -61,14 +61,14 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 	}
 	
 	@Override
-	public Class<? extends ParamDefinition> getEnumClass() {
+	public Class<? extends ConfigPoint> getEnumClass() {
 		return enumClass;
 	}
 	
 	@Override
-	public String getEntireSetName() {
-		if (enumClass.getAnnotation(ParamDefinitionAnnotation.class) != null) {
-			return StringUtils.trimToEmpty(enumClass.getAnnotation(ParamDefinitionAnnotation.class).groupName());
+	public String getGroupDescription() {
+		if (enumClass.getAnnotation(ConfigGroupDescription.class) != null) {
+			return StringUtils.trimToEmpty(enumClass.getAnnotation(ConfigGroupDescription.class).groupName());
 		} else {
 			return "";
 		}
@@ -76,8 +76,8 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 
 	@Override
 	public String getEntireSetDescription() {
-		if (enumClass.getAnnotation(ParamDefinitionAnnotation.class) != null) {
-			return StringUtils.trimToEmpty(enumClass.getAnnotation(ParamDefinitionAnnotation.class).groupDescription());
+		if (enumClass.getAnnotation(ConfigGroupDescription.class) != null) {
+			return StringUtils.trimToEmpty(enumClass.getAnnotation(ConfigGroupDescription.class).groupDescription());
 		} else {
 			return "";
 		}
@@ -89,7 +89,7 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 	}
 
 	@Override
-	public String getExplicitName() {
+	public String getExplicitBaseName() {
 		return explicitName;
 	}
 
@@ -104,7 +104,7 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 	}
 
 	@Override
-	public List<String> getAlias() {
+	public List<String> getBaseAliases() {
 		return alias;
 	}
 
@@ -114,7 +114,7 @@ public class ParamDefinitionCore implements ParamDefinitionInterface {
 	}
 
 	@Override
-	public Object getDefaultValue() {
+	public Object getBaseDefaultValue() {
 		return defaultValue;
 	}
 	

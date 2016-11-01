@@ -1,12 +1,12 @@
 package yarnandtail.andhow.propfile;
 
-import yarnandtail.andhow.ParamDefinition;
+import yarnandtail.andhow.ConfigPoint;
 
 /**
  *
  * @author eeverman
  */
-public interface PropFileLoadConfInt<E extends Enum<E> & PropFileLoadConfInt> extends ParamDefinition<E> {
+public interface PropFileLoadConfInt<E extends Enum<E> & PropFileLoadConfInt> extends ConfigPoint<E> {
 	boolean isPropFileName();
 	boolean isPropFilepath();
 	boolean isDefaultPropFileName();

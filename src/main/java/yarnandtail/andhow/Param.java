@@ -13,7 +13,7 @@ public interface Param {
 	 * The definition object that defines this parameter.
 	 * @return May be null if an unmatched parameter.
 	 */
-	ParamDefinition getParamDefinition();
+	ConfigPoint getParamDefinition();
 	
 	/**
 	 * Convenience to access the type, which is part of the definition.

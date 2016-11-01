@@ -4,7 +4,7 @@ package yarnandtail.andhow;
  *
  * @author eeverman
  */
-public @interface ParamDefinitionAnnotation {
+public @interface ConfigGroupDescription {
 	String groupName();
 	String groupDescription();
 }

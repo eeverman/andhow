@@ -8,7 +8,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ParamMutable implements Param {
 
-	private ParamDefinition def;
+	private ConfigPoint def;
 	private String fullArg;
 	private String name;
 	private String value;
@@ -17,7 +17,7 @@ public class ParamMutable implements Param {
 	public ParamMutable() {
 	}
 
-	public ParamMutable(ParamDefinition def, String fullArg, String name, String value, Boolean valid) {
+	public ParamMutable(ConfigPoint def, String fullArg, String name, String value, Boolean valid) {
 		this.def = def;
 		this.fullArg = fullArg;
 		this.name = name;
@@ -26,11 +26,11 @@ public class ParamMutable implements Param {
 	}
 	
 	@Override
-	public ParamDefinition getParamDefinition() {
+	public ConfigPoint getParamDefinition() {
 		return def;
 	}
 
-	public void setType(ParamDefinition type) {
+	public void setType(ConfigPoint type) {
 		this.def = type;
 	}
 
