@@ -60,7 +60,7 @@ public class AppConfig {
 		
 		//
 		//Edge cases handled from cmd line - continue to props file
-		boolean skipDirectory = findOneParamValueBooleanByType(configParams, ParamType.SKIP_PROPERTIES_FROM_FILE_SYSTEM, false);
+		boolean skipDirectory = findOneParamValueBooleanByType(configParams, ConfigPointType.SKIP_PROPERTIES_FROM_FILE_SYSTEM, false);
 		if (skipDirectory) {
 			PropertyFileWrap propWrap = findPropertiesFile(configParams);
 		} else {
@@ -73,9 +73,9 @@ public class AppConfig {
 	}
 	
 	protected PropertyFileWrap findPropertiesFile(List<ConfigParamValue> cmdLineConfigParams) {
-		String fileName = findOneParamValueStringByType(cmdLineConfigParams, ParamType.PROPERTIES_FILE_NAME, PROP_FILE_NAME);
-		List<String> dirPaths = findParamValueStringsByType(cmdLineConfigParams, ParamType.PROPERTIES_FILE_SYSTEM_PATH, Arrays.asList(DIRECTORY_SEARCH_PATHS));
-		String defaultFileName = findOneParamValueStringByType(cmdLineConfigParams, ParamType.PROPERTIES_DEFAULT_FILE_NAME, DEFAULT_PROP_FILE_NAME);
+		String fileName = findOneParamValueStringByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_FILE_NAME, PROP_FILE_NAME);
+		List<String> dirPaths = findParamValueStringsByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_FILE_SYSTEM_PATH, Arrays.asList(DIRECTORY_SEARCH_PATHS));
+		String defaultFileName = findOneParamValueStringByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_DEFAULT_FILE_NAME, DEFAULT_PROP_FILE_NAME);
 
 		
 		PropertyFileWrap wrap = null;
@@ -125,7 +125,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<ConfigParamValue> findParamsByType(List<ConfigParamValue> params, ParamType type) {
+	private List<ConfigParamValue> findParamsByType(List<ConfigParamValue> params, ConfigPointType type) {
 		List<ConfigParamValue> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType())).forEachOrdered(p -> found.add(p));
 		return found;
@@ -141,7 +141,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<Object> findParamValuesByType(List<ConfigParamValue> params, ParamType type) {
+	private List<Object> findParamValuesByType(List<ConfigParamValue> params, ConfigPointType type) {
 		List<Object> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValue()));
 		return found;
@@ -157,7 +157,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<String> findParamValueStringsByType(List<ConfigParamValue> params, ParamType type, List<String> defaultValues) {
+	private List<String> findParamValueStringsByType(List<ConfigParamValue> params, ConfigPointType type, List<String> defaultValues) {
 		List<String> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValueString()));
 		return (found.size() > 0)?found:defaultValues;
@@ -170,7 +170,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private ConfigParamValue findOneParamByType(List<ConfigParamValue> params, ParamType type) {
+	private ConfigParamValue findOneParamByType(List<ConfigParamValue> params, ConfigPointType type) {
 		return params.stream().filter(p -> type.equals(p.getParamType())).findFirst().orElse(null);
 	}
 	
@@ -181,7 +181,7 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private String findOneParamValueStringByType(List<ConfigParamValue> params, ParamType type, String defValue) {
+	private String findOneParamValueStringByType(List<ConfigParamValue> params, ConfigPointType type, String defValue) {
 		String found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.getEffectiveValueString()).orElse(null);
 		return (found != null)?found:defValue;
 	}
@@ -193,7 +193,7 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private boolean findOneParamValueBooleanByType(List<ConfigParamValue> params, ParamType type, Boolean defValue) {
+	private boolean findOneParamValueBooleanByType(List<ConfigParamValue> params, ConfigPointType type, Boolean defValue) {
 		Boolean found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.isTrue()).orElse(null);
 		return (found != null)?found:defValue;
 	}
@@ -204,12 +204,12 @@ public class AppConfig {
 	
 	private boolean containsHelpRequest(List<ConfigParamValue> params) {
 		return params.stream().anyMatch(p -> 
-				ParamType.HELP_FLAG.equals(p.getParamType()) && p.isTrue());
+				ConfigPointType.HELP_FLAG.equals(p.getParamType()) && p.isTrue());
 	}
 	
 	private boolean containsVerboseConfigRequest(List<ConfigParamValue> params) {
 		return params.stream().anyMatch(p -> 
-				ParamType.VERBOSE_CONFIG_FLAG.equals(p.getParamType()) && p.isTrue());
+				ConfigPointType.VERBOSE_CONFIG_FLAG.equals(p.getParamType()) && p.isTrue());
 	}
 	
 	public void printAppSpecificCommandHelp(PrintStream ps) {

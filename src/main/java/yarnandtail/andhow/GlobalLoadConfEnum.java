@@ -10,16 +10,16 @@ package yarnandtail.andhow;
 )
 public enum GlobalLoadConfEnum implements GlobalLoadConfInt<GlobalLoadConfEnum> {	
 
-	HELP("help", ParamType.FLAG, null, "Print command help", null, null, null),
-	VERBOSE_CONFIG("verboseConfig", ParamType.FLAG, null, "Print detailed info during configuration", null, new String[] {"verbConf"}, null),
-	VERY_VERBOSE_CONFIG("veryVerboseConfig", ParamType.FLAG, null, "Print VERY detailed info during configuration", null, new String[] {"veryVerbConf"}, null);
+	HELP("help", ConfigPointType.FLAG, null, "Print command help", null, null, null),
+	VERBOSE_CONFIG("verboseConfig", ConfigPointType.FLAG, null, "Print detailed info during configuration", null, new String[] {"verbConf"}, null),
+	VERY_VERBOSE_CONFIG("veryVerboseConfig", ConfigPointType.FLAG, null, "Print VERY detailed info during configuration", null, new String[] {"veryVerbConf"}, null);
 
 	
 	
 	private final ConfigPointHelper core;
 
 	
-	private GlobalLoadConfEnum(String fullName, ParamType paramType, Object defaultValue,
+	private GlobalLoadConfEnum(String fullName, ConfigPointType paramType, Object defaultValue,
 			String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues) {
 		

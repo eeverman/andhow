@@ -31,7 +31,7 @@ public interface ConfigPointCommon {
 	 * The basic type of the parameter
 	 * @return 
 	 */
-	ParamType getParamType();
+	ConfigPointType getParamType();
 	
 	/**
 	 * If true, indicates that this parameter is not intended to be exposed.

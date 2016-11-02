@@ -17,7 +17,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 
 	private final Class<? extends ConfigPoint> enumClass;
 	private final String explicitName;
-	private final ParamType paramType;
+	private final ConfigPointType paramType;
 	private final Object defaultValue;
 	private final String shortDesc;
 	private final String helpText;
@@ -25,7 +25,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	private final List<Enum> allowedValueEnum;
 	private final boolean priv;
 	
-	public ConfigPointHelper(Class<? extends ConfigPoint> enumClass, String explicitName, ParamType paramType, Object defaultValue,
+	public ConfigPointHelper(Class<? extends ConfigPoint> enumClass, String explicitName, ConfigPointType paramType, Object defaultValue,
 			String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues, boolean priv) {
 		
@@ -86,7 +86,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	}
 	
 	@Override
-	public ParamType getParamType() {
+	public ConfigPointType getParamType() {
 		return paramType;
 	}
 

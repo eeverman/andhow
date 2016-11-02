@@ -91,7 +91,7 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 	}
 	
 	@Override
-	public ParamType getParamType() {
+	public ConfigPointType getParamType() {
 		return confPt.getParamType();
 	}
 	

@@ -40,7 +40,7 @@ public interface ConfigPoint<E extends Enum<E> & ConfigPoint> extends ConfigPoin
 	}
 	
 	@Override
-	default ParamType getParamType() {
+	default ConfigPointType getParamType() {
 		return getCore().getParamType();
 	}
 	
