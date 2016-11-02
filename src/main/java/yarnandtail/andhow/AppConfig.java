@@ -29,7 +29,7 @@ public class AppConfig {
 	
 	List<String> configParamListNames;
 	
-	List<Param> configParams;
+	List<ConfigParamValue> configParams;
 	
 	boolean copyToSysProps;
 	boolean verboseConfig;
@@ -39,7 +39,7 @@ public class AppConfig {
 		
 		PrintStream ps = System.out;
 		
-		List<Param> configParams = ConfigParamUtil.parseCommandArgs(configParamEnumLists, args, DEFAULT_CMD_NAME_VALUE_SEPARATOR);
+		List<ConfigParamValue> configParams = ConfigParamUtil.parseCommandArgs(configParamEnumLists, args, DEFAULT_CMD_NAME_VALUE_SEPARATOR);
 		verboseConfig = containsVerboseConfigRequest(configParams);
 		
 		
@@ -72,7 +72,7 @@ public class AppConfig {
 		
 	}
 	
-	protected PropertyFileWrap findPropertiesFile(List<Param> cmdLineConfigParams) {
+	protected PropertyFileWrap findPropertiesFile(List<ConfigParamValue> cmdLineConfigParams) {
 		String fileName = findOneParamValueStringByType(cmdLineConfigParams, ParamType.PROPERTIES_FILE_NAME, PROP_FILE_NAME);
 		List<String> dirPaths = findParamValueStringsByType(cmdLineConfigParams, ParamType.PROPERTIES_FILE_SYSTEM_PATH, Arrays.asList(DIRECTORY_SEARCH_PATHS));
 		String defaultFileName = findOneParamValueStringByType(cmdLineConfigParams, ParamType.PROPERTIES_DEFAULT_FILE_NAME, DEFAULT_PROP_FILE_NAME);
@@ -125,8 +125,8 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<Param> findParamsByType(List<Param> params, ParamType type) {
-		List<Param> found = new ArrayList();
+	private List<ConfigParamValue> findParamsByType(List<ConfigParamValue> params, ParamType type) {
+		List<ConfigParamValue> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType())).forEachOrdered(p -> found.add(p));
 		return found;
 	}
@@ -141,7 +141,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<Object> findParamValuesByType(List<Param> params, ParamType type) {
+	private List<Object> findParamValuesByType(List<ConfigParamValue> params, ParamType type) {
 		List<Object> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValue()));
 		return found;
@@ -157,7 +157,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<String> findParamValueStringsByType(List<Param> params, ParamType type, List<String> defaultValues) {
+	private List<String> findParamValueStringsByType(List<ConfigParamValue> params, ParamType type, List<String> defaultValues) {
 		List<String> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValueString()));
 		return (found.size() > 0)?found:defaultValues;
@@ -170,7 +170,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private Param findOneParamByType(List<Param> params, ParamType type) {
+	private ConfigParamValue findOneParamByType(List<ConfigParamValue> params, ParamType type) {
 		return params.stream().filter(p -> type.equals(p.getParamType())).findFirst().orElse(null);
 	}
 	
@@ -181,7 +181,7 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private String findOneParamValueStringByType(List<Param> params, ParamType type, String defValue) {
+	private String findOneParamValueStringByType(List<ConfigParamValue> params, ParamType type, String defValue) {
 		String found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.getEffectiveValueString()).orElse(null);
 		return (found != null)?found:defValue;
 	}
@@ -193,21 +193,21 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private boolean findOneParamValueBooleanByType(List<Param> params, ParamType type, Boolean defValue) {
+	private boolean findOneParamValueBooleanByType(List<ConfigParamValue> params, ParamType type, Boolean defValue) {
 		Boolean found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.isTrue()).orElse(null);
 		return (found != null)?found:defValue;
 	}
 	
-	private boolean isValid(List<Param> params) {
+	private boolean isValid(List<ConfigParamValue> params) {
 		return params.stream().anyMatch(p -> ! p.isValid());
 	}
 	
-	private boolean containsHelpRequest(List<Param> params) {
+	private boolean containsHelpRequest(List<ConfigParamValue> params) {
 		return params.stream().anyMatch(p -> 
 				ParamType.HELP_FLAG.equals(p.getParamType()) && p.isTrue());
 	}
 	
-	private boolean containsVerboseConfigRequest(List<Param> params) {
+	private boolean containsVerboseConfigRequest(List<ConfigParamValue> params) {
 		return params.stream().anyMatch(p -> 
 				ParamType.VERBOSE_CONFIG_FLAG.equals(p.getParamType()) && p.isTrue());
 	}

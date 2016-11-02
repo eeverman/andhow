@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @author eeverman
  */
-public class ParamMutable implements Param {
+public class ParamMutable implements ConfigParamValue {
 
 	private ConfigPoint def;
 	private String fullArg;
@@ -53,7 +53,7 @@ public class ParamMutable implements Param {
 	}
 
 	@Override
-	public String getValue() {
+	public String getExplicitString() {
 		return value;
 	}
 
@@ -71,7 +71,7 @@ public class ParamMutable implements Param {
 	}
 	
 	@Override
-	public Param toImmutable() {
+	public ConfigParamValue toImmutable() {
 		return new ParamImm(def, fullArg, name, value, valid);
 	}
 

@@ -15,10 +15,10 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ConfigParamUtil {
 
-	public static List<Param> parseCommandArgs(
+	public static List<ConfigParamValue> parseCommandArgs(
 			List<List<ConfigPoint>> configParamEnumLists, String[] args, String nameValueSeparator) {
 		
-		List<Param> configParams = new ArrayList();
+		List<ConfigParamValue> configParams = new ArrayList();
 		
 		for (String arg : args) {
 			NameValuePair pair = parseCommandArg(arg, nameValueSeparator);
@@ -48,14 +48,14 @@ public class ConfigParamUtil {
 		return null;
 	}
 	
-	public static boolean validatedConfigParam(Param configParam) {
+	public static boolean validatedConfigParam(ConfigParamValue configParam) {
 		
 		
 		if (configParam.getParamDefinition() != null) {
 			ConfigPoint cpe = configParam.getParamDefinition();
 			
 			if (cpe.getParamType().isRequired()) {
-				if (configParam.getValue() == null) return false;
+				if (configParam.getExplicitString() == null) return false;
 			}
 			
 		}
@@ -146,7 +146,7 @@ public class ConfigParamUtil {
 		}
 	}
 	
-	public static void printParams(List<Param> configParams, PrintStream ps, String header) {
+	public static void printParams(List<ConfigParamValue> configParams, PrintStream ps, String header) {
 		if (header != null) ps.println(header);
 		ps.println("Parameter Key: ");
 		ps.println(					
