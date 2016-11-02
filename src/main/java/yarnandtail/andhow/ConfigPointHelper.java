@@ -23,10 +23,11 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	private final String helpText;
 	private final List<String> alias;
 	private final List<Enum> allowedValueEnum;
+	private final boolean priv;
 	
 	public ConfigPointHelper(Class<? extends ConfigPoint> enumClass, String explicitName, ParamType paramType, Object defaultValue,
 			String shortDesc, String helpText, String[] aliases,
-			Enum[] allowedValues) {
+			Enum[] allowedValues, boolean priv) {
 		
 		List<String> aliasList;
 		if (aliases != null && aliases.length > 0) {
@@ -53,6 +54,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		this.allowedValueEnum = allowedValueEnumList;
+		this.priv = priv;
 
 		
 		if (this.enumClass == null) {
@@ -116,6 +118,11 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	@Override
 	public Object getBaseDefaultValue() {
 		return defaultValue;
+	}
+
+	@Override
+	public boolean isPrivate() {
+		return priv;
 	}
 	
 }

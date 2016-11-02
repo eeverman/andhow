@@ -73,5 +73,10 @@ public interface ConfigPoint<E extends Enum<E> & ConfigPoint> extends ConfigPoin
 	default Object getBaseDefaultValue() {
 		return getCore().getBaseDefaultValue();
 	}
+	
+	@Override
+	default boolean isPrivate() {
+		return getCore().isPrivate();
+	}
 
 }

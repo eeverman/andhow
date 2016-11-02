@@ -15,29 +15,16 @@ public interface ConfigPointContext {
 	Object getEffectiveDefault();
 	
 	/**
-	 * 
-	 * TODO:  There should be a preference for this on the configPoint itself.
-	 * It makes sense that we know ahead of time that some params are private
-	 * and not to be exposed.
-	 * 
-	 * Actually, we may need a way to specify that a param is loaded at a particular
-	 * config level (order of loaders) and not any higher to keep the config point
-	 * within what the point considers to be its 'internal' levels.
-	 * 
-	 * Then we need to provide a way to say to accept the default.
-	 * @return 
-	 */
-	boolean isReverseLoadOrder();
-	
-	/**
-	 * 
-	 * TODO:  There should be a preference for this on the configPoint itself.
-	 * It makes sense that we know ahead of time if a param should be accumulating
-	 * or not, such as a list of directories in which the last to load is the default.
-	 * 
-	 * Then we need to provide a way to say to accept the default.
+	 * Accumulating is a context choice to build up (in order) from outer to inner.
 	 * @return 
 	 */
 	boolean isAccumulating();
+	
+	/*
+	 * Reverse the loading order
+	 * This is a load preference that would be sensative to the ordering of the 
+	 * loaders, so is appropriate only at the context level.
+	 */
+	boolean isReverseLoadOrder();
 	
 }

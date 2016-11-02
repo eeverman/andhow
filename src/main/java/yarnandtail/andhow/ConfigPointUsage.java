@@ -26,13 +26,16 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 	final P confPt;
 	final NamingStrategy naming;
 	final Object defaultVal;
-	boolean reverseLoadOrder;
 	boolean accumulating;
+	boolean reverseLoadOrder;
+	
 
-	public ConfigPointUsage(P confPt, NamingStrategy naming, Object defaultValue) {
+	public ConfigPointUsage(P confPt, NamingStrategy naming, Object defaultValue, boolean accumulating, boolean reverseLoadOrde) {
 		this.confPt = confPt;
 		this.naming = naming;
 		this.defaultVal = defaultValue;
+		this.accumulating = accumulating;
+		this.reverseLoadOrder = reverseLoadOrder;
 	}
 	
 	@Override
@@ -53,12 +56,15 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 		}
 	}
 	
+	@Override
+	public boolean isAccumulating() {
+		return accumulating;
+	}
 	
 	@Override
-	public boolean isReverseLoadOrder();
-	
-	@Override
-	public boolean isAccumulating();
+	public boolean isReverseLoadOrder() {
+		return reverseLoadOrder;
+	}
 	
 	@Override
 	public Object getEffectiveDefault() {
@@ -117,6 +123,11 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 	@Override
 	public Object getBaseDefaultValue() {
 		return confPt.getBaseDefaultValue();
+	}
+	
+	@Override
+	public boolean isPrivate() {
+		return confPt.isPrivate();
 	}
 
 }

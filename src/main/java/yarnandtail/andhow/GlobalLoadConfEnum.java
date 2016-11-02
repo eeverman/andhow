@@ -24,8 +24,7 @@ public enum GlobalLoadConfEnum implements GlobalLoadConfInt<GlobalLoadConfEnum> 
 			Enum[] allowedValues) {
 		
 		core = new ConfigPointHelper(GlobalLoadConfEnum.class, fullName, paramType, defaultValue,
-			shortDesc, helpText, aliases, allowedValues);
-
+			shortDesc, helpText, aliases, allowedValues, false);
 	}
 
 	@Override
