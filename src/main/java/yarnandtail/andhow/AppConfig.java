@@ -224,4 +224,42 @@ public class AppConfig {
 	}
 	
 	
+	//Adding these methods just to preserve some thoughts about how libraries might be config'ed
+	//
+	
+	
+	/**
+	 * For libraries that want to assign static variables w/ a configured value,
+	 * this method allows them to do that w/o contention w/ the loading process.
+	 * 
+	 * A call to actually get the value from the proxy will still block/fail.
+	 * @param configPoint
+	 * @return 
+	 */
+	public static ConfigParamValue getProxyValue(ConfigPoint configPoint) {
+		return null;
+	}
+	
+	/**
+	 * Registers a ConfigPoint enum as being required so that, if it is not
+	 * in the list of ConfigPoint enums in the AppConfig, it will cause a
+	 * Runtime exception.
+	 * 
+	 * This could also be paired w/ adding a class.forName() in a library jar
+	 * file that forces a class w/ this static method to be called.
+	 * @param enumClass 
+	 */
+	public static void require(Class<? extends ConfigPoint> enumClass) {
+		
+	}
+	
+	/**
+	 * Similar.
+	 * @param configPoint 
+	 */
+	public static void require(ConfigPoint configPoint) {
+		
+	}
+	
+	
 }

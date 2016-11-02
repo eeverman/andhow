@@ -13,6 +13,19 @@ public interface ConfigParamValue {
 	 */
 	ConfigPointUsage getConfigPointUsage();
 	
+	/**
+	 * Returns true if this value was explicitly by the configuration.
+	 * If this returns false, then the default value would be returned by the
+	 * getValue methods.
+	 * 
+	 * Need some careful definitions of what set and non-set mean.
+	 * Is an empty string param set?  How do you set a param to an empty string?
+	 * How about an empty Number type param - would that clear it if it were set
+	 * at a lower level? 
+	 * @return 
+	 */
+	boolean isExplicitValue();
+	
 	
 	/**
 	 * The string value that was explicitly set.
