@@ -74,27 +74,7 @@ public interface ConfigParamValue {
 	 * 
 	 * @return Boolean, String or null (null for name/value pairs which are unset)
 	 */
-	default List<Object> getObject() {
-		
-		Object o;
-		
-		if (isValid()) {
-			
-			
-			if (getConfigPointUsage() != null && getConfigPointUsage().getPointType().isFlag()) {
-				o = getExplicitBoolean();
-			} else {
-				o = getExplicitObject();
-			}
-
-		}
-		
-		if (o == null) {
-			o = getConfigPointUsage().getEffectiveDefault();
-		}
-		
-		return o;
-	}
+	List<Object> getObject();
 	
 	/**
 	 * Get the effective value of this parameter, which may differ from getExplicitString.
@@ -104,31 +84,14 @@ public interface ConfigParamValue {
 	 * 
 	 * @return A String or null (null for name/value pairs which are unset)
 	 */
-	default String getString() {
-		Object o = getObject();
-		return (o != null)?o.toString():null;
-	}
+	String getString();
 	
 	/**
 	 * True if the contained value (or no value for flags) would be considered
 	 * 'true-ish'.
 	 * @return 
 	 */
-	default Boolean isTrue() {
-		if (getConfigPointUsage() != null && getConfigPointUsage().getPointType().isFlag()) {
-			if (getExplicitString() != null) {
-				return ConfigParamUtil.toBoolean(getExplicitString());
-			} else {
-				return ConfigParamUtil.toBoolean(getConfigPointUsage().getEffectiveDefault());
-			}
-		} else {
-			if (getExplicitObject() != null) {
-				return ConfigParamUtil.toBoolean(getExplicitObject());
-			} else {
-				return ConfigParamUtil.toBoolean(getConfigPointUsage().getEffectiveDefault());
-			}
-		}
-	}
+	Boolean isTrue();
 	
 	ConfigParamValue toImmutable();
 	
