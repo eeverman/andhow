@@ -1,6 +1,7 @@
 package yarnandtail.andhow;
 
 import java.util.List;
+import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.
@@ -28,10 +29,18 @@ public interface ConfigPointCommon {
 	String getEntireSetDescription();
 	
 	/**
-	 * The basic type of the parameter
+	 * The basic type of the configuration point:  Flag, name/value, multi=value.
 	 * @return 
 	 */
-	ConfigPointType getParamType();
+	ConfigPointType getPointType();
+	
+	/**
+	 * The type of the value (String, Number, Integer, etc).
+	 * For ConfigPointTypes that allow multiple values, an array of values of
+	 * the specified type can be fetched.
+	 * @return 
+	 */
+	ValueType getValueType();
 	
 	/**
 	 * If true, indicates that this parameter is not intended to be exposed.

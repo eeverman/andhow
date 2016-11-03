@@ -3,6 +3,7 @@ package yarnandtail.andhow;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
+import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.
@@ -40,8 +41,13 @@ public interface ConfigPoint<E extends Enum<E> & ConfigPoint> extends ConfigPoin
 	}
 	
 	@Override
-	default ConfigPointType getParamType() {
-		return getCore().getParamType();
+	default ConfigPointType getPointType() {
+		return getCore().getPointType();
+	}
+	
+	@Override
+	default ValueType getValueType() {
+		return getCore().getValueType();
 	}
 	
 	@Override

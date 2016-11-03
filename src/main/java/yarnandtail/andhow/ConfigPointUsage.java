@@ -2,6 +2,7 @@ package yarnandtail.andhow;
 
 import java.util.ArrayList;
 import java.util.List;
+import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  * An actual usage of a ConfigPoint in an application.
@@ -91,8 +92,13 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 	}
 	
 	@Override
-	public ConfigPointType getParamType() {
-		return confPt.getParamType();
+	public ConfigPointType getPointType() {
+		return confPt.getPointType();
+	}
+	
+	@Override
+	public ValueType getValueType() {
+		return confPt.getValueType();
 	}
 	
 	@Override

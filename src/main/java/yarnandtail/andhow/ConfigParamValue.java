@@ -1,5 +1,7 @@
 package yarnandtail.andhow;
 
+import java.util.List;
+
 /**
  * A parameter, including its type, original value, and value (if it has one).
  * 
@@ -72,14 +74,14 @@ public interface ConfigParamValue {
 	 * 
 	 * @return Boolean, String or null (null for name/value pairs which are unset)
 	 */
-	default Object getObject() {
+	default List<Object> getObject() {
 		
 		Object o;
 		
 		if (isValid()) {
 			
 			
-			if (getConfigPointUsage() != null && getConfigPointUsage().getParamType().isFlag()) {
+			if (getConfigPointUsage() != null && getConfigPointUsage().getPointType().isFlag()) {
 				o = getExplicitBoolean();
 			} else {
 				o = getExplicitObject();
@@ -113,7 +115,7 @@ public interface ConfigParamValue {
 	 * @return 
 	 */
 	default Boolean isTrue() {
-		if (getConfigPointUsage() != null && getConfigPointUsage().getParamType().isFlag()) {
+		if (getConfigPointUsage() != null && getConfigPointUsage().getPointType().isFlag()) {
 			if (getExplicitString() != null) {
 				return ConfigParamUtil.toBoolean(getExplicitString());
 			} else {

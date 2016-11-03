@@ -1,5 +1,8 @@
 package yarnandtail.andhow.valuetype;
 
+import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.ConfigValueCollection;
+
 /**
  *
  * @author eeverman
@@ -25,18 +28,43 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 		return clazzType;
 	}
 
-//	@Override
-//	public T convert(Object sourceValue) throws IllegalArgumentException {
-//		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//	}
-
 	@Override
-	public boolean isConvertable(Object sourceValue) {
+	public boolean isConvertable(Object sourceValue, ConfigValueCollection loadedValues) {
 		try {
-			convert(sourceValue);
+			convert(sourceValue, loadedValues);
 			return true;
 		} catch (IllegalArgumentException e) {
 			return false;
+		}
+	}
+	
+	@Override
+	public boolean isExplicitlySet(Object sourceValue, ConfigValueCollection loadedValues) {
+		
+		String strVal = null;
+		
+		if (sourceValue != null) {
+			if (sourceValue instanceof String) {
+				strVal = (String)sourceValue;
+			} else {
+				return true;
+			}
+		}
+		
+		if (trimStyle.equals(TrimStyle.TO_EMPTY)) {
+			strVal = StringUtils.trimToEmpty(strVal);
+		} else if (trimStyle.equals(TrimStyle.TO_NULL)) {
+			strVal = StringUtils.trimToNull(strVal);
+		}
+		
+		if (strVal != null) {
+			if (! strVal.isEmpty()) {
+				return true;
+			} else {
+				return emptyConsideredAValue;
+			}
+		} else {
+			return nullConsideredAValue;
 		}
 	}
 

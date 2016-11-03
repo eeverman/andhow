@@ -54,7 +54,7 @@ public class ConfigParamUtil {
 		if (configParam.getParamDefinition() != null) {
 			ConfigPoint cpe = configParam.getParamDefinition();
 			
-			if (cpe.getParamType().isRequired()) {
+			if (cpe.getPointType().isRequired()) {
 				if (configParam.getExplicitString() == null) return false;
 			}
 			
@@ -193,9 +193,9 @@ public class ConfigParamUtil {
 			}
 			
 			for (ConfigPoint pd : subList) {
-				if (pd.getParamType().isReal()) {
+				if (pd.getPointType().isReal()) {
 					ps.print(pd.getExplicitBaseName());
-					if (! pd.getParamType().isFlag()) {
+					if (! pd.getPointType().isFlag()) {
 						ps.print("=[value]");
 					}
 					

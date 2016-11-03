@@ -1,5 +1,7 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.valuetype.FlagType;
+
 /**
  * @author eeverman
  */
@@ -23,7 +25,7 @@ public enum GlobalLoadConfEnum implements GlobalLoadConfInt<GlobalLoadConfEnum> 
 			String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues) {
 		
-		core = new ConfigPointHelper(GlobalLoadConfEnum.class, fullName, paramType, defaultValue,
+		core = new ConfigPointHelper(GlobalLoadConfEnum.class, fullName, paramType, FlagType.get(), defaultValue,
 			shortDesc, helpText, aliases, allowedValues, false);
 	}
 

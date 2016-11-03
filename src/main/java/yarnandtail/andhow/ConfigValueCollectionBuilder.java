@@ -4,6 +4,6 @@ package yarnandtail.andhow;
  *
  * @author eeverman
  */
-public class ConfigValueCollectionBuilder {
-	
+public interface ConfigValueCollectionBuilder extends ConfigValueCollection {
+	void add(Loader loader, ConfigParamValue value);
 }
