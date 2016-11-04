@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -11,4 +12,5 @@ public interface LoaderState {
 	String[] getCmdLineArgs();
 	ConfigValueCollection getValueCollection();
 	Map<String, ConfigPointUsage> getConfigPointUsages();
+	List<LoaderException> getLoaderExceptions();
 }

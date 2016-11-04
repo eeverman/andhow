@@ -3,12 +3,7 @@ package yarnandtail.andhow.cmdline;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigPointUsage;
-import yarnandtail.andhow.KVP;
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderState;
-import yarnandtail.andhow.UnparsableKVPException;
-import yarnandtail.andhow.ConfigPointValue;
+import yarnandtail.andhow.*;
 
 /**
  *
@@ -26,7 +21,7 @@ public class CmdLineLoader implements Loader {
 			
 			for (String s : state.getCmdLineArgs()) {
 				try {
-					KVP kvp = parseRawArg(s);
+					KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
 					
 					if (kvp.getName() != null) {
 						ConfigPointUsage cpu = state.getConfigPointUsages().get(kvp.getName());
@@ -38,8 +33,10 @@ public class CmdLineLoader implements Loader {
 						}
 				
 					}
-				} catch (UnparsableKVPException e) {
-					throw new UnparsableKVPException(e.getReason(), StringUtils.abbreviate(s, 40));
+				} catch (ParsingException e) {
+					state.getLoaderExceptions().add(
+							new LoaderException(e, this, null, "Command line parameters")
+					);
 				}
 			}
 			
@@ -47,15 +44,6 @@ public class CmdLineLoader implements Loader {
 		}
 	}
 	
-	protected KVP parseRawArg(String arg) {
-		arg = StringUtils.trimToNull(arg);
-		
-		if (arg != null) {
-			return new KVP(arg.split(KVP_DELIMITER, 2));
-		} else {
-			return KVP.NULL_KVP;
-		}
-	}
 	
 	
 }
