@@ -5,24 +5,24 @@ import java.util.List;
 import yarnandtail.andhow.valuetype.ValueType;
 
 /**
- * An actual usage of a ConfigPoint in an application.
- * A ConfigPoint is just the concept of a point in an application that can be
- * configured.  A ConfigPointUsage means an application is ready to use the
- * ConfigPoint by adding application specific context, which includes these
- * two items:
- * <ul>
+ * An actual usage of a ConfigPointDef in an application.
+ * A ConfigPointDef is just the concept of a point in an application that can be
+ configured.  A ConfigPointUsage means an application is ready to use the
+ ConfigPointDef by adding application specific context, which includes these
+ two items:
+ <ul>
  * <li>Determining the actual parameter name and aliases used to configure the point.
  * Names and aliases cannot be hardcoded because there must be a way to mediate
  * if/when names from multiple modules and libraries collide.
  * <li>Supplying application specific default values.  These defaults override
- * the default specified in the ConfigPoint because the <i>Application knows
+ the default specified in the ConfigPointDef because the <i>Application knows
  * best</i> what reasonable defaults are for its usage.
  * </ul>
  * 
  * @author eeverman
  * @param <P>
  */
-public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointContext, ConfigPointCommon {
+public class ConfigPointUsage<P extends ConfigPointDef> implements ConfigPointContext, ConfigPointCommon {
 	
 	final P confPt;
 	final NamingStrategy naming;
@@ -77,7 +77,7 @@ public class ConfigPointUsage<P extends ConfigPoint> implements ConfigPointConte
 	}
 
 	@Override
-	public Class<? extends ConfigPoint> getEnumClass() {
+	public Class<? extends ConfigPointDef> getEnumClass() {
 		return confPt.getEnumClass();
 	}
 	

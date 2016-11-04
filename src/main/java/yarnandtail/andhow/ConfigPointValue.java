@@ -7,7 +7,7 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public interface ConfigParamValue {
+public interface ConfigPointValue {
 
 	/**
 	 * The definition object that defines this parameter.
@@ -93,6 +93,6 @@ public interface ConfigParamValue {
 	 */
 	Boolean isTrue();
 	
-	ConfigParamValue toImmutable();
+	ConfigPointValue toImmutable();
 	
 }

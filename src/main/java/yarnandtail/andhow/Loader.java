@@ -7,5 +7,5 @@ import java.util.List;
  * @author eeverman
  */
 public interface Loader {
-	List<ConfigParamValue> load(LoaderState state);
+	List<ConfigPointValue> load(LoaderState state);
 }

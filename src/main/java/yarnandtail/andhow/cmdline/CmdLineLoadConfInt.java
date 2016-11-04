@@ -1,11 +1,11 @@
 package yarnandtail.andhow.cmdline;
 
-import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ConfigPointDef;
 
 /**
  *
  * @author eeverman
  */
-public interface CmdLineLoadConfInt<E extends Enum<E> & CmdLineLoadConfInt> extends ConfigPoint<E> {
+public interface CmdLineLoadConfInt<E extends Enum<E> & CmdLineLoadConfInt> extends ConfigPointDef<E> {
 	boolean isHelp();
 }

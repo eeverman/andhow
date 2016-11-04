@@ -9,14 +9,14 @@ import yarnandtail.andhow.valuetype.ValueType;
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
-public interface ConfigPoint<E extends Enum<E> & ConfigPoint> extends ConfigPointCommon {
+public interface ConfigPointDef<E extends Enum<E> & ConfigPointDef> extends ConfigPointCommon {
 	
 	static List<Enum> EMPTY_ENUM_LIST = Arrays.asList(new Enum[0]);
 	static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
 	
 	/**
 	 * Returns a core storage object for the details of this parameter.
-	 * This is the one method that ConfigPoint classes must implement.
+	 * This is the one method that ConfigPointDef classes must implement.
  This is generally not used by application code, but simplifies user constructed
  ParamDefinitions because nearly all code can be contained in the 'core'
  object and nearly all public methods can be created as default methods in
@@ -26,7 +26,7 @@ public interface ConfigPoint<E extends Enum<E> & ConfigPoint> extends ConfigPoin
 	ConfigPointCommon getCore();
 	
 	@Override
-	default Class<? extends ConfigPoint> getEnumClass() {
+	default Class<? extends ConfigPointDef> getEnumClass() {
 		return getCore().getEnumClass();
 	}
 	

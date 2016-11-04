@@ -10,11 +10,11 @@ import yarnandtail.andhow.valuetype.ValueType;
 public interface ConfigPointCommon {
 	
 	/**
-	 * The class of the enclosing Enum, which must implement the ConfigPoint
+	 * The class of the enclosing Enum, which must implement the ConfigPointDef
  interface.
 	 * @return 
 	 */
-	Class<? extends ConfigPoint> getEnumClass();
+	Class<? extends ConfigPointDef> getEnumClass();
 	
 	/**
 	 * Name of the entire set of parameters, i.e., for this entire enum and all its values.
@@ -45,9 +45,9 @@ public interface ConfigPointCommon {
 	/**
 	 * If true, indicates that this parameter is not intended to be exposed.
 	 * Creates a fixed value, documented parameter that has a hardcoded value
-	 * set via the default value of the ConfigPoint.
-	 * 
-	 * These values can take advantage of expressions in the default value.
+ set via the default value of the ConfigPointDef.
+ 
+ These values can take advantage of expressions in the default value.
 	 * @return 
 	 */
 	boolean isPrivate();
@@ -58,7 +58,7 @@ public interface ConfigPointCommon {
 	 * the enum itself, typically of the form: SOME_CONFIG_PARAM_NAME.
 	 * 
 	 * This is the <i>base</i> name: the NamingStrategy is applied in the usage
-	 * of the ConfigPoint to determine its actual effective name.
+ of the ConfigPointDef to determine its actual effective name.
    *
 	 * @return The explicitly set name, or null.
 	 */
@@ -81,7 +81,7 @@ public interface ConfigPointCommon {
 	/**
 	 * Alias (short) form.  Similar to 'nix single letter options (dashes not required).
 	 * These are the <i>base</i> aliases: the NamingStrategy is applied in the usage
-	 * of the ConfigPoint to determine actual alias names.
+ of the ConfigPointDef to determine actual alias names.
 	 * 
 	 * @return The list of aliases or an empty list if there are none.
 	 */
@@ -90,11 +90,11 @@ public interface ConfigPointCommon {
 	/**
 	 * If the parameter is unspecified, this value is used instead.
 	 * Any type of Object is possible to store as a default.
-	 * For name-value pairs, this will typically be a string.
-	 * 
-	 * This is the default as specified in the ConfigPoint itself.  At the
-	 * application level, the effective default can be overridden to provide
-	 * application specific default values.
+ For name-value pairs, this will typically be a string.
+ 
+ This is the default as specified in the ConfigPointDef itself.  At the
+ application level, the effective default can be overridden to provide
+ application specific default values.
 	 * @return 
 	 */
 	Object getBaseDefaultValue();

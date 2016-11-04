@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import static yarnandtail.andhow.ConfigPoint.EMPTY_ENUM_LIST;
-import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.ConfigPointDef.EMPTY_ENUM_LIST;
+import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
 import yarnandtail.andhow.valuetype.ValueType;
 
 /**
@@ -16,7 +16,7 @@ import yarnandtail.andhow.valuetype.ValueType;
  */
 public class ConfigPointHelper implements ConfigPointCommon {
 
-	private final Class<? extends ConfigPoint> enumClass;
+	private final Class<? extends ConfigPointDef> enumClass;
 	private final String explicitName;
 	private final ConfigPointType paramType;
 	private final ValueType valueType;
@@ -27,7 +27,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	private final List<Enum> allowedValueEnum;
 	private final boolean priv;
 	
-	public ConfigPointHelper(Class<? extends ConfigPoint> enumClass, String explicitName,
+	public ConfigPointHelper(Class<? extends ConfigPointDef> enumClass, String explicitName,
 			ConfigPointType paramType, ValueType valueType,
 			Object defaultValue, String shortDesc, String helpText, String[] aliases,
 			Enum[] allowedValues, boolean priv) {
@@ -67,7 +67,7 @@ public class ConfigPointHelper implements ConfigPointCommon {
 	}
 	
 	@Override
-	public Class<? extends ConfigPoint> getEnumClass() {
+	public Class<? extends ConfigPointDef> getEnumClass() {
 		return enumClass;
 	}
 	

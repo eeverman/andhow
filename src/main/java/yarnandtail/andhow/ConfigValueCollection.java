@@ -6,6 +6,6 @@ package yarnandtail.andhow;
  */
 public interface ConfigValueCollection {
 	
-	ConfigParamValue getEffective(ConfigPointCommon configPoint);
+	ConfigPointValue getEffective(ConfigPointCommon configPoint);
 	
 }

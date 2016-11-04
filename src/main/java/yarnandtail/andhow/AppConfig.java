@@ -25,21 +25,21 @@ public class AppConfig {
 	
 	
 	/** A List of Lists of ConfigParamEnums */
-	List<List<ConfigPoint>> configParamEnumLists;
+	List<List<ConfigPointDef>> configParamEnumLists;
 	
 	List<String> configParamListNames;
 	
-	List<ConfigParamValue> configParams;
+	List<ConfigPointValue> configParams;
 	
 	boolean copyToSysProps;
 	boolean verboseConfig;
 	
-	public AppConfig(List<List<ConfigPoint>> configParamEnumLists, String[] configParamSetNames, 
+	public AppConfig(List<List<ConfigPointDef>> configParamEnumLists, String[] configParamSetNames, 
 			String[] args, boolean copyToSysProps) {
 		
 		PrintStream ps = System.out;
 		
-		List<ConfigParamValue> configParams = ConfigParamUtil.parseCommandArgs(configParamEnumLists, args, DEFAULT_CMD_NAME_VALUE_SEPARATOR);
+		List<ConfigPointValue> configParams = ConfigParamUtil.parseCommandArgs(configParamEnumLists, args, DEFAULT_CMD_NAME_VALUE_SEPARATOR);
 		verboseConfig = containsVerboseConfigRequest(configParams);
 		
 		
@@ -72,7 +72,7 @@ public class AppConfig {
 		
 	}
 	
-	protected PropertyFileWrap findPropertiesFile(List<ConfigParamValue> cmdLineConfigParams) {
+	protected PropertyFileWrap findPropertiesFile(List<ConfigPointValue> cmdLineConfigParams) {
 		String fileName = findOneParamValueStringByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_FILE_NAME, PROP_FILE_NAME);
 		List<String> dirPaths = findParamValueStringsByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_FILE_SYSTEM_PATH, Arrays.asList(DIRECTORY_SEARCH_PATHS));
 		String defaultFileName = findOneParamValueStringByType(cmdLineConfigParams, ConfigPointType.PROPERTIES_DEFAULT_FILE_NAME, DEFAULT_PROP_FILE_NAME);
@@ -120,20 +120,20 @@ public class AppConfig {
 	
 	/**
 	 * Search all supplied params, in order, and return a list of ones of the
- specified ConfigPoint.
+ specified ConfigPointDef.
 	 * 
 	 * @param params
 	 * @return 
 	 */
-	private List<ConfigParamValue> findParamsByType(List<ConfigParamValue> params, ConfigPointType type) {
-		List<ConfigParamValue> found = new ArrayList();
+	private List<ConfigPointValue> findParamsByType(List<ConfigPointValue> params, ConfigPointType type) {
+		List<ConfigPointValue> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType())).forEachOrdered(p -> found.add(p));
 		return found;
 	}
 	
 	/**
 	 * Search all supplied params, in order, and return a list of the values of
- ones of the specified ConfigPoint.
+ ones of the specified ConfigPointDef.
 	 * Only non-null values or flags are returned.  Name/value types w/ no value
 	 * are skipped.
 	 * This uses the effectiveValue, so Flag values will return a Boolean true if present.
@@ -141,7 +141,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<Object> findParamValuesByType(List<ConfigParamValue> params, ConfigPointType type) {
+	private List<Object> findParamValuesByType(List<ConfigPointValue> params, ConfigPointType type) {
 		List<Object> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValue()));
 		return found;
@@ -157,7 +157,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private List<String> findParamValueStringsByType(List<ConfigParamValue> params, ConfigPointType type, List<String> defaultValues) {
+	private List<String> findParamValueStringsByType(List<ConfigPointValue> params, ConfigPointType type, List<String> defaultValues) {
 		List<String> found = new ArrayList();
 		params.stream().filter(p -> type.equals(p.getParamType()) && p.getEffectiveValue() != null).forEachOrdered(p -> found.add(p.getEffectiveValueString()));
 		return (found.size() > 0)?found:defaultValues;
@@ -170,7 +170,7 @@ public class AppConfig {
 	 * @param params
 	 * @return 
 	 */
-	private ConfigParamValue findOneParamByType(List<ConfigParamValue> params, ConfigPointType type) {
+	private ConfigPointValue findOneParamByType(List<ConfigPointValue> params, ConfigPointType type) {
 		return params.stream().filter(p -> type.equals(p.getParamType())).findFirst().orElse(null);
 	}
 	
@@ -181,7 +181,7 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private String findOneParamValueStringByType(List<ConfigParamValue> params, ConfigPointType type, String defValue) {
+	private String findOneParamValueStringByType(List<ConfigPointValue> params, ConfigPointType type, String defValue) {
 		String found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.getEffectiveValueString()).orElse(null);
 		return (found != null)?found:defValue;
 	}
@@ -193,21 +193,21 @@ public class AppConfig {
 	 * @param params
 	 * @return A Single String or null.
 	 */
-	private boolean findOneParamValueBooleanByType(List<ConfigParamValue> params, ConfigPointType type, Boolean defValue) {
+	private boolean findOneParamValueBooleanByType(List<ConfigPointValue> params, ConfigPointType type, Boolean defValue) {
 		Boolean found = params.stream().filter(p -> type.equals(p.getParamType())).findFirst().map(p -> p.isTrue()).orElse(null);
 		return (found != null)?found:defValue;
 	}
 	
-	private boolean isValid(List<ConfigParamValue> params) {
+	private boolean isValid(List<ConfigPointValue> params) {
 		return params.stream().anyMatch(p -> ! p.isValid());
 	}
 	
-	private boolean containsHelpRequest(List<ConfigParamValue> params) {
+	private boolean containsHelpRequest(List<ConfigPointValue> params) {
 		return params.stream().anyMatch(p -> 
 				ConfigPointType.HELP_FLAG.equals(p.getParamType()) && p.isTrue());
 	}
 	
-	private boolean containsVerboseConfigRequest(List<ConfigParamValue> params) {
+	private boolean containsVerboseConfigRequest(List<ConfigPointValue> params) {
 		return params.stream().anyMatch(p -> 
 				ConfigPointType.VERBOSE_CONFIG_FLAG.equals(p.getParamType()) && p.isTrue());
 	}
@@ -236,20 +236,20 @@ public class AppConfig {
 	 * @param configPoint
 	 * @return 
 	 */
-	public static ConfigParamValue getProxyValue(ConfigPoint configPoint) {
+	public static ConfigPointValue getProxyValue(ConfigPointDef configPoint) {
 		return null;
 	}
 	
 	/**
-	 * Registers a ConfigPoint enum as being required so that, if it is not
-	 * in the list of ConfigPoint enums in the AppConfig, it will cause a
-	 * Runtime exception.
+	 * Registers a ConfigPointDef enum as being required so that, if it is not
+ in the list of ConfigPointDef enums in the AppConfig, it will cause a
+ Runtime exception.
 	 * 
 	 * This could also be paired w/ adding a class.forName() in a library jar
 	 * file that forces a class w/ this static method to be called.
 	 * @param enumClass 
 	 */
-	public static void require(Class<? extends ConfigPoint> enumClass) {
+	public static void require(Class<? extends ConfigPointDef> enumClass) {
 		
 	}
 	
@@ -257,7 +257,7 @@ public class AppConfig {
 	 * Similar.
 	 * @param configPoint 
 	 */
-	public static void require(ConfigPoint configPoint) {
+	public static void require(ConfigPointDef configPoint) {
 		
 	}
 	

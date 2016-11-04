@@ -15,14 +15,14 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ConfigParamUtil {
 
-	public static List<ConfigParamValue> parseCommandArgs(
-			List<List<ConfigPoint>> configParamEnumLists, String[] args, String nameValueSeparator) {
+	public static List<ConfigPointValue> parseCommandArgs(
+			List<List<ConfigPointDef>> configParamEnumLists, String[] args, String nameValueSeparator) {
 		
-		List<ConfigParamValue> configParams = new ArrayList();
+		List<ConfigPointValue> configParams = new ArrayList();
 		
 		for (String arg : args) {
 			NameValuePair pair = parseCommandArg(arg, nameValueSeparator);
-			ConfigPoint cpEnum = findConfigParam(configParamEnumLists, pair.name);
+			ConfigPointDef cpEnum = findConfigParam(configParamEnumLists, pair.name);
 			
 			ParamMutable cpm = new ParamMutable(cpEnum, arg, pair.name, pair.value, null);
 			cpm.setValid(validatedConfigParam(cpm));
@@ -33,12 +33,12 @@ public class ConfigParamUtil {
 		
 	}
 	
-	public static ConfigPoint findConfigParam(List<List<ConfigPoint>> configParamEnumLists, String name) {
+	public static ConfigPointDef findConfigParam(List<List<ConfigPointDef>> configParamEnumLists, String name) {
 		
 		name = StringUtils.trimToNull(name);
 		
-		for (List<ConfigPoint> enumList : configParamEnumLists) {
-			for (ConfigPoint param : enumList) {
+		for (List<ConfigPointDef> enumList : configParamEnumLists) {
+			for (ConfigPointDef param : enumList) {
 				if (param.isMatch(name)) {
 					return param;
 				}
@@ -48,11 +48,11 @@ public class ConfigParamUtil {
 		return null;
 	}
 	
-	public static boolean validatedConfigParam(ConfigParamValue configParam) {
+	public static boolean validatedConfigParam(ConfigPointValue configParam) {
 		
 		
 		if (configParam.getParamDefinition() != null) {
-			ConfigPoint cpe = configParam.getParamDefinition();
+			ConfigPointDef cpe = configParam.getParamDefinition();
 			
 			if (cpe.getPointType().isRequired()) {
 				if (configParam.getExplicitString() == null) return false;
@@ -146,7 +146,7 @@ public class ConfigParamUtil {
 		}
 	}
 	
-	public static void printParams(List<ConfigParamValue> configParams, PrintStream ps, String header) {
+	public static void printParams(List<ConfigPointValue> configParams, PrintStream ps, String header) {
 		if (header != null) ps.println(header);
 		ps.println("Parameter Key: ");
 		ps.println(					
@@ -172,12 +172,12 @@ public class ConfigParamUtil {
 	}
 	
 	
-	public static void printHelpForParams(List<List<ConfigPoint>> configParamEnumLists, String[] configParamSetNames, PrintStream ps, String header) {
+	public static void printHelpForParams(List<List<ConfigPointDef>> configParamEnumLists, String[] configParamSetNames, PrintStream ps, String header) {
 		if (header != null) ps.println(header);
 		
 		for (int i = 0; i < configParamEnumLists.size(); i++) {
 			
-			List<ConfigPoint> subList = configParamEnumLists.get(i);
+			List<ConfigPointDef> subList = configParamEnumLists.get(i);
 			
 			String setName = null;
 			if (configParamSetNames != null && i < configParamSetNames.length) {
@@ -192,7 +192,7 @@ public class ConfigParamUtil {
 				ps.println("All available configuration parameters:");
 			}
 			
-			for (ConfigPoint pd : subList) {
+			for (ConfigPointDef pd : subList) {
 				if (pd.getPointType().isReal()) {
 					ps.print(pd.getExplicitBaseName());
 					if (! pd.getPointType().isFlag()) {
