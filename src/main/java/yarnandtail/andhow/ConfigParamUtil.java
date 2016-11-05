@@ -69,7 +69,7 @@ public class ConfigParamUtil {
 		}
 	}
 	
-	public static void printParams(List<ConfigPointValue> configParams, PrintStream ps, String header) {
+	public static void printParams(List<ConfigPointLoaderValue> configParams, PrintStream ps, String header) {
 		if (header != null) ps.println(header);
 		ps.println("Parameter Key: ");
 		ps.println(					

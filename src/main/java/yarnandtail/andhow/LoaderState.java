@@ -10,7 +10,7 @@ import java.util.Properties;
  */
 public interface LoaderState {
 	String[] getCmdLineArgs();
-	ConfigValueCollection getValueCollection();
+	ConfigValueCollection getExistingValues();
 	Map<String, ConfigPointUsage> getConfigPointUsages();
 	List<LoaderException> getLoaderExceptions();
 }
