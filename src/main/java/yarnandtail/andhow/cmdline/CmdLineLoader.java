@@ -42,6 +42,8 @@ public class CmdLineLoader implements Loader {
 			
 			
 		}
+		
+		return values;
 	}
 	
 	

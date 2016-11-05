@@ -17,7 +17,7 @@ public class KVP {
 	public KVP(String name) throws ParsingException {
 		this.name = StringUtils.trimToNull(name);
 		
-		if (name == null) {
+		if (this.name == null) {
 			throw new ParsingException("The key (parameter name) cannot be empty", name);
 		}
 	}
@@ -26,7 +26,7 @@ public class KVP {
 		this.name = StringUtils.trimToNull(name);
 		this.value = StringUtils.trimToNull(value);
 		
-		if (name == null) {
+		if (this.name == null) {
 			throw new ParsingException("The key (parameter name) cannot be empty", name);
 		}
 	}

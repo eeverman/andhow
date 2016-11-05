@@ -28,6 +28,13 @@ public interface ConfigPointValue {
 	 */
 	boolean isExplicitValue();
 	
+	/**
+	 * Returns the key value that the user actually used.
+	 * Since alias can be used, this provides easier debug traceability.
+	 * 
+	 * @return 
+	 */
+	String getExplicitKey();
 	
 	/**
 	 * The string value that was explicitly set.

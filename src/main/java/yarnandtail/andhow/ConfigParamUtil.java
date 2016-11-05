@@ -1,11 +1,8 @@
 package yarnandtail.andhow;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,54 +12,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ConfigParamUtil {
 
-	public static List<ConfigPointValue> parseCommandArgs(
-			List<List<ConfigPointDef>> configParamEnumLists, String[] args, String nameValueSeparator) {
-		
-		List<ConfigPointValue> configParams = new ArrayList();
-		
-		for (String arg : args) {
-			NameValuePair pair = parseCommandArg(arg, nameValueSeparator);
-			ConfigPointDef cpEnum = findConfigParam(configParamEnumLists, pair.name);
-			
-			ParamMutable cpm = new ParamMutable(cpEnum, arg, pair.name, pair.value, null);
-			cpm.setValid(validatedConfigParam(cpm));
-			configParams.add(cpm.toImmutable());
-		}
-		
-		return configParams;
-		
-	}
-	
-	public static ConfigPointDef findConfigParam(List<List<ConfigPointDef>> configParamEnumLists, String name) {
-		
-		name = StringUtils.trimToNull(name);
-		
-		for (List<ConfigPointDef> enumList : configParamEnumLists) {
-			for (ConfigPointDef param : enumList) {
-				if (param.isMatch(name)) {
-					return param;
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-	public static boolean validatedConfigParam(ConfigPointValue configParam) {
-		
-		
-		if (configParam.getParamDefinition() != null) {
-			ConfigPointDef cpe = configParam.getParamDefinition();
-			
-			if (cpe.getPointType().isRequired()) {
-				if (configParam.getExplicitString() == null) return false;
-			}
-			
-		}
-		
-		return true;
-	}
-	
 	/**
 	 * Parses a string to a boolean.
 	 * It just uses Apache BooleanUtils, but this codifies that this is how its done.
@@ -72,33 +21,7 @@ public class ConfigParamUtil {
 	public static boolean toBoolean(String value) {
 		return BooleanUtils.toBoolean(value);
 	}
-	
-	/**
-	 * Parses command arguments into name value pairs if they contain the specified separator.
-	 * 
-	 * @param arg
-	 * @return 
-	 */
-	public static NameValuePair parseCommandArg(String arg, String separator) {
-		
-		arg = StringUtils.trimToEmpty(arg);
-		
-		if (arg.contains(separator)) {
-			
-			String[] parts = arg.split(separator);
-			
-			if (parts.length == 2) {
-				return new NameValuePair(StringUtils.trimToNull(parts[0]), StringUtils.trimToNull(parts[1]));
-			} else {
-				throw new RuntimeException("The command argument '" + arg + 
-						"' has more than one '" + separator + "' name/value separators.  "
-						+ "There should be just one in the form name" + separator + "value.");
-			}
-			
-		} else {
-			return new NameValuePair(arg);
-		}
-	}
+
 	
 	/**
 	 * Returns a file reference, expanding the path as needed.
@@ -161,11 +84,11 @@ public class ConfigParamUtil {
 		configParams.stream().forEachOrdered(p -> 
 				ps.println(
 					"|" + p.isValid() +
-					"|" + p.getOriginalText() +
-					"|" + p.getName() +
-					"|" + p.getEffectiveValue() +
-					"|" + p.getParamDefinition().getExplicitBaseName() +
-					"|" + p.getParamType() +
+					"|" + p.getExplicitString() +
+					"|" + p.getExplicitKey() +
+					"|" + p.getString() +
+					"|" + p.getConfigPointUsage().getEffectiveName() +
+					"|" + p.getConfigPointUsage().getPointType() +
 					"|"
 				)
 		);
@@ -206,8 +129,8 @@ public class ConfigParamUtil {
 					ps.println("    " + pd.getShortDescription());
 					ps.println("    " + pd.getHelpText());
 					
-					if (! pd.getPossibleValues().isEmpty()) {
-						ps.println("    Allowed Values: " + StringUtils.join(pd.getPossibleValues(), ", "));
+					if (! pd.getPossibleValueEnums().isEmpty()) {
+						ps.println("    Allowed Values: " + StringUtils.join(pd.getPossibleValueEnums(), ", "));
 					}
 
 				}
