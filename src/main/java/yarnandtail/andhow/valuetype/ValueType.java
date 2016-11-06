@@ -1,7 +1,7 @@
 package yarnandtail.andhow.valuetype;
 
 import java.util.List;
-import yarnandtail.andhow.ConfigValueCollection;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
@@ -12,25 +12,25 @@ public interface ValueType<T> {
 	Class<T> getDestinationType();
 	
 	/**
-	 * This assumes that the sourceValue is already parsed if it is a multi-value.
+	 * Attempts to convert the passed, single sourceValue into the type represented
+	 * by the destinationType.
+	 * If this configPoint is a multiValue, each value should be converted separately.
 	 * @param sourceValue
 	 * @param loadedValues
 	 * @return
 	 * @throws IllegalArgumentException 
 	 */
-	T convert(Object sourceValue, ConfigValueCollection loadedValues) throws IllegalArgumentException;
+	T convert(String sourceValue) throws ParsingException;
 		
-	boolean isConvertable(Object sourceValue, ConfigValueCollection loadedValues);
+	boolean isConvertable(String sourceValue);
 	
-	boolean isMissingReferences(Object sourceValue, ConfigValueCollection loadedValues);
+	boolean isConvertableTo(String sourceValue, Class<?> toType);
 	
-	boolean isExplicitlySet(Object sourceValue, ConfigValueCollection loadedValues);
+	boolean isExplicitlySet(String sourceValue);
 	
 	boolean isNullConsideredAValue();
 	
 	boolean isEmptyConsideredAValue();
 	
 	TrimStyle getTrimStyle();
-	
-	boolean isUsingExpressions();
 }

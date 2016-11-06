@@ -4,13 +4,25 @@ package yarnandtail.andhow;
  *
  * @author eeverman
  */
-public interface ConfigPointLoaderValue extends ConfigPointValue {
+public class ConfigPointValueWriter implements ConfigPointValue {
+	
+	
+
+	private ConfigPointUsage configPointUsage;
+	private Object explicitValue;
+	private String explicitKey;
+	
+	
+	
+
 
 	/**
 	 * The definition object that defines this parameter.
 	 * @return May be null if an unmatched parameter.
 	 */
-	ConfigPointUsage getConfigPointUsage();
+	public ConfigPointUsage getConfigPointUsage() {
+		return configPointUsage;
+	}
 
 	/**
 	 * Returns the coerced true/false value that was explicitly set.
@@ -18,7 +30,24 @@ public interface ConfigPointLoaderValue extends ConfigPointValue {
 	 * In the case of a flag, if the flag is not set, this will return null.
 	 * @return
 	 */
-	Boolean getExplicitBoolean();
+	public Boolean getExplicitBoolean() {
+		if (explicitValue != null) {
+			
+			if (configPointUsage != null) {
+				
+				if (configPointUsage.getValueType().isConvertableTo(explicitValue, loadedValues, toType)isConvertableTo(Boolean.class)) {
+					return configPointUsage.getValueType().
+				}
+				
+			} else {
+				
+			}
+			
+			
+		} else {
+			return null;
+		}
+	}
 
 	/**
 	 * Returns the key value that the user actually used.
@@ -26,14 +55,14 @@ public interface ConfigPointLoaderValue extends ConfigPointValue {
 	 *
 	 * @return
 	 */
-	String getExplicitKey();
+	public String getExplicitKey();
 
 	/**
 	 * Returns the coerced value that was explicitly set.
 	 * If no value was set, this returns null even if there is a default.
 	 * @return
 	 */
-	Object getExplicitObject();
+	public Object getExplicitObject();
 
 	/**
 	 * The string value that was explicitly set.
@@ -46,7 +75,7 @@ public interface ConfigPointLoaderValue extends ConfigPointValue {
 	 * Other types of objects will have their toString() returned.
 	 * @return
 	 */
-	String getExplicitString();
+	public String getExplicitString();
 
 	/**
 	 * Returns true if this value was explicitly by the configuration.
@@ -59,7 +88,7 @@ public interface ConfigPointLoaderValue extends ConfigPointValue {
 	 * at a lower level?
 	 * @return
 	 */
-	boolean isExplicitValue();
+	public boolean isExplicitValue();
 
 	/**
 	 * If the value is explicitly set, this return true if the value is valid.
@@ -68,8 +97,8 @@ public interface ConfigPointLoaderValue extends ConfigPointValue {
 	 * value b/c it may have been loaded by another loader).
 	 * @return
 	 */
-	Boolean isValid();
+	public Boolean isValid();
 
-	ConfigPointValue toImmutable();
+	public ConfigPointValue toConfigPointValue();
 	
 }

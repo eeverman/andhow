@@ -2,6 +2,7 @@ package yarnandtail.andhow.valuetype;
 
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigValueCollection;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
@@ -13,14 +14,12 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 	protected final boolean nullConsideredAValue;
 	protected final boolean emptyConsideredAValue;
 	protected final TrimStyle trimStyle;
-	protected final boolean usingExpressions;
 
-	public BaseValueType(Class<T> clazzType, boolean nullConsideredAValue, boolean emptyConsideredAValue, TrimStyle trimStyle, boolean usingExpressions) {
+	public BaseValueType(Class<T> clazzType, boolean nullConsideredAValue, boolean emptyConsideredAValue, TrimStyle trimStyle) {
 		this.clazzType = clazzType;
 		this.nullConsideredAValue = nullConsideredAValue;
 		this.emptyConsideredAValue = emptyConsideredAValue;
 		this.trimStyle = trimStyle;
-		this.usingExpressions = usingExpressions;
 	}
 	
 	@Override
@@ -29,17 +28,17 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 	}
 
 	@Override
-	public boolean isConvertable(Object sourceValue, ConfigValueCollection loadedValues) {
+	public boolean isConvertable(String sourceValue) {
 		try {
-			convert(sourceValue, loadedValues);
+			convert(sourceValue);
 			return true;
-		} catch (IllegalArgumentException e) {
+		} catch (ParsingException e) {
 			return false;
 		}
 	}
 	
 	@Override
-	public boolean isExplicitlySet(Object sourceValue, ConfigValueCollection loadedValues) {
+	public boolean isExplicitlySet(String sourceValue) {
 		
 		String strVal = null;
 		
@@ -81,11 +80,6 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 	@Override
 	public TrimStyle getTrimStyle() {
 		return trimStyle;
-	}
-
-	@Override
-	public boolean isUsingExpressions() {
-		return usingExpressions;
 	}
 	
 }

@@ -2,19 +2,20 @@ package yarnandtail.andhow.valuetype;
 
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigValueCollection;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
  * @author eeverman
  */
-public class StringType extends BaseValueType implements ValueType {
+public class StringType extends BaseValueType<String> implements ValueType<String> {
 
 	private StringType() {
-		super(String.class, false, false, TrimStyle.TO_NULL, true);
+		super(String.class, false, false, TrimStyle.TO_NULL);
 	}
 
 	@Override
-	public Object convert(Object sourceValue, ConfigValueCollection loadedValues) throws IllegalArgumentException {
+	public String convert(String sourceValue) throws ParsingException {
 		if (sourceValue != null) {
 			String str = StringUtils.trimToNull(sourceValue.toString());
 			return str;
@@ -23,9 +24,21 @@ public class StringType extends BaseValueType implements ValueType {
 		}
 	}
 
+
 	@Override
-	public boolean isMissingReferences(Object sourceValue, ConfigValueCollection loadedValues) {
-		return false;
+	public boolean isConvertable(String sourceValue) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
+
+	@Override
+	public boolean isConvertableTo(String sourceValue, Class<?> toType) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
+	@Override
+	public boolean isExplicitlySet(String sourceValue) {
+		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	}
+
 	
 }

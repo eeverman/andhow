@@ -8,12 +8,12 @@ import yarnandtail.andhow.ConfigValueCollection;
  *
  * @author eeverman
  */
-public class FlagType extends BaseValueType implements ValueType {
+public class FlagType extends BaseValueType<Boolean> {
 
 	private static final FlagType instance = new FlagType();
 	
 	private FlagType() {
-		super(String.class, false, true, TrimStyle.TO_EMPTY, true);
+		super(Boolean.class, false, true, TrimStyle.TO_EMPTY);
 	}
 	
 	public static FlagType get() {
@@ -21,19 +21,17 @@ public class FlagType extends BaseValueType implements ValueType {
 	}
 
 	@Override
-	public Object convert(Object sourceValue, ConfigValueCollection loadedValues) throws IllegalArgumentException {
+	public Boolean convert(String sourceValue) throws IllegalArgumentException {
 		if (sourceValue != null) {
-			if (sourceValue instanceof Boolean) {
-				return ((Boolean)sourceValue).booleanValue();
-			} else {
+
 				
-				String str = StringUtils.trimToEmpty(sourceValue.toString());
-				if (str.isEmpty()) {
-					return true;	//a flag is considered try just by its presence
-				} else {
-					return ConfigParamUtil.toBoolean(str);
-				}
+			String str = StringUtils.trimToEmpty(sourceValue.toString());
+			if (str.isEmpty()) {
+				return true;	//a flag is considered try just by its presence
+			} else {
+				return ConfigParamUtil.toBoolean(str);
 			}
+
 
 		} else {
 			return false;
@@ -41,8 +39,11 @@ public class FlagType extends BaseValueType implements ValueType {
 	}
 
 	@Override
-	public boolean isMissingReferences(Object sourceValue, ConfigValueCollection loadedValues) {
-		return false;
+	public boolean isConvertableTo(String sourceValue, Class toType) {
+		return toType != null &&
+				(toType.equals(Boolean.class) || toType.equals(String.class));
 	}
+	
+
 	
 }

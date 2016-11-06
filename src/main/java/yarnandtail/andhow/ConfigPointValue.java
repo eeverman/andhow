@@ -9,6 +9,12 @@ import java.util.List;
  */
 public interface ConfigPointValue {
 
+	/**
+	 * The config point defining this value.
+	 * 
+	 * @return Shouldn't be null - There should be an undefined Param instance instead.
+	 */
+	ConfigPointDef getConfigPoint();
 	
 	/**
 	 * Get the effective value of this parameter, which may differ from getExplicitString.
