@@ -1,5 +1,8 @@
 package yarnandtail.andhow;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author eeverman
@@ -9,7 +12,7 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	
 
 	private ConfigPointUsage configPointUsage;
-	private Object explicitValue;
+	private String explicitValue;
 	private String explicitKey;
 	
 	
@@ -35,19 +38,38 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 			
 			if (configPointUsage != null) {
 				
-				if (configPointUsage.getValueType().isConvertableTo(explicitValue, loadedValues, toType)isConvertableTo(Boolean.class)) {
-					return configPointUsage.getValueType().
+				Object convertedObject = null;
+				
+				if (configPointUsage.getValueType().isConvertable(explicitValue)) {
+					try {
+						convertedObject = configPointUsage.getValueType().convert(explicitValue);
+					} catch (ParsingException ex) {
+						//Ignore in the writter, since this only happens during loading
+					}
 				}
 				
+				if (convertedObject == null) {
+					return null;
+				} else if (convertedObject instanceof Boolean) {
+					return (Boolean)convertedObject;
+				} else {
+					String s = convertedObject.toString();
+					
+					if (s == null) {
+						return false;	//There *is* a value, but w/o a toString val, it must be considered false
+					} else {
+						return ConfigParamUtil.toBoolean(s);
+					}
+				}
 			} else {
-				
+				return ConfigParamUtil.toBoolean(explicitValue);
 			}
-			
-			
+				
 		} else {
 			return null;
 		}
 	}
+	
 
 	/**
 	 * Returns the key value that the user actually used.
@@ -55,7 +77,9 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	 *
 	 * @return
 	 */
-	public String getExplicitKey();
+	public String getExplicitKey() {
+		return explicitKey;
+	}
 
 	/**
 	 * Returns the coerced value that was explicitly set.

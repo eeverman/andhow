@@ -24,8 +24,6 @@ public interface ValueType<T> {
 		
 	boolean isConvertable(String sourceValue);
 	
-	boolean isConvertableTo(String sourceValue, Class<?> toType);
-	
 	boolean isExplicitlySet(String sourceValue);
 	
 	boolean isNullConsideredAValue();
