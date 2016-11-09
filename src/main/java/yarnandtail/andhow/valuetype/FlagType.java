@@ -19,6 +19,10 @@ public class FlagType extends BaseValueType<Boolean> {
 	public static FlagType get() {
 		return instance;
 	}
+	
+	public static FlagType instance() {
+		return instance;
+	}
 
 	@Override
 	public Boolean convert(String sourceValue) throws IllegalArgumentException {

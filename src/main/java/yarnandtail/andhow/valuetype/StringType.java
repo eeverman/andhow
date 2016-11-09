@@ -10,8 +10,14 @@ import yarnandtail.andhow.ParsingException;
  */
 public class StringType extends BaseValueType<String> {
 
+	private static final StringType instance = new StringType();
+	
 	private StringType() {
 		super(String.class, false, false, TrimStyle.TO_NULL);
+	}
+	
+	public static StringType instance() {
+		return instance;
 	}
 
 	@Override
