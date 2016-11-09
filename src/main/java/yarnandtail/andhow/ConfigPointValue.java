@@ -24,7 +24,7 @@ public interface ConfigPointValue {
 	 * 
 	 * @return Boolean, String or null (null for name/value pairs which are unset)
 	 */
-	List<Object> getObject();
+	Object getObject();
 	
 	/**
 	 * Get the effective value of this parameter, which may differ from getExplicitString.

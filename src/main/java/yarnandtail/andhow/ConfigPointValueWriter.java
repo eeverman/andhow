@@ -1,7 +1,9 @@
 package yarnandtail.andhow;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -82,13 +84,6 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	}
 
 	/**
-	 * Returns the coerced value that was explicitly set.
-	 * If no value was set, this returns null even if there is a default.
-	 * @return
-	 */
-	public Object getExplicitObject();
-
-	/**
 	 * The string value that was explicitly set.
 	 *
 	 * Note that for flag type parameters, this may be empty,
@@ -99,7 +94,9 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	 * Other types of objects will have their toString() returned.
 	 * @return
 	 */
-	public String getExplicitString();
+	public String getExplicitString() {
+		return explicitValue;
+	}
 
 	/**
 	 * Returns true if this value was explicitly by the configuration.
@@ -112,7 +109,13 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	 * at a lower level?
 	 * @return
 	 */
-	public boolean isExplicitValue();
+	public boolean isExplicitValue() {
+		if (explicitValue != null && this.configPointUsage.getValueType() != null) {
+			return this.configPointUsage.getValueType().isExplicitlySet(explicitValue);
+		} else {
+			return StringUtils.trimToNull(explicitValue) != null;
+		}
+	}
 
 	/**
 	 * If the value is explicitly set, this return true if the value is valid.
@@ -121,8 +124,72 @@ public class ConfigPointValueWriter implements ConfigPointValue {
 	 * value b/c it may have been loaded by another loader).
 	 * @return
 	 */
-	public Boolean isValid();
+	public Boolean isValid() {
+		if (explicitValue != null && this.configPointUsage.getValueType() != null) {
+			return this.configPointUsage.getValueType().isConvertable(explicitValue);
+		} else {
+			return StringUtils.trimToNull(explicitValue) != null;
+		}
+	}
 
-	public ConfigPointValue toConfigPointValue();
+	//public ConfigPointValue toConfigPointValue();
+
+	@Override
+	public ConfigPointDef getConfigPoint() {
+		return configPointUsage.confPt;
+	}
+
+	@Override
+	public Object getObject() {
+		if (this.configPointUsage.getValueType() != null) {
+			
+			Object o = null;
+			try {
+				o = configPointUsage.getValueType().convert(explicitValue);
+			} catch (ParsingException ex) {
+				//ignore
+			}
+			
+			if (o != null) {
+				return o;
+			} else {
+				return configPointUsage.getEffectiveDefault();
+			}
+			
+			
+		} else {
+			return StringUtils.trimToNull(explicitValue);
+		}
+	}
+
+	@Override
+	public String getString() {
+		Object o = getObject();
+		
+		if (o != null) {
+			return o.toString();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public Boolean isTrue() {
+		Boolean b = getExplicitBoolean();
+		
+		if (b != null) {
+			return b;
+		} else {
+			
+			Object o = configPointUsage.getEffectiveDefault();
+			
+			if (o != null) {
+				return ConfigParamUtil.toBoolean(
+					configPointUsage.getEffectiveDefault().toString());
+			} else {
+				return null;
+			}
+		}
+	}
 	
 }
