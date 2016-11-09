@@ -8,7 +8,7 @@ import yarnandtail.andhow.ParsingException;
  *
  * @author eeverman
  */
-public class StringType extends BaseValueType<String> implements ValueType<String> {
+public class StringType extends BaseValueType<String> {
 
 	private StringType() {
 		super(String.class, false, false, TrimStyle.TO_NULL);
