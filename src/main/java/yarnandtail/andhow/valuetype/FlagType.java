@@ -37,13 +37,5 @@ public class FlagType extends BaseValueType<Boolean> {
 			return false;
 		}
 	}
-
-	@Override
-	public boolean isConvertableTo(String sourceValue, Class toType) {
-		return toType != null &&
-				(toType.equals(Boolean.class) || toType.equals(String.class));
-	}
-	
-
 	
 }

@@ -31,11 +31,6 @@ public class StringType extends BaseValueType<String> {
 	}
 
 	@Override
-	public boolean isConvertableTo(String sourceValue, Class<?> toType) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
 	public boolean isExplicitlySet(String sourceValue) {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
