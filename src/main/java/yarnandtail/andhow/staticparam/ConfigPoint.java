@@ -8,7 +8,7 @@ import yarnandtail.andhow.valuetype.ValueType;
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
-public interface ConfigPoint<T> {
+public interface ConfigPoint {
 	
 	
 	/**
@@ -92,14 +92,8 @@ public interface ConfigPoint<T> {
  application specific default values.
 	 * @return 
 	 */
-	T getBaseDefaultValue();
+	Object getBaseDefaultObject();
 	
-	/**
-	 * Some parameters may have a defined set of possible values, which
-	 * are specified as a list of enums.  This returns that list.
-	 * 
-	 * @return A non-null list of Enums.
-	 */
-	//List<Enum> getPossibleValueEnums();
+
 
 }

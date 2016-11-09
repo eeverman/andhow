@@ -9,20 +9,21 @@ import yarnandtail.andhow.ConfigGroupDescription;
 import yarnandtail.andhow.valuetype.*;
 import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  *
  * @author eeverman
  */
-public class ConfigPointBase<T> implements ConfigPoint<T> {
+public class ConfigPointBase implements ConfigPoint {
 
-	private final static ArrayList<ConfigPointBase<?>> instances = new ArrayList();
+	private final static ArrayList<ConfigPointBase> instances = new ArrayList();
 	
 	private final String explicitName;
 	private final ConfigPointType paramType;
 	private final ValueType valueType;
-	private final T defaultValue;
+	private final Object defaultValue;
 	private final String shortDesc;
 	private final String helpText;
 	private final List<String> alias;
@@ -30,7 +31,7 @@ public class ConfigPointBase<T> implements ConfigPoint<T> {
 	
 	public ConfigPointBase(String explicitName,
 			ConfigPointType paramType, ValueType valueType,
-			T defaultValue, String shortDesc, String helpText, String[] aliases,
+			Object defaultValue, String shortDesc, String helpText, String[] aliases,
 			boolean priv) {
 		
 		List<String> aliasList;
@@ -53,14 +54,14 @@ public class ConfigPointBase<T> implements ConfigPoint<T> {
 
 	}
 	
-	public ConfigPointBase<String> addString() {
-		ConfigPointBase<String> cpb = new ConfigPointBase("", ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
+	public static ConfigPointBase addString(String name) {
+		ConfigPointBase cpb = new ConfigPointBase(name, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
 		instances.add(cpb);
 		return cpb;
 	}
 	
-	public ConfigPointBase<Boolean> addFlag() {
-		ConfigPointBase<Boolean> cpb = new ConfigPointBase("", ConfigPointType.FLAG, FlagType.instance(), null, "", "", null, false);
+	public static ConfigPointBase addFlag(String name) {
+		ConfigPointBase cpb = new ConfigPointBase(name, ConfigPointType.FLAG, FlagType.instance(), null, "", "", null, false);
 		instances.add(cpb);
 		return cpb;
 	}
@@ -116,13 +117,13 @@ public class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 
 	@Override
-	public T getBaseDefaultValue() {
-		return defaultValue;
-	}
-
-	@Override
 	public boolean isPrivate() {
 		return priv;
+	}
+	
+	@Override
+	public Object getBaseDefaultObject() {
+		return defaultValue;
 	}
 	
 }
