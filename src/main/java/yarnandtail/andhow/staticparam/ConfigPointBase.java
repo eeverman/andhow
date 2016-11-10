@@ -6,17 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigGroupDescription;
-import yarnandtail.andhow.valuetype.*;
 import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.ParsingException;
-import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  *
  * @author eeverman
  */
-public class ConfigPointBase implements ConfigPoint {
+public abstract class ConfigPointBase implements ConfigPoint {
 
 	private final static ArrayList<ConfigPointBase> instances = new ArrayList();
 	
@@ -51,20 +49,18 @@ public class ConfigPointBase implements ConfigPoint {
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		this.priv = priv;
+		
+		instances.add(this);
 
 	}
 	
-	public static ConfigPointBase addString(String name) {
-		ConfigPointBase cpb = new ConfigPointBase(name, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
-		instances.add(cpb);
-		return cpb;
-	}
+
 	
-	public static ConfigPointBase addFlag(String name) {
-		ConfigPointBase cpb = new ConfigPointBase(name, ConfigPointType.FLAG, FlagType.instance(), null, "", "", null, false);
-		instances.add(cpb);
-		return cpb;
-	}
+//	public static ConfigPointBase addFlag(String name) {
+//		ConfigPointBase cpb = new ConfigPoint(name, ConfigPointType.FLAG, FlagType.instance(), null, "", "", null, false);
+//		instances.add(cpb);
+//		return cpb;
+//	}
 	
 	
 

@@ -4,6 +4,8 @@ import yarnandtail.andhow.valuetype.*;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigValueCollection;
 import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.staticparam.TrimStyle;
+import yarnandtail.andhow.staticparam.ValueType;
 
 /**
  *

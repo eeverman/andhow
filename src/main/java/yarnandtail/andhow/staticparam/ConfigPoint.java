@@ -2,7 +2,6 @@ package yarnandtail.andhow.staticparam;
 
 import yarnandtail.andhow.*;
 import java.util.List;
-import yarnandtail.andhow.valuetype.ValueType;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.
