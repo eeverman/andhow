@@ -8,6 +8,6 @@ public class SimpleTest {
 	
 	
 	public void testParamType() {
-		SimpleParams.MY_FLAG.
+		String itsAString = SimpleParams.MY_KVP.getValue();
 	}
 }

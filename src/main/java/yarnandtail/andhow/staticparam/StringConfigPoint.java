@@ -13,6 +13,9 @@ import yarnandtail.andhow.ConfigPointType;
  */
 public class StringConfigPoint extends ConfigPointBase {
 	
+	public StringConfigPoint(String name) {
+		this(name, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
+	}
 	public StringConfigPoint(String explicitName,
 			ConfigPointType paramType, ValueType valueType,
 			Object defaultValue, String shortDesc, String helpText, String[] aliases,
@@ -22,11 +25,6 @@ public class StringConfigPoint extends ConfigPointBase {
 
 	}
 	
-	public static StringConfigPoint addString(String name) {
-		StringConfigPoint cpb = new StringConfigPoint(name, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
-		
-		return cpb;
-	}
 	String getValue() {
 		return "";
 	}

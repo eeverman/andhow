@@ -15,8 +15,8 @@ import yarnandtail.andhow.ParsingException;
  * @author eeverman
  */
 public abstract class ConfigPointBase implements ConfigPoint {
-
-	private final static ArrayList<ConfigPointBase> instances = new ArrayList();
+	
+	private final static ArrayList<ConfigPoint> instances = new ArrayList();
 	
 	private final String explicitName;
 	private final ConfigPointType paramType;
@@ -49,18 +49,14 @@ public abstract class ConfigPointBase implements ConfigPoint {
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		this.priv = priv;
-		
-		instances.add(this);
 
 	}
 	
 
 	
-//	public static ConfigPointBase addFlag(String name) {
-//		ConfigPointBase cpb = new ConfigPoint(name, ConfigPointType.FLAG, FlagType.instance(), null, "", "", null, false);
-//		instances.add(cpb);
-//		return cpb;
-//	}
+	public static void add(ConfigPoint cpb) {
+		instances.add(cpb);
+	}
 	
 	
 
