@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigGroupDescription;
 import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
@@ -49,7 +51,24 @@ public abstract class ConfigPointBase implements ConfigPoint {
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		this.priv = priv;
+		
+		StackTraceElement[] st = new Throwable().fillInStackTrace().getStackTrace();
+		for (int i = 0; i < st.length; i++) {
+			try {
+				String className = st[i].getClassName();
+				Class<?> clazz = Class.forName(className);
+				System.out.println("Checking  " + clazz.getName());
+				if (ConfigPointGroup.class.isAssignableFrom(clazz)) {
+					System.out.println("Found it!  " + clazz.getName() + " is the calling class");
+					System.out.println("Method name: " + st[i].getMethodName());
 
+				
+					break;
+				}
+			} catch (ClassNotFoundException ex) {
+				Logger.getLogger(ConfigPointBase.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 	
 
