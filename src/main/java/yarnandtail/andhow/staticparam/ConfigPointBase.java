@@ -52,6 +52,10 @@ public abstract class ConfigPointBase implements ConfigPoint {
 		this.alias = aliasList;
 		this.priv = priv;
 		
+		
+		//So do we even need this?  It seems like we don't care to track all of 
+		//these until they are actually registered in an app.  We can build a more
+		//targetted list when they are actually registered.
 		StackTraceElement[] st = new Throwable().fillInStackTrace().getStackTrace();
 		for (int i = 0; i < st.length; i++) {
 			try {
