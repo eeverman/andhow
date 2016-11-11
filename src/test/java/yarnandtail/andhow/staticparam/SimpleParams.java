@@ -8,7 +8,7 @@ import static yarnandtail.andhow.staticparam.ConfigPointGroup.*;
  */
 public interface SimpleParams extends ConfigPointGroup {
 	
-	StringConfigPoint MY_KVP = add(new StringConfigPoint("kvp"));
+	StringConfigPoint MY_KVP = new StringConfigPoint("kvp");
 
 	
 }

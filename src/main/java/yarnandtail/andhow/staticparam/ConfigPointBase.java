@@ -16,14 +16,12 @@ import yarnandtail.andhow.ParsingException;
  *
  * @author eeverman
  */
-public abstract class ConfigPointBase implements ConfigPoint {
-	
-	private final static ArrayList<ConfigPoint> instances = new ArrayList();
+public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	
 	private final String explicitName;
 	private final ConfigPointType paramType;
 	private final ValueType valueType;
-	private final Object defaultValue;
+	private final T defaultValue;
 	private final String shortDesc;
 	private final String helpText;
 	private final List<String> alias;
@@ -31,7 +29,7 @@ public abstract class ConfigPointBase implements ConfigPoint {
 	
 	public ConfigPointBase(String explicitName,
 			ConfigPointType paramType, ValueType valueType,
-			Object defaultValue, String shortDesc, String helpText, String[] aliases,
+			T defaultValue, String shortDesc, String helpText, String[] aliases,
 			boolean priv) {
 		
 		List<String> aliasList;
@@ -56,49 +54,23 @@ public abstract class ConfigPointBase implements ConfigPoint {
 		//So do we even need this?  It seems like we don't care to track all of 
 		//these until they are actually registered in an app.  We can build a more
 		//targetted list when they are actually registered.
-		StackTraceElement[] st = new Throwable().fillInStackTrace().getStackTrace();
-		for (int i = 0; i < st.length; i++) {
-			try {
-				String className = st[i].getClassName();
-				Class<?> clazz = Class.forName(className);
-				System.out.println("Checking  " + clazz.getName());
-				if (ConfigPointGroup.class.isAssignableFrom(clazz)) {
-					System.out.println("Found it!  " + clazz.getName() + " is the calling class");
-					System.out.println("Method name: " + st[i].getMethodName());
-
-				
-					break;
-				}
-			} catch (ClassNotFoundException ex) {
-				Logger.getLogger(ConfigPointBase.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
-	
-
-	
-	public static void add(ConfigPoint cpb) {
-		instances.add(cpb);
-	}
-	
-	
-
-	@Override
-	public String getGroupDescription() {
-		if (this.getClass().getAnnotation(ConfigGroupDescription.class) != null) {
-			return StringUtils.trimToEmpty(this.getClass().getAnnotation(ConfigGroupDescription.class).groupName());
-		} else {
-			return "";
-		}
-	}
-
-	@Override
-	public String getEntireSetDescription() {
-		if (this.getClass().getAnnotation(ConfigGroupDescription.class) != null) {
-			return StringUtils.trimToEmpty(this.getClass().getAnnotation(ConfigGroupDescription.class).groupDescription());
-		} else {
-			return "";
-		}
+//		StackTraceElement[] st = new Throwable().fillInStackTrace().getStackTrace();
+//		for (int i = 0; i < st.length; i++) {
+//			try {
+//				String className = st[i].getClassName();
+//				Class<?> clazz = Class.forName(className);
+//				System.out.println("Checking  " + clazz.getName());
+//				if (ConfigPointGroup.class.isAssignableFrom(clazz)) {
+//					System.out.println("Found it!  " + clazz.getName() + " is the calling class");
+//					System.out.println("Method name: " + st[i].getMethodName());
+//
+//				
+//					break;
+//				}
+//			} catch (ClassNotFoundException ex) {
+//				Logger.getLogger(ConfigPointBase.class.getName()).log(Level.SEVERE, null, ex);
+//			}
+//		}
 	}
 	
 	@Override
@@ -137,7 +109,7 @@ public abstract class ConfigPointBase implements ConfigPoint {
 	}
 	
 	@Override
-	public Object getBaseDefaultObject() {
+	public T getBaseDefault() {
 		return defaultValue;
 	}
 	

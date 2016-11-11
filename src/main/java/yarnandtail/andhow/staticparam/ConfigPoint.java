@@ -7,20 +7,9 @@ import java.util.List;
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
-public interface ConfigPoint {
+public interface ConfigPoint<T> {
 	
-	
-	/**
-	 * Name of the entire set of parameters, i.e., for this entire enum and all its values.
-	 * @return May be empty, but not null.
-	 */
-	String getGroupDescription();
-	
-	/**
-	 * Name of the entire set of parameters, i.e., for this entire enum and all its values.
-	 * @return May be empty, but not null.
-	 */
-	String getEntireSetDescription();
+	T getValue();
 	
 	/**
 	 * The basic type of the configuration point:  Flag, name/value, multi=value.
@@ -91,7 +80,7 @@ public interface ConfigPoint {
  application specific default values.
 	 * @return 
 	 */
-	Object getBaseDefaultObject();
+	T getBaseDefault();
 	
 
 

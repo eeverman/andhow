@@ -8,8 +8,4 @@ import java.util.ArrayList;
  */
 public interface ConfigPointGroup {
 
-	public static <T extends ConfigPoint> T add(T point) {
-		ConfigPointBase.add(point);
-		return point;
-	}
 }

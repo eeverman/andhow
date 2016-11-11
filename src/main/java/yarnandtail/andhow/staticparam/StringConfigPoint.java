@@ -11,30 +11,30 @@ import yarnandtail.andhow.ConfigPointType;
  *
  * @author eeverman
  */
-public class StringConfigPoint extends ConfigPointBase {
+public class StringConfigPoint extends ConfigPointBase<String> {
 	
 	public StringConfigPoint(String name) {
 		this(name, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), null, "", "", null, false);
 	}
 	public StringConfigPoint(String explicitName,
 			ConfigPointType paramType, ValueType valueType,
-			Object defaultValue, String shortDesc, String helpText, String[] aliases,
+			String defaultValue, String shortDesc, String helpText, String[] aliases,
 			boolean priv) {
 		
 		super(explicitName, paramType, valueType, defaultValue, shortDesc, helpText, aliases, priv);
 
 	}
 	
-	String getValue() {
-		return "";
+	public String getValue() {
+		return AppConfig.instance().getUserString(this);
 	}
 	
 	String getExplicitValue() {
-		return "";
+		return AppConfig.instance().getUserString(this);
 	}
 	
 	String getDefaultValue() {
-		return "";
+		return getBaseDefault();
 	}
 
 }
