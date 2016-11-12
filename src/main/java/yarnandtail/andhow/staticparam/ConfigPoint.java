@@ -11,6 +11,10 @@ public interface ConfigPoint<T> {
 	
 	T getValue();
 	
+	T getExplicitValue();
+	
+	T getDefaultValue();
+	
 	/**
 	 * The basic type of the configuration point:  Flag, name/value, multi=value.
 	 * @return 
