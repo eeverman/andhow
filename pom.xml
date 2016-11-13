@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<name>AndHow</name>
 	<description>
-	Simple typed and validated configutation loading for web apps, command line or any environment application.
+	Simple typed and validated configuration loading for web apps, command line or any environment application.
 	</description>
 
 	<developers>
