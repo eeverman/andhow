@@ -2,6 +2,10 @@ package yarnandtail.andhow.staticparam;
 
 import yarnandtail.andhow.ConfigParamUtil;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.staticparam.AppConfig;
+import yarnandtail.andhow.staticparam.ConfigPointBase;
+import yarnandtail.andhow.staticparam.valuetype.FlagType;
+import yarnandtail.andhow.staticparam.valuetype.ValueType;
 
 /**
  *
@@ -24,28 +28,6 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 		
 		super(explicitName, paramType, valueType, defaultValue, shortDesc, helpText, aliases, priv);
 
-	}
-	
-	@Override
-	public Boolean getValue() {
-		Boolean b = getExplicitValue();
-		if (b == null) b = getDefaultValue();
-		return b;
-	}
-	
-	@Override
-	public Boolean getExplicitValue() {
-		String v = AppConfig.instance().getUserString(this);
-		if (v != null) {
-			return ConfigParamUtil.toBoolean(v);
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	public Boolean getDefaultValue() {
-		return getBaseDefault();
 	}
 
 }

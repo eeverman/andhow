@@ -1,11 +1,11 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow.staticparam.valuetype;
 
 import yarnandtail.andhow.valuetype.*;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.ConfigParamUtil;
 import yarnandtail.andhow.ConfigValueCollection;
-import yarnandtail.andhow.staticparam.BaseValueType;
-import yarnandtail.andhow.staticparam.TrimStyle;
+import yarnandtail.andhow.staticparam.valuetype.BaseValueType;
+import yarnandtail.andhow.staticparam.valuetype.TrimStyle;
 
 /**
  *

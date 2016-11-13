@@ -1,4 +1,4 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow.staticparam.valuetype;
 
 import yarnandtail.andhow.valuetype.*;
 import java.util.List;

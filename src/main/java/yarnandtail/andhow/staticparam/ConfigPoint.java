@@ -1,5 +1,6 @@
 package yarnandtail.andhow.staticparam;
 
+import yarnandtail.andhow.staticparam.valuetype.ValueType;
 import yarnandtail.andhow.*;
 import java.util.List;
 
@@ -14,6 +15,16 @@ public interface ConfigPoint<T> {
 	T getExplicitValue();
 	
 	T getDefaultValue();
+	
+	/**
+	 * Statelessly convert a String to the target type.
+	 * Used during loading to statelessly build values which will later be
+	 * available (statefully) from the Config point.
+	 * @param str
+	 * @return
+	 * @throws ParsingException 
+	 */
+	T convertString(String str) throws ParsingException;
 	
 	/**
 	 * The basic type of the configuration point:  Flag, name/value, multi=value.

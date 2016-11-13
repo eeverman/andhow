@@ -52,8 +52,12 @@ public class AppConfig {
 		}
 	}
 	
-	public String getUserString(ConfigPoint point) {
+	public String getPointUserString(ConfigPoint point) {
 		return effectiveUserPoints.get(point);
+	}
+	
+	public boolean isPointPresent(ConfigPoint point) {
+		return effectiveUserPoints.containsKey(point);
 	}
 	
 	/**

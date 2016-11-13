@@ -1,5 +1,6 @@
 package yarnandtail.andhow.staticparam;
 
+import yarnandtail.andhow.staticparam.valuetype.ValueType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +29,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final boolean priv;
 	
 	public ConfigPointBase(String explicitName,
-			ConfigPointType paramType, ValueType valueType,
+			ConfigPointType paramType, ValueType<T> valueType,
 			T defaultValue, String shortDesc, String helpText, String[] aliases,
 			boolean priv) {
 		
@@ -79,7 +80,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 	
 	@Override
-	public ValueType getValueType() {
+	public ValueType<T> getValueType() {
 		return valueType;
 	}
 
@@ -111,6 +112,38 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	@Override
 	public T getBaseDefault() {
 		return defaultValue;
+	}
+	
+	@Override
+	public T getValue() {
+		T v = getExplicitValue();
+		if (v != null) {
+			return v;
+		} else {
+			return getDefaultValue();
+		}
+	}
+	
+	@Override
+	public T getExplicitValue() {
+		if (AppConfig.instance().isPointPresent(this)) {
+			try {
+				return convertString(AppConfig.instance().getPointUserString(this));
+			} catch (ParsingException ex) {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
+	public T convertString(String str) throws ParsingException {
+		return getValueType().convert(str);
+	}
+	
+	@Override
+	public T getDefaultValue() {
+		return getBaseDefault();
 	}
 	
 }
