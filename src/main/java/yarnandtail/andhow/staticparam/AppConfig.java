@@ -64,7 +64,7 @@ public class AppConfig {
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	protected static void reset(HashMap<ConfigPoint, String> startingValues) {
+	public static void reset(HashMap<ConfigPoint, String> startingValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {

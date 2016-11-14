@@ -137,6 +137,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		}
 	}
 	
+	@Override
 	public T convertString(String str) throws ParsingException {
 		return getValueType().convert(str);
 	}

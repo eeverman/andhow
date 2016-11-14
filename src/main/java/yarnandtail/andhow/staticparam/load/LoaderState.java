@@ -1,9 +1,8 @@
 package yarnandtail.andhow.staticparam.load;
 
-import yarnandtail.andhow.*;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import yarnandtail.andhow.staticparam.ConfigPoint;
 
 /**
  * State of the loading process that the chain of loaders can access.
@@ -11,7 +10,7 @@ import java.util.Properties;
  */
 public interface LoaderState {
 	String[] getCmdLineArgs();
-	ConfigValueCollection getExistingValues();
-	Map<String, ConfigPointUsage> getConfigPointUsages();
+	List<Map<ConfigPoint, String>> getExistingValues();
+	Map<String, ConfigPoint> getRegisteredConfigPoints();
 	List<LoaderException> getLoaderExceptions();
 }

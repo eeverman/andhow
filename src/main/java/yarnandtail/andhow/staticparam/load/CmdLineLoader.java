@@ -1,8 +1,9 @@
 package yarnandtail.andhow.staticparam.load;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import java.util.HashMap;
+import java.util.Map;
+import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.staticparam.ConfigPoint;
 //import yarnandtail.andhow.*;
 
 /**
@@ -14,9 +15,9 @@ public class CmdLineLoader implements Loader {
 	public static final String KVP_DELIMITER = "=";
 	
 	@Override
-	public List<ConfigPointValue> load(LoaderState state) {
+	public Map<ConfigPoint, String> load(LoaderState state) {
 		
-		ArrayList<ConfigPointValue> values = new ArrayList();
+		Map<ConfigPoint, String> values = new HashMap();
 		if (state.getCmdLineArgs() != null && state.getCmdLineArgs().length > 0) {
 			
 			for (String s : state.getCmdLineArgs()) {
@@ -24,10 +25,15 @@ public class CmdLineLoader implements Loader {
 					KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
 					
 					if (kvp.getName() != null) {
-						ConfigPointUsage cpu = state.getConfigPointUsages().get(kvp.getName());
+						ConfigPoint cp = state.getRegisteredConfigPoints().get(kvp.getName());
 						
-						if (cpu != null) {
-							//great!
+						if (cp != null) {
+							values.put(cp, kvp.getValue());
+							
+							//Don't do this - no reason to force an error until
+							//all values are supplied - maybe missing values will
+							//be supplied
+							//cp.convertString(kvp.getValue());	//try converting to force error
 						} else {
 							//need a way to deal w/ these
 						}

@@ -18,5 +18,10 @@ ToDo
 	with a specific name would provide a way to config that thru AH.
 *	Add a CONFIG_POINT.default(value) that creates an argument for the AppConfig
 	that sets a default at creation time.
+*	Create a JNDI loader.  This will expose some issues w/ dealing w/ configed
+	values that are non-string.  For instance, a JNDI param may already be an
+	Integer, instead of needing to be converted from a string.
+*	The AppConfig should initial creating should have a key that is returned
+	to allow resets for testing.
 
 

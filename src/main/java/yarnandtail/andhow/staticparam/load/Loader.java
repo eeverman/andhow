@@ -1,12 +1,12 @@
 package yarnandtail.andhow.staticparam.load;
 
-import yarnandtail.andhow.*;
-import java.util.List;
+import java.util.Map;
+import yarnandtail.andhow.staticparam.ConfigPoint;
 
 /**
  *
  * @author eeverman
  */
 public interface Loader {
-	List<ConfigPointValue> load(LoaderState state);
+	Map<ConfigPoint, String> load(LoaderState state);
 }
