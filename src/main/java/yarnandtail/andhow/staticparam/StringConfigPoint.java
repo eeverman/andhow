@@ -30,4 +30,8 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 
 	}
 	
+	public String cast(Object o) throws RuntimeException {
+		return (String)o;
+	}
+	
 }

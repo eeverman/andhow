@@ -97,6 +97,16 @@ public interface ConfigPoint<T> {
 	 */
 	T getBaseDefault();
 	
+	/**
+	 * Attempt to cast the passed object to the Value type of this CP.
+	 * AndHow should never attempt to do this for values it knows cannot be converted
+	 * so this can throw a RuntimeException if used inappropriately.
+	 * @param o
+	 * @return
+	 * @throws RuntimeException 
+	 */
+	T cast(Object o) throws RuntimeException;
+	
 
 
 }

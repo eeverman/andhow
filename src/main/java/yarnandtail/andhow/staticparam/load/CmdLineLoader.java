@@ -15,9 +15,9 @@ public class CmdLineLoader implements Loader {
 	public static final String KVP_DELIMITER = "=";
 	
 	@Override
-	public Map<ConfigPoint, String> load(LoaderState state) {
+	public Map<ConfigPoint<?>, Object> load(LoaderState state) {
 		
-		Map<ConfigPoint, String> values = new HashMap();
+		Map<ConfigPoint<?>, Object> values = new HashMap();
 		if (state.getCmdLineArgs() != null && state.getCmdLineArgs().length > 0) {
 			
 			for (String s : state.getCmdLineArgs()) {
@@ -28,12 +28,8 @@ public class CmdLineLoader implements Loader {
 						ConfigPoint cp = state.getRegisteredConfigPoints().get(kvp.getName());
 						
 						if (cp != null) {
-							values.put(cp, kvp.getValue());
+							values.put(cp, cp.convertString(kvp.getValue()));
 							
-							//Don't do this - no reason to force an error until
-							//all values are supplied - maybe missing values will
-							//be supplied
-							//cp.convertString(kvp.getValue());	//try converting to force error
 						} else {
 							//need a way to deal w/ these
 						}

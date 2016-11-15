@@ -10,7 +10,7 @@ import yarnandtail.andhow.staticparam.ConfigPoint;
  */
 public interface LoaderState {
 	String[] getCmdLineArgs();
-	List<Map<ConfigPoint, String>> getExistingValues();
+	List<Map<ConfigPoint<?>, Object>> getExistingValues();
 	Map<String, ConfigPoint> getRegisteredConfigPoints();
 	List<LoaderException> getLoaderExceptions();
 }

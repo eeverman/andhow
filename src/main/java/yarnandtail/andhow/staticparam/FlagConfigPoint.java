@@ -30,4 +30,9 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 
 	}
 
+	@Override
+	public Boolean cast(Object o) throws RuntimeException {
+		return (Boolean)o;
+	}
+
 }
