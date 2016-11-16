@@ -1,10 +1,12 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.load.LoaderException;
+import yarnandtail.andhow.load.LoaderState;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.staticparam.ConfigPoint;
+import yarnandtail.andhow.ConfigPoint;
 
 /**
  * Test implementation designed for easy use during testing.

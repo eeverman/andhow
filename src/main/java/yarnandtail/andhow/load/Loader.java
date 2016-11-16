@@ -1,7 +1,7 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
 import java.util.Map;
-import yarnandtail.andhow.staticparam.ConfigPoint;
+import yarnandtail.andhow.ConfigPoint;
 
 /**
  *

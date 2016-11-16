@@ -1,6 +1,6 @@
-package yarnandtail.andhow.staticparam.valuetype;
+package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.staticparam.ParsingException;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *

@@ -1,5 +1,8 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
+import yarnandtail.andhow.SimpleParams;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.AppConfig;
 import java.util.HashMap;
 import org.junit.Test;
 import static org.junit.Assert.*;

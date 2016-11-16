@@ -1,4 +1,4 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
 import org.apache.commons.lang3.BooleanUtils;
 

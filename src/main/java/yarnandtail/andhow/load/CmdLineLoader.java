@@ -1,9 +1,9 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
 import java.util.HashMap;
 import java.util.Map;
-import yarnandtail.andhow.staticparam.ParsingException;
-import yarnandtail.andhow.staticparam.ConfigPoint;
+import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.ConfigPoint;
 //import yarnandtail.andhow.*;
 
 /**

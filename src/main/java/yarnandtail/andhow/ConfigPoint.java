@@ -1,7 +1,7 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
 import java.util.Arrays;
-import yarnandtail.andhow.staticparam.valuetype.ValueType;
+import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 

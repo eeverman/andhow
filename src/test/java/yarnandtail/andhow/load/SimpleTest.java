@@ -1,6 +1,8 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.staticparam.*;
+import yarnandtail.andhow.load.CmdLineLoader;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.SimpleParams;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;

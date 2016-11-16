@@ -1,6 +1,9 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
-import static yarnandtail.andhow.staticparam.ConfigPointGroup.*;
+import yarnandtail.andhow.FlagConfigPoint;
+import yarnandtail.andhow.ConfigPointGroup;
+import yarnandtail.andhow.StringConfigPoint;
+import static yarnandtail.andhow.ConfigPointGroup.*;
 
 /**
  *

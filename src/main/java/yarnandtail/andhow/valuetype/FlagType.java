@@ -1,6 +1,6 @@
-package yarnandtail.andhow.staticparam.valuetype;
+package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.staticparam.ConfigPointUtil;
+import yarnandtail.andhow.ConfigPointUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**

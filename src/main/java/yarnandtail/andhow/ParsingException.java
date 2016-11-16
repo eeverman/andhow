@@ -1,4 +1,4 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
 /**
  * An exception that happens during parsing where we don't know the full loading

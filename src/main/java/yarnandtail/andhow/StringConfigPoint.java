@@ -1,7 +1,7 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
-import yarnandtail.andhow.staticparam.valuetype.ValueType;
-import yarnandtail.andhow.staticparam.valuetype.StringType;
+import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.valuetype.StringType;
 
 /**
  *

@@ -1,4 +1,4 @@
-package yarnandtail.andhow.staticparam;
+package yarnandtail.andhow;
 
 import java.util.HashMap;
 

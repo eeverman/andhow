@@ -1,8 +1,8 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.staticparam.ConfigPoint;
+import yarnandtail.andhow.ConfigPoint;
 
 /**
  * State of the loading process that the chain of loaders can access.

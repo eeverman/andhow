@@ -1,7 +1,7 @@
-package yarnandtail.andhow.staticparam.load;
+package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.staticparam.ConfigPoint;
-import yarnandtail.andhow.staticparam.ParsingException;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
