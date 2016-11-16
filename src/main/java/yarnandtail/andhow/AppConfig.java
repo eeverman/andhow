@@ -1,6 +1,13 @@
 package yarnandtail.andhow;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -11,15 +18,16 @@ public class AppConfig {
 	private static AppConfig singleInstance;
 	private static Object lock = new Object();
 	
-	private static final HashMap<ConfigPoint, String> effectiveUserPoints = new HashMap();
+	//User config
+	private final List<Class<? extends ConfigPointGroup>> registeredGroups = new ArrayList();
+	private final HashMap<ConfigPoint, String> startInputValues = new HashMap();
 	
-	private AppConfig(HashMap<ConfigPoint, String> startingValues) {
-		
-		synchronized (lock) {
-			if (startingValues != null) {
-				effectiveUserPoints.putAll(startingValues);
-			}
-		}
+	//Internal state
+	private final List<ConfigPoint> registeredConfigPoints = new ArrayList();
+	
+	private AppConfig(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+		doReset(this, registeredGroups, startingValues);
+
 	}
 	
 	public static AppConfig instance() {
@@ -30,14 +38,14 @@ public class AppConfig {
 				if (singleInstance != null) {
 					return singleInstance;
 				} else {
-					singleInstance = new AppConfig(null);
+					singleInstance = new AppConfig(null, null);
 					return singleInstance;
 				}
 			}
 		}
 	}
 	
-	public static AppConfig instance(HashMap<ConfigPoint, String> startingValues) {
+	public static AppConfig instance(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
 		if (singleInstance != null) {
 			throw new RuntimeException("Already constructed!");
 		} else {
@@ -45,35 +53,93 @@ public class AppConfig {
 				if (singleInstance != null) {
 					throw new RuntimeException("Already constructed!");
 				} else {
-					singleInstance = new AppConfig(startingValues);
+					singleInstance = new AppConfig(registeredGroups, startingValues);
 					return singleInstance;
 				}
 			}
 		}
 	}
 	
+	public List<Class<? extends ConfigPointGroup>> getRegisteredGroups() {
+		return Collections.unmodifiableList(registeredGroups);
+	}
+
+	public List<ConfigPoint> getRegisteredConfigPoints() {
+		return Collections.unmodifiableList(registeredConfigPoints);
+	}
+	
 	public String getPointUserString(ConfigPoint point) {
-		return effectiveUserPoints.get(point);
+		return startInputValues.get(point);
 	}
 	
 	public boolean isPointPresent(ConfigPoint point) {
-		return effectiveUserPoints.containsKey(point);
+		return startInputValues.containsKey(point);
 	}
+	
+	private static void doReset(AppConfig instanceToReset, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+		synchronized (lock) {
+			instanceToReset.startInputValues.clear();
+			instanceToReset.registeredGroups.clear();
+			instanceToReset.registeredConfigPoints.clear();
+
+			if (startingValues != null) {
+				instanceToReset.startInputValues.putAll(startingValues);
+			}
+			if (registeredGroups != null) {
+				instanceToReset.registeredGroups.addAll(registeredGroups);
+			}
+			
+			for (Class<? extends ConfigPointGroup> grp : registeredGroups) {
+				Field[] fields = grp.getDeclaredFields();
+				
+				for (Field f : fields) {
+					
+					
+						
+					if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
+
+						ConfigPoint cp = null;
+
+						try {
+							cp = (ConfigPoint) f.get(null);
+						} catch (IllegalArgumentException ex) {
+							Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex);
+						} catch (IllegalAccessException ex) {
+							Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex);
+							f.setAccessible(true);
+							try {
+								cp = (ConfigPoint) f.get(null);
+							} catch (Exception ex1) {
+								Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex1);
+							}
+						}
+
+						instanceToReset.registeredConfigPoints.add(cp);
+					}
+
+
+					
+				}
+				
+				
+			}
+			
+			
+		}
+	}
+	
 	
 	/**
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	public static void reset(HashMap<ConfigPoint, String> startingValues) {
+	public static void reset(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {
-				singleInstance = new AppConfig(startingValues);
+				singleInstance = new AppConfig(registeredGroups, startingValues);
 			} else {
-				effectiveUserPoints.clear();
-				if (startingValues != null) {
-					effectiveUserPoints.putAll(startingValues);
-				}
+				doReset(singleInstance, registeredGroups, startingValues);
 			}
 		}
 	}
