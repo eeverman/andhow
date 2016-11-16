@@ -4,7 +4,7 @@ import yarnandtail.andhow.staticparam.load.KVP;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import yarnandtail.andhow.enumimp.cmdline.CmdLineLoader;
+import yarnandtail.andhow.staticparam.load.CmdLineLoader;
 import yarnandtail.andhow.staticparam.ParsingException;
 
 /**

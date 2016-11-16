@@ -1,7 +1,7 @@
 package yarnandtail.andhow.staticparam.valuetype;
 
+import yarnandtail.andhow.staticparam.ConfigPointUtil;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.enumimp.ConfigParamUtil;
 
 /**
  *
@@ -32,7 +32,7 @@ public class FlagType extends BaseValueType<Boolean> {
 			if (str.isEmpty()) {
 				return true;	//a flag is considered try just by its presence
 			} else {
-				return ConfigParamUtil.toBoolean(str);
+				return ConfigPointUtil.toBoolean(str);
 			}
 
 
