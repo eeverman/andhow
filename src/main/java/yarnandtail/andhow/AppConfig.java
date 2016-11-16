@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
  *
@@ -21,12 +22,15 @@ public class AppConfig {
 	//User config
 	private final List<Class<? extends ConfigPointGroup>> registeredGroups = new ArrayList();
 	private final HashMap<ConfigPoint, String> startInputValues = new HashMap();
+	private final List<Loader> loaders = new ArrayList();
+	private final NamingStrategy naming = new BasicNamingStrategy();
 	
 	//Internal state
 	private final List<ConfigPoint> registeredConfigPoints = new ArrayList();
+	private final HashMap<String, ConfigPoint> namedConfigPoints = new HashMap();
 	
-	private AppConfig(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
-		doReset(this, registeredGroups, startingValues);
+	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+		doReset(this, loaders, registeredGroups, startingValues);
 
 	}
 	
@@ -38,14 +42,14 @@ public class AppConfig {
 				if (singleInstance != null) {
 					return singleInstance;
 				} else {
-					singleInstance = new AppConfig(null, null);
+					singleInstance = new AppConfig(null, null, null);
 					return singleInstance;
 				}
 			}
 		}
 	}
 	
-	public static AppConfig instance(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	public static AppConfig instance(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
 		if (singleInstance != null) {
 			throw new RuntimeException("Already constructed!");
 		} else {
@@ -53,7 +57,7 @@ public class AppConfig {
 				if (singleInstance != null) {
 					throw new RuntimeException("Already constructed!");
 				} else {
-					singleInstance = new AppConfig(registeredGroups, startingValues);
+					singleInstance = new AppConfig(loaders, registeredGroups, startingValues);
 					return singleInstance;
 				}
 			}
@@ -76,12 +80,17 @@ public class AppConfig {
 		return startInputValues.containsKey(point);
 	}
 	
-	private static void doReset(AppConfig instanceToReset, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
 		synchronized (lock) {
+			instanceToReset.loaders.clear();
 			instanceToReset.startInputValues.clear();
 			instanceToReset.registeredGroups.clear();
 			instanceToReset.registeredConfigPoints.clear();
+			instanceToReset.namedConfigPoints.clear();
 
+			if (loaders != null) {
+				instanceToReset.loaders.addAll(loaders);
+			}
 			if (startingValues != null) {
 				instanceToReset.startInputValues.putAll(startingValues);
 			}
@@ -94,8 +103,6 @@ public class AppConfig {
 				
 				for (Field f : fields) {
 					
-					
-						
 					if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
 
 						ConfigPoint cp = null;
@@ -115,15 +122,19 @@ public class AppConfig {
 						}
 
 						instanceToReset.registeredConfigPoints.add(cp);
+						
+						NamingStrategy.Naming names = instanceToReset.naming.buildNames(cp, grp, f.getName());
+						
+						instanceToReset.namedConfigPoints.put(names.getPrimaryName(), cp);
+						
+						for (String alias : names.getAliases()) {
+							instanceToReset.namedConfigPoints.put(alias, cp);
+						}
+						
 					}
-
-
 					
 				}
-				
-				
 			}
-			
 			
 		}
 	}
@@ -133,13 +144,13 @@ public class AppConfig {
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	public static void reset(List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {
-				singleInstance = new AppConfig(registeredGroups, startingValues);
+				singleInstance = new AppConfig(loaders, registeredGroups, startingValues);
 			} else {
-				doReset(singleInstance, registeredGroups, startingValues);
+				doReset(singleInstance, loaders, registeredGroups, startingValues);
 			}
 		}
 	}

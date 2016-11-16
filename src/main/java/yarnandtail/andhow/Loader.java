@@ -1,7 +1,8 @@
-package yarnandtail.andhow.load;
+package yarnandtail.andhow;
 
 import java.util.Map;
 import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.load.LoaderState;
 
 /**
  *

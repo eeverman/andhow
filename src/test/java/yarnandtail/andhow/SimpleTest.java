@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import yarnandtail.andhow.load.CmdLineLoader;
 
 /**
  *
@@ -16,11 +17,15 @@ import org.junit.Before;
  */
 public class SimpleTest {
 	
+	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends ConfigPointGroup>> configPtGroups = new ArrayList();
 	HashMap<ConfigPoint, String> startVals = new HashMap();
 	
 	@Before
 	public void setup() {
+		
+		loaders.clear();
+		loaders.add(new CmdLineLoader());
 		
 		configPtGroups.clear();
 		configPtGroups.add(SimpleParams.class);
@@ -36,7 +41,7 @@ public class SimpleTest {
 	@Test
 	public void testAssingingValues() {
 		
-		AppConfig.reset(configPtGroups, startVals);
+		AppConfig.reset(loaders, configPtGroups, startVals);
 		
 		assertEquals("test", SimpleParams.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
@@ -59,7 +64,7 @@ public class SimpleTest {
 	@Test
 	public void testDefaultValues() {
 		
-		AppConfig.reset(configPtGroups, null);
+		AppConfig.reset(loaders, configPtGroups, null);
 		
 		assertEquals("bob", SimpleParams.KVP_BOB.getValue());
 		assertNull(SimpleParams.KVP_NULL.getValue());

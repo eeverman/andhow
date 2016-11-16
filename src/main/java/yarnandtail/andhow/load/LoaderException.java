@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ParsingException;
 

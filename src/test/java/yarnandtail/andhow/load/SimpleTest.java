@@ -1,6 +1,5 @@
 package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.SimpleParams;
 import java.util.HashMap;

@@ -30,7 +30,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		if (aliases != null && aliases.length > 0) {
 			aliasList = Collections.unmodifiableList(Arrays.asList(aliases));
 		} else {
-			aliasList = EMPTY_STRING_LIST;
+			aliasList = ConfigPointUtil.EMPTY_STRING_LIST;
 		}
 	
 				

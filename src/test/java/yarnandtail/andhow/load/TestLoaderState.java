@@ -1,7 +1,5 @@
 package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.load.LoaderException;
-import yarnandtail.andhow.load.LoaderState;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,15 +10,10 @@ import yarnandtail.andhow.ConfigPoint;
  * Test implementation designed for easy use during testing.
  * @author eeverman
  */
-public class TestLoaderState implements LoaderState {
-
-	String[] cmdLineArgs = new String[0];
-	List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
-	Map<String, ConfigPoint> registeredConfigPoints = new HashMap();
-	List<LoaderException> loaderExceptions = new ArrayList();
+public class TestLoaderState extends LoaderState {
 
 	public TestLoaderState() {
-		clear();
+		super(new String[0], new ArrayList<Map<ConfigPoint<?>, Object>>(), new HashMap<String, ConfigPoint>());
 	}
 			
 	@Override
@@ -65,11 +58,5 @@ public class TestLoaderState implements LoaderState {
 		}
 		loaderExceptions.add(loaderException);
 	}
-	
-	public void clear() {
-		String[] cmdLineArgs = new String[0];
-		List<Map<ConfigPoint, String>> existingValues = new ArrayList();
-		Map<String, ConfigPoint> registeredConfigPoints = new HashMap();
-		List<LoaderException> loaderExceptions = new ArrayList();
-	}
+
 }

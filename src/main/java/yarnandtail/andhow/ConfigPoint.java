@@ -10,7 +10,6 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author eeverman
  */
 public interface ConfigPoint<T> {
-	static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
 	
 	T getValue();
 	
