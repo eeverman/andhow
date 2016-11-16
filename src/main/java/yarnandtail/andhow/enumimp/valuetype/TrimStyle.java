@@ -1,4 +1,4 @@
-package yarnandtail.andhow.valuetype;
+package yarnandtail.andhow.enumimp.valuetype;
 
 /**
  *

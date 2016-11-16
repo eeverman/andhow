@@ -1,8 +1,8 @@
-package yarnandtail.andhow.valuetype;
+package yarnandtail.andhow.enumimp.valuetype;
 
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigValueCollection;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.enumimp.ConfigValueCollection;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *

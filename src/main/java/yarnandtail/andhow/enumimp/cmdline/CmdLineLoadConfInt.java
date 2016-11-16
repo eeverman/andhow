@@ -1,6 +1,6 @@
-package yarnandtail.andhow.cmdline;
+package yarnandtail.andhow.enumimp.cmdline;
 
-import yarnandtail.andhow.ConfigPointDef;
+import yarnandtail.andhow.enumimp.ConfigPointDef;
 
 /**
  *

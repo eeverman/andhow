@@ -1,7 +1,5 @@
 package yarnandtail.andhow.staticparam.valuetype;
 
-import yarnandtail.andhow.valuetype.*;
-
 /**
  *
  * @author eeverman

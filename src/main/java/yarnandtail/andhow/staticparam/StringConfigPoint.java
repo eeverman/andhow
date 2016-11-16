@@ -1,11 +1,7 @@
 package yarnandtail.andhow.staticparam;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import yarnandtail.andhow.staticparam.valuetype.ValueType;
 import yarnandtail.andhow.staticparam.valuetype.StringType;
-import yarnandtail.andhow.ConfigPointType;
-import yarnandtail.andhow.ParsingException;
 
 /**
  *

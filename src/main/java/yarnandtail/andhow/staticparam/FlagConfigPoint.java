@@ -1,9 +1,5 @@
 package yarnandtail.andhow.staticparam;
 
-import yarnandtail.andhow.ConfigParamUtil;
-import yarnandtail.andhow.ConfigPointType;
-import yarnandtail.andhow.staticparam.AppConfig;
-import yarnandtail.andhow.staticparam.ConfigPointBase;
 import yarnandtail.andhow.staticparam.valuetype.FlagType;
 import yarnandtail.andhow.staticparam.valuetype.ValueType;
 

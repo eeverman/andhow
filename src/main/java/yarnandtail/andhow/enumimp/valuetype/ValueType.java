@@ -1,7 +1,7 @@
-package yarnandtail.andhow.valuetype;
+package yarnandtail.andhow.enumimp.valuetype;
 
 import java.util.List;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *

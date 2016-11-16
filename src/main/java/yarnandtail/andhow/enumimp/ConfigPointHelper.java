@@ -1,14 +1,16 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
+import yarnandtail.andhow.staticparam.ConfigGroupDescription;
+import yarnandtail.andhow.staticparam.ConfigPointType;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import static yarnandtail.andhow.ConfigPointDef.EMPTY_ENUM_LIST;
-import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
-import yarnandtail.andhow.valuetype.ValueType;
+import static yarnandtail.andhow.enumimp.ConfigPointDef.EMPTY_ENUM_LIST;
+import static yarnandtail.andhow.enumimp.ConfigPointDef.EMPTY_STRING_LIST;
+import yarnandtail.andhow.enumimp.valuetype.ValueType;
 
 /**
  *

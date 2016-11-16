@@ -1,5 +1,6 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
+import yarnandtail.andhow.staticparam.ParsingException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

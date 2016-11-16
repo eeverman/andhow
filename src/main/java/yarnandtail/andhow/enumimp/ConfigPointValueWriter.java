@@ -1,5 +1,6 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
+import yarnandtail.andhow.staticparam.ParsingException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

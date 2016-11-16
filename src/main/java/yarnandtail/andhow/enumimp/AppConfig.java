@@ -1,6 +1,6 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
-import yarnandtail.andhow.ConfigParamUtil;
+import yarnandtail.andhow.enumimp.ConfigParamUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintStream;

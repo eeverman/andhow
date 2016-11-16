@@ -1,9 +1,10 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
+import yarnandtail.andhow.staticparam.ConfigPointType;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.enumimp.valuetype.ValueType;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.

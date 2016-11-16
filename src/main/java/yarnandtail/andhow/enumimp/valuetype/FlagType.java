@@ -1,8 +1,8 @@
-package yarnandtail.andhow.valuetype;
+package yarnandtail.andhow.enumimp.valuetype;
 
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigParamUtil;
-import yarnandtail.andhow.ConfigValueCollection;
+import yarnandtail.andhow.enumimp.ConfigParamUtil;
+import yarnandtail.andhow.enumimp.ConfigValueCollection;
 
 /**
  *

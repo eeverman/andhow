@@ -2,7 +2,7 @@ package yarnandtail.andhow.staticparam.load;
 
 import java.util.HashMap;
 import java.util.Map;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.staticparam.ParsingException;
 import yarnandtail.andhow.staticparam.ConfigPoint;
 //import yarnandtail.andhow.*;
 

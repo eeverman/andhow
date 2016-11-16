@@ -1,10 +1,11 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.staticparam.load.KVP;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import yarnandtail.andhow.cmdline.CmdLineLoader;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.enumimp.cmdline.CmdLineLoader;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *

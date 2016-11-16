@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
 /**
  *

@@ -1,6 +1,8 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
-import yarnandtail.andhow.valuetype.FlagType;
+import yarnandtail.andhow.staticparam.ConfigGroupDescription;
+import yarnandtail.andhow.staticparam.ConfigPointType;
+import yarnandtail.andhow.enumimp.valuetype.FlagType;
 
 /**
  * @author eeverman

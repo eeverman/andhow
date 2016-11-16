@@ -1,14 +1,16 @@
 package yarnandtail.andhow.staticparam;
 
+import java.util.Arrays;
 import yarnandtail.andhow.staticparam.valuetype.ValueType;
-import yarnandtail.andhow.*;
 import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
 public interface ConfigPoint<T> {
+	static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
 	
 	T getValue();
 	

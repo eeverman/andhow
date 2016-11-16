@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
 /**
  * The broad type of parameter.

@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.staticparam;
 
 /**
  * The broad type of parameter.

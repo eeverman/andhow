@@ -1,6 +1,6 @@
 package yarnandtail.andhow.staticparam.load;
 
-import yarnandtail.andhow.*;
+import yarnandtail.andhow.staticparam.ParsingException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

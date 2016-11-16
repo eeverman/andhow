@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.enumimp;
 
 import java.io.File;
 import java.io.PrintStream;

@@ -1,6 +1,7 @@
 package yarnandtail.andhow.staticparam.load;
 
-import yarnandtail.andhow.*;
+import yarnandtail.andhow.staticparam.ConfigPoint;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *
@@ -9,14 +10,14 @@ import yarnandtail.andhow.*;
 public class LoaderException extends Exception {
 	
 	Loader loader;
-	ConfigPointUsage cpu;
+	ConfigPoint cp;
 	String sourceDescription;
 			
-	public LoaderException(ParsingException base, Loader loader, ConfigPointUsage cpu,
+	public LoaderException(ParsingException base, Loader loader, ConfigPoint cp,
 			String sourceDescription) {
 		super(base);
 		this.loader = loader;
-		this.cpu = cpu;
+		this.cp = cp;
 		this.sourceDescription = sourceDescription;
 	}
 	

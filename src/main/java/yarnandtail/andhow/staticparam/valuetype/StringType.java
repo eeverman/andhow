@@ -1,10 +1,7 @@
 package yarnandtail.andhow.staticparam.valuetype;
 
-import yarnandtail.andhow.valuetype.*;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigValueCollection;
-import yarnandtail.andhow.ParsingException;
-import yarnandtail.andhow.staticparam.valuetype.BaseValueType;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *

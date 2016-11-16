@@ -1,8 +1,6 @@
 package yarnandtail.andhow.staticparam.valuetype;
 
-import yarnandtail.andhow.valuetype.*;
-import java.util.List;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.staticparam.ParsingException;
 
 /**
  *

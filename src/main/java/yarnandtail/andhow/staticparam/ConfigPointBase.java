@@ -1,17 +1,10 @@
 package yarnandtail.andhow.staticparam;
 
 import yarnandtail.andhow.staticparam.valuetype.ValueType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigGroupDescription;
-import static yarnandtail.andhow.ConfigPointDef.EMPTY_STRING_LIST;
-import yarnandtail.andhow.ConfigPointType;
-import yarnandtail.andhow.ParsingException;
 
 /**
  *
