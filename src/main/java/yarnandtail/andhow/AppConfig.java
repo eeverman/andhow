@@ -24,7 +24,7 @@ public class AppConfig {
 	
 	//User config
 	private final List<Class<? extends ConfigPointGroup>> registeredGroups = new ArrayList();
-	private final Map<ConfigPoint<?>, Object> startInputValues = new HashMap();
+	private final Map<ConfigPoint<?>, Object> forcedValues = new HashMap();
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy naming = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();
@@ -32,6 +32,7 @@ public class AppConfig {
 	//Internal state
 	private final List<ConfigPoint> registeredConfigPoints = new ArrayList();
 	private final Map<String, ConfigPoint<?>> namedConfigPoints = new HashMap();
+	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
 	
 	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
 		doReset(this, loaders, registeredGroups, cmdLineArgs, startingValues);
@@ -76,28 +77,40 @@ public class AppConfig {
 		return Collections.unmodifiableList(registeredConfigPoints);
 	}
 	
-	public Object getPointUserString(ConfigPoint point) {
-		return startInputValues.get(point);
+	//TODO:  Probably want this for debug info later, but not working now
+//	public String getPointUserString(ConfigPoint point) {
+//		return forcedValues.get(point);
+//	}
+	
+	public boolean isPointPresent(ConfigPoint<?> point) {
+		return getValue(point) != null;
 	}
 	
-	public boolean isPointPresent(ConfigPoint point) {
-		return startInputValues.containsKey(point);
+	public Object getValue(ConfigPoint<?> point) {
+		for (Map<ConfigPoint<?>, Object> map : loadedValues) {
+			if (map.containsKey(point)) {
+				return map.get(point);
+			}
+		}
+		
+		return null;
 	}
 	
-	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> forcedValues) {
 		synchronized (lock) {
 			instanceToReset.loaders.clear();
-			instanceToReset.startInputValues.clear();
+			instanceToReset.forcedValues.clear();
 			instanceToReset.registeredGroups.clear();
 			instanceToReset.registeredConfigPoints.clear();
 			instanceToReset.namedConfigPoints.clear();
 			instanceToReset.cmdLineArgs.clear();
+			instanceToReset.loadedValues.clear();
 
 			if (loaders != null) {
 				instanceToReset.loaders.addAll(loaders);
 			}
-			if (startingValues != null) {
-				instanceToReset.startInputValues.putAll(startingValues);
+			if (forcedValues != null) {
+				instanceToReset.forcedValues.putAll(forcedValues);
 			}
 			if (registeredGroups != null) {
 				instanceToReset.registeredGroups.addAll(registeredGroups);
@@ -106,23 +119,29 @@ public class AppConfig {
 				instanceToReset.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 			}
 			
-			doConfigPointRegistration(instanceToReset, registeredGroups);
+			instanceToReset.doConfigPointRegistration();
+			instanceToReset.doLoad();
 			
 		}
 	}
 	
 	private void doLoad() {
 		
-		List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
-		
-		if (startInputValues.size() > 0) {
-			existingValues.add(startInputValues);
-		}
-		
-		LoaderState state = new LoaderState(cmdLineArgs, existingValues, namedConfigPoints);
-		for (Loader loader : loaders) {
-			Map<ConfigPoint<?>, Object> result = loader.load(state);
-			if (result.size() > 0) existingValues.add(result);
+		synchronized (lock) {
+			List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
+
+			if (forcedValues.size() > 0) {
+				existingValues.add(forcedValues);
+			}
+
+			LoaderState state = new LoaderState(cmdLineArgs, existingValues, namedConfigPoints);
+			for (Loader loader : loaders) {
+				Map<ConfigPoint<?>, Object> result = loader.load(state);
+				if (result.size() > 0) existingValues.add(result);
+			}
+
+			loadedValues.clear();
+			loadedValues.addAll(existingValues);
 		}
 	}
 	
@@ -132,7 +151,7 @@ public class AppConfig {
 	 * @param instanceToReset
 	 * @param registeredGroups 
 	 */
-	private static void doConfigPointRegistration(AppConfig instanceToReset, List<Class<? extends ConfigPointGroup>> registeredGroups) {
+	private void doConfigPointRegistration() {
 		synchronized (lock) {
 			
 			for (Class<? extends ConfigPointGroup> grp : registeredGroups) {
@@ -158,14 +177,14 @@ public class AppConfig {
 							}
 						}
 
-						instanceToReset.registeredConfigPoints.add(cp);
+						registeredConfigPoints.add(cp);
 						
-						NamingStrategy.Naming names = instanceToReset.naming.buildNames(cp, grp, f.getName());
+						NamingStrategy.Naming names = naming.buildNames(cp, grp, f.getName());
 						
-						instanceToReset.namedConfigPoints.put(names.getPrimaryName(), cp);
+						namedConfigPoints.put(names.getPrimaryName(), cp);
 						
 						for (String alias : names.getAliases()) {
-							instanceToReset.namedConfigPoints.put(alias, cp);
+							namedConfigPoints.put(alias, cp);
 						}
 						
 					}
@@ -180,13 +199,13 @@ public class AppConfig {
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> forcedValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {
-				singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, startingValues);
+				singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, forcedValues);
 			} else {
-				doReset(singleInstance, loaders, registeredGroups, cmdLineArgs, startingValues);
+				doReset(singleInstance, loaders, registeredGroups, cmdLineArgs, forcedValues);
 			}
 		}
 	}

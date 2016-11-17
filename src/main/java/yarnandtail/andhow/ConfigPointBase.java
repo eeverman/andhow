@@ -119,15 +119,8 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	
 	@Override
 	public T getExplicitValue() {
-		if (AppConfig.instance().isPointPresent(this)) {
-			try {
-				return convertString(AppConfig.instance().getPointUserString(this));
-			} catch (ParsingException ex) {
-				return null;
-			}
-		} else {
-			return null;
-		}
+		Object v = AppConfig.instance().getValue(this);
+		return cast(v);
 	}
 	
 	@Override

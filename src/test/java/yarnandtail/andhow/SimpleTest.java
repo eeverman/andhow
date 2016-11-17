@@ -20,7 +20,7 @@ public class SimpleTest {
 	
 	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends ConfigPointGroup>> configPtGroups = new ArrayList();
-	HashMap<ConfigPoint, String> startVals = new HashMap();
+	HashMap<ConfigPoint<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	String[] cmdLineArgsWExplicitName = new String[0];
 	
@@ -36,9 +36,9 @@ public class SimpleTest {
 		startVals.clear();
 		startVals.put(SimpleParams.KVP_BOB, "test");
 		startVals.put(SimpleParams.KVP_NULL, "not_null");
-		startVals.put(SimpleParams.FLAG_TRUE, "false");
-		startVals.put(SimpleParams.FLAG_FALSE, "true");
-		startVals.put(SimpleParams.FLAG_NULL, "true");
+		startVals.put(SimpleParams.FLAG_TRUE, Boolean.FALSE);
+		startVals.put(SimpleParams.FLAG_FALSE, Boolean.TRUE);
+		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		String paramFullPath = SimpleParams.class.getCanonicalName();
 		//test the test
@@ -51,7 +51,7 @@ public class SimpleTest {
 			paramFullPath + ".FLAG_NULL" + CmdLineLoader.KVP_DELIMITER + "true"
 		};
 		
-		cmdLineArgsWFullClassName = new String[] {
+		cmdLineArgsWExplicitName = new String[] {
 			SimpleParams.KVP_BOB.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "test",
 			SimpleParams.KVP_NULL.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "not_null",
 			SimpleParams.FLAG_TRUE.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "false",
@@ -61,7 +61,7 @@ public class SimpleTest {
 	}
 	
 	@Test
-	public void testAssingingValuesViaStartValuesOnAppConfig() {
+	public void testForcingValuesViaAppConfig() {
 		
 		AppConfig.reset(loaders, configPtGroups, null, startVals);
 		
