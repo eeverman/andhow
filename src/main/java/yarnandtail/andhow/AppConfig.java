@@ -3,11 +3,14 @@ package yarnandtail.andhow;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import yarnandtail.andhow.load.LoaderState;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -21,16 +24,17 @@ public class AppConfig {
 	
 	//User config
 	private final List<Class<? extends ConfigPointGroup>> registeredGroups = new ArrayList();
-	private final HashMap<ConfigPoint, String> startInputValues = new HashMap();
+	private final Map<ConfigPoint<?>, Object> startInputValues = new HashMap();
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy naming = new BasicNamingStrategy();
+	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
 	private final List<ConfigPoint> registeredConfigPoints = new ArrayList();
-	private final HashMap<String, ConfigPoint> namedConfigPoints = new HashMap();
+	private final Map<String, ConfigPoint<?>> namedConfigPoints = new HashMap();
 	
-	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
-		doReset(this, loaders, registeredGroups, startingValues);
+	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+		doReset(this, loaders, registeredGroups, cmdLineArgs, startingValues);
 
 	}
 	
@@ -42,14 +46,14 @@ public class AppConfig {
 				if (singleInstance != null) {
 					return singleInstance;
 				} else {
-					singleInstance = new AppConfig(null, null, null);
+					singleInstance = new AppConfig(null, null, null, null);
 					return singleInstance;
 				}
 			}
 		}
 	}
 	
-	public static AppConfig instance(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	public static AppConfig instance(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
 		if (singleInstance != null) {
 			throw new RuntimeException("Already constructed!");
 		} else {
@@ -57,7 +61,7 @@ public class AppConfig {
 				if (singleInstance != null) {
 					throw new RuntimeException("Already constructed!");
 				} else {
-					singleInstance = new AppConfig(loaders, registeredGroups, startingValues);
+					singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, startingValues);
 					return singleInstance;
 				}
 			}
@@ -72,7 +76,7 @@ public class AppConfig {
 		return Collections.unmodifiableList(registeredConfigPoints);
 	}
 	
-	public String getPointUserString(ConfigPoint point) {
+	public Object getPointUserString(ConfigPoint point) {
 		return startInputValues.get(point);
 	}
 	
@@ -80,13 +84,14 @@ public class AppConfig {
 		return startInputValues.containsKey(point);
 	}
 	
-	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
 		synchronized (lock) {
 			instanceToReset.loaders.clear();
 			instanceToReset.startInputValues.clear();
 			instanceToReset.registeredGroups.clear();
 			instanceToReset.registeredConfigPoints.clear();
 			instanceToReset.namedConfigPoints.clear();
+			instanceToReset.cmdLineArgs.clear();
 
 			if (loaders != null) {
 				instanceToReset.loaders.addAll(loaders);
@@ -97,6 +102,38 @@ public class AppConfig {
 			if (registeredGroups != null) {
 				instanceToReset.registeredGroups.addAll(registeredGroups);
 			}
+			if (cmdLineArgs != null && cmdLineArgs.length > 0) {
+				instanceToReset.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
+			}
+			
+			doConfigPointRegistration(instanceToReset, registeredGroups);
+			
+		}
+	}
+	
+	private void doLoad() {
+		
+		List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
+		
+		if (startInputValues.size() > 0) {
+			existingValues.add(startInputValues);
+		}
+		
+		LoaderState state = new LoaderState(cmdLineArgs, existingValues, namedConfigPoints);
+		for (Loader loader : loaders) {
+			Map<ConfigPoint<?>, Object> result = loader.load(state);
+			if (result.size() > 0) existingValues.add(result);
+		}
+	}
+	
+
+	/**
+	 * Loads the parameters to registeredConfigPoints and namedConfigPoints 
+	 * @param instanceToReset
+	 * @param registeredGroups 
+	 */
+	private static void doConfigPointRegistration(AppConfig instanceToReset, List<Class<? extends ConfigPointGroup>> registeredGroups) {
+		synchronized (lock) {
 			
 			for (Class<? extends ConfigPointGroup> grp : registeredGroups) {
 				Field[] fields = grp.getDeclaredFields();
@@ -135,7 +172,6 @@ public class AppConfig {
 					
 				}
 			}
-			
 		}
 	}
 	
@@ -144,13 +180,13 @@ public class AppConfig {
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, HashMap<ConfigPoint, String> startingValues) {
+	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {
-				singleInstance = new AppConfig(loaders, registeredGroups, startingValues);
+				singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, startingValues);
 			} else {
-				doReset(singleInstance, loaders, registeredGroups, startingValues);
+				doReset(singleInstance, loaders, registeredGroups, cmdLineArgs, startingValues);
 			}
 		}
 	}

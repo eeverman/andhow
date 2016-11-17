@@ -13,11 +13,11 @@ import yarnandtail.andhow.ConfigPoint;
 public class TestLoaderState extends LoaderState {
 
 	public TestLoaderState() {
-		super(new String[0], new ArrayList<Map<ConfigPoint<?>, Object>>(), new HashMap<String, ConfigPoint>());
+		super(new ArrayList<String>(), new ArrayList<Map<ConfigPoint<?>, Object>>(), new HashMap<String, ConfigPoint<?>>());
 	}
 			
 	@Override
-	public String[] getCmdLineArgs() {
+	public List<String> getCmdLineArgs() {
 		return cmdLineArgs;
 	}
 
@@ -27,7 +27,7 @@ public class TestLoaderState extends LoaderState {
 	}
 
 	@Override
-	public Map<String, ConfigPoint> getRegisteredConfigPoints() {
+	public Map<String, ConfigPoint<?>> getRegisteredConfigPoints() {
 		return registeredConfigPoints;
 	}
 
@@ -36,7 +36,7 @@ public class TestLoaderState extends LoaderState {
 		return loaderExceptions;
 	}
 	
-	public void setCmdLineArgs(String[] cmdLineArgs) {
+	public void setCmdLineArgs(List<String> cmdLineArgs) {
 		this.cmdLineArgs = cmdLineArgs;
 	}
 
@@ -44,7 +44,7 @@ public class TestLoaderState extends LoaderState {
 		this.existingValues = existingValues;
 	}
 
-	public void setRegisteredConfigPoints(Map<String, ConfigPoint> registeredConfigPoints) {
+	public void setRegisteredConfigPoints(Map<String, ConfigPoint<?>> registeredConfigPoints) {
 		this.registeredConfigPoints = registeredConfigPoints;
 	}
 

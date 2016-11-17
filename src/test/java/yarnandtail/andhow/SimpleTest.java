@@ -6,6 +6,7 @@ import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.AppConfig;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -20,6 +21,8 @@ public class SimpleTest {
 	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends ConfigPointGroup>> configPtGroups = new ArrayList();
 	HashMap<ConfigPoint, String> startVals = new HashMap();
+	String[] cmdLineArgsWFullClassName = new String[0];
+	String[] cmdLineArgsWExplicitName = new String[0];
 	
 	@Before
 	public void setup() {
@@ -36,12 +39,31 @@ public class SimpleTest {
 		startVals.put(SimpleParams.FLAG_TRUE, "false");
 		startVals.put(SimpleParams.FLAG_FALSE, "true");
 		startVals.put(SimpleParams.FLAG_NULL, "true");
+		
+		String paramFullPath = SimpleParams.class.getCanonicalName();
+		//test the test
+		assertEquals("yarnandtail.andhow.SimpleParams", paramFullPath);
+		cmdLineArgsWFullClassName = new String[] {
+			paramFullPath + ".KVP_BOB" + CmdLineLoader.KVP_DELIMITER + "test",
+			paramFullPath + ".KVP_NULL" + CmdLineLoader.KVP_DELIMITER + "not_null",
+			paramFullPath + ".FLAG_TRUE" + CmdLineLoader.KVP_DELIMITER + "false",
+			paramFullPath + ".FLAG_FALSE" + CmdLineLoader.KVP_DELIMITER + "true",
+			paramFullPath + ".FLAG_NULL" + CmdLineLoader.KVP_DELIMITER + "true"
+		};
+		
+		cmdLineArgsWFullClassName = new String[] {
+			SimpleParams.KVP_BOB.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "test",
+			SimpleParams.KVP_NULL.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "not_null",
+			SimpleParams.FLAG_TRUE.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "false",
+			SimpleParams.FLAG_FALSE.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "true",
+			SimpleParams.FLAG_NULL.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "true"
+		};
 	}
 	
 	@Test
-	public void testAssingingValues() {
+	public void testAssingingValuesViaStartValuesOnAppConfig() {
 		
-		AppConfig.reset(loaders, configPtGroups, startVals);
+		AppConfig.reset(loaders, configPtGroups, null, startVals);
 		
 		assertEquals("test", SimpleParams.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
@@ -57,14 +79,12 @@ public class SimpleTest {
 		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
-		
-		
 	}
 	
 	@Test
-	public void testDefaultValues() {
+	public void testDefaultValuesViaLoadingWithNoUserValuesSet() {
 		
-		AppConfig.reset(loaders, configPtGroups, null);
+		AppConfig.reset(loaders, configPtGroups, null, null);
 		
 		assertEquals("bob", SimpleParams.KVP_BOB.getValue());
 		assertNull(SimpleParams.KVP_NULL.getValue());
@@ -79,6 +99,28 @@ public class SimpleTest {
 		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testCmdLineLoaderUsingExplicitBaseName() {
+		AppConfig.reset(loaders, configPtGroups, cmdLineArgsWExplicitName, null);
+		
+		assertEquals("test", SimpleParams.KVP_BOB.getValue());
+		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
+		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
+		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
+	}
+	
+	@Test
+	public void testCmdLineLoaderUsingClassBaseName() {
+		AppConfig.reset(loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+		
+		assertEquals("test", SimpleParams.KVP_BOB.getValue());
+		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
+		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
+		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 	}
 	
 

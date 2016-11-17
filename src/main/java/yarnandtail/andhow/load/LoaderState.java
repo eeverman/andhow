@@ -10,18 +10,18 @@ import yarnandtail.andhow.ConfigPoint;
  * @author eeverman
  */
 public class LoaderState {
-	public String[] cmdLineArgs;
+	public List<String> cmdLineArgs;
 	List<Map<ConfigPoint<?>, Object>> existingValues;
-	Map<String, ConfigPoint> registeredConfigPoints;
+	Map<String, ConfigPoint<?>> registeredConfigPoints;
 	List<LoaderException> loaderExceptions = new ArrayList();
 
-	public LoaderState(String[] cmdLineArgs, List<Map<ConfigPoint<?>, Object>> existingValues, Map<String, ConfigPoint> registeredConfigPoints) {
+	public LoaderState(List<String> cmdLineArgs, List<Map<ConfigPoint<?>, Object>> existingValues, Map<String, ConfigPoint<?>> registeredConfigPoints) {
 		this.cmdLineArgs = cmdLineArgs;
 		this.existingValues = existingValues;
 		this.registeredConfigPoints = registeredConfigPoints;
 	}
 	
-	public String[] getCmdLineArgs() {
+	public List<String> getCmdLineArgs() {
 		return cmdLineArgs;
 	}
 
@@ -29,7 +29,7 @@ public class LoaderState {
 		return existingValues;
 	}
 
-	public Map<String, ConfigPoint> getRegisteredConfigPoints() {
+	public Map<String, ConfigPoint<?>> getRegisteredConfigPoints() {
 		return registeredConfigPoints;
 	}
 
