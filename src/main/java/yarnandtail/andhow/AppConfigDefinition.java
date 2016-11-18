@@ -18,11 +18,11 @@ import java.util.Set;
  * @author eeverman
  */
 public class AppConfigDefinition {
-	private final Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> groupedPoints = new HashMap();
-	private final List<Class<? extends ConfigPointGroup>> groups = new ArrayList();
-	private final Map<String, ConfigPoint<?>> allPointNames = new HashMap();
-	private final Map<ConfigPoint<?>, String> canonicalPointNames = new HashMap();
-	private final List<ConfigPoint<?>> orderedPoints = new ArrayList();
+	private final Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> pointsByGroup = new HashMap();
+	private final List<Class<? extends ConfigPointGroup>> groupList = new ArrayList();
+	private final Map<String, ConfigPoint<?>> pointsByNames = new HashMap();
+	private final Map<ConfigPoint<?>, String> canonicalNameByPoint = new HashMap();
+	private final List<ConfigPoint<?>> pointList = new ArrayList();
 	
 	/**
 	 * Adds a ConfigPointGroup, its ConfigPoint and the name and aliases for that point
@@ -39,19 +39,19 @@ public class AppConfigDefinition {
 			throw new RuntimeException("Null values are not allowed when registering a configuration point.");
 		}
 		
-		if (canonicalPointNames.containsKey(point)) {
+		if (canonicalNameByPoint.containsKey(point)) {
 			throw new RuntimeException("The ConfigPoint '" + nameAndAliases.get(0) +
 					"' in ConfigPointGroup '" + group.getCanonicalName() +
 					"' has already been added.  Duplicate entries are not allowed.");
 		}
 		
-		canonicalPointNames.put(point, nameAndAliases.get(0));
-		orderedPoints.add(point);
+		canonicalNameByPoint.put(point, nameAndAliases.get(0));
+		pointList.add(point);
 		
 
 		for (String a : nameAndAliases) {
-			if (! allPointNames.containsKey(a)) {
-				allPointNames.put(a, point);
+			if (! pointsByNames.containsKey(a)) {
+				pointsByNames.put(a, point);
 			} else {
 				throw new RuntimeException("The canonical name or alias '" + a + 
 						"' is already in use.  Cannot have duplicate names or aliases.");
@@ -59,15 +59,23 @@ public class AppConfigDefinition {
 		}
 		
 		
-		List<ConfigPoint<?>> list = groupedPoints.get(group);
+		List<ConfigPoint<?>> list = pointsByGroup.get(group);
 		if (list != null) {
 			list.add(point);
 		} else {
 			list = new ArrayList();
 			list.add(point);
-			groupedPoints.put(group, list);
-			groups.add(group);
+			pointsByGroup.put(group, list);
+			groupList.add(group);
 		}
 		
+	}
+	
+	public ConfigPoint<?> getPoint(String name) {
+		return pointsByNames.get(name);
+	}
+	
+	public String getCanonicalName(ConfigPoint<?> point) {
+		return canonicalNameByPoint.get(point);
 	}
 }

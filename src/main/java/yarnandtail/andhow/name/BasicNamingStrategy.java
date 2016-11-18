@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
+import yarnandtail.andhow.ConfigPointUtil;
 import static yarnandtail.andhow.ConfigPointUtil.EMPTY_STRING_LIST;
 import yarnandtail.andhow.NamingStrategy;
 
@@ -17,21 +18,28 @@ public class BasicNamingStrategy implements NamingStrategy {
 	public Naming buildNames(ConfigPoint configPoint, 
 			Class<? extends ConfigPointGroup> parentGroup, String fieldName) {
 		
-		String name = parentGroup.getCanonicalName() + "." + fieldName;
+		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
+		String commonName = null;
 		
-		List<String> aliasList = EMPTY_STRING_LIST;
-		
-		if (configPoint.getExplicitBaseName() != null || configPoint.getBaseAliases().size() > 0) {
-			aliasList = new ArrayList();
-			
-			if (configPoint.getExplicitBaseName() != null) {
-				aliasList.add(configPoint.getExplicitBaseName());
-			}
-			
-			aliasList.addAll(configPoint.getBaseAliases());
+		if (configPoint.getExplicitBaseName() != null) {
+			commonName = parentGroup.getCanonicalName() + "." + configPoint.getExplicitBaseName();
 		}
 		
-		Naming naming = new Naming(name, aliasList);
+		List<String> effectiveAliases = null;
+		
+		if (configPoint.getBaseAliases().size() > 0) {
+			List<String> aliases = configPoint.getBaseAliases();
+			effectiveAliases = new ArrayList(aliases.size());
+			
+			for (String a : aliases) {
+				effectiveAliases.add(parentGroup.getCanonicalName() + "." + a);
+			}
+		} else {
+			effectiveAliases = ConfigPointUtil.EMPTY_STRING_LIST;
+		}
+
+		
+		Naming naming = new Naming(canonicalName, commonName, effectiveAliases);
 		return naming;
 	}
 	

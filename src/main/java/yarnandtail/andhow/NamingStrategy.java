@@ -18,15 +18,21 @@ public interface NamingStrategy {
 	Naming buildNames(ConfigPoint configPoint, Class<? extends ConfigPointGroup> parentGroup, String fieldName);
 	
 	public static class Naming {
+		private String canonicalName;
 		private String primaryName;
 		private List<String> aliases;
 
-		public Naming(String primaryName, List<String> aliases) {
+		public Naming(String canonicalName, String primaryName, List<String> aliases) {
+			this.canonicalName = canonicalName;
 			this.primaryName = primaryName;
 			this.aliases = aliases;
 		}
+		
+		public String getCanonicalName() {
+			return canonicalName;
+		}
 
-		public String getPrimaryName() {
+		public String getCommonName() {
 			return primaryName;
 		}
 

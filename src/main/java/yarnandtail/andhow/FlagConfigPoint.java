@@ -9,21 +9,20 @@ import yarnandtail.andhow.valuetype.ValueType;
  */
 public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 	
-	public FlagConfigPoint(String name) {
-		this(name, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), null, "", "", null, false);
+	public FlagConfigPoint() {
+		this(null, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, null, null);
 	}
 	
-	public FlagConfigPoint(String name, Boolean defaultValue) {
-		this(name, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), defaultValue, "", "", null, false);
+	public FlagConfigPoint(Boolean defaultValue, String shortDesc, String explicitName) {
+		this(defaultValue, shortDesc, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, explicitName, null, null);
 	}
 	
-	public FlagConfigPoint(String explicitName,
-			ConfigPointType paramType, ValueType<Boolean> valueType,
-			Boolean defaultValue, String shortDesc, String helpText, String[] aliases,
-			boolean priv) {
+	public FlagConfigPoint(
+			Boolean defaultValue, String shortDesc,
+			ConfigPointType paramType, ValueType<Boolean> valueType, boolean priv,
+			String explicitName, String helpText, String[] aliases) {
 		
-		super(explicitName, paramType, valueType, defaultValue, shortDesc, helpText, aliases, priv);
-
+		super(defaultValue, shortDesc, paramType, valueType, priv, explicitName, helpText, aliases);
 	}
 
 	@Override

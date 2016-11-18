@@ -21,10 +21,10 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final List<String> alias;
 	private final boolean priv;
 	
-	public ConfigPointBase(String explicitName,
-			ConfigPointType paramType, ValueType<T> valueType,
-			T defaultValue, String shortDesc, String helpText, String[] aliases,
-			boolean priv) {
+	public ConfigPointBase(
+			T defaultValue, String shortDesc,
+			ConfigPointType paramType, ValueType<T> valueType, boolean priv,
+			String explicitName, String helpText, String[] aliases) {
 		
 		List<String> aliasList;
 		if (aliases != null && aliases.length > 0) {
