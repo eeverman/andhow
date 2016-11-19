@@ -25,7 +25,7 @@ public class CmdLineLoader implements Loader {
 				KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
 
 				if (kvp.getName() != null) {
-					ConfigPoint cp = state.getRegisteredConfigPoints().get(kvp.getName());
+					ConfigPoint cp = state.getAppConfigDef().getPoint(kvp.getName());
 
 					if (cp != null) {
 						values.put(cp, cp.convertString(kvp.getValue()));

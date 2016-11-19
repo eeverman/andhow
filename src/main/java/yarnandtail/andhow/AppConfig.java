@@ -23,15 +23,16 @@ public class AppConfig {
 	private static Object lock = new Object();
 	
 	//User config
-	private final List<Class<? extends ConfigPointGroup>> registeredGroups = new ArrayList();
 	private final Map<ConfigPoint<?>, Object> forcedValues = new HashMap();
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy naming = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
-	private final List<ConfigPoint> registeredConfigPoints = new ArrayList();
-	private final Map<String, ConfigPoint<?>> namedConfigPoints = new HashMap();
+	
+	//Note: This should be an AtomicReference to ensure we don't transiently 
+	//assign to null when updating.
+	private AppConfigDefinition appConfigDef;
 	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
 	
 	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
@@ -69,18 +70,13 @@ public class AppConfig {
 		}
 	}
 	
-	public List<Class<? extends ConfigPointGroup>> getRegisteredGroups() {
-		return Collections.unmodifiableList(registeredGroups);
+	public List<Class<? extends ConfigPointGroup>> getGroups() {
+		return appConfigDef.getGroups();
 	}
 
-	public List<ConfigPoint> getRegisteredConfigPoints() {
-		return Collections.unmodifiableList(registeredConfigPoints);
+	public List<ConfigPoint<?>> getPoints() {
+		return appConfigDef.getPoints();
 	}
-	
-	//TODO:  Probably want this for debug info later, but not working now
-//	public String getPointUserString(ConfigPoint point) {
-//		return forcedValues.get(point);
-//	}
 	
 	public boolean isPointPresent(ConfigPoint<?> point) {
 		return getValue(point) != null;
@@ -100,9 +96,7 @@ public class AppConfig {
 		synchronized (lock) {
 			instanceToReset.loaders.clear();
 			instanceToReset.forcedValues.clear();
-			instanceToReset.registeredGroups.clear();
-			instanceToReset.registeredConfigPoints.clear();
-			instanceToReset.namedConfigPoints.clear();
+			instanceToReset.appConfigDef = null;	//TODO:  how should this work
 			instanceToReset.cmdLineArgs.clear();
 			instanceToReset.loadedValues.clear();
 
@@ -112,14 +106,12 @@ public class AppConfig {
 			if (forcedValues != null) {
 				instanceToReset.forcedValues.putAll(forcedValues);
 			}
-			if (registeredGroups != null) {
-				instanceToReset.registeredGroups.addAll(registeredGroups);
-			}
+
 			if (cmdLineArgs != null && cmdLineArgs.length > 0) {
 				instanceToReset.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 			}
 			
-			instanceToReset.doConfigPointRegistration();
+			instanceToReset.appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, instanceToReset.naming);
 			instanceToReset.doLoad();
 			
 		}
@@ -134,7 +126,7 @@ public class AppConfig {
 				existingValues.add(forcedValues);
 			}
 
-			LoaderState state = new LoaderState(cmdLineArgs, existingValues, namedConfigPoints);
+			LoaderState state = new LoaderState(cmdLineArgs, existingValues, appConfigDef);
 			for (Loader loader : loaders) {
 				Map<ConfigPoint<?>, Object> result = loader.load(state);
 				if (result.size() > 0) existingValues.add(result);
@@ -144,56 +136,6 @@ public class AppConfig {
 			loadedValues.addAll(existingValues);
 		}
 	}
-	
-
-	/**
-	 * Loads the parameters to registeredConfigPoints and namedConfigPoints 
-	 * @param instanceToReset
-	 * @param registeredGroups 
-	 */
-	private void doConfigPointRegistration() {
-		synchronized (lock) {
-			
-			for (Class<? extends ConfigPointGroup> grp : registeredGroups) {
-				Field[] fields = grp.getDeclaredFields();
-				
-				for (Field f : fields) {
-					
-					if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
-
-						ConfigPoint cp = null;
-
-						try {
-							cp = (ConfigPoint) f.get(null);
-						} catch (IllegalArgumentException ex) {
-							Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex);
-						} catch (IllegalAccessException ex) {
-							Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex);
-							f.setAccessible(true);
-							try {
-								cp = (ConfigPoint) f.get(null);
-							} catch (Exception ex1) {
-								Logger.getLogger(AppConfig.class.getName()).log(Level.SEVERE, null, ex1);
-							}
-						}
-
-						registeredConfigPoints.add(cp);
-						
-						NamingStrategy.Naming names = naming.buildNames(cp, grp, f.getName());
-						
-						//namedConfigPoints.put(names.getCommonName(), cp);
-						
-						for (String alias : names.getAliases()) {
-							namedConfigPoints.put(alias, cp);
-						}
-						
-					}
-					
-				}
-			}
-		}
-	}
-	
 	
 	/**
 	 * Mostly for testing - a backdoor to reset

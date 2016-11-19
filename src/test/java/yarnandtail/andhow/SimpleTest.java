@@ -72,7 +72,7 @@ public class SimpleTest {
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 		
 		
-		List<ConfigPoint> regPts = AppConfig.instance().getRegisteredConfigPoints();
+		List<ConfigPoint<?>> regPts = AppConfig.instance().getPoints();
 		
 		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
@@ -93,7 +93,7 @@ public class SimpleTest {
 		assertNull(SimpleParams.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
-		List<ConfigPoint> regPts = AppConfig.instance().getRegisteredConfigPoints();
+		List<ConfigPoint<?>> regPts = AppConfig.instance().getPoints();
 		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
 		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));

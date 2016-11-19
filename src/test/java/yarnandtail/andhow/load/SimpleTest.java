@@ -9,6 +9,8 @@ import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import yarnandtail.andhow.AppConfigDefinition;
+import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
  *
@@ -20,14 +22,16 @@ public class SimpleTest {
 	
 	@Before
 	public void init() {
-		Map<String, ConfigPoint<?>> points = new HashMap();
-		points.put(SimpleParams.KVP_BOB.getBaseAliases().get(0), SimpleParams.KVP_BOB);
-		points.put(SimpleParams.KVP_NULL.getBaseAliases().get(0), SimpleParams.KVP_NULL);
-		points.put(SimpleParams.FLAG_FALSE.getBaseAliases().get(0), SimpleParams.FLAG_FALSE);
-		points.put(SimpleParams.FLAG_TRUE.getBaseAliases().get(0), SimpleParams.FLAG_TRUE);
-		points.put(SimpleParams.FLAG_NULL.getBaseAliases().get(0), SimpleParams.FLAG_NULL);
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		loaderState.setRegisteredConfigPoints(points);
+		AppConfigDefinition appDef = new AppConfigDefinition();
+		appDef.addPoint(SimpleParams.class, SimpleParams.KVP_BOB, bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
+		appDef.addPoint(SimpleParams.class, SimpleParams.KVP_NULL, bns.buildNames(SimpleParams.KVP_NULL, SimpleParams.class, "KVP_NULL"));
+		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
+		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
+		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
+
+		loaderState.setAppConfigDef(appDef);
 	}
 	
 	@Test

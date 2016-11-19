@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import yarnandtail.andhow.AppConfigDefinition;
 import yarnandtail.andhow.ConfigPoint;
 
 /**
@@ -13,7 +14,7 @@ import yarnandtail.andhow.ConfigPoint;
 public class TestLoaderState extends LoaderState {
 
 	public TestLoaderState() {
-		super(new ArrayList<String>(), new ArrayList<Map<ConfigPoint<?>, Object>>(), new HashMap<String, ConfigPoint<?>>());
+		super(new ArrayList<String>(), new ArrayList<Map<ConfigPoint<?>, Object>>(), new AppConfigDefinition());
 	}
 			
 	@Override
@@ -27,8 +28,8 @@ public class TestLoaderState extends LoaderState {
 	}
 
 	@Override
-	public Map<String, ConfigPoint<?>> getRegisteredConfigPoints() {
-		return registeredConfigPoints;
+	public AppConfigDefinition getAppConfigDef() {
+		return appConfigDef;
 	}
 
 	@Override
@@ -44,8 +45,8 @@ public class TestLoaderState extends LoaderState {
 		this.existingValues = existingValues;
 	}
 
-	public void setRegisteredConfigPoints(Map<String, ConfigPoint<?>> registeredConfigPoints) {
-		this.registeredConfigPoints = registeredConfigPoints;
+	public void setAppConfigDef(AppConfigDefinition appConfigDef) {
+		this.appConfigDef = appConfigDef;
 	}
 
 	public void setLoaderExceptions(List<LoaderException> loaderExceptions) {

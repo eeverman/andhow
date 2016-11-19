@@ -1,6 +1,7 @@
 package yarnandtail.andhow;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,5 +77,13 @@ public class AppConfigDefinition {
 	
 	public String getCanonicalName(ConfigPoint<?> point) {
 		return canonicalNameByPoint.get(point);
+	}
+	
+	public List<ConfigPoint<?>> getPoints() {
+		return Collections.unmodifiableList(pointList);
+	}
+	
+	public List<Class<? extends ConfigPointGroup>> getGroups() {
+		return Collections.unmodifiableList(groupList);
 	}
 }
