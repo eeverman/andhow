@@ -55,5 +55,9 @@ ToDo
 *	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
 	(and ConfigPoints) will need to track if a value is explicitly set in some
 	way other than figuring it out from a null value.
+*	All loaders should complain bitterly if there is an unmatched value.
+	Since some apps must deal w/ legacy params, there should be a ConfigPointGroup
+	subclass _FixedNameConfigPointGroup_ that uses only the default name or
+	explicit name w/o any package prefix.
 
 
