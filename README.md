@@ -35,6 +35,9 @@ Design Choices
 
 ToDo
 ----
+*	Remove the concept of a separate explicit/common name.  Instead, the common
+	name is just the first alias.  As a convience, constructors could take either
+	a list of aliases or a single one.
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
 	These will need to be initiated out of sequence from the main AppConfig.
 	They may have no relation to the AppConfig.  Perhaps a separate instance-
