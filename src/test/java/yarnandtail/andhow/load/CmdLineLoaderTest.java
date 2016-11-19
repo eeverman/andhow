@@ -16,7 +16,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  *
  * @author eeverman
  */
-public class SimpleTest {
+public class CmdLineLoaderTest {
 	
 	TestLoaderState loaderState = new TestLoaderState();
 	
@@ -36,12 +36,15 @@ public class SimpleTest {
 	
 	@Test
 	public void testCmdLineLoaderUsingExplicitBaseNames() {
+		
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		
 		List<String> args = new ArrayList();
-		args.add(SimpleParams.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test");
-		args.add(SimpleParams.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null");
-		args.add(SimpleParams.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false");
-		args.add(SimpleParams.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
-		args.add(SimpleParams.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParams.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test");
+		args.add(basePath + SimpleParams.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + SimpleParams.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false");
+		args.add(basePath + SimpleParams.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParams.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
 		loaderState.setCmdLineArgs(args);
 		
 		
