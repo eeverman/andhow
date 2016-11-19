@@ -19,25 +19,15 @@ public interface NamingStrategy {
 	
 	public static class Naming {
 		private String canonicalName;
-		private String primaryName;
 		private List<String> aliases;
 
-		public Naming(String canonicalName, String primaryName, List<String> aliases) {
+		public Naming(String canonicalName, List<String> aliases) {
 			this.canonicalName = canonicalName;
-			this.primaryName = primaryName;
 			this.aliases = aliases;
 		}
 		
 		public String getCanonicalName() {
 			return canonicalName;
-		}
-
-		public String getCommonName() {
-			return primaryName;
-		}
-
-		public void setPrimaryName(String primaryName) {
-			this.primaryName = primaryName;
 		}
 
 		public List<String> getAliases() {

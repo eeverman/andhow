@@ -52,11 +52,11 @@ public class SimpleTest {
 		};
 		
 		cmdLineArgsWExplicitName = new String[] {
-			SimpleParams.KVP_BOB.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "test",
-			SimpleParams.KVP_NULL.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "not_null",
-			SimpleParams.FLAG_TRUE.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "false",
-			SimpleParams.FLAG_FALSE.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "true",
-			SimpleParams.FLAG_NULL.getExplicitBaseName() + CmdLineLoader.KVP_DELIMITER + "true"
+			paramFullPath + SimpleParams.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test",
+			paramFullPath + SimpleParams.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null",
+			paramFullPath + SimpleParams.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false",
+			paramFullPath + SimpleParams.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true",
+			paramFullPath + SimpleParams.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true"
 		};
 	}
 	

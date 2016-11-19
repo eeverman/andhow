@@ -52,18 +52,6 @@ public interface ConfigPoint<T> {
 	boolean isPrivate();
 	
 	/**
-	 * Long-form option name as explicitly set during in the constructor.
-	 * This may be null, in which case the implicit base name is just the name of
-	 * the enum itself, typically of the form: SOME_CONFIG_PARAM_NAME.
-	 * 
-	 * This is the <i>base</i> name: the NamingStrategy is applied in the usage
- of the ConfigPointDef to determine its actual effective name.
-   *
-	 * @return The explicitly set name, or null.
-	 */
-	String getExplicitBaseName();
-	
-	/**
 	 * A short sentence description.
 	 * @return 
 	 */

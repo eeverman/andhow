@@ -181,7 +181,7 @@ public class AppConfig {
 						
 						NamingStrategy.Naming names = naming.buildNames(cp, grp, f.getName());
 						
-						namedConfigPoints.put(names.getCommonName(), cp);
+						//namedConfigPoints.put(names.getCommonName(), cp);
 						
 						for (String alias : names.getAliases()) {
 							namedConfigPoints.put(alias, cp);

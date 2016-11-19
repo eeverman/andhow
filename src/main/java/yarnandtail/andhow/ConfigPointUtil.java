@@ -1,8 +1,8 @@
 package yarnandtail.andhow;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.BooleanUtils;
 
 /**
@@ -10,7 +10,7 @@ import org.apache.commons.lang3.BooleanUtils;
  * @author eeverman
  */
 public class ConfigPointUtil {
-	public static List<String> EMPTY_STRING_LIST = Arrays.asList(ArrayUtils.EMPTY_STRING_ARRAY);
+	public static final List<String> EMPTY_STRING_LIST = Collections.unmodifiableList(new ArrayList<String>());
 	
 	/**
 	 * Parses a string to a boolean.

@@ -33,23 +33,23 @@ public class AppConfigDefinition {
 	 * @param nameAndAliases The canonical name (1st position) and any aliases
 	 */
 	public void addPoint(Class<? extends ConfigPointGroup> group, ConfigPoint<?> point, 
-			List<String> nameAndAliases) {
+			NamingStrategy.Naming names) {
 		
-		if (group == null || point == null || nameAndAliases == null || nameAndAliases.size() == 0) {
+		if (group == null || point == null || names == null || names.getCanonicalName() == null) {
 			throw new RuntimeException("Null values are not allowed when registering a configuration point.");
 		}
 		
 		if (canonicalNameByPoint.containsKey(point)) {
-			throw new RuntimeException("The ConfigPoint '" + nameAndAliases.get(0) +
+			throw new RuntimeException("The ConfigPoint '" + names.getCanonicalName() +
 					"' in ConfigPointGroup '" + group.getCanonicalName() +
 					"' has already been added.  Duplicate entries are not allowed.");
 		}
 		
-		canonicalNameByPoint.put(point, nameAndAliases.get(0));
+		canonicalNameByPoint.put(point, names.getCanonicalName());
 		pointList.add(point);
 		
 
-		for (String a : nameAndAliases) {
+		for (String a : names.getAliases()) {
 			if (! pointsByNames.containsKey(a)) {
 				pointsByNames.put(a, point);
 			} else {
@@ -57,7 +57,6 @@ public class AppConfigDefinition {
 						"' is already in use.  Cannot have duplicate names or aliases.");
 			}
 		}
-		
 		
 		List<ConfigPoint<?>> list = pointsByGroup.get(group);
 		if (list != null) {

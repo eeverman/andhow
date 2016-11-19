@@ -28,7 +28,6 @@ public class BasicNamingStrategyTest {
 		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertNull(naming.getCommonName());
 		assertEquals(0, naming.getAliases().size());
 	}
 	
@@ -39,8 +38,8 @@ public class BasicNamingStrategyTest {
 		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(groupFullPath + ".myName", naming.getCommonName());
-		assertEquals(0, naming.getAliases().size());
+		assertEquals(1, naming.getAliases().size());
+		assertEquals(groupFullPath + ".myName", naming.getAliases().get(0));
 	}
 	
 	@Test
@@ -48,16 +47,14 @@ public class BasicNamingStrategyTest {
 
 		StringConfigPoint point = new StringConfigPoint(
 				null, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, 
-				"myName", null,  new String[] {"name1", "name2", "name3"});
+				null,  new String[] {"name1", "name2", "name3"});
 		
 		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(groupFullPath + ".myName", naming.getCommonName());
 		assertEquals(3, naming.getAliases().size());
 		assertEquals(groupFullPath + ".name1", naming.getAliases().get(0));
 		assertEquals(groupFullPath + ".name2", naming.getAliases().get(1));
 		assertEquals(groupFullPath + ".name3", naming.getAliases().get(2));
-		
 	}
 }

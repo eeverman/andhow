@@ -19,11 +19,6 @@ public class BasicNamingStrategy implements NamingStrategy {
 			Class<? extends ConfigPointGroup> parentGroup, String fieldName) {
 		
 		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
-		String commonName = null;
-		
-		if (configPoint.getExplicitBaseName() != null) {
-			commonName = parentGroup.getCanonicalName() + "." + configPoint.getExplicitBaseName();
-		}
 		
 		List<String> effectiveAliases = null;
 		
@@ -39,7 +34,7 @@ public class BasicNamingStrategy implements NamingStrategy {
 		}
 
 		
-		Naming naming = new Naming(canonicalName, commonName, effectiveAliases);
+		Naming naming = new Naming(canonicalName, effectiveAliases);
 		return naming;
 	}
 	

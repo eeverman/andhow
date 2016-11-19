@@ -21,16 +21,14 @@ public class AppConfigUtil {
 	 * List of contained ConfigPoints (Map Value)
 	 * ConfigPointGroup_2 (Map Key) ...etc
 	 * 
-	 * @param registeredGroups 
+	 * @param groups 
 	 */
-	public static Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> 
-		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> registeredGroups) {
+	public static AppConfigDefinition 
+		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> groups, NamingStrategy naming) {
 
-		Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> regPoints = new HashMap();
+		AppConfigDefinition appDef = new AppConfigDefinition();
 		
-		for (Class<? extends ConfigPointGroup> grp : registeredGroups) {
-			
-			List<ConfigPoint<?>> ptList = new ArrayList();
+		for (Class<? extends ConfigPointGroup> grp : groups) {
 			
 			Field[] fields = grp.getDeclaredFields();
 
@@ -53,16 +51,16 @@ public class AppConfigUtil {
 									"Is there a security policy that prevents setting it accessable?");
 						}
 					}
+					
+					NamingStrategy.Naming names = naming.buildNames(cp, grp, f.getName());
 
-					ptList.add(cp);
+					appDef.addPoint(grp, cp, names);
 				}
 
 			}
-			
-			regPoints.put(grp, ptList);
 		}
 		
-		return regPoints;
+		return appDef;
 
 	}
 }

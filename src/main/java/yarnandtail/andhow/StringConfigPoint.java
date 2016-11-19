@@ -10,25 +10,33 @@ import yarnandtail.andhow.valuetype.StringType;
 public class StringConfigPoint extends ConfigPointBase<String> {
 	
 	public StringConfigPoint() {
-		this(null, "", ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null, null,  null);
+		this(null, "", ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null, (String)null);
 	}
 	
 	public StringConfigPoint(String defaultValue, String shortDesc, String explicitName) {
-		this(defaultValue, shortDesc, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, explicitName, null,  null);
+		this(defaultValue, shortDesc, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null,  explicitName);
 	}
 	
 	public StringConfigPoint(String defaultValue, String shortDesc, 
 			ConfigPointType paramType, ValueType<String> valueType, boolean priv,
 			String explicitName) {
-		this(defaultValue, shortDesc, paramType, valueType, priv, explicitName, null, null);
+		this(defaultValue, shortDesc, paramType, valueType, priv, null, explicitName);
 	}
 	
 	public StringConfigPoint(
 			String defaultValue, String shortDesc, 
 			ConfigPointType paramType, ValueType<String> valueType, boolean priv,
-			String explicitName, String helpText, String[] aliases) {
+			String helpText, String[] aliases) {
 		
-		super(defaultValue, shortDesc, paramType, valueType, priv, explicitName, helpText, aliases);
+		super(defaultValue, shortDesc, paramType, valueType, priv, helpText, aliases);
+	}
+
+	public StringConfigPoint(
+			String defaultValue, String shortDesc, 
+			ConfigPointType paramType, ValueType<String> valueType, boolean priv,
+			String helpText, String explicitName) {
+		
+		super(defaultValue, shortDesc, paramType, valueType, priv, helpText, explicitName);
 	}
 	
 	public String cast(Object o) throws RuntimeException {
