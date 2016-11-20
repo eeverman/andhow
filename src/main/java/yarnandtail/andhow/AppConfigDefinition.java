@@ -19,6 +19,9 @@ import java.util.Set;
  * @author eeverman
  */
 public class AppConfigDefinition {
+	public static final List<ConfigPoint<?>> EMPTY_CONFIGPOINT_LIST = Collections.unmodifiableList(new ArrayList());
+	
+	
 	private final Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> pointsByGroup = new HashMap();
 	private final List<Class<? extends ConfigPointGroup>> groupList = new ArrayList();
 	private final Map<String, ConfigPoint<?>> pointsByNames = new HashMap();
@@ -49,8 +52,13 @@ public class AppConfigDefinition {
 		canonicalNameByPoint.put(point, names.getCanonicalName());
 		pointList.add(point);
 		
+		//Build a list of the canonical name and all the aliases (if any) to simplify later logic
+		ArrayList<String> allNames = new ArrayList();
+		allNames.add(names.getCanonicalName());
+		allNames.addAll(names.getAliases());
+		
 
-		for (String a : names.getAliases()) {
+		for (String a : allNames) {
 			if (! pointsByNames.containsKey(a)) {
 				pointsByNames.put(a, point);
 			} else {
@@ -85,5 +93,21 @@ public class AppConfigDefinition {
 	
 	public List<Class<? extends ConfigPointGroup>> getGroups() {
 		return Collections.unmodifiableList(groupList);
+	}
+	
+	/**
+	 * Returns a list of ConfigPoints registered with the passed group.
+	 * If the group is unregistered or has no points, an empty list is returned.
+	 * @param group
+	 * @return 
+	 */
+	public List<ConfigPoint<?>> getPointsForGroup(Class<? extends ConfigPointGroup> group) {
+		List<ConfigPoint<?>> pts = pointsByGroup.get(group);
+		
+		if (pts != null) {
+			return Collections.unmodifiableList(pts);
+		} else {
+			return EMPTY_CONFIGPOINT_LIST;
+		}
 	}
 }

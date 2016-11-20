@@ -2,7 +2,6 @@ package yarnandtail.andhow.load;
 
 import java.util.ArrayList;
 import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.SimpleParams;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.SimpleParamsWAlias;
 
 /**
  *
@@ -25,11 +25,11 @@ public class CmdLineLoaderTest {
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		AppConfigDefinition appDef = new AppConfigDefinition();
-		appDef.addPoint(SimpleParams.class, SimpleParams.KVP_BOB, bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
-		appDef.addPoint(SimpleParams.class, SimpleParams.KVP_NULL, bns.buildNames(SimpleParams.KVP_NULL, SimpleParams.class, "KVP_NULL"));
-		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
-		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
-		appDef.addPoint(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
+		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
+		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_NULL, bns.buildNames(SimpleParamsWAlias.KVP_NULL, SimpleParamsWAlias.class, "KVP_NULL"));
+		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
+		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_TRUE, bns.buildNames(SimpleParamsWAlias.FLAG_TRUE, SimpleParamsWAlias.class, "FLAG_TRUE"));
+		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_NULL, bns.buildNames(SimpleParamsWAlias.FLAG_NULL, SimpleParamsWAlias.class, "FLAG_NULL"));
 
 		loaderState.setAppConfigDef(appDef);
 	}
@@ -37,14 +37,14 @@ public class CmdLineLoaderTest {
 	@Test
 	public void testCmdLineLoaderUsingExplicitBaseNames() {
 		
-		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		String basePath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + SimpleParams.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test");
-		args.add(basePath + SimpleParams.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + SimpleParams.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false");
-		args.add(basePath + SimpleParams.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
-		args.add(basePath + SimpleParams.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test");
+		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false");
+		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
 		loaderState.setCmdLineArgs(args);
 		
 		
@@ -52,11 +52,11 @@ public class CmdLineLoaderTest {
 		
 		Map<ConfigPoint<?>, Object> result = cll.load(loaderState);
 		
-		assertEquals("test", result.get(SimpleParams.KVP_BOB));
-		assertEquals("not_null", result.get(SimpleParams.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.get(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParams.FLAG_NULL));
+		assertEquals("test", result.get(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("not_null", result.get(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.get(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	

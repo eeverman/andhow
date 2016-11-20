@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.NamingStrategy.Naming;
-import yarnandtail.andhow.SimpleParams;
 import yarnandtail.andhow.StringConfigPoint;
 import yarnandtail.andhow.valuetype.StringType;
+import yarnandtail.andhow.SimpleParamsWAlias;
 
 /**
  *
@@ -15,8 +15,8 @@ import yarnandtail.andhow.valuetype.StringType;
  */
 public class BasicNamingStrategyTest {
 
-	//Using SimpleParams as an arbitrary group to use for naming
-	final String groupFullPath = SimpleParams.class.getCanonicalName();
+	//Using SimpleParamsWAlias as an arbitrary group to use for naming
+	final String groupFullPath = SimpleParamsWAlias.class.getCanonicalName();
 		
 	//Stateless, so ok to have a single instance
 	final BasicNamingStrategy bns = new BasicNamingStrategy();
@@ -25,7 +25,7 @@ public class BasicNamingStrategyTest {
 	public void testDefaultNaming() {
 
 		StringConfigPoint point = new StringConfigPoint();
-		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
+		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
 		assertEquals(0, naming.getAliases().size());
@@ -35,7 +35,7 @@ public class BasicNamingStrategyTest {
 	public void testExplicitNaming() {
 
 		StringConfigPoint point = new StringConfigPoint(null, null, "myName");
-		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
+		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
 		assertEquals(1, naming.getAliases().size());
@@ -49,7 +49,7 @@ public class BasicNamingStrategyTest {
 				null, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, 
 				null,  new String[] {"name1", "name2", "name3"});
 		
-		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
+		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
 		assertEquals(3, naming.getAliases().size());
