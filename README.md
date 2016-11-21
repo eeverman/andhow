@@ -80,4 +80,5 @@ Ideas
 	This would separate construction/reset complexity from the actual AppConfig logic,
 	allow easier testing of just the AppConfigCore, and make it easier to create
 	new instances for subtrees or isolated trees (like servlet config).
-
+*	ConfigPoints should validate their default value against any constraints
+	at construction time to ensure bad defaults cannot be spec'ed.
