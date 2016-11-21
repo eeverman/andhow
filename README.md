@@ -62,5 +62,16 @@ ToDo
 	Since some apps must deal w/ legacy params, there should be a ConfigPointGroup
 	subclass _FixedNameConfigPointGroup_ that uses only the default name or
 	explicit name w/o any package prefix.
+*	Explicitly handle the case of ConfigPointGroups extending other ConfigPointGroups.
+	This might be allows to build up and easily register nested groups of params,
+	but if two Groups extend the same base group, the 2nd child will bomb during
+	registration b/c the super points would attempt to register twice under different
+	names.  Super group w/ multiple child groups == bad / not allowed.
+	One place that might aggregate  (many super groups into a single subclass
+	Group) would be a module that has several logical groups.  When exposing
+	those groups to a larger app, it would be nice to roll those all into a single
+	Uber-Group so the parent app only has one group to register for that module.
+	In that case, the registration should register names based on the most
+	super-classy Group.
 
 

@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -15,13 +16,12 @@ public class AppConfigUtil {
 	
 
 	/**
-	 * Builds a nested map/list of ConfigPoints and the ConfigPointGroup they belong to.
-	 * The structure of the Map is like this:
-	 * ConfigPointGroup_1 (Map Key)
-	 * List of contained ConfigPoints (Map Value)
-	 * ConfigPointGroup_2 (Map Key) ...etc
+	 * Build a fully populated AppConfigDefinition from the points contained in
+	 * the passed Groups, using the NamingStrategy to generate names for each.
 	 * 
-	 * @param groups 
+	 * @param groups The ConfigPointGroups from which to find ConfigPoints
+	 * @param naming  A naming strategy to use when reading the properties during loading
+	 * @return A fully configured instance
 	 */
 	public static AppConfigDefinition 
 		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> groups, NamingStrategy naming) {
@@ -45,7 +45,7 @@ public class AppConfigUtil {
 							f.setAccessible(true);
 							cp = (ConfigPoint) f.get(null);
 						} catch (Exception ex1) {
-							throw new RuntimeException(
+							throw new ConfigurationException(
 									"Unable to access non-public field " + 
 									f.getName() + " in " + grp.getCanonicalName() + ".  " +
 									"Is there a security policy that prevents setting it accessable?");
@@ -62,5 +62,11 @@ public class AppConfigUtil {
 		
 		return appDef;
 
+	}
+		
+	public static void printNamingExceptions(List<NamingException> nameExceptions, PrintStream out) {
+		for (NamingException ne : nameExceptions) {
+			out.println(ne.getMessage());
+		}
 	}
 }

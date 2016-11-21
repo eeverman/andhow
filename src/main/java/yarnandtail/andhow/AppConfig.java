@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class AppConfig {
 	//User config
 	private final Map<ConfigPoint<?>, Object> forcedValues = new HashMap();
 	private final List<Loader> loaders = new ArrayList();
-	private final NamingStrategy naming = new BasicNamingStrategy();
+	private NamingStrategy naming = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
@@ -35,8 +36,8 @@ public class AppConfig {
 	private AppConfigDefinition appConfigDef;
 	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
 	
-	private AppConfig(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
-		doReset(this, loaders, registeredGroups, cmdLineArgs, startingValues);
+	private AppConfig(NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+		doReset(this, naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 
 	}
 	
@@ -48,14 +49,17 @@ public class AppConfig {
 				if (singleInstance != null) {
 					return singleInstance;
 				} else {
-					singleInstance = new AppConfig(null, null, null, null);
+					singleInstance = new AppConfig(new BasicNamingStrategy(), null, null, null, null);
 					return singleInstance;
 				}
 			}
 		}
 	}
 	
-	public static AppConfig instance(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+	public static AppConfig instance(
+			NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, 
+			String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) throws ConfigurationException {
+		
 		if (singleInstance != null) {
 			throw new RuntimeException("Already constructed!");
 		} else {
@@ -63,7 +67,7 @@ public class AppConfig {
 				if (singleInstance != null) {
 					throw new RuntimeException("Already constructed!");
 				} else {
-					singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, startingValues);
+					singleInstance = new AppConfig(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 					return singleInstance;
 				}
 			}
@@ -92,8 +96,19 @@ public class AppConfig {
 		return null;
 	}
 	
-	private static void doReset(AppConfig instanceToReset, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> forcedValues) {
+	private static void doReset(AppConfig instanceToReset, NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
+			HashMap<ConfigPoint<?>, Object> forcedValues) throws ConfigurationException {
+		doReset(instanceToReset, naming, loaders, registeredGroups, cmdLineArgs, 
+			forcedValues, System.err);
+	}
+	
+	private static void doReset(AppConfig instanceToReset, NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
+			HashMap<ConfigPoint<?>, Object> forcedValues, PrintStream errorStream) throws ConfigurationException {
+		
 		synchronized (lock) {
+			instanceToReset.naming = naming;
 			instanceToReset.loaders.clear();
 			instanceToReset.forcedValues.clear();
 			instanceToReset.appConfigDef = null;	//TODO:  how should this work
@@ -112,6 +127,30 @@ public class AppConfig {
 			}
 			
 			instanceToReset.appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, instanceToReset.naming);
+			
+			List<NamingException> nameExceptions = instanceToReset.appConfigDef.getNamingExceptions();
+			if (nameExceptions.size() > 0) {
+				AppConfigUtil.printNamingExceptions(nameExceptions, errorStream);
+				
+				if (nameExceptions.size() == 1) {
+					throw new ConfigurationException(
+							"Unable to continue w/ configuration loading because "
+							+ "there is a single naming error.  "
+							+ "See the 'Caused by' section for the error.  "
+							+ "See System.err for more detail on the actual "
+							+ "params causing the error.",
+							nameExceptions.get(0));
+				} else {
+					throw new ConfigurationException(
+							"Unable to continue w/ configuration loading because "
+							+ "there are multiple naming errors.  "
+							+ "See the 'Caused by' section for first of those errors.  "
+							+ "See System.err for more detail on the actual "
+							+ "params causing the error.",
+							nameExceptions.get(0));
+				}
+			}
+			
 			instanceToReset.doLoad();
 			
 		}
@@ -141,13 +180,15 @@ public class AppConfig {
 	 * Mostly for testing - a backdoor to reset
 	 * @param startingValues 
 	 */
-	public static void reset(List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> forcedValues) {
+	public static void reset(NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
+			HashMap<ConfigPoint<?>, Object> forcedValues) {
 		synchronized (lock) {
 			
 			if (singleInstance == null) {
-				singleInstance = new AppConfig(loaders, registeredGroups, cmdLineArgs, forcedValues);
+				singleInstance = new AppConfig(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
 			} else {
-				doReset(singleInstance, loaders, registeredGroups, cmdLineArgs, forcedValues);
+				doReset(singleInstance, naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
 			}
 		}
 	}

@@ -26,7 +26,8 @@ public class AppConfigDefinition {
 	private final List<Class<? extends ConfigPointGroup>> groupList = new ArrayList();
 	private final Map<String, ConfigPoint<?>> pointsByNames = new HashMap();
 	private final Map<ConfigPoint<?>, String> canonicalNameByPoint = new HashMap();
-	private final List<ConfigPoint<?>> pointList = new ArrayList();
+	private final List<ConfigPoint<?>> points = new ArrayList();
+	private final List<NamingException> namingExceptions = new ArrayList();
 	
 	/**
 	 * Adds a ConfigPointGroup, its ConfigPoint and the name and aliases for that point
@@ -34,7 +35,7 @@ public class AppConfigDefinition {
 	 * 
 	 * @param group The ConfigPointGroup parent of the point
 	 * @param point The ConfigPoint to be added
-	 * @param nameAndAliases The canonical name (1st position) and any aliases
+	 * @param names The names associated w/ this point
 	 */
 	public void addPoint(Class<? extends ConfigPointGroup> group, ConfigPoint<?> point, 
 			NamingStrategy.Naming names) {
@@ -43,38 +44,49 @@ public class AppConfigDefinition {
 			throw new RuntimeException("Null values are not allowed when registering a configuration point.");
 		}
 		
-		if (canonicalNameByPoint.containsKey(point)) {
-			throw new RuntimeException("The ConfigPoint '" + names.getCanonicalName() +
-					"' in ConfigPointGroup '" + group.getCanonicalName() +
-					"' has already been added.  Duplicate entries are not allowed.");
-		}
-		
-		canonicalNameByPoint.put(point, names.getCanonicalName());
-		pointList.add(point);
+		boolean valid = true;
 		
 		//Build a list of the canonical name and all the aliases (if any) to simplify later logic
 		ArrayList<String> allNames = new ArrayList();
 		allNames.add(names.getCanonicalName());
 		allNames.addAll(names.getAliases());
 		
-
+		if (canonicalNameByPoint.containsKey(point)) {
+			throw new ConfigurationException("The ConfigPoint '" + names.getCanonicalName() +
+					"' in ConfigPointGroup '" + group.getCanonicalName() +
+					"' has already been added.  Duplicate entries are not allowed.");
+		}
+		
 		for (String a : allNames) {
-			if (! pointsByNames.containsKey(a)) {
-				pointsByNames.put(a, point);
-			} else {
-				throw new RuntimeException("The canonical name or alias '" + a + 
-						"' is already in use.  Cannot have duplicate names or aliases.");
+			ConfigPoint<?> conflictPoint = pointsByNames.get(a);
+			if (conflictPoint != null) {
+				NamingException ne = new NamingException(
+						point, names.getCanonicalName(), a, 
+						conflictPoint, canonicalNameByPoint.get(conflictPoint));
+				namingExceptions.add(ne);
+				valid = false;
 			}
 		}
 		
-		List<ConfigPoint<?>> list = pointsByGroup.get(group);
-		if (list != null) {
-			list.add(point);
-		} else {
-			list = new ArrayList();
-			list.add(point);
-			pointsByGroup.put(group, list);
-			groupList.add(group);
+		if (valid) {
+		
+			canonicalNameByPoint.put(point, names.getCanonicalName());
+			points.add(point);
+
+
+			for (String a : allNames) {
+				pointsByNames.put(a, point);
+			}
+
+			List<ConfigPoint<?>> list = pointsByGroup.get(group);
+			if (list != null) {
+				list.add(point);
+			} else {
+				list = new ArrayList();
+				list.add(point);
+				pointsByGroup.put(group, list);
+				groupList.add(group);
+			}
 		}
 		
 	}
@@ -88,7 +100,7 @@ public class AppConfigDefinition {
 	}
 	
 	public List<ConfigPoint<?>> getPoints() {
-		return Collections.unmodifiableList(pointList);
+		return Collections.unmodifiableList(points);
 	}
 	
 	public List<Class<? extends ConfigPointGroup>> getGroups() {
@@ -109,5 +121,9 @@ public class AppConfigDefinition {
 		} else {
 			return EMPTY_CONFIGPOINT_LIST;
 		}
+	}
+	
+	public List<NamingException> getNamingExceptions() {
+		return Collections.unmodifiableList(namingExceptions);
 	}
 }
