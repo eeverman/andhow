@@ -126,14 +126,41 @@ public class AppConfigTest {
 		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
 	}
 	
-	@Test(expected=ConfigurationException.class)
+	@Test
 	public void testBlowingUpWithDuplicateAliases() {
 		
 		AsIsAliasNamingStrategy asIsNaming = new AsIsAliasNamingStrategy();
 		
 		configPtGroups.add(SimpleParamsWAliasDuplicate.class);
-		AppConfig.reset(asIsNaming, loaders, configPtGroups, null, startVals);
+		
+		try {
+			AppConfig.reset(asIsNaming, loaders, configPtGroups, null, startVals);
+			fail();	//The line above should throw an error
+		} catch (ConfigurationException ce) {
+			assertEquals(5, ce.getNamingExceptions().size());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getNamingExceptions().get(0).getNewPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getNamingExceptions().get(1).getNewPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getNamingExceptions().get(2).getNewPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getNamingExceptions().get(3).getNewPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getNamingExceptions().get(4).getNewPoint());
 
+		}
+	}
+	
+	@Test
+	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
+		
+		//Add a set of params that are required
+		configPtGroups.add(SimpleParamsNoAliasRequired.class);
+		
+		try {
+			AppConfig.reset(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+			fail();	//The line above should throw an error
+		} catch (ConfigurationException ce) {
+			assertEquals(2, ce.getValidationExceptions().size());
+			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ((RequiredPointException)(ce.getValidationExceptions().get(0))).getPoint());
+			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ((RequiredPointException)(ce.getValidationExceptions().get(1))).getPoint());
+		}
 	}
 	
 

@@ -14,6 +14,10 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 		this(null, false, "", ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null, (String)null);
 	}
 	
+	public StringConfigPoint(String defaultValue, boolean required) {
+		this(defaultValue, required, "", ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null, (String)null);
+	}
+	
 	public StringConfigPoint(String defaultValue, boolean required, String shortDesc, String explicitName) {
 		this(defaultValue, required, shortDesc, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, null,  explicitName);
 	}

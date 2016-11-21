@@ -14,6 +14,10 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 		this(null, false, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, (String)null);
 	}
 	
+	public FlagConfigPoint(Boolean defaultValue, boolean required) {
+		this(defaultValue, required, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, (String)null);
+	}
+	
 	public FlagConfigPoint(Boolean defaultValue, boolean required, String shortDesc, String explicitName) {
 		this(defaultValue, required, shortDesc, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, explicitName);
 	}

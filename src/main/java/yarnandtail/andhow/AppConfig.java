@@ -115,6 +115,7 @@ public class AppConfig {
 			instanceToReset.appConfigDef = null;	//TODO:  how should this work
 			instanceToReset.cmdLineArgs.clear();
 			instanceToReset.loadedValues.clear();
+			instanceToReset.validationExceptions.clear();
 
 			if (loaders != null) {
 				instanceToReset.loaders.addAll(loaders);
@@ -133,23 +134,7 @@ public class AppConfig {
 			if (nameExceptions.size() > 0) {
 				AppConfigUtil.printExceptions(nameExceptions, errorStream);
 				
-				if (nameExceptions.size() == 1) {
-					throw new ConfigurationException(
-							"Unable to continue w/ configuration loading because "
-							+ "there is a single naming error.  "
-							+ "See the 'Caused by' section for the error.  "
-							+ "See System.err for more detail on the actual "
-							+ "params causing the error.",
-							nameExceptions.get(0));
-				} else {
-					throw new ConfigurationException(
-							"Unable to continue w/ configuration loading because "
-							+ "there are multiple naming errors.  "
-							+ "See the 'Caused by' section for first of those errors.  "
-							+ "See System.err for more detail on the actual "
-							+ "params causing the error.",
-							nameExceptions.get(0));
-				}
+				throw new ConfigurationException(nameExceptions, null, null);
 			}
 			
 			instanceToReset.doLoad();
@@ -159,23 +144,7 @@ public class AppConfig {
 			if (instanceToReset.validationExceptions.size() > 0) {
 				AppConfigUtil.printExceptions(instanceToReset.validationExceptions, errorStream);
 				
-				if (nameExceptions.size() == 1) {
-					throw new ConfigurationException(
-							"Unable to continue w/ configuration loading because "
-							+ "there is a single validation error.  "
-							+ "See the 'Caused by' section for the error.  "
-							+ "See System.err for more detail on the actual "
-							+ "params causing the error.",
-							instanceToReset.validationExceptions.get(0));
-				} else {
-					throw new ConfigurationException(
-							"Unable to continue w/ configuration loading because "
-							+ "there are multiple validation errors.  "
-							+ "See the 'Caused by' section for first of those errors.  "
-							+ "See System.err for more detail on the actual "
-							+ "params causing the error.",
-							instanceToReset.validationExceptions.get(0));
-				}
+				throw new ConfigurationException(null, null, instanceToReset.validationExceptions);
 			}
 			
 		}

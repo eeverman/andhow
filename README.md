@@ -35,7 +35,7 @@ Design Choices
 
 ToDo
 ----
-*	***Now have a required flag, but there are no tests***
+*	LoaderErrors need to be handled in the same way as the other errors in AppConfig.
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
 	These will need to be initiated out of sequence from the main AppConfig.
 	They may have no relation to the AppConfig.  Perhaps a separate instance-
@@ -71,6 +71,7 @@ ToDo
 	Uber-Group so the parent app only has one group to register for that module.
 	In that case, the registration should register names based on the most
 	super-classy Group.
+*	Redirect AppConfig errors during tests to some place other than out.
 Ideas
 -----
 *	Make AppConfig just an interface w/ static methods and default methods.

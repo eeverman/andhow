@@ -5,11 +5,11 @@ package yarnandtail.andhow;
  * @author eeverman
  */
 public class NamingException extends Exception {
-	ConfigPoint<?> newPoint;
-	String newPointCanonName;
-	String newPointConflictName;
-	ConfigPoint<?> existingPoint;
-	String existingPointCanonName;
+	private final ConfigPoint<?> newPoint;
+	private final String newPointCanonName;
+	private final String newPointConflictName;
+	private final ConfigPoint<?> existingPoint;
+	private final String existingPointCanonName;
 
 	public NamingException(ConfigPoint<?> newPoint, String newPointCanonName, String newPointConflictName, 
 			ConfigPoint<?> existingPoint, String existingPointCanonName) {
