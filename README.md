@@ -71,5 +71,12 @@ ToDo
 	Uber-Group so the parent app only has one group to register for that module.
 	In that case, the registration should register names based on the most
 	super-classy Group.
-
+Ideas
+-----
+*	Make AppConfig just an interface w/ static methods and default methods.
+	Actual implementation should be AppConfigCore, which would have no instancing
+	rules/restrictions.
+	This would separate construction/reset complexity from the actual AppConfig logic,
+	allow easier testing of just the AppConfigCore, and make it easier to create
+	new instances for subtrees or isolated trees (like servlet config).
 
