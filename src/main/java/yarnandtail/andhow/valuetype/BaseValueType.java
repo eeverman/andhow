@@ -1,7 +1,7 @@
 package yarnandtail.andhow.valuetype;
 
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.load.ParsingException;
 
 /**
  *

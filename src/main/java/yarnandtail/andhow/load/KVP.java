@@ -1,6 +1,5 @@
 package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.ParsingException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.load;
 
 /**
  * An exception that happens during parsing where we don't know the full loading

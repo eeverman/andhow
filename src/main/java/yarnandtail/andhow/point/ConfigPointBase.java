@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.AppConfig;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.load.ParsingException;
 
 /**
  *

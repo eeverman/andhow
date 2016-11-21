@@ -64,8 +64,8 @@ public class AppConfigUtil {
 
 	}
 		
-	public static void printNamingExceptions(List<NamingException> nameExceptions, PrintStream out) {
-		for (NamingException ne : nameExceptions) {
+	public static void printExceptions(List<? extends Exception> exceptions, PrintStream out) {
+		for (Exception ne : exceptions) {
 			out.println(ne.getMessage());
 		}
 	}

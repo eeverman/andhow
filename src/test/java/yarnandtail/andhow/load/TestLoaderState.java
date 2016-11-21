@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.LoaderException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

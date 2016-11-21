@@ -35,7 +35,7 @@ Design Choices
 
 ToDo
 ----
-*	***Now have a required flag, but there is no enforcement of it and no tests***
+*	***Now have a required flag, but there are no tests***
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
 	These will need to be initiated out of sequence from the main AppConfig.
 	They may have no relation to the AppConfig.  Perhaps a separate instance-

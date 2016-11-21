@@ -1,9 +1,9 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.Loader;
 import java.util.HashMap;
 import java.util.Map;
-import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.ConfigPoint;
 //import yarnandtail.andhow.*;
 

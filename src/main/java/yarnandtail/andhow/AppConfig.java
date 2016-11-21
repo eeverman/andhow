@@ -35,6 +35,7 @@ public class AppConfig {
 	//assign to null when updating.
 	private AppConfigDefinition appConfigDef;
 	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
+	private final List<ValidationException> validationExceptions = new ArrayList();
 	
 	private AppConfig(NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
 		doReset(this, naming, loaders, registeredGroups, cmdLineArgs, startingValues);
@@ -130,7 +131,7 @@ public class AppConfig {
 			
 			List<NamingException> nameExceptions = instanceToReset.appConfigDef.getNamingExceptions();
 			if (nameExceptions.size() > 0) {
-				AppConfigUtil.printNamingExceptions(nameExceptions, errorStream);
+				AppConfigUtil.printExceptions(nameExceptions, errorStream);
 				
 				if (nameExceptions.size() == 1) {
 					throw new ConfigurationException(
@@ -153,6 +154,30 @@ public class AppConfig {
 			
 			instanceToReset.doLoad();
 			
+			instanceToReset.doValidaton();
+			
+			if (instanceToReset.validationExceptions.size() > 0) {
+				AppConfigUtil.printExceptions(instanceToReset.validationExceptions, errorStream);
+				
+				if (nameExceptions.size() == 1) {
+					throw new ConfigurationException(
+							"Unable to continue w/ configuration loading because "
+							+ "there is a single validation error.  "
+							+ "See the 'Caused by' section for the error.  "
+							+ "See System.err for more detail on the actual "
+							+ "params causing the error.",
+							instanceToReset.validationExceptions.get(0));
+				} else {
+					throw new ConfigurationException(
+							"Unable to continue w/ configuration loading because "
+							+ "there are multiple validation errors.  "
+							+ "See the 'Caused by' section for first of those errors.  "
+							+ "See System.err for more detail on the actual "
+							+ "params causing the error.",
+							instanceToReset.validationExceptions.get(0));
+				}
+			}
+			
 		}
 	}
 	
@@ -173,6 +198,16 @@ public class AppConfig {
 
 			loadedValues.clear();
 			loadedValues.addAll(existingValues);
+		}
+	}
+	
+	private void doValidaton() {
+		for (ConfigPoint<?> cp : appConfigDef.getPoints()) {
+			if (cp.isRequired()) {
+				if (getValue(cp) == null && cp.getDefaultValue() == null) {
+					validationExceptions.add(new RequiredPointException(cp, appConfigDef.getCanonicalName(cp)));
+				}
+			}
 		}
 	}
 	

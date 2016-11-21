@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.ParsingException;
+import yarnandtail.andhow.load.ParsingException;
 
 /**
  *
