@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.ConfigPointUtil;
+import yarnandtail.andhow.point.ConfigPointUtil;
 import org.apache.commons.lang3.StringUtils;
 
 /**

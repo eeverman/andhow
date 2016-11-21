@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.NamingStrategy.Naming;
-import yarnandtail.andhow.StringConfigPoint;
+import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.valuetype.StringType;
 import yarnandtail.andhow.SimpleParamsWAlias;
 

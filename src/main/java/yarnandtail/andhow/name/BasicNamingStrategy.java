@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.ConfigPointUtil;
-import static yarnandtail.andhow.ConfigPointUtil.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
 import yarnandtail.andhow.NamingStrategy;
 
 /**
@@ -30,7 +29,7 @@ public class BasicNamingStrategy implements NamingStrategy {
 				effectiveAliases.add(parentGroup.getCanonicalName() + "." + a);
 			}
 		} else {
-			effectiveAliases = ConfigPointUtil.EMPTY_STRING_LIST;
+			effectiveAliases = EMPTY_STRING_LIST;
 		}
 
 		

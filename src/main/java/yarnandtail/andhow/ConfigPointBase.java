@@ -32,7 +32,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 					filter(s -> s != null).collect(Collectors.toList());
 			aliasList = Collections.unmodifiableList(aliasList);
 		} else {
-			aliasList = ConfigPointUtil.EMPTY_STRING_LIST;
+			aliasList = EMPTY_STRING_LIST;
 		}
 				
 		//Clean all values to be non-null
@@ -56,7 +56,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		if (explicitName != null) {
 			aliasList = Collections.unmodifiableList(Arrays.asList(new String[] {explicitName}));
 		} else {
-			aliasList = ConfigPointUtil.EMPTY_STRING_LIST;
+			aliasList = EMPTY_STRING_LIST;
 		}
 	
 				

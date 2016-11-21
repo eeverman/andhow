@@ -1,15 +1,16 @@
 package yarnandtail.andhow;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Interface for an enum representing command line arguments and/or configuration parameters.
  * @author eeverman
  */
 public interface ConfigPoint<T> {
+	public static final List<String> EMPTY_STRING_LIST = Collections.unmodifiableList(new ArrayList<String>());
 	
 	T getValue();
 	

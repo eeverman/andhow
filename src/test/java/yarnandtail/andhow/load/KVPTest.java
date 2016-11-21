@@ -1,9 +1,10 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.load;
 
 import yarnandtail.andhow.load.KVP;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.load.CmdLineLoader;
 
 /**

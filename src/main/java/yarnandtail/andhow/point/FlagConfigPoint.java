@@ -1,5 +1,7 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.point;
 
+import yarnandtail.andhow.ConfigPointBase;
+import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.valuetype.FlagType;
 import yarnandtail.andhow.valuetype.ValueType;
 

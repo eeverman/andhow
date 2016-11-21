@@ -1,5 +1,8 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.point.StringConfigPoint;
+import yarnandtail.andhow.point.FlagConfigPoint;
+
 /**
  *
  * @author eeverman
