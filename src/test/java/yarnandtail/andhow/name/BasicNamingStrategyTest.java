@@ -34,7 +34,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testExplicitNaming() {
 
-		StringConfigPoint point = new StringConfigPoint(null, null, "myName");
+		StringConfigPoint point = new StringConfigPoint(null, false, null, "myName");
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
@@ -46,7 +46,7 @@ public class BasicNamingStrategyTest {
 	public void testExplicitNamingWithAliases() {
 
 		StringConfigPoint point = new StringConfigPoint(
-				null, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, 
+				null, false, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), false, 
 				null,  new String[] {"name1", "name2", "name3"});
 		
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");

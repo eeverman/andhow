@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.point;
 
 import yarnandtail.andhow.valuetype.ValueType;
 import java.util.Arrays;
@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.AppConfig;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
@@ -16,13 +20,14 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final ConfigPointType paramType;
 	private final ValueType valueType;
 	private final T defaultValue;
+	private final boolean required;
 	private final String shortDesc;
 	private final String helpText;
 	private final boolean priv;
 	private final List<String> alias;
 	
 	public ConfigPointBase(
-			T defaultValue, String shortDesc,
+			T defaultValue, boolean required, String shortDesc,
 			ConfigPointType paramType, ValueType<T> valueType, boolean priv,
 			String helpText, String[] aliases) {
 		
@@ -39,6 +44,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.paramType = paramType;
 		this.valueType = valueType;
 		this.defaultValue = defaultValue;
+		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
@@ -47,7 +53,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 	
 	public ConfigPointBase(
-			T defaultValue, String shortDesc,
+			T defaultValue, boolean required, String shortDesc,
 			ConfigPointType paramType, ValueType<T> valueType, boolean priv,
 			String helpText, String explicitName) {
 		
@@ -64,6 +70,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.paramType = paramType;
 		this.valueType = valueType;
 		this.defaultValue = defaultValue;
+		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
@@ -104,6 +111,11 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	@Override
 	public T getBaseDefault() {
 		return defaultValue;
+	}
+
+	@Override
+	public boolean isRequired() {
+		return required;
 	}
 	
 	@Override

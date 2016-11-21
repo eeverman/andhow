@@ -18,6 +18,8 @@ public interface ConfigPoint<T> {
 	
 	T getDefaultValue();
 	
+	boolean isRequired();
+	
 	/**
 	 * Statelessly convert a String to the target type.
 	 * Used during loading to statelessly build values which will later be
