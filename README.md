@@ -35,6 +35,7 @@ Design Choices
 
 ToDo
 ----
+*	Need to add blocking on getting App instances that are not ready.
 *	LoaderErrors need to be handled in the same way as the other errors in AppConfig.
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
 	These will need to be initiated out of sequence from the main AppConfig.
