@@ -10,11 +10,16 @@ import java.util.List;
 public class AppConfig {
 	
 	private static AppConfig singleInstance;
-	private static Object lock = new Object();
+	private static final Object lock = new Object();
 	AppConfigCore core;
+	Reloader reloader;
 	
-	private AppConfig(NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) {
+	private AppConfig(NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends ConfigPointGroup>> registeredGroups, 
+			String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues)
+			throws ConfigurationException {
 		core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
+		reloader = new Reloader(this);
 	}
 	
 	public static AppConfig instance() {
@@ -25,22 +30,19 @@ public class AppConfig {
 		}
 	}
 	
-	public static AppConfig instance(
+	public static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, 
 			String[] cmdLineArgs, HashMap<ConfigPoint<?>, Object> startingValues) throws ConfigurationException {
 
-		if (singleInstance != null) {
-			throw new RuntimeException("Already constructed!");
-		} else {
-			synchronized (lock) {
-				if (singleInstance != null) {
-					throw new RuntimeException("Already constructed!");
-				} else {
-					singleInstance = new AppConfig(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
-					return singleInstance;
-				}
+		synchronized (lock) {
+			if (singleInstance != null) {
+				throw new RuntimeException("Already constructed!");
+			} else {
+				singleInstance = new AppConfig(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
+				return singleInstance.reloader;
 			}
 		}
+
 	}
 	
 	public List<Class<? extends ConfigPointGroup>> getGroups() {
@@ -59,19 +61,21 @@ public class AppConfig {
 		return core.getValue(point);
 	}
 
-	/**
-	 * Mostly for testing - a backdoor to reset
-	 * @param startingValues 
-	 */
-	public static void reset(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
-			HashMap<ConfigPoint<?>, Object> forcedValues) {
-		synchronized (lock) {
+
+	public static class Reloader {
+		private final AppConfig instance;
+		
+		private Reloader(AppConfig instance) {
+			this.instance = instance;
+		}
+		
+		public void reload(NamingStrategy naming, List<Loader> loaders, 
+				List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
+				HashMap<ConfigPoint<?>, Object> forcedValues) 
+				throws ConfigurationException {
 			
-			if (singleInstance == null) {
-				singleInstance = new AppConfig(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
-			} else {
-				singleInstance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
+			synchronized (AppConfig.lock) {
+				instance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
@@ -14,7 +15,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  *
  * @author eeverman
  */
-public class AppConfigTest {
+public class AppConfigTest extends AppConfigTestBase {
 	
 	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 	BasicNamingStrategy basicNaming = new BasicNamingStrategy();
@@ -55,6 +56,7 @@ public class AppConfigTest {
 			paramFullPath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true",
 			paramFullPath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true"
 		};
+		
 	}
 	
 	@Test
@@ -66,7 +68,7 @@ public class AppConfigTest {
 	@Test
 	public void testForcingValuesViaAppConfig() {
 		
-		AppConfig.reset(basicNaming, loaders, configPtGroups, null, startVals);
+		reloader.reload(basicNaming, loaders, configPtGroups, null, startVals);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -87,7 +89,7 @@ public class AppConfigTest {
 	@Test
 	public void testDefaultValuesViaLoadingWithNoUserValuesSet() {
 		
-		AppConfig.reset(basicNaming, loaders, configPtGroups, null, null);
+		reloader.reload(basicNaming, loaders, configPtGroups, null, null);
 		
 		assertEquals("bob", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertNull(SimpleParamsWAlias.KVP_NULL.getValue());
@@ -106,7 +108,7 @@ public class AppConfigTest {
 	
 	@Test
 	public void testCmdLineLoaderUsingExplicitBaseName() {
-		AppConfig.reset(basicNaming, loaders, configPtGroups, cmdLineArgsWExplicitName, null);
+		reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWExplicitName, null);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -117,7 +119,7 @@ public class AppConfigTest {
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
-		AppConfig.reset(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+		reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -134,7 +136,7 @@ public class AppConfigTest {
 		configPtGroups.add(SimpleParamsWAliasDuplicate.class);
 		
 		try {
-			AppConfig.reset(asIsNaming, loaders, configPtGroups, null, startVals);
+			reloader.reload(asIsNaming, loaders, configPtGroups, null, startVals);
 			fail();	//The line above should throw an error
 		} catch (ConfigurationException ce) {
 			assertEquals(5, ce.getNamingExceptions().size());
@@ -154,7 +156,7 @@ public class AppConfigTest {
 		configPtGroups.add(SimpleParamsNoAliasRequired.class);
 		
 		try {
-			AppConfig.reset(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+			reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
 			fail();	//The line above should throw an error
 		} catch (ConfigurationException ce) {
 			assertEquals(2, ce.getValidationExceptions().size());
