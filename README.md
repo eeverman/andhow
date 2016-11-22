@@ -25,16 +25,9 @@ Goals
 	points and mark them as required, again, catching these missing parameters
 	at startup.
 	
-
-Design Choices
---------------
-*	Use statics over Enums.  Enums are a natural fit for groups of static final
-	constants, however, Enums do not allow generic types at the individual level.
-	That is, all enums of an Enum type have the same class signature, and thus, 
-	cannot be made to return different types from their getValue() method.
-
 ToDo
 ----
+*	Add testing for AppConfigBuilder
 *	Need to add blocking on getting App instances that are not ready.
 *	LoaderErrors need to be handled in the same way as the other errors in AppConfig.
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
@@ -94,3 +87,11 @@ Ideas
 *	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
 	(and ConfigPoints) will need to track if a value is explicitly set in some
 	way other than figuring it out from a null value.
+
+Design Choices
+--------------
+*	Use statics over Enums.  Enums are a natural fit for groups of static final
+	constants, however, Enums do not allow generic types at the individual level.
+	That is, all enums of an Enum type have the same class signature, and thus, 
+	cannot be made to return different types from their getValue() method.
+

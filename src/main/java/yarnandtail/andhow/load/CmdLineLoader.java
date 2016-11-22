@@ -4,6 +4,7 @@ import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.Loader;
 import java.util.HashMap;
 import java.util.Map;
+import yarnandtail.andhow.AppConfig;
 import yarnandtail.andhow.ConfigPoint;
 //import yarnandtail.andhow.*;
 
@@ -13,7 +14,6 @@ import yarnandtail.andhow.ConfigPoint;
  */
 public class CmdLineLoader implements Loader {
 
-	public static final String KVP_DELIMITER = "=";
 	
 	@Override
 	public Map<ConfigPoint<?>, Object> load(LoaderState state) {
@@ -22,7 +22,7 @@ public class CmdLineLoader implements Loader {
 			
 		for (String s : state.getCmdLineArgs()) {
 			try {
-				KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
+				KVP kvp = KVP.splitKVP(s, AppConfig.KVP_DELIMITER);
 
 				if (kvp.getName() != null) {
 					ConfigPoint cp = state.getAppConfigDef().getPoint(kvp.getName());

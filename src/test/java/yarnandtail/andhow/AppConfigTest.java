@@ -42,19 +42,19 @@ public class AppConfigTest extends AppConfigTestBase {
 		startVals.put(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "KVP_BOB" + CmdLineLoader.KVP_DELIMITER + "test",
-			paramFullPath + "KVP_NULL" + CmdLineLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + CmdLineLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + CmdLineLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + CmdLineLoader.KVP_DELIMITER + "true"
+			paramFullPath + "KVP_BOB" + AppConfig.KVP_DELIMITER + "test",
+			paramFullPath + "KVP_NULL" + AppConfig.KVP_DELIMITER + "not_null",
+			paramFullPath + "FLAG_TRUE" + AppConfig.KVP_DELIMITER + "false",
+			paramFullPath + "FLAG_FALSE" + AppConfig.KVP_DELIMITER + "true",
+			paramFullPath + "FLAG_NULL" + AppConfig.KVP_DELIMITER + "true"
 		};
 		
 		cmdLineArgsWExplicitName = new String[] {
-			paramFullPath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test",
-			paramFullPath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false",
-			paramFullPath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true",
-			paramFullPath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true"
+			paramFullPath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "test",
+			paramFullPath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "not_null",
+			paramFullPath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "false",
+			paramFullPath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true",
+			paramFullPath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true"
 		};
 		
 	}

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import yarnandtail.andhow.AppConfig;
 import yarnandtail.andhow.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
@@ -40,11 +41,11 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "test");
-		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "false");
-		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
-		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + CmdLineLoader.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "test");
+		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "not_null");
+		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "false");
+		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
 		loaderState.setCmdLineArgs(args);
 		
 		
