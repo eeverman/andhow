@@ -53,10 +53,8 @@ ToDo
 	values that are non-string.  For instance, a JNDI param may already be an
 	Integer, instead of needing to be converted from a string.
 *	The AppConfig should initial creating should have a key that is returned
-	to allow resets for testing.
-*	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
-	(and ConfigPoints) will need to track if a value is explicitly set in some
-	way other than figuring it out from a null value.
+	to allow resets for testing.  That 'key' should be an inner class that has
+	access to calling reload.
 *	All loaders should complain bitterly if there is an unmatched value.
 	Since some apps must deal w/ legacy params, there should be a ConfigPointGroup
 	subclass _FixedNameConfigPointGroup_ that uses only the default name or
@@ -93,3 +91,6 @@ Ideas
 		The trans object would share a ref to all of the values, so it would
 		hold the values in memory if it did not close (typical issue w/ resources).
 	Both of those options involve isolating the value map.
+*	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
+	(and ConfigPoints) will need to track if a value is explicitly set in some
+	way other than figuring it out from a null value.
