@@ -82,3 +82,13 @@ Ideas
 	new instances for subtrees or isolated trees (like servlet config).
 *	ConfigPoints should validate their default value against any constraints
 	at construction time to ensure bad defaults cannot be spec'ed.
+*	If dynamic properties are supported, then there needs to be a way to do
+	consistent reads.  Two ways to handle this:
+	*	Get a read-key that would be associated w/ Value map.  Then have some way
+		to use that read-key to read values, which would throw an exception if
+		the read-key is invalid (i.e., the value map has been reassigned).
+	*	Create a transaction object that would contain only the value map.
+		All reads could be done against that transaction object.
+		The trans object would share a ref to all of the values, so it would
+		hold the values in memory if it did not close (typical issue w/ resources).
+	Both of those options involve isolating the value map.
