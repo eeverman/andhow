@@ -28,7 +28,7 @@ public class FlagType extends BaseValueType<Boolean> {
 		if (sourceValue != null) {
 
 				
-			String str = StringUtils.trimToEmpty(sourceValue.toString());
+			String str = StringUtils.trimToEmpty(sourceValue);
 			if (str.isEmpty()) {
 				return true;	//a flag is considered try just by its presence
 			} else {

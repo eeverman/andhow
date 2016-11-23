@@ -2,6 +2,8 @@ package yarnandtail.andhow;
 
 import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.point.FlagConfigPoint;
+import yarnandtail.andhow.point.FlagPointBuilder;
+import yarnandtail.andhow.point.StringPointBuilder;
 
 /**
  *
@@ -9,9 +11,22 @@ import yarnandtail.andhow.point.FlagConfigPoint;
  */
 public interface SimpleParamsWAlias extends ConfigPointGroup {
 	
-	StringConfigPoint KVP_BOB = new StringConfigPoint("bob", false, "", "kvpbob");
-	StringConfigPoint KVP_NULL = new StringConfigPoint(null, false, "", "kvpnull");
-	FlagConfigPoint FLAG_FALSE = new FlagConfigPoint(false, false, "", "flagfalse");
-	FlagConfigPoint FLAG_TRUE = new FlagConfigPoint(true, false, "", "flagtrue");
-	FlagConfigPoint FLAG_NULL = new FlagConfigPoint(null, false, "", "flagnull");
+	StringConfigPoint KVP_BOB = StringPointBuilder.init()
+			.setDefault("bob")
+			.addAlias("kvpbob")
+			.build();
+	StringConfigPoint KVP_NULL = StringPointBuilder.init()
+			.addAlias("kvpnull")
+			.build();
+	FlagConfigPoint FLAG_FALSE = FlagPointBuilder.init()
+			.setDefault(false)
+			.addAlias("flagfalse")
+			.build();
+	FlagConfigPoint FLAG_TRUE = FlagPointBuilder.init()
+			.setDefault(true)
+			.addAlias("flagtrue")
+			.build();
+	FlagConfigPoint FLAG_NULL = FlagPointBuilder.init()
+			.addAlias("flagnull")
+			.build();
 }

@@ -11,8 +11,11 @@ import java.util.List;
  * @author eeverman
  */
 public interface ConfigPoint<T> {
+	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	public static final List<String> EMPTY_STRING_LIST = Collections.unmodifiableList(new ArrayList<String>());
 	
+
+		
 	T getValue();
 	
 	T getExplicitValue();
