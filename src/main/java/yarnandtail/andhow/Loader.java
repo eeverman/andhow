@@ -10,4 +10,12 @@ import yarnandtail.andhow.load.LoaderState;
  */
 public interface Loader {
 	Map<ConfigPoint<?>, Object> load(LoaderState state);
+	
+	/**
+	 * A group of ConfigPoints used to control the loader's behavior, such
+	 * the location of a properties file to load from.
+	 * 
+	 * @return 
+	 */
+	Class<? extends ConfigPointGroup> getLoaderConfig();
 }

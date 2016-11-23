@@ -39,5 +39,23 @@ public class LoaderState {
 		return loaderExceptions;
 	}
 	
+	/**
+	 * Returns the loaded value for the specified point, or the default value
+	 * if not loaded.
+	 * 
+	 * @param <T>
+	 * @param point
+	 * @return 
+	 */
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		for (Map<ConfigPoint<?>, Object> map : existingValues) {
+			if (map.containsKey(point)) {
+				return point.cast(map.get(point));
+			}
+		}
+		
+		return point.getDefaultValue();
+	}
+	
 	
 }

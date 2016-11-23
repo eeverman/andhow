@@ -12,7 +12,7 @@ import yarnandtail.andhow.ConfigPoint;
  *
  * @author eeverman
  */
-public class CmdLineLoader implements Loader {
+public class CmdLineLoader extends BaseLoader {
 
 	
 	@Override

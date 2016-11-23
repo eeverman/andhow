@@ -1,9 +1,5 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.load.ParsingException;
-
 /**
  * A loader exception knows about its Loading context.
  * More specific exceptions like ParsingExceptions might know about the actual
