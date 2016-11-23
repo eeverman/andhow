@@ -29,6 +29,9 @@ Goals
 ToDo
 ----
 *	Start validation...
+*	Aliases should throw an error if they contain commas
+*	Aliases should show a warning if they contain dots.  This could be used to
+	match legacy names, so no warning if contained in a fixed name Group.
 *	IntConfigType needs more testing around conversions.
 *	Are there AppConfig tests that blowup due to unconvertable values (can't turn it to an int)?
 *	Need to add blocking on getting App instances that are not ready.
@@ -43,14 +46,9 @@ ToDo
 	is a system level connection timeout that reads a system property to find
 	a default value, creating a ConfigPoint and marking is as 'write to sys props'
 	with a specific name would provide a way to config that thru AH.
-*	Add a CONFIG_POINT.default(value) that creates an argument for the AppConfig
-	that sets a default at creation time.
 *	Create a JNDI loader.  This will expose some issues w/ dealing w/ configed
 	values that are non-string.  For instance, a JNDI param may already be an
 	Integer, instead of needing to be converted from a string.
-*	The AppConfig should initial creating should have a key that is returned
-	to allow resets for testing.  That 'key' should be an inner class that has
-	access to calling reload.
 *	All loaders should complain bitterly if there is an unmatched value.
 	Since some apps must deal w/ legacy params, there should be a ConfigPointGroup
 	subclass _FixedNameConfigPointGroup_ that uses only the default name or
@@ -69,12 +67,6 @@ ToDo
 *	Redirect AppConfig errors during tests to some place other than out.
 Ideas
 -----
-*	Make AppConfig just an interface w/ static methods and default methods.
-	Actual implementation should be AppConfigCore, which would have no instancing
-	rules/restrictions.
-	This would separate construction/reset complexity from the actual AppConfig logic,
-	allow easier testing of just the AppConfigCore, and make it easier to create
-	new instances for subtrees or isolated trees (like servlet config).
 *	ConfigPoints should validate their default value against any constraints
 	at construction time to ensure bad defaults cannot be spec'ed.
 *	If dynamic properties are supported, then there needs to be a way to do
