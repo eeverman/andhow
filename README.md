@@ -24,9 +24,11 @@ Goals
 *	Support for library/module usage.  A module can declare its configuration
 	points and mark them as required, again, catching these missing parameters
 	at startup.
+*	Easy documentation of config params, example usage and clear error messages.
 	
 ToDo
 ----
+*	Start validation...
 *	IntConfigType needs more testing around conversions.
 *	Are there AppConfig tests that blowup due to unconvertable values (can't turn it to an int)?
 *	Need to add blocking on getting App instances that are not ready.
