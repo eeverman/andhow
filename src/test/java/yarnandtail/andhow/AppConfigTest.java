@@ -3,10 +3,10 @@ package yarnandtail.andhow;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
@@ -21,7 +21,7 @@ public class AppConfigTest extends AppConfigTestBase {
 	BasicNamingStrategy basicNaming = new BasicNamingStrategy();
 	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends ConfigPointGroup>> configPtGroups = new ArrayList();
-	HashMap<ConfigPoint<?>, Object> startVals = new HashMap();
+	Map<ConfigPoint<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	String[] cmdLineArgsWExplicitName = new String[0];
 	
@@ -68,7 +68,15 @@ public class AppConfigTest extends AppConfigTestBase {
 	@Test
 	public void testForcingValuesViaAppConfig() {
 		
-		reloader.reload(basicNaming, loaders, configPtGroups, null, startVals);
+		AppConfigBuilder.init().setNamingStrategy(basicNaming)
+				.addLoader(new CmdLineLoader())
+				.addGroup(SimpleParamsWAlias.class)
+				.addForcedValue(SimpleParamsWAlias.KVP_BOB, "test")
+				.addForcedValue(SimpleParamsWAlias.KVP_NULL, "not_null")
+				.addForcedValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE)
+				.addForcedValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE)
+				.addForcedValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE)
+				.build(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -89,7 +97,10 @@ public class AppConfigTest extends AppConfigTestBase {
 	@Test
 	public void testDefaultValuesViaLoadingWithNoUserValuesSet() {
 		
-		reloader.reload(basicNaming, loaders, configPtGroups, null, null);
+		AppConfigBuilder.init().setNamingStrategy(basicNaming)
+				.addLoader(new CmdLineLoader())
+				.addGroup(SimpleParamsWAlias.class)
+				.build(reloader);
 		
 		assertEquals("bob", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertNull(SimpleParamsWAlias.KVP_NULL.getValue());
@@ -108,7 +119,13 @@ public class AppConfigTest extends AppConfigTestBase {
 	
 	@Test
 	public void testCmdLineLoaderUsingExplicitBaseName() {
-		reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWExplicitName, null);
+
+		AppConfigBuilder.init()
+				.setNamingStrategy(basicNaming)
+				.addLoaders(loaders)
+				.addGroups(configPtGroups)
+				.setCmdLineArgs(cmdLineArgsWExplicitName)
+				.build(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -119,7 +136,12 @@ public class AppConfigTest extends AppConfigTestBase {
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
-		reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+		AppConfigBuilder.init()
+				.setNamingStrategy(basicNaming)
+				.addLoaders(loaders)
+				.addGroups(configPtGroups)
+				.setCmdLineArgs(cmdLineArgsWFullClassName)
+				.build(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -131,12 +153,15 @@ public class AppConfigTest extends AppConfigTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateAliases() {
 		
-		AsIsAliasNamingStrategy asIsNaming = new AsIsAliasNamingStrategy();
-		
-		configPtGroups.add(SimpleParamsWAliasDuplicate.class);
-		
 		try {
-			reloader.reload(asIsNaming, loaders, configPtGroups, null, startVals);
+
+			AppConfigBuilder.init()
+				.setNamingStrategy(new AsIsAliasNamingStrategy())
+				.addLoaders(loaders)
+				.addGroups(configPtGroups)
+				.addGroup(SimpleParamsWAliasDuplicate.class)
+				.build(reloader);
+			
 			fail();	//The line above should throw an error
 		} catch (ConfigurationException ce) {
 			assertEquals(5, ce.getNamingExceptions().size());
@@ -151,12 +176,16 @@ public class AppConfigTest extends AppConfigTestBase {
 	
 	@Test
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
-		
-		//Add a set of params that are required
-		configPtGroups.add(SimpleParamsNoAliasRequired.class);
-		
+
 		try {
-			reloader.reload(basicNaming, loaders, configPtGroups, cmdLineArgsWFullClassName, null);
+				AppConfigBuilder.init()
+					.setNamingStrategy(basicNaming)
+					.addLoaders(loaders)
+					.addGroups(configPtGroups)
+					.addGroup(SimpleParamsNoAliasRequired.class)
+					.setCmdLineArgs(cmdLineArgsWFullClassName)
+					.build(reloader);
+			
 			fail();	//The line above should throw an error
 		} catch (ConfigurationException ce) {
 			assertEquals(2, ce.getValidationExceptions().size());

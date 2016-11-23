@@ -27,7 +27,6 @@ Goals
 	
 ToDo
 ----
-*	Add testing for AppConfigBuilder
 *	Need to add blocking on getting App instances that are not ready.
 *	LoaderErrors need to be handled in the same way as the other errors in AppConfig.
 *	There needs to be a way to use AH for ServletConfig in an isolated scope.
@@ -83,6 +82,7 @@ Ideas
 		All reads could be done against that transaction object.
 		The trans object would share a ref to all of the values, so it would
 		hold the values in memory if it did not close (typical issue w/ resources).
+	*	It may be that J8 ReentrantReadWriteLocks may have alt solutions.
 	Both of those options involve isolating the value map.
 *	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
 	(and ConfigPoints) will need to track if a value is explicitly set in some
