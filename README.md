@@ -29,6 +29,7 @@ Goals
 ToDo
 ----
 *	Start validation...
+*	As a convience, CP.getValue() should accept a default value.
 *	Aliases should throw an error if they contain commas
 *	Aliases should show a warning if they contain dots.  This could be used to
 	match legacy names, so no warning if contained in a fixed name Group.
