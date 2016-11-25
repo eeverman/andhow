@@ -3,10 +3,7 @@ package yarnandtail.andhow;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utilities for AppConfiguration
@@ -24,46 +21,66 @@ public class AppConfigUtil {
 	 * @return A fully configured instance
 	 */
 	public static AppConfigDefinition 
-		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> groups, NamingStrategy naming) {
+		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
 
 		AppConfigDefinition appDef = new AppConfigDefinition();
 		
-		//null groups is possible - used in testing and possibly early uses before params are created
-		if (groups != null) {
-			for (Class<? extends ConfigPointGroup> grp : groups) {
-
-				Field[] fields = grp.getDeclaredFields();
-
-				for (Field f : fields) {
-
-					if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
-
-						ConfigPoint cp = null;
-
-						try {
-							cp = (ConfigPoint) f.get(null);
-						} catch (Exception ex) {	
-							try {
-								f.setAccessible(true);
-								cp = (ConfigPoint) f.get(null);
-							} catch (Exception ex1) {
-								throw new ConfigurationException(
-										"Unable to access non-public field " + 
-										f.getName() + " in " + grp.getCanonicalName() + ".  " +
-										"Is there a security policy that prevents setting it accessable?");
-							}
-						}
-
-						NamingStrategy.Naming names = naming.buildNames(cp, grp, f.getName());
-
-						appDef.addPoint(grp, cp, names);
-					}
-
+		if (loaders != null) {
+			for (Loader loader : loaders) {
+				Class<? extends ConfigPointGroup> group = loader.getLoaderConfig();
+				if (group != null) {
+					
+					doRegisterGroup(appDef, group, naming);
+					
 				}
 			}
 		}
 		
+		//null groups is possible - used in testing and possibly early uses before params are created
+		if (groups != null) {
+			for (Class<? extends ConfigPointGroup> group : groups) {
+
+				doRegisterGroup(appDef, group, naming);
+				
+			}
+		}
+		
 		return appDef;
+
+	}
+		
+	protected static void doRegisterGroup(AppConfigDefinition appDef,
+			Class<? extends ConfigPointGroup> group, NamingStrategy naming) {
+
+
+		Field[] fields = group.getDeclaredFields();
+
+		for (Field f : fields) {
+
+			if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
+
+				ConfigPoint cp = null;
+
+				try {
+					cp = (ConfigPoint) f.get(null);
+				} catch (Exception ex) {	
+					try {
+						f.setAccessible(true);
+						cp = (ConfigPoint) f.get(null);
+					} catch (Exception ex1) {
+						throw new ConfigurationException(
+								"Unable to access non-public field " + 
+								f.getName() + " in " + group.getCanonicalName() + ".  " +
+								"Is there a security policy that prevents setting it accessable?");
+					}
+				}
+
+				NamingStrategy.Naming names = naming.buildNames(cp, group, f.getName());
+
+				appDef.addPoint(group, cp, names);
+			}
+
+		}
 
 	}
 		

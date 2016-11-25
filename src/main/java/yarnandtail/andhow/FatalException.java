@@ -5,7 +5,7 @@ package yarnandtail.andhow;
  * 
  * @author eeverman
  */
-public class FatalException extends Exception {
+public class FatalException extends RuntimeException {
 
 	String fatalReason;
 			

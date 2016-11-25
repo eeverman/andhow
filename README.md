@@ -29,6 +29,7 @@ Goals
 ToDo
 ----
 *	Start validation...
+*	WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 *	As a convience, CP.getValue() should accept a default value.
 *	Aliases should throw an error if they contain commas
 *	Aliases should show a warning if they contain dots.  This could be used to
@@ -79,7 +80,11 @@ Ideas
 		All reads could be done against that transaction object.
 		The trans object would share a ref to all of the values, so it would
 		hold the values in memory if it did not close (typical issue w/ resources).
-	*	It may be that J8 ReentrantReadWriteLocks may have alt solutions.
+		*	The bet idiom for this would be a try (transaction = App.getTrans()) {}
+		*	ConfigPointDynamic might be a base interface which requires a transcation
+			to be passed in to get a value.  Only the more common non-dyn subclass
+			would allow access to values w/o a transaction.
+		*	Transactions that run over a minute of two should complain loudly.
 	Both of those options involve isolating the value map.
 *	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
 	(and ConfigPoints) will need to track if a value is explicitly set in some

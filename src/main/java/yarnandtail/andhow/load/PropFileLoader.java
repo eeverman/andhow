@@ -5,20 +5,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import yarnandtail.andhow.LoaderException;
-import yarnandtail.andhow.Loader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
-import yarnandtail.andhow.AppConfig;
 import yarnandtail.andhow.ConfigGroupDescription;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
 import yarnandtail.andhow.FatalException;
-import yarnandtail.andhow.FatalLoaderException;
-import yarnandtail.andhow.RequiredPointException;
-import yarnandtail.andhow.name.BasicNamingStrategy;
-import yarnandtail.andhow.point.IntConfigPoint;
-import yarnandtail.andhow.point.IntPointBuilder;
 import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.point.StringPointBuilder;
 //import yarnandtail.andhow.*;
@@ -37,14 +31,19 @@ public class PropFileLoader extends BaseLoader {
 		Properties props = null;
 		
 		String filePath = state.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
+		String description = null;
 		
 
 		if (filePath != null) {
+			description = "File at: " + filePath;
 			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 		}
 		
 		if (props == null && state.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
 			File relPath = buildExecutableRelativePath(state.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
+			
+			description = "File at: " + filePath;
+			
 			if (relPath != null) {
 				props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
 			}
@@ -52,19 +51,39 @@ public class PropFileLoader extends BaseLoader {
 		
 		if (props == null && state.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
 			
+			description = "File on classpath at: " + state.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+			
 			props = loadPropertiesFromClasspath(
 				state.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
 
 		}
 
 		if (props == null) {
-			throw new FatalLoaderException(null, this, null,
+			throw new FatalException(null,
 				"Expected to find one of the PropFileLoader config points " +
 				"pointing to a valid file, but couldn't read any file. ");
 		}
 		
+		for(Entry<Object, Object> entry : props.entrySet()) {
+			if (entry.getKey() != null && entry.getValue() != null) {
+				String k = entry.getKey().toString();
+				String v = entry.getValue().toString();
+				
+				try {
+
+					attemptToPut(state, values, k, v);
+
+				} catch (ParsingException e) {
+					state.getLoaderExceptions().add(
+							new LoaderException(e, this, null, description)
+					);
+				}
+				
+				
+			}
+		}
 		
-		//return values;
+		return values;
 	}
 	
 	@Override
@@ -133,13 +152,6 @@ public class PropFileLoader extends BaseLoader {
 			//LOG.error("Attempting to find the executable directory containing the running jar file caused an exception", e);
 			return null;
 		}
-	}
-	
-	protected LoaderException buildLoaderException() {
-							new LoaderException(reqEx, this, CONFIG.PROP_FILEPATH,
-							"Expected to find this ConfigPoint already specified - "
-							+ "it must be loaded by a loader prior to the PropFileLoader "
-							+ "so that the this loader can locate a properties file."));
 	}
 	
 	

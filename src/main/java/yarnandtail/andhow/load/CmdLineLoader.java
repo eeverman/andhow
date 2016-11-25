@@ -24,17 +24,8 @@ public class CmdLineLoader extends BaseLoader {
 			try {
 				KVP kvp = KVP.splitKVP(s, AppConfig.KVP_DELIMITER);
 
-				if (kvp.getName() != null) {
-					ConfigPoint cp = state.getAppConfigDef().getPoint(kvp.getName());
-
-					if (cp != null) {
-						values.put(cp, cp.convertString(kvp.getValue()));
-
-					} else {
-						//need a way to deal w/ these
-					}
-
-				}
+				attemptToPut(state, values, kvp.getName(), kvp.getValue());
+				
 			} catch (ParsingException e) {
 				state.getLoaderExceptions().add(
 						new LoaderException(e, this, null, "Command line parameters")

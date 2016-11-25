@@ -39,7 +39,7 @@ public class AppConfigCore {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		appConfigDef = registerGroups(registeredGroups);
+		appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, loaders, namingStrategy);
 
 		if (appConfigDef.getNamingExceptions().size() > 0) {
 			throw new ConfigurationException(appConfigDef.getNamingExceptions(), null, null);
@@ -77,12 +77,12 @@ public class AppConfigCore {
 		return null;
 	}
 	
-	private AppConfigDefinition registerGroups(List<Class<? extends ConfigPointGroup>> registeredGroups) {
-		return AppConfigUtil.doRegisterConfigPoints(registeredGroups, namingStrategy);
-	}
+//	private AppConfigDefinition registerGroups(List<Class<? extends ConfigPointGroup>> registeredGroups) {
+//		return AppConfigUtil.doRegisterConfigPoints(registeredGroups, namingStrategy);
+//	}
 	
 	
-	private void loadValues() {
+	private void loadValues() throws FatalException {
 		List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
 
 		if (forcedValues.size() > 0) {
