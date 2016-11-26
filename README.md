@@ -34,7 +34,7 @@ ToDo
 *	Aliases should throw an error if they contain commas
 *	Aliases should show a warning if they contain dots.  This could be used to
 	match legacy names, so no warning if contained in a fixed name Group.
-*	IntConfigType needs more testing around conversions.
+*	All ConfigPoints needs direct testing.  Not sure the best way to directly test.
 *	Are there AppConfig tests that blowup due to unconvertable values (can't turn it to an int)?
 *	Need to add blocking on getting App instances that are not ready.
 *	LoaderErrors need to be handled in the same way as the other errors in AppConfig.
