@@ -106,7 +106,7 @@ public class AppConfigTest extends AppConfigTestBase {
 		assertNull(SimpleParamsWAlias.KVP_NULL.getValue());
 		assertTrue(SimpleParamsWAlias.FLAG_TRUE.getValue());
 		assertFalse(SimpleParamsWAlias.FLAG_FALSE.getValue());
-		assertNull(SimpleParamsWAlias.FLAG_NULL.getValue());
+		assertFalse(SimpleParamsWAlias.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
 		List<ConfigPoint<?>> regPts = AppConfig.instance().getPoints();

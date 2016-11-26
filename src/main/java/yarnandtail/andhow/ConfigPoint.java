@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface ConfigPoint<T> {
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
-	public static final List<String> EMPTY_STRING_LIST = Collections.unmodifiableList(new ArrayList<String>());
+	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
 	
 
 		
