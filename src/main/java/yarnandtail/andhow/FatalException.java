@@ -6,15 +6,9 @@ package yarnandtail.andhow;
  * @author eeverman
  */
 public class FatalException extends RuntimeException {
-
-	String fatalReason;
-			
+		
 	public FatalException(Exception base, String fatalReason) {
-		super(base);
-		this.fatalReason = fatalReason;
+		super(fatalReason, base);
 	}
-	
-	public  String getFatalReason() {
-		return fatalReason;
-	}
+
 }
