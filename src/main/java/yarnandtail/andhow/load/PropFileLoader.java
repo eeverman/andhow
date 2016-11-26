@@ -109,8 +109,9 @@ public class PropFileLoader extends BaseLoader {
 	
 	protected Properties loadPropertiesFromClasspath(String classpath, ConfigPoint<?> fromPoint) throws FatalException {
 		
-		return loadPropertiesFromInputStream(
-				PropFileLoader.class.getClassLoader().getResourceAsStream(classpath), fromPoint, classpath);
+		InputStream inS = PropFileLoader.class.getResourceAsStream(classpath);
+		
+		return loadPropertiesFromInputStream(inS, fromPoint, classpath);
 
 	}
 	
