@@ -9,7 +9,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.AppConfig;
-import yarnandtail.andhow.AppConfigDefinition;
+import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
 

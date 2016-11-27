@@ -1,10 +1,18 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ConfigPointGroup;
+import yarnandtail.andhow.ConfigurationException;
+import yarnandtail.andhow.FatalException;
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.RequiredPointException;
+import yarnandtail.andhow.ValidationException;
 import yarnandtail.andhow.load.LoaderState;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 

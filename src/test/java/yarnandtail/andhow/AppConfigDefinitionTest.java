@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import yarnandtail.andhow.AppConfigDefinition;
+import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
