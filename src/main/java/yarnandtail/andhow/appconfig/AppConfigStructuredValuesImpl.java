@@ -1,6 +1,6 @@
 package yarnandtail.andhow.appconfig;
 
-import yarnandtail.andhow.appconfig.AppConfigValuesProduction;
+import yarnandtail.andhow.appconfig.AppConfigValuesImpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,47 +9,33 @@ import java.util.Map;
 import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.AppConfigStructuredValues;
+import yarnandtail.andhow.LoaderValues;
 
 /**
  *
  * @author eeverman
  */
-public class AppConfigValuesBuilder implements AppConfigValues {
+public class AppConfigStructuredValuesImpl implements AppConfigStructuredValues {
 	
 	/** List of maps of values that were loaded by each loader */
-	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
+	private final List<LoaderValues> loadedValuesList = new ArrayList();
 	
-	/** List of loaders, corresponding to the loadedValues list */
-	private final List<Loader> loaders = new ArrayList();
-	
-	public AppConfigValuesBuilder() {}
+	public AppConfigStructuredValuesImpl() {}
 
 	@Override
 	public Object getValue(ConfigPoint<?> point) {
-		for (Map<ConfigPoint<?>, Object> map : loadedValues) {
-			if (map.containsKey(point)) {
-				return map.get(point);
-			}
-		}
-		
-		return null;
+		return loadedValuesList.stream().filter(lv -> lv.isPointPresent(point))
+				.map(lv -> lv.getValue(point)).findFirst().orElse(null);
 	}
 
 	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
-		for (Map<ConfigPoint<?>, Object> map : loadedValues) {
-			if (map.containsKey(point)) {
-				return true;
-			}
-		}
-		return false;
+		return loadedValuesList.stream().anyMatch(pv -> pv.isPointPresent(point));
 	}
 	
-	public void addValues(Loader loader, Map<ConfigPoint<?>, Object> values) {
-		if (values != null && values.size() > 0) {
-			loadedValues.add(values);
-			loaders.add(loader);
-		}
+	public void addValues(LoaderValues values) {
+		loadedValuesList.add(values);
 	}
 	
 	/**
@@ -62,14 +48,8 @@ public class AppConfigValuesBuilder implements AppConfigValues {
 	 * @param loader
 	 * @return 
 	 */
-	public Map<ConfigPoint<?>, Object> getAllValuesLoadedByLoader(Loader loader) {
-		int index = loaders.indexOf(loader);
-		
-		if (index > -1) {
-			return Collections.unmodifiableMap(loadedValues.get(index));
-		} else {
-			return Collections.emptyMap();
-		}
+	public LoaderValues getAllValuesLoadedByLoader(Loader loader) {
+
 	}
 	
 	/**
@@ -79,15 +59,15 @@ public class AppConfigValuesBuilder implements AppConfigValues {
 	 * @param loader
 	 * @return 
 	 */
-	public Map<ConfigPoint<?>, Object> getEffectiveValuesLoadedByLoader(Loader loader) {
+	public LoaderValues getEffectiveValuesLoadedByLoader(Loader loader) {
 		int index = loaders.indexOf(loader);
 		
 		if (index > -1) {
 			Map<ConfigPoint<?>, Object> effLoaderValues = new HashMap();
 
-			for (ConfigPoint<?> point : loadedValues.get(index).keySet()) {
+			for (ConfigPoint<?> point : loadedValuesList.get(index).keySet()) {
 				if (! isValueSetBeforeLoader(point, index)) {
-					effLoaderValues.put(point, loadedValues.get(index).get(point));
+					effLoaderValues.put(point, loadedValuesList.get(index).get(point));
 				}
 			}
 			
@@ -106,7 +86,7 @@ public class AppConfigValuesBuilder implements AppConfigValues {
 	protected boolean isValueSetBeforeLoader(ConfigPoint<?> point, int loaderIndex) {
 
 		for (int i = 0; i < loaderIndex; i++) {
-			if (loadedValues.get(i).containsKey(point)) {
+			if (loadedValuesList.get(i).containsKey(point)) {
 				return true;
 			}
 		}
@@ -114,10 +94,10 @@ public class AppConfigValuesBuilder implements AppConfigValues {
 		return false;
 	}
 	
-	public AppConfigValuesProduction build() {
+	public AppConfigValuesImpl build() {
 		Map<ConfigPoint<?>, Object> finalValues = new HashMap();
 		
-		for (Map<ConfigPoint<?>, Object> map : loadedValues) {
+		for (Map<ConfigPoint<?>, Object> map : loadedValuesList) {
 			for (ConfigPoint<?> point : map.keySet()) {
 				
 				if (! finalValues.containsKey(point)) {
@@ -126,7 +106,7 @@ public class AppConfigValuesBuilder implements AppConfigValues {
 			}
 		}
 		
-		return new AppConfigValuesProduction(finalValues);
+		return new AppConfigValuesImpl(finalValues);
 	}
 	
 	

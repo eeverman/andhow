@@ -22,7 +22,7 @@ public class AppConfigValuesBuilderTest {
 	@Test
 	public void testBuilder() {
 		
-		AppConfigValuesBuilder builder = new AppConfigValuesBuilder();
+		AppConfigStructuredValuesImpl builder = new AppConfigStructuredValuesImpl();
 		
 		Loader cmdLineLoad = new CmdLineLoader();
 		Loader propFileLoad = new PropFileLoader();
@@ -87,7 +87,7 @@ public class AppConfigValuesBuilderTest {
 		
 		//
 		//Convert to the production version
-		AppConfigValuesProduction prodValues = builder.build();
+		AppConfigValuesImpl prodValues = builder.build();
 		assertEquals("test", prodValues.getValue(SimpleParamsWAlias.KVP_BOB));
 		assertEquals("blah", prodValues.getValue(SimpleParamsWAlias.KVP_NULL));
 		assertEquals(false, prodValues.getValue(SimpleParamsWAlias.FLAG_TRUE));

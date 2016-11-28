@@ -12,13 +12,13 @@ import yarnandtail.andhow.ConfigPoint;
  *
  * @author eeverman
  */
-public class AppConfigValuesProduction implements AppConfigValues {
+public class AppConfigValuesImpl implements AppConfigValues {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final Map<ConfigPoint<?>, Object> loadedValues = new HashMap();
 	
 
-	public AppConfigValuesProduction(Map<ConfigPoint<?>, Object> loadedValues) {
+	public AppConfigValuesImpl(Map<ConfigPoint<?>, Object> loadedValues) {
 		this.loadedValues.putAll(loadedValues);
 	}
 
