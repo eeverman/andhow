@@ -1,8 +1,6 @@
 package yarnandtail.andhow.appconfig;
 
-import yarnandtail.andhow.appconfig.AppConfigValuesImpl;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +9,7 @@ import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.LoaderValues.PointValue;
 
 /**
  *
@@ -19,9 +18,18 @@ import yarnandtail.andhow.LoaderValues;
 public class AppConfigStructuredValuesImpl implements AppConfigStructuredValues {
 	
 	/** List of maps of values that were loaded by each loader */
-	private final List<LoaderValues> loadedValuesList = new ArrayList();
+	protected final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
 	
-	public AppConfigStructuredValuesImpl() {}
+	/**
+	 * Only used for subclasses who might populate the loadedValuesList on their
+	 * own.
+	 */
+	protected AppConfigStructuredValuesImpl() {}
+		
+	public AppConfigStructuredValuesImpl(List<LoaderValues> inLoadedValuesList) {
+		loadedValuesList.addAll(inLoadedValuesList);
+		loadedValuesList.trimToSize();
+	}
 
 	@Override
 	public Object getValue(ConfigPoint<?> point) {
@@ -34,79 +42,49 @@ public class AppConfigStructuredValuesImpl implements AppConfigStructuredValues 
 		return loadedValuesList.stream().anyMatch(pv -> pv.isPointPresent(point));
 	}
 	
-	public void addValues(LoaderValues values) {
-		loadedValuesList.add(values);
-	}
-	
-	/**
-	 * Returns all the values loaded by the passed loader.
-	 * 
-	 * Note that these values may not be the final effective values because they
-	 * may have been overridden by values loaded by earlier loaders.
-	 * 
-	 * @see getEffectiveValuesLoadedByLoader for the list of effective values.
-	 * @param loader
-	 * @return 
-	 */
+	@Override
 	public LoaderValues getAllValuesLoadedByLoader(Loader loader) {
-
+		return loadedValuesList.stream().filter(lv -> lv.getLoader().equals(loader)).findFirst().get();
 	}
-	
-	/**
-	 * Returns the map of values that were loaded by the specified load, only if
-	 * they are not overridden by earlier loaders.
-	 * 
-	 * @param loader
-	 * @return 
-	 */
-	public LoaderValues getEffectiveValuesLoadedByLoader(Loader loader) {
-		int index = loaders.indexOf(loader);
-		
-		if (index > -1) {
-			Map<ConfigPoint<?>, Object> effLoaderValues = new HashMap();
 
-			for (ConfigPoint<?> point : loadedValuesList.get(index).keySet()) {
-				if (! isValueSetBeforeLoader(point, index)) {
-					effLoaderValues.put(point, loadedValuesList.get(index).get(point));
-				}
+	@Override
+	public LoaderValues getEffectiveValuesLoadedByLoader(Loader loader) {
+		LoaderValues allLoaderValues = getAllValuesLoadedByLoader(loader);
+		if (allLoaderValues != null) {
+			
+			ArrayList<LoaderValues.PointValue> effValues = new ArrayList(allLoaderValues.getValues());
+			
+			for (LoaderValues lvs : loadedValuesList) {
+				
+				//only looking for loaders before the specified one
+				if (lvs.getLoader().equals(loader)) break;	
+				
+				//remove 
+				effValues.removeIf(pv -> lvs.isPointPresent(pv.getPoint()));
 			}
 			
-			return effLoaderValues;
+			return new LoaderValues(loader, effValues);
 			
 		} else {
-			return Collections.emptyMap();
+			return null;
 		}
 		
 	}
-	
-	/**
-	 * Returns true if the ConfigPoint is set by a loader prior to the laoder
-	 * speced by the loaderIndex
-	 */
-	protected boolean isValueSetBeforeLoader(ConfigPoint<?> point, int loaderIndex) {
 
-		for (int i = 0; i < loaderIndex; i++) {
-			if (loadedValuesList.get(i).containsKey(point)) {
-				return true;
+	@Override
+	public AppConfigValues getAppConfigValues() {
+		
+		Map<ConfigPoint<?>, Object> effValues = new HashMap();
+		
+		for (LoaderValues lvs : loadedValuesList) {
+			for (PointValue pv : lvs.getValues()) {
+				effValues.putIfAbsent(pv.getPoint(), pv.getValue());
 			}
+			
 		}
 		
-		return false;
-	}
-	
-	public AppConfigValuesImpl build() {
-		Map<ConfigPoint<?>, Object> finalValues = new HashMap();
 		
-		for (Map<ConfigPoint<?>, Object> map : loadedValuesList) {
-			for (ConfigPoint<?> point : map.keySet()) {
-				
-				if (! finalValues.containsKey(point)) {
-					finalValues.put(point, map.get(point));
-				}
-			}
-		}
-		
-		return new AppConfigValuesImpl(finalValues);
+		return new AppConfigValuesImpl(effValues); 
 	}
 	
 	

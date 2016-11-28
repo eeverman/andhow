@@ -30,6 +30,16 @@ public class LoaderValues implements AppConfigValues {
 		}
 	}
 
+	public Loader getLoader() {
+		return loader;
+	}
+
+	public List<PointValue> getValues() {
+		return values;
+	}
+	
+	
+
 	/**
 	 * A linear search for the ConfigPoint in the values loaded by this loader.
 	 * 
@@ -58,7 +68,7 @@ public class LoaderValues implements AppConfigValues {
 		private ConfigPoint<?> point;
 		private Object value;
 		
-		PointValue(ConfigPoint<?> point, Object value) {
+		public PointValue(ConfigPoint<?> point, Object value) {
 			this.point = point;
 			this.value = value;
 		}

@@ -1,9 +1,5 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author eeverman
@@ -18,7 +14,7 @@ public interface AppConfigStructuredValues extends AppConfigValues {
 	 * was able to find and load.
 	 * 
 	 * @param loader
-	 * @return 
+	 * @return May return null if the passed Loader is not in use by the AppConfig.
 	 */
 	LoaderValues getAllValuesLoadedByLoader(Loader loader);
 	
@@ -31,7 +27,7 @@ public interface AppConfigStructuredValues extends AppConfigValues {
 	 * was able to find and load.
 	 * 
 	 * @param loader
-	 * @return 
+	 * @return May return null if the passed Loader is not in use by the AppConfig.
 	 */
 	LoaderValues getEffectiveValuesLoadedByLoader(Loader loader);
 	

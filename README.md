@@ -68,6 +68,7 @@ ToDo
 	super-classy Group.
 *	Redirect AppConfig errors during tests to some place other than out.
 *	Add Password string that doesn't spew its values to the log.
+*	Need more tests in AppConfigStructuredValuesBuilderTest
 Ideas
 -----
 *	ConfigPoints should validate their default value against any constraints

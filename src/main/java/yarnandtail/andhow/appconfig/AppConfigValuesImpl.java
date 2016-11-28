@@ -1,9 +1,6 @@
 package yarnandtail.andhow.appconfig;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
@@ -14,7 +11,9 @@ import yarnandtail.andhow.ConfigPoint;
  */
 public class AppConfigValuesImpl implements AppConfigValues {
 	
-	/** List of maps of values that were loaded by each loader */
+	/** All the ConfigPoints and associated values registered and actually in use,
+	 * meaning that a values was specified by the user in some way.
+	 */
 	private final Map<ConfigPoint<?>, Object> loadedValues = new HashMap();
 	
 
@@ -31,6 +30,5 @@ public class AppConfigValuesImpl implements AppConfigValues {
 	public boolean isPointPresent(ConfigPoint<?> point) {
 		return loadedValues.containsKey(point);
 	}
-	
 	
 }
