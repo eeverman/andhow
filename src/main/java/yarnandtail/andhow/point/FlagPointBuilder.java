@@ -19,7 +19,7 @@ public class FlagPointBuilder extends ConfigPointBuilder<FlagPointBuilder, FlagC
 	public FlagConfigPoint build() {
 
 		return new FlagConfigPoint(defaultValue, required, shortDesc, 
-			paramType, valueType, priv,
+			paramType, valueType,
 			helpText, aliases.toArray(new String[aliases.size()]));
 
 	}

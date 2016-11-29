@@ -70,7 +70,7 @@ public class LoaderValues implements AppConfigValues {
 		if (isPointPresent(point)) {
 			return getValue(point);
 		} else {
-			return point.getBaseDefault();
+			return point.getDefaultValue();
 		}
 	}
 

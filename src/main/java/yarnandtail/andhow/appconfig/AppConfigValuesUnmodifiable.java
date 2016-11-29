@@ -31,7 +31,7 @@ public class AppConfigValuesUnmodifiable implements AppConfigValues {
 		if (isPointPresent(point)) {
 			return point.cast(loadedValues.get(point));
 		} else {
-			return point.getBaseDefault();
+			return point.getDefaultValue();
 		}
 	}
 

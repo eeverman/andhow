@@ -32,7 +32,7 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 		if (isPointPresent(valuesList, point)) {
 			return getValue(valuesList, point);
 		} else {
-			return point.getBaseDefault();
+			return point.getDefaultValue();
 		}
 	}
 

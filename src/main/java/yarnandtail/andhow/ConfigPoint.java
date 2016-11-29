@@ -1,7 +1,6 @@
 package yarnandtail.andhow;
 
 import yarnandtail.andhow.load.ParsingException;
-import java.util.ArrayList;
 import java.util.Collections;
 import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
@@ -15,8 +14,11 @@ public interface ConfigPoint<T> {
 	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
 	
 
-		
+	T getValue(AppConfigValues values);
+	
 	T getValue();
+	
+	T getExplicitValue(AppConfigValues values);
 	
 	T getExplicitValue();
 	
@@ -49,16 +51,6 @@ public interface ConfigPoint<T> {
 	ValueType getValueType();
 	
 	/**
-	 * If true, indicates that this parameter is not intended to be exposed.
-	 * Creates a fixed value, documented parameter that has a hardcoded value
- set via the default value of the ConfigPointDef.
- 
- These values can take advantage of expressions in the default value.
-	 * @return 
-	 */
-	boolean isPrivate();
-	
-	/**
 	 * A short sentence description.
 	 * @return 
 	 */
@@ -80,18 +72,6 @@ public interface ConfigPoint<T> {
 	 * @return The list of aliases or an empty list if there are none.
 	 */
 	List<String> getBaseAliases();
-
-	/**
-	 * If the parameter is unspecified, this value is used instead.
-	 * Any type of Object is possible to store as a default.
- For name-value pairs, this will typically be a string.
- 
- This is the default as specified in the ConfigPointDef itself.  At the
- application level, the effective default can be overridden to provide
- application specific default values.
-	 * @return 
-	 */
-	T getBaseDefault();
 	
 	/**
 	 * Attempt to cast the passed object to the Value type of this CP.

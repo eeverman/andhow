@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.AppConfig;
+import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.load.ParsingException;
@@ -23,12 +24,11 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final boolean required;
 	private final String shortDesc;
 	private final String helpText;
-	private final boolean priv;
 	private final List<String> alias;
 	
 	public ConfigPointBase(
 			T defaultValue, boolean required, String shortDesc,
-			ConfigPointType paramType, ValueType<T> valueType, boolean priv,
+			ConfigPointType paramType, ValueType<T> valueType,
 			String helpText, String[] aliases) {
 		
 		List<String> aliasList;
@@ -48,13 +48,12 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
-		this.priv = priv;
 		
 	}
 	
 	public ConfigPointBase(
 			T defaultValue, boolean required, String shortDesc,
-			ConfigPointType paramType, ValueType<T> valueType, boolean priv,
+			ConfigPointType paramType, ValueType<T> valueType,
 			String helpText, String explicitName) {
 		
 		List<String> aliasList;
@@ -74,7 +73,6 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
-		this.priv = priv;
 		
 	}
 	
@@ -102,25 +100,15 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	public List<String> getBaseAliases() {
 		return alias;
 	}
-
-	@Override
-	public boolean isPrivate() {
-		return priv;
-	}
 	
-	@Override
-	public T getBaseDefault() {
-		return defaultValue;
-	}
-
 	@Override
 	public boolean isRequired() {
 		return required;
 	}
 	
 	@Override
-	public T getValue() {
-		T v = getExplicitValue();
+	public T getValue(AppConfigValues values) {
+		T v = getExplicitValue(values);
 		if (v != null) {
 			return v;
 		} else {
@@ -129,9 +117,19 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 	
 	@Override
-	public T getExplicitValue() {
-		Object v = AppConfig.instance().getValue(this);
+	public final T getValue() {
+		return getValue(AppConfig.instance());
+	}
+	
+	@Override
+	public T getExplicitValue(AppConfigValues values) {
+		Object v = values.getValue(this);
 		return cast(v);
+	}
+	
+	@Override
+	public final T getExplicitValue() {
+		return getExplicitValue(AppConfig.instance());
 	}
 	
 	@Override
@@ -141,7 +139,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	
 	@Override
 	public T getDefaultValue() {
-		return getBaseDefault();
+		return defaultValue;
 	}
 	
 }
