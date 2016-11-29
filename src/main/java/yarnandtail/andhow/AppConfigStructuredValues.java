@@ -32,9 +32,20 @@ public interface AppConfigStructuredValues extends AppConfigValues {
 	LoaderValues getEffectiveValuesLoadedByLoader(Loader loader);
 	
 	/**
-	 * Read-only minimum data for ConfigPoints to retrieve their data from.
+	 * Unmodifiable minimum data for ConfigPoints to retrieve their data from.
 	 * @return 
 	 */
-	AppConfigValues getAppConfigValues();
+	AppConfigValues getUnmodifiableAppConfigValues();
+	
+	/**
+	 * Unmodifiable minimum data collection to store the structure of how data
+	 * was loaded.
+	 * 
+	 * Implementations may maintain this data in one state while loading and
+	 * another once loading is done.
+	 * 
+	 * @return 
+	 */
+	AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues();
 
 }

@@ -2,33 +2,32 @@ package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.LoaderValues;
 
 /**
  *
  * @author eeverman
  */
-public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesUnmodifiable {
+public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredValuesBase {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
 	
-	public AppConfigStructuredValuesBuilder() {
+	/**
+	 * Only used for subclasses who might populate the loadedValuesList on their
+	 * own.
+	 */
+	protected AppConfigStructuredValuesUnmodifiable() {}
+		
+	public AppConfigStructuredValuesUnmodifiable(List<LoaderValues> inLoadedValuesList) {
+		loadedValuesList.addAll(inLoadedValuesList);
+		loadedValuesList.trimToSize();
 	}
-	
-	public void addValues(LoaderValues values) {
-		loadedValuesList.add(values);
-	}
-	
-	@Override
-	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
-		return new AppConfigStructuredValuesUnmodifiable(loadedValuesList);
-	}
-	
+
 	@Override
 	public Object getValue(ConfigPoint<?> point) {
 		return getValue(loadedValuesList, point);
@@ -53,5 +52,9 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesU
 	public AppConfigValues getUnmodifiableAppConfigValues() {
 		return getUnmodifiableAppConfigValues(loadedValuesList);
 	}
-
+	
+	@Override
+	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
+		return this;
+	}
 }

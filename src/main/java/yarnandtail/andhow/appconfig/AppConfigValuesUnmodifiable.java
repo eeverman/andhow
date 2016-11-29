@@ -9,7 +9,7 @@ import yarnandtail.andhow.ConfigPoint;
  *
  * @author eeverman
  */
-public class AppConfigValuesImpl implements AppConfigValues {
+public class AppConfigValuesUnmodifiable implements AppConfigValues {
 	
 	/** All the ConfigPoints and associated values registered and actually in use,
 	 * meaning that a values was specified by the user in some way.
@@ -17,7 +17,7 @@ public class AppConfigValuesImpl implements AppConfigValues {
 	private final Map<ConfigPoint<?>, Object> loadedValues = new HashMap();
 	
 
-	public AppConfigValuesImpl(Map<ConfigPoint<?>, Object> loadedValues) {
+	public AppConfigValuesUnmodifiable(Map<ConfigPoint<?>, Object> loadedValues) {
 		this.loadedValues.putAll(loadedValues);
 	}
 
