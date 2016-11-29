@@ -43,11 +43,13 @@ ToDo
 	They may have no relation to the AppConfig.  Perhaps a separate instance-
 	based AppConfig (one that you create and hold a reference too, instead of
 	a static single instance one).
-*	Direct individual parms to be written to SytemProps (or other).  This would
+*	Direct ConfigPointGroups to be written to SytemProps (or other).  This would
 	expose writable system properties to the system.  For instance, if there
 	is a system level connection timeout that reads a system property to find
 	a default value, creating a ConfigPoint and marking is as 'write to sys props'
 	with a specific name would provide a way to config that thru AH.
+	The need for this is known at the group level, so perhaps groups would extend
+	interfaces that include a static method that handles the disposition?
 *	Create a JNDI loader.  This will expose some issues w/ dealing w/ configed
 	values that are non-string.  For instance, a JNDI param may already be an
 	Integer, instead of needing to be converted from a string.
@@ -74,10 +76,6 @@ ToDo
 *	Separate from forcedValues, the AppConfig should accept default values for
 	cases where the app wants to create defaults if nothing is spec'ed.  This would
 	be implemented by adding a FixedValueLoader at the end of the chain.
-*	The cmdLineLoader now accepts args in constructor, but the AppConfigBuilder
-	needs to populate the args after the loader is created, so there is a setArgs
-	method.  But, that makes the state of the cmdLineLoader mutable.  Is that
-	a problem?
 Ideas
 -----
 *	ConfigPoints should validate their default value against any constraints
