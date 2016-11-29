@@ -18,6 +18,11 @@ public class LoaderValues implements AppConfigValues {
 	private final List<PointValue> values;
 
 	public LoaderValues(Loader loader, List<PointValue> inValues) {
+		
+		if (loader == null) {
+			throw new RuntimeException("The loader cannot be null");
+		}
+		
 		this.loader = loader;
 		
 		if (inValues != null && inValues.size() > 0) {
@@ -47,11 +52,26 @@ public class LoaderValues implements AppConfigValues {
 	 * @return 
 	 */
 	@Override
-	public Object getValue(ConfigPoint<?> point) {
+	public <T> T getValue(ConfigPoint<T> point) {
 		if (point == null) {
 			return null;
 		}
-		return values.stream().filter((pv) -> point.equals(pv.point)).findFirst().map((pv) -> pv.value).orElse(null);
+		return point.cast(
+				values.stream().filter((pv) -> point.equals(pv.point)).findFirst().map((pv) -> pv.value).orElse(null)
+		);
+	}
+	
+	@Override
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		if (point == null) {
+			return null;
+		}
+		
+		if (isPointPresent(point)) {
+			return getValue(point);
+		} else {
+			return point.getBaseDefault();
+		}
 	}
 
 	/**

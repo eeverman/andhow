@@ -12,7 +12,7 @@ import yarnandtail.andhow.LoaderValues;
  *
  * @author eeverman
  */
-public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesUnmodifiable {
+public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesBase {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
@@ -30,8 +30,13 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesU
 	}
 	
 	@Override
-	public Object getValue(ConfigPoint<?> point) {
+	public <T> T getValue(ConfigPoint<T> point) {
 		return getValue(loadedValuesList, point);
+	}
+	
+	@Override
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		return getEffectiveValue(loadedValuesList, point);
 	}
 
 	@Override

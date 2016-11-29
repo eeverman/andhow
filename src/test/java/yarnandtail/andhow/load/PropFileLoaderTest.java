@@ -1,17 +1,16 @@
 package yarnandtail.andhow.load;
 
 import java.util.ArrayList;
-import yarnandtail.andhow.ConfigPoint;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import yarnandtail.andhow.AppConfig;
+import yarnandtail.andhow.LoaderException;
+import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.LoaderValues.PointValue;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
+import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
 
 /**
  *
@@ -19,13 +18,18 @@ import yarnandtail.andhow.SimpleParamsWAlias;
  */
 public class PropFileLoaderTest {
 	
-	TestLoaderState loaderState = new TestLoaderState();
+	AppConfigDefinition appDef;
+	AppConfigStructuredValuesBuilder appValuesBuilder;
+	ArrayList<LoaderException> loaderExceptions;
 	
 	@Before
 	public void init() {
+		
+		appValuesBuilder = new AppConfigStructuredValuesBuilder();
+		loaderExceptions = new ArrayList();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		appDef = new AppConfigDefinition();
 		
 		appDef.addPoint(PropFileLoader.CONFIG.class, 
 				PropFileLoader.CONFIG.CLASSPATH_PATH, 
@@ -44,7 +48,6 @@ public class PropFileLoaderTest {
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_TRUE, bns.buildNames(SimpleParamsWAlias.FLAG_TRUE, SimpleParamsWAlias.class, "FLAG_TRUE"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_NULL, bns.buildNames(SimpleParamsWAlias.FLAG_NULL, SimpleParamsWAlias.class, "FLAG_NULL"));
 
-		loaderState.setAppConfigDef(appDef);
 	}
 	
 	@Test
@@ -52,20 +55,22 @@ public class PropFileLoaderTest {
 		
 		String basePath = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 		
-		Map<ConfigPoint<?>, Object> existingValues = new HashMap();
-		existingValues.put(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/example.properties");
-		loaderState.getExistingValues().add(existingValues);
 		
+		
+		ArrayList<PointValue> evl = new ArrayList();
+		evl.add(new PointValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/example.properties"));
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl);
+		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
 		
-		Map<ConfigPoint<?>, Object> result = cll.load(loaderState);
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder, loaderExceptions);
 		
-		assertEquals("kvpBobValue", result.get(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("kvpNullValue", result.get(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.get(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("kvpBobValue", result.getValue(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("kvpNullValue", result.getValue(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getValue(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	

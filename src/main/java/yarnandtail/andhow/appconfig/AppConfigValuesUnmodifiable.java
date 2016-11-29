@@ -22,8 +22,17 @@ public class AppConfigValuesUnmodifiable implements AppConfigValues {
 	}
 
 	@Override
-	public Object getValue(ConfigPoint<?> point) {
-		return loadedValues.get(point);
+	public <T> T getValue(ConfigPoint<T> point) {
+		return point.cast(loadedValues.get(point));
+	}
+	
+	@Override
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		if (isPointPresent(point)) {
+			return point.cast(loadedValues.get(point));
+		} else {
+			return point.getBaseDefault();
+		}
 	}
 
 	@Override

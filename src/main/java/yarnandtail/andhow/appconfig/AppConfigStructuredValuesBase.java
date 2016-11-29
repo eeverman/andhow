@@ -21,8 +21,19 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 
 	//
 	// implementation independent methods to be used w/ subclasses
-	protected final Object getValue(List<LoaderValues> valuesList, ConfigPoint<?> point) {
-		return valuesList.stream().filter((LoaderValues lv) -> lv.isPointPresent(point)).map((LoaderValues lv) -> lv.getValue(point)).findFirst().orElse(null);
+	protected final <T> T getValue(List<LoaderValues> valuesList, ConfigPoint<T> point) {
+		return point.cast(
+				valuesList.stream().filter((LoaderValues lv) -> lv.isPointPresent(point)).
+						map((LoaderValues lv) -> lv.getValue(point)).findFirst().orElse(null)
+		);
+	}
+	
+	protected final <T> T getEffectiveValue(List<LoaderValues> valuesList, ConfigPoint<T> point) {
+		if (isPointPresent(valuesList, point)) {
+			return getValue(valuesList, point);
+		} else {
+			return point.getBaseDefault();
+		}
 	}
 
 	protected final boolean isPointPresent(List<LoaderValues> valuesList, ConfigPoint<?> point) {

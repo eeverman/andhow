@@ -3,9 +3,8 @@ package yarnandtail.andhow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import yarnandtail.andhow.LoaderValues.PointValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -38,7 +37,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  */
 public class AppConfigBuilder {
 	//User config
-	private final Map<ConfigPoint<?>, Object> forcedValues = new HashMap();
+	private final ArrayList<LoaderValues.PointValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private NamingStrategy namingStrategy = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();
@@ -69,18 +68,18 @@ public class AppConfigBuilder {
 	}
 	
 	public AppConfigBuilder addForcedValue(ConfigPoint<?> point, Object value) {
-		forcedValues.put(point, value);
+		forcedValues.add(new PointValue(point, value));
 		return this;
 	}
 	
 	/**
 	 * Alternative to adding individual forced values if you already have them
-	 * in a map.
+	 * in a list
 	 * @param startVals
 	 * @return 
 	 */
-	public AppConfigBuilder addForcedValues(Map<ConfigPoint<?>, Object> startVals) {
-		this.forcedValues.putAll(startVals);
+	public AppConfigBuilder addForcedValues(List<PointValue> startVals) {
+		this.forcedValues.addAll(startVals);
 		return this;
 	}
 	

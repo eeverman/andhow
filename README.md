@@ -68,7 +68,16 @@ ToDo
 	super-classy Group.
 *	Redirect AppConfig errors during tests to some place other than out.
 *	Add Password string that doesn't spew its values to the log.
-*	Need more tests in AppConfigStructuredValuesBuilderTest
+*	Need to define how multiple entries for the same point are handled, even
+	from the same loader (ie two entries in a prop file).  Right now I think the
+	first would win, but maybe that should just throw an error?
+*	Separate from forcedValues, the AppConfig should accept default values for
+	cases where the app wants to create defaults if nothing is spec'ed.  This would
+	be implemented by adding a FixedValueLoader at the end of the chain.
+*	The cmdLineLoader now accepts args in constructor, but the AppConfigBuilder
+	needs to populate the args after the loader is created, so there is a setArgs
+	method.  But, that makes the state of the cmdLineLoader mutable.  Is that
+	a problem?
 Ideas
 -----
 *	ConfigPoints should validate their default value against any constraints

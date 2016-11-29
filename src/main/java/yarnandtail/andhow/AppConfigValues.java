@@ -11,6 +11,7 @@ package yarnandtail.andhow;
  * @author eeverman
  */
 public interface AppConfigValues {
-	Object getValue(ConfigPoint<?> point);
+	<T> T getValue(ConfigPoint<T> point);
+	<T> T  getEffectiveValue(ConfigPoint<T> point);
 	boolean isPointPresent(ConfigPoint<?> point);
 }

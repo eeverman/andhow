@@ -1,7 +1,7 @@
 package yarnandtail.andhow;
 
-import java.util.Map;
-import yarnandtail.andhow.load.LoaderState;
+import java.util.List;
+import yarnandtail.andhow.appconfig.AppConfigDefinition;
 
 /**
  * Each instance is responsible for loading values from a particular type of source.
@@ -18,7 +18,9 @@ import yarnandtail.andhow.load.LoaderState;
  * @author eeverman
  */
 public interface Loader {
-	Map<ConfigPoint<?>, Object> load(LoaderState state) throws FatalException;
+	LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
+			AppConfigStructuredValues existingValues, 
+			List<LoaderException> loaderExceptions) throws FatalException;
 	
 	/**
 	 * A group of ConfigPoints used to control the loader's behavior, such

@@ -2,37 +2,33 @@ package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.ConfigurationException;
-import yarnandtail.andhow.FatalException;
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.NamingStrategy;
-import yarnandtail.andhow.RequiredPointException;
-import yarnandtail.andhow.ValidationException;
-import yarnandtail.andhow.load.LoaderState;
+import yarnandtail.andhow.*;
+import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
  *
  * @author eeverman
  */
-public class AppConfigCore {
+public class AppConfigCore implements AppConfigValues {
 	//User config
-	private final Map<ConfigPoint<?>, Object> forcedValues = new HashMap();
+	private final ArrayList<PointValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy namingStrategy;
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
 	private final AppConfigDefinition appConfigDef;
-	private final List<Map<ConfigPoint<?>, Object>> loadedValues = new ArrayList();
-	private final List<ValidationException> validationExceptions = new ArrayList();
+	private final AppConfigStructuredValues loadedValues;
+	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
+	private final ArrayList<ValidationException> validationExceptions = new ArrayList();
 	
-	public AppConfigCore(NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, Map<ConfigPoint<?>, Object> startingValues) {
+	public AppConfigCore(NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends ConfigPointGroup>> registeredGroups, 
+			String[] cmdLineArgs, List<PointValue> startingValues) {
+		
 		this.namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
 		if (loaders != null) {
@@ -40,7 +36,8 @@ public class AppConfigCore {
 		}
 		
 		if (startingValues != null) {
-			forcedValues.putAll(startingValues);
+			forcedValues.addAll(startingValues);
+			forcedValues.trimToSize();
 		}
 		
 		if (cmdLineArgs != null && cmdLineArgs.length > 0) {
@@ -53,7 +50,7 @@ public class AppConfigCore {
 			throw new ConfigurationException(appConfigDef.getNamingExceptions(), null, null);
 		}
 
-		loadValues();
+		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
 
 		validateValues();
 
@@ -71,40 +68,36 @@ public class AppConfigCore {
 		return appConfigDef.getPoints();
 	}
 	
+	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
-		return getValue(point) != null;
+		return loadedValues.isPointPresent(point);
 	}
 	
-	public Object getValue(ConfigPoint<?> point) {
-		for (Map<ConfigPoint<?>, Object> map : loadedValues) {
-			if (map.containsKey(point)) {
-				return map.get(point);
-			}
-		}
-		
-		return null;
+	@Override
+	public <T> T getValue(ConfigPoint<T> point) {
+		return loadedValues.getValue(point);
 	}
 	
-//	private AppConfigDefinition registerGroups(List<Class<? extends ConfigPointGroup>> registeredGroups) {
-//		return AppConfigUtil.doRegisterConfigPoints(registeredGroups, namingStrategy);
-//	}
+	@Override
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		return loadedValues.getEffectiveValue(point);
+	}
 	
-	
-	private void loadValues() throws FatalException {
-		List<Map<ConfigPoint<?>, Object>> existingValues = new ArrayList();
+	private AppConfigStructuredValues loadValues() throws FatalException {
+		AppConfigStructuredValuesBuilder existingValues = new AppConfigStructuredValuesBuilder();
 
 		if (forcedValues.size() > 0) {
-			existingValues.add(forcedValues);
+			FixedValueLoader fvl = new FixedValueLoader(forcedValues);
+			loaders.add(0, fvl);
 		}
 
-		LoaderState state = new LoaderState(cmdLineArgs, existingValues, appConfigDef);
+		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, appConfigDef);
 		for (Loader loader : loaders) {
-			Map<ConfigPoint<?>, Object> result = loader.load(state);
-			if (result.size() > 0) existingValues.add(result);
+			LoaderValues result = loader.load(appConfigDef, cmdLineArgs, existingValues, loaderExceptions);
+			existingValues.addValues(result);
 		}
 
-		loadedValues.clear();
-		loadedValues.addAll(existingValues);
+		return existingValues;
 	}
 	
 	

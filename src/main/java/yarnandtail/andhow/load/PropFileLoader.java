@@ -4,15 +4,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import yarnandtail.andhow.LoaderException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import yarnandtail.andhow.ConfigGroupDescription;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.FatalException;
+import yarnandtail.andhow.*;
+import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.point.StringPointBuilder;
 //import yarnandtail.andhow.*;
@@ -25,12 +23,13 @@ public class PropFileLoader extends BaseLoader {
 
 	
 	@Override
-	public Map<ConfigPoint<?>, Object> load(LoaderState state) throws FatalException {
+	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
+			AppConfigStructuredValues existingValues, List<LoaderException> loaderExceptions) throws FatalException {
 		
-		Map<ConfigPoint<?>, Object> values = new HashMap();
+		ArrayList<LoaderValues.PointValue> values = new ArrayList();
 		Properties props = null;
 		
-		String filePath = state.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
+		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
 		String description = null;
 		
 
@@ -39,8 +38,8 @@ public class PropFileLoader extends BaseLoader {
 			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 		}
 		
-		if (props == null && state.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
-			File relPath = buildExecutableRelativePath(state.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
+		if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
+			File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
 			
 			description = "File at: " + filePath;
 			
@@ -49,12 +48,12 @@ public class PropFileLoader extends BaseLoader {
 			}
 		}
 		
-		if (props == null && state.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
+		if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
 			
-			description = "File on classpath at: " + state.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+			description = "File on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
 			
 			props = loadPropertiesFromClasspath(
-				state.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
+				existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
 
 		}
 
@@ -71,10 +70,10 @@ public class PropFileLoader extends BaseLoader {
 				
 				try {
 
-					attemptToPut(state, values, k, v);
+					attemptToAdd(appConfigDef, values, k, v);
 
 				} catch (ParsingException e) {
-					state.getLoaderExceptions().add(
+					loaderExceptions.add(
 							new LoaderException(e, this, null, description)
 					);
 				}
@@ -83,7 +82,9 @@ public class PropFileLoader extends BaseLoader {
 			}
 		}
 		
-		return values;
+		values.trimToSize();
+		
+		return new LoaderValues(this, values);
 	}
 	
 	@Override

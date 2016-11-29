@@ -1,17 +1,17 @@
 package yarnandtail.andhow.load;
 
 import java.util.ArrayList;
-import yarnandtail.andhow.ConfigPoint;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.AppConfig;
+import yarnandtail.andhow.LoaderException;
+import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
+import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
 
 /**
  *
@@ -19,20 +19,24 @@ import yarnandtail.andhow.SimpleParamsWAlias;
  */
 public class CmdLineLoaderTest {
 	
-	TestLoaderState loaderState = new TestLoaderState();
-	
+	AppConfigDefinition appDef;
+	AppConfigStructuredValuesBuilder appValuesBuilder;
+	ArrayList<LoaderException> loaderExceptions;
+
 	@Before
 	public void init() {
+		appValuesBuilder = new AppConfigStructuredValuesBuilder();
+		loaderExceptions = new ArrayList();
+		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		appDef = new AppConfigDefinition();
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_NULL, bns.buildNames(SimpleParamsWAlias.KVP_NULL, SimpleParamsWAlias.class, "KVP_NULL"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_TRUE, bns.buildNames(SimpleParamsWAlias.FLAG_TRUE, SimpleParamsWAlias.class, "FLAG_TRUE"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_NULL, bns.buildNames(SimpleParamsWAlias.FLAG_NULL, SimpleParamsWAlias.class, "FLAG_NULL"));
 
-		loaderState.setAppConfigDef(appDef);
 	}
 	
 	@Test
@@ -46,18 +50,17 @@ public class CmdLineLoaderTest {
 		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "false");
 		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
 		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
-		loaderState.setCmdLineArgs(args);
 		
 		
 		CmdLineLoader cll = new CmdLineLoader();
 		
-		Map<ConfigPoint<?>, Object> result = cll.load(loaderState);
+		LoaderValues result = cll.load(appDef, args, appValuesBuilder, loaderExceptions);
 		
-		assertEquals("test", result.get(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("not_null", result.get(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.get(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.get(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("test", result.getValue(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("not_null", result.getValue(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getValue(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	
