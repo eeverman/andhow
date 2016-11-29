@@ -1,10 +1,10 @@
 package yarnandtail.andhow.load;
 
-import java.util.Map;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.*;
+import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.appconfig.AppConfigDefinition;
 
 /**
  *
@@ -18,16 +18,16 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected void attemptToPut(LoaderState state, Map<ConfigPoint<?>, Object> values, 
+	protected void attemptToAdd(AppConfigDefinition appConfigDef, List<LoaderValues.PointValue> values, 
 			String key, String value) throws ParsingException {
 		
 		key = StringUtils.trimToNull(key);
 		
 		if (key != null && value != null) {
-			ConfigPoint cp = state.getAppConfigDef().getPoint(key);
+			ConfigPoint cp = appConfigDef.getPoint(key);
 
 			if (cp != null) {
-				values.put(cp, cp.convertString(value));
+				values.add(new PointValue(cp, cp.convertString(value)));
 			} else {
 				//need a way to deal w/ these
 			}

@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ConfigPointGroup;
+import yarnandtail.andhow.ConfigurationException;
+import yarnandtail.andhow.NamingException;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
  * The defined set of ConfigPointGroups, child ConfigPoints and their names for use by the app.

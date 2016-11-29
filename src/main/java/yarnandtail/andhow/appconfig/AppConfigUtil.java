@@ -1,9 +1,14 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.appconfig;
 
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ConfigPointGroup;
+import yarnandtail.andhow.ConfigurationException;
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
  * Utilities for AppConfiguration
