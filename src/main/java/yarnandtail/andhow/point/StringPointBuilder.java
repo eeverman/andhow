@@ -18,8 +18,8 @@ public class StringPointBuilder extends ConfigPointBuilder<StringPointBuilder, S
 	@Override
 	public StringConfigPoint build() {
 
-		return new StringConfigPoint(defaultValue, required, shortDesc, 
-			paramType, valueType, priv,
+		return new StringConfigPoint(defaultValue, required, shortDesc, validators,
+			paramType, valueType,
 			helpText, aliases.toArray(new String[aliases.size()]));
 
 	}

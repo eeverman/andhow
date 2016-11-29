@@ -72,7 +72,8 @@ ToDo
 *	Add Password string that doesn't spew its values to the log.
 *	Need to define how multiple entries for the same point are handled, even
 	from the same loader (ie two entries in a prop file).  Right now I think the
-	first would win, but maybe that should just throw an error?
+	first would win, but maybe that should just throw an error?  What about multi-
+	entries on the cmd-line?
 *	Separate from forcedValues, the AppConfig should accept default values for
 	cases where the app wants to create defaults if nothing is spec'ed.  This would
 	be implemented by adding a FixedValueLoader at the end of the chain.

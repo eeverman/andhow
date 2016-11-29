@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valuetype.ValueType;
 
 /**
@@ -18,8 +19,8 @@ public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends
 	protected T defaultValue;
 	protected boolean required = false;
 	protected String shortDesc;
+	protected List<Validator<T>> validators = new ArrayList();
 	protected String helpText;
-	protected boolean priv = false;
 	protected final List<String> aliases = new ArrayList();
 	
 	//All subclasses should have this static method
@@ -65,13 +66,24 @@ public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends
 		return instance;
 	}
 	
-	public B setHelpText(String helpText) {
-		this.helpText = helpText;
+	public B addValidation(Validator<T> validator) {
+		validators.add(validator);
 		return instance;
 	}
 	
-	public B setPrivate(boolean priv) {
-		this.priv = priv;
+	public B addValidations(List<Validator<T>> validators) {
+		this.validators.addAll(validators);
+		return instance;
+	}
+	
+	public B setValidations(List<Validator<T>> validators) {
+		this.validators.clear();
+		this.validators.addAll(validators);
+		return instance;
+	}
+	
+	public B setHelpText(String helpText) {
+		this.helpText = helpText;
 		return instance;
 	}
 	

@@ -19,8 +19,8 @@ public class IntPointBuilder extends ConfigPointBuilder<IntPointBuilder, IntConf
 	@Override
 	public IntConfigPoint build() {
 
-		return new IntConfigPoint(defaultValue, required, shortDesc, 
-			paramType, valueType, priv,
+		return new IntConfigPoint(defaultValue, required, shortDesc, validators,
+			paramType, valueType,
 			helpText, aliases.toArray(new String[aliases.size()]));
 
 	}
