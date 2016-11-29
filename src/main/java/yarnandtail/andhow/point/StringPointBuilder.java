@@ -19,7 +19,7 @@ public class StringPointBuilder extends ConfigPointBuilder<StringPointBuilder, S
 	public StringConfigPoint build() {
 
 		return new StringConfigPoint(defaultValue, required, shortDesc, 
-			paramType, valueType, priv,
+			paramType, valueType,
 			helpText, aliases.toArray(new String[aliases.size()]));
 
 	}

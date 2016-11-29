@@ -8,7 +8,7 @@ import yarnandtail.andhow.LoaderValues.PointValue;
  *
  * @author eeverman
  */
-public class AppConfig {
+public class AppConfig implements AppConfigValues {
 	
 	/**
 	 * In text formats, this is the default delimiter between a key and a value.
@@ -62,12 +62,19 @@ public class AppConfig {
 		return core.getPoints();
 	}
 	
+	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
 		return core.isPointPresent(point);
 	}
 	
-	public Object getValue(ConfigPoint<?> point) {
+	@Override
+	public <T> T getValue(ConfigPoint<T> point) {
 		return core.getValue(point);
+	}
+	
+	@Override
+	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+		return core.getEffectiveValue(point);
 	}
 
 

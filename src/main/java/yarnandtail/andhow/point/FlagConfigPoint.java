@@ -1,5 +1,6 @@
 package yarnandtail.andhow.point;
 
+import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.valuetype.FlagType;
 import yarnandtail.andhow.valuetype.ValueType;
@@ -28,28 +29,24 @@ import yarnandtail.andhow.valuetype.ValueType;
 public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 	
 	public FlagConfigPoint() {
-		this(null, false, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, EMPTY_STRING_ARRAY);
+		this(null, false, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
 	public FlagConfigPoint(Boolean defaultValue, boolean required) {
-		this(defaultValue, required, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), false, null, EMPTY_STRING_ARRAY);
+		this(defaultValue, required, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
 	public FlagConfigPoint(
 			Boolean defaultValue, boolean required, String shortDesc,
-			ConfigPointType paramType, ValueType<Boolean> valueType, boolean priv,
+			ConfigPointType paramType, ValueType<Boolean> valueType,
 			String helpText, String[] aliases) {
 		
-		super(defaultValue, required, shortDesc, paramType, valueType, priv, helpText, aliases);
+		super(defaultValue, required, shortDesc, paramType, valueType, helpText, aliases);
 	}
 	
-	/**
-	 * Override to provide the non-null behavior of the flag.
-	 * @return 
-	 */
 	@Override
-	public Boolean getValue() {
-		Boolean b = super.getValue();
+	public Boolean getValue(AppConfigValues values) {
+		Boolean b = super.getValue(values);
 		
 		if (b != null) {
 			return b;
