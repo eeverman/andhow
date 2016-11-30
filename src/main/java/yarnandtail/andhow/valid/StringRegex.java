@@ -36,4 +36,9 @@ public class StringRegex implements Validator<String> {
 		}
 	}
 	
+	@Override
+	public String getInvalidMessage(String value) {
+		return "The value '" + value + "' does not match the regex expression '" + regex + "'";
+	}
+	
 }

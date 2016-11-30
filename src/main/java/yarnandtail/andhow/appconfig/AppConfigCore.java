@@ -109,6 +109,12 @@ public class AppConfigCore implements AppConfigValues {
 				}
 			}
 		}
+		
+		//Need to iterate over the loaders and the associated values here
+		//and keep track of which ones are effective and not effective.
+		//Do we need a non-effective value list from the structured loader?
+
+		
 	}
 		
 }
