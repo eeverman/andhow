@@ -15,7 +15,7 @@ import yarnandtail.andhow.valid.StringRegex;
  */
 public interface SampleRestClientGroup extends ConfigPointGroup {
 	
-	StringConfigPoint REST_HOST = StringPointBuilder.init().addValidation(new StringRegex("http.*")) .required().build();
+	StringConfigPoint REST_HOST = StringPointBuilder.init().addValidation(new StringRegex(".*\\.usgs\\.gov")) .required().build();
 	IntConfigPoint REST_PORT = IntPointBuilder.init().required().build();
 	StringConfigPoint REST_SERVICE_NAME = StringPointBuilder.init().setDefault("query").build();
 	StringConfigPoint AUTH_KEY = StringPointBuilder.init().required().build();
