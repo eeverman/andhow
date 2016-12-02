@@ -12,6 +12,16 @@ public interface Validator<T> {
 	 * If the value is not valid, this will create a user message explaining
 	 * why the value is not valid.
 	 * 
+	 * This message should only refer to the value and the criteria and assume
+	 * that it is included in a larger message that identifies the ConfigPoint
+	 * and other context.
+	 * 
+	 * This method should be prepared to handle nulls.
+	 * 
+	 * Ending punctuation should not be included.
+	 * 
+	 * Example:  The value '999999999' is larger than the max value of 9999
+	 * 
 	 * @param value
 	 * @return 
 	 */

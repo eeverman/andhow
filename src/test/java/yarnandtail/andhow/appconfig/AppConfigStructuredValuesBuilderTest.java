@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.load.PropFileLoader;
 

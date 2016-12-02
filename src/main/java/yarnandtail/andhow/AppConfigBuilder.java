@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -37,7 +37,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  */
 public class AppConfigBuilder {
 	//User config
-	private final ArrayList<LoaderValues.PointValue> forcedValues = new ArrayList();
+	private final ArrayList<PointValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private NamingStrategy namingStrategy = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();

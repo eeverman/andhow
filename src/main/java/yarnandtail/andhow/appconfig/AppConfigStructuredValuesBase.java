@@ -9,6 +9,7 @@ import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.PointValue;
 
 /**
  *
@@ -47,14 +48,14 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 	public LoaderValues getEffectiveValuesLoadedByLoader(List<LoaderValues> valuesList, Loader loader) {
 		LoaderValues allLoaderValues = getAllValuesLoadedByLoader(loader);
 		if (allLoaderValues != null) {
-			ArrayList<LoaderValues.PointValue> effValues = new ArrayList(allLoaderValues.getValues());
+			ArrayList<PointValue> effValues = new ArrayList(allLoaderValues.getValues());
 			for (LoaderValues lvs : valuesList) {
 				//only looking for loaders before the specified one
 				if (lvs.getLoader().equals(loader)) {
 					break;
 				}
 				//remove
-				effValues.removeIf((LoaderValues.PointValue pv) -> lvs.isPointPresent(pv.getPoint()));
+				effValues.removeIf((PointValue pv) -> lvs.isPointPresent(pv.getPoint()));
 			}
 			return new LoaderValues(loader, effValues);
 		} else {
@@ -67,7 +68,7 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 		Map<ConfigPoint<?>, Object> effValues = new HashMap();
 		
 		for (LoaderValues lvs : valuesList) {
-			for (LoaderValues.PointValue pv : lvs.getValues()) {
+			for (PointValue pv : lvs.getValues()) {
 				effValues.putIfAbsent(pv.getPoint(), pv.getValue());
 			}
 			

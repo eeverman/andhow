@@ -57,7 +57,8 @@ public class LoaderValues implements AppConfigValues {
 			return null;
 		}
 		return point.cast(
-				values.stream().filter((pv) -> point.equals(pv.point)).findFirst().map((pv) -> pv.value).orElse(null)
+				values.stream().filter(pv -> point.equals(pv.getPoint())).
+						findFirst().map(pv -> pv.getValue()).orElse(null)
 		);
 	}
 	
@@ -81,25 +82,8 @@ public class LoaderValues implements AppConfigValues {
 	 */
 	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
-		return values.stream().anyMatch((p) -> p.point.equals(point));
+		return values.stream().anyMatch(p -> p.getPoint().equals(point));
 	}
 	
-	public static class PointValue {
-		private ConfigPoint<?> point;
-		private Object value;
-		
-		public PointValue(ConfigPoint<?> point, Object value) {
-			this.point = point;
-			this.value = value;
-		}
-
-		public ConfigPoint<?> getPoint() {
-			return point;
-		}
-
-		public Object getValue() {
-			return value;
-		}
-	}
 	
 }

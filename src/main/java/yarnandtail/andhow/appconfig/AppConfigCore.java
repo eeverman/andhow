@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
@@ -102,6 +102,9 @@ public class AppConfigCore implements AppConfigValues {
 	
 	
 	private void validateValues() {
+		
+		boolean hasIssues = false;
+		
 		for (ConfigPoint<?> cp : appConfigDef.getPoints()) {
 			if (cp.isRequired()) {
 				if (getValue(cp) == null && cp.getDefaultValue() == null) {
@@ -110,9 +113,19 @@ public class AppConfigCore implements AppConfigValues {
 			}
 		}
 		
-		//Need to iterate over the loaders and the associated values here
-		//and keep track of which ones are effective and not effective.
-		//Do we need a non-effective value list from the structured loader?
+		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
+			for (PointValue pv : lvs.getValues()) {
+				for (ValueIssue issue : pv.getIssues()) {
+					hasIssues = true;
+					
+					System.err.println(issue.getMessageInPointContext());
+				}
+			}
+		}
+		
+		if (hasIssues) {
+			throw new RuntimeException("VAlues are not valid!!");
+		}
 
 		
 	}

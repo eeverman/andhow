@@ -1,9 +1,10 @@
 package yarnandtail.andhow.load;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 
 /**
@@ -18,21 +19,39 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected void attemptToAdd(AppConfigDefinition appConfigDef, List<LoaderValues.PointValue> values, 
-			String key, String value) throws ParsingException {
+	protected void attemptToAdd(AppConfigDefinition appConfigDef, List<PointValue> values, 
+			String key, String strValue) throws ParsingException {
 		
 		key = StringUtils.trimToNull(key);
 		
-		if (key != null && value != null) {
+		if (key != null && strValue != null) {
 			ConfigPoint cp = appConfigDef.getPoint(key);
 
 			if (cp != null) {
-				values.add(new PointValue(cp, cp.convertString(value)));
+				
+				PointValue pv = createValue(cp, strValue);
+				values.add(pv);
+				
 			} else {
 				//need a way to deal w/ these
 			}
 
 		}
+	}
+	
+	protected <T> PointValue createValue(ConfigPoint<T> point, String strValue) throws ParsingException {
+		
+		T value = point.convertString(strValue);
+		
+		ArrayList<ValueIssue> issues = new ArrayList();
+
+		for (Validator<T> v : point.getValidators()) {
+			if (! v.isValid(value)) {
+				issues.add(new InvalidValueIssue(point, value, v));
+			}
+		}
+		
+		return new PointValue(point, value, issues);
 	}
 	
 }

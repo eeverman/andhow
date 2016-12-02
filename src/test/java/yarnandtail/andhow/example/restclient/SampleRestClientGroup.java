@@ -7,6 +7,7 @@ import yarnandtail.andhow.point.FlagPointBuilder;
 import yarnandtail.andhow.point.IntConfigPoint;
 import yarnandtail.andhow.point.IntPointBuilder;
 import yarnandtail.andhow.point.StringPointBuilder;
+import yarnandtail.andhow.valid.StringRegex;
 
 /**
  *
@@ -14,7 +15,7 @@ import yarnandtail.andhow.point.StringPointBuilder;
  */
 public interface SampleRestClientGroup extends ConfigPointGroup {
 	
-	StringConfigPoint REST_HOST = StringPointBuilder.init().required().build();
+	StringConfigPoint REST_HOST = StringPointBuilder.init().addValidation(new StringRegex("http.*")) .required().build();
 	IntConfigPoint REST_PORT = IntPointBuilder.init().required().build();
 	StringConfigPoint REST_SERVICE_NAME = StringPointBuilder.init().setDefault("query").build();
 	StringConfigPoint AUTH_KEY = StringPointBuilder.init().required().build();

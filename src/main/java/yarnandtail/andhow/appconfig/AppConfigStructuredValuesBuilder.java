@@ -1,6 +1,7 @@
 package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppConfigValues;
@@ -42,6 +43,11 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
 		return isPointPresent(loadedValuesList, point);
+	}
+	
+	@Override
+	public List<LoaderValues> getAllLoaderValues() {
+		return Collections.unmodifiableList(loadedValuesList);
 	}
 	
 	@Override

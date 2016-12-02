@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;

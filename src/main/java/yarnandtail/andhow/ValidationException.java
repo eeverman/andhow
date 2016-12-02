@@ -10,6 +10,8 @@ public class ValidationException extends Exception {
 	
 	public ValidationException(ConfigPoint<?> point, String canonName, String message) {
 		super(message);
+		this.point = point;
+		this.canonName = canonName;
 	}
 	
 	public ConfigPoint<?> getPoint() {

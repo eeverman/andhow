@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import yarnandtail.andhow.appconfig.AppConfigCore;
 import java.util.List;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 
 /**
  *
