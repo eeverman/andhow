@@ -25,10 +25,12 @@ public class PointValue {
 		this.point = point;
 		this.value = value;
 		
-		if (inIssues.size() > 0) {
+		if (inIssues != null && inIssues.size() > 0) {
 			List<ValueIssue> newIssues = new ArrayList(inIssues.size());
 			newIssues.addAll(inIssues);
 			issues = Collections.unmodifiableList(newIssues);
+		} else {
+			this.issues = EMPTY_ISSUE_LIST;
 		}
 	}
 
