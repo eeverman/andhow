@@ -30,7 +30,8 @@ ToDo
 ----
 *	Must throw an exception if a Loader instance is not unique b/c loaders are used
 	for identity w/in the StructuredVales.
-*	Start validation...
+*	Validators can detect if they have a bad configuration - need to check that
+	at startup.
 *	WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 *	As a convience, CP.getValue() should accept a default value.
 *	Aliases should throw an error if they contain commas
