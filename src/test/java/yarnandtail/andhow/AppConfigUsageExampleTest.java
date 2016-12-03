@@ -74,11 +74,11 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 					.addLoader(new CmdLineLoader())
 					.build(reloader);
 			fail();
-		} catch (ConfigurationException ce) {
-			assertEquals(3, ce.getValidationExceptions().size());
-			assertEquals(UI_CONFIG.DISPLAY_NAME, ((RequiredPointException)(ce.getValidationExceptions().get(0))).getPoint());
-			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ((RequiredPointException)(ce.getValidationExceptions().get(1))).getPoint());
-			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ((RequiredPointException)(ce.getValidationExceptions().get(2))).getPoint());
+		} catch (AppFatalException ce) {
+			assertEquals(3, ce.getRequirementsProblems().size());
+			assertEquals(UI_CONFIG.DISPLAY_NAME, ((RequirmentProblem)(ce.getRequirementsProblems().get(0))).getPoint());
+			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ((RequirmentProblem)(ce.getRequirementsProblems().get(1))).getPoint());
+			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ((RequirmentProblem)(ce.getRequirementsProblems().get(2))).getPoint());
 		}
 	}
 	

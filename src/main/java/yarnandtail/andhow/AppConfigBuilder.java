@@ -122,9 +122,9 @@ public class AppConfigBuilder {
 	 * in place.
 	 * 
 	 * @return
-	 * @throws ConfigurationException 
+	 * @throws ConstructionException 
 	 */
-	public AppConfig.Reloader build() throws ConfigurationException {
+	public AppConfig.Reloader build() throws ConstructionException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		return AppConfig.build(namingStrategy, loaders, groups,  args, forcedValues);
 	}
@@ -135,9 +135,9 @@ public class AppConfigBuilder {
 	 * Not recommended in production.
 	 * 
 	 * @param reloader
-	 * @throws ConfigurationException 
+	 * @throws ConstructionException 
 	 */
-	public void build(AppConfig.Reloader reloader) throws ConfigurationException {
+	public void build(AppConfig.Reloader reloader) throws ConstructionException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		reloader.reload(namingStrategy, loaders, groups,  args, forcedValues);
 	}

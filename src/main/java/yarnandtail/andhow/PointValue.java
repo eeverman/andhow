@@ -9,11 +9,11 @@ import java.util.List;
  * @author eeverman
  */
 public class PointValue {
-	private static final List<ValueIssue> EMPTY_ISSUE_LIST = Collections.emptyList();
+	private static final List<PointValueProblem> EMPTY_ISSUE_LIST = Collections.emptyList();
 	
 	private ConfigPoint<?> point;
 	private Object value;
-	private List<ValueIssue> issues;
+	private List<PointValueProblem> issues;
 
 	public PointValue(ConfigPoint<?> point, Object value) {
 		this.point = point;
@@ -21,12 +21,12 @@ public class PointValue {
 		this.issues = EMPTY_ISSUE_LIST;
 	}
 	
-	public PointValue(ConfigPoint<?> point, Object value, List<ValueIssue> inIssues) {
+	public PointValue(ConfigPoint<?> point, Object value, List<PointValueProblem> inIssues) {
 		this.point = point;
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			List<ValueIssue> newIssues = new ArrayList(inIssues.size());
+			List<PointValueProblem> newIssues = new ArrayList(inIssues.size());
 			newIssues.addAll(inIssues);
 			issues = Collections.unmodifiableList(newIssues);
 		} else {
@@ -46,7 +46,7 @@ public class PointValue {
 		return issues.size() > 0;
 	}
 	
-	public List<ValueIssue> getIssues() {
+	public List<PointValueProblem> getIssues() {
 		return issues;	//Already unmodifiable
 	}
 	

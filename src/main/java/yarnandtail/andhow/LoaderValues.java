@@ -16,6 +16,7 @@ public class LoaderValues implements AppConfigValues {
 	
 	private final Loader loader;
 	private final List<PointValue> values;
+	private boolean problem = false;
 
 	public LoaderValues(Loader loader, List<PointValue> inValues) {
 		
@@ -30,6 +31,16 @@ public class LoaderValues implements AppConfigValues {
 			newValues.addAll(inValues);
 			newValues.trimToSize();
 			values = Collections.unmodifiableList(newValues);
+			
+			
+			//check for problems
+			for (PointValue pv : values) {
+				if (pv.hasIssues()) {
+					problem = true;
+					break;
+				}
+			}
+			
 		} else {
 			values = EMPTY_POINT_VALUE_LIST;
 		}
@@ -83,6 +94,16 @@ public class LoaderValues implements AppConfigValues {
 	@Override
 	public boolean isPointPresent(ConfigPoint<?> point) {
 		return values.stream().anyMatch(p -> p.getPoint().equals(point));
+	}
+	
+	/**
+	 * Returns true if any value or loader has any sort of issue (invalid value,
+	 * parsing error, etc).
+	 * 
+	 * @return 
+	 */
+	public boolean hasProblems() {
+		return problem;
 	}
 	
 	

@@ -17,12 +17,14 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
+	private boolean problem = false;
 	
 	public AppConfigStructuredValuesBuilder() {
 	}
 	
 	public void addValues(LoaderValues values) {
 		loadedValuesList.add(values);
+		if (values.hasProblems()) problem = true;
 	}
 	
 	@Override
@@ -63,6 +65,11 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	@Override
 	public AppConfigValues getUnmodifiableAppConfigValues() {
 		return getUnmodifiableAppConfigValues(loadedValuesList);
+	}
+
+	@Override
+	public boolean hasProblems() {
+		return problem;
 	}
 
 }

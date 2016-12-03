@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PointValueProblem;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 
 /**
@@ -43,11 +44,11 @@ public abstract class BaseLoader implements Loader {
 		
 		T value = point.convertString(strValue);
 		
-		ArrayList<ValueIssue> issues = new ArrayList();
+		ArrayList<PointValueProblem> issues = new ArrayList();
 
 		for (Validator<T> v : point.getValidators()) {
 			if (! v.isValid(value)) {
-				issues.add(new InvalidValueIssue(point, value, v));
+				issues.add(new PointValueProblem(this, point, value, v));
 			}
 		}
 		

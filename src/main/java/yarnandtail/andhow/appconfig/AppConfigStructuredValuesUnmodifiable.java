@@ -20,11 +20,24 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	
 	/** Just the final effective values */
 	private final AppConfigValues effectiveValues;
+	
+	private final boolean problem;
 		
 	public AppConfigStructuredValuesUnmodifiable(List<LoaderValues> inLoadedValuesList) {
 		structuredValues.addAll(inLoadedValuesList);
 		structuredValues.trimToSize();
 		effectiveValues = super.getUnmodifiableAppConfigValues(structuredValues);
+		
+		//Check for problems
+		boolean willHaveProblem = false;
+		for (LoaderValues lvs : structuredValues) {
+			if (lvs.hasProblems()) {
+				willHaveProblem = true;
+				break;
+			}
+		}
+		
+		problem = willHaveProblem;
 	}
 
 	//
@@ -73,5 +86,10 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	@Override
 	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
 		return this;
+	}
+	
+	@Override
+	public boolean hasProblems() {
+		return problem;
 	}
 }

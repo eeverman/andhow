@@ -3,12 +3,19 @@ package yarnandtail.andhow.appconfig;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
+import yarnandtail.andhow.AppConfigStructuredValues;
+import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.ConfigurationException;
+import yarnandtail.andhow.ConstructionException;
 import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PointValueProblem;
+import yarnandtail.andhow.RequirmentProblem;
 
 /**
  * Utilities for AppConfiguration
@@ -73,7 +80,7 @@ public class AppConfigUtil {
 						f.setAccessible(true);
 						cp = (ConfigPoint) f.get(null);
 					} catch (Exception ex1) {
-						throw new ConfigurationException(
+						throw new ConstructionException(
 								"Unable to access non-public field " + 
 								f.getName() + " in " + group.getCanonicalName() + ".  " +
 								"Is there a security policy that prevents setting it accessable?");
@@ -93,5 +100,24 @@ public class AppConfigUtil {
 		for (Exception ne : exceptions) {
 			out.println(ne.getMessage());
 		}
+	}
+	
+	public static AppFatalException buildFatalException(ArrayList<RequirmentProblem> requirementsProblems,
+			AppConfigStructuredValues loadedValues) {
+		
+		ArrayList<PointValueProblem> pvps = new ArrayList();
+		
+		//build list of PointValueProblems
+		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
+			for (PointValue pv : lvs.getValues()) {
+				pvps.addAll(pv.getIssues());
+			}
+		}
+		
+		return new AppFatalException(
+				"Unable to complete application configuration due to problems. " +
+				"See the System.err out or the log files for complete details.",
+				pvps, requirementsProblems);
+		
 	}
 }

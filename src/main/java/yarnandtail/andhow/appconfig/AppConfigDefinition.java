@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.ConfigurationException;
+import yarnandtail.andhow.ConstructionException;
 import yarnandtail.andhow.NamingException;
 import yarnandtail.andhow.NamingStrategy;
 
@@ -57,7 +57,7 @@ public class AppConfigDefinition {
 		allNames.addAll(names.getAliases());
 		
 		if (canonicalNameByPoint.containsKey(point)) {
-			throw new ConfigurationException("The ConfigPoint '" + names.getCanonicalName() +
+			throw new ConstructionException("The ConfigPoint '" + names.getCanonicalName() +
 					"' in ConfigPointGroup '" + group.getCanonicalName() +
 					"' has already been added.  Duplicate entries are not allowed.");
 		}
