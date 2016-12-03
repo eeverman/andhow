@@ -104,10 +104,11 @@ public class AppConfigCore implements AppConfigValues {
 	//Possible problems:
 	//ConstructionProblem (App level construction issue)
 	//	* Naming exception (non-unique names)
-	//	* Dupllicate point addition
+	//	* Duplicate point addition
 	//	* Duplicate Loader
 	//	* Security exception - unable to read fields in ConfigGroups
 	//	* Default value is invalid
+	//	* Validation is invalid (bad regex string, etc)
 	//LoaderProblem (Loader only context)
 	//	* read IO error
 	//	* Parse error where the point is unknown
