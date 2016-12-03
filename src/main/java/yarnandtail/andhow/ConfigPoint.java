@@ -57,6 +57,12 @@ public interface ConfigPoint<T> {
 	String getShortDescription();
 	
 	/**
+	 * List of validators to validate the converted value.
+	 * @return 
+	 */
+	List<Validator<T>> getValidators();
+	
+	/**
 	 * Added details that might be shown if the user requests help.
 	 * Assume that the short description is already shown.
 	 * @return 

@@ -10,6 +10,7 @@ import yarnandtail.andhow.AppConfig;
 import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.load.ParsingException;
 
 /**
@@ -23,11 +24,12 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final T defaultValue;
 	private final boolean required;
 	private final String shortDesc;
+	private final List<Validator<T>> validators;
 	private final String helpText;
 	private final List<String> alias;
 	
 	public ConfigPointBase(
-			T defaultValue, boolean required, String shortDesc,
+			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
 			ConfigPointType paramType, ValueType<T> valueType,
 			String helpText, String[] aliases) {
 		
@@ -46,13 +48,14 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.defaultValue = defaultValue;
 		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
+		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		
 	}
 	
 	public ConfigPointBase(
-			T defaultValue, boolean required, String shortDesc,
+			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
 			ConfigPointType paramType, ValueType<T> valueType,
 			String helpText, String explicitName) {
 		
@@ -71,6 +74,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		this.defaultValue = defaultValue;
 		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
+		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
 		this.helpText = (helpText != null)?helpText:"";
 		this.alias = aliasList;
 		
@@ -89,6 +93,11 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	@Override
 	public String getShortDescription() {
 		return shortDesc;
+	}
+	
+	@Override
+	public List<Validator<T>> getValidators() {
+		return validators;
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class AppConfigDefinitionTest {
 		assertEquals(0, appDef.getPointsForGroup(SimpleParamsNoAlias.class).size());		//A random group that is not registered 
 	}
 	
-	@Test(expected=ConfigurationException.class)
+	@Test(expected=ConstructionException.class)
 	public void testDuplicatePoint() {
 		
 		NamingStrategy bns = new BasicNamingStrategy();

@@ -26,7 +26,7 @@ public class PropFileLoader extends BaseLoader {
 	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
 			AppConfigStructuredValues existingValues, List<LoaderException> loaderExceptions) throws FatalException {
 		
-		ArrayList<LoaderValues.PointValue> values = new ArrayList();
+		ArrayList<PointValue> values = new ArrayList();
 		Properties props = null;
 		
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);

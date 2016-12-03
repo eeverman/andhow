@@ -11,7 +11,7 @@ import yarnandtail.andhow.load.PropFileLoader;
  *
  * @author eeverman
  */
-public class SampleRestClientApp extends AppConfigTestBase {
+public class SampleRestClientAppTest extends AppConfigTestBase {
 	
 	String propFileLoaderPointbase = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 	String[] cmdLineArgs = new String[0];

@@ -4,7 +4,7 @@ import yarnandtail.andhow.LoaderException;
 import java.util.List;
 import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 //import yarnandtail.andhow.*;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -37,7 +37,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  */
 public class AppConfigBuilder {
 	//User config
-	private final ArrayList<LoaderValues.PointValue> forcedValues = new ArrayList();
+	private final ArrayList<PointValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private NamingStrategy namingStrategy = new BasicNamingStrategy();
 	private final List<String> cmdLineArgs = new ArrayList();
@@ -122,9 +122,9 @@ public class AppConfigBuilder {
 	 * in place.
 	 * 
 	 * @return
-	 * @throws ConfigurationException 
+	 * @throws ConstructionException 
 	 */
-	public AppConfig.Reloader build() throws ConfigurationException {
+	public AppConfig.Reloader build() throws ConstructionException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		return AppConfig.build(namingStrategy, loaders, groups,  args, forcedValues);
 	}
@@ -135,9 +135,9 @@ public class AppConfigBuilder {
 	 * Not recommended in production.
 	 * 
 	 * @param reloader
-	 * @throws ConfigurationException 
+	 * @throws ConstructionException 
 	 */
-	public void build(AppConfig.Reloader reloader) throws ConfigurationException {
+	public void build(AppConfig.Reloader reloader) throws ConstructionException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		reloader.reload(namingStrategy, loaders, groups,  args, forcedValues);
 	}

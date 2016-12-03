@@ -163,7 +163,7 @@ public class AppConfigTest extends AppConfigTestBase {
 				.build(reloader);
 			
 			fail();	//The line above should throw an error
-		} catch (ConfigurationException ce) {
+		} catch (ConstructionException ce) {
 			assertEquals(5, ce.getNamingExceptions().size());
 			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getNamingExceptions().get(0).getNewPoint());
 			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getNamingExceptions().get(1).getNewPoint());
@@ -187,10 +187,10 @@ public class AppConfigTest extends AppConfigTestBase {
 					.build(reloader);
 			
 			fail();	//The line above should throw an error
-		} catch (ConfigurationException ce) {
-			assertEquals(2, ce.getValidationExceptions().size());
-			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ((RequiredPointException)(ce.getValidationExceptions().get(0))).getPoint());
-			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ((RequiredPointException)(ce.getValidationExceptions().get(1))).getPoint());
+		} catch (AppFatalException ce) {
+			assertEquals(2, ce.getRequirementsProblems().size());
+			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ((RequirmentProblem)(ce.getRequirementsProblems().get(0))).getPoint());
+			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ((RequirmentProblem)(ce.getRequirementsProblems().get(1))).getPoint());
 		}
 	}
 	
