@@ -26,6 +26,11 @@ public class StringRegex implements Validator<String> {
 		}
 		
 	}
+	
+	@Override
+	public String getInvalidSpecificationMessage() {
+		return "The expression '" + regex + "' is not a valid regex expression";
+	}
 
 	@Override
 	public boolean isValid(String value) {

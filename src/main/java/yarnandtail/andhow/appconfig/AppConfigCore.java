@@ -101,7 +101,6 @@ public class AppConfigCore implements AppConfigValues {
 	}
 	
 
-	
 	private void validateValues() {
 		
 		boolean hasIssues = false;
