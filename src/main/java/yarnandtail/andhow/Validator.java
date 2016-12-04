@@ -28,6 +28,17 @@ public interface Validator<T> {
 	String getInvalidMessage(T value);
 	
 	/**
+	 * If the specification itself is invalid (such as a bad regex string), this
+	 * will build a message describing the problem to the user.
+	 * 
+	 * This method may return a message regardless of if the validation is invalid
+	 * or not - use isSpecificationValid() to determine if the Validator is
+	 * configured correctly or not.
+	 * @return A message describing an assumed problem with the validation specification.
+	 */
+	String getInvalidSpecificationMessage();
+	
+	/**
 	 * Returns true if the validation criteria itself is valid.
 	 * 
 	 * For things like regex expressions, this would check to see if the regex
