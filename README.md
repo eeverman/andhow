@@ -80,6 +80,8 @@ ToDo
 *	Separate from forcedValues, the AppConfig should accept default values for
 	cases where the app wants to create defaults if nothing is spec'ed.  This would
 	be implemented by adding a FixedValueLoader at the end of the chain.
+*	AppConfigDefinition might be better named AppConfigRuntimeDefinition, b/c it
+	is not a full definition - only the needed def for runtime (ie. no Loader info).
 
 Error / Problem Handling
 -------------------------

@@ -26,7 +26,7 @@ public class AppConfig implements AppConfigValues {
 	private AppConfig(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends ConfigPointGroup>> registeredGroups, 
 			String[] cmdLineArgs, List<PointValue> startingValues)
-			throws ConstructionException {
+			throws AppFatalException {
 		core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 		reloader = new Reloader(this);
 	}
@@ -41,7 +41,7 @@ public class AppConfig implements AppConfigValues {
 	
 	public static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PointValue> startingValues) throws ConstructionException {
+			String[] cmdLineArgs, List<PointValue> startingValues) throws AppFatalException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
@@ -88,7 +88,7 @@ public class AppConfig implements AppConfigValues {
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
 				List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
 				List<PointValue> forcedValues) 
-				throws ConstructionException {
+				throws AppFatalException {
 			
 			synchronized (AppConfig.lock) {
 				instance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);

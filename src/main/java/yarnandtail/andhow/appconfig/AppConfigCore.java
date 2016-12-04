@@ -22,6 +22,7 @@ public class AppConfigCore implements AppConfigValues {
 	//Internal state
 	private final AppConfigDefinition appConfigDef;
 	private final AppConfigStructuredValues loadedValues;
+	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
 	private final ArrayList<RequirmentProblem> requirementsProblems = new ArrayList();
 	
@@ -32,7 +33,13 @@ public class AppConfigCore implements AppConfigValues {
 		this.namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
 		if (loaders != null) {
-			this.loaders.addAll(loaders);
+			for (Loader loader : loaders) {
+				if (! this.loaders.contains(loader)) {
+					this.loaders.add(loader);
+				} else {
+					constructProblems.add(new ConstructionProblem.DuplicateLoader(loader));
+				}
+			}
 		}
 		
 		if (startingValues != null) {
@@ -45,10 +52,8 @@ public class AppConfigCore implements AppConfigValues {
 		}
 
 		appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, loaders, namingStrategy);
-
-		if (appConfigDef.getNamingExceptions().size() > 0) {
-			throw new ConstructionException(appConfigDef.getNamingExceptions(), null, null);
-		}
+		constructProblems.addAll(appConfigDef.getConstructionProblems());
+		
 
 		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
 
@@ -58,7 +63,6 @@ public class AppConfigCore implements AppConfigValues {
 			throw AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
 		}
 	}
-	
 
 	public List<Class<? extends ConfigPointGroup>> getGroups() {
 		return appConfigDef.getGroups();

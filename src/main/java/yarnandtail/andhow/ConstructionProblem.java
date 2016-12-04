@@ -13,14 +13,18 @@ public abstract class ConstructionProblem {
 	
 	public static class NonUniqueNames extends ConstructionProblem {
 		ConfigPoint<?> firstPoint;
-		ConfigPointGroup firstGroup;
+		Class<? extends ConfigPointGroup> firstGroup;
 		String firstCanonName;
 		ConfigPoint<?> secondPoint;
-		ConfigPointGroup secondGroup;
+		Class<? extends ConfigPointGroup> secondGroup;
 		String secondCanonName;
 		String conflictName;
 
-		public NonUniqueNames(ConfigPoint<?> firstPoint, ConfigPointGroup firstGroup, String firstCanonName, ConfigPoint<?> secondPoint, ConfigPointGroup secondGroup, String secondCanonName, String conflictName) {
+		public NonUniqueNames(
+				ConfigPoint<?> firstPoint, Class<? extends ConfigPointGroup> firstGroup, String firstCanonName, 
+				ConfigPoint<?> secondPoint, Class<? extends ConfigPointGroup> secondGroup, String secondCanonName, 
+				String conflictName) {
+			
 			this.firstPoint = firstPoint;
 			this.firstGroup = firstGroup;
 			this.firstCanonName = firstCanonName;
@@ -34,7 +38,7 @@ public abstract class ConstructionProblem {
 			return firstPoint;
 		}
 
-		public ConfigPointGroup getFirstGroup() {
+		public Class<? extends ConfigPointGroup> getFirstGroup() {
 			return firstGroup;
 		}
 
@@ -46,7 +50,7 @@ public abstract class ConstructionProblem {
 			return secondPoint;
 		}
 
-		public ConfigPointGroup getSecondGroup() {
+		public Class<? extends ConfigPointGroup> getSecondGroup() {
 			return secondGroup;
 		}
 
@@ -140,9 +144,9 @@ public abstract class ConstructionProblem {
 	
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
-		Class<ConfigPointGroup> group;
+		Class<? extends ConfigPointGroup> group;
 
-		public SecurityException(Exception exception, Class<ConfigPointGroup> group) {
+		public SecurityException(Exception exception, Class<? extends ConfigPointGroup> group) {
 			this.exception = exception;
 			this.group = group;
 		}
@@ -151,7 +155,7 @@ public abstract class ConstructionProblem {
 			return exception;
 		}
 
-		public Class<ConfigPointGroup> getGroup() {
+		public Class<? extends ConfigPointGroup> getGroup() {
 			return group;
 		}
 		
