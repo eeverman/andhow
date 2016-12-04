@@ -1,10 +1,26 @@
 package yarnandtail.andhow;
 
+import java.util.List;
+
 /**
  *
  * @author eeverman
  */
 public interface AppConfigStructuredValues extends AppConfigValues {
+	
+	/**
+	 * Returns true if any value or loader has any sort of issue (invalid value,
+	 * parsing error, etc).
+	 * 
+	 * @return 
+	 */
+	boolean hasProblems();
+	
+	/**
+	 * A sequential list of all loaders and all its values, even overwritten ones.
+	 * @return 
+	 */
+	List<LoaderValues> getAllLoaderValues();
 	
 	/**
 	 * All the values loaded by the specified Loader, even if they were overridden

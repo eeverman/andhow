@@ -47,7 +47,7 @@ public class BasicNamingStrategyTest {
 	public void testExplicitNamingWithAliases() {
 
 		StringConfigPoint point = new StringConfigPoint(
-				null, false, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), 
+				null, false, null, null, ConfigPointType.SINGLE_NAME_VALUE, StringType.instance(), 
 				null,  new String[] {"name1", "name2", "name3"});
 		
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");

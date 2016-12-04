@@ -1,6 +1,7 @@
 package yarnandtail.andhow.appconfig;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppConfigValues;
@@ -16,12 +17,14 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
+	private boolean problem = false;
 	
 	public AppConfigStructuredValuesBuilder() {
 	}
 	
 	public void addValues(LoaderValues values) {
 		loadedValuesList.add(values);
+		if (values.hasProblems()) problem = true;
 	}
 	
 	@Override
@@ -45,6 +48,11 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 	
 	@Override
+	public List<LoaderValues> getAllLoaderValues() {
+		return Collections.unmodifiableList(loadedValuesList);
+	}
+	
+	@Override
 	public LoaderValues getAllValuesLoadedByLoader(Loader loader) {
 		return getAllValuesLoadedByLoader(loadedValuesList, loader);
 	}
@@ -57,6 +65,11 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	@Override
 	public AppConfigValues getUnmodifiableAppConfigValues() {
 		return getUnmodifiableAppConfigValues(loadedValuesList);
+	}
+
+	@Override
+	public boolean hasProblems() {
+		return problem;
 	}
 
 }

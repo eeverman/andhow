@@ -1,7 +1,9 @@
 package yarnandtail.andhow.point;
 
+import java.util.List;
 import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valuetype.FlagType;
 import yarnandtail.andhow.valuetype.ValueType;
 
@@ -41,7 +43,7 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 			ConfigPointType paramType, ValueType<Boolean> valueType,
 			String helpText, String[] aliases) {
 		
-		super(defaultValue, required, shortDesc, paramType, valueType, helpText, aliases);
+		super(defaultValue, required, shortDesc, null, paramType, valueType, helpText, aliases);
 	}
 	
 	@Override

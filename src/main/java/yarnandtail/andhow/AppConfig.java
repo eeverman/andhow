@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import yarnandtail.andhow.appconfig.AppConfigCore;
 import java.util.List;
-import yarnandtail.andhow.LoaderValues.PointValue;
+import yarnandtail.andhow.PointValue;
 
 /**
  *
@@ -26,7 +26,7 @@ public class AppConfig implements AppConfigValues {
 	private AppConfig(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends ConfigPointGroup>> registeredGroups, 
 			String[] cmdLineArgs, List<PointValue> startingValues)
-			throws ConfigurationException {
+			throws ConstructionException {
 		core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 		reloader = new Reloader(this);
 	}
@@ -41,7 +41,7 @@ public class AppConfig implements AppConfigValues {
 	
 	public static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PointValue> startingValues) throws ConfigurationException {
+			String[] cmdLineArgs, List<PointValue> startingValues) throws ConstructionException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
@@ -88,7 +88,7 @@ public class AppConfig implements AppConfigValues {
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
 				List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
 				List<PointValue> forcedValues) 
-				throws ConfigurationException {
+				throws ConstructionException {
 			
 			synchronized (AppConfig.lock) {
 				instance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);

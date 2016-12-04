@@ -14,21 +14,21 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public class ConfigurationException extends RuntimeException {
+public class ConstructionException extends RuntimeException {
 
 	private final List<NamingException> namingExceptions;
 	private final List<LoaderException> loadingExceptions;
 	private final List<ValidationException> validationExceptions;
 	
 	
-	public ConfigurationException(String message) {
+	public ConstructionException(String message) {
 		super(message);
 		namingExceptions = null;
 		loadingExceptions = null;
 		validationExceptions = null;
 	}
 
-	public ConfigurationException(String message, List<NamingException> namingExceptions,
+	public ConstructionException(String message, List<NamingException> namingExceptions,
 			List<LoaderException> loadingExceptions, List<ValidationException> validationExceptions) {
 		super(message);
 		
@@ -37,7 +37,7 @@ public class ConfigurationException extends RuntimeException {
 		this.validationExceptions = validationExceptions;
 	}
 	
-	public ConfigurationException(List<NamingException> namingExceptions,
+	public ConstructionException(List<NamingException> namingExceptions,
 			List<LoaderException> loadingExceptions, List<ValidationException> validationExceptions) {
 		super();
 		
