@@ -100,26 +100,7 @@ public class AppConfigCore implements AppConfigValues {
 		return existingValues;
 	}
 	
-	//
-	//Possible problems:
-	//ConstructionProblem (App level construction issue)
-	//	* Naming exception (non-unique names)
-	//	* Dupllicate point addition
-	//	* Duplicate Loader
-	//	* Security exception - unable to read fields in ConfigGroups
-	//	* Default value is invalid
-	//LoaderProblem (Loader only context)
-	//	* read IO error
-	//	* Parse error where the point is unknown
-	//	* Unfound file (but is indicated to be required)
-	//	* Unrecognized point name
-	//PointValueProblem (Point and Loader context)
-	//	* Not valid
-	//	* String conversion error
-	//	* Coersion error (from jndi objects)
-	//RequirementsProblem (App level configuration issue)
-	//	* Required Point exception
-	//	* Req group
+
 	
 	private void validateValues() {
 		
