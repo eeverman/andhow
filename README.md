@@ -28,7 +28,10 @@ Goals
 	
 ToDo
 ----
-*	Start validation...
+*	Must throw an exception if a Loader instance is not unique b/c loaders are used
+	for identity w/in the StructuredVales.
+*	Validators can detect if they have a bad configuration - need to check that
+	at startup.
 *	WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 *	As a convience, CP.getValue() should accept a default value.
 *	Aliases should throw an error if they contain commas
@@ -99,6 +102,9 @@ Ideas
 *	Nulls might be explicitly set, possibly w/ EL.  In that case, the LoaderState
 	(and ConfigPoints) will need to track if a value is explicitly set in some
 	way other than figuring it out from a null value.
+*	Add intentions to Loaders to indicate that a loader is intended to load
+	an entire group.  This would require that all required params in a group
+	must be present in via the loader.
 
 Design Choices
 --------------
