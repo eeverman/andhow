@@ -65,7 +65,7 @@ public class AppConfigCore implements AppConfigValues {
 		//Continuing on to load values
 		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
 
-		validateValues();
+		checkForRequiredValues();
 
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems()) {
 			throw AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
@@ -113,9 +113,7 @@ public class AppConfigCore implements AppConfigValues {
 	}
 	
 
-	private void validateValues() {
-		
-		boolean hasIssues = false;
+	private void checkForRequiredValues() {
 		
 		for (ConfigPoint<?> cp : appConfigDef.getPoints()) {
 			if (cp.isRequired()) {
