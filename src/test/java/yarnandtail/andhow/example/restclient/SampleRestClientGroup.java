@@ -11,7 +11,7 @@ import yarnandtail.andhow.point.IntConfigPoint;
  */
 public interface SampleRestClientGroup extends ConfigPointGroup {
 	
-	StringConfigPoint REST_HOST = StringConfigPoint.builder().addRegexValidator(".*\\.usgs\\.gov") .required().build();
+	StringConfigPoint REST_HOST = StringConfigPoint.builder().mustMatchRegex(".*\\.usgs\\.gov") .required().build();
 	IntConfigPoint REST_PORT = IntConfigPoint.builder().required().build();
 	StringConfigPoint REST_SERVICE_NAME = StringConfigPoint.builder().setDefault("query").build();
 	StringConfigPoint AUTH_KEY = StringConfigPoint.builder().required().build();

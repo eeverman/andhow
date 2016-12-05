@@ -55,7 +55,7 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 				helpText, aliases.toArray(new String[aliases.size()]));
 		}
 		
-		public StringPointBuilder addRegexValidator(String regex) {
+		public StringPointBuilder mustMatchRegex(String regex) {
 			this.addValidation(new StringRegex(regex));
 			return this;
 		}

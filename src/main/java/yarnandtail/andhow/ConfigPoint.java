@@ -6,7 +6,29 @@ import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
 
 /**
- * Interface for an enum representing command line arguments and/or configuration parameters.
+ * Interface to represent a configuration point of an application.
+ * 
+ * Implementations are typed so that they return String, Integer, Boolean types
+ * rather than just configuration strings.
+ * 
+ * Implementor's Notes:
+ * See IntConfigPoint as a best example of how to implement a new ConfigPoint.
+ * The reason for creating a new implementation would be to handle a new type, such
+ * as a domain object.
+ * 
+ * <ul>
+ * <li>All implementations can use the ConfigPointBase as a base class.  Most
+ * methods are already present w/ just a few methods left to implement.
+ * <li>All implementations should have a static builder() method that returns
+ * a builder capable of building an instance.  by convention, builders are
+ * inner classes of their associated ConfigPoint.  The ConfigPointBuilder is an
+ * easy base class to extend that provide nearly all needed functionality.
+ * <li>Builders should provide easy access to Validators for their appropriate type.
+ * For instance the StringConfigPoint has a value type of String and has an
+ * associated StringRegex Validator.  By convention, the builder methods to add
+ * validators use the 'must' terminology, as in:  mustMatchRegex(String regex),
+ * or mustStartWith(String prefix).
+ * </ul>
  * @author eeverman
  */
 public interface ConfigPoint<T> {

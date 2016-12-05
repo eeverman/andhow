@@ -192,9 +192,9 @@ public class AppConfigDefinitionTest {
 	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
 	 */
 	public static interface BadDefaultAndValidationGroup extends ConfigPointGroup {
-		StringConfigPoint NAME_WITH_BAD_REGEX = StringConfigPoint.builder().addRegexValidator("The[broekn.*").setDefault("The Big Chill").build();
-		StringConfigPoint COLOR_WITH_BAD_DEFAULT = StringConfigPoint.builder().addRegexValidator("[A-F,0-9]*").setDefault("Red").build();
-		StringConfigPoint COLOR_WITH_OK_DEFAULT = StringConfigPoint.builder().addRegexValidator("[A-F,0-9]*").setDefault("FFF000").build();
+		StringConfigPoint NAME_WITH_BAD_REGEX = StringConfigPoint.builder().mustMatchRegex("The[broekn.*").setDefault("The Big Chill").build();
+		StringConfigPoint COLOR_WITH_BAD_DEFAULT = StringConfigPoint.builder().mustMatchRegex("[A-F,0-9]*").setDefault("Red").build();
+		StringConfigPoint COLOR_WITH_OK_DEFAULT = StringConfigPoint.builder().mustMatchRegex("[A-F,0-9]*").setDefault("FFF000").build();
 
 	}
 }
