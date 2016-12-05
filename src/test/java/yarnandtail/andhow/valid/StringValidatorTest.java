@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
  *
  * @author ericeverman
  */
-public class StringRegexTest {
+public class StringValidatorTest {
 	
-	public StringRegexTest() {
+	public StringValidatorTest() {
 	}
 	
 	@BeforeClass
@@ -37,10 +37,10 @@ public class StringRegexTest {
 	 */
 	@Test
 	public void testIsSpecificationValid() {
-		StringRegex instance = new StringRegex("abc.*");
+		StringValidator.Regex instance = new StringValidator.Regex("abc.*");
 		assertTrue(instance.isSpecificationValid());
 		
-		instance = new StringRegex("abc.*[");
+		instance = new StringValidator.Regex("abc.*[");
 		assertFalse(instance.isSpecificationValid());
 	}
 
@@ -49,7 +49,7 @@ public class StringRegexTest {
 	 */
 	@Test
 	public void testIsValid() {
-		StringRegex instance = new StringRegex("abc.*");
+		StringValidator.Regex instance = new StringValidator.Regex("abc.*");
 		assertTrue(instance.isValid("abc"));
 		assertTrue(instance.isValid("abcXYZ"));
 		assertFalse(instance.isValid("cba"));

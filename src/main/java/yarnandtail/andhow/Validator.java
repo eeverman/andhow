@@ -47,4 +47,15 @@ public interface Validator<T> {
 	 * @return 
 	 */
 	boolean isSpecificationValid();
+	
+	/**
+	 * Get a description of the validation rule.
+	 * 
+	 * Assume that the text returned is prefixed with 'The value must...'
+	 * 
+	 * As an example for a regex rule with the pattern 'ABC.*', the return could be:  
+	 * "match the regex pattern 'ABC.*'"
+	 * @return 
+	 */
+	String getTheValueMustDescription();
 }
