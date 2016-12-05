@@ -61,5 +61,27 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 	public Boolean cast(Object o) throws RuntimeException {
 		return (Boolean)o;
 	}
+	
+	public static FlagPointBuilder builder() {
+		return new FlagPointBuilder();
+	}
+	
+	public static class FlagPointBuilder extends ConfigPointBuilder<FlagPointBuilder, FlagConfigPoint, Boolean> {
+
+		public FlagPointBuilder () {
+			instance = this;
+			setValueType(FlagType.instance());
+		}
+
+		@Override
+		public FlagConfigPoint build() {
+
+			return new FlagConfigPoint(defaultValue, required, shortDesc, 
+				paramType, valueType,
+				helpText, aliases.toArray(new String[aliases.size()]));
+
+		}
+
+	}
 
 }

@@ -2,8 +2,6 @@ package yarnandtail.andhow;
 
 import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.point.FlagConfigPoint;
-import yarnandtail.andhow.point.FlagPointBuilder;
-import yarnandtail.andhow.point.StringPointBuilder;
 
 /**
  *
@@ -11,22 +9,22 @@ import yarnandtail.andhow.point.StringPointBuilder;
  */
 public interface SimpleParamsWAlias extends ConfigPointGroup {
 	
-	StringConfigPoint KVP_BOB = StringPointBuilder.init()
+	StringConfigPoint KVP_BOB = StringConfigPoint.builder()
 			.setDefault("bob")
 			.addAlias("kvpbob")
 			.build();
-	StringConfigPoint KVP_NULL = StringPointBuilder.init()
+	StringConfigPoint KVP_NULL = StringConfigPoint.builder()
 			.addAlias("kvpnull")
 			.build();
-	FlagConfigPoint FLAG_FALSE = FlagPointBuilder.init()
+	FlagConfigPoint FLAG_FALSE = FlagConfigPoint.builder()
 			.setDefault(false)
 			.addAlias("flagfalse")
 			.build();
-	FlagConfigPoint FLAG_TRUE = FlagPointBuilder.init()
+	FlagConfigPoint FLAG_TRUE = FlagConfigPoint.builder()
 			.setDefault(true)
 			.addAlias("flagtrue")
 			.build();
-	FlagConfigPoint FLAG_NULL = FlagPointBuilder.init()
+	FlagConfigPoint FLAG_NULL = FlagConfigPoint.builder()
 			.addAlias("flagnull")
 			.build();
 }

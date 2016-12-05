@@ -4,6 +4,7 @@ import java.util.List;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.valid.StringRegex;
 import yarnandtail.andhow.valuetype.ValueType;
 import yarnandtail.andhow.valuetype.StringType;
 
@@ -31,6 +32,34 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 	
 	public String cast(Object o) throws RuntimeException {
 		return (String)o;
+	}
+	
+	public static StringPointBuilder builder() {
+		return new StringPointBuilder();
+	}
+	
+	
+	public static class StringPointBuilder extends ConfigPointBuilder<StringPointBuilder, StringConfigPoint, String> {
+
+		
+		public StringPointBuilder() {
+			instance = this;
+			setValueType(StringType.instance());
+		}
+
+		@Override
+		public StringConfigPoint build() {
+
+			return new StringConfigPoint(defaultValue, required, shortDesc, validators,
+				paramType, valueType,
+				helpText, aliases.toArray(new String[aliases.size()]));
+		}
+		
+		public StringPointBuilder mustMatchRegex(String regex) {
+			this.addValidation(new StringRegex(regex));
+			return this;
+		}
+
 	}
 	
 }

@@ -8,7 +8,6 @@ import yarnandtail.andhow.NamingStrategy.Naming;
 import yarnandtail.andhow.point.StringConfigPoint;
 import yarnandtail.andhow.valuetype.StringType;
 import yarnandtail.andhow.SimpleParamsWAlias;
-import yarnandtail.andhow.point.StringPointBuilder;
 
 /**
  *
@@ -35,7 +34,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testExplicitNaming() {
 
-		StringConfigPoint point = StringPointBuilder.init().addAlias("myName").build();
+		StringConfigPoint point = StringConfigPoint.builder().addAlias("myName").build();
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());

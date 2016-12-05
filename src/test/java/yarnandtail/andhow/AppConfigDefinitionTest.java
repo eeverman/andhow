@@ -6,7 +6,6 @@ import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.point.StringConfigPoint;
-import yarnandtail.andhow.point.StringPointBuilder;
 import yarnandtail.andhow.valid.StringRegex;
 
 /**
@@ -193,9 +192,9 @@ public class AppConfigDefinitionTest {
 	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
 	 */
 	public static interface BadDefaultAndValidationGroup extends ConfigPointGroup {
-		StringConfigPoint NAME_WITH_BAD_REGEX = StringPointBuilder.init().addValidation(new StringRegex("The[broekn.*")).setDefault("The Big Chill").build();
-		StringConfigPoint COLOR_WITH_BAD_DEFAULT = StringPointBuilder.init().addValidation(new StringRegex("[A-F,0-9]*")).setDefault("Red").build();
-		StringConfigPoint COLOR_WITH_OK_DEFAULT = StringPointBuilder.init().addValidation(new StringRegex("[A-F,0-9]*")).setDefault("FFF000").build();
+		StringConfigPoint NAME_WITH_BAD_REGEX = StringConfigPoint.builder().mustMatchRegex("The[broekn.*").setDefault("The Big Chill").build();
+		StringConfigPoint COLOR_WITH_BAD_DEFAULT = StringConfigPoint.builder().mustMatchRegex("[A-F,0-9]*").setDefault("Red").build();
+		StringConfigPoint COLOR_WITH_OK_DEFAULT = StringConfigPoint.builder().mustMatchRegex("[A-F,0-9]*").setDefault("FFF000").build();
 
 	}
 }

@@ -13,7 +13,12 @@ import yarnandtail.andhow.valuetype.ValueType;
  */
 public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends ConfigPoint<T>, T> {
 	
+	//Weird tracking of its own instance is so we get the type correct when returning
+	//to the caller.  Returning 'this' is a ConfigPointBuilder.  Returing 'B' is
+	//a specific subclass.
 	protected B instance;
+	
+	
 	protected ConfigPointType paramType = ConfigPointType.SINGLE_NAME_VALUE;
 	protected ValueType<T> valueType;
 	protected T defaultValue;
@@ -23,8 +28,16 @@ public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends
 	protected String helpText;
 	protected final List<String> aliases = new ArrayList();
 	
-	//All subclasses should have this static method
-	//public static ConfigPointBuilder<T> init();
+	
+	
+	//All subclasses should have this a static builder() method that returns
+	//an appropriate subclass of ConfigPointBuilder.
+	
+	//All subclasses should have a constructor that looks like this:
+//	public [[TYPE]]PointBuilder() {
+//		this.instance = this;	//Required to set instance to a correct type
+//		this.setValueType([[type]]Type.instance());
+//	}
 	
 	protected void setInstance(B instance) {
 		this.instance = instance;
