@@ -32,5 +32,27 @@ public class IntConfigPoint extends ConfigPointBase<Integer> {
 	public Integer cast(Object o) throws RuntimeException {
 		return (Integer)o;
 	}
+	
+	public static IntPointBuilder builder() {
+		return new IntPointBuilder();
+	}
+	
+	public static class IntPointBuilder extends ConfigPointBuilder<IntPointBuilder, IntConfigPoint, Integer> {
+
+		public IntPointBuilder() {
+			instance = this;
+			setValueType(IntType.instance());
+		}
+
+		@Override
+		public IntConfigPoint build() {
+
+			return new IntConfigPoint(defaultValue, required, shortDesc, validators,
+				paramType, valueType,
+				helpText, aliases.toArray(new String[aliases.size()]));
+
+		}
+
+	}
 
 }

@@ -12,8 +12,6 @@ import java.util.Properties;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.point.StringConfigPoint;
-import yarnandtail.andhow.point.StringPointBuilder;
-//import yarnandtail.andhow.*;
 
 /**
  *
@@ -162,13 +160,13 @@ public class PropFileLoader extends BaseLoader {
 			groupName="PropFileLoader ConfigPoints",
 			groupDescription= "One of these properties must be specified")
 	public static interface CONFIG extends ConfigPointGroup {
-		StringConfigPoint FILESYSTEM_PATH = StringPointBuilder.init()
+		StringConfigPoint FILESYSTEM_PATH = StringConfigPoint.builder()
 				.setDescription("Local filesystem path to a properties file, as interpreted by a Java File object").build();
-		StringConfigPoint EXECUTABLE_RELATIVE_PATH = StringPointBuilder.init()
+		StringConfigPoint EXECUTABLE_RELATIVE_PATH = StringConfigPoint.builder()
 				.setDescription("Path relative to the current executable for a properties file.  "
 						+ "If running from a jar file, this would be a path relative to that jar. "
 						+ "In other contexts, the parent directory may be unpredictable.").build();
-		StringConfigPoint CLASSPATH_PATH = StringPointBuilder.init()
+		StringConfigPoint CLASSPATH_PATH = StringConfigPoint.builder()
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();
 	}

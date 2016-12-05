@@ -5,9 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.point.IntConfigPoint;
-import yarnandtail.andhow.point.IntPointBuilder;
 import yarnandtail.andhow.point.StringConfigPoint;
-import yarnandtail.andhow.point.StringPointBuilder;
 
 /**
  *
@@ -83,14 +81,14 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 	}
 	
 	public static interface UI_CONFIG extends ConfigPointGroup {
-		StringConfigPoint DISPLAY_NAME = StringPointBuilder.init().required().build();
-		StringConfigPoint BACKGROUP_COLOR = StringPointBuilder.init().build();
+		StringConfigPoint DISPLAY_NAME = StringConfigPoint.builder().required().build();
+		StringConfigPoint BACKGROUP_COLOR = StringConfigPoint.builder().build();
 	}
 	
 	public static interface SERVICE_CONFIG extends ConfigPointGroup {
-		StringConfigPoint REST_ENDPOINT_URL = StringPointBuilder.init().required().build();
-		IntConfigPoint RETRY_COUNT = IntPointBuilder.init().setDefault(3).build();
-		IntConfigPoint TIMEOUT_SECONDS = IntPointBuilder.init().required().build();
+		StringConfigPoint REST_ENDPOINT_URL = StringConfigPoint.builder().required().build();
+		IntConfigPoint RETRY_COUNT = IntConfigPoint.builder().setDefault(3).build();
+		IntConfigPoint TIMEOUT_SECONDS = IntConfigPoint.builder().required().build();
 	}
 	
 
