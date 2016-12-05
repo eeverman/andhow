@@ -9,7 +9,7 @@ import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
-import yarnandtail.andhow.ConstructionException;
+import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
@@ -80,10 +80,9 @@ public class AppConfigUtil {
 						f.setAccessible(true);
 						cp = (ConfigPoint) f.get(null);
 					} catch (Exception ex1) {
-						throw new ConstructionException(
-								"Unable to access non-public field " + 
-								f.getName() + " in " + group.getCanonicalName() + ".  " +
-								"Is there a security policy that prevents setting it accessable?");
+						ConstructionProblem.SecurityException se = new ConstructionProblem.SecurityException(
+							ex1, group);
+						appDef.addConstructionProblem(se);
 					}
 				}
 

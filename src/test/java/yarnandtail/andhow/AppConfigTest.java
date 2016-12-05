@@ -163,14 +163,36 @@ public class AppConfigTest extends AppConfigTestBase {
 				.build(reloader);
 			
 			fail();	//The line above should throw an error
-		} catch (ConstructionException ce) {
-			assertEquals(5, ce.getNamingExceptions().size());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getNamingExceptions().get(0).getNewPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getNamingExceptions().get(1).getNewPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getNamingExceptions().get(2).getNewPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getNamingExceptions().get(3).getNewPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getNamingExceptions().get(4).getNewPoint());
+		} catch (AppFatalException ce) {
+			assertEquals(5, ce.getConstructionProblems().size());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getConstructionProblems().get(0).getBadPoint().getPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getConstructionProblems().get(1).getBadPoint().getPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getConstructionProblems().get(2).getBadPoint().getPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getConstructionProblems().get(3).getBadPoint().getPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getConstructionProblems().get(4).getBadPoint().getPoint());
 
+		}
+	}
+	
+	@Test
+	public void testBlowingUpWithDuplicateLoaders() {
+		
+		try {
+
+			AppConfigBuilder.init()
+				.setNamingStrategy(new AsIsAliasNamingStrategy())
+				.addLoaders(loaders)
+				.addLoader(loaders.get(0))
+				.addGroups(configPtGroups)
+				.build(reloader);
+			
+			fail();	//The line above should throw an error
+		} catch (AppFatalException ce) {
+			assertEquals(1, ce.getConstructionProblems().size());
+			assertTrue(ce.getConstructionProblems().get(0) instanceof ConstructionProblem.DuplicateLoader);
+			
+			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getConstructionProblems().get(0);
+			assertEquals(loaders.get(0), dl.getLoader());
 		}
 	}
 	

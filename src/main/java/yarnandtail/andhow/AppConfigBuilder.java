@@ -124,7 +124,7 @@ public class AppConfigBuilder {
 	 * @return
 	 * @throws ConstructionException 
 	 */
-	public AppConfig.Reloader build() throws ConstructionException {
+	public AppConfig.Reloader build() throws AppFatalException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		return AppConfig.build(namingStrategy, loaders, groups,  args, forcedValues);
 	}
@@ -137,7 +137,7 @@ public class AppConfigBuilder {
 	 * @param reloader
 	 * @throws ConstructionException 
 	 */
-	public void build(AppConfig.Reloader reloader) throws ConstructionException {
+	public void build(AppConfig.Reloader reloader) throws AppFatalException {
 		String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
 		reloader.reload(namingStrategy, loaders, groups,  args, forcedValues);
 	}

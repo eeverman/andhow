@@ -22,6 +22,7 @@ public class AppConfigCore implements AppConfigValues {
 	//Internal state
 	private final AppConfigDefinition appConfigDef;
 	private final AppConfigStructuredValues loadedValues;
+	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
 	private final ArrayList<RequirmentProblem> requirementsProblems = new ArrayList();
 	
@@ -32,7 +33,13 @@ public class AppConfigCore implements AppConfigValues {
 		this.namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
 		if (loaders != null) {
-			this.loaders.addAll(loaders);
+			for (Loader loader : loaders) {
+				if (! this.loaders.contains(loader)) {
+					this.loaders.add(loader);
+				} else {
+					constructProblems.add(new ConstructionProblem.DuplicateLoader(loader));
+				}
+			}
 		}
 		
 		if (startingValues != null) {
@@ -45,20 +52,25 @@ public class AppConfigCore implements AppConfigValues {
 		}
 
 		appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, loaders, namingStrategy);
-
-		if (appConfigDef.getNamingExceptions().size() > 0) {
-			throw new ConstructionException(appConfigDef.getNamingExceptions(), null, null);
+		constructProblems.addAll(appConfigDef.getConstructionProblems());
+		
+		//
+		//If there are ConstructionProblems, we can't continue on to attempt to
+		//load values.
+		if (constructProblems.size() > 0) {
+			throw new AppFatalException(constructProblems);
 		}
+		
 
+		//Continuing on to load values
 		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
 
-		validateValues();
+		checkForRequiredValues();
 
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems()) {
 			throw AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
 		}
 	}
-	
 
 	public List<Class<? extends ConfigPointGroup>> getGroups() {
 		return appConfigDef.getGroups();
@@ -100,31 +112,8 @@ public class AppConfigCore implements AppConfigValues {
 		return existingValues;
 	}
 	
-	//
-	//Possible problems:
-	//ConstructionProblem (App level construction issue)
-	//	* Naming exception (non-unique names)
-	//	* Duplicate point addition
-	//	* Duplicate Loader
-	//	* Security exception - unable to read fields in ConfigGroups
-	//	* Default value is invalid
-	//	* Validation is invalid (bad regex string, etc)
-	//LoaderProblem (Loader only context)
-	//	* read IO error
-	//	* Parse error where the point is unknown
-	//	* Unfound file (but is indicated to be required)
-	//	* Unrecognized point name
-	//PointValueProblem (Point and Loader context)
-	//	* Not valid
-	//	* String conversion error
-	//	* Coersion error (from jndi objects)
-	//RequirementsProblem (App level configuration issue)
-	//	* Required Point exception
-	//	* Req group
-	
-	private void validateValues() {
-		
-		boolean hasIssues = false;
+
+	private void checkForRequiredValues() {
 		
 		for (ConfigPoint<?> cp : appConfigDef.getPoints()) {
 			if (cp.isRequired()) {

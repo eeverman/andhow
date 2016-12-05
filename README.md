@@ -28,10 +28,8 @@ Goals
 	
 ToDo
 ----
-*	Must throw an exception if a Loader instance is not unique b/c loaders are used
-	for identity w/in the StructuredVales.
-*	Validators can detect if they have a bad configuration - need to check that
-	at startup.
+*	The SecurityProblem ConstructionProblem is untested.
+*	Validators should describe their criteria so it can be included in sample files.
 *	WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 *	As a convience, CP.getValue() should accept a default value.
 *	Aliases should throw an error if they contain commas
@@ -80,6 +78,33 @@ ToDo
 *	Separate from forcedValues, the AppConfig should accept default values for
 	cases where the app wants to create defaults if nothing is spec'ed.  This would
 	be implemented by adding a FixedValueLoader at the end of the chain.
+*	AppConfigDefinition might be better named AppConfigRuntimeDefinition, b/c it
+	is not a full definition - only the needed def for runtime (ie. no Loader info).
+*	.builder() should be a static method on ConfigPoint classes.
+
+Error / Problem Handling
+-------------------------
+These are the different major types of problems w/ subtypes:
+*	ConstructionProblem (App level construction issue)
+	* NonUniqueNames exception (non-unique names)
+	* Duplicate point addition
+	* Duplicate Loader
+	* Security exception - unable to read fields in ConfigGroups
+	* Default value is invalid
+	* Validation configuration is invalid
+*	LoaderProblem (Loader only context)
+	* read IO error
+	* Parse error where the point is unknown
+	* Unfound file (but is indicated to be required)
+	* Unrecognized point name
+*	PointValueProblem (Point and Loader context)
+	* Not valid
+	* String conversion error
+	* Coersion error (from jndi objects)
+*	RequirementsProblem (App level configuration issue)
+	* Required Point exception
+	* Req group
+
 Ideas
 -----
 *	ConfigPoints should validate their default value against any constraints
