@@ -48,12 +48,19 @@ public class AppConfigDefinition {
 			throw new RuntimeException("Null values are not allowed when registering a configuration point.");
 		}
 		
-		boolean valid = true;
-		
 		//Build a list of the canonical name and all the aliases (if any) to simplify later logic
 		ArrayList<String> allNames = new ArrayList();
 		allNames.add(names.getCanonicalName());
 		allNames.addAll(names.getAliases());
+		
+		if (canonicalNameByPoint.containsKey(point)) {
+			ConstructionProblem.DuplicatePoint dupPoint = new ConstructionProblem.DuplicatePoint(
+					point, getGroupForPoint(point), canonicalNameByPoint.get(point),
+					point, group, names.getCanonicalName());
+			
+			constructProblems.add(dupPoint);
+			return;
+		}
 		
 		//Check for duplicate names
 		for (String a : allNames) {
@@ -64,48 +71,46 @@ public class AppConfigDefinition {
 					point, group, names.getCanonicalName(), a);
 						
 				constructProblems.add(notUniqueName);
-				valid = false;
+				return;
 			}
 		}
 		
 		//Check for bad internal validation configuration (eg, bad regex string)
-		boolean validationConfigurationIsOK = true;
 		for (Validator v : point.getValidators()) {
 			if (! v.isSpecificationValid()) {
 				ConstructionProblem.InvalidValidationConfiguration badValid = new
 					ConstructionProblem.InvalidValidationConfiguration(
-					point, names.getCanonicalName(), v);
+					point, group, names.getCanonicalName(), v);
 				
 				constructProblems.add(badValid);
-				validationConfigurationIsOK = false;
+				return;
 			}
 		}
 		
-		//Check the default value against validation, but don't bother if the
-		//validation is goofed up b/c that would just cause an error.
-		if (! validationConfigurationIsOK) {
-			checkForInvalidDefaultValue(point, names.getCanonicalName());
+		//Check the default value against validation
+		if (checkForInvalidDefaultValue(point, group, names.getCanonicalName())) {
+			return;
 		}
 		
-		if (valid) {
+		//
+		//All checks pass, so add point
 		
-			canonicalNameByPoint.put(point, names.getCanonicalName());
-			points.add(point);
+		canonicalNameByPoint.put(point, names.getCanonicalName());
+		points.add(point);
 
 
-			for (String a : allNames) {
-				pointsByNames.put(a, point);
-			}
+		for (String a : allNames) {
+			pointsByNames.put(a, point);
+		}
 
-			List<ConfigPoint<?>> list = pointsByGroup.get(group);
-			if (list != null) {
-				list.add(point);
-			} else {
-				list = new ArrayList();
-				list.add(point);
-				pointsByGroup.put(group, list);
-				groupList.add(group);
-			}
+		List<ConfigPoint<?>> list = pointsByGroup.get(group);
+		if (list != null) {
+			list.add(point);
+		} else {
+			list = new ArrayList();
+			list.add(point);
+			pointsByGroup.put(group, list);
+			groupList.add(group);
 		}
 		
 	}
@@ -178,22 +183,41 @@ public class AppConfigDefinition {
 		return Collections.unmodifiableList(constructProblems);
 	}
 	
-	protected final <T> void checkForInvalidDefaultValue(ConfigPoint<T> point, String canonName) {
+	/**
+	 * Checks a ConfigPoint's default value against its Validators and adds entries
+	 * to constructProblems if there are issues.
+	 * 
+	 * @param <T>
+	 * @param point
+	 * @param group
+	 * @param canonName
+	 * @return True if the default value is invalid.
+	 */
+	protected final <T> boolean checkForInvalidDefaultValue(ConfigPoint<T> point, 
+			Class<? extends ConfigPointGroup> group, String canonName) {
+		
+		boolean foundProblem = false;
 		
 		if (point.getDefaultValue() != null) {
 			T t = point.getDefaultValue();
 			
-			for (Validator<T> v : point.getValidators()) {
-				if (! v.isValid(t)) {
-					
-					ConstructionProblem.InvalidDefaultValue problem = 
-							new ConstructionProblem.InvalidDefaultValue(
-									point, canonName, 
-									v.getInvalidMessage(t));
-					constructProblems.add(problem);
+			if (t != null) {
+			
+				for (Validator<T> v : point.getValidators()) {
+					if (! v.isValid(t)) {
+
+						ConstructionProblem.InvalidDefaultValue problem = 
+								new ConstructionProblem.InvalidDefaultValue(
+										point, group, canonName, 
+										v.getInvalidMessage(t));
+						constructProblems.add(problem);
+						foundProblem = true;
+					}
 				}
 			}
 		}
+		
+		return foundProblem;
 	}
 	
 }

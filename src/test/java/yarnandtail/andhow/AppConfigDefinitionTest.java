@@ -53,8 +53,8 @@ public class AppConfigDefinitionTest {
 		assertEquals(0, appDef.getPointsForGroup(SimpleParamsNoAlias.class).size());		//A random group that is not registered 
 	}
 	
-	@Test(expected=ConstructionException.class)
-	public void testDuplicatePoint() {
+	@Test
+	public void testDuplicatePointInSeparateGroupWithDistinctNames() {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
@@ -62,8 +62,21 @@ public class AppConfigDefinitionTest {
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
 				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
 		appDef.addPoint(SimpleParamsNoAlias.class, SimpleParamsWAlias.KVP_BOB, 
-				bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
-
+				bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "fakeName"));
+		
+		assertEquals(1, appDef.getPoints().size());
+		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPoints().get(0));
+		assertEquals(1, appDef.getConstructionProblems().size());
+		assertTrue(appDef.getConstructionProblems().get(0) instanceof ConstructionProblem.DuplicatePoint);
+		
+		ConstructionProblem.DuplicatePoint dpcp = (ConstructionProblem.DuplicatePoint)appDef.getConstructionProblems().get(0);
+		
+		assertEquals(SimpleParamsWAlias.KVP_BOB, dpcp.getRefPoint().getPoint());
+		assertEquals(SimpleParamsWAlias.class, dpcp.getRefPoint().getGroup());
+		assertEquals(bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB").getCanonicalName(), dpcp.getRefPoint().getName());
+		assertEquals(SimpleParamsWAlias.KVP_BOB, dpcp.getBadPoint().getPoint());
+		assertEquals(SimpleParamsNoAlias.class, dpcp.getBadPoint().getGroup());
+		assertEquals(bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "fakeName").getCanonicalName(), dpcp.getBadPoint().getName());
 	}
 	
 	@Test
@@ -88,13 +101,23 @@ public class AppConfigDefinitionTest {
 		appDef.addPoint(SimpleParamsWAliasDuplicate.class, SimpleParamsWAliasDuplicate.FLAG_TRUE, 
 				bns.buildNames(SimpleParamsWAliasDuplicate.FLAG_TRUE, SimpleParamsWAliasDuplicate.class, "FLAG_TRUE"));
 
-		//We should have created one NamingException
-		assertEquals(1, appDef.getNamingExceptions().size());
-		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, appDef.getNamingExceptions().get(0).getNewPoint());
-		assertEquals(dupParamFullPath + "FLAG_FALSE", appDef.getNamingExceptions().get(0).getNewPointCanonName());
-		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE.getBaseAliases().get(0), appDef.getNamingExceptions().get(0).getNewPointConflictName());
-		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getNamingExceptions().get(0).getExistingPoint());
-		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getNamingExceptions().get(0).getExistingPointCanonName());
+		//Check values that were actually added to list - The dup point should not have been added
+		assertEquals(3, appDef.getPoints().size());
+		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPoints().get(0));
+		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getPoints().get(1));
+		assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, appDef.getPoints().get(2));
+		
+		//We should have created 1 NonUniuqeName problem
+		assertEquals(1, appDef.getConstructionProblems().size());
+		assertTrue(appDef.getConstructionProblems().get(0) instanceof ConstructionProblem.NonUniqueNames);
+		ConstructionProblem.NonUniqueNames dupCpn = (ConstructionProblem.NonUniqueNames)appDef.getConstructionProblems().get(0);
+		
+		//Check problem specifics
+		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, dupCpn.getBadPoint().getPoint());
+		assertEquals(dupParamFullPath + "FLAG_FALSE", dupCpn.getBadPoint().getName());
+		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE.getBaseAliases().get(0), dupCpn.getConflictName());
+		assertEquals(SimpleParamsWAlias.FLAG_FALSE, dupCpn.getRefPoint().getPoint());
+		assertEquals(paramFullPath + "FLAG_FALSE", dupCpn.getRefPoint().getName());
 		
 		//Canonical Names for Point
 		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParamsWAlias.KVP_BOB));

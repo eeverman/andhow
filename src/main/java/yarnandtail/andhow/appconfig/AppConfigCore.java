@@ -54,7 +54,15 @@ public class AppConfigCore implements AppConfigValues {
 		appConfigDef = AppConfigUtil.doRegisterConfigPoints(registeredGroups, loaders, namingStrategy);
 		constructProblems.addAll(appConfigDef.getConstructionProblems());
 		
+		//
+		//If there are ConstructionProblems, we can't continue on to attempt to
+		//load values.
+		if (constructProblems.size() > 0) {
+			throw new AppFatalException(constructProblems);
+		}
+		
 
+		//Continuing on to load values
 		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
 
 		validateValues();
