@@ -5,6 +5,9 @@ import org.junit.Test;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.point.StringConfigPoint;
+import yarnandtail.andhow.point.StringPointBuilder;
+import yarnandtail.andhow.valid.StringRegex;
 
 /**
  *
@@ -151,5 +154,48 @@ public class AppConfigDefinitionTest {
 		assertEquals(1, appDef.getPointsForGroup(SimpleParamsWAliasDuplicate.class).size());
 		assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, appDef.getPointsForGroup(SimpleParamsWAliasDuplicate.class).get(0));
 		assertEquals(0, appDef.getPointsForGroup(SimpleParamsNoAlias.class).size());		//A random group that is not registered 
+	}
+	
+	@Test
+	public void testNonValidDefaultValueAndInvalidRegexValidationSpec() {
+		
+		NamingStrategy bns = new BasicNamingStrategy();
+		
+		AppConfigDefinition appDef = new AppConfigDefinition();
+		appDef.addPoint(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
+				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX"));
+		appDef.addPoint(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_BAD_DEFAULT"));
+		appDef.addPoint(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, 
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_OK_DEFAULT"));
+		
+		assertEquals(1, appDef.getPoints().size());
+		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getPoints().get(0));
+		assertEquals(2, appDef.getConstructionProblems().size());
+		assertTrue(appDef.getConstructionProblems().get(0) instanceof ConstructionProblem.InvalidValidationConfiguration);
+		assertTrue(appDef.getConstructionProblems().get(1) instanceof ConstructionProblem.InvalidDefaultValue);
+		
+		ConstructionProblem.InvalidValidationConfiguration invalidConfig = (ConstructionProblem.InvalidValidationConfiguration)appDef.getConstructionProblems().get(0);
+		ConstructionProblem.InvalidDefaultValue invalidDefault = (ConstructionProblem.InvalidDefaultValue)appDef.getConstructionProblems().get(1);
+
+		
+		
+		assertEquals(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, invalidConfig.getBadPoint().getPoint());
+		assertEquals(BadDefaultAndValidationGroup.class, invalidConfig.getBadPoint().getGroup());
+		assertEquals(false, invalidConfig.getValidator().isSpecificationValid());
+		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, invalidDefault.getBadPoint().getPoint());
+		assertEquals(BadDefaultAndValidationGroup.class, invalidDefault.getBadPoint().getGroup());
+
+
+	}
+	
+	/**
+	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
+	 */
+	public static interface BadDefaultAndValidationGroup extends ConfigPointGroup {
+		StringConfigPoint NAME_WITH_BAD_REGEX = StringPointBuilder.init().addValidation(new StringRegex("The[broekn.*")).setDefault("The Big Chill").build();
+		StringConfigPoint COLOR_WITH_BAD_DEFAULT = StringPointBuilder.init().addValidation(new StringRegex("[A-F,0-9]*")).setDefault("Red").build();
+		StringConfigPoint COLOR_WITH_OK_DEFAULT = StringPointBuilder.init().addValidation(new StringRegex("[A-F,0-9]*")).setDefault("FFF000").build();
+
 	}
 }

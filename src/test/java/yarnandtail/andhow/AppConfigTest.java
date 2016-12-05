@@ -175,6 +175,28 @@ public class AppConfigTest extends AppConfigTestBase {
 	}
 	
 	@Test
+	public void testBlowingUpWithDuplicateLoaders() {
+		
+		try {
+
+			AppConfigBuilder.init()
+				.setNamingStrategy(new AsIsAliasNamingStrategy())
+				.addLoaders(loaders)
+				.addLoader(loaders.get(0))
+				.addGroups(configPtGroups)
+				.build(reloader);
+			
+			fail();	//The line above should throw an error
+		} catch (AppFatalException ce) {
+			assertEquals(1, ce.getConstructionProblems().size());
+			assertTrue(ce.getConstructionProblems().get(0) instanceof ConstructionProblem.DuplicateLoader);
+			
+			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getConstructionProblems().get(0);
+			assertEquals(loaders.get(0), dl.getLoader());
+		}
+	}
+	
+	@Test
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
 
 		try {

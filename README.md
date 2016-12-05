@@ -28,10 +28,7 @@ Goals
 	
 ToDo
 ----
-*	Must throw an exception if a Loader instance is not unique b/c loaders are used
-	for identity w/in the StructuredVales.
-*	Validators can detect if they have a bad configuration - need to check that
-	at startup.
+*	The SecurityProblem ConstructionProblem is untested.
 *	Validators should describe their criteria so it can be included in sample files.
 *	WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 *	As a convience, CP.getValue() should accept a default value.
@@ -83,6 +80,7 @@ ToDo
 	be implemented by adding a FixedValueLoader at the end of the chain.
 *	AppConfigDefinition might be better named AppConfigRuntimeDefinition, b/c it
 	is not a full definition - only the needed def for runtime (ie. no Loader info).
+*	.builder() should be a static method on ConfigPoint classes.
 
 Error / Problem Handling
 -------------------------

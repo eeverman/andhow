@@ -9,8 +9,8 @@ package yarnandtail.andhow;
  */
 public abstract class ConstructionProblem {
 	
-	protected PointDef refPoint;
-	protected PointDef badPoint;
+	protected PointDef refPointDef;
+	protected PointDef badPointDef;
 		
 	/**
 	 * For points that have some type of duplication w/ other points, this is the
@@ -18,7 +18,7 @@ public abstract class ConstructionProblem {
 	 * @return May return null if not applicable.
 	 */
 	public PointDef getRefPoint() {
-		return refPoint;
+		return refPointDef;
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public abstract class ConstructionProblem {
 	 * @return May return null if not applicable.
 	 */
 	public PointDef getBadPoint() {
-		return badPoint;
+		return badPointDef;
 	}
 	
 	/**
@@ -66,12 +66,12 @@ public abstract class ConstructionProblem {
 		String conflictName;
 
 		public NonUniqueNames(
-				ConfigPoint<?> firstPoint, Class<? extends ConfigPointGroup> firstGroup, String firstCanonName, 
-				ConfigPoint<?> secondPoint, Class<? extends ConfigPointGroup> secondGroup, String secondCanonName, 
+				ConfigPoint<?> refPoint, Class<? extends ConfigPointGroup> refGroup, String refCanonName, 
+				ConfigPoint<?> badPoint, Class<? extends ConfigPointGroup> badGroup, String badCanonName, 
 				String conflictName) {
 			
-			refPoint = new PointDef(firstPoint, firstGroup, firstCanonName);
-			badPoint = new PointDef(secondPoint, secondGroup, secondCanonName);
+			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
+			this.badPointDef = new PointDef(badPoint, badGroup, badCanonName);
 			this.conflictName = conflictName;
 		}
 
@@ -81,25 +81,25 @@ public abstract class ConstructionProblem {
 		
 		@Override
 		public String getMessage() {
-			return "The point " + badPoint.getName() + " has a name that duplicates " +
-					refPoint.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
+			return "The point " + badPointDef.getName() + " has a name that duplicates " +
+					refPointDef.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
 		}
 	}
 	
 	public static class DuplicatePoint extends ConstructionProblem {
 
 		public DuplicatePoint(
-				ConfigPoint<?> firstPoint, Class<? extends ConfigPointGroup> firstGroup, String firstCanonName, 
-				ConfigPoint<?> secondPoint, Class<? extends ConfigPointGroup> secondGroup, String secondCanonName) {
-			refPoint = new PointDef(firstPoint, firstGroup, firstCanonName);
-			badPoint = new PointDef(secondPoint, secondGroup, secondCanonName);
+				ConfigPoint<?> refPoint, Class<? extends ConfigPointGroup> refGroup, String refCanonName, 
+				ConfigPoint<?> badPoint, Class<? extends ConfigPointGroup> badGroup, String badCanonName) {
+			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
+			this.badPointDef = new PointDef(badPoint, badGroup, badCanonName);
 		}
 		
 		@Override
 		public String getMessage() {
 			return "The AppConfig has been configured with a duplicate ConfigPoint instance, " +
 				"meaning that two ConfigGroups are sharing the same ConfigPoint, which is not allowed. " +
-				"The first point is " + refPoint.getName() + ", the second is " + badPoint.getName() + ". " +
+				"The first point is " + refPointDef.getName() + ", the second is " + badPointDef.getName() + ". " +
 				"The first part of each name of the ConfigGroup containing the points.";
 		}
 		
@@ -130,7 +130,7 @@ public abstract class ConstructionProblem {
 
 		public SecurityException(Exception exception, Class<? extends ConfigPointGroup> group) {
 			this.exception = exception;
-			badPoint = new PointDef(null, group, null);
+			badPointDef = new PointDef(null, group, null);
 		}
 
 		public Exception getException() {
@@ -140,7 +140,7 @@ public abstract class ConstructionProblem {
 		@Override
 		public String getMessage() {
 			return "There was a security exception while trying to access members of " +
-				"the ConfigPointGroup " + badPoint.getGroup().getCanonicalName() + ".  AppConfig needs " +
+				"the ConfigPointGroup " + badPointDef.getGroup().getCanonicalName() + ".  AppConfig needs " +
 				"to be able to read class members via reflection, even if a package protected " +
 				"class.  Perhaps there is security policy in place that is preventing it?";
 		}
@@ -153,7 +153,7 @@ public abstract class ConstructionProblem {
 		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
 		public InvalidDefaultValue(ConfigPoint<?> point, Class<? extends ConfigPointGroup> group, String canonName, String invalidMessage) {
-			this.badPoint = new PointDef(point, group, canonName);
+			this.badPointDef = new PointDef(point, group, canonName);
 			this.invalidMessage = invalidMessage;
 		}
 
@@ -163,7 +163,7 @@ public abstract class ConstructionProblem {
 
 		@Override
 		public String getMessage() {
-			return "The ConfigPoint " + badPoint.getName() + " is configured with a default " +
+			return "The ConfigPoint " + badPointDef.getName() + " is configured with a default " +
 				"value that does not meet the validation requirements: " + invalidMessage;
 		}
 	}
@@ -175,7 +175,7 @@ public abstract class ConstructionProblem {
 				ConfigPoint<?> point, Class<? extends ConfigPointGroup> group, String canonName, 
 				Validator<?> valid) {
 			
-			this.badPoint = new PointDef(point, group, canonName);
+			this.badPointDef = new PointDef(point, group, canonName);
 			this.valid = valid;
 		}
 
@@ -184,7 +184,7 @@ public abstract class ConstructionProblem {
 		}
 		
 		public String getMessage() {
-			return "The point " + badPoint.getName() + " has a validator of type " + 
+			return "The point " + badPointDef.getName() + " has a validator of type " + 
 					valid.getClass().getSimpleName() + " that is not configured correctly: " +
 					valid.getInvalidSpecificationMessage();
 		}
