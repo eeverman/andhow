@@ -1,10 +1,9 @@
 package yarnandtail.andhow.point;
 
 import java.util.List;
-import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.valid.StringRegex;
+import yarnandtail.andhow.valid.StringValidator;
 import yarnandtail.andhow.valuetype.ValueType;
 import yarnandtail.andhow.valuetype.StringType;
 
@@ -56,7 +55,17 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 		}
 		
 		public StringPointBuilder mustMatchRegex(String regex) {
-			this.addValidation(new StringRegex(regex));
+			this.addValidation(new StringValidator.Regex(regex));
+			return this;
+		}
+		
+		public StringPointBuilder mustStartWith(String prefix, boolean ignoreCase) {
+			this.addValidation(new StringValidator.StartsWith(prefix, ignoreCase));
+			return this;
+		}
+		
+		public StringPointBuilder mustEndWith(String sufix, boolean ignoreCase) {
+			this.addValidation(new StringValidator.EndsWith(sufix, ignoreCase));
 			return this;
 		}
 

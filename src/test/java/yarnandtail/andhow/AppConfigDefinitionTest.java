@@ -6,7 +6,6 @@ import yarnandtail.andhow.appconfig.AppConfigDefinition;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.point.StringConfigPoint;
-import yarnandtail.andhow.valid.StringRegex;
 
 /**
  *

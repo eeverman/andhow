@@ -3,6 +3,7 @@ package yarnandtail.andhow.point;
 import java.util.List;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.valid.IntValidator;
 import yarnandtail.andhow.valuetype.IntType;
 import yarnandtail.andhow.valuetype.ValueType;
 
@@ -51,6 +52,26 @@ public class IntConfigPoint extends ConfigPointBase<Integer> {
 				paramType, valueType,
 				helpText, aliases.toArray(new String[aliases.size()]));
 
+		}
+		
+		public IntPointBuilder mustBeGreaterThan(int reference) {
+			addValidation(new IntValidator.GreaterThan(reference));
+			return instance;
+		}
+		
+		public IntPointBuilder mustBeGreaterThanOrEqualTo(int reference) {
+			addValidation(new IntValidator.GreaterThanOrEqualTo(reference));
+			return instance;
+		}
+		
+		public IntPointBuilder mustBeLessThan(int reference) {
+			addValidation(new IntValidator.LessThan(reference));
+			return instance;
+		}
+		
+		public IntPointBuilder mustBeLessThanOrEqualTo(int reference) {
+			addValidation(new IntValidator.LessThanOrEqualTo(reference));
+			return instance;
 		}
 
 	}

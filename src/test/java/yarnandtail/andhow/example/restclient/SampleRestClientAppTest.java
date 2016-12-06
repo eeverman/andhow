@@ -1,5 +1,6 @@
 package yarnandtail.andhow.example.restclient;
 
+import java.util.ArrayList;
 import yarnandtail.andhow.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
 		assertEquals(new Integer(8080), SampleRestClientGroup.REST_PORT.getValue());
-		assertEquals("doquery", SampleRestClientGroup.REST_SERVICE_NAME.getValue());
+		assertEquals("doquery/", SampleRestClientGroup.REST_SERVICE_NAME.getValue());
 		assertEquals("abc123", SampleRestClientGroup.AUTH_KEY.getValue());
 		assertEquals(new Integer(4), SampleRestClientGroup.RETRY_COUNT.getValue());
 		assertFalse(SampleRestClientGroup.REQUEST_META_DATA.getValue());
@@ -72,11 +73,48 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
 		assertEquals(new Integer(8080), SampleRestClientGroup.REST_PORT.getValue());
-		assertEquals("query", SampleRestClientGroup.REST_SERVICE_NAME.getValue());	//a default value
+		assertEquals("query/", SampleRestClientGroup.REST_SERVICE_NAME.getValue());	//a default value
 		assertEquals("abc123", SampleRestClientGroup.AUTH_KEY.getValue());
 		assertEquals(new Integer(2), SampleRestClientGroup.RETRY_COUNT.getValue());	//a default
 		assertTrue(SampleRestClientGroup.REQUEST_META_DATA.getValue());	//a default
 		assertFalse(SampleRestClientGroup.REQUEST_SUMMARY_DATA.getValue());	//a default
+
+	}
+	
+	@Test
+	public void testInvalidValues() {
+		
+		cmdLineArgs = new String[] {
+			propFileLoaderPointbase + "CLASSPATH_PATH" + AppConfig.KVP_DELIMITER + 
+				"/yarnandtail/andhow/example/restclient/invalid.properties",
+		};
+				
+				
+		try {
+			
+			//Error expected b/c some values are invalid
+			AppConfigBuilder.init()
+					.addGroup(SampleRestClientGroup.class)
+					.addLoader(new CmdLineLoader())
+					.addLoader(new PropFileLoader())
+					.setCmdLineArgs(cmdLineArgs)
+					.build(reloader);
+		} catch (AppFatalException e) {
+			
+			
+			//Due to loading from a prop file, the order of the file is not preserved,
+			//so we cannot know the order that problems were encountered.
+			ArrayList<ConfigPoint<?>> expectedProblemPoints = new ArrayList();
+			expectedProblemPoints.add(SampleRestClientGroup.REST_HOST);
+			expectedProblemPoints.add(SampleRestClientGroup.REST_PORT);
+			expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
+			
+			assertEquals(3, e.getPointValueProblems().size());
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(0).getPoint()));
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(1).getPoint()));
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(2).getPoint()));
+		}
+		
 
 	}
 	
