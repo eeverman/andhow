@@ -1,6 +1,5 @@
 package yarnandtail.andhow.valid;
 
-import java.util.regex.PatternSyntaxException;
 import yarnandtail.andhow.Validator;
 
 /**
@@ -44,15 +43,10 @@ public class StringValidator {
 			}
 			return false;
 		}
-
-		@Override
-		public String getInvalidMessage(String value) {
-			return "The value '" + value + "' does not start with '" + prefix + "'";
-		}
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "The value must start with '" + prefix + "'";
+			return "must start with '" + prefix + "'";
 		}
 	}
 	
@@ -91,15 +85,10 @@ public class StringValidator {
 			}
 			return false;
 		}
-
-		@Override
-		public String getInvalidMessage(String value) {
-			return "The value '" + value + "' does not end with '" + sufix + "'";
-		}
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "The value must end with '" + sufix + "'";
+			return "must end with '" + sufix + "'";
 		}
 	}
 	
@@ -120,7 +109,7 @@ public class StringValidator {
 			try {
 				"".matches(regex);
 				return true;
-			} catch (PatternSyntaxException e) {
+			} catch (Exception e) {
 				return false;
 			}
 
@@ -139,15 +128,10 @@ public class StringValidator {
 				return false;
 			}
 		}
-
-		@Override
-		public String getInvalidMessage(String value) {
-			return "The value '" + value + "' does not match the regex expression '" + regex + "'";
-		}
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "The value must match the regex '" + regex + "'";
+			return "must match the regex expression '" + regex + "'";
 		}
 
 	}	

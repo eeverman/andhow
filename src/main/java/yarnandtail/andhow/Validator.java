@@ -22,10 +22,20 @@ public interface Validator<T> {
 	 * 
 	 * Example:  The value '999999999' is larger than the max value of 9999
 	 * 
+	 * The default implementation in the Validator Interface provides a reasonable
+	 * default if the conventions are followed correction in the 
+	 * getTheValueMustDescription method.
+	 * 
 	 * @param value
 	 * @return 
 	 */
-	String getInvalidMessage(T value);
+	default String getInvalidMessage(T value) {
+		if (value != null) {
+			return "The value '" + value.toString() + "' " + getTheValueMustDescription();
+		} else {
+			return "The value [[null]] " + getTheValueMustDescription();
+		}
+	}
 	
 	/**
 	 * If the specification itself is invalid (such as a bad regex string), this

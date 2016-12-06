@@ -12,8 +12,8 @@ import yarnandtail.andhow.point.IntConfigPoint;
 public interface SampleRestClientGroup extends ConfigPointGroup {
 	
 	StringConfigPoint REST_HOST = StringConfigPoint.builder().mustMatchRegex(".*\\.usgs\\.gov") .required().build();
-	IntConfigPoint REST_PORT = IntConfigPoint.builder().required().build();
-	StringConfigPoint REST_SERVICE_NAME = StringConfigPoint.builder().setDefault("query").build();
+	IntConfigPoint REST_PORT = IntConfigPoint.builder().required().mustBeGreaterThanOrEqualTo(80).mustBeLessThan(10000).build();
+	StringConfigPoint REST_SERVICE_NAME = StringConfigPoint.builder().setDefault("query/").mustEndWith("/", true).build();
 	StringConfigPoint AUTH_KEY = StringConfigPoint.builder().required().build();
 	IntConfigPoint RETRY_COUNT = IntConfigPoint.builder().setDefault(2).build();
 	FlagConfigPoint REQUEST_META_DATA = FlagConfigPoint.builder().setDefault(true).build();
