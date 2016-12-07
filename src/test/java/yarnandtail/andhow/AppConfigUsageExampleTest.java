@@ -74,9 +74,9 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 			fail();
 		} catch (AppFatalException ce) {
 			assertEquals(3, ce.getRequirementsProblems().size());
-			assertEquals(UI_CONFIG.DISPLAY_NAME, ((RequirmentProblem)(ce.getRequirementsProblems().get(0))).getPoint());
-			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ((RequirmentProblem)(ce.getRequirementsProblems().get(1))).getPoint());
-			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ((RequirmentProblem)(ce.getRequirementsProblems().get(2))).getPoint());
+			assertEquals(UI_CONFIG.DISPLAY_NAME, ((RequirementProblem)(ce.getRequirementsProblems().get(0))).getPoint());
+			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ((RequirementProblem)(ce.getRequirementsProblems().get(1))).getPoint());
+			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ((RequirementProblem)(ce.getRequirementsProblems().get(2))).getPoint());
 		}
 	}
 	

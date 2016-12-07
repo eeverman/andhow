@@ -1,20 +1,20 @@
 package yarnandtail.andhow;
 
 /**
- *
+ * A problem of required values not being specified.
  * @author eeverman
  */
-public class RequirmentProblem {
+public class RequirementProblem {
 	
 	protected final ConfigPoint<?> point;
 	protected final Class<? extends ConfigPointGroup> group;
 
-	public RequirmentProblem(ConfigPoint<?> point) {
+	public RequirementProblem(ConfigPoint<?> point) {
 		this.point = point;
 		this.group = null;
 	}
 
-	public RequirmentProblem(Class<? extends ConfigPointGroup> group) {
+	public RequirementProblem(Class<? extends ConfigPointGroup> group) {
 		this.point = null;
 		this.group = group;
 	}	

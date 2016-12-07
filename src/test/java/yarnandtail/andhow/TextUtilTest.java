@@ -70,4 +70,11 @@ public class TextUtilTest {
 		assertEquals("abc\\{}xyz", getStreamContent());
 	}
 	
+	@Test
+	public void testRepeat() {
+		assertEquals("=====", TextUtil.repeat("=", 5));
+		assertEquals(".....", TextUtil.repeat(".", 5));
+		assertEquals("abab", TextUtil.repeat("ab", 2));
+	}
+	
 }

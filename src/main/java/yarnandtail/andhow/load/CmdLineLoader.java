@@ -45,6 +45,9 @@ public class CmdLineLoader extends BaseLoader {
 		return new LoaderValues(this, values);
 	}
 	
-	
+	@Override
+	public String getSpecificLoadDescription() {
+		return "arguments passed in from the command line at startup";
+	}
 	
 }

@@ -1,7 +1,7 @@
 package yarnandtail.andhow;
 
 /**
- *
+ * Problems with invalid values, values that cannot be converted to their destination type.
  * @author eeverman
  */
 public class PointValueProblem {
@@ -98,20 +98,17 @@ public class PointValueProblem {
 			case INVALID_VALUE:
 				return validator.getInvalidMessage(value);
 			case UNCOVERTABLE_STRING:
-				String strEff = (unconvertable!=null)?unconvertable.toString():TextUtil.NULL_PRINT; 
-				return "The string '" + strEff + "' could not be converted to a " + 
-						point.getValueType().getDestinationType().getCanonicalName();
+				return TextUtil.format("The string '{}' could not be converted to a {}", unconvertable, 
+						point.getValueType().getDestinationType().getCanonicalName());
 			case UNCOVERTABLE_OBJECT:
 				String objType = TextUtil.NULL_PRINT;
-				String objEff = TextUtil.NULL_PRINT;
 				if (unconvertable != null) {
-					objEff = unconvertable.toString();
 					objType = unconvertable.getClass().getCanonicalName();
 				}
 
-				return "The object of type " + objType + " with a toString() value of '" +
-						objEff + "' could not be converted to a " + 
-						point.getValueType().getDestinationType().getCanonicalName();
+				return TextUtil.format(
+						"The object of type {} with a toString() value of '{}' could not be converted to a {}",
+								objType, unconvertable, point.getValueType().getDestinationType().getCanonicalName());
 			default:
 				throw new RuntimeException("Unexpected TYPE");
 		}

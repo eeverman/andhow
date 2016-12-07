@@ -28,6 +28,9 @@ public class FixedValueLoader extends BaseLoader {
 		return new LoaderValues(this, values);
 	}
 	
-	
+	@Override
+	public String getSpecificLoadDescription() {
+		return "a list of fixed values passed in by the construction code (not dynamically loaded)";
+	}
 	
 }

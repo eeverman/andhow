@@ -36,6 +36,16 @@ public class TextUtil {
 	}
 	
 	/**
+	 * println a Horizontal rule (separator) to the passed PrintStream
+	 * @param out
+	 * @param pattern
+	 * @param args 
+	 */
+	public static void printlnHr(PrintStream out) {
+		out.println(repeat("=", 80));
+	}
+	
+	/**
 	 * Creates a message with {} instances replaced with values from the args
 	 * list, similar to how SLF4J formats messages.
 	 * 
@@ -78,5 +88,9 @@ public class TextUtil {
 		} else {
 			return pattern;
 		}
+	}
+	
+	public static String repeat(String base, int repeat) {
+		return new String(new char[repeat]).replace("\0", base);
 	}
 }
