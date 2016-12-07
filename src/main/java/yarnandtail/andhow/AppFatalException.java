@@ -12,7 +12,7 @@ public class AppFatalException extends RuntimeException {
 	
 	private final List<ConstructionProblem> constructProblems;	
 	private final List<PointValueProblem> pointValueProblems;
-	private final List<RequirmentProblem> requirementsProblems;
+	private final List<RequirementProblem> requirementsProblems;
 	
 	public AppFatalException(List<ConstructionProblem> constructProblems) {
 		super("There is a problem with the basic setup of the AppConfig instance. " +
@@ -25,7 +25,7 @@ public class AppFatalException extends RuntimeException {
 	}
 	
 	public AppFatalException(String message,
-			List<PointValueProblem> pointValueProblems, List<RequirmentProblem> requirementsProblems) {
+			List<PointValueProblem> pointValueProblems, List<RequirementProblem> requirementsProblems) {
 		super(message);
 		
 		this.constructProblems = Collections.emptyList();
@@ -41,7 +41,7 @@ public class AppFatalException extends RuntimeException {
 		return pointValueProblems;
 	}
 
-	public List<RequirmentProblem> getRequirementsProblems() {
+	public List<RequirementProblem> getRequirementsProblems() {
 		return requirementsProblems;
 	}
 

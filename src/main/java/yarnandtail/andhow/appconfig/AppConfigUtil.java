@@ -15,7 +15,7 @@ import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.PointValueProblem;
-import yarnandtail.andhow.RequirmentProblem;
+import yarnandtail.andhow.RequirementProblem;
 
 /**
  * Utilities for AppConfiguration
@@ -101,7 +101,7 @@ public class AppConfigUtil {
 		}
 	}
 	
-	public static AppFatalException buildFatalException(ArrayList<RequirmentProblem> requirementsProblems,
+	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
 			AppConfigStructuredValues loadedValues) {
 		
 		ArrayList<PointValueProblem> pvps = new ArrayList();

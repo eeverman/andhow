@@ -29,4 +29,20 @@ public interface Loader {
 	 * @return 
 	 */
 	Class<? extends ConfigPointGroup> getLoaderConfig();
+	
+	/**
+	 * For this particular load, where was info loaded from?
+	 * 
+	 * This may vary from run to run based on config params.  For instance,
+	 * The PropFileLoader will look multiple places to find a properties file.
+	 * This method should return the actual location it was found.  Assume the
+	 * text is prefixed with "This loader loaded from: ".
+	 * 
+	 * An example would be "/home/user/config/my-props.properties"
+	 * 
+	 * No ending punctuation should be used.
+	 * 
+	 * @return 
+	 */
+	String getSpecificLoadDescription();
 }

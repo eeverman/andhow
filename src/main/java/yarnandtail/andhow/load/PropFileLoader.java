@@ -19,6 +19,7 @@ import yarnandtail.andhow.point.StringConfigPoint;
  */
 public class PropFileLoader extends BaseLoader {
 
+	String specificLoadDescription = null;
 	
 	@Override
 	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
@@ -28,18 +29,16 @@ public class PropFileLoader extends BaseLoader {
 		Properties props = null;
 		
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
-		String description = null;
-		
 
 		if (filePath != null) {
-			description = "File at: " + filePath;
+			specificLoadDescription = "File at: " + filePath;
 			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 		}
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
 			File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
 			
-			description = "File at: " + filePath;
+			specificLoadDescription = "File at: " + filePath;
 			
 			if (relPath != null) {
 				props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
@@ -48,7 +47,7 @@ public class PropFileLoader extends BaseLoader {
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
 			
-			description = "File on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+			specificLoadDescription = "File on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
 			
 			props = loadPropertiesFromClasspath(
 				existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
@@ -71,8 +70,7 @@ public class PropFileLoader extends BaseLoader {
 					attemptToAdd(appConfigDef, values, k, v);
 
 				} catch (ParsingException e) {
-					loaderExceptions.add(
-							new LoaderException(e, this, null, description)
+					loaderExceptions.add(new LoaderException(e, this, null, specificLoadDescription)
 					);
 				}
 				
@@ -154,6 +152,11 @@ public class PropFileLoader extends BaseLoader {
 		}
 	}
 	
+	@Override
+	public String getSpecificLoadDescription() {
+		return specificLoadDescription;
+	}
+	
 	
 	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 	@ConfigGroupDescription(
@@ -170,6 +173,5 @@ public class PropFileLoader extends BaseLoader {
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();
 	}
-	
 	
 }

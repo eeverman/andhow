@@ -7,6 +7,7 @@ import yarnandtail.andhow.*;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.ProblemReporter;
 
 /**
  *
@@ -24,7 +25,7 @@ public class AppConfigCore implements AppConfigValues {
 	private final AppConfigStructuredValues loadedValues;
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
-	private final ArrayList<RequirmentProblem> requirementsProblems = new ArrayList();
+	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
 	
 	public AppConfigCore(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends ConfigPointGroup>> registeredGroups, 
@@ -68,6 +69,11 @@ public class AppConfigCore implements AppConfigValues {
 		checkForRequiredValues();
 
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems()) {
+			AppFatalException afe = AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
+			
+			ProblemReporter pr = new ProblemReporter(afe, appConfigDef);
+			pr.print(System.err);
+			
 			throw AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
 		}
 	}
@@ -118,7 +124,7 @@ public class AppConfigCore implements AppConfigValues {
 		for (ConfigPoint<?> cp : appConfigDef.getPoints()) {
 			if (cp.isRequired()) {
 				if (getEffectiveValue(cp) == null) {
-					requirementsProblems.add(new RequirmentProblem(cp));
+					requirementsProblems.add(new RequirementProblem(cp));
 				}
 			}
 		}
