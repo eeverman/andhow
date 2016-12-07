@@ -6,10 +6,6 @@ package yarnandtail.andhow;
  */
 public class PointValueProblem {
 	
-	public static final String NULL_PRINT = "[[null]]";
-	
-
-	
 	protected final Loader loader;
 	protected final ConfigPoint<?> point;
 	protected final Object unconvertable;
@@ -102,12 +98,12 @@ public class PointValueProblem {
 			case INVALID_VALUE:
 				return validator.getInvalidMessage(value);
 			case UNCOVERTABLE_STRING:
-				String strEff = (unconvertable!=null)?unconvertable.toString():NULL_PRINT; 
+				String strEff = (unconvertable!=null)?unconvertable.toString():TextUtil.NULL_PRINT; 
 				return "The string '" + strEff + "' could not be converted to a " + 
 						point.getValueType().getDestinationType().getCanonicalName();
 			case UNCOVERTABLE_OBJECT:
-				String objType = NULL_PRINT;
-				String objEff = NULL_PRINT;
+				String objType = TextUtil.NULL_PRINT;
+				String objEff = TextUtil.NULL_PRINT;
 				if (unconvertable != null) {
 					objEff = unconvertable.toString();
 					objType = unconvertable.getClass().getCanonicalName();

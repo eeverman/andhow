@@ -41,10 +41,19 @@ public class TextUtilTest {
 	@Test
 	public void testFormat() {
 		assertEquals("abcXXXxyz", TextUtil.format("abc{}xyz", "XXX"));
+		assertEquals("abcXXXxyz", TextUtil.format("abc{}xyz", "XXX", "YYY", "ZZZ"));
 		assertEquals("AAAabcBBBxyzCCC", TextUtil.format("{}abc{}xyz{}", "AAA", "BBB", "CCC"));
 		assertEquals("AAAabcBBBxyzCCC", TextUtil.format("{}abc{}xyz{}", "AAA", "BBB", "CCC"));
-		TextUtil.format("abc\\{}xyz", "XXX");
 		assertEquals("abc\\{}xyz", TextUtil.format("abc\\{}xyz", "XXX"));
+		
+		//Some more edge cases
+		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", null));
+		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", null, null, null));
+	}
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void testFormatException() {
+		assertEquals("abcXXXxyz", TextUtil.format("abc{}xyz{}", "XXX"));
 	}
 
 

@@ -10,7 +10,10 @@ import java.io.PrintStream;
  */
 public class TextUtil {
 	
+	public static final String NULL_PRINT = "[[NULL]]";
+	
 	private static final String PAD = "[[00PAD00]]";
+	
 	
 	/**
 	 * println to the passed PrintStream using the format {} patterning.
@@ -61,7 +64,13 @@ public class TextUtil {
 			sb.append(tokens[0]);
 			
 			for (int i = 1; i < tokens.length; i++) {
-				sb.append(args[i - 1]);
+				
+				if (args != null && args[i - 1] != null) {
+					sb.append(args[i - 1]);
+				} else {
+					sb.append(NULL_PRINT);
+				}
+				
 				sb.append(tokens[i]);
 			}
 			
