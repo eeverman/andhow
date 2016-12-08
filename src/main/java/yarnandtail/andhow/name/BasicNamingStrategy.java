@@ -19,6 +19,13 @@ public class BasicNamingStrategy implements NamingStrategy {
 		
 		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
 		
+		return buildNamesFromCanonical(configPoint, parentGroup, canonicalName);
+	}
+	
+	@Override
+	public Naming buildNamesFromCanonical(ConfigPoint configPoint, 
+			Class<? extends ConfigPointGroup> parentGroup, String canonicalName) {
+		
 		List<String> effectiveAliases = null;
 		
 		if (configPoint.getBaseAliases().size() > 0) {

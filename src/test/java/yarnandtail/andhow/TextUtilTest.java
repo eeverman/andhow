@@ -77,4 +77,23 @@ public class TextUtilTest {
 		assertEquals("abab", TextUtil.repeat("ab", 2));
 	}
 	
+	@Test
+	public void testTrimToNull() {
+		assertEquals("bob", TextUtil.trimToNull("bob"));
+		assertEquals("carl", TextUtil.trimToNull("  carl\t "));
+		assertNull(TextUtil.trimToNull("   \t "));
+		assertNull(TextUtil.trimToNull(""));
+		assertNull(TextUtil.trimToNull(null));
+	}
+	
+	@Test
+	public void testPadRight() {
+		assertEquals("abcXX", TextUtil.padRight("abc", "X", 5));
+		assertEquals("abc", TextUtil.padRight("abc", "X", 2));
+		assertEquals("abc", TextUtil.padRight("abc", "X", -99));
+		assertEquals("abcAB", TextUtil.padRight("abc", "ABCDEFG", 5));
+		assertEquals("abc  ", TextUtil.padRight("abc", null, 5));
+		assertNull(TextUtil.padRight(null, "ABCDEFG", 5));
+	}
+	
 }

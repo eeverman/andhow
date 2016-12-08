@@ -1,5 +1,6 @@
 package yarnandtail.andhow.appconfig;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +8,7 @@ import yarnandtail.andhow.*;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
-import yarnandtail.andhow.ProblemReporter;
+import yarnandtail.andhow.ReportGenerator;
 
 /**
  *
@@ -71,11 +72,15 @@ public class AppConfigCore implements AppConfigValues {
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems()) {
 			AppFatalException afe = AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
 			
-			ProblemReporter pr = new ProblemReporter(afe, appConfigDef);
-			pr.print(System.err);
+			printFailedStartupDetails(afe);
 			
 			throw AppConfigUtil.buildFatalException(requirementsProblems, loadedValues);
 		}
+	}
+	
+	private void printFailedStartupDetails(AppFatalException afe) {
+		ReportGenerator.printProblems(System.err, afe, appConfigDef);
+		ReportGenerator.printConfigSamples(System.err, appConfigDef, loaders);
 	}
 
 	public List<Class<? extends ConfigPointGroup>> getGroups() {

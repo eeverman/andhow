@@ -29,4 +29,12 @@ public class AsIsAliasNamingStrategy implements NamingStrategy {
 		return naming;
 	}
 	
+	@Override
+	public Naming buildNamesFromCanonical(ConfigPoint configPoint, 
+			Class<? extends ConfigPointGroup> parentGroup, String canonicalName) {
+		
+		Naming naming = new Naming(canonicalName, configPoint.getBaseAliases());
+		return naming;
+	}
+	
 }
