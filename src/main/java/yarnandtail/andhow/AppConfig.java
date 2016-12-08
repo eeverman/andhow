@@ -32,10 +32,13 @@ public class AppConfig implements AppConfigValues {
 	}
 	
 	public static AppConfig instance() {
-		if (singleInstance != null) {
+		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
-			return null;	//this should block
+			throw new RuntimeException("AppConfig has not been initialized.  " +
+					"Possible causes:  1) There is a race condition where ConfigPoint access may happen before configuration " +
+					"2) There is no configuration at the entry point to the application. " +
+					"Refer to " + ReportGenerator.ANDHOW_URL + " for code examples and FAQs.");
 		}
 	}
 	
@@ -84,7 +87,20 @@ public class AppConfig implements AppConfigValues {
 		private Reloader(AppConfig instance) {
 			this.instance = instance;
 		}
-		
+		/**
+		 * Forces a reload of the AppConfig state.
+		 * 
+		 * This may someday support production reloading of values, but for now
+		 * it is really just a means for testing w/o having to deal with new
+		 * classloaders for the singleton instancing.
+		 * 
+		 * @param naming
+		 * @param loaders
+		 * @param registeredGroups
+		 * @param cmdLineArgs
+		 * @param forcedValues
+		 * @throws AppFatalException 
+		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
 				List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
 				List<PointValue> forcedValues) 
@@ -92,6 +108,20 @@ public class AppConfig implements AppConfigValues {
 			
 			synchronized (AppConfig.lock) {
 				instance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
+			}
+		}
+		
+		/**
+		 * For shutdown or testing.
+		 * 
+		 * Flushes the internal state, making the AppConfig appear unconfigured.
+		 */
+		public void destroy() {
+			
+			synchronized (AppConfig.lock) {
+				if (instance != null) {
+					instance.core = null;
+				}
 			}
 		}
 	}
