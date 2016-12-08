@@ -14,7 +14,7 @@ public class ReportGenerator {
 	
 	public static final String ANDHOW_NAME = "AndHow!";
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
-	public static final String ANDHOW_TAG_LINE = "simple.strong.valid.App_Configuration";
+	public static final String ANDHOW_TAG_LINE = "strong.valid.simple.App_Configuration";
 	
 	public static void printProblems(PrintStream out, AppFatalException fatalException, AppConfigDefinition appDef) {
 		
