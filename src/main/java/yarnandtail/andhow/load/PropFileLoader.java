@@ -175,7 +175,30 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		out.println();
 		out.println();
 		out.println(TextUtil.repeat("#", ReportGenerator.DEFAULT_LINE_WIDTH));
-		out.println("# " + group.getCanonicalName() + " Configuration group with the following points: ");
+		
+		String name = null;
+		String desc = null;
+		
+		ConfigGroupDescription groupDesc = group.getAnnotation(ConfigGroupDescription.class);
+		if (groupDesc != null) {
+			name = TextUtil.trimToNull(groupDesc.groupName());
+			desc = TextUtil.trimToNull(groupDesc.groupDescription());
+		}
+		
+		if (name != null || desc != null) {
+			if (name != null && desc != null) {
+				TextUtil.println(out, "# Configuration group {} - {}", name, desc);
+				TextUtil.println(out, "# Defined in interface {}", group.getCanonicalName());
+			} else {
+				TextUtil.println(out, "# Configuration group {}", group.getCanonicalName());
+				TextUtil.println(out, "# Description: {}", (name != null)?name:desc);
+			}
+			
+			
+		} else {
+			TextUtil.println(out, "# Configuration group {}", group.getCanonicalName());
+		}
+		
 	}
 	
 	
@@ -229,12 +252,12 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 
 	@Override
 	public void printConfigGroupEnd(PrintStream out, Class<? extends ConfigPointGroup> group) {
-		return;
 	}
 	
 	@Override
 	public void printSampleEnd(PrintStream out) {
 		out.println();
+		out.println(TextUtil.repeat("#", ReportGenerator.DEFAULT_LINE_WIDTH));
 		out.println(TextUtil.repeat("#", ReportGenerator.DEFAULT_LINE_WIDTH));
 	}
 
@@ -242,16 +265,20 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 	@ConfigGroupDescription(
-			groupName="PropFileLoader ConfigPoints",
-			groupDescription= "One of these properties must be specified")
+			groupName="PropFileLoader Configuration",
+			groupDescription= "Configure one of these points to specify a location to load a properties file from. " +
+					"Search order is the order listed below.")
 	public static interface CONFIG extends ConfigPointGroup {
 		StringConfigPoint FILESYSTEM_PATH = StringConfigPoint.builder()
 				.setDescription("Local filesystem path to a properties file, as interpreted by a Java File object").build();
+		
 		StringConfigPoint EXECUTABLE_RELATIVE_PATH = StringConfigPoint.builder()
 				.setDescription("Path relative to the current executable for a properties file.  "
 						+ "If running from a jar file, this would be a path relative to that jar. "
 						+ "In other contexts, the parent directory may be unpredictable.").build();
+		
 		StringConfigPoint CLASSPATH_PATH = StringConfigPoint.builder()
+				.setDefault("andhow.properties")
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();
 	}

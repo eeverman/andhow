@@ -42,7 +42,6 @@ public class ReportGenerator {
 			
 		} else {
 			
-			printProblemHR(out);
 			out.println("CONSTRUCTION PROBLEMS  ~Foundational problems with the App Configuration.");
 			out.println("~The AppConfig may have been built in an inconsistent way, such as default values that violate validation rules.");
 			out.println("~When there are construction problems, no attempt is made to load configuration values.");
@@ -53,7 +52,6 @@ public class ReportGenerator {
 				out.println(p.getMessage());
 			}
 			
-			printProblemHR(out);
 		}
 	}
 	
@@ -65,8 +63,6 @@ public class ReportGenerator {
 //			printProblemHR(out);
 			
 		} else {
-			
-			printProblemHR(out);
 			
 			out.println("VALUE PROBLEMS  ~Values that violate validation rules, "
 					+ "or source values that cannot be converted to their destination type.");
@@ -80,7 +76,6 @@ public class ReportGenerator {
 						p.getMessageWithinFullContext());
 			}
 			
-			printProblemHR(out);
 		}
 	}
 	
@@ -92,8 +87,7 @@ public class ReportGenerator {
 //			printProblemHR(out);
 			
 		} else {
-			
-			printProblemHR(out);
+
 			out.println("REQUIRMENT PROBLEMS  ~When a required configuration point is not provided");
 			out.println("~Note:  Prior issues that prevente individual values from loading may also result in requirements problems.");
 			out.println();
@@ -112,7 +106,6 @@ public class ReportGenerator {
 
 			}
 			
-			printProblemHR(out);
 		}
 	}
 	
@@ -150,7 +143,6 @@ public class ReportGenerator {
 			
 			
 		}
-		
-
 	}
+	
 }
