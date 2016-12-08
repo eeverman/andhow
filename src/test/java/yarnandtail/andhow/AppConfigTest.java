@@ -216,5 +216,11 @@ public class AppConfigTest extends AppConfigTestBase {
 		}
 	}
 	
+	@Test(expected = RuntimeException.class)
+	public void testAttemptingToFetchAConfigPointValueBeforeConfigurationShouldThrowARuntimeException() {
+		reloader.destroy();
+		String shouldFail = SimpleParamsWAlias.KVP_BOB.getValue();
+	}
+	
 
 }
