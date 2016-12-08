@@ -40,7 +40,7 @@ public class IntValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must be greater than " + Integer.toString(ref);
+			return "be greater than " + Integer.toString(ref);
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class IntValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must be greater than or equal to " + Integer.toString(ref);
+			return "be greater than or equal to " + Integer.toString(ref);
 		}
 	}
 	
@@ -112,7 +112,7 @@ public class IntValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must be less than " + Integer.toString(ref);
+			return "be less than " + Integer.toString(ref);
 		}
 	}
 	
@@ -148,7 +148,7 @@ public class IntValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must be less than or equal to " + Integer.toString(ref);
+			return "be less than or equal to " + Integer.toString(ref);
 		}
 	}
 	

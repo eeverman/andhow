@@ -46,7 +46,7 @@ public class StringValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must start with '" + prefix + "'";
+			return "start with '" + prefix + "'";
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class StringValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must end with '" + sufix + "'";
+			return "end with '" + sufix + "'";
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class StringValidator {
 		
 		@Override
 		public String getTheValueMustDescription() {
-			return "must match the regex expression '" + regex + "'";
+			return "match the regex expression '" + regex + "'";
 		}
 
 	}	

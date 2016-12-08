@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConfigPoint;
@@ -64,33 +66,18 @@ public class AppConfigUtil {
 	protected static void doRegisterGroup(AppConfigDefinition appDef,
 			Class<? extends ConfigPointGroup> group, NamingStrategy naming) {
 
-
-		Field[] fields = group.getDeclaredFields();
-
-		for (Field f : fields) {
-
-			if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
-
-				ConfigPoint cp = null;
-
-				try {
-					cp = (ConfigPoint) f.get(null);
-				} catch (Exception ex) {	
-					try {
-						f.setAccessible(true);
-						cp = (ConfigPoint) f.get(null);
-					} catch (Exception ex1) {
-						ConstructionProblem.SecurityException se = new ConstructionProblem.SecurityException(
-							ex1, group);
-						appDef.addConstructionProblem(se);
-					}
-				}
-
-				NamingStrategy.Naming names = naming.buildNames(cp, group, f.getName());
-
-				appDef.addPoint(group, cp, names);
+		try {
+			List<ConfigPointGroup.NameAndPoint> nameAndPoints = ConfigPointGroup.getConfigPoints(group);
+			
+			for (ConfigPointGroup.NameAndPoint nameAndPoint : nameAndPoints) {
+				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndPoint.point, group, nameAndPoint.canonName);
+				appDef.addPoint(group, nameAndPoint.point, names);
 			}
-
+			
+		} catch (Exception ex) {
+			ConstructionProblem.SecurityException se = new ConstructionProblem.SecurityException(
+				ex, group);
+			appDef.addConstructionProblem(se);
 		}
 
 	}

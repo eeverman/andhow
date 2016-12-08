@@ -36,16 +36,6 @@ public class TextUtil {
 	}
 	
 	/**
-	 * println a Horizontal rule (separator) to the passed PrintStream
-	 * @param out
-	 * @param pattern
-	 * @param args 
-	 */
-	public static void printlnHr(PrintStream out) {
-		out.println(repeat("=", 80));
-	}
-	
-	/**
 	 * Creates a message with {} instances replaced with values from the args
 	 * list, similar to how SLF4J formats messages.
 	 * 
@@ -92,5 +82,56 @@ public class TextUtil {
 	
 	public static String repeat(String base, int repeat) {
 		return new String(new char[repeat]).replace("\0", base);
+	}
+	
+	/**
+	 * Pads the right side of the string with repeating repeatString's until the
+	 * specified totalLength is reached.
+	 * 
+	 * If the initial base string is longer than the totalLength, it is not modified.
+	 * If the repeatString is multi-character, the final string will be trimmed
+	 * to the totalLength, thus, the repeat string may be partially truncated.
+	 * 
+	 * A null base string will return null.  A null repeatString will be treated
+	 * as a single space.
+	 * 
+	 * @param base
+	 * @param repeatString
+	 * @param totalLength
+	 * @return 
+	 */
+	public static String padRight(String base, String repeatString, int totalLength) {
+		
+		if (base == null) return null;
+		
+		if (base.length() < totalLength) {
+			
+			if (repeatString == null) repeatString = " ";
+			
+			StringBuilder sb = new StringBuilder(base);
+
+			while (sb.length() < totalLength) {
+				sb.append(repeatString);
+			}
+			
+			return sb.substring(0, totalLength);
+			
+		} else {
+			return base;
+		}
+		
+		
+	}
+	
+	public static String trimToNull(String source) {
+		if (source == null) return null;
+		
+		source = source.trim();
+		
+		if (source.length() > 0) {
+			return source;
+		} else {
+			return null;
+		}
 	}
 }
