@@ -94,9 +94,12 @@ public class AppConfigUtil {
 		ArrayList<PointValueProblem> pvps = new ArrayList();
 		
 		//build list of PointValueProblems
-		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
-			for (PointValue pv : lvs.getValues()) {
-				pvps.addAll(pv.getIssues());
+		
+		if (loadedValues != null) {
+			for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
+				for (PointValue pv : lvs.getValues()) {
+					pvps.addAll(pv.getIssues());
+				}
 			}
 		}
 		

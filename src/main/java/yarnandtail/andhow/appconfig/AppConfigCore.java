@@ -65,7 +65,15 @@ public class AppConfigCore implements AppConfigValues {
 		
 
 		//Continuing on to load values
-		loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
+		try {
+			loadedValues = loadValues().getUnmodifiableAppConfigStructuredValues();
+		} catch (FatalException e) {
+			AppFatalException afe = AppConfigUtil.buildFatalException(requirementsProblems, null);
+			
+			printFailedStartupDetails(afe);
+			
+			throw AppConfigUtil.buildFatalException(requirementsProblems, null);
+		}
 
 		checkForRequiredValues();
 
