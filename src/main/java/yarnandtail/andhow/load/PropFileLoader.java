@@ -278,7 +278,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 						+ "In other contexts, the parent directory may be unpredictable.").build();
 		
 		StringConfigPoint CLASSPATH_PATH = StringConfigPoint.builder()
-				.setDefault("andhow.properties")
+				.setDefault("/andhow.properties")
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();
 	}
