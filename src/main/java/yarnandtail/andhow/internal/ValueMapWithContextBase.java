@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import yarnandtail.andhow.ValueMapWithContext;
  *
  * @author eeverman
  */
-public abstract class AppConfigStructuredValuesBase implements ValueMapWithContext {
+public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 	
-	public AppConfigStructuredValuesBase() {
+	public ValueMapWithContextBase() {
 	}
 
 	//
@@ -63,7 +63,7 @@ public abstract class AppConfigStructuredValuesBase implements ValueMapWithConte
 		}
 	}
 	
-	public ValueMap getUnmodifiableAppConfigValues(List<LoaderValues> valuesList) {
+	public ValueMapImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
 		
 		Map<ConfigPoint<?>, Object> effValues = new HashMap();
 		
@@ -75,7 +75,7 @@ public abstract class AppConfigStructuredValuesBase implements ValueMapWithConte
 		}
 		
 		
-		return new AppConfigValuesUnmodifiable(effValues); 
+		return new ValueMapImmutable(effValues); 
 	}
 	
 }

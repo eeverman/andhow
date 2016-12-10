@@ -3,7 +3,7 @@ package yarnandtail.andhow;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import yarnandtail.andhow.appconfig.AppConfigCore;
+import yarnandtail.andhow.internal.AndHowCore;
 import java.util.List;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
@@ -13,6 +13,13 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  * @author eeverman
  */
 public class AndHow implements ValueMap {
+	
+	//
+	//A few app-wide constants
+	public static final String ANDHOW_INLINE_NAME = "AndHow";
+	public static final String ANDHOW_NAME = ANDHOW_INLINE_NAME + "!";
+	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
+	public static final String ANDHOW_TAG_LINE = "strong.valid.simple.App_Configuration";
 	
 	/**
 	 * In text formats, this is the default delimiter between a key and a value.
@@ -24,14 +31,14 @@ public class AndHow implements ValueMap {
 	private static AndHow singleInstance;
 	private static final Object lock = new Object();
 	
-	AppConfigCore core;
+	AndHowCore core;
 	Reloader reloader;
 	
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends ConfigPointGroup>> registeredGroups, 
 			String[] cmdLineArgs, List<PointValue> startingValues)
 			throws AppFatalException {
-		core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
+		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 		reloader = new Reloader(this);
 	}
 	
@@ -47,10 +54,10 @@ public class AndHow implements ValueMap {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
-			throw new RuntimeException("AppConfig has not been initialized.  " +
+			throw new RuntimeException(ANDHOW_INLINE_NAME + " has not been initialized.  " +
 					"Possible causes:  1) There is a race condition where ConfigPoint access may happen before configuration " +
 					"2) There is no configuration at the entry point to the application. " +
-					"Refer to " + ReportGenerator.ANDHOW_URL + " for code examples and FAQs.");
+					"Refer to " + ANDHOW_URL + " for code examples and FAQs.");
 		}
 	}
 	
@@ -113,8 +120,7 @@ public class AndHow implements ValueMap {
 	/**
 	 * A builder class, which is the only supported way to construct an AndHow instance.
 	 * 
-	 * Once an AndHow instance is built, it can never be rebuilt or reconfigured,
-	 * with the small exception of a unit testing.
+	 * Once an AndHow instance is built, it can never be rebuilt or reconfigured**.,
 	 * 
 	 * Generally <em>addXXX</em> adds to a collection and  <em>setXXX</em> replaces 
 	 * the value or values.
@@ -131,13 +137,18 @@ public class AndHow implements ValueMap {
 	 * }
 	 * </pre>
 	 * 
-	 * build() returns an AppConfig.Reloader object.  If you do need to reload the
-	 * AppConfig at some point (primarily for testing, not production), you will need
-	 * to keep a reference to that Reloader.  An overloaded version of build(Reloader)
-	 * expects that same instance of the reloader to allow the AppConfig to reload.
+	 * There is no return value because there is no need to hold a reference
+	 * to anything past framework startup.  After a successful startup, ConfigPoint
+	 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+	 * {@code Integer value = MyInt.getValue();}
+
+	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
+	 * it is important that a single entry and configuration loading point to
+	 * your application is well defined.
 	 * 
-	 * Attempting to call build() a 2nd time w/o the reloader instance will
-	 * cause a RuntimeException.
+	 * **See buildForUnitTesting() for a small backdoor for unit testing, which
+	 * provides a non-production, unsupported way to force the AndHow framework
+	 * to reload its state.
 	 * 
 	 * @author eeverman
 	 */
@@ -295,7 +306,7 @@ public class AndHow implements ValueMap {
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {
-				instance.core = new AppConfigCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
+				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
 			}
 		}
 		

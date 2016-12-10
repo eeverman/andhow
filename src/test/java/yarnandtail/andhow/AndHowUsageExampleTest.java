@@ -11,7 +11,7 @@ import yarnandtail.andhow.point.StringConfigPoint;
  *
  * @author eeverman
  */
-public class AppConfigUsageExampleTest extends AppConfigTestBase {
+public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	String uiFullPath = UI_CONFIG.class.getCanonicalName() + ".";
 	String svsFullPath = SERVICE_CONFIG.class.getCanonicalName() + ".";

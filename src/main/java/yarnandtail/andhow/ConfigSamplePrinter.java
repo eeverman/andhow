@@ -6,9 +6,8 @@ import java.io.PrintStream;
  * Can write a sample configuration to the passed in PrintStream.
  * 
  * This is intended to be implemented by Loaders who support writing configuration
- * samples.  If the AppConfig fails to startup correctly, the AppConfig will
- * ask each Loader implementing this interface to incrementally create a sample
- * configuration for the user to start from.
+ * samples.  If AndHow fails to startup correctly, each Loader implementing this
+ * interface will create a sample configuration for the user to start from.
  * 
  * @author ericeverman
  */

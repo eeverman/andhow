@@ -6,15 +6,15 @@ import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
 
 /**
- * Interface to represent a configuration point of an application.
+ * Represents a configuration point of an application.
  * 
- * Implementations are typed so that they return String, Integer, Boolean types
+ * Implementations are typed so that they return String, Integer, Boolean, etc.,
  * rather than just configuration strings.
  * 
  * Implementor's Notes:
  * See IntConfigPoint as a best example of how to implement a new ConfigPoint.
- * The reason for creating a new implementation would be to handle a new type, such
- * as a domain object.
+ * The reason for creating a new implementation would be to handle a new type, 
+ * such as a DateTime type.
  * 
  * <ul>
  * <li>All implementations can use the ConfigPointBase as a base class.  Most

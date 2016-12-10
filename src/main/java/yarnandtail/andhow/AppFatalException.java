@@ -15,8 +15,8 @@ public class AppFatalException extends RuntimeException {
 	private final List<RequirementProblem> requirementsProblems;
 	
 	public AppFatalException(List<ConstructionProblem> constructProblems) {
-		super("There is a problem with the basic setup of the AppConfig instance. " +
-				"Since it is the AppConfig itself that is misconfigured, no attempt was made to load values. " +
+		super("There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
+				"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +
 				"See System.err, out or the log files for more details.");
 		
 		this.constructProblems = constructProblems;

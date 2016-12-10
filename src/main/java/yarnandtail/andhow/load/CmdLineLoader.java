@@ -6,7 +6,7 @@ import java.util.List;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PointValue;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
 //import yarnandtail.andhow.*;
 
@@ -20,7 +20,7 @@ public class CmdLineLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) {
 		
 		ArrayList<PointValue> values = new ArrayList();

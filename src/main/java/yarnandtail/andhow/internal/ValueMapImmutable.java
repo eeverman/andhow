@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import yarnandtail.andhow.ValueMap;
  *
  * @author eeverman
  */
-public class AppConfigValuesUnmodifiable implements ValueMap {
+public class ValueMapImmutable implements ValueMap {
 	
 	/** All the ConfigPoints and associated values registered and actually in use,
 	 * meaning that a values was specified by the user in some way.
@@ -17,7 +17,7 @@ public class AppConfigValuesUnmodifiable implements ValueMap {
 	private final Map<ConfigPoint<?>, Object> loadedValues = new HashMap();
 	
 
-	public AppConfigValuesUnmodifiable(Map<ConfigPoint<?>, Object> loadedValues) {
+	public ValueMapImmutable(Map<ConfigPoint<?>, Object> loadedValues) {
 		this.loadedValues.putAll(loadedValues);
 	}
 

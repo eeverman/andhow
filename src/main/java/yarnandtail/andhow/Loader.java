@@ -2,16 +2,16 @@ package yarnandtail.andhow;
 
 import java.io.PrintStream;
 import java.util.List;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
  * Each instance is responsible for loading values from a particular type of source.
  * 
  * Implementations may define a set of ConfigPoints used to control the behavior
- * of the loader, which are returned from getLoaderConfig().  During AppConfig
+ * of the loader, which are returned from getLoaderConfig().  During AndHow
  * startup, these parameters will are automatically added to the list of registered
  * ConfigPoints.  Values for these points need to be loaded by a preceding loader
- * or <em>forced</em> in the AppConfigBuilder.
+ * or <em>forced</em> in the AndHowBuilder.
  * 
  * Instances should not hold state because they are held in memory for the life
  * of the application.
@@ -19,7 +19,7 @@ import yarnandtail.andhow.appconfig.AppConfigDefinition;
  * @author eeverman
  */
 public interface Loader {
-	LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
+	LoaderValues load(RuntimeDefinition runtimeDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues, 
 			List<LoaderException> loaderExceptions) throws FatalException;
 	

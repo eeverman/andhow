@@ -15,7 +15,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  *
  * @author eeverman
  */
-public class AppConfigTest extends AppConfigTestBase {
+public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 	BasicNamingStrategy basicNaming = new BasicNamingStrategy();

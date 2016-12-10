@@ -30,7 +30,7 @@ public interface ValueMapWithContext extends ValueMap {
 	 * was able to find and load.
 	 * 
 	 * @param loader
-	 * @return May return null if the passed Loader is not in use by the AppConfig.
+	 * @return May return null if the passed Loader is not in use by AndHow.
 	 */
 	LoaderValues getAllValuesLoadedByLoader(Loader loader);
 	
@@ -43,7 +43,7 @@ public interface ValueMapWithContext extends ValueMap {
 	 * was able to find and load.
 	 * 
 	 * @param loader
-	 * @return May return null if the passed Loader is not in use by the AppConfig.
+	 * @return May return null if the passed Loader is not in use by AndHow.
 	 */
 	LoaderValues getEffectiveValuesLoadedByLoader(Loader loader);
 	
@@ -51,7 +51,7 @@ public interface ValueMapWithContext extends ValueMap {
 	 * Unmodifiable minimum data for ConfigPoints to retrieve their data from.
 	 * @return 
 	 */
-	ValueMap getUnmodifiableAppConfigValues();
+	ValueMap getValueMapImmutable();
 	
 	/**
 	 * Unmodifiable minimum data collection to store the structure of how data
@@ -62,6 +62,6 @@ public interface ValueMapWithContext extends ValueMap {
 	 * 
 	 * @return 
 	 */
-	ValueMapWithContext getUnmodifiableAppConfigStructuredValues();
+	ValueMapWithContext getValueMapWithContextImmutable();
 
 }

@@ -7,10 +7,10 @@ import org.junit.Before;
 import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PointValue;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
-import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
+import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 
 /**
  *
@@ -18,18 +18,18 @@ import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
  */
 public class PropFileLoaderTest {
 	
-	AppConfigDefinition appDef;
-	AppConfigStructuredValuesBuilder appValuesBuilder;
+	RuntimeDefinition appDef;
+	ValueMapWithContextMutable appValuesBuilder;
 	ArrayList<LoaderException> loaderExceptions;
 	
 	@Before
 	public void init() {
 		
-		appValuesBuilder = new AppConfigStructuredValuesBuilder();
+		appValuesBuilder = new ValueMapWithContextMutable();
 		loaderExceptions = new ArrayList();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new AppConfigDefinition();
+		appDef = new RuntimeDefinition();
 		
 		appDef.addPoint(PropFileLoader.CONFIG.class, 
 				PropFileLoader.CONFIG.CLASSPATH_PATH, 

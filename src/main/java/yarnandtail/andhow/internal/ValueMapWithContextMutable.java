@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,13 +13,13 @@ import yarnandtail.andhow.ValueMapWithContext;
  *
  * @author eeverman
  */
-public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesBase {
+public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
 	private boolean problem = false;
 	
-	public AppConfigStructuredValuesBuilder() {
+	public ValueMapWithContextMutable() {
 	}
 	
 	public void addValues(LoaderValues values) {
@@ -28,8 +28,8 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 	
 	@Override
-	public ValueMapWithContext getUnmodifiableAppConfigStructuredValues() {
-		return new AppConfigStructuredValuesUnmodifiable(loadedValuesList);
+	public ValueMapWithContext getValueMapWithContextImmutable() {
+		return new ValueMapWithContextImmutable(loadedValuesList);
 	}
 	
 	@Override
@@ -63,8 +63,8 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 
 	@Override
-	public ValueMap getUnmodifiableAppConfigValues() {
-		return getUnmodifiableAppConfigValues(loadedValuesList);
+	public ValueMap getValueMapImmutable() {
+		return buildValueMapImmutable(loadedValuesList);
 	}
 
 	@Override

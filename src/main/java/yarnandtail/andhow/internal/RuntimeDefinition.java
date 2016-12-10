@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,15 +14,15 @@ import yarnandtail.andhow.Validator;
 /**
  * The defined set of ConfigPointGroups, child ConfigPoints and their names for use by the app.
  * 
+ * This class does not contain any values for ConfigPoints or Loaders - it is
+ * just the list of known ConfigPoints and their structure in ConfigPointGroups.
+ * 
  * This class is intended to be constructed populated by Loaders during initialization,
- * then should remain unchanged.  If an AppConfig needs to load a new state,
- * if should throw this definition away and start a new one because this classes
- * internal collections provides no transactions or protection from read/write
- * conflicts.
+ * then should remain unchanged.
  * 
  * @author eeverman
  */
-public class AppConfigDefinition {
+public class RuntimeDefinition {
 	public static final List<ConfigPoint<?>> EMPTY_CONFIGPOINT_LIST = Collections.unmodifiableList(new ArrayList());
 	
 	

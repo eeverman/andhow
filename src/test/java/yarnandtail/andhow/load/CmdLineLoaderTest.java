@@ -8,10 +8,10 @@ import org.junit.Before;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
-import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
+import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 
 /**
  *
@@ -19,18 +19,18 @@ import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
  */
 public class CmdLineLoaderTest {
 	
-	AppConfigDefinition appDef;
-	AppConfigStructuredValuesBuilder appValuesBuilder;
+	RuntimeDefinition appDef;
+	ValueMapWithContextMutable appValuesBuilder;
 	ArrayList<LoaderException> loaderExceptions;
 
 	@Before
 	public void init() {
-		appValuesBuilder = new AppConfigStructuredValuesBuilder();
+		appValuesBuilder = new ValueMapWithContextMutable();
 		loaderExceptions = new ArrayList();
 		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new AppConfigDefinition();
+		appDef = new RuntimeDefinition();
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_NULL, bns.buildNames(SimpleParamsWAlias.KVP_NULL, SimpleParamsWAlias.class, "KVP_NULL"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));

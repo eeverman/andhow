@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import yarnandtail.andhow.ValueMapWithContext;
  *
  * @author eeverman
  */
-public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredValuesBase {
+public class ValueMapWithContextImmutable extends ValueMapWithContextBase {
 	
 	/** Lists of values loaded by each loader */
 	private final ArrayList<LoaderValues> structuredValues = new ArrayList();
@@ -23,10 +23,10 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	
 	private final boolean problem;
 		
-	public AppConfigStructuredValuesUnmodifiable(List<LoaderValues> inLoadedValuesList) {
+	public ValueMapWithContextImmutable(List<LoaderValues> inLoadedValuesList) {
 		structuredValues.addAll(inLoadedValuesList);
 		structuredValues.trimToSize();
-		effectiveValues = super.getUnmodifiableAppConfigValues(structuredValues);
+		effectiveValues = super.buildValueMapImmutable(structuredValues);
 		
 		//Check for problems
 		boolean willHaveProblem = false;
@@ -41,7 +41,7 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	}
 
 	//
-	//These two methods use the AppConfigValues instance b/c it is backed by a HashMap
+	//These next three methods use the ValueMap b/c it is backed by a HashMap
 	@Override
 	public <T> T getExplicitValue(ConfigPoint<T> point) {
 		return effectiveValues.getExplicitValue(point);
@@ -79,12 +79,12 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	//Build methods
 
 	@Override
-	public ValueMap getUnmodifiableAppConfigValues() {
+	public ValueMap getValueMapImmutable() {
 		return effectiveValues;
 	}
 	
 	@Override
-	public ValueMapWithContext getUnmodifiableAppConfigStructuredValues() {
+	public ValueMapWithContext getValueMapWithContextImmutable() {
 		return this;
 	}
 	

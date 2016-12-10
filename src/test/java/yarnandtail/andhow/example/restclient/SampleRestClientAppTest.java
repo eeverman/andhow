@@ -12,7 +12,7 @@ import yarnandtail.andhow.load.PropFileLoader;
  *
  * @author eeverman
  */
-public class SampleRestClientAppTest extends AppConfigTestBase {
+public class SampleRestClientAppTest extends AndHowTestBase {
 	
 	String propFileLoaderPointbase = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 	String[] cmdLineArgs = new String[0];
