@@ -1,8 +1,7 @@
 package yarnandtail.andhow;
 
 /**
- * A problem building up the basic AppConfiguration, prior to attempting to load
- * any values.
+ * A problem bootstrapping the AndHow, prior to attempting to load any values.
  * 
  * 
  * @author ericeverman
@@ -97,10 +96,10 @@ public abstract class ConstructionProblem {
 		
 		@Override
 		public String getMessage() {
-			return "The AppConfig has been configured with a duplicate ConfigPoint instance, " +
-				"meaning that two ConfigGroups are sharing the same ConfigPoint, which is not allowed. " +
+			return AndHow.ANDHOW_INLINE_NAME +  " has been configured with a duplicate ConfigPoint instance, " +
+				"meaning that one or more ConfigGroups are sharing the same ConfigPoint instance, which is not allowed. " +
 				"The first point is " + refPointDef.getName() + ", the second is " + badPointDef.getName() + ". " +
-				"The first part of each name of the ConfigGroup containing the points.";
+				"The first part of each name is the ConfigGroup containing the points.";
 		}
 		
 
@@ -119,7 +118,7 @@ public abstract class ConstructionProblem {
 
 		@Override
 		public String getMessage() {
-			return "The AppConfig has been configured with a duplicate Loader instance " +
+			return AndHow.ANDHOW_INLINE_NAME + " has been configured with a duplicate Loader instance " +
 					"of type " + loader.getClass().getCanonicalName() + ".  " +
 					"Multiple loaders of the same type are OK, but they must be separate instances.";
 		}
@@ -140,8 +139,8 @@ public abstract class ConstructionProblem {
 		@Override
 		public String getMessage() {
 			return "There was a security exception while trying to access members of " +
-				"the ConfigPointGroup " + badPointDef.getGroup().getCanonicalName() + ".  AppConfig needs " +
-				"to be able to read class members via reflection, even if a package protected " +
+				"the ConfigPointGroup " + badPointDef.getGroup().getCanonicalName() + ".  " +
+				AndHow.ANDHOW_INLINE_NAME + " to be able to read class members via reflection, even if a package protected " +
 				"class.  Perhaps there is security policy in place that is preventing it?";
 		}
 		

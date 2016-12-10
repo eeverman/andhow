@@ -12,7 +12,7 @@ import yarnandtail.andhow.load.PropFileLoader;
  *
  * @author eeverman
  */
-public class SampleRestClientAppTest extends AppConfigTestBase {
+public class SampleRestClientAppTest extends AndHowTestBase {
 	
 	String propFileLoaderPointbase = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 	String[] cmdLineArgs = new String[0];
@@ -29,17 +29,17 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 	public void testAllValuesAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AppConfig.KVP_DELIMITER + 
+			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/all.points.speced.properties",
 		};
 				
 				
-		AppConfigBuilder.init()
+		AndHow.builder()
 				.addGroup(SampleRestClientGroup.class)
 				.addLoader(new CmdLineLoader())
 				.addLoader(new PropFileLoader())
 				.setCmdLineArgs(cmdLineArgs)
-				.build(reloader);
+				.reloadForUnitTesting(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
@@ -57,17 +57,17 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 	public void testMinimumPointsAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AppConfig.KVP_DELIMITER + 
+			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/minimum.points.speced.properties",
 		};
 				
 				
-		AppConfigBuilder.init()
+		AndHow.builder()
 				.addGroup(SampleRestClientGroup.class)
 				.addLoader(new CmdLineLoader())
 				.addLoader(new PropFileLoader())
 				.setCmdLineArgs(cmdLineArgs)
-				.build(reloader);
+				.reloadForUnitTesting(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
@@ -85,7 +85,7 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 	public void testInvalidValues() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AppConfig.KVP_DELIMITER + 
+			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/invalid.properties",
 		};
 				
@@ -93,12 +93,12 @@ public class SampleRestClientAppTest extends AppConfigTestBase {
 		try {
 			
 			//Error expected b/c some values are invalid
-			AppConfigBuilder.init()
+			AndHow.builder()
 					.addGroup(SampleRestClientGroup.class)
 					.addLoader(new CmdLineLoader())
 					.addLoader(new PropFileLoader())
 					.setCmdLineArgs(cmdLineArgs)
-					.build(reloader);
+					.reloadForUnitTesting(reloader);
 		} catch (AppFatalException e) {
 			
 			

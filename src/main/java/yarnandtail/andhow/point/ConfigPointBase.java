@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import yarnandtail.andhow.AppConfig;
-import yarnandtail.andhow.AppConfigValues;
+import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.load.ParsingException;
+import yarnandtail.andhow.ValueMap;
 
 /**
  *
@@ -116,7 +116,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 	
 	@Override
-	public T getValue(AppConfigValues values) {
+	public T getValue(ValueMap values) {
 		T v = getExplicitValue(values);
 		if (v != null) {
 			return v;
@@ -127,18 +127,18 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	
 	@Override
 	public final T getValue() {
-		return getValue(AppConfig.instance());
+		return getValue(AndHow.instance());
 	}
 	
 	@Override
-	public T getExplicitValue(AppConfigValues values) {
-		Object v = values.getValue(this);
+	public T getExplicitValue(ValueMap values) {
+		Object v = values.getExplicitValue(this);
 		return cast(v);
 	}
 	
 	@Override
 	public final T getExplicitValue() {
-		return getExplicitValue(AppConfig.instance());
+		return getExplicitValue(AndHow.instance());
 	}
 	
 	@Override

@@ -7,10 +7,10 @@ import org.junit.Before;
 import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PointValue;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.SimpleParamsWAlias;
-import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
+import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 
 /**
  *
@@ -18,18 +18,18 @@ import yarnandtail.andhow.appconfig.AppConfigStructuredValuesBuilder;
  */
 public class PropFileLoaderTest {
 	
-	AppConfigDefinition appDef;
-	AppConfigStructuredValuesBuilder appValuesBuilder;
+	RuntimeDefinition appDef;
+	ValueMapWithContextMutable appValuesBuilder;
 	ArrayList<LoaderException> loaderExceptions;
 	
 	@Before
 	public void init() {
 		
-		appValuesBuilder = new AppConfigStructuredValuesBuilder();
+		appValuesBuilder = new ValueMapWithContextMutable();
 		loaderExceptions = new ArrayList();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new AppConfigDefinition();
+		appDef = new RuntimeDefinition();
 		
 		appDef.addPoint(PropFileLoader.CONFIG.class, 
 				PropFileLoader.CONFIG.CLASSPATH_PATH, 
@@ -66,11 +66,11 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder, loaderExceptions);
 		
-		assertEquals("kvpBobValue", result.getValue(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("kvpNullValue", result.getValue(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.getValue(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	

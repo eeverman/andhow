@@ -1,25 +1,25 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import yarnandtail.andhow.AppConfigStructuredValues;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  *
  * @author eeverman
  */
-public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesBase {
+public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
 	private boolean problem = false;
 	
-	public AppConfigStructuredValuesBuilder() {
+	public ValueMapWithContextMutable() {
 	}
 	
 	public void addValues(LoaderValues values) {
@@ -28,12 +28,12 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 	
 	@Override
-	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
-		return new AppConfigStructuredValuesUnmodifiable(loadedValuesList);
+	public ValueMapWithContext getValueMapWithContextImmutable() {
+		return new ValueMapWithContextImmutable(loadedValuesList);
 	}
 	
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
 		return getValue(loadedValuesList, point);
 	}
 	
@@ -43,7 +43,7 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
 		return isPointPresent(loadedValuesList, point);
 	}
 	
@@ -63,8 +63,8 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 
 	@Override
-	public AppConfigValues getUnmodifiableAppConfigValues() {
-		return getUnmodifiableAppConfigValues(loadedValuesList);
+	public ValueMap getValueMapImmutable() {
+		return buildValueMapImmutable(loadedValuesList);
 	}
 
 	@Override

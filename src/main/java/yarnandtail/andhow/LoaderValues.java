@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public class LoaderValues implements AppConfigValues {
+public class LoaderValues implements ValueMap {
 	public static final List<PointValue> EMPTY_POINT_VALUE_LIST = Collections.emptyList();
 	
 	private final Loader loader;
@@ -63,7 +63,7 @@ public class LoaderValues implements AppConfigValues {
 	 * @return 
 	 */
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
 		if (point == null) {
 			return null;
 		}
@@ -79,8 +79,8 @@ public class LoaderValues implements AppConfigValues {
 			return null;
 		}
 		
-		if (isPointPresent(point)) {
-			return getValue(point);
+		if (isExplicitlySet(point)) {
+			return getExplicitValue(point);
 		} else {
 			return point.getDefaultValue();
 		}
@@ -92,7 +92,7 @@ public class LoaderValues implements AppConfigValues {
 	 * @return 
 	 */
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
 		return values.stream().anyMatch(p -> p.getPoint().equals(point));
 	}
 	

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.PointValueProblem;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
  *
@@ -20,7 +20,7 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected void attemptToAdd(AppConfigDefinition appConfigDef, List<PointValue> values, 
+	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PointValue> values, 
 			String key, String strValue) throws ParsingException {
 		
 		key = StringUtils.trimToNull(key);

@@ -11,7 +11,7 @@ import yarnandtail.andhow.point.StringConfigPoint;
  *
  * @author eeverman
  */
-public class AppConfigUsageExampleTest extends AppConfigTestBase {
+public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	String uiFullPath = UI_CONFIG.class.getCanonicalName() + ".";
 	String svsFullPath = SERVICE_CONFIG.class.getCanonicalName() + ".";
@@ -22,22 +22,22 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 	public void setup() {
 		
 		cmdLineArgsWFullClassName = new String[] {
-			uiFullPath + "DISPLAY_NAME" + AppConfig.KVP_DELIMITER + "My App",
-			uiFullPath + "BACKGROUP_COLOR" + AppConfig.KVP_DELIMITER + "ffffff",
-			svsFullPath + "REST_ENDPOINT_URL" + AppConfig.KVP_DELIMITER + "google.com",
-			svsFullPath + "RETRY_COUNT" + AppConfig.KVP_DELIMITER + "4",
-			svsFullPath + "TIMEOUT_SECONDS" + AppConfig.KVP_DELIMITER + "10"
+			uiFullPath + "DISPLAY_NAME" + AndHow.KVP_DELIMITER + "My App",
+			uiFullPath + "BACKGROUP_COLOR" + AndHow.KVP_DELIMITER + "ffffff",
+			svsFullPath + "REST_ENDPOINT_URL" + AndHow.KVP_DELIMITER + "google.com",
+			svsFullPath + "RETRY_COUNT" + AndHow.KVP_DELIMITER + "4",
+			svsFullPath + "TIMEOUT_SECONDS" + AndHow.KVP_DELIMITER + "10"
 		};
 		
 	}
 	
 	@Test
 	public void testAllValuesAreSet() {
-		AppConfigBuilder.init()
+		AndHow.builder()
 				.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
 				.addLoader(new CmdLineLoader())
 				.setCmdLineArgs(cmdLineArgsWFullClassName)
-				.build(reloader);
+				.reloadForUnitTesting(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -48,13 +48,13 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 	
 	@Test
 	public void testOptionalValuesAreUnset() {
-		AppConfigBuilder.init()
+		AndHow.builder()
 				.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
 				.addLoader(new CmdLineLoader())
 				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
 				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
-				.build(reloader);
+				.reloadForUnitTesting(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -67,10 +67,10 @@ public class AppConfigUsageExampleTest extends AppConfigTestBase {
 	public void testMissingValuesException() {
 		
 		try {
-			AppConfigBuilder.init()
+			AndHow.builder()
 					.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
 					.addLoader(new CmdLineLoader())
-					.build(reloader);
+					.reloadForUnitTesting(reloader);
 			fail();
 		} catch (AppFatalException ce) {
 			assertEquals(3, ce.getRequirementsProblems().size());

@@ -1,15 +1,9 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Loader;
@@ -18,26 +12,27 @@ import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.PointValueProblem;
 import yarnandtail.andhow.RequirementProblem;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
- * Utilities for AppConfiguration
+ * Utilities used by AndHow during initial construction.
  * @author eeverman
  */
-public class AppConfigUtil {
+public class AndHowUtil {
 	
 
 	/**
-	 * Build a fully populated AppConfigDefinition from the points contained in
-	 * the passed Groups, using the NamingStrategy to generate names for each.
+	 * Build a fully populated RuntimeDefinition from the points contained in
+ the passed Groups, using the NamingStrategy to generate names for each.
 	 * 
 	 * @param groups The ConfigPointGroups from which to find ConfigPoints.  May be null
 	 * @param naming  A naming strategy to use when reading the properties during loading
 	 * @return A fully configured instance
 	 */
-	public static AppConfigDefinition 
+	public static RuntimeDefinition 
 		doRegisterConfigPoints(List<Class<? extends ConfigPointGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
 
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		RuntimeDefinition appDef = new RuntimeDefinition();
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
@@ -63,7 +58,7 @@ public class AppConfigUtil {
 
 	}
 		
-	protected static void doRegisterGroup(AppConfigDefinition appDef,
+	protected static void doRegisterGroup(RuntimeDefinition appDef,
 			Class<? extends ConfigPointGroup> group, NamingStrategy naming) {
 
 		try {
@@ -89,7 +84,7 @@ public class AppConfigUtil {
 	}
 	
 	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
-			AppConfigStructuredValues loadedValues) {
+			ValueMapWithContext loadedValues) {
 		
 		ArrayList<PointValueProblem> pvps = new ArrayList();
 		

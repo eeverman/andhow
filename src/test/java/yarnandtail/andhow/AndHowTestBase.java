@@ -7,8 +7,8 @@ package yarnandtail.andhow;
  * 
  * @author eeverman
  */
-public class AppConfigTestBase {
+public class AndHowTestBase {
 	
-	public static AppConfig.Reloader reloader = AppConfig.build(null, null, null, null, null);
+	public static AndHow.Reloader reloader = AndHow.builder().buildForUnitTesting();
 
 }

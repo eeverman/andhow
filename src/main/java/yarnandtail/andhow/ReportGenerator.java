@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import java.io.PrintStream;
 import java.util.List;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
  *
@@ -11,18 +11,14 @@ import yarnandtail.andhow.appconfig.AppConfigDefinition;
 public class ReportGenerator {
 	
 	public static final int DEFAULT_LINE_WIDTH = 90;
-	
-	public static final String ANDHOW_NAME = "AndHow!";
-	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
-	public static final String ANDHOW_TAG_LINE = "strong.valid.simple.App_Configuration";
-	
-	public static void printProblems(PrintStream out, AppFatalException fatalException, AppConfigDefinition appDef) {
+		
+	public static void printProblems(PrintStream out, AppFatalException fatalException, RuntimeDefinition appDef) {
 		
 		try {
 			printProblemHR(out);
-			out.println(TextUtil.padRight("== Problem report from " + ANDHOW_NAME + "  " + ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
-			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
-			printConfigurationProblems(out, fatalException.getConstructionProblems(), appDef);
+			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
+			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
+			printConstructionProblems(out, fatalException.getConstructionProblems(), appDef);
 			printPointValueProblems(out, fatalException.getPointValueProblems(), appDef);
 			printRequirementProblems(out, fatalException.getRequirementsProblems(), appDef);
 			printProblemHR(out);
@@ -33,18 +29,12 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printConfigurationProblems(PrintStream out, List<ConstructionProblem> probs, AppConfigDefinition appDef) {
-		if (probs.isEmpty()) {
+	public static void printConstructionProblems(PrintStream out, List<ConstructionProblem> probs, RuntimeDefinition appDef) {
+		if (! probs.isEmpty()) {
 			
-//			printProblemHR(out);
-//			out.println("CONSTRUCTION PROBLEMS:  Excellent!  There are no construction problems");
-//			printProblemHR(out);
-			
-		} else {
-			
-			out.println("CONSTRUCTION PROBLEMS  ~Foundational problems with the App Configuration.");
-			out.println("~The AppConfig may have been built in an inconsistent way, such as default values that violate validation rules.");
-			out.println("~When there are construction problems, no attempt is made to load configuration values.");
+			out.println("CONSTRUCTION PROBLEMS  - Basic problems configuring and starting up the " + AndHow.ANDHOW_INLINE_NAME + " frameowork.");
+			out.println(AndHow.ANDHOW_INLINE_NAME + " may have been built in an inconsistent way, such as a default value that violates its own validation rules.");
+			out.println("When there are construction problems, no attempt is made to load configuration values.");
 			out.println();
 			out.println("Defailed list of Construction Problems:");
 			
@@ -55,16 +45,10 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printPointValueProblems(PrintStream out, List<PointValueProblem> probs, AppConfigDefinition appDef) {
-		if (probs.isEmpty()) {
+	public static void printPointValueProblems(PrintStream out, List<PointValueProblem> probs, RuntimeDefinition appDef) {
+		if (! probs.isEmpty()) {
 			
-//			printProblemHR(out);
-//			out.println("VALUE PROBLEMS:  Nice! There are no value problems.");
-//			printProblemHR(out);
-			
-		} else {
-			
-			out.println("VALUE PROBLEMS  ~Values that violate validation rules, "
+			out.println("VALUE PROBLEMS - Values that violate validation rules, "
 					+ "or source values that cannot be converted to their destination type.");
 			out.println();
 			out.println("Defailed list of Value Problems:");
@@ -79,17 +63,11 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printRequirementProblems(PrintStream out, List<RequirementProblem> probs, AppConfigDefinition appDef) {
-		if (probs.isEmpty()) {
-			
-//			printProblemHR(out);
-//			out.println("REQUIRMENT PROBLEMS:  Well done!  There are no requirment problems");
-//			printProblemHR(out);
-			
-		} else {
+	public static void printRequirementProblems(PrintStream out, List<RequirementProblem> probs, RuntimeDefinition appDef) {
+		if (! probs.isEmpty()) {
 
-			out.println("REQUIRMENT PROBLEMS  ~When a required configuration point is not provided");
-			out.println("~Note:  Prior issues that prevente individual values from loading may also result in requirements problems.");
+			out.println("REQUIRMENT PROBLEMS - When a required configuration point is not provided");
+			out.println("Note:  Prior issues that prevente individual values from loading may also result in requirements problems.");
 			out.println();
 			out.println("Defailed list of Requirements Problems:");
 			
@@ -113,7 +91,7 @@ public class ReportGenerator {
 		out.println(TextUtil.repeat("=", DEFAULT_LINE_WIDTH));
 	}
 	
-	public static void printConfigSamples(PrintStream out, AppConfigDefinition appDef, List<Loader> loaders) {
+	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders) {
 		
 		for (Loader loader : loaders) {
 			if (loader instanceof ConfigSamplePrinter) {

@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.point.StringConfigPoint;
@@ -11,7 +11,7 @@ import yarnandtail.andhow.point.StringConfigPoint;
  *
  * @author eeverman
  */
-public class AppConfigDefinitionTest {
+public class RuntimeDefinitionTest {
 	
 	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 	
@@ -20,7 +20,7 @@ public class AppConfigDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		RuntimeDefinition appDef = new RuntimeDefinition();
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
 				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, 
@@ -59,7 +59,7 @@ public class AppConfigDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		RuntimeDefinition appDef = new RuntimeDefinition();
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
 				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
 		appDef.addPoint(SimpleParamsNoAlias.class, SimpleParamsWAlias.KVP_BOB, 
@@ -86,7 +86,7 @@ public class AppConfigDefinitionTest {
 		
 		//Use Aliases as-is to cause naming collisions
 		NamingStrategy bns = new AsIsAliasNamingStrategy();
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		RuntimeDefinition appDef = new RuntimeDefinition();
 		
 		appDef.addPoint(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
 				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
@@ -159,7 +159,7 @@ public class AppConfigDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		AppConfigDefinition appDef = new AppConfigDefinition();
+		RuntimeDefinition appDef = new RuntimeDefinition();
 		appDef.addPoint(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
 				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX"));
 		appDef.addPoint(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 

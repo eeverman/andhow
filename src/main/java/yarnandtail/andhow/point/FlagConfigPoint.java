@@ -1,11 +1,11 @@
 package yarnandtail.andhow.point;
 
 import java.util.List;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPointType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valuetype.FlagType;
 import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueMap;
 
 /**
  * A True/False switch that is never null and behaves similarly to a unix cmd line switch.
@@ -47,7 +47,7 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 	}
 	
 	@Override
-	public Boolean getValue(AppConfigValues values) {
+	public Boolean getValue(ValueMap values) {
 		Boolean b = super.getValue(values);
 		
 		if (b != null) {
