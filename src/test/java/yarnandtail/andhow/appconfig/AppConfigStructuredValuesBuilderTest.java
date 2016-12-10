@@ -47,7 +47,7 @@ public class AppConfigStructuredValuesBuilderTest {
 		//Lists of stuff to test b/c lots of the tests deal w/ ensuring that the
 		//data is the same regardless of where we read it from
 		ArrayList<LoaderValues> lvsToTest = new ArrayList();
-		ArrayList<AppConfigValues> acvsToTest = new ArrayList();
+		ArrayList<ValueMap> acvsToTest = new ArrayList();
 		
 		//
 		//Test basic class types
@@ -59,12 +59,12 @@ public class AppConfigStructuredValuesBuilderTest {
 		acvsToTest.add(builder);
 		acvsToTest.add(builder.getUnmodifiableAppConfigStructuredValues());
 		acvsToTest.add(builder.getUnmodifiableAppConfigValues());
-		for (AppConfigValues acv : acvsToTest) {
-			assertEquals("test", acv.getValue(SimpleParamsWAlias.KVP_BOB));
-			assertEquals("blah", acv.getValue(SimpleParamsWAlias.KVP_NULL));
-			assertEquals(false, acv.getValue(SimpleParamsWAlias.FLAG_TRUE));
-			assertEquals(true, acv.getValue(SimpleParamsWAlias.FLAG_FALSE));
-			assertEquals(true, acv.getValue(SimpleParamsWAlias.FLAG_NULL));
+		for (ValueMap acv : acvsToTest) {
+			assertEquals("test", acv.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+			assertEquals("blah", acv.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
+			assertEquals(false, acv.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+			assertEquals(true, acv.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+			assertEquals(true, acv.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 		}
 		
 		
@@ -75,10 +75,10 @@ public class AppConfigStructuredValuesBuilderTest {
 		lvsToTest.add(builder.getUnmodifiableAppConfigStructuredValues().getAllValuesLoadedByLoader(cmdLineLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
-			assertEquals("test", lvs.getValue(SimpleParamsWAlias.KVP_BOB));
-			assertEquals(false, lvs.getValue(SimpleParamsWAlias.FLAG_TRUE));
-			assertEquals(true, lvs.getValue(SimpleParamsWAlias.FLAG_FALSE));
-			assertEquals(true, lvs.getValue(SimpleParamsWAlias.FLAG_NULL));
+			assertEquals("test", lvs.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+			assertEquals(false, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+			assertEquals(true, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+			assertEquals(true, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 		}
 		
 		//Again - all the same stuff except KVP_NULL
@@ -87,10 +87,10 @@ public class AppConfigStructuredValuesBuilderTest {
 		lvsToTest.add(builder.getUnmodifiableAppConfigStructuredValues().getEffectiveValuesLoadedByLoader(cmdLineLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
-			assertEquals("test", lvs.getValue(SimpleParamsWAlias.KVP_BOB));
-			assertEquals(false, lvs.getValue(SimpleParamsWAlias.FLAG_TRUE));
-			assertEquals(true, lvs.getValue(SimpleParamsWAlias.FLAG_FALSE));
-			assertEquals(true, lvs.getValue(SimpleParamsWAlias.FLAG_NULL));
+			assertEquals("test", lvs.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+			assertEquals(false, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+			assertEquals(true, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+			assertEquals(true, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 		}
 		
 		//
@@ -100,11 +100,11 @@ public class AppConfigStructuredValuesBuilderTest {
 		lvsToTest.add(builder.getUnmodifiableAppConfigStructuredValues().getAllValuesLoadedByLoader(propFileLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(5, lvs.getValues().size());
-			assertEquals("blah", lvs.getValue(SimpleParamsWAlias.KVP_BOB));
-			assertEquals("blah", lvs.getValue(SimpleParamsWAlias.KVP_NULL));
-			assertEquals(true, lvs.getValue(SimpleParamsWAlias.FLAG_TRUE));
-			assertEquals(false, lvs.getValue(SimpleParamsWAlias.FLAG_FALSE));
-			assertEquals(false, lvs.getValue(SimpleParamsWAlias.FLAG_NULL));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
+			assertEquals(true, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+			assertEquals(false, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+			assertEquals(false, lvs.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 		}
 		
 		//The effective values for just the propFileLoader (only one not overridden)
@@ -113,7 +113,7 @@ public class AppConfigStructuredValuesBuilderTest {
 		lvsToTest.add(builder.getUnmodifiableAppConfigStructuredValues().getEffectiveValuesLoadedByLoader(propFileLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(1, lvs.getValues().size());
-			assertEquals("blah", lvs.getValue(SimpleParamsWAlias.KVP_NULL));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
 		}
 		
 	}

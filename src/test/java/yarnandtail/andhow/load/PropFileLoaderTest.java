@@ -66,11 +66,11 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder, loaderExceptions);
 		
-		assertEquals("kvpBobValue", result.getValue(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("kvpNullValue", result.getValue(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.getValue(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	

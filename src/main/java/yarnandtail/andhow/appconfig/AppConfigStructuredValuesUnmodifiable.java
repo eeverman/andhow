@@ -3,11 +3,11 @@ package yarnandtail.andhow.appconfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  *
@@ -19,7 +19,7 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	private final ArrayList<LoaderValues> structuredValues = new ArrayList();
 	
 	/** Just the final effective values */
-	private final AppConfigValues effectiveValues;
+	private final ValueMap effectiveValues;
 	
 	private final boolean problem;
 		
@@ -43,8 +43,8 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	//
 	//These two methods use the AppConfigValues instance b/c it is backed by a HashMap
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
-		return effectiveValues.getValue(point);
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
+		return effectiveValues.getExplicitValue(point);
 	}
 	
 	@Override
@@ -53,8 +53,8 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	}
 
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
-		return effectiveValues.isPointPresent(point);
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
+		return effectiveValues.isExplicitlySet(point);
 	}
 	
 	@Override
@@ -79,12 +79,12 @@ public class AppConfigStructuredValuesUnmodifiable extends AppConfigStructuredVa
 	//Build methods
 
 	@Override
-	public AppConfigValues getUnmodifiableAppConfigValues() {
+	public ValueMap getUnmodifiableAppConfigValues() {
 		return effectiveValues;
 	}
 	
 	@Override
-	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
+	public ValueMapWithContext getUnmodifiableAppConfigStructuredValues() {
 		return this;
 	}
 	

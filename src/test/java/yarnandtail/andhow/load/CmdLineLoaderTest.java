@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import yarnandtail.andhow.AppConfig;
+import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
@@ -45,22 +45,22 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "test");
-		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "not_null");
-		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "false");
-		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
-		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AppConfig.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "test");
+		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "not_null");
+		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "false");
+		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true");
 		
 		
 		CmdLineLoader cll = new CmdLineLoader();
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder, loaderExceptions);
 		
-		assertEquals("test", result.getValue(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("not_null", result.getValue(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.getValue(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getValue(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("test", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
 	}
 
 	

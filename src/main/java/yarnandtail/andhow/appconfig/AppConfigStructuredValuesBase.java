@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.AppConfigStructuredValues;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  *
  * @author eeverman
  */
-public abstract class AppConfigStructuredValuesBase implements AppConfigStructuredValues {
+public abstract class AppConfigStructuredValuesBase implements ValueMapWithContext {
 	
 	public AppConfigStructuredValuesBase() {
 	}
@@ -24,8 +24,8 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 	// implementation independent methods to be used w/ subclasses
 	protected final <T> T getValue(List<LoaderValues> valuesList, ConfigPoint<T> point) {
 		return point.cast(
-				valuesList.stream().filter((LoaderValues lv) -> lv.isPointPresent(point)).
-						map((LoaderValues lv) -> lv.getValue(point)).findFirst().orElse(null)
+				valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(point)).
+						map((LoaderValues lv) -> lv.getExplicitValue(point)).findFirst().orElse(null)
 		);
 	}
 	
@@ -38,7 +38,7 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 	}
 
 	protected final boolean isPointPresent(List<LoaderValues> valuesList, ConfigPoint<?> point) {
-		return valuesList.stream().anyMatch((LoaderValues pv) -> pv.isPointPresent(point));
+		return valuesList.stream().anyMatch((LoaderValues pv) -> pv.isExplicitlySet(point));
 	}
 
 	protected final LoaderValues getAllValuesLoadedByLoader(List<LoaderValues> valuesList, Loader loader) {
@@ -55,7 +55,7 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 					break;
 				}
 				//remove
-				effValues.removeIf((PointValue pv) -> lvs.isPointPresent(pv.getPoint()));
+				effValues.removeIf((PointValue pv) -> lvs.isExplicitlySet(pv.getPoint()));
 			}
 			return new LoaderValues(loader, effValues);
 		} else {
@@ -63,7 +63,7 @@ public abstract class AppConfigStructuredValuesBase implements AppConfigStructur
 		}
 	}
 	
-	public AppConfigValues getUnmodifiableAppConfigValues(List<LoaderValues> valuesList) {
+	public ValueMap getUnmodifiableAppConfigValues(List<LoaderValues> valuesList) {
 		
 		Map<ConfigPoint<?>, Object> effValues = new HashMap();
 		

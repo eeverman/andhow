@@ -20,7 +20,7 @@ import yarnandtail.andhow.appconfig.AppConfigDefinition;
  */
 public interface Loader {
 	LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
-			AppConfigStructuredValues existingValues, 
+			ValueMapWithContext existingValues, 
 			List<LoaderException> loaderExceptions) throws FatalException;
 	
 	/**

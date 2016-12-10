@@ -9,6 +9,6 @@ package yarnandtail.andhow;
  */
 public class AppConfigTestBase {
 	
-	public static AppConfig.Reloader reloader = AppConfig.build(null, null, null, null, null);
+	public static AndHow.Reloader reloader = AndHow.builder().buildForUnitTesting();
 
 }

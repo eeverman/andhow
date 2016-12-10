@@ -14,7 +14,7 @@ import yarnandtail.andhow.ReportGenerator;
  *
  * @author eeverman
  */
-public class AppConfigCore implements AppConfigValues {
+public class AppConfigCore implements ValueMap {
 	//User config
 	private final ArrayList<PointValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
@@ -23,7 +23,7 @@ public class AppConfigCore implements AppConfigValues {
 	
 	//Internal state
 	private final AppConfigDefinition appConfigDef;
-	private final AppConfigStructuredValues loadedValues;
+	private final ValueMapWithContext loadedValues;
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
 	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
@@ -100,13 +100,13 @@ public class AppConfigCore implements AppConfigValues {
 	}
 	
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
-		return loadedValues.isPointPresent(point);
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
+		return loadedValues.isExplicitlySet(point);
 	}
 	
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
-		return loadedValues.getValue(point);
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
+		return loadedValues.getExplicitValue(point);
 	}
 	
 	@Override
@@ -114,7 +114,7 @@ public class AppConfigCore implements AppConfigValues {
 		return loadedValues.getEffectiveValue(point);
 	}
 	
-	private AppConfigStructuredValues loadValues() throws FatalException {
+	private ValueMapWithContext loadValues() throws FatalException {
 		AppConfigStructuredValuesBuilder existingValues = new AppConfigStructuredValuesBuilder();
 
 		if (forcedValues.size() > 0) {

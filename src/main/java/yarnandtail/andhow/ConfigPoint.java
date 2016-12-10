@@ -36,11 +36,11 @@ public interface ConfigPoint<T> {
 	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
 	
 
-	T getValue(AppConfigValues values);
+	T getValue(ValueMap values);
 	
 	T getValue();
 	
-	T getExplicitValue(AppConfigValues values);
+	T getExplicitValue(ValueMap values);
 	
 	T getExplicitValue();
 	

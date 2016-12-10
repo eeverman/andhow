@@ -27,7 +27,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	@Override
 	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
-			AppConfigStructuredValues existingValues, List<LoaderException> loaderExceptions) throws FatalException {
+			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) throws FatalException {
 		
 		ArrayList<PointValue> values = new ArrayList();
 		Properties props = null;

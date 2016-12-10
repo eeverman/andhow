@@ -3,11 +3,11 @@ package yarnandtail.andhow.appconfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import yarnandtail.andhow.AppConfigStructuredValues;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  *
@@ -28,12 +28,12 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 	
 	@Override
-	public AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues() {
+	public ValueMapWithContext getUnmodifiableAppConfigStructuredValues() {
 		return new AppConfigStructuredValuesUnmodifiable(loadedValuesList);
 	}
 	
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
 		return getValue(loadedValuesList, point);
 	}
 	
@@ -43,7 +43,7 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
 		return isPointPresent(loadedValuesList, point);
 	}
 	
@@ -63,7 +63,7 @@ public class AppConfigStructuredValuesBuilder extends AppConfigStructuredValuesB
 	}
 
 	@Override
-	public AppConfigValues getUnmodifiableAppConfigValues() {
+	public ValueMap getUnmodifiableAppConfigValues() {
 		return getUnmodifiableAppConfigValues(loadedValuesList);
 	}
 

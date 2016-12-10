@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import yarnandtail.andhow.AppConfigStructuredValues;
 import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointGroup;
@@ -18,6 +17,7 @@ import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.PointValueProblem;
 import yarnandtail.andhow.RequirementProblem;
+import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  * Utilities for AppConfiguration
@@ -89,7 +89,7 @@ public class AppConfigUtil {
 	}
 	
 	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
-			AppConfigStructuredValues loadedValues) {
+			ValueMapWithContext loadedValues) {
 		
 		ArrayList<PointValueProblem> pvps = new ArrayList();
 		

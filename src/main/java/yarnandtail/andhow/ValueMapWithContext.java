@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author eeverman
  */
-public interface AppConfigStructuredValues extends AppConfigValues {
+public interface ValueMapWithContext extends ValueMap {
 	
 	/**
 	 * Returns true if any value or loader has any sort of issue (invalid value,
@@ -51,7 +51,7 @@ public interface AppConfigStructuredValues extends AppConfigValues {
 	 * Unmodifiable minimum data for ConfigPoints to retrieve their data from.
 	 * @return 
 	 */
-	AppConfigValues getUnmodifiableAppConfigValues();
+	ValueMap getUnmodifiableAppConfigValues();
 	
 	/**
 	 * Unmodifiable minimum data collection to store the structure of how data
@@ -62,6 +62,6 @@ public interface AppConfigStructuredValues extends AppConfigValues {
 	 * 
 	 * @return 
 	 */
-	AppConfigStructuredValues getUnmodifiableAppConfigStructuredValues();
+	ValueMapWithContext getUnmodifiableAppConfigStructuredValues();
 
 }

@@ -3,11 +3,11 @@ package yarnandtail.andhow.load;
 import yarnandtail.andhow.LoaderException;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.AppConfig;
-import yarnandtail.andhow.AppConfigStructuredValues;
+import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.appconfig.AppConfigDefinition;
+import yarnandtail.andhow.ValueMapWithContext;
 //import yarnandtail.andhow.*;
 
 /**
@@ -21,14 +21,14 @@ public class CmdLineLoader extends BaseLoader {
 	
 	@Override
 	public LoaderValues load(AppConfigDefinition appConfigDef, List<String> cmdLineArgs,
-			AppConfigStructuredValues existingValues, List<LoaderException> loaderExceptions) {
+			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) {
 		
 		ArrayList<PointValue> values = new ArrayList();
 			
 		if (cmdLineArgs != null) {
 			for (String s : cmdLineArgs) {
 				try {
-					KVP kvp = KVP.splitKVP(s, AppConfig.KVP_DELIMITER);
+					KVP kvp = KVP.splitKVP(s, AndHow.KVP_DELIMITER);
 
 					attemptToAdd(appConfigDef, values, kvp.getName(), kvp.getValue());
 

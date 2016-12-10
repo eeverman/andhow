@@ -2,14 +2,14 @@ package yarnandtail.andhow.appconfig;
 
 import java.util.HashMap;
 import java.util.Map;
-import yarnandtail.andhow.AppConfigValues;
 import yarnandtail.andhow.ConfigPoint;
+import yarnandtail.andhow.ValueMap;
 
 /**
  *
  * @author eeverman
  */
-public class AppConfigValuesUnmodifiable implements AppConfigValues {
+public class AppConfigValuesUnmodifiable implements ValueMap {
 	
 	/** All the ConfigPoints and associated values registered and actually in use,
 	 * meaning that a values was specified by the user in some way.
@@ -22,13 +22,13 @@ public class AppConfigValuesUnmodifiable implements AppConfigValues {
 	}
 
 	@Override
-	public <T> T getValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(ConfigPoint<T> point) {
 		return point.cast(loadedValues.get(point));
 	}
 	
 	@Override
 	public <T> T getEffectiveValue(ConfigPoint<T> point) {
-		if (isPointPresent(point)) {
+		if (isExplicitlySet(point)) {
 			return point.cast(loadedValues.get(point));
 		} else {
 			return point.getDefaultValue();
@@ -36,7 +36,7 @@ public class AppConfigValuesUnmodifiable implements AppConfigValues {
 	}
 
 	@Override
-	public boolean isPointPresent(ConfigPoint<?> point) {
+	public boolean isExplicitlySet(ConfigPoint<?> point) {
 		return loadedValues.containsKey(point);
 	}
 	
