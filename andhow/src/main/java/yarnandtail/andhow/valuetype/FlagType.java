@@ -1,7 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.point.ConfigPointUtil;
-import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.TextUtil;
 
 /**
  *
@@ -28,11 +27,11 @@ public class FlagType extends BaseValueType<Boolean> {
 		if (sourceValue != null) {
 
 				
-			String str = StringUtils.trimToEmpty(sourceValue);
+			String str = TextUtil.trimToEmpty(sourceValue);
 			if (str.isEmpty()) {
 				return true;	//a flag is considered try just by its presence
 			} else {
-				return ConfigPointUtil.toBoolean(str);
+				return TextUtil.toBoolean(str);
 			}
 
 

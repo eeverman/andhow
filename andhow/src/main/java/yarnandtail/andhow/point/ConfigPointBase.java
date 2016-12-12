@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.load.ParsingException;
 import yarnandtail.andhow.ValueMap;
@@ -35,7 +35,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		
 		List<String> aliasList;
 		if (aliases != null && aliases.length > 0) {
-			aliasList = Arrays.stream(aliases).map(s -> StringUtils.trimToNull(s)).
+			aliasList = Arrays.stream(aliases).map(s -> TextUtil.trimToNull(s)).
 					filter(s -> s != null).collect(Collectors.toList());
 			aliasList = Collections.unmodifiableList(aliasList);
 		} else {
@@ -60,7 +60,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 			String helpText, String explicitName) {
 		
 		List<String> aliasList;
-		explicitName = StringUtils.trimToNull(explicitName);
+		explicitName = TextUtil.trimToNull(explicitName);
 		if (explicitName != null) {
 			aliasList = Collections.unmodifiableList(Arrays.asList(new String[] {explicitName}));
 		} else {

@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.TextUtil;
 
 /**
  *
@@ -25,7 +25,7 @@ public class IntType extends BaseValueType<Integer> {
 	@Override
 	public Integer convert(String sourceValue) throws IllegalArgumentException {
 		
-		String effVal = StringUtils.trimToNull(sourceValue);
+		String effVal = TextUtil.trimToNull(sourceValue);
 		
 		if (effVal != null) {
 				

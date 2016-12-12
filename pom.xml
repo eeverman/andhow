@@ -11,6 +11,10 @@
 	Simple typed and validated configuration loading for web apps, command line or any environment application.
 	</description>
 	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<modules>
 		<module>andhow</module>
 		<module>andhow-usage-examples</module>
@@ -47,11 +51,6 @@
 	
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.apache.commons</groupId>
-				<artifactId>commons-lang3</artifactId>
-				<version>3.4</version>
-			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>

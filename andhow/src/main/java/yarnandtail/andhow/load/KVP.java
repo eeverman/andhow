@@ -1,6 +1,6 @@
 package yarnandtail.andhow.load;
 
-import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.TextUtil;
 
 /**
  * Key-value pair
@@ -15,7 +15,7 @@ public class KVP {
 	private KVP() {}
 
 	public KVP(String name) throws ParsingException {
-		this.name = StringUtils.trimToNull(name);
+		this.name = TextUtil.trimToNull(name);
 		
 		if (this.name == null) {
 			throw new ParsingException("The key (parameter name) cannot be empty", name);
@@ -23,8 +23,8 @@ public class KVP {
 	}
 
 	public KVP(String name, String value) throws ParsingException {
-		this.name = StringUtils.trimToNull(name);
-		this.value = StringUtils.trimToNull(value);
+		this.name = TextUtil.trimToNull(name);
+		this.value = TextUtil.trimToNull(value);
 		
 		if (this.name == null) {
 			throw new ParsingException("The key (parameter name) cannot be empty", name);
@@ -53,7 +53,7 @@ public class KVP {
 	 * @throws ParsingException 
 	 */
 	public static KVP splitKVP(String arg, String delimiter) throws ParsingException {
-		arg = StringUtils.trimToNull(arg);
+		arg = TextUtil.trimToNull(arg);
 		
 		if (arg != null) {
 			String[] ss = arg.split(delimiter);
@@ -61,14 +61,14 @@ public class KVP {
 			String value = null;
 			
 			if (ss.length > 0) {
-				name = StringUtils.trimToNull(ss[0]);
+				name = TextUtil.trimToNull(ss[0]);
 				if (name == null) {
 					throw new ParsingException("The key (parameter name) cannot be empty", arg);
 				}
 			}
 
 			if (ss.length > 1) {
-				value = StringUtils.trimToNull(ss[1]);
+				value = TextUtil.trimToNull(ss[1]);
 			}
 
 			if (ss.length < 3) {

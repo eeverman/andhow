@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.load.ParsingException;
 
 /**
@@ -22,8 +22,7 @@ public class StringType extends BaseValueType<String> {
 	@Override
 	public String convert(String sourceValue) throws ParsingException {
 		if (sourceValue != null) {
-			String str = StringUtils.trimToNull(sourceValue.toString());
-			return str;
+			return TextUtil.trimToNull(sourceValue);
 		} else {
 			return null;
 		}

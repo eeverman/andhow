@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import org.apache.commons.lang3.StringUtils;
+import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.load.ParsingException;
 
 /**
@@ -50,9 +50,9 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 		}
 		
 		if (trimStyle.equals(TrimStyle.TO_EMPTY)) {
-			strVal = StringUtils.trimToEmpty(strVal);
+			strVal = TextUtil.trimToEmpty(strVal);
 		} else if (trimStyle.equals(TrimStyle.TO_NULL)) {
-			strVal = StringUtils.trimToNull(strVal);
+			strVal = TextUtil.trimToNull(strVal);
 		}
 		
 		if (strVal != null) {
