@@ -99,13 +99,13 @@ public class ReportGenerator {
 				
 				printer.printSampleStart(out);
 				
-				for (Class<? extends ConfigPointGroup> group : appDef.getGroups()) {
+				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
 					
-					printer.printConfigGroupStart(out, group);
+					printer.printPropertyGroupStart(out, group);
 					
 					try {
-						for (ConfigPoint<?> point : appDef.getPointsForGroup(group)) {
-							printer.printConfigPoint(out, group, point);
+						for (Property<?> point : appDef.getPropertiesForGroup(group)) {
+							printer.printProperty(out, group, point);
 						}
 					} catch (Exception ex) {
 						out.println("SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
@@ -113,7 +113,7 @@ public class ReportGenerator {
 								"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
 					}
 					
-					printer.printConfigGroupEnd(out, group);
+					printer.printPropertyGroupEnd(out, group);
 				}
 				
 				printer.printSampleEnd(out);

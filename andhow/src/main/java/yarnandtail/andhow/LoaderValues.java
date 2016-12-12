@@ -12,13 +12,13 @@ import java.util.List;
  * @author eeverman
  */
 public class LoaderValues implements ValueMap {
-	public static final List<PointValue> EMPTY_POINT_VALUE_LIST = Collections.emptyList();
+	public static final List<PropertyValue> EMPTY_POINT_VALUE_LIST = Collections.emptyList();
 	
 	private final Loader loader;
-	private final List<PointValue> values;
+	private final List<PropertyValue> values;
 	private boolean problem = false;
 
-	public LoaderValues(Loader loader, List<PointValue> inValues) {
+	public LoaderValues(Loader loader, List<PropertyValue> inValues) {
 		
 		if (loader == null) {
 			throw new RuntimeException("The loader cannot be null");
@@ -34,7 +34,7 @@ public class LoaderValues implements ValueMap {
 			
 			
 			//check for problems
-			for (PointValue pv : values) {
+			for (PropertyValue pv : values) {
 				if (pv.hasIssues()) {
 					problem = true;
 					break;
@@ -50,31 +50,31 @@ public class LoaderValues implements ValueMap {
 		return loader;
 	}
 
-	public List<PointValue> getValues() {
+	public List<PropertyValue> getValues() {
 		return values;
 	}
 	
 	
 
 	/**
-	 * A linear search for the ConfigPoint in the values loaded by this loader.
+	 * A linear search for the Property in the values loaded by this loader.
 	 * 
 	 * @param point
 	 * @return 
 	 */
 	@Override
-	public <T> T getExplicitValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(Property<T> point) {
 		if (point == null) {
 			return null;
 		}
 		return point.cast(
-				values.stream().filter(pv -> point.equals(pv.getPoint())).
+				values.stream().filter(pv -> point.equals(pv.getProperty())).
 						findFirst().map(pv -> pv.getValue()).orElse(null)
 		);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+	public <T> T getEffectiveValue(Property<T> point) {
 		if (point == null) {
 			return null;
 		}
@@ -87,13 +87,13 @@ public class LoaderValues implements ValueMap {
 	}
 
 	/**
-	 * A linear search for the ConfigPoint in the values loaded by this loader.
+	 * A linear search for the Property in the values loaded by this loader.
 	 * @param point
 	 * @return 
 	 */
 	@Override
-	public boolean isExplicitlySet(ConfigPoint<?> point) {
-		return values.stream().anyMatch(p -> p.getPoint().equals(point));
+	public boolean isExplicitlySet(Property<?> point) {
+		return values.stream().anyMatch(p -> p.getProperty().equals(point));
 	}
 	
 	/**

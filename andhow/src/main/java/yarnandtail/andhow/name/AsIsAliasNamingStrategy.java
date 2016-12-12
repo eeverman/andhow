@@ -1,11 +1,8 @@
 package yarnandtail.andhow.name;
 
-import java.util.ArrayList;
-import java.util.List;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
-import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
 import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
 
 /**
  * A RISKY and NON-PRODUCTION strategy that uses aliases as-is w/o any prefix.
@@ -14,26 +11,26 @@ import yarnandtail.andhow.NamingStrategy;
  * especially as the application grows or is used as a library in a larger project.
  * 
  * The real purpose of this strategy is to unit test the effect of naming collisions
- * and (possibly) for smaller projects that have just a handful of ConfigPoints.
+ * and (possibly) for smaller projects that have just a handful of Properties.
  * 
  * @author eeverman
  */
 public class AsIsAliasNamingStrategy implements NamingStrategy {
 
 	@Override
-	public Naming buildNames(ConfigPoint configPoint, 
-			Class<? extends ConfigPointGroup> parentGroup, String fieldName) {
+	public Naming buildNames(Property prop, 
+			Class<? extends PropertyGroup> parentGroup, String fieldName) {
 		
 		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
-		Naming naming = new Naming(canonicalName, configPoint.getBaseAliases());
+		Naming naming = new Naming(canonicalName, prop.getBaseAliases());
 		return naming;
 	}
 	
 	@Override
-	public Naming buildNamesFromCanonical(ConfigPoint configPoint, 
-			Class<? extends ConfigPointGroup> parentGroup, String canonicalName) {
+	public Naming buildNamesFromCanonical(Property prop, 
+			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
 		
-		Naming naming = new Naming(canonicalName, configPoint.getBaseAliases());
+		Naming naming = new Naming(canonicalName, prop.getBaseAliases());
 		return naming;
 	}
 	

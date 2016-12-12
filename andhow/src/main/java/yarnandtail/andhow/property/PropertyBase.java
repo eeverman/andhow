@@ -1,4 +1,4 @@
-package yarnandtail.andhow.point;
+package yarnandtail.andhow.property;
 
 import yarnandtail.andhow.valuetype.ValueType;
 import java.util.Arrays;
@@ -6,20 +6,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.load.ParsingException;
 import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.Property;
 
 /**
  *
  * @author eeverman
  */
-public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
+public abstract class PropertyBase<T> implements Property<T> {
 	
-	private final ConfigPointType paramType;
+	private final PropertyType paramType;
 	private final ValueType valueType;
 	private final T defaultValue;
 	private final boolean required;
@@ -28,9 +28,9 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	private final String helpText;
 	private final List<String> alias;
 	
-	public ConfigPointBase(
+	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			ConfigPointType paramType, ValueType<T> valueType,
+			PropertyType paramType, ValueType<T> valueType,
 			String helpText, String[] aliases) {
 		
 		List<String> aliasList;
@@ -54,9 +54,9 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 		
 	}
 	
-	public ConfigPointBase(
+	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			ConfigPointType paramType, ValueType<T> valueType,
+			PropertyType paramType, ValueType<T> valueType,
 			String helpText, String explicitName) {
 		
 		List<String> aliasList;
@@ -81,7 +81,7 @@ public abstract class ConfigPointBase<T> implements ConfigPoint<T> {
 	}
 	
 	@Override
-	public ConfigPointType getPointType() {
+	public PropertyType getPropertyType() {
 		return paramType;
 	}
 	

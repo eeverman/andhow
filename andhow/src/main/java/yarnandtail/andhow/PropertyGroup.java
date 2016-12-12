@@ -6,15 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A logical and/or functional grouping of Properties.
+ * 
  * @author eeverman
  */
-public interface ConfigPointGroup {
+public interface PropertyGroup {
 
 	
 
 	/**
-	 * Builds a list of all ConfigPoints and their canonical names contained in
+	 * Builds a list of all Properties and their canonical names contained in
 	 * the passed group.
 	 * 
 	 * Exceptions may be thrown if a security manager blocks access to members.
@@ -25,74 +26,74 @@ public interface ConfigPointGroup {
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	static List<NameAndPoint> getConfigPoints(Class<? extends ConfigPointGroup> group) 
+	static List<NameAndProperty> getConfigPoints(Class<? extends PropertyGroup> group) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
-		List<NameAndPoint> points = new ArrayList();
+		List<NameAndProperty> props = new ArrayList();
 		
 		Field[] fields = group.getDeclaredFields();
 
 		for (Field f : fields) {
 
-			if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
+			if (Modifier.isStatic(f.getModifiers()) && Property.class.isAssignableFrom(f.getType())) {
 
-				ConfigPoint cp = null;
+				Property cp = null;
 
 				try {
-					cp = (ConfigPoint) f.get(null);
+					cp = (Property) f.get(null);
 				} catch (Exception ex) {	
 					f.setAccessible(true);
-					cp = (ConfigPoint) f.get(null);
+					cp = (Property) f.get(null);
 				}
 				
 				String name = group.getCanonicalName() + "." + f.getName();	
-				points.add(new NameAndPoint(name, cp));
+				props.add(new NameAndProperty(name, cp));
 				
 			}
 
 		}
 		
-		return points;
+		return props;
 	}
 	
 	
 	/**
-	 * Gets the field name for a point in the group,
+	 * Gets the field name for a property in the group,
 	 * which is just the last portion of the canonical name.
 	 * 
 	 * The canonical name is of the form:<br/>
-	 * [group canonical name].[field name of the point within the group]<br/>
-	 * thus, it is require that the point be a field within the group, otherwise
+	 * [group canonical name].[field name of the Property within the group]<br/>
+	 * thus, it is require that the Property be a field within the group, otherwise
 	 * null is returned.
 	 * 
 	 * Exceptions may be thrown if a security manager blocks access to members.
 	 * 
 	 * @param group
-	 * @param point
+	 * @param property
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	static String getFieldName(Class<? extends ConfigPointGroup> group, ConfigPoint<?> point) 
+	static String getFieldName(Class<? extends PropertyGroup> group, Property<?> property) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		Field[] fields = group.getDeclaredFields();
 
 		for (Field f : fields) {
 
-			if (Modifier.isStatic(f.getModifiers()) && ConfigPoint.class.isAssignableFrom(f.getType())) {
+			if (Modifier.isStatic(f.getModifiers()) && Property.class.isAssignableFrom(f.getType())) {
 
-				ConfigPoint cp = null;
+				Property cp = null;
 
 				try {
-					cp = (ConfigPoint) f.get(null);
+					cp = (Property) f.get(null);
 				} catch (Exception ex) {	
 					f.setAccessible(true);
-					cp = (ConfigPoint) f.get(null);
+					cp = (Property) f.get(null);
 				}
 				
-				if (cp.equals(point)) {
+				if (cp.equals(property)) {
 					return f.getName();
 				}
 			}
@@ -103,26 +104,26 @@ public interface ConfigPointGroup {
 	}
 	
 	/**
-	 * Gets the canonical name for a point in the group.
+	 * Gets the canonical name for a Property in the group.
 	 * 
 	 * The canonical name is of the form:<br/>
-	 * [group canonical name].[field name of the point within the group]<br/>
-	 * thus, it is require that the point be a field within the group, otherwise
+	 * [group canonical name].[field name of the Property within the group]<br/>
+	 * thus, it is require that the Property be a field within the group, otherwise
 	 * null is returned.
 	 * 
 	 * Exceptions may be thrown if a security manager blocks access to members.
 	 * 
 	 * @param group
-	 * @param point
+	 * @param property
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	static String getCanonicalName(Class<? extends ConfigPointGroup> group, ConfigPoint<?> point) 
+	static String getCanonicalName(Class<? extends PropertyGroup> group, Property<?> property) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
-		String fieldName = getFieldName(group, point);
+		String fieldName = getFieldName(group, property);
 		
 		if (fieldName != null) {
 			return group.getCanonicalName() + "." + fieldName;
@@ -132,15 +133,15 @@ public interface ConfigPointGroup {
 	}
 	
 	/**
-	 * Simple way to pass the canonical name and associated point around
+	 * Simple way to pass the canonical name and associated property around
 	 */
-	public static class NameAndPoint {
+	public static class NameAndProperty {
 		public String canonName;
-		public ConfigPoint<?> point;
+		public Property<?> property;
 		
-		public NameAndPoint(String canonName, ConfigPoint<?> point) {
+		public NameAndProperty(String canonName, Property<?> prop) {
 			this.canonName = canonName;
-			this.point = point;
+			this.property = prop;
 		}
 	}
 }

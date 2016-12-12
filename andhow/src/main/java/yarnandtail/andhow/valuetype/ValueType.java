@@ -15,7 +15,6 @@ public interface ValueType<T> {
 	 * by the destinationType.
 	 * If this configPoint is a multiValue, each value should be converted separately.
 	 * @param sourceValue
-	 * @param loadedValues
 	 * @return
 	 * @throws IllegalArgumentException 
 	 */

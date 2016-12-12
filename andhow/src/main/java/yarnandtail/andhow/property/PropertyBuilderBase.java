@@ -1,25 +1,25 @@
-package yarnandtail.andhow.point;
+package yarnandtail.andhow.property;
 
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointType;
+import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.Property;
 
 /**
  *
  * @author eeverman
  */
-public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends ConfigPoint<T>, T> {
+public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C extends Property<T>, T> {
 	
 	//Weird tracking of its own instance is so we get the type correct when returning
-	//to the caller.  Returning 'this' is a ConfigPointBuilder.  Returing 'B' is
+	//to the caller.  Returning 'this' is a PropertyBuilderBase.  Returing 'B' is
 	//a specific subclass.
 	protected B instance;
 	
 	
-	protected ConfigPointType paramType = ConfigPointType.SINGLE_NAME_VALUE;
+	protected PropertyType paramType = PropertyType.SINGLE_NAME_VALUE;
 	protected ValueType<T> valueType;
 	protected T defaultValue;
 	protected boolean required = false;
@@ -31,19 +31,19 @@ public abstract class ConfigPointBuilder<B extends ConfigPointBuilder, C extends
 	
 	
 	//All subclasses should have this a static builder() method that returns
-	//an appropriate subclass of ConfigPointBuilder.
+	//an appropriate subclass of PropertyBuilderBase.
 	
 	//All subclasses should have a constructor that looks like this:
-//	public [[TYPE]]PointBuilder() {
-//		this.instance = this;	//Required to set instance to a correct type
-//		this.setValueType([[type]]Type.instance());
-//	}
+	//	public [[TYPE]]PointBuilder() {
+	//		this.instance = this;	//Required to set instance to a correct type
+	//		this.setValueType([[type]]Type.instance());
+	//	}
 	
 	protected void setInstance(B instance) {
 		this.instance = instance;
 	}
 	
-	public B setParamType(ConfigPointType paramType) {
+	public B setParamType(PropertyType paramType) {
 		this.paramType = paramType;
 		return instance;
 	}

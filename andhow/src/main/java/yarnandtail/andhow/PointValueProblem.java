@@ -7,7 +7,7 @@ package yarnandtail.andhow;
 public class PointValueProblem {
 	
 	protected final Loader loader;
-	protected final ConfigPoint<?> point;
+	protected final Property<?> point;
 	protected final Object unconvertable;
 	protected final Object value;
 	protected final Validator validator;
@@ -20,7 +20,7 @@ public class PointValueProblem {
 	 * @param value
 	 * @param validator 
 	 */
-	public PointValueProblem(Loader loader, ConfigPoint<?> point, Object value, Validator<?> validator) {
+	public PointValueProblem(Loader loader, Property<?> point, Object value, Validator<?> validator) {
 		this.loader = loader;
 		this.point = point;
 		this.unconvertable = null;
@@ -36,7 +36,7 @@ public class PointValueProblem {
 	 * @param point
 	 * @param type 
 	 */
-	public PointValueProblem(Loader loader, ConfigPoint<?> point, String unconvertableString) {
+	public PointValueProblem(Loader loader, Property<?> point, String unconvertableString) {
 		this.loader = loader;
 		this.point = point;
 		this.unconvertable = unconvertableString;
@@ -51,7 +51,7 @@ public class PointValueProblem {
 	 * @param point
 	 * @param unconvertableObject 
 	 */
-	public PointValueProblem(Loader loader, ConfigPoint<?> point, Object unconvertableObject) {
+	public PointValueProblem(Loader loader, Property<?> point, Object unconvertableObject) {
 		this.loader = loader;
 		this.point = point;
 		this.unconvertable = unconvertableObject;
@@ -64,7 +64,7 @@ public class PointValueProblem {
 		return loader;
 	}
 
-	public ConfigPoint<?> getPoint() {
+	public Property<?> getPoint() {
 		return point;
 	}
 
@@ -86,7 +86,7 @@ public class PointValueProblem {
 	
 	/**
 	 * Builds a message describing the issue with the value within the context
-	 * of the ConfigPoint.
+ of the Property.
 	 * 
 	 * Assume that the user already sees the name of the config point listed:
 	 * Its name does not need to be repeated, only the value and the issue w/ it.

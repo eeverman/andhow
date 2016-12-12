@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.load.PropFileLoader;
 
@@ -26,21 +26,21 @@ public class ValueMapWithContextMutableTest {
 		Loader cmdLineLoad = new CmdLineLoader();
 		Loader propFileLoad = new PropFileLoader();
 		
-		List<PointValue> firstSet = new ArrayList();
+		List<PropertyValue> firstSet = new ArrayList();
 		
-		firstSet.add(new PointValue(SimpleParamsWAlias.KVP_BOB, "test"));
+		firstSet.add(new PropertyValue(SimpleParamsWAlias.KVP_BOB, "test"));
 		//firstSet.put(SimpleParamsWAlias.KVP_NULL, "not_null");
-		firstSet.add(new PointValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE));
-		firstSet.add(new PointValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE));
-		firstSet.add(new PointValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE));
+		firstSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE));
+		firstSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE));
+		firstSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE));
 		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet);
 		
-		List<PointValue> secondSet = new ArrayList();
-		secondSet.add(new PointValue(SimpleParamsWAlias.KVP_BOB, "blah"));
-		secondSet.add(new PointValue(SimpleParamsWAlias.KVP_NULL, "blah"));
-		secondSet.add(new PointValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.TRUE));
-		secondSet.add(new PointValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.FALSE));
-		secondSet.add(new PointValue(SimpleParamsWAlias.FLAG_NULL, Boolean.FALSE));
+		List<PropertyValue> secondSet = new ArrayList();
+		secondSet.add(new PropertyValue(SimpleParamsWAlias.KVP_BOB, "blah"));
+		secondSet.add(new PropertyValue(SimpleParamsWAlias.KVP_NULL, "blah"));
+		secondSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.TRUE));
+		secondSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.FALSE));
+		secondSet.add(new PropertyValue(SimpleParamsWAlias.FLAG_NULL, Boolean.FALSE));
 		LoaderValues secondLoaderValues = new LoaderValues(propFileLoad, secondSet);
 		
 		builder.addValues(firstLoaderValues);

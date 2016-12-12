@@ -1,8 +1,9 @@
 package org.dataprocess;
 
+import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.IntProp;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.load.PropFileLoader;
-import yarnandtail.andhow.point.*;
 
 /**
  * This is an example minimal application configuration.
@@ -50,32 +51,24 @@ public class SampleAppConfiguration {
 	// within the modules they configure.  
 
 	
-	@ConfigGroupDescription(
+	@PropertyGroupDescription(
 			groupName="Aquarius Service Configuration", 
 			groupDescription="Configures all communication to the USGS Aquarius service")
-	public interface AquariusConfig extends ConfigPointGroup {
-		public static final StringConfigPoint SERVICE_URL = StringConfigPoint.builder()
-				.mustEndWith("/").build();
-		public static final IntConfigPoint TIMEOUT = IntConfigPoint.builder()
-				.setDefault(50).build();
-		public static final StringConfigPoint QUERY_ENDPOINT = StringConfigPoint.builder()
-				.build();
-		public static final StringConfigPoint ITEM_ENDPOINT = StringConfigPoint.builder()
-				.setRequired(true).build();
+	public interface AquariusConfig extends PropertyGroup {
+		StringProp SERVICE_URL = StringProp.builder().mustEndWith("/").build();
+		IntProp TIMEOUT = IntProp.builder().setDefault(50).build();
+		StringProp QUERY_ENDPOINT = StringProp.builder().build();
+		StringProp ITEM_ENDPOINT = StringProp.builder().required().build();
 	}
 	
-	@ConfigGroupDescription(
+	@PropertyGroupDescription(
 			groupName="NWIS Service Configuration", 
 			groupDescription="Configures all communication to the USGS NWIS service")
-	public interface NwisConfig extends ConfigPointGroup {
-		public static final StringConfigPoint SERVICE_URL = StringConfigPoint.builder()
-				.mustEndWith("/").build();
-		public static final IntConfigPoint TIMEOUT = IntConfigPoint.builder()
-				.setDefault(20).build();
-		public static final StringConfigPoint QUERY_ENDPOINT = StringConfigPoint.builder()
-				.build();
-		public static final StringConfigPoint ITEM_ENDPOINT = StringConfigPoint.builder()
-				.setRequired(true).build();
+	public interface NwisConfig extends PropertyGroup {
+		StringProp SERVICE_URL = StringProp.builder().mustEndWith("/").build();
+		IntProp TIMEOUT = IntProp.builder().setDefault(20).build();
+		StringProp QUERY_ENDPOINT = StringProp.builder().build();
+		StringProp ITEM_ENDPOINT = StringProp.builder().setRequired(true).build();
 	}
 	
 }

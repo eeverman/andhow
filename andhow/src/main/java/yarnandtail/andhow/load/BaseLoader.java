@@ -3,7 +3,7 @@ package yarnandtail.andhow.load;
 import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.PointValueProblem;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 
@@ -15,21 +15,21 @@ public abstract class BaseLoader implements Loader {
 	
 	
 	@Override
-	public Class<? extends ConfigPointGroup> getLoaderConfig() {
+	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return null;
 	}
 	
-	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PointValue> values, 
+	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PropertyValue> values, 
 			String key, String strValue) throws ParsingException {
 		
 		key = TextUtil.trimToNull(key);
 		
 		if (key != null && strValue != null) {
-			ConfigPoint cp = appConfigDef.getPoint(key);
+			Property prop = appConfigDef.getProperty(key);
 
-			if (cp != null) {
+			if (prop != null) {
 				
-				PointValue pv = createValue(cp, strValue);
+				PropertyValue pv = createValue(prop, strValue);
 				values.add(pv);
 				
 			} else {
@@ -39,19 +39,19 @@ public abstract class BaseLoader implements Loader {
 		}
 	}
 	
-	protected <T> PointValue createValue(ConfigPoint<T> point, String strValue) throws ParsingException {
+	protected <T> PropertyValue createValue(Property<T> prop, String strValue) throws ParsingException {
 		
-		T value = point.convertString(strValue);
+		T value = prop.convertString(strValue);
 		
 		ArrayList<PointValueProblem> issues = new ArrayList();
 
-		for (Validator<T> v : point.getValidators()) {
+		for (Validator<T> v : prop.getValidators()) {
 			if (! v.isValid(value)) {
-				issues.add(new PointValueProblem(this, point, value, v));
+				issues.add(new PointValueProblem(this, prop, value, v));
 			}
 		}
 		
-		return new PointValue(point, value, issues);
+		return new PropertyValue(prop, value, issues);
 	}
 	
 }

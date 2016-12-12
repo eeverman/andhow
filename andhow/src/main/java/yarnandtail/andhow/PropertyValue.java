@@ -5,24 +5,25 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- *
+ * Simple class to bundle a Property, its value and any associated issues with the Property.
+ * 
  * @author eeverman
  */
-public class PointValue {
+public class PropertyValue {
 	private static final List<PointValueProblem> EMPTY_ISSUE_LIST = Collections.emptyList();
 	
-	private ConfigPoint<?> point;
+	private Property<?> property;
 	private Object value;
 	private List<PointValueProblem> issues;
 
-	public PointValue(ConfigPoint<?> point, Object value) {
-		this.point = point;
+	public PropertyValue(Property<?> prop, Object value) {
+		this.property = prop;
 		this.value = value;
 		this.issues = EMPTY_ISSUE_LIST;
 	}
 	
-	public PointValue(ConfigPoint<?> point, Object value, List<PointValueProblem> inIssues) {
-		this.point = point;
+	public PropertyValue(Property<?> prop, Object value, List<PointValueProblem> inIssues) {
+		this.property = prop;
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
@@ -34,8 +35,8 @@ public class PointValue {
 		}
 	}
 
-	public ConfigPoint<?> getPoint() {
-		return point;
+	public Property<?> getProperty() {
+		return property;
 	}
 
 	public Object getValue() {

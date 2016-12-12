@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import yarnandtail.andhow.internal.AndHowCore;
 import java.util.List;
-import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -35,8 +35,8 @@ public class AndHow implements ValueMap {
 	Reloader reloader;
 	
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends ConfigPointGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PointValue> startingValues)
+			List<Class<? extends PropertyGroup>> registeredGroups, 
+			String[] cmdLineArgs, List<PropertyValue> startingValues)
 			throws AppFatalException {
 		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
 		reloader = new Reloader(this);
@@ -79,8 +79,8 @@ public class AndHow implements ValueMap {
 	 * @throws AppFatalException 
 	 */
 	private static Reloader build(
-			NamingStrategy naming, List<Loader> loaders, List<Class<? extends ConfigPointGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PointValue> startingValues) throws AppFatalException, RuntimeException {
+			NamingStrategy naming, List<Loader> loaders, List<Class<? extends PropertyGroup>> registeredGroups, 
+			String[] cmdLineArgs, List<PropertyValue> startingValues) throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
@@ -93,26 +93,26 @@ public class AndHow implements ValueMap {
 
 	}
 	
-	public List<Class<? extends ConfigPointGroup>> getGroups() {
-		return core.getGroups();
+	public List<Class<? extends PropertyGroup>> getGroups() {
+		return core.getPropertyGroups();
 	}
 
-	public List<ConfigPoint<?>> getPoints() {
-		return core.getPoints();
+	public List<Property<?>> getPoints() {
+		return core.getProperties();
 	}
 	
 	@Override
-	public boolean isExplicitlySet(ConfigPoint<?> point) {
+	public boolean isExplicitlySet(Property<?> point) {
 		return core.isExplicitlySet(point);
 	}
 	
 	@Override
-	public <T> T getExplicitValue(ConfigPoint<T> point) {
+	public <T> T getExplicitValue(Property<T> point) {
 		return core.getExplicitValue(point);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(ConfigPoint<T> point) {
+	public <T> T getEffectiveValue(Property<T> point) {
 		return core.getEffectiveValue(point);
 	}
 	
@@ -136,11 +136,11 @@ public class AndHow implements ValueMap {
 	 *			.build();
 	 * }
 	 * </pre>
-	 * 
-	 * There is no return value because there is no need to hold a reference
-	 * to anything past framework startup.  After a successful startup, ConfigPoint
-	 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
-	 * {@code Integer value = MyInt.getValue();}
+ 
+ There is no return value because there is no need to hold a reference
+ to anything past framework startup.  After a successful startup, Property
+ values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+ {@code Integer value = MyInt.getValue();}
 
 	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
 	 * it is important that a single entry and configuration loading point to
@@ -154,11 +154,11 @@ public class AndHow implements ValueMap {
 	 */
 	public static class AndHowBuilder {
 		//User config
-		private final ArrayList<PointValue> forcedValues = new ArrayList();
+		private final ArrayList<PropertyValue> forcedValues = new ArrayList();
 		private final List<Loader> loaders = new ArrayList();
 		private NamingStrategy namingStrategy = new BasicNamingStrategy();
 		private final List<String> cmdLineArgs = new ArrayList();
-		List<Class<? extends ConfigPointGroup>> groups = new ArrayList();
+		List<Class<? extends PropertyGroup>> groups = new ArrayList();
 
 		public AndHowBuilder addLoader(Loader loader) {
 			loaders.add(loader);
@@ -170,18 +170,18 @@ public class AndHow implements ValueMap {
 			return this;
 		}
 
-		public AndHowBuilder addGroup(Class<? extends ConfigPointGroup> group) {
+		public AndHowBuilder addGroup(Class<? extends PropertyGroup> group) {
 			groups.add(group);
 			return this;
 		}
 
-		public AndHowBuilder addGroups(Collection<Class<? extends ConfigPointGroup>> groups) {
+		public AndHowBuilder addGroups(Collection<Class<? extends PropertyGroup>> groups) {
 			this.groups.addAll(groups);
 			return this;
 		}
 
-		public AndHowBuilder addForcedValue(ConfigPoint<?> point, Object value) {
-			forcedValues.add(new PointValue(point, value));
+		public AndHowBuilder addForcedValue(Property<?> point, Object value) {
+			forcedValues.add(new PropertyValue(point, value));
 			return this;
 		}
 
@@ -191,7 +191,7 @@ public class AndHow implements ValueMap {
 		 * @param startVals
 		 * @return 
 		 */
-		public AndHowBuilder addForcedValues(List<PointValue> startVals) {
+		public AndHowBuilder addForcedValues(List<PropertyValue> startVals) {
 			this.forcedValues.addAll(startVals);
 			return this;
 		}
@@ -230,9 +230,9 @@ public class AndHow implements ValueMap {
 		 * Executes the AndHow framework startup.
 		 * 
 		 * There is no return value because there is no need to hold a reference
-		 * to anything past framework startup.  After a successful startup, ConfigPoint
-		 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
-		 * {@code Integer value = MyInt.getValue();}
+ to anything past framework startup.  After a successful startup, Property
+ values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+ {@code Integer value = MyInt.getValue();}
 		 * 
 		 * @throws AppFatalException If the startup fails.
 		 */
@@ -301,8 +301,8 @@ public class AndHow implements ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
-				List<Class<? extends ConfigPointGroup>> registeredGroups, String[] cmdLineArgs, 
-				List<PointValue> forcedValues) 
+				List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs, 
+				List<PropertyValue> forcedValues) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {

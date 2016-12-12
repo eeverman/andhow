@@ -9,21 +9,21 @@ import java.util.List;
  * Represents a configuration point of an application.
  * 
  * Implementations are typed so that they return String, Integer, Boolean, etc.,
- * rather than just configuration strings.
- * 
- * Implementor's Notes:
- * See IntConfigPoint as a best example of how to implement a new ConfigPoint.
- * The reason for creating a new implementation would be to handle a new type, 
- * such as a DateTime type.
- * 
- * <ul>
+ rather than just configuration strings.
+ 
+ Implementor's Notes:
+ See IntConfigPoint as a best example of how to implement a new Property.
+ The reason for creating a new implementation would be to handle a new type, 
+ such as a DateTime type.
+ 
+ <ul>
  * <li>All implementations can use the ConfigPointBase as a base class.  Most
  * methods are already present w/ just a few methods left to implement.
  * <li>All implementations should have a static builder() method that returns
- * a builder capable of building an instance.  by convention, builders are
- * inner classes of their associated ConfigPoint.  The ConfigPointBuilder is an
- * easy base class to extend that provide nearly all needed functionality.
- * <li>Builders should provide easy access to Validators for their appropriate type.
+ a builder capable of building an instance.  by convention, builders are
+ inner classes of their associated Property.  The ConfigPointBuilder is an
+ easy base class to extend that provide nearly all needed functionality.
+ <li>Builders should provide easy access to Validators for their appropriate type.
  * For instance the StringConfigPoint has a value type of String and has an
  * associated StringRegex Validator.  By convention, the builder methods to add
  * validators use the 'must' terminology, as in:  mustMatchRegex(String regex),
@@ -31,7 +31,7 @@ import java.util.List;
  * </ul>
  * @author eeverman
  */
-public interface ConfigPoint<T> {
+public interface Property<T> {
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
 	
@@ -59,15 +59,15 @@ public interface ConfigPoint<T> {
 	T convertString(String str) throws ParsingException;
 	
 	/**
-	 * The basic type of the configuration point:  Flag, name/value, multi=value.
+	 * The basic type of the property:  Flag, name/value, multi=value.
 	 * @return 
 	 */
-	ConfigPointType getPointType();
+	PropertyType getPropertyType();
 	
 	/**
 	 * The type of the value (String, Number, Integer, etc).
-	 * For ConfigPointTypes that allow multiple values, an array of values of
-	 * the specified type can be fetched.
+	 * For Properties that allow multiple values (not yet implemented), an array
+	 * of values of the specified type can be fetched.
 	 * @return 
 	 */
 	ValueType getValueType();
@@ -95,7 +95,7 @@ public interface ConfigPoint<T> {
 	/**
 	 * Alias (short) form.  Similar to 'nix single letter options (dashes not required).
 	 * These are the <i>base</i> aliases: the NamingStrategy is applied in the usage
- of the ConfigPointDef to determine actual alias names.
+	 * of the Property to determine actual alias names.
 	 * 
 	 * @return The list of aliases or an empty list if there are none.
 	 */

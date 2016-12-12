@@ -2,10 +2,10 @@ package yarnandtail.andhow.name;
 
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
-import static yarnandtail.andhow.ConfigPoint.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.Property.EMPTY_STRING_LIST;
 import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
 
 /**
  *
@@ -14,22 +14,22 @@ import yarnandtail.andhow.NamingStrategy;
 public class BasicNamingStrategy implements NamingStrategy {
 
 	@Override
-	public Naming buildNames(ConfigPoint configPoint, 
-			Class<? extends ConfigPointGroup> parentGroup, String fieldName) {
+	public Naming buildNames(Property prop, 
+			Class<? extends PropertyGroup> parentGroup, String fieldName) {
 		
 		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
 		
-		return buildNamesFromCanonical(configPoint, parentGroup, canonicalName);
+		return buildNamesFromCanonical(prop, parentGroup, canonicalName);
 	}
 	
 	@Override
-	public Naming buildNamesFromCanonical(ConfigPoint configPoint, 
-			Class<? extends ConfigPointGroup> parentGroup, String canonicalName) {
+	public Naming buildNamesFromCanonical(Property prop, 
+			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
 		
 		List<String> effectiveAliases = null;
 		
-		if (configPoint.getBaseAliases().size() > 0) {
-			List<String> aliases = configPoint.getBaseAliases();
+		if (prop.getBaseAliases().size() > 0) {
+			List<String> aliases = prop.getBaseAliases();
 			effectiveAliases = new ArrayList(aliases.size());
 			
 			for (String a : aliases) {

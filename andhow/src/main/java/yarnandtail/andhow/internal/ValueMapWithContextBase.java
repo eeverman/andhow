@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PointValue;
-import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueMapWithContext;
+import yarnandtail.andhow.Property;
 
 /**
- *
+ * Shared base implementation for both immutable and mutable versions.
+ * 
  * @author eeverman
  */
 public abstract class ValueMapWithContextBase implements ValueMapWithContext {
@@ -22,23 +22,22 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 
 	//
 	// implementation independent methods to be used w/ subclasses
-	protected final <T> T getValue(List<LoaderValues> valuesList, ConfigPoint<T> point) {
-		return point.cast(
-				valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(point)).
-						map((LoaderValues lv) -> lv.getExplicitValue(point)).findFirst().orElse(null)
+	protected final <T> T getValue(List<LoaderValues> valuesList, Property<T> prop) {
+		return prop.cast(valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(prop)).
+						map((LoaderValues lv) -> lv.getExplicitValue(prop)).findFirst().orElse(null)
 		);
 	}
 	
-	protected final <T> T getEffectiveValue(List<LoaderValues> valuesList, ConfigPoint<T> point) {
-		if (isPointPresent(valuesList, point)) {
-			return getValue(valuesList, point);
+	protected final <T> T getEffectiveValue(List<LoaderValues> valuesList, Property<T> prop) {
+		if (isPointPresent(valuesList, prop)) {
+			return getValue(valuesList, prop);
 		} else {
-			return point.getDefaultValue();
+			return prop.getDefaultValue();
 		}
 	}
 
-	protected final boolean isPointPresent(List<LoaderValues> valuesList, ConfigPoint<?> point) {
-		return valuesList.stream().anyMatch((LoaderValues pv) -> pv.isExplicitlySet(point));
+	protected final boolean isPointPresent(List<LoaderValues> valuesList, Property<?> prop) {
+		return valuesList.stream().anyMatch((LoaderValues pv) -> pv.isExplicitlySet(prop));
 	}
 
 	protected final LoaderValues getAllValuesLoadedByLoader(List<LoaderValues> valuesList, Loader loader) {
@@ -48,14 +47,14 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 	public LoaderValues getEffectiveValuesLoadedByLoader(List<LoaderValues> valuesList, Loader loader) {
 		LoaderValues allLoaderValues = getAllValuesLoadedByLoader(loader);
 		if (allLoaderValues != null) {
-			ArrayList<PointValue> effValues = new ArrayList(allLoaderValues.getValues());
+			ArrayList<PropertyValue> effValues = new ArrayList(allLoaderValues.getValues());
 			for (LoaderValues lvs : valuesList) {
 				//only looking for loaders before the specified one
 				if (lvs.getLoader().equals(loader)) {
 					break;
 				}
 				//remove
-				effValues.removeIf((PointValue pv) -> lvs.isExplicitlySet(pv.getPoint()));
+				effValues.removeIf((PropertyValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
 			}
 			return new LoaderValues(loader, effValues);
 		} else {
@@ -65,11 +64,11 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 	
 	public ValueMapImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
 		
-		Map<ConfigPoint<?>, Object> effValues = new HashMap();
+		Map<Property<?>, Object> effValues = new HashMap();
 		
 		for (LoaderValues lvs : valuesList) {
-			for (PointValue pv : lvs.getValues()) {
-				effValues.putIfAbsent(pv.getPoint(), pv.getValue());
+			for (PropertyValue pv : lvs.getValues()) {
+				effValues.putIfAbsent(pv.getProperty(), pv.getValue());
 			}
 			
 		}

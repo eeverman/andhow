@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.ConfigPoint;
-import yarnandtail.andhow.ConfigPointGroup;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
 
 /**
  * The defined set of ConfigPointGroups, child ConfigPoints and their names for use by the app.
@@ -23,29 +23,29 @@ import yarnandtail.andhow.Validator;
  * @author eeverman
  */
 public class RuntimeDefinition {
-	public static final List<ConfigPoint<?>> EMPTY_CONFIGPOINT_LIST = Collections.unmodifiableList(new ArrayList());
+	public static final List<Property<?>> EMPTY_CONFIGPOINT_LIST = Collections.unmodifiableList(new ArrayList());
 	
 	
-	private final Map<Class<? extends ConfigPointGroup>, List<ConfigPoint<?>>> pointsByGroup = new HashMap();
-	private final List<Class<? extends ConfigPointGroup>> groupList = new ArrayList();
-	private final Map<String, ConfigPoint<?>> pointsByNames = new HashMap();
-	private final Map<ConfigPoint<?>, String> canonicalNameByPoint = new HashMap();
-	private final List<ConfigPoint<?>> points = new ArrayList();
+	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
+	private final List<Class<? extends PropertyGroup>> groupList = new ArrayList();
+	private final Map<String, Property<?>> propertiesByNames = new HashMap();
+	private final Map<Property<?>, String> canonicalNameByProperty = new HashMap();
+	private final List<Property<?>> properties = new ArrayList();
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	
 	/**
-	 * Adds a ConfigPointGroup, its ConfigPoint and the name and aliases for that point
-	 * to all the collections.
+	 * Adds a PropertyGroup, its Property and the name and aliases for that property
+ to all the collections.
 	 * 
-	 * @param group The ConfigPointGroup parent of the point
-	 * @param point The ConfigPoint to be added
-	 * @param names The names associated w/ this point
+	 * @param group The PropertyGroup parent of the property
+	 * @param property The Property to be added
+	 * @param names The names associated w/ this property
 	 */
-	public void addPoint(Class<? extends ConfigPointGroup> group, ConfigPoint<?> point, 
+	public void addProperty(Class<? extends PropertyGroup> group, Property<?> property, 
 			NamingStrategy.Naming names) {
 		
-		if (group == null || point == null || names == null || names.getCanonicalName() == null) {
-			throw new RuntimeException("Null values are not allowed when registering a configuration point.");
+		if (group == null || property == null || names == null || names.getCanonicalName() == null) {
+			throw new RuntimeException("Null values are not allowed when registering a property.");
 		}
 		
 		//Build a list of the canonical name and all the aliases (if any) to simplify later logic
@@ -53,10 +53,10 @@ public class RuntimeDefinition {
 		allNames.add(names.getCanonicalName());
 		allNames.addAll(names.getAliases());
 		
-		if (canonicalNameByPoint.containsKey(point)) {
+		if (canonicalNameByProperty.containsKey(property)) {
 			ConstructionProblem.DuplicatePoint dupPoint = new ConstructionProblem.DuplicatePoint(
-					point, getGroupForPoint(point), canonicalNameByPoint.get(point),
-					point, group, names.getCanonicalName());
+					property, getGroupForPoint(property), canonicalNameByProperty.get(property),
+					property, group, names.getCanonicalName());
 			
 			constructProblems.add(dupPoint);
 			return;
@@ -64,11 +64,11 @@ public class RuntimeDefinition {
 		
 		//Check for duplicate names
 		for (String a : allNames) {
-			ConfigPoint<?> conflictPoint = pointsByNames.get(a);
+			Property<?> conflictPoint = propertiesByNames.get(a);
 			if (conflictPoint != null) {
 				ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
-					conflictPoint, getGroupForPoint(conflictPoint), canonicalNameByPoint.get(conflictPoint),
-					point, group, names.getCanonicalName(), a);
+					conflictPoint, getGroupForPoint(conflictPoint), canonicalNameByProperty.get(conflictPoint),
+					property, group, names.getCanonicalName(), a);
 						
 				constructProblems.add(notUniqueName);
 				return;
@@ -76,11 +76,11 @@ public class RuntimeDefinition {
 		}
 		
 		//Check for bad internal validation configuration (eg, bad regex string)
-		for (Validator v : point.getValidators()) {
+		for (Validator v : property.getValidators()) {
 			if (! v.isSpecificationValid()) {
 				ConstructionProblem.InvalidValidationConfiguration badValid = new
 					ConstructionProblem.InvalidValidationConfiguration(
-					point, group, names.getCanonicalName(), v);
+					property, group, names.getCanonicalName(), v);
 				
 				constructProblems.add(badValid);
 				return;
@@ -88,36 +88,36 @@ public class RuntimeDefinition {
 		}
 		
 		//Check the default value against validation
-		if (checkForInvalidDefaultValue(point, group, names.getCanonicalName())) {
+		if (checkForInvalidDefaultValue(property, group, names.getCanonicalName())) {
 			return;
 		}
 		
 		//
-		//All checks pass, so add point
+		//All checks pass, so add property
 		
-		canonicalNameByPoint.put(point, names.getCanonicalName());
-		points.add(point);
+		canonicalNameByProperty.put(property, names.getCanonicalName());
+		properties.add(property);
 
 
 		for (String a : allNames) {
-			pointsByNames.put(a, point);
+			propertiesByNames.put(a, property);
 		}
 
-		List<ConfigPoint<?>> list = pointsByGroup.get(group);
+		List<Property<?>> list = propertiesByGroup.get(group);
 		if (list != null) {
-			list.add(point);
+			list.add(property);
 		} else {
 			list = new ArrayList();
-			list.add(point);
-			pointsByGroup.put(group, list);
+			list.add(property);
+			propertiesByGroup.put(group, list);
 			groupList.add(group);
 		}
 		
 	}
 	
 	/**
-	 * Since code outside this class is adding points, external code also needs
-	 * to be able to record when it cannot add points to the definition.
+	 * Since code outside this class is adding properties, external code also needs
+ to be able to record when it cannot add properties to the definition.
 	 * 
 	 * @param problem 
 	 */
@@ -125,30 +125,30 @@ public class RuntimeDefinition {
 		constructProblems.add(problem);
 	}
 	
-	public ConfigPoint<?> getPoint(String name) {
-		return pointsByNames.get(name);
+	public Property<?> getProperty(String name) {
+		return propertiesByNames.get(name);
 	}
 	
-	public String getCanonicalName(ConfigPoint<?> point) {
-		return canonicalNameByPoint.get(point);
+	public String getCanonicalName(Property<?> prop) {
+		return canonicalNameByProperty.get(prop);
 	}
 	
-	public List<ConfigPoint<?>> getPoints() {
-		return Collections.unmodifiableList(points);
+	public List<Property<?>> getProperties() {
+		return Collections.unmodifiableList(properties);
 	}
 	
-	public List<Class<? extends ConfigPointGroup>> getGroups() {
+	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
 		return Collections.unmodifiableList(groupList);
 	}
 	
 	/**
 	 * Returns a list of ConfigPoints registered with the passed group.
-	 * If the group is unregistered or has no points, an empty list is returned.
+	 * If the group is unregistered or has no properties, an empty list is returned.
 	 * @param group
 	 * @return 
 	 */
-	public List<ConfigPoint<?>> getPointsForGroup(Class<? extends ConfigPointGroup> group) {
-		List<ConfigPoint<?>> pts = pointsByGroup.get(group);
+	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+		List<Property<?>> pts = propertiesByGroup.get(group);
 		
 		if (pts != null) {
 			return Collections.unmodifiableList(pts);
@@ -158,15 +158,15 @@ public class RuntimeDefinition {
 	}
 	
 	/**
-	 * Finds the group containing the specified point.
+	 * Finds the PropertyGroup containing the specified Property.
 	 * 
-	 * @param point
-	 * @return May return null if the Point is not in any group, or during construction,
-	 * if the group has not finished registering all of its points.
+	 * @param prop
+	 * @return May return null if the Property is not in any group, or during 
+	 * construction, if the group has not finished registering all of its properties.
 	 */
-	public Class<? extends ConfigPointGroup> getGroupForPoint(ConfigPoint<?> point) {
-		for (Class<? extends ConfigPointGroup> group : groupList) {
-			if (pointsByGroup.get(group).contains(point)) {
+	public Class<? extends PropertyGroup> getGroupForPoint(Property<?> prop) {
+		for (Class<? extends PropertyGroup> group : groupList) {
+			if (propertiesByGroup.get(group).contains(prop)) {
 				return group;
 			}
 		}
@@ -184,31 +184,31 @@ public class RuntimeDefinition {
 	}
 	
 	/**
-	 * Checks a ConfigPoint's default value against its Validators and adds entries
+	 * Checks a Property's default value against its Validators and adds entries
 	 * to constructProblems if there are issues.
 	 * 
 	 * @param <T>
-	 * @param point
+	 * @param property
 	 * @param group
 	 * @param canonName
 	 * @return True if the default value is invalid.
 	 */
-	protected final <T> boolean checkForInvalidDefaultValue(ConfigPoint<T> point, 
-			Class<? extends ConfigPointGroup> group, String canonName) {
+	protected final <T> boolean checkForInvalidDefaultValue(Property<T> property, 
+			Class<? extends PropertyGroup> group, String canonName) {
 		
 		boolean foundProblem = false;
 		
-		if (point.getDefaultValue() != null) {
-			T t = point.getDefaultValue();
+		if (property.getDefaultValue() != null) {
+			T t = property.getDefaultValue();
 			
 			if (t != null) {
 			
-				for (Validator<T> v : point.getValidators()) {
+				for (Validator<T> v : property.getValidators()) {
 					if (! v.isValid(t)) {
 
 						ConstructionProblem.InvalidDefaultValue problem = 
 								new ConstructionProblem.InvalidDefaultValue(
-										point, group, canonName, 
+										property, group, canonName, 
 										v.getInvalidMessage(t));
 						constructProblems.add(problem);
 						foundProblem = true;

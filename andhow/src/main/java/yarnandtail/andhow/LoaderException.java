@@ -9,10 +9,10 @@ package yarnandtail.andhow;
 public class LoaderException extends Exception {
 	
 	Loader loader;
-	ConfigPoint cp;
+	Property cp;
 	String sourceDescription;
 			
-	public LoaderException(Exception base, Loader loader, ConfigPoint cp,
+	public LoaderException(Exception base, Loader loader, Property cp,
 			String sourceDescription) {
 		super(base);
 		this.loader = loader;

@@ -29,7 +29,7 @@ public interface Loader {
 	 * 
 	 * @return 
 	 */
-	Class<? extends ConfigPointGroup> getLoaderConfig();
+	Class<? extends PropertyGroup> getLoaderConfig();
 	
 	/**
 	 * For this particular load, where was info loaded from?

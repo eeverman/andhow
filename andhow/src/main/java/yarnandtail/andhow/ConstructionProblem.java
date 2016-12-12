@@ -37,21 +37,21 @@ public abstract class ConstructionProblem {
 	public abstract String getMessage();
 	
 	public static class PointDef {
-		ConfigPoint<?> point;
-		Class<? extends ConfigPointGroup> group;
+		Property<?> point;
+		Class<? extends PropertyGroup> group;
 		String name;
 
-		public PointDef(ConfigPoint<?> point, Class<? extends ConfigPointGroup> group, String name) {
+		public PointDef(Property<?> point, Class<? extends PropertyGroup> group, String name) {
 			this.point = point;
 			this.group = group;
 			this.name = name;
 		}
 
-		public ConfigPoint<?> getPoint() {
+		public Property<?> getPoint() {
 			return point;
 		}
 
-		public Class<? extends ConfigPointGroup> getGroup() {
+		public Class<? extends PropertyGroup> getGroup() {
 			return group;
 		}
 
@@ -65,8 +65,8 @@ public abstract class ConstructionProblem {
 		String conflictName;
 
 		public NonUniqueNames(
-				ConfigPoint<?> refPoint, Class<? extends ConfigPointGroup> refGroup, String refCanonName, 
-				ConfigPoint<?> badPoint, Class<? extends ConfigPointGroup> badGroup, String badCanonName, 
+				Property<?> refPoint, Class<? extends PropertyGroup> refGroup, String refCanonName, 
+				Property<?> badPoint, Class<? extends PropertyGroup> badGroup, String badCanonName, 
 				String conflictName) {
 			
 			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
@@ -88,8 +88,8 @@ public abstract class ConstructionProblem {
 	public static class DuplicatePoint extends ConstructionProblem {
 
 		public DuplicatePoint(
-				ConfigPoint<?> refPoint, Class<? extends ConfigPointGroup> refGroup, String refCanonName, 
-				ConfigPoint<?> badPoint, Class<? extends ConfigPointGroup> badGroup, String badCanonName) {
+				Property<?> refPoint, Class<? extends PropertyGroup> refGroup, String refCanonName, 
+				Property<?> badPoint, Class<? extends PropertyGroup> badGroup, String badCanonName) {
 			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
 			this.badPointDef = new PointDef(badPoint, badGroup, badCanonName);
 		}
@@ -127,7 +127,7 @@ public abstract class ConstructionProblem {
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
 
-		public SecurityException(Exception exception, Class<? extends ConfigPointGroup> group) {
+		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
 			badPointDef = new PointDef(null, group, null);
 		}
@@ -151,7 +151,7 @@ public abstract class ConstructionProblem {
 		String invalidMessage;	
 		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
-		public InvalidDefaultValue(ConfigPoint<?> point, Class<? extends ConfigPointGroup> group, String canonName, String invalidMessage) {
+		public InvalidDefaultValue(Property<?> point, Class<? extends PropertyGroup> group, String canonName, String invalidMessage) {
 			this.badPointDef = new PointDef(point, group, canonName);
 			this.invalidMessage = invalidMessage;
 		}
@@ -171,7 +171,7 @@ public abstract class ConstructionProblem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				ConfigPoint<?> point, Class<? extends ConfigPointGroup> group, String canonName, 
+				Property<?> point, Class<? extends PropertyGroup> group, String canonName, 
 				Validator<?> valid) {
 			
 			this.badPointDef = new PointDef(point, group, canonName);
