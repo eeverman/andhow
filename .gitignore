@@ -4,3 +4,5 @@
 /.project
 /dependency-reduced-pom.xml
 /nbproject/
+/andhow/target/
+nbproject/project.properties
