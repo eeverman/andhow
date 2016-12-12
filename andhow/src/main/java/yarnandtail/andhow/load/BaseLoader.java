@@ -2,7 +2,6 @@ package yarnandtail.andhow.load;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PointValue;
 import yarnandtail.andhow.PointValueProblem;
@@ -23,7 +22,7 @@ public abstract class BaseLoader implements Loader {
 	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PointValue> values, 
 			String key, String strValue) throws ParsingException {
 		
-		key = StringUtils.trimToNull(key);
+		key = TextUtil.trimToNull(key);
 		
 		if (key != null && strValue != null) {
 			ConfigPoint cp = appConfigDef.getPoint(key);
