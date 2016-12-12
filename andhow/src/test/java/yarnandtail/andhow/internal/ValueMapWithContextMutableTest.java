@@ -1,4 +1,4 @@
-package yarnandtail.andhow.appconfig;
+package yarnandtail.andhow.internal;
 
 import yarnandtail.andhow.internal.ValueMapImmutable;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
