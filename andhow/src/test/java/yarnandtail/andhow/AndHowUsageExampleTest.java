@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.property.IntProp;
-import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -81,12 +81,12 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	}
 	
 	public static interface UI_CONFIG extends PropertyGroup {
-		StringProp DISPLAY_NAME = StringProp.builder().required().build();
-		StringProp BACKGROUP_COLOR = StringProp.builder().build();
+		StrProp DISPLAY_NAME = StrProp.builder().required().build();
+		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 	
 	public static interface SERVICE_CONFIG extends PropertyGroup {
-		StringProp REST_ENDPOINT_URL = StringProp.builder().required().build();
+		StrProp REST_ENDPOINT_URL = StrProp.builder().required().build();
 		IntProp RETRY_COUNT = IntProp.builder().setDefault(3).build();
 		IntProp TIMEOUT_SECONDS = IntProp.builder().required().build();
 	}

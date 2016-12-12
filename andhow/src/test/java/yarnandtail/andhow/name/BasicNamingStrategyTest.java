@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.NamingStrategy.Naming;
-import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.valuetype.StringType;
 import yarnandtail.andhow.SimpleParamsWAlias;
 
@@ -24,7 +24,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testDefaultNaming() {
 
-		StringProp point = new StringProp();
+		StrProp point = new StrProp();
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
@@ -34,7 +34,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testExplicitNaming() {
 
-		StringProp point = StringProp.builder().addAlias("myName").build();
+		StrProp point = StrProp.builder().addAlias("myName").build();
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
@@ -45,7 +45,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testExplicitNamingWithAliases() {
 
-		StringProp point = new StringProp(
+		StrProp point = new StrProp(
 				null, false, null, null, PropertyType.SINGLE_NAME_VALUE, StringType.instance(), 
 				null,  new String[] {"name1", "name2", "name3"});
 		

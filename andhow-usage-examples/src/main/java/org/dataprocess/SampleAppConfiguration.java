@@ -1,6 +1,6 @@
 package org.dataprocess;
 
-import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.property.IntProp;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.load.PropFileLoader;
@@ -55,20 +55,20 @@ public class SampleAppConfiguration {
 			groupName="Aquarius Service Configuration", 
 			groupDescription="Configures all communication to the USGS Aquarius service")
 	public interface AquariusConfig extends PropertyGroup {
-		StringProp SERVICE_URL = StringProp.builder().mustEndWith("/").build();
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().setDefault(50).build();
-		StringProp QUERY_ENDPOINT = StringProp.builder().build();
-		StringProp ITEM_ENDPOINT = StringProp.builder().required().build();
+		StrProp QUERY_ENDPOINT = StrProp.builder().build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
 	}
 	
 	@PropertyGroupDescription(
 			groupName="NWIS Service Configuration", 
 			groupDescription="Configures all communication to the USGS NWIS service")
 	public interface NwisConfig extends PropertyGroup {
-		StringProp SERVICE_URL = StringProp.builder().mustEndWith("/").build();
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().setDefault(20).build();
-		StringProp QUERY_ENDPOINT = StringProp.builder().build();
-		StringProp ITEM_ENDPOINT = StringProp.builder().setRequired(true).build();
+		StrProp QUERY_ENDPOINT = StrProp.builder().build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().setRequired(true).build();
 	}
 	
 }

@@ -1,6 +1,6 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.property.FlagProp;
 
 /**
@@ -9,11 +9,11 @@ import yarnandtail.andhow.property.FlagProp;
  */
 public interface SimpleParamsWAliasDuplicate extends PropertyGroup {
 	
-	StringProp KVP_BOB = StringProp.builder()
+	StrProp KVP_BOB = StrProp.builder()
 			.setDefault("bob")
 			.addAlias("kvpbob")
 			.build();
-	StringProp KVP_NULL = StringProp.builder()
+	StrProp KVP_NULL = StrProp.builder()
 			.addAlias("kvpnull")
 			.build();
 	FlagProp FLAG_FALSE = FlagProp.builder()

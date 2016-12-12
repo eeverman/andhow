@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.RuntimeDefinition;
-import yarnandtail.andhow.property.StringProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -266,15 +266,15 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 			groupDescription= "Configure one of these properties to specify a location to load a properties file from. " +
 					"Search order is the order listed below.")
 	public static interface CONFIG extends PropertyGroup {
-		StringProp FILESYSTEM_PATH = StringProp.builder()
+		StrProp FILESYSTEM_PATH = StrProp.builder()
 				.setDescription("Local filesystem path to a properties file, as interpreted by a Java File object").build();
 		
-		StringProp EXECUTABLE_RELATIVE_PATH = StringProp.builder()
+		StrProp EXECUTABLE_RELATIVE_PATH = StrProp.builder()
 				.setDescription("Path relative to the current executable for a properties file.  "
 						+ "If running from a jar file, this would be a path relative to that jar. "
 						+ "In other contexts, the parent directory may be unpredictable.").build();
 		
-		StringProp CLASSPATH_PATH = StringProp.builder()
+		StrProp CLASSPATH_PATH = StrProp.builder()
 				.setDefault("/andhow.properties")
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();

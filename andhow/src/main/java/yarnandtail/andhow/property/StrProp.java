@@ -11,17 +11,17 @@ import yarnandtail.andhow.valuetype.StringType;
  *
  * @author eeverman
  */
-public class StringProp extends PropertyBase<String> {
+public class StrProp extends PropertyBase<String> {
 	
-	public StringProp() {
+	public StrProp() {
 		this(null, false, "", null, PropertyType.SINGLE_NAME_VALUE, StringType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
-	public StringProp(String defaultValue, boolean required) {
+	public StrProp(String defaultValue, boolean required) {
 		this(defaultValue, required, "", null, PropertyType.SINGLE_NAME_VALUE, StringType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
-	public StringProp(
+	public StrProp(
 			String defaultValue, boolean required, String shortDesc, List<Validator<String>> validators,
 			PropertyType paramType, ValueType<String> valueType,
 			String helpText, String[] aliases) {
@@ -38,7 +38,7 @@ public class StringProp extends PropertyBase<String> {
 	}
 	
 	
-	public static class StringBuilder extends PropertyBuilderBase<StringBuilder, StringProp, String> {
+	public static class StringBuilder extends PropertyBuilderBase<StringBuilder, StrProp, String> {
 
 		
 		public StringBuilder() {
@@ -47,9 +47,9 @@ public class StringProp extends PropertyBase<String> {
 		}
 
 		@Override
-		public StringProp build() {
+		public StrProp build() {
 
-			return new StringProp(defaultValue, required, shortDesc, validators,
+			return new StrProp(defaultValue, required, shortDesc, validators,
 				paramType, valueType,
 				helpText, aliases.toArray(new String[aliases.size()]));
 		}
