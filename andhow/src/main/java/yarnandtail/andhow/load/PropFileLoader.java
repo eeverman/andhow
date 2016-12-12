@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.RuntimeDefinition;
-import yarnandtail.andhow.point.StringConfigPoint;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -26,7 +26,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) throws FatalException {
 		
-		ArrayList<PointValue> values = new ArrayList();
+		ArrayList<PropertyValue> values = new ArrayList();
 		Properties props = null;
 		
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
@@ -57,7 +57,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 
 		if (props == null) {
 			throw new FatalException(null,
-				"Expected to find one of the PropFileLoader config points " +
+				"Expected to find one of the PropFileLoader configuration properties " +
 				"pointing to a valid file, but couldn't read any file. ");
 		}
 		
@@ -85,12 +85,12 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 	
 	@Override
-	public Class<? extends ConfigPointGroup> getLoaderConfig() {
+	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return CONFIG.class;
 	}
 	
 
-	protected Properties loadPropertiesFromFilesystem(File propFile, ConfigPoint<?> fromPoint) throws FatalException {
+	protected Properties loadPropertiesFromFilesystem(File propFile, Property<?> fromPoint) throws FatalException {
 		
 		if (propFile.exists() && propFile.canRead()) {
 
@@ -105,7 +105,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		return null;	
 	}
 	
-	protected Properties loadPropertiesFromClasspath(String classpath, ConfigPoint<?> fromPoint) throws FatalException {
+	protected Properties loadPropertiesFromClasspath(String classpath, Property<?> fromPoint) throws FatalException {
 		
 		InputStream inS = PropFileLoader.class.getResourceAsStream(classpath);
 		
@@ -113,7 +113,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 
 	}
 	
-	protected Properties loadPropertiesFromInputStream(InputStream inputStream, ConfigPoint<?> fromPoint, String fromPath) throws FatalException {
+	protected Properties loadPropertiesFromInputStream(InputStream inputStream, Property<?> fromPoint, String fromPath) throws FatalException {
 
 		if (inputStream == null) return null;
 		
@@ -168,7 +168,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 	
 	@Override
-	public void printConfigGroupStart(PrintStream out, Class<? extends ConfigPointGroup> group) {
+	public void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group) {
 		out.println();
 		out.println();
 		out.println(TextUtil.repeat("#", ReportGenerator.DEFAULT_LINE_WIDTH));
@@ -176,7 +176,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		String name = null;
 		String desc = null;
 		
-		ConfigGroupDescription groupDesc = group.getAnnotation(ConfigGroupDescription.class);
+		PropertyGroupDescription groupDesc = group.getAnnotation(PropertyGroupDescription.class);
 		if (groupDesc != null) {
 			name = TextUtil.trimToNull(groupDesc.groupName());
 			desc = TextUtil.trimToNull(groupDesc.groupDescription());
@@ -184,28 +184,28 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		
 		if (name != null || desc != null) {
 			if (name != null && desc != null) {
-				TextUtil.println(out, "# Configuration group {} - {}", name, desc);
+				TextUtil.println(out, "# Property Group {} - {}", name, desc);
 				TextUtil.println(out, "# Defined in interface {}", group.getCanonicalName());
 			} else {
-				TextUtil.println(out, "# Configuration group {}", group.getCanonicalName());
+				TextUtil.println(out, "# Property Group {}", group.getCanonicalName());
 				TextUtil.println(out, "# Description: {}", (name != null)?name:desc);
 			}
 			
 			
 		} else {
-			TextUtil.println(out, "# Configuration group {}", group.getCanonicalName());
+			TextUtil.println(out, "# Property Group {}", group.getCanonicalName());
 		}
 		
 	}
 	
 	
 	@Override
-	public void printConfigPoint(PrintStream out, Class<? extends ConfigPointGroup> group,
-			ConfigPoint<?> point) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+	public void printProperty(PrintStream out, Class<? extends PropertyGroup> group,
+			Property<?> point) throws IllegalArgumentException, IllegalAccessException, SecurityException {
 		
 		
-		String pointFieldName = ConfigPointGroup.getFieldName(group, point);
-		String pointCanondName = ConfigPointGroup.getCanonicalName(group, point);
+		String pointFieldName = PropertyGroup.getFieldName(group, point);
+		String pointCanondName = PropertyGroup.getCanonicalName(group, point);
 		
 		out.println();
 		TextUtil.println(out, "# {} ({}) {}{}", 
@@ -248,7 +248,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 
 	@Override
-	public void printConfigGroupEnd(PrintStream out, Class<? extends ConfigPointGroup> group) {
+	public void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group) {
 	}
 	
 	@Override
@@ -261,20 +261,20 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	
 	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
-	@ConfigGroupDescription(
+	@PropertyGroupDescription(
 			groupName="PropFileLoader Configuration",
-			groupDescription= "Configure one of these points to specify a location to load a properties file from. " +
+			groupDescription= "Configure one of these properties to specify a location to load a properties file from. " +
 					"Search order is the order listed below.")
-	public static interface CONFIG extends ConfigPointGroup {
-		StringConfigPoint FILESYSTEM_PATH = StringConfigPoint.builder()
+	public static interface CONFIG extends PropertyGroup {
+		StrProp FILESYSTEM_PATH = StrProp.builder()
 				.setDescription("Local filesystem path to a properties file, as interpreted by a Java File object").build();
 		
-		StringConfigPoint EXECUTABLE_RELATIVE_PATH = StringConfigPoint.builder()
+		StrProp EXECUTABLE_RELATIVE_PATH = StrProp.builder()
 				.setDescription("Path relative to the current executable for a properties file.  "
 						+ "If running from a jar file, this would be a path relative to that jar. "
 						+ "In other contexts, the parent directory may be unpredictable.").build();
 		
-		StringConfigPoint CLASSPATH_PATH = StringConfigPoint.builder()
+		StrProp CLASSPATH_PATH = StrProp.builder()
 				.setDefault("/andhow.properties")
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();

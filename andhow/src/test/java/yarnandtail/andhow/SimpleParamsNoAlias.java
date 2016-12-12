@@ -1,17 +1,17 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.point.StringConfigPoint;
-import yarnandtail.andhow.point.FlagConfigPoint;
+import yarnandtail.andhow.property.StrProp;
+import yarnandtail.andhow.property.FlagProp;
 
 /**
  *
  * @author eeverman
  */
-public interface SimpleParamsNoAlias extends ConfigPointGroup {
+public interface SimpleParamsNoAlias extends PropertyGroup {
 	
-	StringConfigPoint KVP_BOB = StringConfigPoint.builder().build();
-	StringConfigPoint KVP_NULL = StringConfigPoint.builder().build();
-	FlagConfigPoint FLAG_FALSE = FlagConfigPoint.builder().build();
-	FlagConfigPoint FLAG_TRUE = FlagConfigPoint.builder().build();
-	FlagConfigPoint FLAG_NULL = FlagConfigPoint.builder().build();
+	StrProp KVP_BOB = StrProp.builder().build();
+	StrProp KVP_NULL = StrProp.builder().build();
+	FlagProp FLAG_FALSE = FlagProp.builder().build();
+	FlagProp FLAG_TRUE = FlagProp.builder().build();
+	FlagProp FLAG_NULL = FlagProp.builder().build();
 }

@@ -104,7 +104,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			
 			//Due to loading from a prop file, the order of the file is not preserved,
 			//so we cannot know the order that problems were encountered.
-			ArrayList<ConfigPoint<?>> expectedProblemPoints = new ArrayList();
+			ArrayList<Property<?>> expectedProblemPoints = new ArrayList();
 			expectedProblemPoints.add(SampleRestClientGroup.REST_HOST);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_PORT);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);

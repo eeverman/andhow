@@ -3,10 +3,9 @@ package yarnandtail.andhow.load;
 import yarnandtail.andhow.LoaderException;
 import java.util.List;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
-//import yarnandtail.andhow.*;
 
 /**
  * A utility loader that is used internally to put fixed values into the effective
@@ -16,9 +15,9 @@ import yarnandtail.andhow.ValueMapWithContext;
  */
 public class FixedValueLoader extends BaseLoader {
 
-	List<PointValue> values;
+	List<PropertyValue> values;
 			
-	public FixedValueLoader(List<PointValue> values) {
+	public FixedValueLoader(List<PropertyValue> values) {
 		this.values = values;
 	}
 	

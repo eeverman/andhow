@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import yarnandtail.andhow.load.CmdLineLoader;
-import yarnandtail.andhow.point.IntConfigPoint;
-import yarnandtail.andhow.point.StringConfigPoint;
+import yarnandtail.andhow.property.IntProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -80,15 +80,15 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		}
 	}
 	
-	public static interface UI_CONFIG extends ConfigPointGroup {
-		StringConfigPoint DISPLAY_NAME = StringConfigPoint.builder().required().build();
-		StringConfigPoint BACKGROUP_COLOR = StringConfigPoint.builder().build();
+	public static interface UI_CONFIG extends PropertyGroup {
+		StrProp DISPLAY_NAME = StrProp.builder().required().build();
+		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 	
-	public static interface SERVICE_CONFIG extends ConfigPointGroup {
-		StringConfigPoint REST_ENDPOINT_URL = StringConfigPoint.builder().required().build();
-		IntConfigPoint RETRY_COUNT = IntConfigPoint.builder().setDefault(3).build();
-		IntConfigPoint TIMEOUT_SECONDS = IntConfigPoint.builder().required().build();
+	public static interface SERVICE_CONFIG extends PropertyGroup {
+		StrProp REST_ENDPOINT_URL = StrProp.builder().required().build();
+		IntProp RETRY_COUNT = IntProp.builder().setDefault(3).build();
+		IntProp TIMEOUT_SECONDS = IntProp.builder().required().build();
 	}
 	
 

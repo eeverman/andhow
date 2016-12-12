@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.PointValue;
+import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.ReportGenerator;
@@ -20,7 +20,7 @@ import yarnandtail.andhow.ReportGenerator;
  */
 public class AndHowCore implements ValueMap {
 	//User config
-	private final ArrayList<PointValue> forcedValues = new ArrayList();
+	private final ArrayList<PropertyValue> forcedValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy namingStrategy;
 	private final List<String> cmdLineArgs = new ArrayList();
@@ -33,8 +33,8 @@ public class AndHowCore implements ValueMap {
 	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends ConfigPointGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PointValue> startingValues) throws AppFatalException {
+			List<Class<? extends PropertyGroup>> registeredGroups, 
+			String[] cmdLineArgs, List<PropertyValue> startingValues) throws AppFatalException {
 		
 		this.namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
@@ -95,27 +95,27 @@ public class AndHowCore implements ValueMap {
 		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders);
 	}
 
-	public List<Class<? extends ConfigPointGroup>> getGroups() {
-		return runtimeDef.getGroups();
+	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+		return runtimeDef.getPropertyGroups();
 	}
 
-	public List<ConfigPoint<?>> getPoints() {
-		return runtimeDef.getPoints();
+	public List<Property<?>> getProperties() {
+		return runtimeDef.getProperties();
 	}
 	
 	@Override
-	public boolean isExplicitlySet(ConfigPoint<?> point) {
-		return loadedValues.isExplicitlySet(point);
+	public boolean isExplicitlySet(Property<?> prop) {
+		return loadedValues.isExplicitlySet(prop);
 	}
 	
 	@Override
-	public <T> T getExplicitValue(ConfigPoint<T> point) {
-		return loadedValues.getExplicitValue(point);
+	public <T> T getExplicitValue(Property<T> prop) {
+		return loadedValues.getExplicitValue(prop);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(ConfigPoint<T> point) {
-		return loadedValues.getEffectiveValue(point);
+	public <T> T getEffectiveValue(Property<T> prop) {
+		return loadedValues.getEffectiveValue(prop);
 	}
 	
 	private ValueMapWithContext loadValues() throws FatalException {
@@ -138,10 +138,10 @@ public class AndHowCore implements ValueMap {
 
 	private void checkForRequiredValues() {
 		
-		for (ConfigPoint<?> cp : runtimeDef.getPoints()) {
-			if (cp.isRequired()) {
-				if (getEffectiveValue(cp) == null) {
-					requirementsProblems.add(new RequirementProblem(cp));
+		for (Property<?> prop : runtimeDef.getProperties()) {
+			if (prop.isRequired()) {
+				if (getEffectiveValue(prop) == null) {
+					requirementsProblems.add(new RequirementProblem(prop));
 				}
 			}
 		}

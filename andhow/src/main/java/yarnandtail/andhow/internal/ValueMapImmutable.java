@@ -2,8 +2,8 @@ package yarnandtail.andhow.internal;
 
 import java.util.HashMap;
 import java.util.Map;
-import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.ValueMap;
+import yarnandtail.andhow.Property;
 
 /**
  *
@@ -11,33 +11,34 @@ import yarnandtail.andhow.ValueMap;
  */
 public class ValueMapImmutable implements ValueMap {
 	
-	/** All the ConfigPoints and associated values registered and actually in use,
+	/** 
+	 * All the Properties and associated values registered and actually in use,
 	 * meaning that a values was specified by the user in some way.
 	 */
-	private final Map<ConfigPoint<?>, Object> loadedValues = new HashMap();
+	private final Map<Property<?>, Object> loadedValues = new HashMap();
 	
 
-	public ValueMapImmutable(Map<ConfigPoint<?>, Object> loadedValues) {
+	public ValueMapImmutable(Map<Property<?>, Object> loadedValues) {
 		this.loadedValues.putAll(loadedValues);
 	}
 
 	@Override
-	public <T> T getExplicitValue(ConfigPoint<T> point) {
-		return point.cast(loadedValues.get(point));
+	public <T> T getExplicitValue(Property<T> prop) {
+		return prop.cast(loadedValues.get(prop));
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(ConfigPoint<T> point) {
-		if (isExplicitlySet(point)) {
-			return point.cast(loadedValues.get(point));
+	public <T> T getEffectiveValue(Property<T> prop) {
+		if (isExplicitlySet(prop)) {
+			return prop.cast(loadedValues.get(prop));
 		} else {
-			return point.getDefaultValue();
+			return prop.getDefaultValue();
 		}
 	}
 
 	@Override
-	public boolean isExplicitlySet(ConfigPoint<?> point) {
-		return loadedValues.containsKey(point);
+	public boolean isExplicitlySet(Property<?> prop) {
+		return loadedValues.containsKey(prop);
 	}
 	
 }

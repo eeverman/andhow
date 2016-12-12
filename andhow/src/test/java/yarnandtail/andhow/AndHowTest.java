@@ -20,8 +20,8 @@ public class AndHowTest extends AndHowTestBase {
 	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 	BasicNamingStrategy basicNaming = new BasicNamingStrategy();
 	List<Loader> loaders = new ArrayList();
-	ArrayList<Class<? extends ConfigPointGroup>> configPtGroups = new ArrayList();
-	Map<ConfigPoint<?>, Object> startVals = new HashMap();
+	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
+	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	String[] cmdLineArgsWExplicitName = new String[0];
 	
@@ -85,7 +85,7 @@ public class AndHowTest extends AndHowTestBase {
 		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
 		
 		
-		List<ConfigPoint<?>> regPts = AndHow.instance().getPoints();
+		List<Property<?>> regPts = AndHow.instance().getPoints();
 		
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
@@ -109,7 +109,7 @@ public class AndHowTest extends AndHowTestBase {
 		assertFalse(SimpleParamsWAlias.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
-		List<ConfigPoint<?>> regPts = AndHow.instance().getPoints();
+		List<Property<?>> regPts = AndHow.instance().getPoints();
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
 		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_TRUE));

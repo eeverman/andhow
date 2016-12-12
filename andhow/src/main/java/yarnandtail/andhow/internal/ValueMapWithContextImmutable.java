@@ -3,11 +3,11 @@ package yarnandtail.andhow.internal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import yarnandtail.andhow.ConfigPoint;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.ValueMap;
 import yarnandtail.andhow.ValueMapWithContext;
+import yarnandtail.andhow.Property;
 
 /**
  *
@@ -43,18 +43,18 @@ public class ValueMapWithContextImmutable extends ValueMapWithContextBase {
 	//
 	//These next three methods use the ValueMap b/c it is backed by a HashMap
 	@Override
-	public <T> T getExplicitValue(ConfigPoint<T> point) {
-		return effectiveValues.getExplicitValue(point);
+	public <T> T getExplicitValue(Property<T> prop) {
+		return effectiveValues.getExplicitValue(prop);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(ConfigPoint<T> point) {
-		return effectiveValues.getEffectiveValue(point);
+	public <T> T getEffectiveValue(Property<T> prop) {
+		return effectiveValues.getEffectiveValue(prop);
 	}
 
 	@Override
-	public boolean isExplicitlySet(ConfigPoint<?> point) {
-		return effectiveValues.isExplicitlySet(point);
+	public boolean isExplicitlySet(Property<?> prop) {
+		return effectiveValues.isExplicitlySet(prop);
 	}
 	
 	@Override

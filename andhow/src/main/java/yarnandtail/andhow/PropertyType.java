@@ -1,10 +1,11 @@
 package yarnandtail.andhow;
 
 /**
- * The broad type of parameter.
+ * The broad type of the Property
+ * 
  * @author eeverman
  */
-public enum ConfigPointType {
+public enum PropertyType {
 	/** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning *//** A Param with no meaning */
 	NON_PARAM(false, false, false),
 	/** Flag that is true just by its presence.  May also be explicitly set true. */
@@ -30,7 +31,7 @@ public enum ConfigPointType {
 	private final boolean accumulate;
 
 	
-	ConfigPointType(boolean flag, boolean multipleOk, boolean accumulate) {
+	PropertyType(boolean flag, boolean multipleOk, boolean accumulate) {
 		this.flag = flag;
 		this.multipleOk = multipleOk;
 		this.accumulate = accumulate;

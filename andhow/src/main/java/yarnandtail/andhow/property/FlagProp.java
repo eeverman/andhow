@@ -1,8 +1,6 @@
-package yarnandtail.andhow.point;
+package yarnandtail.andhow.property;
 
-import java.util.List;
-import yarnandtail.andhow.ConfigPointType;
-import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.valuetype.FlagType;
 import yarnandtail.andhow.valuetype.ValueType;
 import yarnandtail.andhow.ValueMap;
@@ -14,8 +12,8 @@ import yarnandtail.andhow.ValueMap;
  * true.  Best used for on/off flags, particularly if used from command line,
  * where a <i>null</i> value makes no sense.
  * 
- * A FlagConfigPoint is similar to a Boolean point, but with these differences:
- * <ul>
+ * A FlagProp is similar to a Boolean point, but with these differences:
+ <ul>
  * <li>A Flag is never null - it will always return true or false.</li>
  * <li>Loaders will interpret the presence of the flag as setting the flag to
  * True (where possible).  For instance, if a Flag is aliased as <em>-enableTorpedos</em>,
@@ -28,19 +26,19 @@ import yarnandtail.andhow.ValueMap;
  * 
  * @author eeverman
  */
-public class FlagConfigPoint extends ConfigPointBase<Boolean> {
+public class FlagProp extends PropertyBase<Boolean> {
 	
-	public FlagConfigPoint() {
-		this(null, false, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
+	public FlagProp() {
+		this(null, false, null, PropertyType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
-	public FlagConfigPoint(Boolean defaultValue, boolean required) {
-		this(defaultValue, required, null, ConfigPointType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
+	public FlagProp(Boolean defaultValue, boolean required) {
+		this(defaultValue, required, null, PropertyType.SINGLE_NAME_VALUE, FlagType.instance(), null, EMPTY_STRING_ARRAY);
 	}
 	
-	public FlagConfigPoint(
+	public FlagProp(
 			Boolean defaultValue, boolean required, String shortDesc,
-			ConfigPointType paramType, ValueType<Boolean> valueType,
+			PropertyType paramType, ValueType<Boolean> valueType,
 			String helpText, String[] aliases) {
 		
 		super(defaultValue, required, shortDesc, null, paramType, valueType, helpText, aliases);
@@ -62,21 +60,21 @@ public class FlagConfigPoint extends ConfigPointBase<Boolean> {
 		return (Boolean)o;
 	}
 	
-	public static FlagPointBuilder builder() {
-		return new FlagPointBuilder();
+	public static FlagBuilder builder() {
+		return new FlagBuilder();
 	}
 	
-	public static class FlagPointBuilder extends ConfigPointBuilder<FlagPointBuilder, FlagConfigPoint, Boolean> {
+	public static class FlagBuilder extends PropertyBuilderBase<FlagBuilder, FlagProp, Boolean> {
 
-		public FlagPointBuilder () {
+		public FlagBuilder () {
 			instance = this;
 			setValueType(FlagType.instance());
 		}
 
 		@Override
-		public FlagConfigPoint build() {
+		public FlagProp build() {
 
-			return new FlagConfigPoint(defaultValue, required, shortDesc, 
+			return new FlagProp(defaultValue, required, shortDesc, 
 				paramType, valueType,
 				helpText, aliases.toArray(new String[aliases.size()]));
 

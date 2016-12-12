@@ -3,7 +3,19 @@ package yarnandtail.andhow;
 import java.util.List;
 
 /**
- *
+ * Extention of ValueMap that adds contextual information to the ValueMap.
+ * 
+ * ValueMap has all the needed info to provide values for Proerties during runtime.
+ * This class provides more metadata, such as where a value was loaded from, if
+ * there are Problems encountered during value loading and which values were loaded
+ * by which Loader, etc..
+ * 
+ * During startup, a mutable version of ValueMapWithContext if incrementally loaded
+ * with values and reported issues.  After loading is complete, values are copied
+ * to immutable versions of ValueMap and ValueMapWithContext.  ValueMap is used
+ * to fetch values as needed, ValueMapWithContext provides metadata on values if
+ * needed.
+ * 
  * @author eeverman
  */
 public interface ValueMapWithContext extends ValueMap {
@@ -35,7 +47,7 @@ public interface ValueMapWithContext extends ValueMap {
 	LoaderValues getAllValuesLoadedByLoader(Loader loader);
 	
 	/**
-	 * The list of ConfigPoints and values loaded by the specified loader that
+	 * The list of Properties and values loaded by the specified loader that
 	 * were not overridden by earlier Loaders.  I.e., the values returned are
 	 * actually in use.
 	 * 
@@ -48,7 +60,7 @@ public interface ValueMapWithContext extends ValueMap {
 	LoaderValues getEffectiveValuesLoadedByLoader(Loader loader);
 	
 	/**
-	 * Unmodifiable minimum data for ConfigPoints to retrieve their data from.
+	 * Unmodifiable minimum data for Properties to retrieve their data from.
 	 * @return 
 	 */
 	ValueMap getValueMapImmutable();

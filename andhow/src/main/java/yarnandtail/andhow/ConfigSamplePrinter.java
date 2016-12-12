@@ -26,12 +26,12 @@ public interface ConfigSamplePrinter {
 	
 	void printSampleStart(PrintStream out);
 	
-	void printConfigGroupStart(PrintStream out, Class<? extends ConfigPointGroup> group);
+	void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group);
 
-	void printConfigPoint(PrintStream out, Class<? extends ConfigPointGroup> group, ConfigPoint<?> point)
+	void printProperty(PrintStream out, Class<? extends PropertyGroup> group, Property<?> point)
 			throws IllegalArgumentException, IllegalAccessException, SecurityException;
 	
-	void printConfigGroupEnd(PrintStream out, Class<? extends ConfigPointGroup> group);
+	void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group);
 	
 	void printSampleEnd(PrintStream out);
 }

@@ -1,12 +1,13 @@
 package yarnandtail.andhow;
 
 /**
- * The values that are loaded or otherwise specified for a set of ConfigPoints
+ * The values that are loaded or otherwise specified for a set of Properties
  * in a AndHow.
  * 
- * This is basically a dedicated Map with ConfigPoint keys and their associated
- * value.  Not all ConfigPoints will be in the map, only the ones which have a
- * value specified.
+ * This is basically a dedicated Map with Property keys and their associated
+ * values.  Not all Properties will be in the map, only the ones which have a
+ * value specified.  During runtime, an immutable instance of this class contains
+ * all the needed information to map Properties to their values.
  * 
  * @author eeverman
  */
@@ -18,28 +19,28 @@ public interface ValueMap {
 	 * value.
 	 * 
 	 * @param <T>
-	 * @param point
+	 * @param prop
 	 * @return 
 	 */
-	<T> T getExplicitValue(ConfigPoint<T> point);
+	<T> T getExplicitValue(Property<T> prop);
 	
 	/**
 	 * The explicitly value, or if that is null, the default (which may also be null).
 	 * 
 	 * @param <T>
-	 * @param point
+	 * @param prop
 	 * @return 
 	 */
-	<T> T  getEffectiveValue(ConfigPoint<T> point);
+	<T> T  getEffectiveValue(Property<T> prop);
 	
 	/**
-	 * Returns true if the point's value was explicitly set via one of the loaders.
+	 * Returns true if the Property's value was explicitly set via one of the loaders.
 	 * 
 	 * At the moment, that means it would also return a non-null value, however,
 	 * future versions may support explicit nulls.
 	 * 
-	 * @param point
+	 * @param prop
 	 * @return 
 	 */
-	boolean isExplicitlySet(ConfigPoint<?> point);
+	boolean isExplicitlySet(Property<?> prop);
 }
