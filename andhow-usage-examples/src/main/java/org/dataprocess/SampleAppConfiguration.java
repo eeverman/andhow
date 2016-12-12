@@ -55,7 +55,7 @@ public class SampleAppConfiguration {
 			groupDescription="Configures all communication to the USGS Aquarius service")
 	public interface AquariusConfig extends ConfigPointGroup {
 		public static final StringConfigPoint SERVICE_URL = StringConfigPoint.builder()
-				.mustEndWith("/", true).build();
+				.mustEndWith("/").build();
 		public static final IntConfigPoint TIMEOUT = IntConfigPoint.builder()
 				.setDefault(50).build();
 		public static final StringConfigPoint QUERY_ENDPOINT = StringConfigPoint.builder()
@@ -69,7 +69,7 @@ public class SampleAppConfiguration {
 			groupDescription="Configures all communication to the USGS NWIS service")
 	public interface NwisConfig extends ConfigPointGroup {
 		public static final StringConfigPoint SERVICE_URL = StringConfigPoint.builder()
-				.mustEndWith("/", true).build();
+				.mustEndWith("/").build();
 		public static final IntConfigPoint TIMEOUT = IntConfigPoint.builder()
 				.setDefault(20).build();
 		public static final StringConfigPoint QUERY_ENDPOINT = StringConfigPoint.builder()

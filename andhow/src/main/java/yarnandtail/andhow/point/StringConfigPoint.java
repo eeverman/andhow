@@ -59,13 +59,23 @@ public class StringConfigPoint extends ConfigPointBase<String> {
 			return this;
 		}
 		
-		public StringPointBuilder mustStartWith(String prefix, boolean ignoreCase) {
-			this.addValidation(new StringValidator.StartsWith(prefix, ignoreCase));
+		public StringPointBuilder mustStartWith(String prefix) {
+			this.addValidation(new StringValidator.StartsWith(prefix, false));
 			return this;
 		}
 		
-		public StringPointBuilder mustEndWith(String sufix, boolean ignoreCase) {
-			this.addValidation(new StringValidator.EndsWith(sufix, ignoreCase));
+		public StringPointBuilder mustStartWithIgnoreCase(String prefix) {
+			this.addValidation(new StringValidator.StartsWith(prefix, true));
+			return this;
+		}
+		
+		public StringPointBuilder mustEndWith(String sufix) {
+			this.addValidation(new StringValidator.EndsWith(sufix, false));
+			return this;
+		}
+		
+		public StringPointBuilder mustEndWithIgnoreCase(String sufix) {
+			this.addValidation(new StringValidator.EndsWith(sufix, true));
 			return this;
 		}
 
