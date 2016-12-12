@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>andhow-parent</artifactId>
+		<groupId>yarnandtail</groupId>
+		<version>0.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>andhow-usage-examples</artifactId>
+	
+	<!-- This really isn't meant to be packaged up at all - its sample code -->
+	<packaging>pom</packaging>
+	<name>AndHow-Usage-Examples</name>
+	<description>Usage examples of the AndHow! configuration frameork.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>yarnandtail</groupId>
+			<artifactId>andhow</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
