@@ -1,7 +1,6 @@
 package org.dataprocess;
 
-import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.property.IntProp;
+import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.load.PropFileLoader;
 
@@ -46,7 +45,7 @@ public class SampleAppConfiguration {
 	
 	
 	//
-	// Here are two configuration groups that are added to the AppConfig, above.
+	// Here are two configuration groups that are added to AndHow, above.
 	// Normally these would be in separate files, or even better, in files
 	// within the modules they configure.  
 
