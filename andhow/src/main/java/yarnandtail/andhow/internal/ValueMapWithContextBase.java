@@ -23,7 +23,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 	//
 	// implementation independent methods to be used w/ subclasses
 	protected final <T> T getValue(List<LoaderValues> valuesList, Property<T> prop) {
-		return prop.cast(valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(prop)).
+		return prop.getValueType().cast(valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(prop)).
 						map((LoaderValues lv) -> lv.getExplicitValue(prop)).findFirst().orElse(null)
 		);
 	}

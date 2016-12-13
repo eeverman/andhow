@@ -1,6 +1,6 @@
 package yarnandtail.andhow.property;
 
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +20,7 @@ import yarnandtail.andhow.Property;
 public abstract class PropertyBase<T> implements Property<T> {
 	
 	private final PropertyType paramType;
-	private final ValueType valueType;
+	private final ValueType<T> valueType;
 	private final T defaultValue;
 	private final boolean required;
 	private final String shortDesc;
@@ -133,7 +133,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	@Override
 	public T getExplicitValue(ValueMap values) {
 		Object v = values.getExplicitValue(this);
-		return cast(v);
+		return valueType.cast(v);
 	}
 	
 	@Override

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.Property;
 
 /**

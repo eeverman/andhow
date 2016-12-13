@@ -2,7 +2,6 @@ package yarnandtail.andhow;
 
 import yarnandtail.andhow.load.ParsingException;
 import java.util.Collections;
-import yarnandtail.andhow.valuetype.ValueType;
 import java.util.List;
 
 /**
@@ -70,7 +69,7 @@ public interface Property<T> {
 	 * of values of the specified type can be fetched.
 	 * @return 
 	 */
-	ValueType getValueType();
+	ValueType<T> getValueType();
 	
 	/**
 	 * A short sentence description.
@@ -100,17 +99,5 @@ public interface Property<T> {
 	 * @return The list of aliases or an empty list if there are none.
 	 */
 	List<String> getBaseAliases();
-	
-	/**
-	 * Attempt to cast the passed object to the Value type of this CP.
-	 * AndHow should never attempt to do this for values it knows cannot be converted
-	 * so this can throw a RuntimeException if used inappropriately.
-	 * @param o
-	 * @return
-	 * @throws RuntimeException 
-	 */
-	T cast(Object o) throws RuntimeException;
-	
-
 
 }

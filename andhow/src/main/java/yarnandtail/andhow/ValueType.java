@@ -1,6 +1,7 @@
-package yarnandtail.andhow.valuetype;
+package yarnandtail.andhow;
 
 import yarnandtail.andhow.load.ParsingException;
+import yarnandtail.andhow.valuetype.TrimStyle;
 
 /**
  *
@@ -29,4 +30,17 @@ public interface ValueType<T> {
 	boolean isEmptyConsideredAValue();
 	
 	TrimStyle getTrimStyle();
+	
+	/**
+	 * Attempt to cast the passed object to the generic type T.
+	 * AndHow uses this internally to cast values known to already be of type T,
+	 * but were stored in a generic way.
+	 * If used for unknown types that are not castable to T, it will throw
+	 * a RuntimeException.
+	 * 
+	 * @param o
+	 * @return
+	 * @throws RuntimeException 
+	 */
+	T cast(Object o) throws RuntimeException;
 }
