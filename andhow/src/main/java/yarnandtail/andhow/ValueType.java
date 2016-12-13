@@ -1,6 +1,5 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.load.ParsingException;
 import yarnandtail.andhow.valuetype.TrimStyle;
 
 /**
@@ -12,12 +11,12 @@ public interface ValueType<T> {
 	Class<T> getDestinationType();
 	
 	/**
-	 * Attempts to convert the passed, single sourceValue into the type represented
+	 * Attempts to convert the passed String into the type represented
 	 * by the destinationType.
 	 * If this configPoint is a multiValue, each value should be converted separately.
 	 * @param sourceValue
 	 * @return
-	 * @throws IllegalArgumentException 
+	 * @throws ParsingException 
 	 */
 	T convert(String sourceValue) throws ParsingException;
 		

@@ -1,6 +1,5 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.load.ParsingException;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,16 +45,6 @@ public interface Property<T> {
 	T getDefaultValue();
 	
 	boolean isRequired();
-	
-	/**
-	 * Statelessly convert a String to the target type.
-	 * Used during loading to statelessly build values which will later be
-	 * available (statefully) from the Config point.
-	 * @param str
-	 * @return
-	 * @throws ParsingException 
-	 */
-	T convertString(String str) throws ParsingException;
 	
 	/**
 	 * The basic type of the property:  Flag, name/value, multi=value.

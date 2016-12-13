@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
@@ -41,7 +42,7 @@ public abstract class BaseLoader implements Loader {
 	
 	protected <T> PropertyValue createValue(Property<T> prop, String strValue) throws ParsingException {
 		
-		T value = prop.convertString(strValue);
+		T value = prop.getValueType().convert(strValue);
 		
 		ArrayList<PropertyValueProblem> issues = new ArrayList();
 

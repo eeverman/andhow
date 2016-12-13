@@ -9,7 +9,6 @@ import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.load.ParsingException;
 import yarnandtail.andhow.ValueMap;
 import yarnandtail.andhow.Property;
 
@@ -139,11 +138,6 @@ public abstract class PropertyBase<T> implements Property<T> {
 	@Override
 	public final T getExplicitValue() {
 		return getExplicitValue(AndHow.instance());
-	}
-	
-	@Override
-	public T convertString(String str) throws ParsingException {
-		return getValueType().convert(str);
 	}
 	
 	@Override

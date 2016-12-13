@@ -1,8 +1,7 @@
-package yarnandtail.andhow.load;
+package yarnandtail.andhow;
 
 /**
- * An exception that happens during parsing where we don't know the full loading
- * context.
+ * An exception where a String is unreadable or unconvertable to a target type.
  * 
  * @author eeverman
  */

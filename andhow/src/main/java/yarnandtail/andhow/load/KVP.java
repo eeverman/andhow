@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.TextUtil;
 
 /**

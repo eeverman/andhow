@@ -2,7 +2,7 @@ package yarnandtail.andhow.valuetype;
 
 import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.TextUtil;
-import yarnandtail.andhow.load.ParsingException;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
