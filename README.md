@@ -43,21 +43,21 @@ public class SimpleSample {
 }
 ```
 ### Walking through the example:
-1.	AndHow initializes with a simple builder().  _Loaders_, like the `PropFileLoader`,
+1.	`AndHow` initializes with a simple builder().  _Loaders_, like the `PropFileLoader`,
 	read properties from various sources.  PropFileLoader will look for an _andhow.properties_ file by default,
 	but other locations can be configured and other loaders can be used, such as
 	command line and (soon) JNDI.
-2.	Add the list of PropertyGroups that AndHow will manage.
-3.	Property values can be accessed directly from the Property itself - there is
+2.	Add `PropertyGroup`s to the list that AndHow will manage.
+3.	`Property` values can be accessed directly from the Property itself - there is
 	no _magic name string_ to fetch properties from a HashMap.
-	Return values of getValue() are _**strongly typed**_.
-4.	`Properties` are defined as `public static final` constants in interfaces that
+	Return values of `getValue()` are _**strongly typed**_.
+4.	Properties are defined as `public static final` constants in interfaces that
 	create logical sets called `PropertyGroups`.  Properties describe themselves
 	in their builders, including the value type (String, Integer, etc), required vs. optional,
 	validation rules and description.
 
 Of course, this example fails because there is no _andhow.properties_ file.
-This is a good thing - you would want a misconfigured application to appear to start.
+This is a good thing - you would not want a misconfigured application to appear to start.
 Even better, it doesn't just fail, it prints a sample configuration for each
 of the loaders in use.  For the PropFileLoader it would print this:
 
