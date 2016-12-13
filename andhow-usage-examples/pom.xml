@@ -10,7 +10,7 @@
 	<artifactId>andhow-usage-examples</artifactId>
 	
 	<!-- This really isn't meant to be packaged up at all - its sample code -->
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<name>AndHow-Usage-Examples</name>
 	<description>Usage examples of the AndHow! configuration frameork.</description>
 
