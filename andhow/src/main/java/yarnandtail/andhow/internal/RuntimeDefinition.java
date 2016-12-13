@@ -54,7 +54,7 @@ public class RuntimeDefinition {
 		allNames.addAll(names.getAliases());
 		
 		if (canonicalNameByProperty.containsKey(property)) {
-			ConstructionProblem.DuplicatePoint dupPoint = new ConstructionProblem.DuplicatePoint(
+			ConstructionProblem.DuplicateProperty dupPoint = new ConstructionProblem.DuplicateProperty(
 					property, getGroupForPoint(property), canonicalNameByProperty.get(property),
 					property, group, names.getCanonicalName());
 			
