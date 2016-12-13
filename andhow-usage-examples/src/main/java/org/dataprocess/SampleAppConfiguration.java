@@ -51,9 +51,7 @@ public class SampleAppConfiguration {
 	// within the modules they configure.  
 
 	
-	@PropertyGroupDescription(
-			groupName="Aquarius Service Configuration", 
-			groupDescription="Configures all communication to the USGS Aquarius service")
+	@GroupInfo(name="Aquarius Configuration", desc="Configures communication to the USGS Aquarius service")
 	public interface AquariusConfig extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().setDefault(50).build();
@@ -61,9 +59,7 @@ public class SampleAppConfiguration {
 		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
 	}
 	
-	@PropertyGroupDescription(
-			groupName="NWIS Service Configuration", 
-			groupDescription="Configures all communication to the USGS NWIS service")
+	@GroupInfo(name="NWIS Configuration", desc="Configures communication to the USGS NWIS service")
 	public interface NwisConfig extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().setDefault(20).build();
