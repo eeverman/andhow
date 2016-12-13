@@ -8,25 +8,25 @@ package yarnandtail.andhow;
  */
 public abstract class ConstructionProblem {
 	
-	protected PointDef refPointDef;
-	protected PointDef badPointDef;
+	protected PropertyDef refPropertyDef;
+	protected PropertyDef badPropertyDef;
 		
 	/**
-	 * For points that have some type of duplication w/ other points, this is the
-	 * point that is duplicated (the earlier of the two duplicates).
+	 * For Properties that have some type of duplication w/ other points, this is the
+	 * Property that is duplicated (the earlier of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
-	public PointDef getRefPoint() {
-		return refPointDef;
+	public PropertyDef getRefProperty() {
+		return refPropertyDef;
 	}
 	
 	/**
-	 * For points that have some type of duplication w/ other points, this is the
-	 * point that is the duplicate point (the later of the two duplicates).
+	 * For Properties that have some type of duplication w/ other points, this is the
+	 * property that is the duplicate one (the later of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
-	public PointDef getBadPoint() {
-		return badPointDef;
+	public PropertyDef getBadProperty() {
+		return badPropertyDef;
 	}
 	
 	/**
@@ -36,19 +36,19 @@ public abstract class ConstructionProblem {
 	 */
 	public abstract String getMessage();
 	
-	public static class PointDef {
-		Property<?> point;
+	public static class PropertyDef {
+		Property<?> property;
 		Class<? extends PropertyGroup> group;
 		String name;
 
-		public PointDef(Property<?> point, Class<? extends PropertyGroup> group, String name) {
-			this.point = point;
+		public PropertyDef(Property<?> prop, Class<? extends PropertyGroup> group, String name) {
+			this.property = prop;
 			this.group = group;
 			this.name = name;
 		}
 
-		public Property<?> getPoint() {
-			return point;
+		public Property<?> getProperty() {
+			return property;
 		}
 
 		public Class<? extends PropertyGroup> getGroup() {
@@ -65,12 +65,12 @@ public abstract class ConstructionProblem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Property<?> refPoint, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badPoint, Class<? extends PropertyGroup> badGroup, String badCanonName, 
+				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
+				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName, 
 				String conflictName) {
 			
-			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
-			this.badPointDef = new PointDef(badPoint, badGroup, badCanonName);
+			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
+			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
 			this.conflictName = conflictName;
 		}
 
@@ -80,29 +80,27 @@ public abstract class ConstructionProblem {
 		
 		@Override
 		public String getMessage() {
-			return "The point " + badPointDef.getName() + " has a name that duplicates " +
-					refPointDef.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
+			return "The property " + badPropertyDef.getName() + " has a name that duplicates " +
+					refPropertyDef.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
 		}
 	}
 	
-	public static class DuplicatePoint extends ConstructionProblem {
+	public static class DuplicateProperty extends ConstructionProblem {
 
-		public DuplicatePoint(
-				Property<?> refPoint, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badPoint, Class<? extends PropertyGroup> badGroup, String badCanonName) {
-			this.refPointDef = new PointDef(refPoint, refGroup, refCanonName);
-			this.badPointDef = new PointDef(badPoint, badGroup, badCanonName);
+		public DuplicateProperty(
+				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
+				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName) {
+			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
+			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
 		}
 		
 		@Override
 		public String getMessage() {
-			return AndHow.ANDHOW_INLINE_NAME +  " has been configured with a duplicate ConfigPoint instance, " +
-				"meaning that one or more ConfigGroups are sharing the same ConfigPoint instance, which is not allowed. " +
-				"The first point is " + refPointDef.getName() + ", the second is " + badPointDef.getName() + ". " +
-				"The first part of each name is the ConfigGroup containing the points.";
+			return AndHow.ANDHOW_INLINE_NAME +  " has been configured with a duplicate Property instance, " +
+				"meaning that one or more PropertyGroups are sharing the same Property instance, which is not allowed. " +
+				"The first Property is " + refPropertyDef.getName() + ", the second is " + badPropertyDef.getName() + ". " +
+				"The first part of each name is the PropertyGroup containing the properties.";
 		}
-		
-
 	}
 	
 	public static class DuplicateLoader extends ConstructionProblem {
@@ -129,7 +127,7 @@ public abstract class ConstructionProblem {
 
 		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
-			badPointDef = new PointDef(null, group, null);
+			badPropertyDef = new PropertyDef(null, group, null);
 		}
 
 		public Exception getException() {
@@ -139,9 +137,9 @@ public abstract class ConstructionProblem {
 		@Override
 		public String getMessage() {
 			return "There was a security exception while trying to access members of " +
-				"the ConfigPointGroup " + badPointDef.getGroup().getCanonicalName() + ".  " +
-				AndHow.ANDHOW_INLINE_NAME + " to be able to read class members via reflection, even if a package protected " +
-				"class.  Perhaps there is security policy in place that is preventing it?";
+				"the PropertyGroup " + badPropertyDef.getGroup().getCanonicalName() + ".  " +
+				AndHow.ANDHOW_INLINE_NAME + " must be able to read class members via reflection, even from a package protected " +
+				"interface.  Perhaps there is security policy in place that is preventing it?";
 		}
 		
 	}
@@ -151,8 +149,8 @@ public abstract class ConstructionProblem {
 		String invalidMessage;	
 		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
-		public InvalidDefaultValue(Property<?> point, Class<? extends PropertyGroup> group, String canonName, String invalidMessage) {
-			this.badPointDef = new PointDef(point, group, canonName);
+		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String canonName, String invalidMessage) {
+			this.badPropertyDef = new PropertyDef(prop, group, canonName);
 			this.invalidMessage = invalidMessage;
 		}
 
@@ -162,7 +160,7 @@ public abstract class ConstructionProblem {
 
 		@Override
 		public String getMessage() {
-			return "The ConfigPoint " + badPointDef.getName() + " is configured with a default " +
+			return "The Property " + badPropertyDef.getName() + " is configured with a default " +
 				"value that does not meet the validation requirements: " + invalidMessage;
 		}
 	}
@@ -171,10 +169,10 @@ public abstract class ConstructionProblem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Property<?> point, Class<? extends PropertyGroup> group, String canonName, 
+				Property<?> property, Class<? extends PropertyGroup> group, String canonName, 
 				Validator<?> valid) {
 			
-			this.badPointDef = new PointDef(point, group, canonName);
+			this.badPropertyDef = new PropertyDef(property, group, canonName);
 			this.valid = valid;
 		}
 
@@ -183,7 +181,7 @@ public abstract class ConstructionProblem {
 		}
 		
 		public String getMessage() {
-			return "The point " + badPointDef.getName() + " has a validator of type " + 
+			return "The property " + badPropertyDef.getName() + " has a validator of type " + 
 					valid.getClass().getSimpleName() + " that is not configured correctly: " +
 					valid.getInvalidSpecificationMessage();
 		}

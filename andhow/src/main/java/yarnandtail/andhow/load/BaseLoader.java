@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.PointValueProblem;
+import yarnandtail.andhow.PropertyValueProblem;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
@@ -43,11 +43,11 @@ public abstract class BaseLoader implements Loader {
 		
 		T value = prop.convertString(strValue);
 		
-		ArrayList<PointValueProblem> issues = new ArrayList();
+		ArrayList<PropertyValueProblem> issues = new ArrayList();
 
 		for (Validator<T> v : prop.getValidators()) {
 			if (! v.isValid(value)) {
-				issues.add(new PointValueProblem(this, prop, value, v));
+				issues.add(new PropertyValueProblem(this, prop, value, v));
 			}
 		}
 		

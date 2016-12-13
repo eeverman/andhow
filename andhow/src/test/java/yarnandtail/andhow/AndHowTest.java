@@ -165,11 +165,11 @@ public class AndHowTest extends AndHowTestBase {
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(5, ce.getConstructionProblems().size());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getConstructionProblems().get(0).getBadPoint().getPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getConstructionProblems().get(1).getBadPoint().getPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getConstructionProblems().get(2).getBadPoint().getPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getConstructionProblems().get(3).getBadPoint().getPoint());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getConstructionProblems().get(4).getBadPoint().getPoint());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getConstructionProblems().get(0).getBadProperty().getProperty());
+			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getConstructionProblems().get(1).getBadProperty().getProperty());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getConstructionProblems().get(2).getBadProperty().getProperty());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getConstructionProblems().get(3).getBadProperty().getProperty());
+			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getConstructionProblems().get(4).getBadProperty().getProperty());
 
 		}
 	}

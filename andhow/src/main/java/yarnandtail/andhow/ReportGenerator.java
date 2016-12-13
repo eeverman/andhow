@@ -45,7 +45,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printPointValueProblems(PrintStream out, List<PointValueProblem> probs, RuntimeDefinition appDef) {
+	public static void printPointValueProblems(PrintStream out, List<PropertyValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			out.println("VALUE PROBLEMS - Values that violate validation rules, "
@@ -53,9 +53,9 @@ public class ReportGenerator {
 			out.println();
 			out.println("Defailed list of Value Problems:");
 			
-			for (PointValueProblem p : probs) {
+			for (PropertyValueProblem p : probs) {
 				TextUtil.println(out, "ConfigPoint {} loaded from {}: {}", 
-						appDef.getCanonicalName(p.getPoint()), 
+						appDef.getCanonicalName(p.getProperty()), 
 						p.getLoader().getSpecificLoadDescription(),
 						p.getMessageWithinFullContext());
 			}
