@@ -176,10 +176,10 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		String name = null;
 		String desc = null;
 		
-		PropertyGroupDescription groupDesc = group.getAnnotation(PropertyGroupDescription.class);
+		GroupInfo groupDesc = group.getAnnotation(GroupInfo.class);
 		if (groupDesc != null) {
-			name = TextUtil.trimToNull(groupDesc.groupName());
-			desc = TextUtil.trimToNull(groupDesc.groupDescription());
+			name = TextUtil.trimToNull(groupDesc.name());
+			desc = TextUtil.trimToNull(groupDesc.desc());
 		}
 		
 		if (name != null || desc != null) {
@@ -261,9 +261,9 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	
 	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
-	@PropertyGroupDescription(
-			groupName="PropFileLoader Configuration",
-			groupDescription= "Configure one of these properties to specify a location to load a properties file from. " +
+	@GroupInfo(
+			name="PropFileLoader Configuration",
+			desc= "Configure one of these properties to specify a location to load a properties file from. " +
 					"Search order is the order listed below.")
 	public static interface CONFIG extends PropertyGroup {
 		StrProp FILESYSTEM_PATH = StrProp.builder()
