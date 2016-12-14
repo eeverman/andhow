@@ -3,6 +3,7 @@ package yarnandtail.andhow;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -122,6 +123,97 @@ public class TextUtilTest {
 		assertEquals(false, TextUtil.toBoolean(""));
 		assertEquals(false, TextUtil.toBoolean(".asef3"));
 		assertEquals(false, TextUtil.toBoolean(null));
+	}
+	
+	@Test
+	public void testWrapWithObviousBreakLocations() {
+		
+		List<String> result;
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10);
+		assertEquals(2, result.size());
+		assertEquals("abcdefghij", result.get(0));
+		assertEquals("klmnopqrstuvwxyz", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghijk lmnopqrstuvwxyz", 10);
+		assertEquals(2, result.size());
+		assertEquals("abcdefghijk", result.get(0));
+		assertEquals("lmnopqrstuvwxyz", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghijk lmnopqrstuvwxyzabcdefghijklmnop", 10);
+		assertEquals(2, result.size());
+		assertEquals("abcdefghijk", result.get(0));
+		assertEquals("lmnopqrstuvwxyzabcdefghijklmnop", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghijk lmnopqrstuvwxyzabcdefghijklmnop qrs tuv", 10);
+		assertEquals(3, result.size());
+		assertEquals("abcdefghijk", result.get(0));
+		assertEquals("lmnopqrstuvwxyzabcdefghijklmnop", result.get(1));
+		assertEquals("qrs tuv", result.get(2));
+	}
+	
+
+	@Test
+	public void testWrapWithCompromiseBreakLocations() {
+		
+		List<String> result;
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefgh ijklmnopqrstuvwxyzabcdefgh", 10);
+		assertEquals(2, result.size());
+		assertEquals("abcdefgh", result.get(0));
+		assertEquals("ijklmnopqrstuvwxyzabcdefgh", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefgh ijklmnopqrstuvwxyz abcdefgh ijklmnopqrstuv", 10);
+		assertEquals(4, result.size());
+		assertEquals("abcdefgh", result.get(0));
+		assertEquals("ijklmnopqrstuvwxyz", result.get(1));
+		assertEquals("abcdefgh", result.get(2));
+		assertEquals("ijklmnopqrstuv", result.get(3));
+		
+		//In this one the first chunk is just a little too short to justify an
+		//early break.
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefg hijklmnopqrstuvwxyzabcdefgh", 10);
+		assertEquals(1, result.size());
+		
+		//A worst case scenario
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefg hijklmnopqrstuvwxyzabcdefgh i", 10);
+		assertEquals("abcdefg hijklmnopqrstuvwxyzabcdefgh", result.get(0));
+		assertEquals("i", result.get(1));
+		
+	}
+	
+
+	@Test
+	public void testWrapWithPrefix() {
+		
+		List<String> result;
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10, "# ", "xxx");
+		assertEquals(2, result.size());
+		assertEquals("# abcdefghij", result.get(0));
+		assertEquals("# xxxklmnopqrstuvwxyz", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghijk lmnopqrstuvwxyz", 10, "# ", "xxx");
+		assertEquals(2, result.size());
+		assertEquals("# abcdefghijk", result.get(0));
+		assertEquals("# xxxlmnopqrstuvwxyz", result.get(1));
+		
+		//......................12345678901234567890123456789012345678901234567890
+		result = TextUtil.wrap("abcdefghijk lmnopqrstuvwxyzabcdefghijklmnop qrs tuv", 10, "# ", "xxx");
+		assertEquals(3, result.size());
+		assertEquals("# abcdefghijk", result.get(0));
+		assertEquals("# xxxlmnopqrstuvwxyzabcdefghijklmnop", result.get(1));
+		assertEquals("# xxxqrs tuv", result.get(2));
 	}
 	
 }

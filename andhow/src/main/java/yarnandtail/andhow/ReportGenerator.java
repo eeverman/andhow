@@ -2,6 +2,7 @@ package yarnandtail.andhow;
 
 import java.io.PrintStream;
 import java.util.List;
+import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
@@ -36,10 +37,10 @@ public class ReportGenerator {
 			out.println(AndHow.ANDHOW_INLINE_NAME + " may have been built in an inconsistent way, such as a default value that violates its own validation rules.");
 			out.println("When there are construction problems, no attempt is made to load configuration values.");
 			out.println();
-			out.println("Defailed list of Construction Problems:");
+			out.println("Detailed list of Construction Problems:");
 			
 			for (ConstructionProblem p : probs) {
-				out.println(p.getMessage());
+				out.println(TextUtil.wrap(p.getMessage(), DEFAULT_LINE_WIDTH, "", SECOND_LINE_INDENT));
 			}
 			
 		}
@@ -48,10 +49,11 @@ public class ReportGenerator {
 	public static void printPointValueProblems(PrintStream out, List<PropertyValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
-			out.println("VALUE PROBLEMS - Values that violate validation rules, "
-					+ "or source values that cannot be converted to their destination type.");
+			out.println(TextUtil.wrap("VALUE PROBLEMS - Values that violate validation rules, "
+					+ "or source values that cannot be converted to their destination type.",
+					DEFAULT_LINE_WIDTH, "", SECOND_LINE_INDENT));
 			out.println();
-			out.println("Defailed list of Value Problems:");
+			out.println("Detailed list of Value Problems:");
 			
 			for (PropertyValueProblem p : probs) {
 				TextUtil.println(out, "ConfigPoint {} loaded from {}: {}", 
@@ -69,15 +71,15 @@ public class ReportGenerator {
 			out.println("REQUIRMENT PROBLEMS - When a required configuration point is not provided");
 			out.println("Note:  Prior issues that prevente individual values from loading may also result in requirements problems.");
 			out.println();
-			out.println("Defailed list of Requirements Problems:");
-			
+			out.println("Detailed list of Requirements Problems:");
+
 			for (RequirementProblem p : probs) {
 				if (p.getPoint() != null) {
 					TextUtil.println(out, "ConfigPoint {}: {}", 
 						appDef.getCanonicalName(p.getPoint()), 
 						p.getMessageWithinFullContext());
 				} else {
-					TextUtil.println(out, "ConfigPointGroup {}: {}", 
+					TextUtil.println(out, "PropertyGroup {}: {}", 
 						p.getGroup().getCanonicalName(), 
 						p.getMessageWithinFullContext());
 				}
