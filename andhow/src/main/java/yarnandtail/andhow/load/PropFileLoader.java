@@ -189,7 +189,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		if (name != null || desc != null) {
 			if (name != null && desc != null) {
 				
-				if (! name.endsWith(".")) name = name + ".";
+				if (! desc.endsWith(".")) desc = desc + ".";
 				
 				TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, 
 						"Property Group {} - {}  Defined in interface {}", name, desc, group.getCanonicalName());
@@ -219,11 +219,11 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, "{} ({}) {}{}", 
 				pointFieldName,
 				point.getValueType().getDestinationType().getSimpleName(),
-				(point.isRequired())?ConfigSamplePrinter.REQUIRED_TEXT:"",
+				(point.isRequired())?ConfigSamplePrinter.REQUIRED_KEYWORD:"",
 				(TextUtil.trimToNull(point.getShortDescription()) == null)?"":" - " + point.getShortDescription());
 		
 		if (point.getDefaultValue() != null) {
-			out.println("# Default Value: " + point.getDefaultValue());
+			out.println(LINE_PREFIX + DEFAULT_VALUE_TEXT + ": " + point.getDefaultValue());
 		}
 		
 		if (TextUtil.trimToNull(point.getHelpText()) != null) {
@@ -231,11 +231,11 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		}
 		
 		if (point.getValidators().size() == 1) {
-			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, VALIDATION_TEXT + " " + point.getValidators().get(0).getTheValueMustDescription());
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, THE_VALUE_MUST_TEXT + " " + point.getValidators().get(0).getTheValueMustDescription());
 		}
 		
 		if (point.getValidators().size() > 1) {
-			out.println(LINE_PREFIX + VALIDATION_TEXT + ":");	
+			out.println(LINE_PREFIX + THE_VALUE_MUST_TEXT + ":");	
 			for (Validator v : point.getValidators()) {
 				out.println(LINE_PREFIX + "\t- " + v.getTheValueMustDescription());
 			}
@@ -284,8 +284,9 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		
 		StrProp CLASSPATH_PATH = StrProp.builder()
 				.setDefault("/andhow.properties")
+				.mustStartWith("/")
 				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
-						+ "This path should start with a slash like this: /org/name/MyProperties.props").build();
+						+ "e.g.: /org/name/MyProperties.props").build();
 	}
 	
 }
