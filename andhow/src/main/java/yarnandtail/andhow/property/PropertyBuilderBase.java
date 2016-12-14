@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.Property;
 
 /**
- *
+ * A generic PropertyBuilder class which needs to be fully implemented as an
+ * inner class in each Property implementation.
+ * 
  * @author eeverman
  */
 public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C extends Property<T>, T> {

@@ -24,13 +24,13 @@ public class ValueMapImmutable implements ValueMap {
 
 	@Override
 	public <T> T getExplicitValue(Property<T> prop) {
-		return prop.cast(loadedValues.get(prop));
+		return prop.getValueType().cast(loadedValues.get(prop));
 	}
 	
 	@Override
 	public <T> T getEffectiveValue(Property<T> prop) {
 		if (isExplicitlySet(prop)) {
-			return prop.cast(loadedValues.get(prop));
+			return prop.getValueType().cast(loadedValues.get(prop));
 		} else {
 			return prop.getDefaultValue();
 		}

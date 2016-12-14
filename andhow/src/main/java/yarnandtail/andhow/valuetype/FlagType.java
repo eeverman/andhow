@@ -40,4 +40,9 @@ public class FlagType extends BaseValueType<Boolean> {
 		}
 	}
 	
+	@Override
+	public Boolean cast(Object o) throws RuntimeException {
+		return (Boolean)o;
+	}
+	
 }

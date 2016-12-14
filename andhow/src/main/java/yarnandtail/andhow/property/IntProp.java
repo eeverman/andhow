@@ -5,7 +5,7 @@ import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valid.IntValidator;
 import yarnandtail.andhow.valuetype.IntType;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 
 /**
  *
@@ -27,11 +27,6 @@ public class IntProp extends PropertyBase<Integer> {
 			String helpText, String[] aliases) {
 		
 		super(defaultValue, required, shortDesc, validators, paramType, valueType, helpText, aliases);
-	}
-
-	@Override
-	public Integer cast(Object o) throws RuntimeException {
-		return (Integer)o;
 	}
 	
 	public static IntBuilder builder() {

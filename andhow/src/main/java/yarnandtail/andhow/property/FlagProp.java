@@ -2,7 +2,7 @@ package yarnandtail.andhow.property;
 
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.valuetype.FlagType;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.ValueMap;
 
 /**
@@ -53,11 +53,6 @@ public class FlagProp extends PropertyBase<Boolean> {
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public Boolean cast(Object o) throws RuntimeException {
-		return (Boolean)o;
 	}
 	
 	public static FlagBuilder builder() {
