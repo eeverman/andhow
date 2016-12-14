@@ -13,16 +13,18 @@ import java.io.PrintStream;
  */
 public interface ConfigSamplePrinter {
 	
-	/** Required point will be marked w/ this text in the sample */
-	static final String REQUIRED_TEXT = "REQUIRED";
+	/** Required properties will be marked w/ this text in the sample */
+	static final String REQUIRED_KEYWORD = "REQUIRED";
 	
-	/** A general explanation for a sample header of what a required point is */
-	static final String REQUIRED_HEADER_TEXT = "Properties marked as " + REQUIRED_TEXT + 
-			" must receive a value during the loading process or " +
-			AndHow.ANDHOW_INLINE_NAME + " will throw a RuntimeException.";
+	/** A general explanation for a sample header of what a required property is */
+	static final String REQUIRED_HEADER_TEXT = "Properties marked " + REQUIRED_KEYWORD + 
+			" must be given a value or a RuntimeException will be thrown.";
 	
-	/** Required point will be marked w/ this text in the sample */
-	static final String VALIDATION_TEXT = "The configured property must";
+	/** Lead-in text for validation requirements */
+	static final String THE_VALUE_MUST_TEXT = "The property value must";
+	
+	/** Lead-in for a default value */
+	static final String DEFAULT_VALUE_TEXT = "Default Value";
 	
 	void printSampleStart(PrintStream out);
 	
