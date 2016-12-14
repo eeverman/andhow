@@ -163,35 +163,78 @@ public class AndHow implements ValueMap {
 		private final List<String> _cmdLineArgs = new ArrayList();
 		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
 
+		/**
+		 * Add a loader to the list of loaders.  Loaders are used in the order added.
+		 * @param loader
+		 * @return 
+		 */
 		public AndHowBuilder loader(Loader loader) {
 			_loaders.add(loader);
 			return this;
 		}
 
+		/**
+		 * Add a list of loaders to the list being built.  Loaders are used in the order added.
+		 * @param loaders
+		 * @return 
+		 */
 		public AndHowBuilder loaders(Collection<Loader> loaders) {
 			this._loaders.addAll(loaders);
 			return this;
 		}
 
+		/**
+		 * Add a group to the list of groups being built.
+		 * 
+		 * Group order makes no difference, but for error reports and sample
+		 * configuration files, the order is preserved.
+		 * 
+		 * @param group
+		 * @return 
+		 */
 		public AndHowBuilder group(Class<? extends PropertyGroup> group) {
 			_groups.add(group);
 			return this;
 		}
 
+		/**
+		 * Add a list of groups to the list of groups being built.
+		 * 
+		 * Group order makes no difference, but for error reports and sample
+		 * configuration files, the order is preserved.
+		 * 
+		 * @param groups
+		 * @return 
+		 */
 		public AndHowBuilder groups(Collection<Class<? extends PropertyGroup>> groups) {
 			this._groups.addAll(groups);
 			return this;
 		}
 
-		public AndHowBuilder forceValue(Property<?> point, Object value) {
-			_forcedValues.add(new PropertyValue(point, value));
+		/**
+		 * Force a Property to have a specific value.
+		 * 
+		 * This is implemented by including an implicit fixed value loader that
+		 * loads these fixed values before the other loaders run.  First loaded
+		 * value wins, so this effectively forces the value to be as configured here.
+		 * 
+		 * @param property
+		 * @param value
+		 * @return 
+		 */
+		public AndHowBuilder forceValue(Property<?> property, Object value) {
+			_forcedValues.add(new PropertyValue(property, value));
 			return this;
 		}
 
 		/**
-		 * Alternative to adding individual forced values if you already have them
-		 * in a list
-		 * @param startVals
+		 * Force a list of Properties to have specific values.
+		 * 
+		 * This is implemented by including an implicit fixed value loader that
+		 * loads these fixed values before the other loaders run.  First loaded
+		 * value wins, so this effectively forces the value to be as configured here.
+		 * 
+		 * @param startVals A list w/ Properties and values bundled into a PropertyValue.
 		 * @return 
 		 */
 		public AndHowBuilder forceValues(List<PropertyValue> startVals) {
@@ -200,30 +243,44 @@ public class AndHow implements ValueMap {
 		}
 
 		/**
-		 * Sets the command line arguments and clears out any existing cmd line values.
+		 * Adds the command line arguments to the list being build of cmd line args.
 		 * 
 		 * @param commandLineArgs
 		 * @return 
 		 */
 		public AndHowBuilder cmdLineArgs(String[] commandLineArgs) {
-			_cmdLineArgs.clear();
 			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 			return this;
 		}
 
 		/**
-		 * Adds a command line argument.
+		 * Adds a command line argument in key=value form.
 		 * 
-		 * Note that values added this way are overwritten if _cmdLineArgs(String[]) is called.
+		 * If the value is null, only the key is added (ie its a flag).
+		 * 
 		 * @param key
 		 * @param value
 		 * @return 
 		 */
 		public AndHowBuilder cmdLineArg(String key, String value) {
-			_cmdLineArgs.add(key + AndHow.KVP_DELIMITER + value);
+			
+			if (value != null) {
+				_cmdLineArgs.add(key + AndHow.KVP_DELIMITER + value);
+			} else {
+				_cmdLineArgs.add(key);
+			}
 			return this;
 		}
 
+		/**
+		 * Sets the naming strategy, which determines how the property names
+		 * are realized when used in config files, JNDI and cmd line arguments.
+		 * 
+		 * If unspecified, BasicNamingStrategy is used.
+		 * 
+		 * @param namingStrategy
+		 * @return 
+		 */
 		public AndHowBuilder namingStrategy(NamingStrategy namingStrategy) {
 			this._namingStrategy = namingStrategy;
 			return this;
