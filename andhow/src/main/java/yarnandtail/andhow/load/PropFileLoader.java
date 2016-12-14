@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.ParsingException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -4,7 +4,7 @@ import java.util.List;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valid.StringValidator;
-import yarnandtail.andhow.valuetype.ValueType;
+import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.valuetype.StringType;
 
 /**
@@ -27,10 +27,6 @@ public class StrProp extends PropertyBase<String> {
 			String helpText, String[] aliases) {
 		
 		super(defaultValue, required, shortDesc, validators, paramType, valueType, helpText, aliases);
-	}
-	
-	public String cast(Object o) throws RuntimeException {
-		return (String)o;
 	}
 	
 	public static StringBuilder builder() {

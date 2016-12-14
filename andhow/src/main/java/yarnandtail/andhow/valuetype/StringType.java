@@ -1,7 +1,7 @@
 package yarnandtail.andhow.valuetype;
 
 import yarnandtail.andhow.TextUtil;
-import yarnandtail.andhow.load.ParsingException;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
@@ -39,5 +39,9 @@ public class StringType extends BaseValueType<String> {
 		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
+	@Override
+	public String cast(Object o) throws RuntimeException {
+		return (String)o;
+	}
 	
 }

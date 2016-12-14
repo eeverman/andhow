@@ -67,7 +67,7 @@ public class LoaderValues implements ValueMap {
 		if (point == null) {
 			return null;
 		}
-		return point.cast(
+		return point.getValueType().cast(
 				values.stream().filter(pv -> point.equals(pv.getProperty())).
 						findFirst().map(pv -> pv.getValue()).orElse(null)
 		);

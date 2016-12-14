@@ -36,4 +36,9 @@ public class IntType extends BaseValueType<Integer> {
 		}
 	}
 	
+	@Override
+	public Integer cast(Object o) throws RuntimeException {
+		return (Integer)o;
+	}
+	
 }
