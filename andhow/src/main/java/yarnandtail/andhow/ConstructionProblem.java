@@ -36,12 +36,11 @@ public abstract class ConstructionProblem extends Problem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, 
-				String conflictName) {
+				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends PropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
 			
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup);
+			this.refPropertyDef = new PropertyDef(refGroup, refProperty);
+			this.badPropertyDef = new PropertyDef(badGroup, badProperty);
 			this.conflictName = conflictName;
 		}
 
@@ -60,10 +59,11 @@ public abstract class ConstructionProblem extends Problem {
 	public static class DuplicateProperty extends ConstructionProblem {
 
 		public DuplicateProperty(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup) {
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup);
+				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends PropertyGroup> badGroup, Property<?> badProperty) {
+			
+			this.refPropertyDef = new PropertyDef(refGroup, refProperty);
+			this.badPropertyDef = new PropertyDef(badGroup, badProperty);
 		}
 		
 		@Override
@@ -102,7 +102,7 @@ public abstract class ConstructionProblem extends Problem {
 
 		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
-			badPropertyDef = new PropertyDef(null, group);
+			badPropertyDef = new PropertyDef(group, null);
 		}
 
 		public Exception getException() {
@@ -123,8 +123,8 @@ public abstract class ConstructionProblem extends Problem {
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
 
-		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String invalidMessage) {
-			this.badPropertyDef = new PropertyDef(prop, group);
+		public InvalidDefaultValue(Class<? extends PropertyGroup> group, Property<?> prop, String invalidMessage) {
+			this.badPropertyDef = new PropertyDef(group, prop);
 			this.invalidMessage = invalidMessage;
 		}
 
@@ -144,10 +144,9 @@ public abstract class ConstructionProblem extends Problem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Property<?> property, Class<? extends PropertyGroup> group, 
-				Validator<?> valid) {
+				Class<? extends PropertyGroup> group, Property<?> property, Validator<?> valid) {
 			
-			this.badPropertyDef = new PropertyDef(property, group);
+			this.badPropertyDef = new PropertyDef(group, property);
 			this.valid = valid;
 		}
 

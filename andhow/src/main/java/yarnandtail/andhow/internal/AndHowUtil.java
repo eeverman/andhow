@@ -9,7 +9,7 @@ import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.PropertyValueProblem;
+import yarnandtail.andhow.ValueProblem;
 import yarnandtail.andhow.RequirementProblem;
 import yarnandtail.andhow.ValueMapWithContext;
 import yarnandtail.andhow.PropertyGroup;
@@ -86,7 +86,7 @@ public class AndHowUtil {
 	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
 			ValueMapWithContext loadedValues) {
 		
-		ArrayList<PropertyValueProblem> pvps = new ArrayList();
+		ArrayList<ValueProblem> pvps = new ArrayList();
 		
 		//build list of PointValueProblems
 		

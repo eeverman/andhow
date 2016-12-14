@@ -10,11 +10,11 @@ import java.util.List;
  * @author eeverman
  */
 public class PropertyValue {
-	private static final List<PropertyValueProblem> EMPTY_ISSUE_LIST = Collections.emptyList();
+	private static final List<ValueProblem> EMPTY_ISSUE_LIST = Collections.emptyList();
 	
 	private Property<?> property;
 	private Object value;
-	private List<PropertyValueProblem> issues;
+	private List<ValueProblem> issues;
 
 	public PropertyValue(Property<?> prop, Object value) {
 		this.property = prop;
@@ -22,12 +22,12 @@ public class PropertyValue {
 		this.issues = EMPTY_ISSUE_LIST;
 	}
 	
-	public PropertyValue(Property<?> prop, Object value, List<PropertyValueProblem> inIssues) {
+	public PropertyValue(Property<?> prop, Object value, List<ValueProblem> inIssues) {
 		this.property = prop;
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			List<PropertyValueProblem> newIssues = new ArrayList(inIssues.size());
+			List<ValueProblem> newIssues = new ArrayList(inIssues.size());
 			newIssues.addAll(inIssues);
 			issues = Collections.unmodifiableList(newIssues);
 		} else {
@@ -47,7 +47,7 @@ public class PropertyValue {
 		return issues.size() > 0;
 	}
 	
-	public List<PropertyValueProblem> getIssues() {
+	public List<ValueProblem> getIssues() {
 		return issues;	//Already unmodifiable
 	}
 	

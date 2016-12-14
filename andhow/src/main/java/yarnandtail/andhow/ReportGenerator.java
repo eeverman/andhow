@@ -46,7 +46,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printPointValueProblems(PrintStream out, List<PropertyValueProblem> probs, RuntimeDefinition appDef) {
+	public static void printPointValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules, "
@@ -54,7 +54,7 @@ public class ReportGenerator {
 			out.println();
 			out.println("Detailed list of Value Problems:");
 			
-			for (PropertyValueProblem p : probs) {
+			for (ValueProblem p : probs) {
 				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {} loaded from {}: {}", 
 						appDef.getCanonicalName(p.getProperty()), 
 						p.getLoader().getSpecificLoadDescription(),

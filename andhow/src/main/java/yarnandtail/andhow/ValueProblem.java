@@ -4,7 +4,7 @@ package yarnandtail.andhow;
  * Problems with invalid values, values that cannot be converted to their destination type.
  * @author eeverman
  */
-public class PropertyValueProblem {
+public class ValueProblem {
 	
 	protected final Loader loader;
 	protected final Property<?> property;
@@ -20,7 +20,7 @@ public class PropertyValueProblem {
 	 * @param value
 	 * @param validator 
 	 */
-	public PropertyValueProblem(Loader loader, Property<?> prop, Object value, Validator<?> validator) {
+	public ValueProblem(Loader loader, Property<?> prop, Object value, Validator<?> validator) {
 		this.loader = loader;
 		this.property = prop;
 		this.unconvertable = null;
@@ -36,7 +36,7 @@ public class PropertyValueProblem {
 	 * @param prop
 	 * @param type 
 	 */
-	public PropertyValueProblem(Loader loader, Property<?> prop, String unconvertableString) {
+	public ValueProblem(Loader loader, Property<?> prop, String unconvertableString) {
 		this.loader = loader;
 		this.property = prop;
 		this.unconvertable = unconvertableString;
@@ -51,7 +51,7 @@ public class PropertyValueProblem {
 	 * @param prop
 	 * @param unconvertableObject 
 	 */
-	public PropertyValueProblem(Loader loader, Property<?> prop, Object unconvertableObject) {
+	public ValueProblem(Loader loader, Property<?> prop, Object unconvertableObject) {
 		this.loader = loader;
 		this.property = prop;
 		this.unconvertable = unconvertableObject;

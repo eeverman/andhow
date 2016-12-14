@@ -27,8 +27,8 @@ public abstract class Problem {
 	public static class PropertyValueDef extends PropertyDef {
 		Loader loader;
 		
-		public PropertyValueDef(Loader loader, Property<?> prop, Class<? extends PropertyGroup> group) {
-			super(prop, group);
+		public PropertyValueDef(Loader loader, Class<? extends PropertyGroup> group, Property<?> prop) {
+			super(group, prop);
 			this.loader = loader;
 		}
 		
@@ -50,7 +50,7 @@ public abstract class Problem {
 		Class<? extends PropertyGroup> group;
 		String name;
 
-		public PropertyDef(Property<?> prop, Class<? extends PropertyGroup> group) {
+		public PropertyDef(Class<? extends PropertyGroup> group, Property<?> prop) {
 			this.property = prop;
 			this.group = group;
 			

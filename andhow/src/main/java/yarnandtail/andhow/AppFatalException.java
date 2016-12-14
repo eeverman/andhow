@@ -11,7 +11,7 @@ import java.util.List;
 public class AppFatalException extends RuntimeException {
 	
 	private final List<ConstructionProblem> constructProblems;	
-	private final List<PropertyValueProblem> pointValueProblems;
+	private final List<ValueProblem> pointValueProblems;
 	private final List<RequirementProblem> requirementsProblems;
 	
 	public AppFatalException(List<ConstructionProblem> constructProblems) {
@@ -25,7 +25,7 @@ public class AppFatalException extends RuntimeException {
 	}
 	
 	public AppFatalException(String message,
-			List<PropertyValueProblem> pointValueProblems, List<RequirementProblem> requirementsProblems) {
+			List<ValueProblem> pointValueProblems, List<RequirementProblem> requirementsProblems) {
 		super(message);
 		
 		this.constructProblems = Collections.emptyList();
@@ -37,7 +37,7 @@ public class AppFatalException extends RuntimeException {
 		return constructProblems;
 	}
 
-	public List<PropertyValueProblem> getPointValueProblems() {
+	public List<ValueProblem> getPointValueProblems() {
 		return pointValueProblems;
 	}
 
