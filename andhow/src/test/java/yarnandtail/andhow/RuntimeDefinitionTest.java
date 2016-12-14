@@ -15,6 +15,10 @@ public class RuntimeDefinitionTest {
 	
 	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 	
+	//Two PropGroups w/ a duplicate (shared) property
+	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
+	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
+	
 	@Test
 	public void testHappyPath() {
 		
@@ -55,29 +59,29 @@ public class RuntimeDefinitionTest {
 	}
 	
 	@Test
-	public void testDuplicatePointInSeparateGroupWithDistinctNames() {
+	public void testDuplicatePointInSeparateGroupWithDistinctNames() throws Exception {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
 		RuntimeDefinition appDef = new RuntimeDefinition();
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
-				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParamsNoAlias.class, SimpleParamsWAlias.KVP_BOB, 
-				bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "fakeName"));
+		appDef.addProperty(SampleGroup.class, SampleGroup.STR_1, 
+				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1"));
+		appDef.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
+				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class, "STR_1_DUP"));
 		
 		assertEquals(1, appDef.getProperties().size());
-		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperties().get(0));
+		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
 		assertEquals(1, appDef.getConstructionProblems().size());
 		assertTrue(appDef.getConstructionProblems().get(0) instanceof ConstructionProblem.DuplicateProperty);
 		
 		ConstructionProblem.DuplicateProperty dpcp = (ConstructionProblem.DuplicateProperty)appDef.getConstructionProblems().get(0);
 		
-		assertEquals(SimpleParamsWAlias.KVP_BOB, dpcp.getRefProperty().getProperty());
-		assertEquals(SimpleParamsWAlias.class, dpcp.getRefProperty().getGroup());
-		assertEquals(bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB").getCanonicalName(), dpcp.getRefProperty().getName());
-		assertEquals(SimpleParamsWAlias.KVP_BOB, dpcp.getBadProperty().getProperty());
-		assertEquals(SimpleParamsNoAlias.class, dpcp.getBadProperty().getGroup());
-		assertEquals(bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "fakeName").getCanonicalName(), dpcp.getBadProperty().getName());
+		assertEquals(SampleGroup.STR_1, dpcp.getRefProperty().getProperty());
+		assertEquals(SampleGroup.class, dpcp.getRefProperty().getGroup());
+		assertEquals(PropertyGroup.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefProperty().getName());
+		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadProperty().getProperty());
+		assertEquals(SampleGroupDup.class, dpcp.getBadProperty().getGroup());
+		assertEquals(PropertyGroup.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadProperty().getName());
 	}
 	
 	@Test

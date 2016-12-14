@@ -6,71 +6,18 @@ package yarnandtail.andhow;
  * 
  * @author ericeverman
  */
-public abstract class ConstructionProblem {
-	
-	protected PropertyDef refPropertyDef;
-	protected PropertyDef badPropertyDef;
-		
-	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
-	 * Property that is duplicated (the earlier of the two duplicates).
-	 * @return May return null if not applicable.
-	 */
-	public PropertyDef getRefProperty() {
-		return refPropertyDef;
-	}
-	
-	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
-	 * property that is the duplicate one (the later of the two duplicates).
-	 * @return May return null if not applicable.
-	 */
-	public PropertyDef getBadProperty() {
-		return badPropertyDef;
-	}
-	
-	/**
-	 * A detailed description of the problem.
-	 * 
-	 * @return 
-	 */
-	public abstract String getMessage();
-	
-	public static class PropertyDef {
-		Property<?> property;
-		Class<? extends PropertyGroup> group;
-		String name;
-
-		public PropertyDef(Property<?> prop, Class<? extends PropertyGroup> group, String name) {
-			this.property = prop;
-			this.group = group;
-			this.name = name;
-		}
-
-		public Property<?> getProperty() {
-			return property;
-		}
-
-		public Class<? extends PropertyGroup> getGroup() {
-			return group;
-		}
-
-		public String getName() {
-			return name;
-		}
-		
-	}
+public abstract class ConstructionProblem extends Problem {
 	
 	public static class NonUniqueNames extends ConstructionProblem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName, 
+				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, 
+				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, 
 				String conflictName) {
 			
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
+			this.refPropertyDef = new PropertyDef(refProperty, refGroup);
+			this.badPropertyDef = new PropertyDef(badProperty, badGroup);
 			this.conflictName = conflictName;
 		}
 
@@ -88,10 +35,10 @@ public abstract class ConstructionProblem {
 	public static class DuplicateProperty extends ConstructionProblem {
 
 		public DuplicateProperty(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName) {
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
+				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, 
+				Property<?> badProperty, Class<? extends PropertyGroup> badGroup) {
+			this.refPropertyDef = new PropertyDef(refProperty, refGroup);
+			this.badPropertyDef = new PropertyDef(badProperty, badGroup);
 		}
 		
 		@Override
@@ -127,7 +74,7 @@ public abstract class ConstructionProblem {
 
 		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
-			badPropertyDef = new PropertyDef(null, group, null);
+			badPropertyDef = new PropertyDef(null, group);
 		}
 
 		public Exception getException() {
@@ -149,8 +96,8 @@ public abstract class ConstructionProblem {
 		String invalidMessage;	
 		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
-		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String canonName, String invalidMessage) {
-			this.badPropertyDef = new PropertyDef(prop, group, canonName);
+		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String invalidMessage) {
+			this.badPropertyDef = new PropertyDef(prop, group);
 			this.invalidMessage = invalidMessage;
 		}
 
@@ -169,10 +116,10 @@ public abstract class ConstructionProblem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Property<?> property, Class<? extends PropertyGroup> group, String canonName, 
+				Property<?> property, Class<? extends PropertyGroup> group, 
 				Validator<?> valid) {
 			
-			this.badPropertyDef = new PropertyDef(property, group, canonName);
+			this.badPropertyDef = new PropertyDef(property, group);
 			this.valid = valid;
 		}
 

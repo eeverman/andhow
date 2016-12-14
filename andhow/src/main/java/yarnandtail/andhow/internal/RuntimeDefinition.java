@@ -55,8 +55,8 @@ public class RuntimeDefinition {
 		
 		if (canonicalNameByProperty.containsKey(property)) {
 			ConstructionProblem.DuplicateProperty dupPoint = new ConstructionProblem.DuplicateProperty(
-					property, getGroupForPoint(property), canonicalNameByProperty.get(property),
-					property, group, names.getCanonicalName());
+					property, getGroupForPoint(property),
+					property, group);
 			
 			constructProblems.add(dupPoint);
 			return;
@@ -67,8 +67,8 @@ public class RuntimeDefinition {
 			Property<?> conflictPoint = propertiesByNames.get(a);
 			if (conflictPoint != null) {
 				ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
-					conflictPoint, getGroupForPoint(conflictPoint), canonicalNameByProperty.get(conflictPoint),
-					property, group, names.getCanonicalName(), a);
+					conflictPoint, getGroupForPoint(conflictPoint),
+					property, group, a);
 						
 				constructProblems.add(notUniqueName);
 				return;
@@ -80,7 +80,7 @@ public class RuntimeDefinition {
 			if (! v.isSpecificationValid()) {
 				ConstructionProblem.InvalidValidationConfiguration badValid = new
 					ConstructionProblem.InvalidValidationConfiguration(
-					property, group, names.getCanonicalName(), v);
+					property, group, v);
 				
 				constructProblems.add(badValid);
 				return;
@@ -208,7 +208,7 @@ public class RuntimeDefinition {
 
 						ConstructionProblem.InvalidDefaultValue problem = 
 								new ConstructionProblem.InvalidDefaultValue(
-										property, group, canonName, 
+										property, group, 
 										v.getInvalidMessage(t));
 						constructProblems.add(problem);
 						foundProblem = true;
