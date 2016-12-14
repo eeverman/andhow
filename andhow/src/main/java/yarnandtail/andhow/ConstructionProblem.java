@@ -8,6 +8,30 @@ package yarnandtail.andhow;
  */
 public abstract class ConstructionProblem extends Problem {
 	
+	/** The Property that actually has the problem */
+	protected PropertyDef badPropertyDef;
+	
+	/** For construction problems that duplicate or reference another Property... */
+	protected PropertyDef refPropertyDef;
+	
+	/**
+	 * For Properties that have some type of duplication w/ other points, this is the
+	 * Property that is duplicated (the earlier of the two duplicates).
+	 * @return May return null if not applicable.
+	 */
+	public PropertyDef getRefProperty() {
+		return refPropertyDef;
+	}
+
+	/**
+	 * For Properties that have some type of duplication w/ other points, this is the
+	 * property that is the duplicate one (the later of the two duplicates).
+	 * @return May return null if not applicable.
+	 */
+	public PropertyDef getBadProperty() {
+		return badPropertyDef;
+	}
+	
 	public static class NonUniqueNames extends ConstructionProblem {
 		String conflictName;
 
@@ -27,8 +51,9 @@ public abstract class ConstructionProblem extends Problem {
 		
 		@Override
 		public String getMessage() {
-			return "The property " + badPropertyDef.getName() + " has a name that duplicates " +
-					refPropertyDef.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
+			return TextUtil.format("The property {} has a name that duplicates {}. " +
+					"The conflicting name/alias is '{}'.  All names must be unique.",
+					badPropertyDef.getName(), refPropertyDef.getName(), conflictName);
 		}
 	}
 	
@@ -43,10 +68,12 @@ public abstract class ConstructionProblem extends Problem {
 		
 		@Override
 		public String getMessage() {
-			return AndHow.ANDHOW_INLINE_NAME +  " has been configured with a duplicate Property instance, " +
-				"meaning that one or more PropertyGroups are sharing the same Property instance, which is not allowed. " +
-				"The first Property is " + refPropertyDef.getName() + ", the second is " + badPropertyDef.getName() + ". " +
-				"The first part of each name is the PropertyGroup containing the properties.";
+			return TextUtil.format(
+					"The Property {} is actually the same instance as {} - " +
+					"The containing PropertyGroups are sharing a reference to the same " +
+					"Property instance.  Properties must each be independant " +
+					"instances because they each identify unique values.", 
+				badPropertyDef.getName(), refPropertyDef.getName());
 		}
 	}
 	
@@ -63,9 +90,10 @@ public abstract class ConstructionProblem extends Problem {
 
 		@Override
 		public String getMessage() {
-			return AndHow.ANDHOW_INLINE_NAME + " has been configured with a duplicate Loader instance " +
-					"of type " + loader.getClass().getCanonicalName() + ".  " +
-					"Multiple loaders of the same type are OK, but they must be separate instances.";
+			return TextUtil.format("Two loaders of type {}  " +
+					"are actually the same Loader instance. " +
+					"Multiple loaders of the same type are allowed, but they must be separate instances.",
+				loader.getClass().getCanonicalName());
 		}
 	}
 	
@@ -83,18 +111,17 @@ public abstract class ConstructionProblem extends Problem {
 		
 		@Override
 		public String getMessage() {
-			return "There was a security exception while trying to access members of " +
-				"the PropertyGroup " + badPropertyDef.getGroup().getCanonicalName() + ".  " +
-				AndHow.ANDHOW_INLINE_NAME + " must be able to read class members via reflection, even from a package protected " +
-				"interface.  Perhaps there is security policy in place that is preventing it?";
+			return TextUtil.format(
+				"A security exception blocked to access members of the PropertyGroup {}.  " +
+				"{} must be able to read class members via reflection, even package protected " +
+				"interfaces.  Is there a security policy in place that is preventing this?",
+				badPropertyDef.getGroup().getCanonicalName(), AndHow.ANDHOW_INLINE_NAME);
 		}
 		
 	}
 	
-
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
-		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
 		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String invalidMessage) {
 			this.badPropertyDef = new PropertyDef(prop, group);
@@ -107,8 +134,9 @@ public abstract class ConstructionProblem extends Problem {
 
 		@Override
 		public String getMessage() {
-			return "The Property " + badPropertyDef.getName() + " is configured with a default " +
-				"value that does not meet the validation requirements: " + invalidMessage;
+			return TextUtil.format(
+					"The Property {} has a default value that does not pass validation: {}",
+				badPropertyDef.getName(), invalidMessage);
 		}
 	}
 	
@@ -128,9 +156,9 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		public String getMessage() {
-			return "The property " + badPropertyDef.getName() + " has a validator of type " + 
-					valid.getClass().getSimpleName() + " that is not configured correctly: " +
-					valid.getInvalidSpecificationMessage();
+			return TextUtil.format(
+					"The Property {} has a Validator of type {} that is not configured correctly: {}",
+				badPropertyDef.getName(), valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
 		}
 	}
 }
