@@ -49,14 +49,13 @@ public class ReportGenerator {
 	public static void printPointValueProblems(PrintStream out, List<PropertyValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
-			out.println(TextUtil.wrap("VALUE PROBLEMS - Values that violate validation rules, "
-					+ "or source values that cannot be converted to their destination type.",
-					DEFAULT_LINE_WIDTH, "", SECOND_LINE_INDENT));
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules, "
+					+ "or source values that cannot be converted to their destination type.");
 			out.println();
 			out.println("Detailed list of Value Problems:");
 			
 			for (PropertyValueProblem p : probs) {
-				TextUtil.println(out, "ConfigPoint {} loaded from {}: {}", 
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {} loaded from {}: {}", 
 						appDef.getCanonicalName(p.getProperty()), 
 						p.getLoader().getSpecificLoadDescription(),
 						p.getMessageWithinFullContext());
@@ -69,17 +68,17 @@ public class ReportGenerator {
 		if (! probs.isEmpty()) {
 
 			out.println("REQUIRMENT PROBLEMS - When a required configuration point is not provided");
-			out.println("Note:  Prior issues that prevente individual values from loading may also result in requirements problems.");
+			out.println("Note:  Issues, above, preventing values from loading may also result in requirements problems.");
 			out.println();
 			out.println("Detailed list of Requirements Problems:");
 
 			for (RequirementProblem p : probs) {
 				if (p.getPoint() != null) {
-					TextUtil.println(out, "ConfigPoint {}: {}", 
+					TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {}: {}", 
 						appDef.getCanonicalName(p.getPoint()), 
 						p.getMessageWithinFullContext());
 				} else {
-					TextUtil.println(out, "PropertyGroup {}: {}", 
+					TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "PropertyGroup {}: {}", 
 						p.getGroup().getCanonicalName(), 
 						p.getMessageWithinFullContext());
 				}
@@ -110,7 +109,7 @@ public class ReportGenerator {
 							printer.printProperty(out, group, point);
 						}
 					} catch (Exception ex) {
-						out.println("SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
+						TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
 								"ENSURE ALL ConfigPoint FIELDS ARE PUBLIC IN THE ConfigPointGroup " +
 								"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
 					}

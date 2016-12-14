@@ -38,11 +38,11 @@ public class RequirementProblem {
 	public String getMessageWithinFullContext() {
 		
 		if (point != null) {
-			return "This configuration point is required: "
-				+ "A value must be specified in one of the configuration sources.";
+			return "This property is required: "
+				+ "A value must be found by one of the loaders";
 		} else {
-			return "This configuration group is required: "
-				+ "At least one configuration point in the group must have a value specified in one of the configuration sources.";	
+			return "This PropertyGroup is required: "
+				+ "At value for at least one its property must be found by one of the loaders";	
 		}
 	}
 	

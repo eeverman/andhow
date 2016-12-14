@@ -31,9 +31,9 @@ public interface Validator<T> {
 	 */
 	default String getInvalidMessage(T value) {
 		if (value != null) {
-			return "The value '" + value.toString() + "' " + getTheValueMustDescription();
+			return "The value '" + value.toString() + "' must " + getTheValueMustDescription();
 		} else {
-			return "The value [[null]] " + getTheValueMustDescription();
+			return "The value [[null]] must " + getTheValueMustDescription();
 		}
 	}
 	

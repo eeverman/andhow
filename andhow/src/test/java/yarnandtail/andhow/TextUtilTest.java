@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import static yarnandtail.andhow.ReportGenerator.DEFAULT_LINE_WIDTH;
+import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
 
 /**
  *
@@ -214,6 +216,7 @@ public class TextUtilTest {
 		assertEquals("# abcdefghijk", result.get(0));
 		assertEquals("# xxxlmnopqrstuvwxyzabcdefghijklmnop", result.get(1));
 		assertEquals("# xxxqrs tuv", result.get(2));
+		
 	}
 	
 }

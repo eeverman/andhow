@@ -14,7 +14,7 @@ import java.util.List;
 public class TextUtil {
 	
 	public static final String NULL_PRINT = "[[NULL]]";
-	public static final String SECOND_LINE_INDENT = "    ";
+	public static final String SECOND_LINE_INDENT = "  ";
 	
 	
 	private static final String PAD = "[[00PAD00]]";
@@ -37,7 +37,7 @@ public class TextUtil {
 	 * As each line is wrapped, linePrefix is added to the beginning of each line
 	 * (this allows use as comments in things like properties files).
 	 * 
-	 * Additionally, each wrapped line is given 4 spaces of indent after the prefix.
+	 * Additionally, each wrapped line is given SECOND_LINE_INDENT of indent after the prefix.
 	 * 
 	 * @param out
 	 * @param maxLineLength Max characters to place on one line (best effort)
@@ -47,6 +47,27 @@ public class TextUtil {
 	 */
 	public static void println(PrintStream out, int maxLineLength, String linePrefix, String pattern, Object... args) {
 		String content = format(pattern, args);
+		List<String> chunks = wrap(content, maxLineLength, linePrefix, SECOND_LINE_INDENT);
+		
+		for (String s : chunks) {
+			out.println(s);
+		}
+	}
+	
+	/**
+	 * println to the passed PrintStream, wrapped to a specified line length.
+	 * 
+	 * As each line is wrapped, linePrefix is added to the beginning of each line
+	 * (this allows use as comments in things like properties files).
+	 * 
+	 * Additionally, each wrapped line is given SECOND_LINE_INDENT of indent after the prefix.
+	 * 
+	 * @param out
+	 * @param maxLineLength Max characters to place on one line (best effort)
+	 * @param linePrefix Each line will receive this prefix, which counts toward line length
+	 * @param content String to be split up.
+	 */
+	public static void println(PrintStream out, int maxLineLength, String linePrefix, String content) {
 		List<String> chunks = wrap(content, maxLineLength, linePrefix, SECOND_LINE_INDENT);
 		
 		for (String s : chunks) {
