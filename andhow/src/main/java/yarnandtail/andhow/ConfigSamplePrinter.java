@@ -17,12 +17,12 @@ public interface ConfigSamplePrinter {
 	static final String REQUIRED_TEXT = "REQUIRED";
 	
 	/** A general explanation for a sample header of what a required point is */
-	static final String REQUIRED_HEADER_TEXT = "Value marked as " + REQUIRED_TEXT + 
-			" must have a value assigned to them during the loading process or the " +
-			"startup will fail with a RuntimeException.";
+	static final String REQUIRED_HEADER_TEXT = "Properties marked as " + REQUIRED_TEXT + 
+			" must receive a value during the loading process or " +
+			AndHow.ANDHOW_INLINE_NAME + " will throw a RuntimeException.";
 	
 	/** Required point will be marked w/ this text in the sample */
-	static final String VALIDATION_TEXT = "The configured value must";
+	static final String VALIDATION_TEXT = "The configured property must";
 	
 	void printSampleStart(PrintStream out);
 	
