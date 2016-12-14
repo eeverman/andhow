@@ -11,8 +11,8 @@ public class SimpleSample {
 	
 	public static void main(String[] args) {
 		AndHow.builder() /* Simple builder initializes framework */
-				.addLoader(new PropFileLoader())
-				.addGroup(MySetOfProps.class)
+				.loader(new PropFileLoader())
+				.group(MySetOfProps.class)
 				.build();
 	
 		//After initialization, Properties can be used to directly access their values.
@@ -31,8 +31,8 @@ public class SimpleSample {
 	public interface MySetOfProps extends PropertyGroup {
 		
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
-		IntProp TIMEOUT = IntProp.builder().setDefault(50).build();
+		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
-				.setDescription("Service name added to end of url for the queries").build();
+				.desc("Service name added to end of url for the queries").build();
 	}
 }

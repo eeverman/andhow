@@ -68,14 +68,14 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testForcingValuesViaAppConfig() {
 		
-		AndHow.builder().setNamingStrategy(basicNaming)
-				.addLoader(new CmdLineLoader())
-				.addGroup(SimpleParamsWAlias.class)
-				.addForcedValue(SimpleParamsWAlias.KVP_BOB, "test")
-				.addForcedValue(SimpleParamsWAlias.KVP_NULL, "not_null")
-				.addForcedValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE)
-				.addForcedValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE)
-				.addForcedValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE)
+		AndHow.builder().namingStrategy(basicNaming)
+				.loader(new CmdLineLoader())
+				.group(SimpleParamsWAlias.class)
+				.forceValue(SimpleParamsWAlias.KVP_BOB, "test")
+				.forceValue(SimpleParamsWAlias.KVP_NULL, "not_null")
+				.forceValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE)
+				.forceValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE)
+				.forceValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
@@ -97,9 +97,9 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testDefaultValuesViaLoadingWithNoUserValuesSet() {
 		
-		AndHow.builder().setNamingStrategy(basicNaming)
-				.addLoader(new CmdLineLoader())
-				.addGroup(SimpleParamsWAlias.class)
+		AndHow.builder().namingStrategy(basicNaming)
+				.loader(new CmdLineLoader())
+				.group(SimpleParamsWAlias.class)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("bob", SimpleParamsWAlias.KVP_BOB.getValue());
@@ -121,10 +121,10 @@ public class AndHowTest extends AndHowTestBase {
 	public void testCmdLineLoaderUsingExplicitBaseName() {
 
 		AndHow.builder()
-				.setNamingStrategy(basicNaming)
-				.addLoaders(loaders)
-				.addGroups(configPtGroups)
-				.setCmdLineArgs(cmdLineArgsWExplicitName)
+				.namingStrategy(basicNaming)
+				.loaders(loaders)
+				.groups(configPtGroups)
+				.cmdLineArgs(cmdLineArgsWExplicitName)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
@@ -137,10 +137,10 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
 		AndHow.builder()
-				.setNamingStrategy(basicNaming)
-				.addLoaders(loaders)
-				.addGroups(configPtGroups)
-				.setCmdLineArgs(cmdLineArgsWFullClassName)
+				.namingStrategy(basicNaming)
+				.loaders(loaders)
+				.groups(configPtGroups)
+				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
@@ -156,10 +156,10 @@ public class AndHowTest extends AndHowTestBase {
 		try {
 
 			AndHow.builder()
-				.setNamingStrategy(new AsIsAliasNamingStrategy())
-				.addLoaders(loaders)
-				.addGroups(configPtGroups)
-				.addGroup(SimpleParamsWAliasDuplicate.class)
+				.namingStrategy(new AsIsAliasNamingStrategy())
+				.loaders(loaders)
+				.groups(configPtGroups)
+				.group(SimpleParamsWAliasDuplicate.class)
 				.reloadForUnitTesting(reloader);
 			
 			fail();	//The line above should throw an error
@@ -180,10 +180,10 @@ public class AndHowTest extends AndHowTestBase {
 		try {
 
 			AndHow.builder()
-				.setNamingStrategy(new AsIsAliasNamingStrategy())
-				.addLoaders(loaders)
-				.addLoader(loaders.get(0))
-				.addGroups(configPtGroups)
+				.namingStrategy(new AsIsAliasNamingStrategy())
+				.loaders(loaders)
+				.loader(loaders.get(0))
+				.groups(configPtGroups)
 				.reloadForUnitTesting(reloader);
 			
 			fail();	//The line above should throw an error
@@ -201,11 +201,11 @@ public class AndHowTest extends AndHowTestBase {
 
 		try {
 				AndHow.builder()
-					.setNamingStrategy(basicNaming)
-					.addLoaders(loaders)
-					.addGroups(configPtGroups)
-					.addGroup(SimpleParamsNoAliasRequired.class)
-					.setCmdLineArgs(cmdLineArgsWFullClassName)
+					.namingStrategy(basicNaming)
+					.loaders(loaders)
+					.groups(configPtGroups)
+					.group(SimpleParamsNoAliasRequired.class)
+					.cmdLineArgs(cmdLineArgsWFullClassName)
 					.reloadForUnitTesting(reloader);
 			
 			fail();	//The line above should throw an error

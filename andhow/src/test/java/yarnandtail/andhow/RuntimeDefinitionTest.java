@@ -191,9 +191,9 @@ public class RuntimeDefinitionTest {
 	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
 	 */
 	public static interface BadDefaultAndValidationGroup extends PropertyGroup {
-		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").setDefault("The Big Chill").build();
-		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").setDefault("Red").build();
-		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").setDefault("FFF000").build();
+		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
+		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
+		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();
 
 	}
 }

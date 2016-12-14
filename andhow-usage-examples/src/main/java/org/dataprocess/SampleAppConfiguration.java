@@ -25,9 +25,9 @@ public class SampleAppConfiguration {
 	
 	public static void main(String[] args) {
 		AndHow.builder()
-				.addLoader(new PropFileLoader())
-				.addGroup(AquariusConfig.class)
-				.addGroup(NwisConfig.class)
+				.loader(new PropFileLoader())
+				.group(AquariusConfig.class)
+				.group(NwisConfig.class)
 				.build();
 		
 	
@@ -53,7 +53,7 @@ public class SampleAppConfiguration {
 	@GroupInfo(name="Aquarius Configuration", desc="Configures communication to the USGS Aquarius service")
 	public interface AquariusConfig extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
-		IntProp TIMEOUT = IntProp.builder().setDefault(50).build();
+		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().build();
 		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
 	}
@@ -61,9 +61,9 @@ public class SampleAppConfiguration {
 	@GroupInfo(name="NWIS Configuration", desc="Configures communication to the USGS NWIS service")
 	public interface NwisConfig extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
-		IntProp TIMEOUT = IntProp.builder().setDefault(20).build();
+		IntProp TIMEOUT = IntProp.builder().defaultValue(20).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().build();
-		StrProp ITEM_ENDPOINT = StrProp.builder().setRequired(true).build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
 	}
 	
 }

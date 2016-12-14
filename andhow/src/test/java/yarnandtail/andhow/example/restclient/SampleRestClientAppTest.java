@@ -35,10 +35,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 				
 		AndHow.builder()
-				.addGroup(SampleRestClientGroup.class)
-				.addLoader(new CmdLineLoader())
-				.addLoader(new PropFileLoader())
-				.setCmdLineArgs(cmdLineArgs)
+				.group(SampleRestClientGroup.class)
+				.loader(new CmdLineLoader())
+				.loader(new PropFileLoader())
+				.cmdLineArgs(cmdLineArgs)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
@@ -63,10 +63,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 				
 		AndHow.builder()
-				.addGroup(SampleRestClientGroup.class)
-				.addLoader(new CmdLineLoader())
-				.addLoader(new PropFileLoader())
-				.setCmdLineArgs(cmdLineArgs)
+				.group(SampleRestClientGroup.class)
+				.loader(new CmdLineLoader())
+				.loader(new PropFileLoader())
+				.cmdLineArgs(cmdLineArgs)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
@@ -94,10 +94,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			
 			//Error expected b/c some values are invalid
 			AndHow.builder()
-					.addGroup(SampleRestClientGroup.class)
-					.addLoader(new CmdLineLoader())
-					.addLoader(new PropFileLoader())
-					.setCmdLineArgs(cmdLineArgs)
+					.group(SampleRestClientGroup.class)
+					.loader(new CmdLineLoader())
+					.loader(new PropFileLoader())
+					.cmdLineArgs(cmdLineArgs)
 					.reloadForUnitTesting(reloader);
 		} catch (AppFatalException e) {
 			

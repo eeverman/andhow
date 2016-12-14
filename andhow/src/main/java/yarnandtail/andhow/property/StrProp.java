@@ -39,39 +39,39 @@ public class StrProp extends PropertyBase<String> {
 		
 		public StringBuilder() {
 			instance = this;
-			setValueType(StringType.instance());
+			valueType(StringType.instance());
 		}
 
 		@Override
 		public StrProp build() {
 
-			return new StrProp(defaultValue, required, shortDesc, validators,
-				paramType, valueType,
-				helpText, aliases.toArray(new String[aliases.size()]));
+			return new StrProp(_defaultValue, _required, _shortDesc, _validators,
+				_paramType, _valueType,
+				_helpText, _aliases.toArray(new String[_aliases.size()]));
 		}
 		
 		public StringBuilder mustMatchRegex(String regex) {
-			this.addValidation(new StringValidator.Regex(regex));
+			this.validation(new StringValidator.Regex(regex));
 			return this;
 		}
 		
 		public StringBuilder mustStartWith(String prefix) {
-			this.addValidation(new StringValidator.StartsWith(prefix, false));
+			this.validation(new StringValidator.StartsWith(prefix, false));
 			return this;
 		}
 		
 		public StringBuilder mustStartWithIgnoreCase(String prefix) {
-			this.addValidation(new StringValidator.StartsWith(prefix, true));
+			this.validation(new StringValidator.StartsWith(prefix, true));
 			return this;
 		}
 		
 		public StringBuilder mustEndWith(String sufix) {
-			this.addValidation(new StringValidator.EndsWith(sufix, false));
+			this.validation(new StringValidator.EndsWith(sufix, false));
 			return this;
 		}
 		
 		public StringBuilder mustEndWithIgnoreCase(String sufix) {
-			this.addValidation(new StringValidator.EndsWith(sufix, true));
+			this.validation(new StringValidator.EndsWith(sufix, true));
 			return this;
 		}
 

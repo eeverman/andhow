@@ -34,9 +34,9 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	@Test
 	public void testAllValuesAreSet() {
 		AndHow.builder()
-				.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
-				.addLoader(new CmdLineLoader())
-				.setCmdLineArgs(cmdLineArgsWFullClassName)
+				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
+				.loader(new CmdLineLoader())
+				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
@@ -49,11 +49,11 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	@Test
 	public void testOptionalValuesAreUnset() {
 		AndHow.builder()
-				.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
-				.addLoader(new CmdLineLoader())
-				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
-				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
-				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
+				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
+				.loader(new CmdLineLoader())
+				.cmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
+				.cmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
+				.cmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
 				.reloadForUnitTesting(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
@@ -68,8 +68,8 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder()
-					.addGroup(UI_CONFIG.class).addGroup(SERVICE_CONFIG.class)
-					.addLoader(new CmdLineLoader())
+					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
+					.loader(new CmdLineLoader())
 					.reloadForUnitTesting(reloader);
 			fail();
 		} catch (AppFatalException ce) {
@@ -87,7 +87,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	public static interface SERVICE_CONFIG extends PropertyGroup {
 		StrProp REST_ENDPOINT_URL = StrProp.builder().required().build();
-		IntProp RETRY_COUNT = IntProp.builder().setDefault(3).build();
+		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).build();
 		IntProp TIMEOUT_SECONDS = IntProp.builder().required().build();
 	}
 	

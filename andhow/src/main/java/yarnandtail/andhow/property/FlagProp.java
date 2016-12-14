@@ -63,15 +63,15 @@ public class FlagProp extends PropertyBase<Boolean> {
 
 		public FlagBuilder () {
 			instance = this;
-			setValueType(FlagType.instance());
+			valueType(FlagType.instance());
 		}
 
 		@Override
 		public FlagProp build() {
 
-			return new FlagProp(defaultValue, required, shortDesc, 
-				paramType, valueType,
-				helpText, aliases.toArray(new String[aliases.size()]));
+			return new FlagProp(_defaultValue, _required, _shortDesc, 
+				_paramType, _valueType,
+				_helpText, _aliases.toArray(new String[_aliases.size()]));
 
 		}
 
