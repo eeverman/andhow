@@ -192,7 +192,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 				if (! desc.endsWith(".")) desc = desc + ".";
 				
 				TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, 
-						"Property Group {} - {}  Defined in interface {}", name, desc, group.getCanonicalName());
+						"Property Group '{}' - {}  Defined in interface {}", name, desc, group.getCanonicalName());
 
 			} else {
 				TextUtil.println(out, LINE_PREFIX + "Property Group {}", group.getCanonicalName());
@@ -271,21 +271,21 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 	@GroupInfo(
 			name="PropFileLoader Configuration",
-			desc= "Configure one of these properties to specify a location to load a properties file from. " +
+			desc="Configure one of these properties to specify a location to load a properties file from. " +
 					"Search order is the order listed below.")
 	public static interface CONFIG extends PropertyGroup {
 		StrProp FILESYSTEM_PATH = StrProp.builder()
-				.setDescription("Local filesystem path to a properties file, as interpreted by a Java File object").build();
+				.desc("Local filesystem path to a properties file, as interpreted by a Java File object").build();
 		
 		StrProp EXECUTABLE_RELATIVE_PATH = StrProp.builder()
-				.setDescription("Path relative to the current executable for a properties file.  "
+				.desc("Path relative to the current executable for a properties file.  "
 						+ "If running from a jar file, this would be a path relative to that jar. "
 						+ "In other contexts, the parent directory may be unpredictable.").build();
 		
 		StrProp CLASSPATH_PATH = StrProp.builder()
-				.setDefault("/andhow.properties")
+				.defaultValue("/andhow.properties")
 				.mustStartWith("/")
-				.setDescription("Classpath to a properties file as interpreted by a Java Classloader.  "
+				.desc("Classpath to a properties file as interpreted by a Java Classloader.  "
 						+ "e.g.: /org/name/MyProperties.props").build();
 	}
 	

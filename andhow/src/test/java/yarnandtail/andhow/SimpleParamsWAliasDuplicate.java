@@ -10,21 +10,21 @@ import yarnandtail.andhow.property.FlagProp;
 public interface SimpleParamsWAliasDuplicate extends PropertyGroup {
 	
 	StrProp KVP_BOB = StrProp.builder()
-			.setDefault("bob")
-			.addAlias("kvpbob")
+			.defaultValue("bob")
+			.alias("kvpbob")
 			.build();
 	StrProp KVP_NULL = StrProp.builder()
-			.addAlias("kvpnull")
+			.alias("kvpnull")
 			.build();
 	FlagProp FLAG_FALSE = FlagProp.builder()
-			.setDefault(false)
-			.addAlias("flagfalse")
+			.defaultValue(false)
+			.alias("flagfalse")
 			.build();
 	FlagProp FLAG_TRUE = FlagProp.builder()
-			.setDefault(true)
-			.addAlias("flagtrue")
+			.defaultValue(true)
+			.alias("flagtrue")
 			.build();
 	FlagProp FLAG_NULL = FlagProp.builder()
-			.addAlias("flagnull")
+			.alias("flagnull")
 			.build();
 }

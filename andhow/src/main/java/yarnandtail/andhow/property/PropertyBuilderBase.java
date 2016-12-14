@@ -11,9 +11,17 @@ import yarnandtail.andhow.Property;
  * A generic PropertyBuilder class which needs to be fully implemented as an
  * inner class in each Property implementation.
  * 
+ * The builder code is intended to be concise and readable in use.  Thus,
+ * 'set' or 'add' is dropped from method name prefixes where possible.
+ * 
+ * For single valued properties, like description, calling description("")
+ * sets the value.  For list of values, like validation, calling validation(new Validator(...))
+ * would add a validitor to the list.  Calling setValidators(List<Validators>)
+ * would overwrite existing Validators and assign a new list.
+ * 
  * @author eeverman
  */
-public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C extends Property<T>, T> {
+public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P extends Property<T>, T> {
 	
 	//Weird tracking of its own instance is so we get the type correct when returning
 	//to the caller.  Returning 'this' is a PropertyBuilderBase.  Returing 'B' is
@@ -21,14 +29,14 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C exten
 	protected B instance;
 	
 	
-	protected PropertyType paramType = PropertyType.SINGLE_NAME_VALUE;
-	protected ValueType<T> valueType;
-	protected T defaultValue;
-	protected boolean required = false;
-	protected String shortDesc;
-	protected List<Validator<T>> validators = new ArrayList();
-	protected String helpText;
-	protected final List<String> aliases = new ArrayList();
+	protected PropertyType _paramType = PropertyType.SINGLE_NAME_VALUE;
+	protected ValueType<T> _valueType;
+	protected T _defaultValue;
+	protected boolean _required = false;
+	protected String _shortDesc;
+	protected List<Validator<T>> _validators = new ArrayList();
+	protected String _helpText;
+	protected final List<String> _aliases = new ArrayList();
 	
 	
 	
@@ -38,15 +46,15 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C exten
 	//All subclasses should have a constructor that looks like this:
 	//	public [[TYPE]]PointBuilder() {
 	//		this.instance = this;	//Required to set instance to a correct type
-	//		this.setValueType([[type]]Type.instance());
+	//		this.valueType([[type]]Type.instance());
 	//	}
 	
 	protected void setInstance(B instance) {
 		this.instance = instance;
 	}
 	
-	public B setParamType(PropertyType paramType) {
-		this.paramType = paramType;
+	public B paramType(PropertyType paramType) {
+		this._paramType = paramType;
 		return instance;
 	}
 	
@@ -56,67 +64,106 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, C exten
 	 * @param valueType
 	 * @return 
 	 */
-	public B setValueType(ValueType<T> valueType) {
-		this.valueType = valueType;
+	public B valueType(ValueType<T> valueType) {
+		this._valueType = valueType;
 		return instance;
 	}
 	
-	public B setDefault(T defaultValue) {
-		this.defaultValue = defaultValue;
+	public B defaultValue(T defaultValue) {
+		this._defaultValue = defaultValue;
 		return instance;
 	}
 		
 	public B setRequired(boolean required) {
-		this.required = required;
+		this._required = required;
 		return instance;
 	}
 	
 	public B required() {
-		this.required = true;
+		this._required = true;
 		return instance;
 	}
 	
-	public B setDescription(String shortDesc) {
-		this.shortDesc = shortDesc;
+	/**
+	 * Same as description
+	 * 
+	 * @param shortDesc
+	 * @return 
+	 */
+	public B desc(String shortDesc) {
+		return description(shortDesc);
+	}
+	
+	public B description(String shortDesc) {
+		this._shortDesc = shortDesc;
 		return instance;
 	}
 	
-	public B addValidation(Validator<T> validator) {
-		validators.add(validator);
+	/**
+	 * Adds a validation to the list of validators,
+	 * 
+	 * @param validator
+	 * @return 
+	 */
+	public B validation(Validator<T> validator) {
+		_validators.add(validator);
 		return instance;
 	}
 	
+	/**
+	 * Adds a list of Validators to the list of validators being built.
+	 * 
+	 * @param validators
+	 * @return 
+	 */
 	public B addValidations(List<Validator<T>> validators) {
-		this.validators.addAll(validators);
+		this._validators.addAll(validators);
 		return instance;
 	}
 	
+	/**
+	 * Sets list the list of validators, deleting any already added to the list.
+	 * 
+	 * @param validators
+	 * @return 
+	 */
 	public B setValidations(List<Validator<T>> validators) {
-		this.validators.clear();
-		this.validators.addAll(validators);
+		this._validators.clear();
+		this._validators.addAll(validators);
 		return instance;
 	}
 	
-	public B setHelpText(String helpText) {
-		this.helpText = helpText;
+	public B helpText(String helpText) {
+		this._helpText = helpText;
 		return instance;
 	}
 	
-	public B addAlias(String alias) {
-		aliases.add(alias);
+	/**
+	 * Adds an alias to the list of aliases being built.
+	 * @param alias
+	 * @return 
+	 */
+	public B alias(String alias) {
+		_aliases.add(alias);
 		return instance;
 	}
 	
-	public B addAliases(List<String> aliases) {
-		aliases.addAll(aliases);
-		return instance;
-	}
-	
+	/**
+	 * Sets teh list of aliases, removing any existing.
+	 * 
+	 * @param aliases
+	 * @return 
+	 */
 	public B setAliases(List<String> aliases) {
-		this.aliases.clear();
-		this.aliases.addAll(aliases);
+		this._aliases.clear();
+		this._aliases.addAll(aliases);
 		return instance;
 	}
 	
-	public abstract C build();
+	/**
+	 * Build the Property instance.
+	 * 
+	 * @return 
+	 */
+	public abstract P build();
 }

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import yarnandtail.andhow.internal.AndHowCore;
 import java.util.List;
-import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -122,25 +121,29 @@ public class AndHow implements ValueMap {
 	 * 
 	 * Once an AndHow instance is built, it can never be rebuilt or reconfigured**.,
 	 * 
-	 * Generally <em>addXXX</em> adds to a collection and  <em>setXXX</em> replaces 
-	 * the value or values.
+	 * The builder code is intended to be concise and readable in use.  Thus,
+	 * 'set' or 'add' is dropped from method name prefixes where possible.
+	 * 
+	 * For single valued properties, like namingStrategy, calling namingStrategy(new ANamingStrategy())
+	 * sets the value.  For list of values, like groups, calling group(SomeGroup.class)
+	 * would add the group to the list.
 	 * 
 	 * Usage always starts with AndHow.builder() and ends with build():
 	 * <pre>
 	 * {@code 
-	 * 		AndHow.builder()
-	 *			.setNamingStrategy(basicNaming)
-	 *			.addLoaders(loaders)
-	 *			.addGroups(configPtGroups)
-	 *			.setCmdLineArgs(cmdLineArgsWExplicitName)
-	 *			.build();
-	 * }
+ 		AndHow.builder()
+			.loader(new PropFileLoader)
+			.group(SomeGroup.class)
+			.group(SomeOtherGroup.class)
+			.cmdLineArgs([Array of cmd line arguments])
+			.build();
+ }
 	 * </pre>
- 
- There is no return value because there is no need to hold a reference
- to anything past framework startup.  After a successful startup, Property
- values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
- {@code Integer value = MyInt.getValue();}
+	 * 
+	 * There is no return value because there is no need to hold a reference
+	 * to anything past framework startup.  After a successful startup, Property
+	 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+	 * {@code Integer value = MyInt.getValue();}
 
 	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
 	 * it is important that a single entry and configuration loading point to
@@ -154,34 +157,34 @@ public class AndHow implements ValueMap {
 	 */
 	public static class AndHowBuilder {
 		//User config
-		private final ArrayList<PropertyValue> forcedValues = new ArrayList();
-		private final List<Loader> loaders = new ArrayList();
-		private NamingStrategy namingStrategy = new BasicNamingStrategy();
-		private final List<String> cmdLineArgs = new ArrayList();
-		List<Class<? extends PropertyGroup>> groups = new ArrayList();
+		private final ArrayList<PropertyValue> _forcedValues = new ArrayList();
+		private final List<Loader> _loaders = new ArrayList();
+		private NamingStrategy _namingStrategy = new BasicNamingStrategy();
+		private final List<String> _cmdLineArgs = new ArrayList();
+		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
 
-		public AndHowBuilder addLoader(Loader loader) {
-			loaders.add(loader);
+		public AndHowBuilder loader(Loader loader) {
+			_loaders.add(loader);
 			return this;
 		}
 
-		public AndHowBuilder addLoaders(Collection<Loader> loaders) {
-			this.loaders.addAll(loaders);
+		public AndHowBuilder loaders(Collection<Loader> loaders) {
+			this._loaders.addAll(loaders);
 			return this;
 		}
 
-		public AndHowBuilder addGroup(Class<? extends PropertyGroup> group) {
-			groups.add(group);
+		public AndHowBuilder group(Class<? extends PropertyGroup> group) {
+			_groups.add(group);
 			return this;
 		}
 
-		public AndHowBuilder addGroups(Collection<Class<? extends PropertyGroup>> groups) {
-			this.groups.addAll(groups);
+		public AndHowBuilder groups(Collection<Class<? extends PropertyGroup>> groups) {
+			this._groups.addAll(groups);
 			return this;
 		}
 
-		public AndHowBuilder addForcedValue(Property<?> point, Object value) {
-			forcedValues.add(new PropertyValue(point, value));
+		public AndHowBuilder forceValue(Property<?> point, Object value) {
+			_forcedValues.add(new PropertyValue(point, value));
 			return this;
 		}
 
@@ -191,8 +194,8 @@ public class AndHow implements ValueMap {
 		 * @param startVals
 		 * @return 
 		 */
-		public AndHowBuilder addForcedValues(List<PropertyValue> startVals) {
-			this.forcedValues.addAll(startVals);
+		public AndHowBuilder forceValues(List<PropertyValue> startVals) {
+			this._forcedValues.addAll(startVals);
 			return this;
 		}
 
@@ -202,27 +205,27 @@ public class AndHow implements ValueMap {
 		 * @param commandLineArgs
 		 * @return 
 		 */
-		public AndHowBuilder setCmdLineArgs(String[] commandLineArgs) {
-			cmdLineArgs.clear();
-			cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
+		public AndHowBuilder cmdLineArgs(String[] commandLineArgs) {
+			_cmdLineArgs.clear();
+			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 			return this;
 		}
 
 		/**
 		 * Adds a command line argument.
 		 * 
-		 * Note that values added this way are overwritten if setCmdLineArgs(String[]) is called.
+		 * Note that values added this way are overwritten if _cmdLineArgs(String[]) is called.
 		 * @param key
 		 * @param value
 		 * @return 
 		 */
-		public AndHowBuilder addCmdLineArg(String key, String value) {
-			cmdLineArgs.add(key + AndHow.KVP_DELIMITER + value);
+		public AndHowBuilder cmdLineArg(String key, String value) {
+			_cmdLineArgs.add(key + AndHow.KVP_DELIMITER + value);
 			return this;
 		}
 
-		public AndHowBuilder setNamingStrategy(NamingStrategy namingStrategy) {
-			this.namingStrategy = namingStrategy;
+		public AndHowBuilder namingStrategy(NamingStrategy namingStrategy) {
+			this._namingStrategy = namingStrategy;
 			return this;
 		}
 		
@@ -230,15 +233,15 @@ public class AndHow implements ValueMap {
 		 * Executes the AndHow framework startup.
 		 * 
 		 * There is no return value because there is no need to hold a reference
- to anything past framework startup.  After a successful startup, Property
- values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
- {@code Integer value = MyInt.getValue();}
+		 * to anything past framework startup.  After a successful startup, Property
+		 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+		 * {@code Integer value = MyInt.getValue();}
 		 * 
 		 * @throws AppFatalException If the startup fails.
 		 */
 		public void build() throws AppFatalException {
-			String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
-			AndHow.build(namingStrategy, loaders, groups,  args, forcedValues);
+			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
+			AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues);
 		}
 
 		/**
@@ -259,8 +262,8 @@ public class AndHow implements ValueMap {
 		 * @deprecated Don't use in production code
 		 */
 		public AndHow.Reloader buildForUnitTesting() throws AppFatalException {
-			String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
-			return AndHow.build(namingStrategy, loaders, groups,  args, forcedValues);
+			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
+			return AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues);
 		}
 		
 		/**
@@ -273,8 +276,8 @@ public class AndHow implements ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public void reloadForUnitTesting(AndHow.Reloader reloader) throws AppFatalException {
-			String[] args = cmdLineArgs.toArray(new String[cmdLineArgs.size()]);
-			reloader.reload(namingStrategy, loaders, groups,  args, forcedValues);
+			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
+			reloader.reload(_namingStrategy, _loaders, _groups,  args, _forcedValues);
 		}
 
 	}

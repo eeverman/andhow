@@ -37,35 +37,35 @@ public class IntProp extends PropertyBase<Integer> {
 
 		public IntBuilder() {
 			instance = this;
-			setValueType(IntType.instance());
+			valueType(IntType.instance());
 		}
 
 		@Override
 		public IntProp build() {
 
-			return new IntProp(defaultValue, required, shortDesc, validators,
-				paramType, valueType,
-				helpText, aliases.toArray(new String[aliases.size()]));
+			return new IntProp(_defaultValue, _required, _shortDesc, _validators,
+				_paramType, _valueType,
+				_helpText, _aliases.toArray(new String[_aliases.size()]));
 
 		}
 		
 		public IntBuilder mustBeGreaterThan(int reference) {
-			addValidation(new IntValidator.GreaterThan(reference));
+			validation(new IntValidator.GreaterThan(reference));
 			return instance;
 		}
 		
 		public IntBuilder mustBeGreaterThanOrEqualTo(int reference) {
-			addValidation(new IntValidator.GreaterThanOrEqualTo(reference));
+			validation(new IntValidator.GreaterThanOrEqualTo(reference));
 			return instance;
 		}
 		
 		public IntBuilder mustBeLessThan(int reference) {
-			addValidation(new IntValidator.LessThan(reference));
+			validation(new IntValidator.LessThan(reference));
 			return instance;
 		}
 		
 		public IntBuilder mustBeLessThanOrEqualTo(int reference) {
-			addValidation(new IntValidator.LessThanOrEqualTo(reference));
+			validation(new IntValidator.LessThanOrEqualTo(reference));
 			return instance;
 		}
 
