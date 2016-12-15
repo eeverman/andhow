@@ -5,6 +5,8 @@ package yarnandtail.andhow;
  * @author ericeverman
  */
 public abstract class Problem {
+	
+	public final static String UNKNOWN = "[[Unknown]]";
 
 	/**
 	 * A complete description of the problem w/ context and problem description.
@@ -89,7 +91,7 @@ public abstract class Problem {
 					name = "[[Unable to determine the property canonical name]]";
 				}
 			} else {
-				name = "[[Unknown]]";
+				name = UNKNOWN;
 			}
 			
 		}
@@ -109,6 +111,20 @@ public abstract class Problem {
 		public Class<? extends PropertyGroup> getGroup() {
 			return group;
 		}
+		
+		/**
+		 * The canonical name of the group, or some form of [[Unknown]] if it is
+		 * null.
+		 * 
+		 * @return 
+		 */
+		public String getGroupName() {
+			if (group != null) {
+				return group.getCanonicalName();
+			} else {
+				return UNKNOWN;
+			}
+		}
 
 		/**
 		 * The canonical name of the Property, or one of a series of placeholder
@@ -117,7 +133,7 @@ public abstract class Problem {
 		 * Placeholders are double square bracketed like this:  [[Unknown]]
 		 * @return Never null
 		 */
-		public String getName() {
+		public String getPropName() {
 			return name;
 		}
 		

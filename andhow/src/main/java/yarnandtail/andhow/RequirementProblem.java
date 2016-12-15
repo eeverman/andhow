@@ -28,7 +28,7 @@ public abstract class RequirementProblem extends Problem {
 		
 		@Override
 		public String getProblemContext() {
-			return TextUtil.format("Property {}", propertyCoord.getName());
+			return TextUtil.format("Property {}", propertyCoord.getPropName());
 		}
 		
 		@Override

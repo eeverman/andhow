@@ -9,18 +9,18 @@ package yarnandtail.andhow;
 public abstract class ConstructionProblem extends Problem {
 	
 	/** The Property that actually has the problem */
-	protected PropertyCoord badPropertyDef;
+	protected PropertyCoord badPropertyCoord;
 	
 	/** For construction problems that duplicate or reference another Property... */
-	protected PropertyCoord refPropertyDef;
+	protected PropertyCoord refPropertyCoord;
 	
 	/**
 	 * For Properties that have some type of duplication w/ other points, this is the
 	 * Property that is duplicated (the earlier of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
-	public PropertyCoord getRefProperty() {
-		return refPropertyDef;
+	public PropertyCoord getRefPropertyCoord() {
+		return refPropertyCoord;
 	}
 
 	/**
@@ -28,9 +28,20 @@ public abstract class ConstructionProblem extends Problem {
 	 * property that is the duplicate one (the later of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
-	public PropertyCoord getBadProperty() {
-		return badPropertyDef;
+	public PropertyCoord getBadPropertyCoord() {
+		return badPropertyCoord;
 	}
+	
+	@Override
+	public String getProblemContext() {
+		if (badPropertyCoord != null) {
+			return TextUtil.format("Property {}", badPropertyCoord.getPropName());
+		} else {
+			return UNKNOWN;
+		}
+	}
+	
+	
 	
 	public static class NonUniqueNames extends ConstructionProblem {
 		String conflictName;
@@ -39,8 +50,8 @@ public abstract class ConstructionProblem extends Problem {
 				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
 				Class<? extends PropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
 			
-			this.refPropertyDef = new PropertyCoord(refGroup, refProperty);
-			this.badPropertyDef = new PropertyCoord(badGroup, badProperty);
+			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
 			this.conflictName = conflictName;
 		}
 
@@ -49,15 +60,10 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {}", badPropertyDef.getName());
-		}
-		
-		@Override
 		public String getProblemDescription() {
 			return TextUtil.format("Has the name {} which a name in use by {}. " +
 					"All names must be unique.",
-					conflictName, refPropertyDef.getName());
+					conflictName, refPropertyCoord.getPropName());
 		}
 	}
 	
@@ -67,23 +73,17 @@ public abstract class ConstructionProblem extends Problem {
 				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
 				Class<? extends PropertyGroup> badGroup, Property<?> badProperty) {
 			
-			this.refPropertyDef = new PropertyCoord(refGroup, refProperty);
-			this.badPropertyDef = new PropertyCoord(badGroup, badProperty);
-		}
-		
-		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {}", badPropertyDef.getName());
+			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return TextUtil.format(
-					"Is the same instance as {} - " +
+			return TextUtil.format("Is the same instance as {} - " +
 					"The containing PropertyGroups are sharing a reference to the same " +
 					"Property instance.  Properties must each be independant " +
 					"instances because they each identify unique values.", 
-				refPropertyDef.getName());
+				refPropertyCoord.getPropName());
 		}
 	}
 	
@@ -115,7 +115,7 @@ public abstract class ConstructionProblem extends Problem {
 
 		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
-			badPropertyDef = new PropertyCoord(group, null);
+			badPropertyCoord = new PropertyCoord(group, null);
 		}
 
 		public Exception getException() {
@@ -124,7 +124,7 @@ public abstract class ConstructionProblem extends Problem {
 		
 		@Override
 		public String getProblemContext() {
-			return TextUtil.format("PropertyGroup {}", badPropertyDef.getGroup().getCanonicalName());
+			return TextUtil.format("PropertyGroup {}", badPropertyCoord.getGroup().getCanonicalName());
 		}
 		
 		@Override
@@ -142,17 +142,12 @@ public abstract class ConstructionProblem extends Problem {
 		String invalidMessage;	
 
 		public InvalidDefaultValue(Class<? extends PropertyGroup> group, Property<?> prop, String invalidMessage) {
-			this.badPropertyDef = new PropertyCoord(group, prop);
+			this.badPropertyCoord = new PropertyCoord(group, prop);
 			this.invalidMessage = invalidMessage;
 		}
 
 		public String getInvalidMessage() {
 			return invalidMessage;
-		}
-		
-		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {}", badPropertyDef.getName());
 		}
 		
 		@Override
@@ -169,17 +164,12 @@ public abstract class ConstructionProblem extends Problem {
 		public InvalidValidationConfiguration(
 				Class<? extends PropertyGroup> group, Property<?> property, Validator<?> valid) {
 			
-			this.badPropertyDef = new PropertyCoord(group, property);
+			this.badPropertyCoord = new PropertyCoord(group, property);
 			this.valid = valid;
 		}
 
 		public Validator<?> getValidator() {
 			return valid;
-		}
-		
-		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {}", badPropertyDef.getName());
 		}
 		
 		@Override

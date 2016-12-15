@@ -54,7 +54,7 @@ public class AndHow implements ValueMap {
 			return singleInstance;
 		} else {
 			throw new RuntimeException(ANDHOW_INLINE_NAME + " has not been initialized.  " +
-					"Possible causes:  1) There is a race condition where ConfigPoint access may happen before configuration " +
+					"Possible causes:  1) There is a race condition where Property access may happen before configuration " +
 					"2) There is no configuration at the entry point to the application. " +
 					"Refer to " + ANDHOW_URL + " for code examples and FAQs.");
 		}

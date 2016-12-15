@@ -76,12 +76,12 @@ public class RuntimeDefinitionTest {
 		
 		ConstructionProblem.DuplicateProperty dpcp = (ConstructionProblem.DuplicateProperty)appDef.getConstructionProblems().get(0);
 		
-		assertEquals(SampleGroup.STR_1, dpcp.getRefProperty().getProperty());
-		assertEquals(SampleGroup.class, dpcp.getRefProperty().getGroup());
-		assertEquals(PropertyGroup.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefProperty().getName());
-		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadProperty().getProperty());
-		assertEquals(SampleGroupDup.class, dpcp.getBadProperty().getGroup());
-		assertEquals(PropertyGroup.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadProperty().getName());
+		assertEquals(SampleGroup.STR_1, dpcp.getRefPropertyCoord().getProperty());
+		assertEquals(SampleGroup.class, dpcp.getRefPropertyCoord().getGroup());
+		assertEquals(PropertyGroup.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
+		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadPropertyCoord().getProperty());
+		assertEquals(SampleGroupDup.class, dpcp.getBadPropertyCoord().getGroup());
+		assertEquals(PropertyGroup.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
 	}
 	
 	@Test
@@ -118,11 +118,11 @@ public class RuntimeDefinitionTest {
 		ConstructionProblem.NonUniqueNames dupCpn = (ConstructionProblem.NonUniqueNames)appDef.getConstructionProblems().get(0);
 		
 		//Check problem specifics
-		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, dupCpn.getBadProperty().getProperty());
-		assertEquals(dupParamFullPath + "FLAG_FALSE", dupCpn.getBadProperty().getName());
+		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, dupCpn.getBadPropertyCoord().getProperty());
+		assertEquals(dupParamFullPath + "FLAG_FALSE", dupCpn.getBadPropertyCoord().getPropName());
 		assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE.getBaseAliases().get(0), dupCpn.getConflictName());
-		assertEquals(SimpleParamsWAlias.FLAG_FALSE, dupCpn.getRefProperty().getProperty());
-		assertEquals(paramFullPath + "FLAG_FALSE", dupCpn.getRefProperty().getName());
+		assertEquals(SimpleParamsWAlias.FLAG_FALSE, dupCpn.getRefPropertyCoord().getProperty());
+		assertEquals(paramFullPath + "FLAG_FALSE", dupCpn.getRefPropertyCoord().getPropName());
 		
 		//Canonical Names for Point
 		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParamsWAlias.KVP_BOB));
@@ -182,11 +182,11 @@ public class RuntimeDefinitionTest {
 
 		
 		
-		assertEquals(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, invalidConfig.getBadProperty().getProperty());
-		assertEquals(BadDefaultAndValidationGroup.class, invalidConfig.getBadProperty().getGroup());
+		assertEquals(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, invalidConfig.getBadPropertyCoord().getProperty());
+		assertEquals(BadDefaultAndValidationGroup.class, invalidConfig.getBadPropertyCoord().getGroup());
 		assertEquals(false, invalidConfig.getValidator().isSpecificationValid());
-		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, invalidDefault.getBadProperty().getProperty());
-		assertEquals(BadDefaultAndValidationGroup.class, invalidDefault.getBadProperty().getGroup());
+		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, invalidDefault.getBadPropertyCoord().getProperty());
+		assertEquals(BadDefaultAndValidationGroup.class, invalidDefault.getBadPropertyCoord().getGroup());
 
 
 	}

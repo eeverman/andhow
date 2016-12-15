@@ -7,10 +7,28 @@ package yarnandtail.andhow;
  */
 public abstract class ValueProblem extends Problem {
 	
-	protected ValueCoord propertyValueDef;
+	protected ValueCoord propertyValueCoord;
 	
-	public ValueCoord getPropertyValueDef() {
-		return propertyValueDef;
+	public ValueCoord getPropertyValueCoord() {
+		return propertyValueCoord;
+	}
+	
+	@Override
+	public String getProblemContext() {
+		
+		if (propertyValueCoord != null) {
+			
+			String loadDesc = UNKNOWN;
+			
+			if (propertyValueCoord.getLoader() != null && 
+					propertyValueCoord.getLoader().getSpecificLoadDescription() != null) {
+				loadDesc = propertyValueCoord.getLoader().getSpecificLoadDescription();
+			}
+			return TextUtil.format("Property {} loaded from {}", 
+						propertyValueCoord.getPropName(), loadDesc);
+		} else {
+			return UNKNOWN;
+		}
 	}
 	
 	public static class InvalidValueProblem<T> extends ValueProblem {
@@ -21,16 +39,9 @@ public abstract class ValueProblem extends Problem {
 		public InvalidValueProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property<T> prop, 
 				T value, Validator<T> validator) {
-			propertyValueDef = new ValueCoord(loader, group, prop);
+			propertyValueCoord = new ValueCoord(loader, group, prop);
 			this.validator = validator;
 			this.value = value;
-		}
-		
-		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {} loaded from {}", 
-						getPropertyValueDef().getName(), 
-						getPropertyValueDef().getLoader().getSpecificLoadDescription());
 		}
 		
 		@Override
@@ -46,23 +57,15 @@ public abstract class ValueProblem extends Problem {
 				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
 				String str) {
 			
-			propertyValueDef = new ValueCoord(loader, group, prop);
+			propertyValueCoord = new ValueCoord(loader, group, prop);
 			this.str = str;
 		}
-		
-		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {} loaded from {}", 
-						getPropertyValueDef().getName(), 
-						getPropertyValueDef().getLoader().getSpecificLoadDescription());
-		}
-		
+
 		@Override
 		public String getProblemDescription() {
-			return TextUtil.format(
-					"The string '{}' could not be converted to type {}",
+			return TextUtil.format("The string '{}' could not be converted to type {}",
 					(str!=null)?str:TextUtil.NULL_PRINT, 
-					this.propertyValueDef.property.getValueType().getDestinationType().getSimpleName());
+					this.propertyValueCoord.property.getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	
@@ -73,23 +76,15 @@ public abstract class ValueProblem extends Problem {
 				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
 				Object obj) {
 			
-			propertyValueDef = new ValueCoord(loader, group, prop);
+			propertyValueCoord = new ValueCoord(loader, group, prop);
 			this.obj = obj;
 		}
 		
 		@Override
-		public String getProblemContext() {
-			return TextUtil.format("Property {} loaded from {}", 
-						getPropertyValueDef().getName(), 
-						getPropertyValueDef().getLoader().getSpecificLoadDescription());
-		}
-		
-		@Override
 		public String getProblemDescription() {
-			return TextUtil.format(
-					"The object '{}' could not be converted to type {}",
+			return TextUtil.format("The object '{}' could not be converted to type {}",
 					(obj!=null)?obj:TextUtil.NULL_PRINT,
-					this.propertyValueDef.property.getValueType().getDestinationType().getSimpleName());
+					this.propertyValueCoord.property.getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	
