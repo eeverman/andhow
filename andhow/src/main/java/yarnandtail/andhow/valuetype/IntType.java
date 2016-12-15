@@ -1,5 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
+import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.TextUtil;
 
 /**
@@ -23,13 +24,17 @@ public class IntType extends BaseValueType<Integer> {
 	}
 
 	@Override
-	public Integer convert(String sourceValue) throws IllegalArgumentException {
+	public Integer convert(String sourceValue) throws ParsingException {
 		
 		String effVal = TextUtil.trimToNull(sourceValue);
 		
 		if (effVal != null) {
-				
-			return Integer.parseInt(effVal);
+			
+			try {
+				return Integer.parseInt(effVal);
+			} catch (Exception e) {
+				throw new ParsingException("Unable to convert to an integer", effVal, e);
+			}
 
 		} else {
 			return null;

@@ -108,11 +108,13 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			expectedProblemPoints.add(SampleRestClientGroup.REST_HOST);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_PORT);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
+			expectedProblemPoints.add(SampleRestClientGroup.RETRY_COUNT);
 			
-			assertEquals(3, e.getPointValueProblems().size());
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(0).getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(1).getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(2).getProperty()));
+			assertEquals(4, e.getPointValueProblems().size());
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(0).getPropertyValueDef().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(1).getPropertyValueDef().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(2).getPropertyValueDef().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(3).getPropertyValueDef().getProperty()));
 		}
 		
 

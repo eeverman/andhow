@@ -22,6 +22,12 @@ public class ParsingException extends Exception {
 		this.problemText = problemText;
 	}
 	
+	public ParsingException(String message, String problemText, Throwable cause) {
+		super(message, cause);
+		this.paramText = null;
+		this.problemText = problemText;
+	}
+	
 	public ParsingException(String message, String problemText) {
 		super(message);
 		this.paramText = null;

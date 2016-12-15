@@ -20,9 +20,12 @@ public abstract class Problem {
 	
 
 	/**
-	 * Full definition of where a value for a property would be loaded from,
+	 * Full definition of where a value for a property would be loaded from, 
 	 * which is a PropertyDef plus a Loader.
 	 * 
+	 * The actual value itself is not included b/c its type varies depending on
+	 * the context of the problem and it is at least useful to unify where the
+	 * value came from, if not the value itself.
 	 */
 	public static class PropertyValueDef extends PropertyDef {
 		Loader loader;
@@ -39,6 +42,7 @@ public abstract class Problem {
 		public Loader getLoader() {
 			return loader;
 		}
+		
 	}
 	
 	/**

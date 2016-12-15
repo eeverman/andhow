@@ -56,9 +56,9 @@ public class ReportGenerator {
 			
 			for (ValueProblem p : probs) {
 				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {} loaded from {}: {}", 
-						appDef.getCanonicalName(p.getProperty()), 
-						p.getLoader().getSpecificLoadDescription(),
-						p.getMessageWithinFullContext());
+						p.getPropertyValueDef().getName(), 
+						p.getPropertyValueDef().getLoader().getSpecificLoadDescription(),
+						p.getMessage());
 			}
 			
 		}

@@ -154,6 +154,7 @@ public abstract class ConstructionProblem extends Problem {
 			return valid;
 		}
 		
+		@Override
 		public String getMessage() {
 			return TextUtil.format(
 					"The Property {} has a Validator of type {} that is not configured correctly: {}",

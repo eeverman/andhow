@@ -3,6 +3,8 @@ package yarnandtail.andhow.load;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
@@ -30,7 +32,7 @@ public abstract class BaseLoader implements Loader {
 
 			if (prop != null) {
 				
-				PropertyValue pv = createValue(prop, strValue);
+				PropertyValue pv = createValue(appConfigDef, prop, strValue);
 				values.add(pv);
 				
 			} else {
@@ -40,17 +42,27 @@ public abstract class BaseLoader implements Loader {
 		}
 	}
 	
-	protected <T> PropertyValue createValue(Property<T> prop, String strValue) throws ParsingException {
+	protected <T> PropertyValue createValue(RuntimeDefinition appConfigDef, Property<T> prop, String strValue) {
 		
-		T value = prop.getValueType().convert(strValue);
+		ArrayList<ValueProblem> issues = new ArrayList(0);
+		T value = null;
 		
-		ArrayList<ValueProblem> issues = new ArrayList();
+		try {
+			
+			value = prop.getValueType().convert(strValue);
 
-		for (Validator<T> v : prop.getValidators()) {
-			if (! v.isValid(value)) {
-				issues.add(new ValueProblem(this, prop, value, v));
+			for (Validator<T> v : prop.getValidators()) {
+				if (! v.isValid(value)) {
+					issues.add(new ValueProblem.InvalidValueProblem(
+							this, appConfigDef.getGroupForPoint(prop), prop, value, v));
+				}
 			}
+		} catch (ParsingException ex) {
+			issues.add(new ValueProblem.StringConversionValueProblem(
+					this, appConfigDef.getGroupForPoint(prop), prop, strValue));
 		}
+		
+
 		
 		return new PropertyValue(prop, value, issues);
 	}
