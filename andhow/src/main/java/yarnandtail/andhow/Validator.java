@@ -13,7 +13,7 @@ public interface Validator<T> {
 	 * why the value is not valid.
 	 * 
 	 * This message should only refer to the value and the criteria and assume
-	 * that it is included in a larger message that identifies the ConfigPoint
+	 * that it is included in a larger message that identifies the property
 	 * and other context.
 	 * 
 	 * This method should be prepared to handle nulls.

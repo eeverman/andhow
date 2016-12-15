@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The ConfigPoints and values loaded by a Loader.
+ * The Properties and values loaded by a Loader.
  * 
- * Only ConfigPoints for which a Loader found a value will be in the collection.
+ * Only Properties for which a Loader found a value will be in the collection.
  * 
  * @author eeverman
  */
 public class LoaderValues implements ValueMap {
-	public static final List<PropertyValue> EMPTY_POINT_VALUE_LIST = Collections.emptyList();
+	public static final List<PropertyValue> EMPTY_PROP_VALUE_LIST = Collections.emptyList();
 	
 	private final Loader loader;
 	private final List<PropertyValue> values;
@@ -42,7 +42,7 @@ public class LoaderValues implements ValueMap {
 			}
 			
 		} else {
-			values = EMPTY_POINT_VALUE_LIST;
+			values = EMPTY_PROP_VALUE_LIST;
 		}
 	}
 
@@ -59,41 +59,40 @@ public class LoaderValues implements ValueMap {
 	/**
 	 * A linear search for the Property in the values loaded by this loader.
 	 * 
-	 * @param point
+	 * @param prop
 	 * @return 
 	 */
 	@Override
-	public <T> T getExplicitValue(Property<T> point) {
-		if (point == null) {
+	public <T> T getExplicitValue(Property<T> prop) {
+		if (prop == null) {
 			return null;
 		}
-		return point.getValueType().cast(
-				values.stream().filter(pv -> point.equals(pv.getProperty())).
+		return prop.getValueType().cast(values.stream().filter(pv -> prop.equals(pv.getProperty())).
 						findFirst().map(pv -> pv.getValue()).orElse(null)
 		);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> point) {
-		if (point == null) {
+	public <T> T getEffectiveValue(Property<T> prop) {
+		if (prop == null) {
 			return null;
 		}
 		
-		if (isExplicitlySet(point)) {
-			return getExplicitValue(point);
+		if (isExplicitlySet(prop)) {
+			return getExplicitValue(prop);
 		} else {
-			return point.getDefaultValue();
+			return prop.getDefaultValue();
 		}
 	}
 
 	/**
 	 * A linear search for the Property in the values loaded by this loader.
-	 * @param point
+	 * @param prop
 	 * @return 
 	 */
 	@Override
-	public boolean isExplicitlySet(Property<?> point) {
-		return values.stream().anyMatch(p -> p.getProperty().equals(point));
+	public boolean isExplicitlySet(Property<?> prop) {
+		return values.stream().anyMatch(p -> p.getProperty().equals(prop));
 	}
 	
 	/**

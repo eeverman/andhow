@@ -29,14 +29,14 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 	}
 	
 	protected final <T> T getEffectiveValue(List<LoaderValues> valuesList, Property<T> prop) {
-		if (isPointPresent(valuesList, prop)) {
+		if (isPropertyPresent(valuesList, prop)) {
 			return getValue(valuesList, prop);
 		} else {
 			return prop.getDefaultValue();
 		}
 	}
 
-	protected final boolean isPointPresent(List<LoaderValues> valuesList, Property<?> prop) {
+	protected final boolean isPropertyPresent(List<LoaderValues> valuesList, Property<?> prop) {
 		return valuesList.stream().anyMatch((LoaderValues pv) -> pv.isExplicitlySet(prop));
 	}
 

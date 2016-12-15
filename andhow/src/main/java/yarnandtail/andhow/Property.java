@@ -10,19 +10,19 @@ import java.util.List;
  rather than just configuration strings.
  
  Implementor's Notes:
- See IntConfigPoint as a best example of how to implement a new Property.
+ See IntProp as a best example of how to implement a new Property.
  The reason for creating a new implementation would be to handle a new type, 
  such as a DateTime type.
  
  <ul>
- * <li>All implementations can use the ConfigPointBase as a base class.  Most
+ * <li>All implementations can use the PropertyBase as a base class.  Most
  * methods are already present w/ just a few methods left to implement.
  * <li>All implementations should have a static builder() method that returns
- a builder capable of building an instance.  by convention, builders are
- inner classes of their associated Property.  The ConfigPointBuilder is an
- easy base class to extend that provide nearly all needed functionality.
- <li>Builders should provide easy access to Validators for their appropriate type.
- * For instance the StringConfigPoint has a value type of String and has an
+ * a builder capable of building an instance.  by convention, builders are
+ * inner classes of their associated Property.  The PropertyBuilderBase is an
+ * easy base class to extend that provide nearly all needed functionality.
+ * <li>Builders should provide easy access to Validators for their appropriate type.
+ * For instance the StrProp has a value type of String and has an
  * associated StringRegex Validator.  By convention, the builder methods to add
  * validators use the 'must' terminology, as in:  mustMatchRegex(String regex),
  * or mustStartWith(String prefix).

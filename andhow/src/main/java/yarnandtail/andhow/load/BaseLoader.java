@@ -54,12 +54,12 @@ public abstract class BaseLoader implements Loader {
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {
 					issues.add(new ValueProblem.InvalidValueProblem(
-							this, appConfigDef.getGroupForPoint(prop), prop, value, v));
+							this, appConfigDef.getGroupForProperty(prop), prop, value, v));
 				}
 			}
 		} catch (ParsingException ex) {
 			issues.add(new ValueProblem.StringConversionValueProblem(
-					this, appConfigDef.getGroupForPoint(prop), prop, strValue));
+					this, appConfigDef.getGroupForProperty(prop), prop, strValue));
 		}
 		
 

@@ -15,7 +15,7 @@ public abstract class ConstructionProblem extends Problem {
 	protected PropertyCoord refPropertyCoord;
 	
 	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
+	 * For Properties that have some type of duplication w/ other properties, this is the
 	 * Property that is duplicated (the earlier of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
@@ -24,8 +24,8 @@ public abstract class ConstructionProblem extends Problem {
 	}
 
 	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
-	 * property that is the duplicate one (the later of the two duplicates).
+	 * The Property that has the problem.
+	 * 
 	 * @return May return null if not applicable.
 	 */
 	public PropertyCoord getBadPropertyCoord() {

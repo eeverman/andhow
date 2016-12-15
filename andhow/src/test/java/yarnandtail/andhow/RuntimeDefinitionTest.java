@@ -30,11 +30,11 @@ public class RuntimeDefinitionTest {
 		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, 
 				bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
 
-		//Canonical Names for Point
+		//Canonical Names for Property
 		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParamsWAlias.KVP_BOB));
 		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParamsWAlias.FLAG_FALSE));
 		
-		//Get points for Canonical name and alias
+		//Get properties for Canonical name and alias
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperty(paramFullPath + "KVP_BOB"));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperty(paramFullPath + "FLAG_FALSE"));
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperty(paramFullPath + 
@@ -46,12 +46,12 @@ public class RuntimeDefinitionTest {
 		assertEquals(1, appDef.getPropertyGroups().size());
 		assertEquals(SimpleParamsWAlias.class, appDef.getPropertyGroups().get(0));
 		
-		//Point list
+		//prop list
 		assertEquals(2, appDef.getProperties().size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperties().get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperties().get(1));
 		
-		//Points for Group
+		//Properties for Group
 		assertEquals(2, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(1));
@@ -59,7 +59,7 @@ public class RuntimeDefinitionTest {
 	}
 	
 	@Test
-	public void testDuplicatePointInSeparateGroupWithDistinctNames() throws Exception {
+	public void testDuplicatePropertiesInSeparateGroupWithDistinctNames() throws Exception {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
@@ -106,7 +106,7 @@ public class RuntimeDefinitionTest {
 		appDef.addProperty(SimpleParamsWAliasDuplicate.class, SimpleParamsWAliasDuplicate.FLAG_TRUE, 
 				bns.buildNames(SimpleParamsWAliasDuplicate.FLAG_TRUE, SimpleParamsWAliasDuplicate.class, "FLAG_TRUE"));
 
-		//Check values that were actually added to list - The dup point should not have been added
+		//Check values that were actually added to list - The dup prop should not have been added
 		assertEquals(3, appDef.getProperties().size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperties().get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperties().get(1));
@@ -124,13 +124,13 @@ public class RuntimeDefinitionTest {
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, dupCpn.getRefPropertyCoord().getProperty());
 		assertEquals(paramFullPath + "FLAG_FALSE", dupCpn.getRefPropertyCoord().getPropName());
 		
-		//Canonical Names for Point
+		//Canonical Names for Property
 		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParamsWAlias.KVP_BOB));
 		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParamsWAlias.FLAG_FALSE));
 		assertNull(appDef.getCanonicalName(SimpleParamsWAliasDuplicate.FLAG_FALSE));		//not added b/c dup
 		assertEquals(dupParamFullPath + "FLAG_TRUE", appDef.getCanonicalName(SimpleParamsWAliasDuplicate.FLAG_TRUE));
 		
-		//Get points for Canonical name and alias
+		//Get props for Canonical name and alias
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperty(paramFullPath + "KVP_BOB"));
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperty(SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0)));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperty(paramFullPath + "FLAG_FALSE"));
@@ -143,13 +143,13 @@ public class RuntimeDefinitionTest {
 		assertEquals(SimpleParamsWAlias.class, appDef.getPropertyGroups().get(0));
 		assertEquals(SimpleParamsWAliasDuplicate.class, appDef.getPropertyGroups().get(1));
 		
-		//Point list
+		//Prop list
 		assertEquals(3, appDef.getProperties().size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperties().get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperties().get(1));
 		assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, appDef.getProperties().get(2));
 		
-		//Points for Group
+		//Props for Group
 		assertEquals(2, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(1));

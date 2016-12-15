@@ -44,7 +44,7 @@ public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
-		return isPointPresent(loadedValuesList, prop);
+		return isPropertyPresent(loadedValuesList, prop);
 	}
 	
 	@Override

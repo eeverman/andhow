@@ -85,7 +85,7 @@ public class AndHowTest extends AndHowTestBase {
 		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
 		
 		
-		List<Property<?>> regPts = AndHow.instance().getPoints();
+		List<Property<?>> regPts = AndHow.instance().getProperties();
 		
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
@@ -109,7 +109,7 @@ public class AndHowTest extends AndHowTestBase {
 		assertFalse(SimpleParamsWAlias.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
-		List<Property<?>> regPts = AndHow.instance().getPoints();
+		List<Property<?>> regPts = AndHow.instance().getProperties();
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
 		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
 		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_TRUE));
@@ -210,14 +210,14 @@ public class AndHowTest extends AndHowTestBase {
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
-			assertEquals(2, ce.getRequirementsProblems().size());
-			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ce.getRequirementsProblems().get(0).getPropertyCoord().getProperty());
-			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ce.getRequirementsProblems().get(1).getPropertyCoord().getProperty());
+			assertEquals(2, ce.getRequirementProblems().size());
+			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
 		}
 	}
 	
 	@Test(expected = RuntimeException.class)
-	public void testAttemptingToFetchAConfigPointValueBeforeConfigurationShouldThrowARuntimeException() {
+	public void testAttemptingToFetchAPropValueBeforeConfigurationShouldThrowARuntimeException() {
 		reloader.destroy();
 		String shouldFail = SimpleParamsWAlias.KVP_BOB.getValue();
 	}

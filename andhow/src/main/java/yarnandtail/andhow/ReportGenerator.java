@@ -20,8 +20,8 @@ public class ReportGenerator {
 			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
 			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
 			printConstructionProblems(out, fatalException.getConstructionProblems(), appDef);
-			printPointValueProblems(out, fatalException.getPointValueProblems(), appDef);
-			printRequirementProblems(out, fatalException.getRequirementsProblems(), appDef);
+			printValueProblems(out, fatalException.getValueProblems(), appDef);
+			printRequirementProblems(out, fatalException.getRequirementProblems(), appDef);
 			printProblemHR(out);
 		} catch (Exception e) {
 			out.println("Uh oh.  There was an Exception while printing the list of problems with the app config.");
@@ -46,7 +46,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printPointValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
+	public static void printValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules, "
@@ -64,7 +64,7 @@ public class ReportGenerator {
 	public static void printRequirementProblems(PrintStream out, List<RequirementProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 
-			out.println("REQUIRMENT PROBLEMS - When a required configuration point is not provided");
+			out.println("REQUIRMENT PROBLEMS - When a required property is not provided");
 			out.println("Note:  Issues, above, preventing values from loading may also result in requirements problems.");
 			out.println();
 			out.println("Detailed list of Requirements Problems:");
@@ -93,12 +93,12 @@ public class ReportGenerator {
 					printer.printPropertyGroupStart(out, group);
 					
 					try {
-						for (Property<?> point : appDef.getPropertiesForGroup(group)) {
-							printer.printProperty(out, group, point);
+						for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
+							printer.printProperty(out, group, prop);
 						}
 					} catch (Exception ex) {
 						TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
-								"ENSURE ALL ConfigPoint FIELDS ARE PUBLIC IN THE ConfigPointGroup " +
+								"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
 								"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
 					}
 					

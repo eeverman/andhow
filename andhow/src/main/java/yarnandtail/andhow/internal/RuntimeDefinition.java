@@ -6,16 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import yarnandtail.andhow.ConstructionProblem;
-import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
- * The defined set of ConfigPointGroups, child ConfigPoints and their names for use by the app.
+ * The defined set of PropertyGroups, child Properties and their names for use by the app.
  * 
- * This class does not contain any values for ConfigPoints or Loaders - it is
- * just the list of known ConfigPoints and their structure in ConfigPointGroups.
+ * This class does not contain any values for the Properties or Loaders - it is
+ * just the list of known Properties and their structure in PropertyGroups.
  * 
  * This class is intended to be constructed populated by Loaders during initialization,
  * then should remain unchanged.
@@ -23,7 +23,7 @@ import yarnandtail.andhow.PropertyGroup;
  * @author eeverman
  */
 public class RuntimeDefinition {
-	public static final List<Property<?>> EMPTY_CONFIGPOINT_LIST = Collections.unmodifiableList(new ArrayList());
+	public static final List<Property<?>> EMPTY_PROPERTY_LIST = Collections.unmodifiableList(new ArrayList());
 	
 	
 	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
@@ -54,21 +54,21 @@ public class RuntimeDefinition {
 		allNames.addAll(names.getAliases());
 		
 		if (canonicalNameByProperty.containsKey(property)) {
-			ConstructionProblem.DuplicateProperty dupPoint = new ConstructionProblem.DuplicateProperty(
-					getGroupForPoint(property),
+			ConstructionProblem.DuplicateProperty dupProp = new ConstructionProblem.DuplicateProperty(
+					getGroupForProperty(property),
 					property, group, property);
 			
-			constructProblems.add(dupPoint);
+			constructProblems.add(dupProp);
 			return;
 		}
 		
 		//Check for duplicate names
 		for (String a : allNames) {
-			Property<?> conflictPoint = propertiesByNames.get(a);
-			if (conflictPoint != null) {
+			Property<?> conflictProp = propertiesByNames.get(a);
+			if (conflictProp != null) {
 				ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
-					getGroupForPoint(conflictPoint),
-						conflictPoint, group, property, a);
+					getGroupForProperty(conflictProp),
+						conflictProp, group, property, a);
 						
 				constructProblems.add(notUniqueName);
 				return;
@@ -142,7 +142,7 @@ public class RuntimeDefinition {
 	}
 	
 	/**
-	 * Returns a list of ConfigPoints registered with the passed group.
+	 * Returns a list of Properties registered with the passed group.
 	 * If the group is unregistered or has no properties, an empty list is returned.
 	 * @param group
 	 * @return 
@@ -153,7 +153,7 @@ public class RuntimeDefinition {
 		if (pts != null) {
 			return Collections.unmodifiableList(pts);
 		} else {
-			return EMPTY_CONFIGPOINT_LIST;
+			return EMPTY_PROPERTY_LIST;
 		}
 	}
 	
@@ -164,7 +164,7 @@ public class RuntimeDefinition {
 	 * @return May return null if the Property is not in any group, or during 
 	 * construction, if the group has not finished registering all of its properties.
 	 */
-	public Class<? extends PropertyGroup> getGroupForPoint(Property<?> prop) {
+	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
 		for (Class<? extends PropertyGroup> group : groupList) {
 			if (propertiesByGroup.get(group).contains(prop)) {
 				return group;

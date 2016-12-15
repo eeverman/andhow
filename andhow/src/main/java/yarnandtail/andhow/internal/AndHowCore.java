@@ -57,7 +57,7 @@ public class AndHowCore implements ValueMap {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		runtimeDef = AndHowUtil.doRegisterConfigPoints(registeredGroups, loaders, namingStrategy);
+		runtimeDef = AndHowUtil.doRegisterProperties(registeredGroups, loaders, namingStrategy);
 		constructProblems.addAll(runtimeDef.getConstructionProblems());
 		
 		//
@@ -144,7 +144,7 @@ public class AndHowCore implements ValueMap {
 					
 					requirementsProblems.add(
 						new RequirementProblem.RequiredPropertyProblem(
-								runtimeDef.getGroupForPoint(prop), prop));
+								runtimeDef.getGroupForProperty(prop), prop));
 				}
 			}
 		}

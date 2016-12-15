@@ -26,7 +26,7 @@ public interface PropertyGroup {
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	static List<NameAndProperty> getConfigPoints(Class<? extends PropertyGroup> group) 
+	static List<NameAndProperty> getProperties(Class<? extends PropertyGroup> group) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		List<NameAndProperty> props = new ArrayList();
