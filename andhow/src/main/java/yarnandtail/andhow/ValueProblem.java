@@ -2,6 +2,9 @@ package yarnandtail.andhow;
 
 /**
  * Problems with invalid values, values that cannot be converted to their destination type.
+ * 
+ * TODO:  The symantics around getMessage are different here verses Construction problem.
+ * 
  * @author eeverman
  */
 public abstract class ValueProblem extends Problem {

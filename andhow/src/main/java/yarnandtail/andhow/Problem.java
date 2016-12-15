@@ -1,9 +1,4 @@
-/*
- */
 package yarnandtail.andhow;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -26,6 +21,8 @@ public abstract class Problem {
 	 * The actual value itself is not included b/c its type varies depending on
 	 * the context of the problem and it is at least useful to unify where the
 	 * value came from, if not the value itself.
+	 * 
+	 * TODO:  Remame to LoadedPropertyCoord??
 	 */
 	public static class PropertyValueDef extends PropertyDef {
 		Loader loader;
