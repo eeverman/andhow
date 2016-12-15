@@ -47,7 +47,7 @@ public abstract class Problem {
 	 * value came from, if not the value itself.
 	 * 
 	 */
-	public static class ValueCoord extends PropertyDef {
+	public static class ValueCoord extends PropertyCoord {
 		Loader loader;
 		
 		public ValueCoord(Loader loader, Class<? extends PropertyGroup> group, Property<?> prop) {
@@ -69,12 +69,12 @@ public abstract class Problem {
 	 * Logical location of a Property (Group and Property).
 	 * 
 	 */
-	public static class PropertyDef {
+	public static class PropertyCoord {
 		Property<?> property;
 		Class<? extends PropertyGroup> group;
 		String name;
 
-		public PropertyDef(Class<? extends PropertyGroup> group, Property<?> prop) {
+		public PropertyCoord(Class<? extends PropertyGroup> group, Property<?> prop) {
 			this.property = prop;
 			this.group = group;
 			

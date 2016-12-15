@@ -70,16 +70,7 @@ public class ReportGenerator {
 			out.println("Detailed list of Requirements Problems:");
 
 			for (RequirementProblem p : probs) {
-				if (p.getPoint() != null) {
-					TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {}: {}", 
-						appDef.getCanonicalName(p.getPoint()), 
-						p.getMessageWithinFullContext());
-				} else {
-					TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "PropertyGroup {}: {}", 
-						p.getGroup().getCanonicalName(), 
-						p.getMessageWithinFullContext());
-				}
-
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", p.getFullMessage());
 			}
 			
 		}

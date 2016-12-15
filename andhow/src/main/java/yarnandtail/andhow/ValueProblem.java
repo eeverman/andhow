@@ -7,11 +7,7 @@ package yarnandtail.andhow;
  */
 public abstract class ValueProblem extends Problem {
 	
-	ValueCoord propertyValueDef;
-	
-	public ValueProblem() {
-		
-	}
+	protected ValueCoord propertyValueDef;
 	
 	public ValueCoord getPropertyValueDef() {
 		return propertyValueDef;

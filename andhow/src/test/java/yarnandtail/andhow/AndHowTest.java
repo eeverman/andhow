@@ -211,8 +211,8 @@ public class AndHowTest extends AndHowTestBase {
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(2, ce.getRequirementsProblems().size());
-			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ((RequirementProblem)(ce.getRequirementsProblems().get(0))).getPoint());
-			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ((RequirementProblem)(ce.getRequirementsProblems().get(1))).getPoint());
+			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ce.getRequirementsProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ce.getRequirementsProblems().get(1).getPropertyCoord().getProperty());
 		}
 	}
 	
