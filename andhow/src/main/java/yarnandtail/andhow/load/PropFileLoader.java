@@ -34,14 +34,14 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
 
 		if (filePath != null) {
-			specificLoadDescription = "File at: " + filePath;
+			specificLoadDescription = "file at: " + filePath;
 			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 		}
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
 			File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
 			
-			specificLoadDescription = "File at: " + filePath;
+			specificLoadDescription = "file at: " + filePath;
 			
 			if (relPath != null) {
 				props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
@@ -50,7 +50,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
 			
-			specificLoadDescription = "File on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+			specificLoadDescription = "file on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
 			
 			props = loadPropertiesFromClasspath(
 				existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
@@ -267,8 +267,6 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 
 	
-	
-	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 	@GroupInfo(
 			name="PropFileLoader Configuration",
 			desc="Configure one of these properties to specify a location to load a properties file from. " +

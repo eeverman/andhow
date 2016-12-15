@@ -49,10 +49,15 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		@Override
-		public String getMessage() {
-			return TextUtil.format("The property {} has a name that duplicates {}. " +
-					"The conflicting name/alias is '{}'.  All names must be unique.",
-					badPropertyDef.getName(), refPropertyDef.getName(), conflictName);
+		public String getProblemContext() {
+			return TextUtil.format("Property {}", badPropertyDef.getName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format("Has the name {} which a name in use by {}. " +
+					"All names must be unique.",
+					conflictName, refPropertyDef.getName());
 		}
 	}
 	
@@ -67,13 +72,18 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		@Override
-		public String getMessage() {
+		public String getProblemContext() {
+			return TextUtil.format("Property {}", badPropertyDef.getName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
 			return TextUtil.format(
-					"The Property {} is actually the same instance as {} - " +
+					"Is the same instance as {} - " +
 					"The containing PropertyGroups are sharing a reference to the same " +
 					"Property instance.  Properties must each be independant " +
 					"instances because they each identify unique values.", 
-				badPropertyDef.getName(), refPropertyDef.getName());
+				refPropertyDef.getName());
 		}
 	}
 	
@@ -87,13 +97,16 @@ public abstract class ConstructionProblem extends Problem {
 		public Loader getLoader() {
 			return loader;
 		}
-
+		
 		@Override
-		public String getMessage() {
-			return TextUtil.format("Two loaders of type {}  " +
-					"are actually the same Loader instance. " +
-					"Multiple loaders of the same type are allowed, but they must be separate instances.",
-				loader.getClass().getCanonicalName());
+		public String getProblemContext() {
+			return TextUtil.format("Multiple loaders of type {}", loader.getClass().getCanonicalName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "The same Loader instance has been added multiple times. " +
+					"Loaders of the same type are allowed, but they must be separate instances.";
 		}
 	}
 	
@@ -110,14 +123,19 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		@Override
-		public String getMessage() {
-			return TextUtil.format(
-				"A security exception blocked to access members of the PropertyGroup {}.  " +
-				"{} must be able to read class members via reflection, even package protected " +
-				"interfaces.  Is there a security policy in place that is preventing this?",
-				badPropertyDef.getGroup().getCanonicalName(), AndHow.ANDHOW_INLINE_NAME);
+		public String getProblemContext() {
+			return TextUtil.format("PropertyGroup {}", badPropertyDef.getGroup().getCanonicalName());
 		}
 		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format(
+				"A security exception was thrown while trying to read class members.  " +
+				"{} must read PropertyGroup class members via reflection to build Property names. " +
+				"To fix, ensure that all PropertyGroup members are public or turn off " +
+				"JVM security policies that might be preventing this.",
+				AndHow.ANDHOW_INLINE_NAME);
+		}
 	}
 	
 	public static class InvalidDefaultValue extends ConstructionProblem {
@@ -131,12 +149,17 @@ public abstract class ConstructionProblem extends Problem {
 		public String getInvalidMessage() {
 			return invalidMessage;
 		}
-
+		
 		@Override
-		public String getMessage() {
+		public String getProblemContext() {
+			return TextUtil.format("Property {}", badPropertyDef.getName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
 			return TextUtil.format(
-					"The Property {} has a default value that does not pass validation: {}",
-				badPropertyDef.getName(), invalidMessage);
+					"Has a default value that does not pass validation: {}",
+				invalidMessage);
 		}
 	}
 	
@@ -155,10 +178,15 @@ public abstract class ConstructionProblem extends Problem {
 		}
 		
 		@Override
-		public String getMessage() {
+		public String getProblemContext() {
+			return TextUtil.format("Property {}", badPropertyDef.getName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
 			return TextUtil.format(
-					"The Property {} has a Validator of type {} that is not configured correctly: {}",
-				badPropertyDef.getName(), valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
+					"Has a Validator of type {} that is not configured correctly: {}",
+				valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
 		}
 	}
 }

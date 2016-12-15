@@ -7,27 +7,50 @@ package yarnandtail.andhow;
 public abstract class Problem {
 
 	/**
-	 * A detailed description of the problem.
+	 * A complete description of the problem w/ context and problem description.
+	 * 
+	 * Constructed by stringing the problem context and the problem description
+	 * together:  [Context]: [Description]
 	 *
 	 * @return
 	 */
-	public abstract String getMessage();
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
+	}
+	
+	/**
+	 * The context for the problem, for the user.
+	 * 
+	 * For a construction problem for a property, this would be the Property
+	 * canonical name.  For a invalid value, it might be the Property name
+	 * and where it was loaded from.
+	 * 
+	 * 
+	 * @return 
+	 */
+	public abstract String getProblemContext();
+	
+	/**
+	 * The problem description, for the user.
+	 * 
+	 * It should be able to be tacked on to the 
+	 * @return 
+	 */
+	public abstract String getProblemDescription();
 	
 
 	/**
-	 * Full definition of where a value for a property would be loaded from, 
-	 * which is a PropertyDef plus a Loader.
+	 * Location of a value, as loaded by a specific loader for a specific Property.
 	 * 
 	 * The actual value itself is not included b/c its type varies depending on
 	 * the context of the problem and it is at least useful to unify where the
 	 * value came from, if not the value itself.
 	 * 
-	 * TODO:  Remame to LoadedPropertyCoord??
 	 */
-	public static class PropertyValueDef extends PropertyDef {
+	public static class ValueCoord extends PropertyDef {
 		Loader loader;
 		
-		public PropertyValueDef(Loader loader, Class<? extends PropertyGroup> group, Property<?> prop) {
+		public ValueCoord(Loader loader, Class<? extends PropertyGroup> group, Property<?> prop) {
 			super(group, prop);
 			this.loader = loader;
 		}
@@ -43,7 +66,7 @@ public abstract class Problem {
 	}
 	
 	/**
-	 * Full definition of a Property, including its group.
+	 * Logical location of a Property (Group and Property).
 	 * 
 	 */
 	public static class PropertyDef {

@@ -40,7 +40,7 @@ public class ReportGenerator {
 			out.println("Detailed list of Construction Problems:");
 			
 			for (ConstructionProblem p : probs) {
-				out.println(TextUtil.wrap(p.getMessage(), DEFAULT_LINE_WIDTH, "", SECOND_LINE_INDENT));
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", p.getFullMessage());
 			}
 			
 		}
@@ -55,10 +55,7 @@ public class ReportGenerator {
 			out.println("Detailed list of Value Problems:");
 			
 			for (ValueProblem p : probs) {
-				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "Property {} loaded from {}: {}", 
-						p.getPropertyValueDef().getName(), 
-						p.getPropertyValueDef().getLoader().getSpecificLoadDescription(),
-						p.getMessage());
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", p.getFullMessage());
 			}
 			
 		}

@@ -3,6 +3,8 @@ package yarnandtail.andhow;
 /**
  * A problem of required values not being specified.
  * @author eeverman
+ * 
+ * TODO:  Needs to extent Problem
  */
 public class RequirementProblem {
 	
