@@ -33,11 +33,24 @@ public class AndHow implements ValueMap {
 	AndHowCore core;
 	Reloader reloader;
 	
+	/**
+	 * Private constructor - Use the AndHowBuilder to build instances.
+	 * 
+	 * @param naming
+	 * @param loaders
+	 * @param registeredGroups
+	 * @param cmdLineArgs
+	 * @param forcedValues
+	 * @param defaultValues
+	 * @throws AppFatalException 
+	 */
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PropertyValue> startingValues)
+			String[] cmdLineArgs, List<PropertyValue> forcedValues, 
+			List<PropertyValue> defaultValues)
 			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
+		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, 
+				forcedValues, defaultValues);
 		reloader = new Reloader(this);
 	}
 	
@@ -67,25 +80,27 @@ public class AndHow implements ValueMap {
 	 * been constructed.
 	 * 
 	 * It returns a reference to the reloader, which can be used for reloading
-	 * durint unit test (not for production).
+	 * during unit test (not for production).
 	 * 
 	 * @param naming
 	 * @param loaders
 	 * @param registeredGroups
 	 * @param cmdLineArgs
-	 * @param startingValues
+	 * @param forcedValues
 	 * @return
 	 * @throws AppFatalException 
 	 */
 	private static Reloader build(
-			NamingStrategy naming, List<Loader> loaders, List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PropertyValue> startingValues) throws AppFatalException, RuntimeException {
+			NamingStrategy naming, List<Loader> loaders, 
+			List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs, 
+			List<PropertyValue> forcedValues, List<PropertyValue> defaultValues) throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
 				throw new RuntimeException("Already constructed!");
 			} else {
-				singleInstance = new AndHow(naming, loaders, registeredGroups, cmdLineArgs, startingValues);
+				singleInstance = new AndHow(naming, loaders, registeredGroups, 
+						cmdLineArgs, forcedValues, defaultValues);
 				return singleInstance.reloader;
 			}
 		}
@@ -158,6 +173,7 @@ public class AndHow implements ValueMap {
 	public static class AndHowBuilder {
 		//User config
 		private final ArrayList<PropertyValue> _forcedValues = new ArrayList();
+		private final ArrayList<PropertyValue> _defaultValues = new ArrayList();
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = new BasicNamingStrategy();
 		private final List<String> _cmdLineArgs = new ArrayList();
@@ -241,6 +257,30 @@ public class AndHow implements ValueMap {
 			this._forcedValues.addAll(startVals);
 			return this;
 		}
+		
+		/**
+		 * Set a default value for a Property.
+		 * 
+		 * TODO:  Better docs for forced and default
+		 * @param property
+		 * @param value
+		 * @return 
+		 */
+		public AndHowBuilder defaultValue(Property<?> property, Object value) {
+			_defaultValues.add(new PropertyValue(property, value));
+			return this;
+		}
+		
+		/**
+		 * Set default values for a set of Properties.
+		 * 
+		 * @param defaultVals A list w/ Properties and values bundled into a PropertyValue.
+		 * @return 
+		 */
+		public AndHowBuilder defaultValues(List<PropertyValue> defaultVals) {
+			this._defaultValues.addAll(defaultVals);
+			return this;
+		}
 
 		/**
 		 * Adds the command line arguments to the list being build of cmd line args.
@@ -298,7 +338,7 @@ public class AndHow implements ValueMap {
 		 */
 		public void build() throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues);
+			AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
 		}
 
 		/**
@@ -320,7 +360,7 @@ public class AndHow implements ValueMap {
 		 */
 		public AndHow.Reloader buildForUnitTesting() throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			return AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues);
+			return AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
 		}
 		
 		/**
@@ -334,7 +374,7 @@ public class AndHow implements ValueMap {
 		 */
 		public void reloadForUnitTesting(AndHow.Reloader reloader) throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			reloader.reload(_namingStrategy, _loaders, _groups,  args, _forcedValues);
+			reloader.reload(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
 		}
 
 	}
@@ -358,15 +398,16 @@ public class AndHow implements ValueMap {
 		 * @param registeredGroups
 		 * @param cmdLineArgs
 		 * @param forcedValues
+		 * @param defaultValues
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
 				List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs, 
-				List<PropertyValue> forcedValues) 
+				List<PropertyValue> forcedValues, List<PropertyValue> defaultValues) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues);
+				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues, defaultValues);
 			}
 		}
 		
