@@ -16,9 +16,10 @@ public class LoaderValues implements ValueMap {
 	
 	private final Loader loader;
 	private final List<PropertyValue> values;
+	private final List<LoaderProblem> problems;
 	private boolean problem = false;
 
-	public LoaderValues(Loader loader, List<PropertyValue> inValues) {
+	public LoaderValues(Loader loader, List<PropertyValue> inValues, List<LoaderProblem> problems) {
 		
 		if (loader == null) {
 			throw new RuntimeException("The loader cannot be null");
@@ -43,6 +44,12 @@ public class LoaderValues implements ValueMap {
 			
 		} else {
 			values = EMPTY_PROP_VALUE_LIST;
+		}
+		
+		this.problems = problems;
+		
+		if (problems != null && problems.size() > 0) {
+			problem = true;
 		}
 	}
 
@@ -104,6 +111,12 @@ public class LoaderValues implements ValueMap {
 	public boolean hasProblems() {
 		return problem;
 	}
-	
-	
+
+	/**
+	 * Returns loader related problems, if any.
+	 * @return May be null
+	 */
+	public List<LoaderProblem> getProblems() {
+		return problems;
+	}
 }

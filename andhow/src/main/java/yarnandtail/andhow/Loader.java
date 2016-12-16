@@ -19,8 +19,7 @@ import yarnandtail.andhow.internal.RuntimeDefinition;
  */
 public interface Loader {
 	LoaderValues load(RuntimeDefinition runtimeDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues, 
-			List<LoaderException> loaderExceptions) throws FatalException;
+			ValueMapWithContext existingValues);
 	
 	/**
 	 * A group of Properties used to control the loader's behavior, such

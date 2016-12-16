@@ -1,6 +1,7 @@
 package yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +57,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 				//remove
 				effValues.removeIf((PropertyValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
 			}
-			return new LoaderValues(loader, effValues);
+			return new LoaderValues(loader, effValues, Collections.emptyList());
 		} else {
 			return null;
 		}

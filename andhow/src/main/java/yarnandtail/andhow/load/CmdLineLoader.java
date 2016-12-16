@@ -1,10 +1,10 @@
 package yarnandtail.andhow.load;
 
 import yarnandtail.andhow.ParsingException;
-import yarnandtail.andhow.LoaderException;
 import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.AndHow;
+import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.RuntimeDefinition;
@@ -21,10 +21,11 @@ public class CmdLineLoader extends BaseLoader {
 	
 	@Override
 	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) {
+			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
-			
+		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		
 		if (cmdLineArgs != null) {
 			for (String s : cmdLineArgs) {
 				try {
@@ -33,21 +34,19 @@ public class CmdLineLoader extends BaseLoader {
 					attemptToAdd(appConfigDef, values, kvp.getName(), kvp.getValue());
 
 				} catch (ParsingException e) {
-					loaderExceptions.add(
-							new LoaderException(e, this, null, "Command line parameters")
-					);
+					problems.add(new LoaderProblem.ParsingLoaderProblem(this, null, null, e));
 				}
 			}
 
 			values.trimToSize();
 		}
 		
-		return new LoaderValues(this, values);
+		return new LoaderValues(this, values, problems);
 	}
 	
 	@Override
 	public String getSpecificLoadDescription() {
-		return "arguments passed in from the command line at startup";
+		return "arguments on the command line at startup";
 	}
 	
 }
