@@ -10,22 +10,22 @@ public interface NamingStrategy {
 	
 	/**
 	 * Build a list of names for the Property
-	 * @param configPoint Names for this point
-	 * @param parentGroup ConfigPoints must be contained in a PropertyGroup to be exposed
-	 * @param fieldName The name of the static field in the parentGroup that refers to the configPoint
+	 * @param prop The Property to be named
+	 * @param containingGroup Properties must be contained in a PropertyGroup to be exposed
+	 * @param fieldName The name of the static field in the containingGroup that refers to the prop
 	 * @return 
 	 * @deprecated - To hard to remove the existing testing using fieldName right now, so keeping this version.
 	 */
-	Naming buildNames(Property configPoint, Class<? extends PropertyGroup> parentGroup, String fieldName);
+	Naming buildNames(Property prop, Class<? extends PropertyGroup> containingGroup, String fieldName);
 	
 	/**
 	 * Builds a list of names for this Property, using the canoicalName
-	 * @param configPoint
-	 * @param parentGroup
+	 * @param prop
+	 * @param containingGroup
 	 * @param canonicalName
 	 * @return 
 	 */
-	Naming buildNamesFromCanonical(Property configPoint, Class<? extends PropertyGroup> parentGroup, String canonicalName);
+	Naming buildNamesFromCanonical(Property prop, Class<? extends PropertyGroup> containingGroup, String canonicalName);
 	
 	public static class Naming {
 		private String canonicalName;

@@ -54,7 +54,7 @@ public class AndHow implements ValueMap {
 			return singleInstance;
 		} else {
 			throw new RuntimeException(ANDHOW_INLINE_NAME + " has not been initialized.  " +
-					"Possible causes:  1) There is a race condition where ConfigPoint access may happen before configuration " +
+					"Possible causes:  1) There is a race condition where Property access may happen before configuration " +
 					"2) There is no configuration at the entry point to the application. " +
 					"Refer to " + ANDHOW_URL + " for code examples and FAQs.");
 		}
@@ -96,23 +96,23 @@ public class AndHow implements ValueMap {
 		return core.getPropertyGroups();
 	}
 
-	public List<Property<?>> getPoints() {
+	public List<Property<?>> getProperties() {
 		return core.getProperties();
 	}
 	
 	@Override
-	public boolean isExplicitlySet(Property<?> point) {
-		return core.isExplicitlySet(point);
+	public boolean isExplicitlySet(Property<?> prop) {
+		return core.isExplicitlySet(prop);
 	}
 	
 	@Override
-	public <T> T getExplicitValue(Property<T> point) {
-		return core.getExplicitValue(point);
+	public <T> T getExplicitValue(Property<T> prop) {
+		return core.getExplicitValue(prop);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> point) {
-		return core.getEffectiveValue(point);
+	public <T> T getEffectiveValue(Property<T> prop) {
+		return core.getEffectiveValue(prop);
 	}
 	
 
@@ -142,7 +142,7 @@ public class AndHow implements ValueMap {
 	 * 
 	 * There is no return value because there is no need to hold a reference
 	 * to anything past framework startup.  After a successful startup, Property
-	 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+	 * values can be read directly.  For instance, for a Property named 'MyInt':
 	 * {@code Integer value = MyInt.getValue();}
 
 	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
@@ -291,7 +291,7 @@ public class AndHow implements ValueMap {
 		 * 
 		 * There is no return value because there is no need to hold a reference
 		 * to anything past framework startup.  After a successful startup, Property
-		 * values can be read directly.  For instance, for an IntConfigPoint named 'MyInt':
+		 * values can be read directly.  For instance, for a property named 'MyInt':
 		 * {@code Integer value = MyInt.getValue();}
 		 * 
 		 * @throws AppFatalException If the startup fails.

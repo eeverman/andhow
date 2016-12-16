@@ -34,14 +34,14 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
 
 		if (filePath != null) {
-			specificLoadDescription = "File at: " + filePath;
+			specificLoadDescription = "file at: " + filePath;
 			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 		}
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
 			File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
 			
-			specificLoadDescription = "File at: " + filePath;
+			specificLoadDescription = "file at: " + filePath;
 			
 			if (relPath != null) {
 				props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
@@ -50,7 +50,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		
 		if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
 			
-			specificLoadDescription = "File on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+			specificLoadDescription = "file on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
 			
 			props = loadPropertiesFromClasspath(
 				existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
@@ -92,12 +92,18 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 	
 
-	protected Properties loadPropertiesFromFilesystem(File propFile, Property<?> fromPoint) throws FatalException {
+	/**
+	 * @param propFile the File to load from
+	 * @param fromProp For reference, which Property identified this file to load from
+	 * @return
+	 * @throws FatalException 
+	 */
+	protected Properties loadPropertiesFromFilesystem(File propFile, Property<?> fromProp) throws FatalException {
 		
 		if (propFile.exists() && propFile.canRead()) {
 
 			try (FileInputStream in = new FileInputStream(propFile)) {
-				return loadPropertiesFromInputStream(in, fromPoint, propFile.getAbsolutePath());
+				return loadPropertiesFromInputStream(in, fromProp, propFile.getAbsolutePath());
 			} catch (IOException e) {
 				//this exception from opening the FileInputStream
 				//Ignore - non-fatal b/c we can try another
@@ -107,15 +113,30 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 		return null;	
 	}
 	
-	protected Properties loadPropertiesFromClasspath(String classpath, Property<?> fromPoint) throws FatalException {
+	/**
+	 * 
+	 * @param classpath
+	 * @param fromProp For reference, which Property identified this file to load from
+	 * @return
+	 * @throws FatalException 
+	 */
+	protected Properties loadPropertiesFromClasspath(String classpath, Property<?> fromProp) throws FatalException {
 		
 		InputStream inS = PropFileLoader.class.getResourceAsStream(classpath);
 		
-		return loadPropertiesFromInputStream(inS, fromPoint, classpath);
+		return loadPropertiesFromInputStream(inS, fromProp, classpath);
 
 	}
 	
-	protected Properties loadPropertiesFromInputStream(InputStream inputStream, Property<?> fromPoint, String fromPath) throws FatalException {
+	/**
+	 * 
+	 * @param inputStream
+	 * @param fromProp For reference, which Property identified this file to load from
+	 * @param fromPath
+	 * @return
+	 * @throws FatalException 
+	 */
+	protected Properties loadPropertiesFromInputStream(InputStream inputStream, Property<?> fromProp, String fromPath) throws FatalException {
 
 		if (inputStream == null) return null;
 		
@@ -125,7 +146,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 			return props;
 		} catch (Exception e) {
 
-			LoaderException le = new LoaderException(e, this, fromPoint,
+			LoaderException le = new LoaderException(e, this, fromProp,
 					"The properties file at '" + fromPath + 
 					"' exists and is accessable, but was unparsable.");
 
@@ -209,47 +230,47 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	@Override
 	public void printProperty(PrintStream out, Class<? extends PropertyGroup> group,
-			Property<?> point) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+			Property<?> prop) throws IllegalArgumentException, IllegalAccessException, SecurityException {
 		
 		
-		String pointFieldName = PropertyGroup.getFieldName(group, point);
-		String pointCanondName = PropertyGroup.getCanonicalName(group, point);
+		String propFieldName = PropertyGroup.getFieldName(group, prop);
+		String propCanonName = PropertyGroup.getCanonicalName(group, prop);
 		
 		out.println();
 		TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, "{} ({}) {}{}", 
-				pointFieldName,
-				point.getValueType().getDestinationType().getSimpleName(),
-				(point.isRequired())?ConfigSamplePrinter.REQUIRED_KEYWORD:"",
-				(TextUtil.trimToNull(point.getShortDescription()) == null)?"":" - " + point.getShortDescription());
+				propFieldName,
+				prop.getValueType().getDestinationType().getSimpleName(),
+				(prop.isRequired())?ConfigSamplePrinter.REQUIRED_KEYWORD:"",
+				(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription());
 		
-		if (point.getDefaultValue() != null) {
-			out.println(LINE_PREFIX + DEFAULT_VALUE_TEXT + ": " + point.getDefaultValue());
+		if (prop.getDefaultValue() != null) {
+			out.println(LINE_PREFIX + DEFAULT_VALUE_TEXT + ": " + prop.getDefaultValue());
 		}
 		
-		if (TextUtil.trimToNull(point.getHelpText()) != null) {
-			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, point.getHelpText());
+		if (TextUtil.trimToNull(prop.getHelpText()) != null) {
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, prop.getHelpText());
 		}
 		
-		if (point.getValidators().size() == 1) {
-			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, THE_VALUE_MUST_TEXT + " " + point.getValidators().get(0).getTheValueMustDescription());
+		if (prop.getValidators().size() == 1) {
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, LINE_PREFIX, THE_VALUE_MUST_TEXT + " " + prop.getValidators().get(0).getTheValueMustDescription());
 		}
 		
-		if (point.getValidators().size() > 1) {
+		if (prop.getValidators().size() > 1) {
 			out.println(LINE_PREFIX + THE_VALUE_MUST_TEXT + ":");	
-			for (Validator v : point.getValidators()) {
+			for (Validator v : prop.getValidators()) {
 				out.println(LINE_PREFIX + "\t- " + v.getTheValueMustDescription());
 			}
 		}
 		
 		//print the actual sample line
-		if (point.getDefaultValue() != null) {
+		if (prop.getDefaultValue() != null) {
 			TextUtil.println(out, "{} = {}", 
-					pointCanondName, 
-					point.getDefaultValue());
+					propCanonName, 
+					prop.getDefaultValue());
 		} else {
 			TextUtil.println(out, "{} = [{}]", 
-					pointCanondName, 
-					point.getValueType().getDestinationType().getSimpleName());
+					propCanonName, 
+					prop.getValueType().getDestinationType().getSimpleName());
 		}
 		
 		
@@ -267,8 +288,6 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	}
 
 	
-	
-	//TODO:  WOULD LIKE TO HAVE A REQUIRE-ONE TYPE ConfigGroup
 	@GroupInfo(
 			name="PropFileLoader Configuration",
 			desc="Configure one of these properties to specify a location to load a properties file from. " +

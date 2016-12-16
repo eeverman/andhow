@@ -3,9 +3,9 @@ package yarnandtail.andhow.name;
 import java.util.ArrayList;
 import java.util.List;
 import static yarnandtail.andhow.Property.EMPTY_STRING_LIST;
-import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
  *

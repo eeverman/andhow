@@ -13,7 +13,7 @@ public interface ValueType<T> {
 	/**
 	 * Attempts to convert the passed String into the type represented
 	 * by the destinationType.
-	 * If this configPoint is a multiValue, each value should be converted separately.
+	 * If this Property is a multiValue, each value should be converted separately.
 	 * @param sourceValue
 	 * @return
 	 * @throws ParsingException 

@@ -1,8 +1,8 @@
 package yarnandtail.andhow.name;
 
-import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
  * A RISKY and NON-PRODUCTION strategy that uses aliases as-is w/o any prefix.

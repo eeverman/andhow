@@ -11,8 +11,8 @@ import java.util.List;
 public class AppFatalException extends RuntimeException {
 	
 	private final List<ConstructionProblem> constructProblems;	
-	private final List<PropertyValueProblem> pointValueProblems;
-	private final List<RequirementProblem> requirementsProblems;
+	private final List<ValueProblem> valueProblems;
+	private final List<RequirementProblem> requirementProblems;
 	
 	public AppFatalException(List<ConstructionProblem> constructProblems) {
 		super("There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
@@ -20,29 +20,29 @@ public class AppFatalException extends RuntimeException {
 				"See System.err, out or the log files for more details.");
 		
 		this.constructProblems = constructProblems;
-		this.pointValueProblems = Collections.emptyList();
-		this.requirementsProblems = Collections.emptyList();
+		this.valueProblems = Collections.emptyList();
+		this.requirementProblems = Collections.emptyList();
 	}
 	
 	public AppFatalException(String message,
-			List<PropertyValueProblem> pointValueProblems, List<RequirementProblem> requirementsProblems) {
+			List<ValueProblem> propValueProblems, List<RequirementProblem> requirementProblems) {
 		super(message);
 		
 		this.constructProblems = Collections.emptyList();
-		this.pointValueProblems = pointValueProblems;
-		this.requirementsProblems = requirementsProblems;
+		this.valueProblems = propValueProblems;
+		this.requirementProblems = requirementProblems;
 	}
 	
 	public List<ConstructionProblem> getConstructionProblems() {
 		return constructProblems;
 	}
 
-	public List<PropertyValueProblem> getPointValueProblems() {
-		return pointValueProblems;
+	public List<ValueProblem> getValueProblems() {
+		return valueProblems;
 	}
 
-	public List<RequirementProblem> getRequirementsProblems() {
-		return requirementsProblems;
+	public List<RequirementProblem> getRequirementProblems() {
+		return requirementProblems;
 	}
 
 }

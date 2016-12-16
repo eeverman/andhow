@@ -12,7 +12,7 @@ import yarnandtail.andhow.ValueMap;
  * true.  Best used for on/off flags, particularly if used from command line,
  * where a <i>null</i> value makes no sense.
  * 
- * A FlagProp is similar to a Boolean point, but with these differences:
+ * A FlagProp is similar to a Boolean Property, but with these differences:
  <ul>
  * <li>A Flag is never null - it will always return true or false.</li>
  * <li>Loaders will interpret the presence of the flag as setting the flag to

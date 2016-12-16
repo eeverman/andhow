@@ -14,7 +14,7 @@ import yarnandtail.andhow.load.PropFileLoader;
  */
 public class SampleRestClientAppTest extends AndHowTestBase {
 	
-	String propFileLoaderPointbase = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
+	String propFileLoaderConfigBaseName = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 	String[] cmdLineArgs = new String[0];
 
 	
@@ -29,7 +29,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
+			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/all.points.speced.properties",
 		};
 				
@@ -54,10 +54,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testMinimumPointsAreSet() {
+	public void testMinimumPropsAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
+			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/minimum.points.speced.properties",
 		};
 				
@@ -85,7 +85,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testInvalidValues() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderPointbase + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
+			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
 				"/yarnandtail/andhow/example/restclient/invalid.properties",
 		};
 				
@@ -108,11 +108,13 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			expectedProblemPoints.add(SampleRestClientGroup.REST_HOST);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_PORT);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
+			expectedProblemPoints.add(SampleRestClientGroup.RETRY_COUNT);
 			
-			assertEquals(3, e.getPointValueProblems().size());
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(0).getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(1).getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getPointValueProblems().get(2).getProperty()));
+			assertEquals(4, e.getValueProblems().size());
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(0).getPropertyValueCoord().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(1).getPropertyValueCoord().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(2).getPropertyValueCoord().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(3).getPropertyValueCoord().getProperty()));
 		}
 		
 

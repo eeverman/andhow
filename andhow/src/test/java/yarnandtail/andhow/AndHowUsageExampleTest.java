@@ -73,10 +73,10 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 					.reloadForUnitTesting(reloader);
 			fail();
 		} catch (AppFatalException ce) {
-			assertEquals(3, ce.getRequirementsProblems().size());
-			assertEquals(UI_CONFIG.DISPLAY_NAME, ((RequirementProblem)(ce.getRequirementsProblems().get(0))).getPoint());
-			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ((RequirementProblem)(ce.getRequirementsProblems().get(1))).getPoint());
-			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ((RequirementProblem)(ce.getRequirementsProblems().get(2))).getPoint());
+			assertEquals(3, ce.getRequirementProblems().size());
+			assertEquals(UI_CONFIG.DISPLAY_NAME, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
+			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ce.getRequirementProblems().get(2).getPropertyCoord().getProperty());
 		}
 	}
 	

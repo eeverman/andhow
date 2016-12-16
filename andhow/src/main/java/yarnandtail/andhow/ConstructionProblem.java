@@ -6,71 +6,52 @@ package yarnandtail.andhow;
  * 
  * @author ericeverman
  */
-public abstract class ConstructionProblem {
+public abstract class ConstructionProblem extends Problem {
 	
-	protected PropertyDef refPropertyDef;
-	protected PropertyDef badPropertyDef;
-		
+	/** The Property that actually has the problem */
+	protected PropertyCoord badPropertyCoord;
+	
+	/** For construction problems that duplicate or reference another Property... */
+	protected PropertyCoord refPropertyCoord;
+	
 	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
+	 * For Properties that have some type of duplication w/ other properties, this is the
 	 * Property that is duplicated (the earlier of the two duplicates).
 	 * @return May return null if not applicable.
 	 */
-	public PropertyDef getRefProperty() {
-		return refPropertyDef;
+	public PropertyCoord getRefPropertyCoord() {
+		return refPropertyCoord;
 	}
-	
+
 	/**
-	 * For Properties that have some type of duplication w/ other points, this is the
-	 * property that is the duplicate one (the later of the two duplicates).
+	 * The Property that has the problem.
+	 * 
 	 * @return May return null if not applicable.
 	 */
-	public PropertyDef getBadProperty() {
-		return badPropertyDef;
+	public PropertyCoord getBadPropertyCoord() {
+		return badPropertyCoord;
 	}
 	
-	/**
-	 * A detailed description of the problem.
-	 * 
-	 * @return 
-	 */
-	public abstract String getMessage();
-	
-	public static class PropertyDef {
-		Property<?> property;
-		Class<? extends PropertyGroup> group;
-		String name;
-
-		public PropertyDef(Property<?> prop, Class<? extends PropertyGroup> group, String name) {
-			this.property = prop;
-			this.group = group;
-			this.name = name;
+	@Override
+	public String getProblemContext() {
+		if (badPropertyCoord != null) {
+			return TextUtil.format("Property {}", badPropertyCoord.getPropName());
+		} else {
+			return UNKNOWN;
 		}
-
-		public Property<?> getProperty() {
-			return property;
-		}
-
-		public Class<? extends PropertyGroup> getGroup() {
-			return group;
-		}
-
-		public String getName() {
-			return name;
-		}
-		
 	}
+	
+	
 	
 	public static class NonUniqueNames extends ConstructionProblem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName, 
-				String conflictName) {
+				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends PropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
 			
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
+			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
 			this.conflictName = conflictName;
 		}
 
@@ -79,27 +60,30 @@ public abstract class ConstructionProblem {
 		}
 		
 		@Override
-		public String getMessage() {
-			return "The property " + badPropertyDef.getName() + " has a name that duplicates " +
-					refPropertyDef.getName() + ".  The conflicting name/alias is '" + conflictName + "'";
+		public String getProblemDescription() {
+			return TextUtil.format("Has the name {} which a name in use by {}. " +
+					"All names must be unique.",
+					conflictName, refPropertyCoord.getPropName());
 		}
 	}
 	
 	public static class DuplicateProperty extends ConstructionProblem {
 
 		public DuplicateProperty(
-				Property<?> refProperty, Class<? extends PropertyGroup> refGroup, String refCanonName, 
-				Property<?> badProperty, Class<? extends PropertyGroup> badGroup, String badCanonName) {
-			this.refPropertyDef = new PropertyDef(refProperty, refGroup, refCanonName);
-			this.badPropertyDef = new PropertyDef(badProperty, badGroup, badCanonName);
+				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends PropertyGroup> badGroup, Property<?> badProperty) {
+			
+			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
 		}
 		
 		@Override
-		public String getMessage() {
-			return AndHow.ANDHOW_INLINE_NAME +  " has been configured with a duplicate Property instance, " +
-				"meaning that one or more PropertyGroups are sharing the same Property instance, which is not allowed. " +
-				"The first Property is " + refPropertyDef.getName() + ", the second is " + badPropertyDef.getName() + ". " +
-				"The first part of each name is the PropertyGroup containing the properties.";
+		public String getProblemDescription() {
+			return TextUtil.format("Is the same instance as {} - " +
+					"The containing PropertyGroups are sharing a reference to the same " +
+					"Property instance.  Properties must each be independant " +
+					"instances because they each identify unique values.", 
+				refPropertyCoord.getPropName());
 		}
 	}
 	
@@ -113,12 +97,16 @@ public abstract class ConstructionProblem {
 		public Loader getLoader() {
 			return loader;
 		}
-
+		
 		@Override
-		public String getMessage() {
-			return AndHow.ANDHOW_INLINE_NAME + " has been configured with a duplicate Loader instance " +
-					"of type " + loader.getClass().getCanonicalName() + ".  " +
-					"Multiple loaders of the same type are OK, but they must be separate instances.";
+		public String getProblemContext() {
+			return TextUtil.format("Multiple loaders of type {}", loader.getClass().getCanonicalName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "The same Loader instance has been added multiple times. " +
+					"Loaders of the same type are allowed, but they must be separate instances.";
 		}
 	}
 	
@@ -127,7 +115,7 @@ public abstract class ConstructionProblem {
 
 		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
 			this.exception = exception;
-			badPropertyDef = new PropertyDef(null, group, null);
+			badPropertyCoord = new PropertyCoord(group, null);
 		}
 
 		public Exception getException() {
@@ -135,33 +123,38 @@ public abstract class ConstructionProblem {
 		}
 		
 		@Override
-		public String getMessage() {
-			return "There was a security exception while trying to access members of " +
-				"the PropertyGroup " + badPropertyDef.getGroup().getCanonicalName() + ".  " +
-				AndHow.ANDHOW_INLINE_NAME + " must be able to read class members via reflection, even from a package protected " +
-				"interface.  Perhaps there is security policy in place that is preventing it?";
+		public String getProblemContext() {
+			return TextUtil.format("PropertyGroup {}", badPropertyCoord.getGroup().getCanonicalName());
 		}
 		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format(
+				"A security exception was thrown while trying to read class members.  " +
+				"{} must read PropertyGroup class members via reflection to build Property names. " +
+				"To fix, ensure that all PropertyGroup members are public or turn off " +
+				"JVM security policies that might be preventing this.",
+				AndHow.ANDHOW_INLINE_NAME);
+		}
 	}
 	
-
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
-		//not all context is possible b/c we don't know the type of value to pass to the validator to re-validate
 
-		public InvalidDefaultValue(Property<?> prop, Class<? extends PropertyGroup> group, String canonName, String invalidMessage) {
-			this.badPropertyDef = new PropertyDef(prop, group, canonName);
+		public InvalidDefaultValue(Class<? extends PropertyGroup> group, Property<?> prop, String invalidMessage) {
+			this.badPropertyCoord = new PropertyCoord(group, prop);
 			this.invalidMessage = invalidMessage;
 		}
 
 		public String getInvalidMessage() {
 			return invalidMessage;
 		}
-
+		
 		@Override
-		public String getMessage() {
-			return "The Property " + badPropertyDef.getName() + " is configured with a default " +
-				"value that does not meet the validation requirements: " + invalidMessage;
+		public String getProblemDescription() {
+			return TextUtil.format(
+					"Has a default value that does not pass validation: {}",
+				invalidMessage);
 		}
 	}
 	
@@ -169,10 +162,9 @@ public abstract class ConstructionProblem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Property<?> property, Class<? extends PropertyGroup> group, String canonName, 
-				Validator<?> valid) {
+				Class<? extends PropertyGroup> group, Property<?> property, Validator<?> valid) {
 			
-			this.badPropertyDef = new PropertyDef(property, group, canonName);
+			this.badPropertyCoord = new PropertyCoord(group, property);
 			this.valid = valid;
 		}
 
@@ -180,10 +172,11 @@ public abstract class ConstructionProblem {
 			return valid;
 		}
 		
-		public String getMessage() {
-			return "The property " + badPropertyDef.getName() + " has a validator of type " + 
-					valid.getClass().getSimpleName() + " that is not configured correctly: " +
-					valid.getInvalidSpecificationMessage();
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format(
+					"Has a Validator of type {} that is not configured correctly: {}",
+				valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
 		}
 	}
 }

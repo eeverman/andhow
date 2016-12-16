@@ -7,12 +7,12 @@ import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.PropertyValueProblem;
+import yarnandtail.andhow.ValueProblem;
 import yarnandtail.andhow.RequirementProblem;
 import yarnandtail.andhow.ValueMapWithContext;
 import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.NamingStrategy;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -22,15 +22,15 @@ public class AndHowUtil {
 	
 
 	/**
-	 * Build a fully populated RuntimeDefinition from the points contained in
- the passed Groups, using the NamingStrategy to generate names for each.
+	 * Build a fully populated RuntimeDefinition from the Properties contained in
+	 * the passed Groups, using the NamingStrategy to generate names for each.
 	 * 
-	 * @param groups The ConfigPointGroups from which to find ConfigPoints.  May be null
+	 * @param groups The PropertyGroups from which to find Properties.  May be null
 	 * @param naming  A naming strategy to use when reading the properties during loading
 	 * @return A fully configured instance
 	 */
 	public static RuntimeDefinition 
-		doRegisterConfigPoints(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
+		doRegisterProperties(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
 
 		RuntimeDefinition appDef = new RuntimeDefinition();
 		
@@ -62,11 +62,11 @@ public class AndHowUtil {
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
 
 		try {
-			List<PropertyGroup.NameAndProperty> nameAndPoints = PropertyGroup.getConfigPoints(group);
+			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
-			for (PropertyGroup.NameAndProperty nameAndPoint : nameAndPoints) {
-				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndPoint.property, group, nameAndPoint.canonName);
-				appDef.addProperty(group, nameAndPoint.property, names);
+			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
+				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndProp.property, group, nameAndProp.canonName);
+				appDef.addProperty(group, nameAndProp.property, names);
 			}
 			
 		} catch (Exception ex) {
@@ -86,9 +86,9 @@ public class AndHowUtil {
 	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
 			ValueMapWithContext loadedValues) {
 		
-		ArrayList<PropertyValueProblem> pvps = new ArrayList();
+		ArrayList<ValueProblem> pvps = new ArrayList();
 		
-		//build list of PointValueProblems
+		//build list of ValueProblems
 		
 		if (loadedValues != null) {
 			for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {

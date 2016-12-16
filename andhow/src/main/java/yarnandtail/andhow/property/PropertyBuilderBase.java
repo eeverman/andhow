@@ -44,7 +44,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	//an appropriate subclass of PropertyBuilderBase.
 	
 	//All subclasses should have a constructor that looks like this:
-	//	public [[TYPE]]PointBuilder() {
+	//	public [[TYPE]]Builder() {
 	//		this.instance = this;	//Required to set instance to a correct type
 	//		this.valueType([[type]]Type.instance());
 	//	}
