@@ -6,7 +6,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
@@ -21,12 +20,10 @@ public class CmdLineLoaderTest {
 	
 	RuntimeDefinition appDef;
 	ValueMapWithContextMutable appValuesBuilder;
-	ArrayList<LoaderException> loaderExceptions;
 
 	@Before
 	public void init() {
 		appValuesBuilder = new ValueMapWithContextMutable();
-		loaderExceptions = new ArrayList();
 		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
@@ -54,7 +51,7 @@ public class CmdLineLoaderTest {
 		
 		CmdLineLoader cll = new CmdLineLoader();
 		
-		LoaderValues result = cll.load(appDef, args, appValuesBuilder, loaderExceptions);
+		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
 		assertEquals("test", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
 		assertEquals("not_null", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));

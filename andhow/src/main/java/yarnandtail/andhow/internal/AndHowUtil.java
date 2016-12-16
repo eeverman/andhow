@@ -6,6 +6,7 @@ import java.util.List;
 import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
@@ -83,8 +84,8 @@ public class AndHowUtil {
 		}
 	}
 	
-	public static AppFatalException buildFatalException(ArrayList<RequirementProblem> requirementsProblems,
-			ValueMapWithContext loadedValues) {
+	public static AppFatalException buildFatalException(List<LoaderProblem> loaderProblems, 
+			List<RequirementProblem> requirementsProblems, ValueMapWithContext loadedValues) {
 		
 		ArrayList<ValueProblem> pvps = new ArrayList();
 		
@@ -101,7 +102,7 @@ public class AndHowUtil {
 		return new AppFatalException(
 				"Unable to complete application configuration due to problems. " +
 				"See the System.err out or the log files for complete details.",
-				pvps, requirementsProblems);
+				loaderProblems, pvps, requirementsProblems);
 		
 	}
 }

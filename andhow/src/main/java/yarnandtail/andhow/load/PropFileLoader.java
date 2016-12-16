@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.LoaderException;
 import java.util.Map.Entry;
 import java.util.Properties;
 import yarnandtail.andhow.*;
@@ -26,64 +25,74 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	
 	@Override
 	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) throws FatalException {
+			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
+		ArrayList<LoaderProblem> problems = new ArrayList(0);
 		Properties props = null;
 		
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);
 
-		if (filePath != null) {
-			specificLoadDescription = "file at: " + filePath;
-			props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
-		}
 		
-		if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
-			File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
-			
-			specificLoadDescription = "file at: " + filePath;
-			
-			if (relPath != null) {
-				props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
+		try {
+			if (filePath != null) {
+				specificLoadDescription = "file at: " + filePath;
+				props = loadPropertiesFromFilesystem(new File(filePath), CONFIG.FILESYSTEM_PATH);			
 			}
-		}
-		
-		if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
-			
-			specificLoadDescription = "file on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
-			
-			props = loadPropertiesFromClasspath(
-				existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
 
-		}
+			if (props == null && existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH) != null) {
+				File relPath = buildExecutableRelativePath(existingValues.getEffectiveValue(CONFIG.EXECUTABLE_RELATIVE_PATH));
 
-		if (props == null) {
-			throw new FatalException(null,
-				"Expected to find one of the PropFileLoader configuration properties " +
-				"pointing to a valid file, but couldn't read any file. ");
-		}
-		
-		for(Entry<Object, Object> entry : props.entrySet()) {
-			if (entry.getKey() != null && entry.getValue() != null) {
-				String k = entry.getKey().toString();
-				String v = entry.getValue().toString();
-				
-				try {
+				specificLoadDescription = "file at: " + filePath;
 
-					attemptToAdd(appConfigDef, values, k, v);
-
-				} catch (ParsingException e) {
-					loaderExceptions.add(new LoaderException(e, this, null, specificLoadDescription)
-					);
+				if (relPath != null) {
+					props = loadPropertiesFromFilesystem(relPath, CONFIG.EXECUTABLE_RELATIVE_PATH);
 				}
-				
-				
 			}
+
+			if (props == null && existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH) != null) {
+
+				specificLoadDescription = "file on classpath at: " + existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH);
+
+				props = loadPropertiesFromClasspath(
+					existingValues.getEffectiveValue(CONFIG.CLASSPATH_PATH), CONFIG.CLASSPATH_PATH);
+
+			}
+
+			if (props != null) {
+
+				for(Entry<Object, Object> entry : props.entrySet()) {
+					if (entry.getKey() != null && entry.getValue() != null) {
+						String k = entry.getKey().toString();
+						String v = entry.getValue().toString();
+
+						try {
+							attemptToAdd(appConfigDef, values, k, v);
+						} catch (ParsingException e) {
+							problems.add(new LoaderProblem.ParsingLoaderProblem(this, null, null, e));
+						}
+					}
+				}
+
+				values.trimToSize();
+			} else {
+
+				LoaderProblem p = new LoaderProblem.SourceNotFoundLoaderProblem(this, 
+						TextUtil.format("Could not find a properties file to read. " + 
+							"Make sure there is a property file at the default location {}, " +
+							"or that one of the PropFileLoader.CONFIG properties points to valid location.", 
+						CONFIG.CLASSPATH_PATH.getDefaultValue())
+				);
+
+				problems.add(p);
+			}
+		} catch (LoaderException e) {
+			problems.add(new LoaderProblem.IOLoaderProblem(this, null, null, e));
 		}
 		
-		values.trimToSize();
+
 		
-		return new LoaderValues(this, values);
+		return new LoaderValues(this, values, problems);
 	}
 	
 	@Override
@@ -96,9 +105,10 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	 * @param propFile the File to load from
 	 * @param fromProp For reference, which Property identified this file to load from
 	 * @return
-	 * @throws FatalException 
+	 * @throws LoaderException 
 	 */
-	protected Properties loadPropertiesFromFilesystem(File propFile, Property<?> fromProp) throws FatalException {
+	protected Properties loadPropertiesFromFilesystem(File propFile, Property<?> fromProp) 
+			throws LoaderException {
 		
 		if (propFile.exists() && propFile.canRead()) {
 
@@ -118,14 +128,13 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	 * @param classpath
 	 * @param fromProp For reference, which Property identified this file to load from
 	 * @return
-	 * @throws FatalException 
+	 * @throws yarnandtail.andhow.load.LoaderException
 	 */
-	protected Properties loadPropertiesFromClasspath(String classpath, Property<?> fromProp) throws FatalException {
+	protected Properties loadPropertiesFromClasspath(String classpath, Property<?> fromProp)
+			throws LoaderException {
 		
 		InputStream inS = PropFileLoader.class.getResourceAsStream(classpath);
-		
 		return loadPropertiesFromInputStream(inS, fromProp, classpath);
-
 	}
 	
 	/**
@@ -134,9 +143,10 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	 * @param fromProp For reference, which Property identified this file to load from
 	 * @param fromPath
 	 * @return
-	 * @throws FatalException 
+	 * @throws yarnandtail.andhow.load.LoaderException
 	 */
-	protected Properties loadPropertiesFromInputStream(InputStream inputStream, Property<?> fromProp, String fromPath) throws FatalException {
+	protected Properties loadPropertiesFromInputStream(
+			InputStream inputStream, Property<?> fromProp, String fromPath) throws LoaderException {
 
 		if (inputStream == null) return null;
 		
@@ -145,14 +155,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 			props.load(inputStream);
 			return props;
 		} catch (Exception e) {
-
-			LoaderException le = new LoaderException(e, this, fromProp,
-					"The properties file at '" + fromPath + 
-					"' exists and is accessable, but was unparsable.");
-
-			throw new FatalException(le,
-					"Unable to continue w/ configuration loading.  " +
-					"Fix the properties file and try again.");
+			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
 		}
 	
 	}

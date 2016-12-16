@@ -1,10 +1,10 @@
 package yarnandtail.andhow.load;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import yarnandtail.andhow.LoaderException;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.RuntimeDefinition;
@@ -20,13 +20,11 @@ public class PropFileLoaderTest {
 	
 	RuntimeDefinition appDef;
 	ValueMapWithContextMutable appValuesBuilder;
-	ArrayList<LoaderException> loaderExceptions;
 	
 	@Before
 	public void init() {
 		
 		appValuesBuilder = new ValueMapWithContextMutable();
-		loaderExceptions = new ArrayList();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		appDef = new RuntimeDefinition();
@@ -59,12 +57,12 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/example.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl);
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
 		
-		LoaderValues result = cll.load(appDef, null, appValuesBuilder, loaderExceptions);
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
 		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));

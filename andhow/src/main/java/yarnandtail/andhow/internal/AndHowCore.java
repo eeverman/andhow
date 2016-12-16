@@ -29,7 +29,7 @@ public class AndHowCore implements ValueMap {
 	private final RuntimeDefinition runtimeDef;
 	private final ValueMapWithContext loadedValues;
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
-	private final ArrayList<LoaderException> loaderExceptions = new ArrayList();
+	private final ArrayList<LoaderProblem> loaderProblems = new ArrayList();
 	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
@@ -64,29 +64,20 @@ public class AndHowCore implements ValueMap {
 		//If there are ConstructionProblems, we can't continue on to attempt to
 		//load values.
 		if (constructProblems.size() > 0) {
-			throw new AppFatalException(constructProblems);
+			AppFatalException afe = new AppFatalException(constructProblems);
+			printFailedStartupDetails(afe);
+			throw afe;
 		}
 		
-
 		//Continuing on to load values
-		try {
-			loadedValues = loadValues().getValueMapWithContextImmutable();
-		} catch (FatalException e) {
-			AppFatalException afe = AndHowUtil.buildFatalException(requirementsProblems, null);
-			
-			printFailedStartupDetails(afe);
-			
-			throw AndHowUtil.buildFatalException(requirementsProblems, null);
-		}
+		loadedValues = loadValues().getValueMapWithContextImmutable();
 
 		checkForRequiredValues();
 
-		if (requirementsProblems.size() > 0 || loadedValues.hasProblems()) {
-			AppFatalException afe = AndHowUtil.buildFatalException(requirementsProblems, loadedValues);
-			
+		if (requirementsProblems.size() > 0 || loadedValues.hasProblems() || loaderProblems.size() > 0) {
+			AppFatalException afe = AndHowUtil.buildFatalException(loaderProblems, requirementsProblems, loadedValues);
 			printFailedStartupDetails(afe);
-			
-			throw AndHowUtil.buildFatalException(requirementsProblems, loadedValues);
+			throw afe;
 		}
 	}
 	
@@ -118,7 +109,7 @@ public class AndHowCore implements ValueMap {
 		return loadedValues.getEffectiveValue(prop);
 	}
 	
-	private ValueMapWithContext loadValues() throws FatalException {
+	private ValueMapWithContext loadValues() {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
 
 		if (forcedValues.size() > 0) {
@@ -128,8 +119,9 @@ public class AndHowCore implements ValueMap {
 
 		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(runtimeDef, cmdLineArgs, existingValues, loaderExceptions);
+			LoaderValues result = loader.load(runtimeDef, cmdLineArgs, existingValues);
 			existingValues.addValues(result);
+			loaderProblems.addAll(result.getProblems());
 		}
 
 		return existingValues;

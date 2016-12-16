@@ -1,6 +1,6 @@
 package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.LoaderException;
+import java.util.Collections;
 import java.util.List;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
@@ -23,8 +23,8 @@ public class FixedValueLoader extends BaseLoader {
 	
 	@Override
 	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues, List<LoaderException> loaderExceptions) {
-		return new LoaderValues(this, values);
+			ValueMapWithContext existingValues) {
+		return new LoaderValues(this, values, Collections.emptyList());
 	}
 	
 	@Override

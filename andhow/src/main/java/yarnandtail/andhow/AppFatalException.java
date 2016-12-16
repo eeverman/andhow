@@ -10,7 +10,8 @@ import java.util.List;
  */
 public class AppFatalException extends RuntimeException {
 	
-	private final List<ConstructionProblem> constructProblems;	
+	private final List<ConstructionProblem> constructProblems;
+	private final List<LoaderProblem> loaderProblems;
 	private final List<ValueProblem> valueProblems;
 	private final List<RequirementProblem> requirementProblems;
 	
@@ -20,21 +21,27 @@ public class AppFatalException extends RuntimeException {
 				"See System.err, out or the log files for more details.");
 		
 		this.constructProblems = constructProblems;
+		this.loaderProblems = Collections.emptyList();
 		this.valueProblems = Collections.emptyList();
 		this.requirementProblems = Collections.emptyList();
 	}
 	
-	public AppFatalException(String message,
+	public AppFatalException(String message, List<LoaderProblem> loaderProblems,
 			List<ValueProblem> propValueProblems, List<RequirementProblem> requirementProblems) {
 		super(message);
 		
 		this.constructProblems = Collections.emptyList();
+		this.loaderProblems = loaderProblems;
 		this.valueProblems = propValueProblems;
 		this.requirementProblems = requirementProblems;
 	}
 	
 	public List<ConstructionProblem> getConstructionProblems() {
 		return constructProblems;
+	}
+
+	public List<LoaderProblem> getLoaderProblems() {
+		return loaderProblems;
 	}
 
 	public List<ValueProblem> getValueProblems() {

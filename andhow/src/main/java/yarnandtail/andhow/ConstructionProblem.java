@@ -61,7 +61,7 @@ public abstract class ConstructionProblem extends Problem {
 		
 		@Override
 		public String getProblemDescription() {
-			return TextUtil.format("Has the name {} which a name in use by {}. " +
+			return TextUtil.format("Has the name '{}' which is a name or alias in use by {}. " +
 					"All names must be unique.",
 					conflictName, refPropertyCoord.getPropName());
 		}
