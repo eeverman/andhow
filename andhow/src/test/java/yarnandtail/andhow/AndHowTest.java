@@ -10,6 +10,8 @@ import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.property.IntProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -76,7 +78,7 @@ public class AndHowTest extends AndHowTestBase {
 				.forceValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE)
 				.forceValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE)
 				.forceValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -100,7 +102,7 @@ public class AndHowTest extends AndHowTestBase {
 		AndHow.builder().namingStrategy(basicNaming)
 				.loader(new CmdLineLoader())
 				.group(SimpleParamsWAlias.class)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("bob", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertNull(SimpleParamsWAlias.KVP_NULL.getValue());
@@ -125,7 +127,7 @@ public class AndHowTest extends AndHowTestBase {
 				.loaders(loaders)
 				.groups(configPtGroups)
 				.cmdLineArgs(cmdLineArgsWExplicitName)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -141,7 +143,7 @@ public class AndHowTest extends AndHowTestBase {
 				.loaders(loaders)
 				.groups(configPtGroups)
 				.cmdLineArgs(cmdLineArgsWFullClassName)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
@@ -160,7 +162,7 @@ public class AndHowTest extends AndHowTestBase {
 				.loaders(loaders)
 				.groups(configPtGroups)
 				.group(SimpleParamsWAliasDuplicate.class)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -184,7 +186,7 @@ public class AndHowTest extends AndHowTestBase {
 				.loaders(loaders)
 				.loader(loaders.get(0))
 				.groups(configPtGroups)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -206,7 +208,7 @@ public class AndHowTest extends AndHowTestBase {
 					.groups(configPtGroups)
 					.group(SimpleParamsNoAliasRequired.class)
 					.cmdLineArgs(cmdLineArgsWFullClassName)
-					.reloadForUnitTesting(reloader);
+					.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

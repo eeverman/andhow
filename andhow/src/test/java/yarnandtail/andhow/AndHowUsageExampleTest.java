@@ -37,7 +37,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.loader(new CmdLineLoader())
 				.cmdLineArgs(cmdLineArgsWFullClassName)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -54,7 +54,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 				.cmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.cmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
 				.cmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -70,7 +70,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 			AndHow.builder()
 					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 					.loader(new CmdLineLoader())
-					.reloadForUnitTesting(reloader);
+					.reloadForNonPropduction(reloader);
 			fail();
 		} catch (AppFatalException ce) {
 			assertEquals(3, ce.getRequirementProblems().size());
