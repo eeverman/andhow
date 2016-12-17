@@ -140,8 +140,10 @@ public class AndHow implements ValueMap {
 	 * 'set' or 'add' is dropped from method name prefixes where possible.
 	 * 
 	 * For single valued properties, like namingStrategy, calling namingStrategy(new ANamingStrategy())
-	 * sets the value.  For list of values, like groups, calling group(SomeGroup.class)
-	 * would add the group to the list.
+	 * sets the value.  For attributes that takes lists of of values, there are
+	 * methods that add single values or multiple values, e.g. for PropertyGroups, 
+	 * calling <code>builder.group(SomeGroup.class)</code> would add a single group,
+	 * <code>builder.groups(aListOfGroups)</code> would add an entire list.
 	 * 
 	 * Usage always starts with AndHow.builder() and ends with build():
 	 * <pre>
@@ -160,13 +162,13 @@ public class AndHow implements ValueMap {
 	 * values can be read directly.  For instance, for a Property named 'MyInt':
 	 * {@code Integer value = MyInt.getValue();}
 
-	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
-	 * it is important that a single entry and configuration loading point to
-	 * your application is well defined.
-	 * 
-	 * **See buildForUnitTesting() for a small backdoor for unit testing, which
-	 * provides a non-production, unsupported way to force the AndHow framework
-	 * to reload its state.
+ Attempting to call build() a 2nd time will throw a RuntimeException, so
+ it is important that a single entry and configuration loading point to
+ your application is well defined.
+ 
+ **See buildForNonPropduction() for a small backdoor for unit testing, which
+ provides a non-production, unsupported way to force the AndHow framework
+ to reload its state.
 	 * 
 	 * @author eeverman
 	 */
@@ -230,16 +232,29 @@ public class AndHow implements ValueMap {
 		/**
 		 * Force a Property to have a specific value.
 		 * 
-		 * This is implemented by including an implicit fixed value loader that
-		 * loads these fixed values before the other loaders run.  First loaded
-		 * value wins, so this effectively forces the value to be as configured here.
+		 * Avoid using the forceValue(s) methods - consider using the defaultValue(s)
+		 * methods instead.  If a value is forced, all other configuration for it
+		 * will be ignored and it essentially becomes a constant.
+		 * This is the sledgehammer of setting values.
 		 * 
-		 * @param property
-		 * @param value
+		 * Why you might use this:  If a particular entry point to an application
+		 * requires some guaranteed configuration unique to the entry point.
+		 * For instance, a calculation module might be runnable as part of a
+		 * cluster of servers that communicate together to process tasks, or it
+		 * may run stand-alone from command-line startup.  For the command-line
+		 * entry point to the application, you might force a property that turns
+		 * off communication to other instances running in the cluster.
+		 * 
+		 * This is implemented by including an implicit fixed-value loader that
+		 * loads values before the other loaders run.  The first loaded value wins,
+		 * so this effectively forces values.
+		 * 
+		 * @param property The property to force
+		 * @param value The value to set
 		 * @return 
 		 * @throws RuntimeException if there is already a default value assigned to this property
 		 */
-		public AndHowBuilder forceValue(Property<?> property, Object value) {
+		public <T> AndHowBuilder forceValue(Property<T> property, T value) {
 
 			if (checkForExistingProperty(_forcedValues, property)) {
 				throw new RuntimeException("Cannot assign two forced values to a property");
@@ -250,11 +265,24 @@ public class AndHow implements ValueMap {
 		}
 
 		/**
-		 * Force a list of Properties to have specific values.
+		 * Force a list of Properties to have a specific values.
 		 * 
-		 * This is implemented by including an implicit fixed value loader that
-		 * loads these fixed values before the other loaders run.  First loaded
-		 * value wins, so this effectively forces the value to be as configured here.
+		 * Avoid using the forceValue(s) methods - consider using the defaultValue(s)
+		 * methods instead.  If a value is forced, all other configuration for it
+		 * will be ignored and it essentially becomes a constant.
+		 * This is the sledgehammer of setting values.
+		 * 
+		 * Why you might use this:  If a particular entry point to an application
+		 * requires some guaranteed configuration unique to the entry point.
+		 * For instance, a calculation module might be runnable as part of a
+		 * cluster of servers that communicate together to process tasks, or it
+		 * may run stand-alone from command-line startup.  For the command-line
+		 * entry point to the application, you might force a property that turns
+		 * off communication to other instances running in the cluster.
+		 * 
+		 * This is implemented by including an implicit fixed-value loader that
+		 * loads values before the other loaders run.  The first loaded value wins,
+		 * so this effectively forces values.
 		 * 
 		 * @param forcedValues A list w/ Properties and values bundled into a PropertyValue.
 		 * @return 
@@ -274,15 +302,28 @@ public class AndHow implements ValueMap {
 		}
 		
 		/**
-		 * Set a default value for a Property.
+		 * Sets a default value for the Property, overriding the default defined
+		 * in the Property itself, if any.
 		 * 
-		 * TODO:  Better docs for forced and default
+		 * Why you might use this:  There may be defaults that make sense for
+		 * particular entry points of an application.  A module might default its
+		 * output format to html when started as a web application and pdf when
+		 * started from command-line.
+		 * 
+		 * Since Loaders like the PropFileLoader take parameters to configure them,
+		 * you can easily set a default Property value here that would direct a
+		 * loader to look for a specific config file for this entry point, such
+		 * as cmd-line-startup.properties.
+		 * 
+		 * This is implemented by including an implicit fixed-value loader that
+		 * loads values after the other loaders run.
+		 * 
 		 * @param property
 		 * @param value
 		 * @return 
 		 * @throws RuntimeException if there is already a default value assigned to this property
 		 */
-		public AndHowBuilder defaultValue(Property<?> property, Object value) {
+		public <T> AndHowBuilder defaultValue(Property<T> property, T value) {
 
 			if (checkForExistingProperty(_defaultValues, property)) {
 				throw new RuntimeException("Cannot assign two default values to a property");
@@ -292,7 +333,21 @@ public class AndHow implements ValueMap {
 		}
 		
 		/**
-		 * Set default values for a set of Properties.
+		 * Sets default values for a list of Properties, overriding the defaults
+		 * defined in the Property themselves, if any.
+		 * 
+		 * Why you might use this:  There may be defaults that make sense for
+		 * particular entry points of an application.  A module might default its
+		 * output format to html when started as a web application and pdf when
+		 * started from command-line.
+		 * 
+		 * Since Loaders like the PropFileLoader take parameters to configure them,
+		 * you can easily set a default Property value here that would direct a
+		 * loader to look for a specific config file for this entry point, such
+		 * as cmd-line-startup.properties.
+		 * 
+		 * This is implemented by including an implicit fixed-value loader that
+		 * loads values after the other loaders run.
 		 * 
 		 * @param defaultVals A list w/ Properties and values bundled into a PropertyValue.
 		 * @return 
@@ -393,23 +448,22 @@ public class AndHow implements ValueMap {
 		 * 
 		 * @return
 		 * @throws AppFatalException 
-		 * @deprecated Don't use in production code
 		 */
-		public AndHow.Reloader buildForUnitTesting() throws AppFatalException {
+		public AndHow.Reloader buildForNonPropduction() throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
 			return AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
 		}
 		
 		/**
-		 * After initial construction with buildForUnitTesting() this method 
+		 * After initial construction with buildForNonPropduction() this method 
 		 * forces a reload using the reloader instance.
 		 * 
-		 * Not for production, @See buildForUnitTesting
+		 * Not for production, @See buildForNonPropduction
 		 * 
-		 * @param reloader Must be the same instance given out by buildForUnitTesting.
+		 * @param reloader Must be the same instance given out by buildForNonPropduction.
 		 * @throws AppFatalException 
 		 */
-		public void reloadForUnitTesting(AndHow.Reloader reloader) throws AppFatalException {
+		public void reloadForNonPropduction(AndHow.Reloader reloader) throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
 			reloader.reload(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
 		}

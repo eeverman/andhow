@@ -16,8 +16,7 @@ import yarnandtail.andhow.Property;
  * 
  * For single valued properties, like description, calling description("")
  * sets the value.  For list of values, like validation, calling validation(new Validator(...))
- * would add a validitor to the list.  Calling setValidators(List<Validators>)
- * would overwrite existing Validators and assign a new list.
+ * would add a validitor to the list.
  * 
  * @author eeverman
  */
@@ -116,19 +115,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * @param validators
 	 * @return 
 	 */
-	public B addValidations(List<Validator<T>> validators) {
-		this._validators.addAll(validators);
-		return instance;
-	}
-	
-	/**
-	 * Sets list the list of validators, deleting any already added to the list.
-	 * 
-	 * @param validators
-	 * @return 
-	 */
-	public B setValidations(List<Validator<T>> validators) {
-		this._validators.clear();
+	public B validations(List<Validator<T>> validators) {
 		this._validators.addAll(validators);
 		return instance;
 	}
@@ -149,13 +136,12 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	}
 	
 	/**
-	 * Sets teh list of aliases, removing any existing.
+	 * Adds a list of aliases,
 	 * 
 	 * @param aliases
 	 * @return 
 	 */
-	public B setAliases(List<String> aliases) {
-		this._aliases.clear();
+	public B aliases(List<String> aliases) {
 		this._aliases.addAll(aliases);
 		return instance;
 	}

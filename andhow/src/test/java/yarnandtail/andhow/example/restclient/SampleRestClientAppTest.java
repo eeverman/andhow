@@ -39,7 +39,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				.loader(new CmdLineLoader())
 				.loader(new PropFileLoader())
 				.cmdLineArgs(cmdLineArgs)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
@@ -67,7 +67,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				.loader(new CmdLineLoader())
 				.loader(new PropFileLoader())
 				.cmdLineArgs(cmdLineArgs)
-				.reloadForUnitTesting(reloader);
+				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
@@ -98,7 +98,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 					.loader(new CmdLineLoader())
 					.loader(new PropFileLoader())
 					.cmdLineArgs(cmdLineArgs)
-					.reloadForUnitTesting(reloader);
+					.reloadForNonPropduction(reloader);
 		} catch (AppFatalException e) {
 			
 			

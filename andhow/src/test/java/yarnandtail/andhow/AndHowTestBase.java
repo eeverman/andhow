@@ -9,6 +9,6 @@ package yarnandtail.andhow;
  */
 public class AndHowTestBase {
 	
-	public static AndHow.Reloader reloader = AndHow.builder().buildForUnitTesting();
+	public static AndHow.Reloader reloader = AndHow.builder().buildForNonPropduction();
 
 }
