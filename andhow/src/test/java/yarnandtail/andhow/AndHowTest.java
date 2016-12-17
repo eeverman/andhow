@@ -10,6 +10,8 @@ import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.property.IntProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
