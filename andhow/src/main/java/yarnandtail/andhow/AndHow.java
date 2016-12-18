@@ -18,7 +18,7 @@ public class AndHow implements ValueMap {
 	public static final String ANDHOW_INLINE_NAME = "AndHow";
 	public static final String ANDHOW_NAME = ANDHOW_INLINE_NAME + "!";
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
-	public static final String ANDHOW_TAG_LINE = "strong.valid.simple.AppConfiguration";
+	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 	
 	/**
 	 * In text formats, this is the default delimiter between a key and a value.
