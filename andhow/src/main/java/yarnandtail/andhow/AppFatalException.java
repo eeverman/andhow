@@ -15,6 +15,19 @@ public class AppFatalException extends RuntimeException {
 	private final List<ValueProblem> valueProblems;
 	private final List<RequirementProblem> requirementProblems;
 	
+	/**
+	 * Used for errors while the AndHow builder is still in use - we don't have
+	 * full context b/c AndHow has not been constructed yet.
+	 * @param message 
+	 */
+	public AppFatalException(String message) {
+		super(message);
+		this.constructProblems = Collections.emptyList();
+		this.loaderProblems = Collections.emptyList();
+		this.valueProblems = Collections.emptyList();
+		this.requirementProblems = Collections.emptyList();
+	}
+	
 	public AppFatalException(List<ConstructionProblem> constructProblems) {
 		super("There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
 				"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +

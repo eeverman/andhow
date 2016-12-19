@@ -85,7 +85,7 @@ public class AndHow_DefaultAndForceValueTest extends AndHowTestBase {
 	
 	//
 	// Degenerate cases
-	@Test(expected = RuntimeException.class)
+	@Test(expected = AppFatalException.class)
 	public void testSettingTheSameDefaultMultipleTimesShouldFail() {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
@@ -96,7 +96,7 @@ public class AndHow_DefaultAndForceValueTest extends AndHowTestBase {
 		
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test(expected = AppFatalException.class)
 	public void testSettingTheSameDefaultMultipleTimesInASingleListShouldFail() {
 		
 		ArrayList<PropertyValue> defPvs = new ArrayList();
@@ -111,7 +111,7 @@ public class AndHow_DefaultAndForceValueTest extends AndHowTestBase {
 		
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test(expected = AppFatalException.class)
 	public void testSettingTheSameForcedMultipleTimesShouldFail() {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
@@ -122,7 +122,7 @@ public class AndHow_DefaultAndForceValueTest extends AndHowTestBase {
 		
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test(expected = AppFatalException.class)
 	public void testSettingTheSameForcedMultipleTimesInASingleListShouldFail() {
 		
 		ArrayList<PropertyValue> forcePvs = new ArrayList();
