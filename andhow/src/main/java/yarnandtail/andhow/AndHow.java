@@ -252,12 +252,12 @@ public class AndHow implements ValueMap {
 		 * @param property The property to force
 		 * @param value The value to set
 		 * @return 
-		 * @throws RuntimeException if there is already a default value assigned to this property
+		 * @throws AppFatalException if there is already a default value assigned to this property
 		 */
 		public <T> AndHowBuilder forceValue(Property<T> property, T value) {
 
 			if (checkForExistingProperty(_forcedValues, property)) {
-				throw new RuntimeException("Cannot assign two forced values to a property");
+				throwFatal("Cannot assign two forced values to a Property");
 			}
 
 			_forcedValues.add(new PropertyValue(property, value));
@@ -286,13 +286,13 @@ public class AndHow implements ValueMap {
 		 * 
 		 * @param forcedValues A list w/ Properties and values bundled into a PropertyValue.
 		 * @return 
-		 * @throws RuntimeException if there is already a default value assigned to any of these properties
+		 * @throws AppFatalException if there is already a default value assigned to any of these properties
 		 */
 		public AndHowBuilder forceValues(List<PropertyValue> forcedValues) {
 			
 			for (PropertyValue pv : forcedValues) {
 				if (checkForExistingProperty(_forcedValues, pv.getProperty())) {
-					throw new RuntimeException("Cannot assign two forced values to a property");
+					throwFatal("Cannot assign two forced values to a Property");
 				}
 				
 				_forcedValues.add(pv);
@@ -321,12 +321,12 @@ public class AndHow implements ValueMap {
 		 * @param property
 		 * @param value
 		 * @return 
-		 * @throws RuntimeException if there is already a default value assigned to this property
+		 * @throws AppFatalException if there is already a default value assigned to this property
 		 */
 		public <T> AndHowBuilder defaultValue(Property<T> property, T value) {
 
 			if (checkForExistingProperty(_defaultValues, property)) {
-				throw new RuntimeException("Cannot assign two default values to a property");
+				throwFatal("Cannot assign two default values to a Property");
 			}
 			_defaultValues.add(new PropertyValue(property, value));
 			return this;
@@ -351,13 +351,13 @@ public class AndHow implements ValueMap {
 		 * 
 		 * @param defaultVals A list w/ Properties and values bundled into a PropertyValue.
 		 * @return 
-		 * @throws RuntimeException if there is already a default value assigned to any of these properties
+		 * @throws AppFatalException if there is already a default value assigned to any of these properties
 		 */
 		public AndHowBuilder defaultValues(List<PropertyValue> defaultVals) {
 			
 			for (PropertyValue pv : defaultVals) {
 				if (checkForExistingProperty(_defaultValues, pv.getProperty())) {
-					throw new RuntimeException("Cannot assign two default values to a property");
+					throwFatal("Cannot assign two default values to a Property");
 				}
 				
 				_defaultValues.add(pv);
@@ -416,6 +416,20 @@ public class AndHow implements ValueMap {
 		public AndHowBuilder namingStrategy(NamingStrategy namingStrategy) {
 			this._namingStrategy = namingStrategy;
 			return this;
+		}
+		
+		/**
+		 * Builds and throws an AppFatalException.
+		 * The stack trace is edited to remove 2 method calls, which should put
+		 * the stacktrace at the user code of the build.
+		 * @param message 
+		 */
+		private void throwFatal(String message) {
+			RuntimeException re = new RuntimeException(message);
+			StackTraceElement[] stes = re.getStackTrace();
+			stes = Arrays.copyOfRange(stes, 2, stes.length);
+			re.setStackTrace(stes);
+			throw re;
 		}
 		
 		/**
