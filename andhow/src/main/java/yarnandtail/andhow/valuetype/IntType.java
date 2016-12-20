@@ -12,7 +12,7 @@ public class IntType extends BaseValueType<Integer> {
 	private static final IntType instance = new IntType();
 	
 	private IntType() {
-		super(Integer.class, false, true, TrimStyle.TO_NULL);
+		super(Integer.class);
 	}
 	
 	public static IntType get() {

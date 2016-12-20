@@ -11,7 +11,7 @@ public class FlagType extends BaseValueType<Boolean> {
 	private static final FlagType instance = new FlagType();
 	
 	private FlagType() {
-		super(Boolean.class, false, true, TrimStyle.TO_EMPTY);
+		super(Boolean.class);
 	}
 	
 	public static FlagType get() {

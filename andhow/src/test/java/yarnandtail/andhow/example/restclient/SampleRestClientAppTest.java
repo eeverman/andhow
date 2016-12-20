@@ -43,6 +43,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
+		assertEquals("  Big App  ", SampleRestClientGroup.APP_NAME.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
 		assertEquals(new Integer(8080), SampleRestClientGroup.REST_PORT.getValue());
 		assertEquals("doquery/", SampleRestClientGroup.REST_SERVICE_NAME.getValue());

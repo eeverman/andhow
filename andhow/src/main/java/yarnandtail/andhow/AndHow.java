@@ -425,11 +425,11 @@ public class AndHow implements ValueMap {
 		 * @param message 
 		 */
 		private void throwFatal(String message) {
-			RuntimeException re = new RuntimeException(message);
-			StackTraceElement[] stes = re.getStackTrace();
+			AppFatalException afe = new AppFatalException(message);
+			StackTraceElement[] stes = afe.getStackTrace();
 			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			re.setStackTrace(stes);
-			throw re;
+			afe.setStackTrace(stes);
+			throw afe;
 		}
 		
 		/**
