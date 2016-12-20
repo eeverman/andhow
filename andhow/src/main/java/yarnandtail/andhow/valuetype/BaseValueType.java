@@ -1,7 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
 import yarnandtail.andhow.ValueType;
-import yarnandtail.andhow.TextUtil;
 import yarnandtail.andhow.ParsingException;
 
 /**
@@ -11,15 +10,9 @@ import yarnandtail.andhow.ParsingException;
 public abstract class BaseValueType<T> implements ValueType<T> {
 
 	protected final Class<T> clazzType;
-	protected final boolean nullConsideredAValue;
-	protected final boolean emptyConsideredAValue;
-	protected final TrimStyle trimStyle;
 
-	public BaseValueType(Class<T> clazzType, boolean nullConsideredAValue, boolean emptyConsideredAValue, TrimStyle trimStyle) {
+	public BaseValueType(Class<T> clazzType) {
 		this.clazzType = clazzType;
-		this.nullConsideredAValue = nullConsideredAValue;
-		this.emptyConsideredAValue = emptyConsideredAValue;
-		this.trimStyle = trimStyle;
 	}
 	
 	@Override
@@ -35,51 +28,6 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 		} catch (ParsingException e) {
 			return false;
 		}
-	}
-	
-	@Override
-	public boolean isExplicitlySet(String sourceValue) {
-		
-		String strVal = null;
-		
-		if (sourceValue != null) {
-			if (sourceValue instanceof String) {
-				strVal = (String)sourceValue;
-			} else {
-				return true;
-			}
-		}
-		
-		if (trimStyle.equals(TrimStyle.TO_EMPTY)) {
-			strVal = TextUtil.trimToEmpty(strVal);
-		} else if (trimStyle.equals(TrimStyle.TO_NULL)) {
-			strVal = TextUtil.trimToNull(strVal);
-		}
-		
-		if (strVal != null) {
-			if (! strVal.isEmpty()) {
-				return true;
-			} else {
-				return emptyConsideredAValue;
-			}
-		} else {
-			return nullConsideredAValue;
-		}
-	}
-
-	@Override
-	public boolean isNullConsideredAValue() {
-		return nullConsideredAValue;
-	}
-
-	@Override
-	public boolean isEmptyConsideredAValue() {
-		return emptyConsideredAValue;
-	}
-
-	@Override
-	public TrimStyle getTrimStyle() {
-		return trimStyle;
 	}
 	
 }

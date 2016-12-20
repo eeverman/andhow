@@ -12,7 +12,7 @@ public class StringType extends BaseValueType<String> {
 	private static final StringType instance = new StringType();
 	
 	private StringType() {
-		super(String.class, false, false, TrimStyle.TO_NULL);
+		super(String.class);
 	}
 	
 	public static StringType instance() {
@@ -26,17 +26,6 @@ public class StringType extends BaseValueType<String> {
 		} else {
 			return null;
 		}
-	}
-
-
-	@Override
-	public boolean isConvertable(String sourceValue) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public boolean isExplicitlySet(String sourceValue) {
-		throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override

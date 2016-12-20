@@ -13,7 +13,11 @@ public interface ValueType<T> {
 	/**
 	 * Attempts to convert the passed String into the type represented
 	 * by the destinationType.
-	 * If this Property is a multiValue, each value should be converted separately.
+	 * 
+	 * Implementations should be careful to ONLY throw a ParsingException -
+	 * Integers and other types may throw other unchecked exceptions when trying
+	 * to convert values, which should be handled in this method and rethrown as
+	 * a ParsingException.
 	 * @param sourceValue
 	 * @return
 	 * @throws ParsingException 
@@ -21,14 +25,6 @@ public interface ValueType<T> {
 	T convert(String sourceValue) throws ParsingException;
 		
 	boolean isConvertable(String sourceValue);
-	
-	boolean isExplicitlySet(String sourceValue);
-	
-	boolean isNullConsideredAValue();
-	
-	boolean isEmptyConsideredAValue();
-	
-	TrimStyle getTrimStyle();
 	
 	/**
 	 * Attempt to cast the passed object to the generic type T.
