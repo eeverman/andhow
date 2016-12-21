@@ -3,8 +3,6 @@ package yarnandtail.andhow.load;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
@@ -49,7 +47,8 @@ public abstract class BaseLoader implements Loader {
 		
 		try {
 			
-			value = prop.getValueType().convert(strValue);
+			String trimmed = prop.getTrimmer().trim(strValue);
+			value = prop.getValueType().convert(trimmed);
 
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {

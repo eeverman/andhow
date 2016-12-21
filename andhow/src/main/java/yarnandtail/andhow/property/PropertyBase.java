@@ -5,12 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.PropertyType;
-import yarnandtail.andhow.TextUtil;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.ValueMap;
-import yarnandtail.andhow.Property;
+import yarnandtail.andhow.*;
 
 /**
  *
@@ -20,6 +15,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	private final PropertyType paramType;
 	private final ValueType<T> valueType;
+	private final Trimmer trimmer;
 	private final T defaultValue;
 	private final boolean required;
 	private final String shortDesc;
@@ -29,7 +25,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			PropertyType paramType, ValueType<T> valueType,
+			PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
 			String helpText, String[] aliases) {
 		
 		List<String> aliasList;
@@ -44,6 +40,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 		//Clean all values to be non-null
 		this.paramType = paramType;
 		this.valueType = valueType;
+		this.trimmer = trimmer;
 		this.defaultValue = defaultValue;
 		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
@@ -55,7 +52,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			PropertyType paramType, ValueType<T> valueType,
+			PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
 			String helpText, String explicitName) {
 		
 		List<String> aliasList;
@@ -70,6 +67,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 		//Clean all values to be non-null
 		this.paramType = paramType;
 		this.valueType = valueType;
+		this.trimmer = trimmer;
 		this.defaultValue = defaultValue;
 		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
@@ -89,6 +87,11 @@ public abstract class PropertyBase<T> implements Property<T> {
 		return valueType;
 	}
 
+	@Override
+	public Trimmer getTrimmer() {
+		return trimmer;
+	}
+	
 	@Override
 	public String getShortDescription() {
 		return shortDesc;
