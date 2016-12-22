@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.property.FlagProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -22,6 +24,14 @@ public class AndHowTest extends AndHowTestBase {
 	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
+	
+	public static interface RequiredParams extends PropertyGroup {
+		StrProp KVP_BOB = StrProp.builder().defaultValue("Bob").required().build();
+		StrProp KVP_NULL = StrProp.builder().required().build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).required().build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).required().build();
+		FlagProp FLAG_NULL = FlagProp.builder().required().build();
+	}
 	
 	@Before
 	public void setup() {
@@ -153,15 +163,15 @@ public class AndHowTest extends AndHowTestBase {
 					.namingStrategy(basicNaming)
 					.loaders(loaders)
 					.groups(configPtGroups)
-					.group(SimpleParamsNoAliasRequired.class)
+					.group(RequiredParams.class)
 					.cmdLineArgs(cmdLineArgsWFullClassName)
 					.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(2, ce.getRequirementProblems().size());
-			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
-			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
 		}
 	}
 	
