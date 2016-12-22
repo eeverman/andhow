@@ -87,14 +87,4 @@ public interface Property<T> {
 	 */
 	String getHelpText();
 
-	
-	/**
-	 * Alias (short) form.  Similar to 'nix single letter options (dashes not required).
-	 * These are the <i>base</i> aliases: the NamingStrategy is applied in the usage
-	 * of the Property to determine actual alias names.
-	 * 
-	 * @return The list of aliases or an empty list if there are none.
-	 */
-	List<String> getBaseAliases();
-
 }

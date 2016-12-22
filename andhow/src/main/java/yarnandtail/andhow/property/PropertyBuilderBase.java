@@ -37,7 +37,6 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	protected String _shortDesc;
 	protected List<Validator<T>> _validators = new ArrayList();
 	protected String _helpText;
-	protected final List<String> _aliases = new ArrayList();
 	
 	
 	
@@ -137,27 +136,6 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	
 	public B helpText(String helpText) {
 		this._helpText = helpText;
-		return instance;
-	}
-	
-	/**
-	 * Adds an alias to the list of aliases being built.
-	 * @param alias
-	 * @return 
-	 */
-	public B alias(String alias) {
-		_aliases.add(alias);
-		return instance;
-	}
-	
-	/**
-	 * Adds a list of aliases,
-	 * 
-	 * @param aliases
-	 * @return 
-	 */
-	public B aliases(List<String> aliases) {
-		this._aliases.addAll(aliases);
 		return instance;
 	}
 	

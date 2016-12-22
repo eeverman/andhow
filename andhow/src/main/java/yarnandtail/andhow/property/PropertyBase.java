@@ -1,10 +1,8 @@
 package yarnandtail.andhow.property;
 
 import yarnandtail.andhow.ValueType;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import yarnandtail.andhow.*;
 
 /**
@@ -21,21 +19,11 @@ public abstract class PropertyBase<T> implements Property<T> {
 	private final String shortDesc;
 	private final List<Validator<T>> validators;
 	private final String helpText;
-	private final List<String> alias;
 	
 	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
 			PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
-			String helpText, String[] aliases) {
-		
-		List<String> aliasList;
-		if (aliases != null && aliases.length > 0) {
-			aliasList = Arrays.stream(aliases).map(s -> TextUtil.trimToNull(s)).
-					filter(s -> s != null).collect(Collectors.toList());
-			aliasList = Collections.unmodifiableList(aliasList);
-		} else {
-			aliasList = EMPTY_STRING_LIST;
-		}
+			String helpText) {
 				
 		//Clean all values to be non-null
 		this.paramType = paramType;
@@ -46,34 +34,6 @@ public abstract class PropertyBase<T> implements Property<T> {
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
 		this.helpText = (helpText != null)?helpText:"";
-		this.alias = aliasList;
-		
-	}
-	
-	public PropertyBase(
-			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
-			String helpText, String explicitName) {
-		
-		List<String> aliasList;
-		explicitName = TextUtil.trimToNull(explicitName);
-		if (explicitName != null) {
-			aliasList = Collections.unmodifiableList(Arrays.asList(new String[] {explicitName}));
-		} else {
-			aliasList = EMPTY_STRING_LIST;
-		}
-	
-				
-		//Clean all values to be non-null
-		this.paramType = paramType;
-		this.valueType = valueType;
-		this.trimmer = trimmer;
-		this.defaultValue = defaultValue;
-		this.required = required;
-		this.shortDesc = (shortDesc != null)?shortDesc:"";
-		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
-		this.helpText = (helpText != null)?helpText:"";
-		this.alias = aliasList;
 		
 	}
 	
@@ -105,11 +65,6 @@ public abstract class PropertyBase<T> implements Property<T> {
 	@Override
 	public String getHelpText() {
 		return helpText;
-	}
-
-	@Override
-	public List<String> getBaseAliases() {
-		return alias;
 	}
 	
 	@Override

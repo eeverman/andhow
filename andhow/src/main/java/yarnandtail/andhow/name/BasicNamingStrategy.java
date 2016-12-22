@@ -1,6 +1,5 @@
 package yarnandtail.andhow.name;
 
-import java.util.ArrayList;
 import java.util.List;
 import static yarnandtail.andhow.Property.EMPTY_STRING_LIST;
 import yarnandtail.andhow.Property;
@@ -26,18 +25,7 @@ public class BasicNamingStrategy implements NamingStrategy {
 	public Naming buildNamesFromCanonical(Property prop, 
 			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
 		
-		List<String> effectiveAliases = null;
-		
-		if (prop.getBaseAliases().size() > 0) {
-			List<String> aliases = prop.getBaseAliases();
-			effectiveAliases = new ArrayList(aliases.size());
-			
-			for (String a : aliases) {
-				effectiveAliases.add(parentGroup.getCanonicalName() + "." + a);
-			}
-		} else {
-			effectiveAliases = EMPTY_STRING_LIST;
-		}
+		List<String> effectiveAliases = effectiveAliases = EMPTY_STRING_LIST;
 
 		
 		Naming naming = new Naming(canonicalName, effectiveAliases);

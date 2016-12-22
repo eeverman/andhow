@@ -42,11 +42,11 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParamsWAlias.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "test");
-		args.add(basePath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "not_null");
-		args.add(basePath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "false");
-		args.add(basePath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true");
-		args.add(basePath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + "KVP_BOB" + AndHow.KVP_DELIMITER + "test");
+		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "not_null");
+		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
 		
 		
 		CmdLineLoader cll = new CmdLineLoader();
