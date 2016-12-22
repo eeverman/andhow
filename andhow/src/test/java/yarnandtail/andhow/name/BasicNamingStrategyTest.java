@@ -24,7 +24,7 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testDefaultNaming() {
 
-		StrProp point = new StrProp();
+		StrProp point = StrProp.builder().build();
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
@@ -45,9 +45,9 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testExplicitNamingWithAliases() {
 
-		StrProp point = new StrProp(
-				null, false, null, null, PropertyType.SINGLE_NAME_VALUE, StringType.instance(), 
-				null,  new String[] {"name1", "name2", "name3"});
+		StrProp point = StrProp.builder()
+				.alias("name1").alias("name2").alias("name3").build();
+
 		
 		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
 		

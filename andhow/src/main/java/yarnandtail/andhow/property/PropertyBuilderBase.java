@@ -6,6 +6,7 @@ import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.Property;
+import yarnandtail.andhow.Trimmer;
 
 /**
  * A generic PropertyBuilder class which needs to be fully implemented as an
@@ -30,6 +31,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	
 	protected PropertyType _paramType = PropertyType.SINGLE_NAME_VALUE;
 	protected ValueType<T> _valueType;
+	protected Trimmer _trimmer;
 	protected T _defaultValue;
 	protected boolean _required = false;
 	protected String _shortDesc;
@@ -65,6 +67,19 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 */
 	public B valueType(ValueType<T> valueType) {
 		this._valueType = valueType;
+		return instance;
+	}
+	
+	/**
+	 * Assigns the whitespace trimmer that is used on the raw value.
+	 * 
+	 * The default trimmer for each Property subclass should generally be acceptable -
+	 * See individual Property instances for details on the defaults.
+	 * @param trimmer
+	 * @return 
+	 */
+	public B trimmer(Trimmer trimmer) {
+		this._trimmer = trimmer;
 		return instance;
 	}
 	

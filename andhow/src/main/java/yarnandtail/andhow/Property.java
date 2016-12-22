@@ -61,6 +61,14 @@ public interface Property<T> {
 	ValueType<T> getValueType();
 	
 	/**
+	 * The Trimmer responsible for trimming String values before they are converted
+	 * to the appropriate property type.
+	 * 
+	 * @return 
+	 */
+	Trimmer getTrimmer();
+	
+	/**
 	 * A short sentence description.
 	 * @return 
 	 */

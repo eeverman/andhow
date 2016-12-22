@@ -21,11 +21,7 @@ public class StringType extends BaseValueType<String> {
 
 	@Override
 	public String convert(String sourceValue) throws ParsingException {
-		if (sourceValue != null) {
-			return TextUtil.trimToNull(sourceValue);
-		} else {
-			return null;
-		}
+		return sourceValue;		//Too simple!  Trimming is handled separately
 	}
 
 	@Override
