@@ -18,6 +18,8 @@ public class RuntimeDefinitionTest {
 	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
 	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
 	
+	public interface RandomUnregisteredGroup extends PropertyGroup { StrProp STR_RND = StrProp.builder().build(); }
+	
 	@Test
 	public void testHappyPath() {
 		
@@ -51,7 +53,7 @@ public class RuntimeDefinitionTest {
 		assertEquals(2, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).size());
 		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(0));
 		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(1));
-		assertEquals(0, appDef.getPropertiesForGroup(SimpleParamsNoAlias.class).size());		//A random group that is not registered 
+		assertEquals(0, appDef.getPropertiesForGroup(RandomUnregisteredGroup.class).size());		//A random group that is not registered 
 	}
 	
 	@Test
