@@ -9,7 +9,11 @@ import yarnandtail.andhow.valuetype.IntType;
 import yarnandtail.andhow.ValueType;
 
 /**
- *
+ * A Property that refers to an Integer value.
+ * 
+ * By default this uses the TrimToNullTrimmer, which removes all whitespace from
+ * the value and ultimately null if the value is all whitespace.
+ * 
  * @author eeverman
  */
 public class IntProp extends PropertyBase<Integer> {

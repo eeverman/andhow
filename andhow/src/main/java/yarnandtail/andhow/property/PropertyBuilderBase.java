@@ -70,6 +70,14 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 		return instance;
 	}
 	
+	/**
+	 * Assigns the whitespace trimmer that is used on the raw value.
+	 * 
+	 * The default trimmer for each Property subclass should generally be acceptable -
+	 * See individual Property instances for details on the defaults.
+	 * @param trimmer
+	 * @return 
+	 */
 	public B trimmer(Trimmer trimmer) {
 		this._trimmer = trimmer;
 		return instance;

@@ -23,7 +23,11 @@ import yarnandtail.andhow.ValueMap;
  * </ul>
  * 
  * Explicitly setting a flag true or false on the command line is allowed, such
- * as <code>-enableTorpedos=true</code>.
+ * as <code>enableTorpedos=true</code>.
+ * 
+ * By default this uses the TrimToNullTrimmer, which removes all whitespace from
+ * the value and ultimately null if the value is all whitespace.  Since being
+ * present counts as 'on' for a flag, this would equate to true.
  * 
  * @author eeverman
  */

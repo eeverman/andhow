@@ -9,7 +9,11 @@ import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.valuetype.StringType;
 
 /**
- *
+ * A Property that refers to a String value.
+ * 
+ * By default, this uses the QuotedSpacePreservingTrimmer, which will keep
+ * whitespace inside double quotes.
+ * 
  * @author eeverman
  */
 public class StrProp extends PropertyBase<String> {
