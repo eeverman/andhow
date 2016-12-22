@@ -7,7 +7,7 @@ import yarnandtail.andhow.property.FlagProp;
  *
  * @author eeverman
  */
-public interface SimpleParamsWAlias extends PropertyGroup {
+public interface SimpleParams extends PropertyGroup {
 	
 	StrProp KVP_BOB = StrProp.builder().defaultValue("bob").build();
 	StrProp KVP_NULL = StrProp.builder().build();
