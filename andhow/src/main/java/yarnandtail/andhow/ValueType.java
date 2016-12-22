@@ -14,6 +14,9 @@ public interface ValueType<T> {
 	 * Attempts to convert the passed String into the type represented
 	 * by the destinationType.
 	 * 
+	 * All trimming (removing whitespace from around a value) should be assumed
+	 * to already have happened for the incoming sourceValue by a Trimmer.
+	 * 
 	 * Implementations should be careful to ONLY throw a ParsingException -
 	 * Integers and other types may throw other unchecked exceptions when trying
 	 * to convert values, which should be handled in this method and rethrown as
