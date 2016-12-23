@@ -21,9 +21,9 @@ public class StrProp extends PropertyBase<String> {
 	public StrProp(
 			String defaultValue, boolean required, String shortDesc, List<Validator<String>> validators,
 			PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
-			String helpText, String[] aliases) {
+			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText, aliases);
+		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static StrBuilder builder() {
@@ -44,8 +44,7 @@ public class StrProp extends PropertyBase<String> {
 		public StrProp build() {
 
 			return new StrProp(_defaultValue, _required, _shortDesc, _validators,
-				_paramType, _valueType, _trimmer,
-				_helpText, _aliases.toArray(new String[_aliases.size()]));
+				_paramType, _valueType, _trimmer, _helpText);
 		}
 		
 		public StrBuilder mustMatchRegex(String regex) {

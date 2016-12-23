@@ -21,9 +21,9 @@ public class IntProp extends PropertyBase<Integer> {
 	public IntProp(
 			Integer defaultValue, boolean required, String shortDesc, List<Validator<Integer>> validators,
 			PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
-			String helpText, String[] aliases) {
+			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText, aliases);
+		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static IntBuilder builder() {
@@ -42,8 +42,7 @@ public class IntProp extends PropertyBase<Integer> {
 		public IntProp build() {
 
 			return new IntProp(_defaultValue, _required, _shortDesc, _validators,
-				_paramType, _valueType, _trimmer,
-				_helpText, _aliases.toArray(new String[_aliases.size()]));
+				_paramType, _valueType, _trimmer, _helpText);
 
 		}
 		

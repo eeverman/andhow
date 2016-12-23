@@ -9,22 +9,9 @@ import yarnandtail.andhow.property.FlagProp;
  */
 public interface SimpleParamsWAliasDuplicate extends PropertyGroup {
 	
-	StrProp KVP_BOB = StrProp.builder()
-			.defaultValue("bob")
-			.alias("kvpbob")
-			.build();
-	StrProp KVP_NULL = StrProp.builder()
-			.alias("kvpnull")
-			.build();
-	FlagProp FLAG_FALSE = FlagProp.builder()
-			.defaultValue(false)
-			.alias("flagfalse")
-			.build();
-	FlagProp FLAG_TRUE = FlagProp.builder()
-			.defaultValue(true)
-			.alias("flagtrue")
-			.build();
-	FlagProp FLAG_NULL = FlagProp.builder()
-			.alias("flagnull")
-			.build();
+	StrProp KVP_BOB = StrProp.builder().defaultValue("bob").build();
+	StrProp KVP_NULL = StrProp.builder().build();
+	FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+	FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+	FlagProp FLAG_NULL = FlagProp.builder().build();
 }

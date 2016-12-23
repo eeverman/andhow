@@ -1,12 +1,9 @@
 package yarnandtail.andhow.name;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.NamingStrategy.Naming;
 import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.valuetype.StringType;
 import yarnandtail.andhow.SimpleParamsWAlias;
 
 /**
@@ -30,31 +27,5 @@ public class BasicNamingStrategyTest {
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
 		assertEquals(0, naming.getAliases().size());
 	}
-	
-	@Test
-	public void testExplicitNaming() {
 
-		StrProp point = StrProp.builder().alias("myName").build();
-		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
-		
-		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(1, naming.getAliases().size());
-		assertEquals(groupFullPath + ".myName", naming.getAliases().get(0));
-	}
-	
-	@Test
-	public void testExplicitNamingWithAliases() {
-
-		StrProp point = StrProp.builder()
-				.alias("name1").alias("name2").alias("name3").build();
-
-		
-		Naming naming = bns.buildNames(point, SimpleParamsWAlias.class, "BOB");
-		
-		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(3, naming.getAliases().size());
-		assertEquals(groupFullPath + ".name1", naming.getAliases().get(0));
-		assertEquals(groupFullPath + ".name2", naming.getAliases().get(1));
-		assertEquals(groupFullPath + ".name3", naming.getAliases().get(2));
-	}
 }

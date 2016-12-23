@@ -36,9 +36,9 @@ public class FlagProp extends PropertyBase<Boolean> {
 	public FlagProp(
 			Boolean defaultValue, boolean required, String shortDesc,
 			PropertyType paramType, ValueType<Boolean> valueType, Trimmer trimmer,
-			String helpText, String[] aliases) {
+			String helpText) {
 		
-		super(defaultValue, required, shortDesc, null, paramType, valueType, trimmer, helpText, aliases);
+		super(defaultValue, required, shortDesc, null, paramType, valueType, trimmer, helpText);
 	}
 	
 	@Override
@@ -68,8 +68,7 @@ public class FlagProp extends PropertyBase<Boolean> {
 		public FlagProp build() {
 
 			return new FlagProp(_defaultValue, _required, _shortDesc, 
-				_paramType, _valueType, _trimmer,
-				_helpText, _aliases.toArray(new String[_aliases.size()]));
+				_paramType, _valueType, _trimmer, _helpText);
 
 		}
 

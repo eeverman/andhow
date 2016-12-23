@@ -8,7 +8,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
-import yarnandtail.andhow.name.AsIsAliasNamingStrategy;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
@@ -23,7 +22,6 @@ public class AndHowTest extends AndHowTestBase {
 	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
-	String[] cmdLineArgsWExplicitName = new String[0];
 	
 	@Before
 	public void setup() {
@@ -47,14 +45,6 @@ public class AndHowTest extends AndHowTestBase {
 			paramFullPath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false",
 			paramFullPath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true",
 			paramFullPath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true"
-		};
-		
-		cmdLineArgsWExplicitName = new String[] {
-			paramFullPath + SimpleParamsWAlias.KVP_BOB.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "test",
-			paramFullPath + SimpleParamsWAlias.KVP_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "not_null",
-			paramFullPath + SimpleParamsWAlias.FLAG_TRUE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "false",
-			paramFullPath + SimpleParamsWAlias.FLAG_FALSE.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true",
-			paramFullPath + SimpleParamsWAlias.FLAG_NULL.getBaseAliases().get(0) + AndHow.KVP_DELIMITER + "true"
 		};
 		
 	}
@@ -117,22 +107,6 @@ public class AndHowTest extends AndHowTestBase {
 		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_NULL));
 	}
 	
-	@Test
-	public void testCmdLineLoaderUsingExplicitBaseName() {
-
-		AndHow.builder()
-				.namingStrategy(basicNaming)
-				.loaders(loaders)
-				.groups(configPtGroups)
-				.cmdLineArgs(cmdLineArgsWExplicitName)
-				.reloadForNonPropduction(reloader);
-		
-		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
-		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
-		assertEquals(false, SimpleParamsWAlias.FLAG_TRUE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_FALSE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
-	}
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
@@ -151,36 +125,11 @@ public class AndHowTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testBlowingUpWithDuplicateAliases() {
-		
-		try {
-
-			AndHow.builder()
-				.namingStrategy(new AsIsAliasNamingStrategy())
-				.loaders(loaders)
-				.groups(configPtGroups)
-				.group(SimpleParamsWAliasDuplicate.class)
-				.reloadForNonPropduction(reloader);
-			
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
-			assertEquals(5, ce.getConstructionProblems().size());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_BOB, ce.getConstructionProblems().get(0).getBadPropertyCoord().getProperty());
-			assertEquals(SimpleParamsWAliasDuplicate.KVP_NULL, ce.getConstructionProblems().get(1).getBadPropertyCoord().getProperty());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_FALSE, ce.getConstructionProblems().get(2).getBadPropertyCoord().getProperty());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_TRUE, ce.getConstructionProblems().get(3).getBadPropertyCoord().getProperty());
-			assertEquals(SimpleParamsWAliasDuplicate.FLAG_NULL, ce.getConstructionProblems().get(4).getBadPropertyCoord().getProperty());
-
-		}
-	}
-	
-	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 		
 		try {
 
 			AndHow.builder()
-				.namingStrategy(new AsIsAliasNamingStrategy())
 				.loaders(loaders)
 				.loader(loaders.get(0))
 				.groups(configPtGroups)
