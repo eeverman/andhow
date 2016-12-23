@@ -50,7 +50,7 @@ public class TextUtilTest {
 		assertEquals("abc\\{}xyz", TextUtil.format("abc\\{}xyz", "XXX"));
 		
 		//Some more edge cases
-		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", null));
+		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", (String)null));
 		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", null, null, null));
 	}
 	

@@ -24,19 +24,12 @@ public class FlagType extends BaseValueType<Boolean> {
 
 	@Override
 	public Boolean convert(String sourceValue) throws IllegalArgumentException {
-		if (sourceValue != null) {
 
-				
-			String str = TextUtil.trimToEmpty(sourceValue);
-			if (str.isEmpty()) {
-				return true;	//a flag is considered try just by its presence
-			} else {
-				return TextUtil.toBoolean(str);
-			}
-
-
+		if (TextUtil.trimToNull(sourceValue) == null) {
+			//regardless of trimming, all whitespace is considered == to the flag is present
+			return true;
 		} else {
-			return false;
+			return TextUtil.toBoolean(sourceValue);
 		}
 	}
 	

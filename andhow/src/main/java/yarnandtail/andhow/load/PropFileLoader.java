@@ -16,7 +16,31 @@ import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.property.StrProp;
 
 /**
- *
+ * Reads properties from a Java .property file, following standard java conventions
+ * for the structure of those file.
+ * 
+ * The PropFileLoader actually uses the java.util.Properties class to do read
+ * the properties, so several behaviours are determined by that JVM class.
+ * Particular quirks of how Java Properties reads properties files:
+ * <ul>
+ * <li>Multiple entries for the same property (i.e., the same key value appearing
+ * on multiple lines) will result in only the last of the values being set.  The
+ * previous entries for the same key are just overwritten by the later ones.
+ * Normally AndHow would consider multiple entries for a property a Problem, but
+ * in this case, the Java properties file reader doesn't report the issue, only
+ * the final value.
+ * <li>In rare cases, whitespace handling may be an issue.
+ * After finding the start of a value on a row, which happens after
+ * finding the key and ignoring any whitespace or divider character, whitespace
+ * is kept and is part of the value until the end of the file or a carraige return.
+ * This shouldn't be a problem in most cases.  By default, non-string properties
+ * have all whitespace removed by the Trimmer.  For string properties, all white
+ * space is removed, but double quotes can be used to preserve it.  If, however,
+ * you set a custom Trimmer implementation that preserves all whitespace, be
+ * aware of this behaviour.
+ * 
+ * TODO:  Add these docs to the User Manual.
+ * </ul>
  * @author eeverman
  */
 public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
@@ -66,11 +90,7 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 						String k = entry.getKey().toString();
 						String v = entry.getValue().toString();
 
-						try {
-							attemptToAdd(appConfigDef, values, k, v);
-						} catch (ParsingException e) {
-							problems.add(new LoaderProblem.ParsingLoaderProblem(this, null, null, e));
-						}
+						attemptToAdd(appConfigDef, values, problems, k, v);
 					}
 				}
 

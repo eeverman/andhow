@@ -101,6 +101,19 @@ public abstract class LoaderProblem extends Problem {
 		}
 	}
 	
+	public static class DuplicatePropertyLoaderProblem extends LoaderProblem {
+		
+		public DuplicatePropertyLoaderProblem(
+				Loader loader, Class<? extends PropertyGroup> group, Property prop) {
+			badValueCoord = new ValueCoord(loader, group, prop);
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "There are multiple values assigned to this property";
+		}
+	}
+	
 	public static class SourceNotFoundLoaderProblem extends LoaderProblem {
 
 		String message;

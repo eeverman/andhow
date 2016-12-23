@@ -11,7 +11,26 @@ import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
 
 /**
- *
+ * Intended to reads properties from the command line, but could be used for
+ * other sources where properties can be passed as an array of strings, each
+ * of the form name=value.
+ * 
+ * For FlgProperties (flags), the CmdLineLoader will interpret the presence of
+ * the property name as setting the property true.
+ * 
+ * The JVM considers whitespace as breaks between values, however, it can be
+ * escaped with a backslash to include it in the value passed to the CmdLineLoader.
+ * After the CmdLineLoader receives the value, each individual Property will use
+ * its Trimmer to remove whitespace according to its own rules.  Generally that
+ * means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
+ * for everything else.
+ * 
+ * If this loader is passed duplicate entries for the same property (i.e., the
+ * property name appears more than once), it is considered a LoaderProblem and
+ * will be reported and the app startup stopped.
+ * 
+ * TODO:  Add these docs to the User Manual.
+ * 
  * @author eeverman
  */
 public class CmdLineLoader extends BaseLoader {
@@ -31,9 +50,11 @@ public class CmdLineLoader extends BaseLoader {
 				try {
 					KVP kvp = KVP.splitKVP(s, AndHow.KVP_DELIMITER);
 
-					attemptToAdd(appConfigDef, values, kvp.getName(), kvp.getValue());
+					attemptToAdd(appConfigDef, values, problems, kvp.getName(), kvp.getValue());
 
 				} catch (ParsingException e) {
+					//thrown by KVP.split - this is aloader level problem if we cannot
+					//determine even what the Property is.
 					problems.add(new LoaderProblem.ParsingLoaderProblem(this, null, null, e));
 				}
 			}

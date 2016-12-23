@@ -68,7 +68,7 @@ public class FlagProp extends PropertyBase<Boolean> {
 		public FlagProp build() {
 
 			return new FlagProp(_defaultValue, _required, _shortDesc, 
-				_paramType, _valueType, _trimmer, _helpText);
+				PropertyType.FLAG, _valueType, _trimmer, _helpText);
 
 		}
 

@@ -44,7 +44,7 @@ public class StrProp extends PropertyBase<String> {
 		public StrProp build() {
 
 			return new StrProp(_defaultValue, _required, _shortDesc, _validators,
-				_paramType, _valueType, _trimmer, _helpText);
+				PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 		}
 		
 		public StrBuilder mustMatchRegex(String regex) {
