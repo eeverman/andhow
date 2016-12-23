@@ -9,6 +9,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
+import yarnandtail.andhow.property.FlagProp;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -16,12 +18,20 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  */
 public class AndHowTest extends AndHowTestBase {
 	
-	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
+	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	BasicNamingStrategy basicNaming = new BasicNamingStrategy();
 	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
+	
+	public static interface RequiredParams extends PropertyGroup {
+		StrProp KVP_BOB = StrProp.builder().defaultValue("Bob").required().build();
+		StrProp KVP_NULL = StrProp.builder().required().build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).required().build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).required().build();
+		FlagProp FLAG_NULL = FlagProp.builder().required().build();
+	}
 	
 	@Before
 	public void setup() {
@@ -30,14 +40,14 @@ public class AndHowTest extends AndHowTestBase {
 		loaders.add(new CmdLineLoader());
 		
 		configPtGroups.clear();
-		configPtGroups.add(SimpleParamsWAlias.class);
+		configPtGroups.add(SimpleParams.class);
 		
 		startVals.clear();
-		startVals.put(SimpleParamsWAlias.KVP_BOB, "test");
-		startVals.put(SimpleParamsWAlias.KVP_NULL, "not_null");
-		startVals.put(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE);
-		startVals.put(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE);
-		startVals.put(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE);
+		startVals.put(SimpleParams.KVP_BOB, "test");
+		startVals.put(SimpleParams.KVP_NULL, "not_null");
+		startVals.put(SimpleParams.FLAG_TRUE, Boolean.FALSE);
+		startVals.put(SimpleParams.FLAG_FALSE, Boolean.TRUE);
+		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
 			paramFullPath + "KVP_BOB" + AndHow.KVP_DELIMITER + "test",
@@ -51,8 +61,9 @@ public class AndHowTest extends AndHowTestBase {
 	
 	@Test
 	public void testTheTest() {
-		//test the test
-		assertEquals("yarnandtail.andhow.SimpleParamsWAlias.", paramFullPath);
+		//This could be generalized to use the class.getCanonicalName(),
+		//but this one place we make it explicit
+		assertEquals("yarnandtail.andhow.SimpleParams.", paramFullPath);
 	}
 	
 	@Test
@@ -60,28 +71,28 @@ public class AndHowTest extends AndHowTestBase {
 		
 		AndHow.builder().namingStrategy(basicNaming)
 				.loader(new CmdLineLoader())
-				.group(SimpleParamsWAlias.class)
-				.forceValue(SimpleParamsWAlias.KVP_BOB, "test")
-				.forceValue(SimpleParamsWAlias.KVP_NULL, "not_null")
-				.forceValue(SimpleParamsWAlias.FLAG_TRUE, Boolean.FALSE)
-				.forceValue(SimpleParamsWAlias.FLAG_FALSE, Boolean.TRUE)
-				.forceValue(SimpleParamsWAlias.FLAG_NULL, Boolean.TRUE)
+				.group(SimpleParams.class)
+				.forceValue(SimpleParams.KVP_BOB, "test")
+				.forceValue(SimpleParams.KVP_NULL, "not_null")
+				.forceValue(SimpleParams.FLAG_TRUE, Boolean.FALSE)
+				.forceValue(SimpleParams.FLAG_FALSE, Boolean.TRUE)
+				.forceValue(SimpleParams.FLAG_NULL, Boolean.TRUE)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
-		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
-		assertEquals(false, SimpleParamsWAlias.FLAG_TRUE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_FALSE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
+		assertEquals("test", SimpleParams.KVP_BOB.getValue());
+		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
+		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
+		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 		
 		
 		List<Property<?>> regPts = AndHow.instance().getProperties();
 		
-		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
-		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_TRUE));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_FALSE));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_NULL));
+		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
+		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
+		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
+		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
+		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
 	}
 	
 	@Test
@@ -89,22 +100,22 @@ public class AndHowTest extends AndHowTestBase {
 		
 		AndHow.builder().namingStrategy(basicNaming)
 				.loader(new CmdLineLoader())
-				.group(SimpleParamsWAlias.class)
+				.group(SimpleParams.class)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("bob", SimpleParamsWAlias.KVP_BOB.getValue());
-		assertNull(SimpleParamsWAlias.KVP_NULL.getValue());
-		assertTrue(SimpleParamsWAlias.FLAG_TRUE.getValue());
-		assertFalse(SimpleParamsWAlias.FLAG_FALSE.getValue());
-		assertFalse(SimpleParamsWAlias.FLAG_NULL.getValue());
+		assertEquals("bob", SimpleParams.KVP_BOB.getValue());
+		assertNull(SimpleParams.KVP_NULL.getValue());
+		assertTrue(SimpleParams.FLAG_TRUE.getValue());
+		assertFalse(SimpleParams.FLAG_FALSE.getValue());
+		assertFalse(SimpleParams.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
 		List<Property<?>> regPts = AndHow.instance().getProperties();
-		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_BOB));
-		assertTrue(regPts.contains(SimpleParamsWAlias.KVP_NULL));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_TRUE));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_FALSE));
-		assertTrue(regPts.contains(SimpleParamsWAlias.FLAG_NULL));
+		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
+		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
+		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
+		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
+		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
 	}
 	
 	
@@ -117,11 +128,11 @@ public class AndHowTest extends AndHowTestBase {
 				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("test", SimpleParamsWAlias.KVP_BOB.getValue());
-		assertEquals("not_null", SimpleParamsWAlias.KVP_NULL.getValue());
-		assertEquals(false, SimpleParamsWAlias.FLAG_TRUE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_FALSE.getValue());
-		assertEquals(true, SimpleParamsWAlias.FLAG_NULL.getValue());
+		assertEquals("test", SimpleParams.KVP_BOB.getValue());
+		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
+		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
+		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 	}
 	
 	@Test
@@ -153,22 +164,22 @@ public class AndHowTest extends AndHowTestBase {
 					.namingStrategy(basicNaming)
 					.loaders(loaders)
 					.groups(configPtGroups)
-					.group(SimpleParamsNoAliasRequired.class)
+					.group(RequiredParams.class)
 					.cmdLineArgs(cmdLineArgsWFullClassName)
 					.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(2, ce.getRequirementProblems().size());
-			assertEquals(SimpleParamsNoAliasRequired.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
-			assertEquals(SimpleParamsNoAliasRequired.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
 		}
 	}
 	
 	@Test(expected = RuntimeException.class)
 	public void testAttemptingToFetchAPropValueBeforeConfigurationShouldThrowARuntimeException() {
 		reloader.destroy();
-		String shouldFail = SimpleParamsWAlias.KVP_BOB.getValue();
+		String shouldFail = SimpleParams.KVP_BOB.getValue();
 	}
 	
 

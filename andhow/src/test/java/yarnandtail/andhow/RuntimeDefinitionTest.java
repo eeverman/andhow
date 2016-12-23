@@ -12,11 +12,13 @@ import yarnandtail.andhow.property.StrProp;
  */
 public class RuntimeDefinitionTest {
 	
-	String paramFullPath = SimpleParamsWAlias.class.getCanonicalName() + ".";
+	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
 	//Two PropGroups w/ a duplicate (shared) property
 	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
 	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
+	
+	public interface RandomUnregisteredGroup extends PropertyGroup { StrProp STR_RND = StrProp.builder().build(); }
 	
 	@Test
 	public void testHappyPath() {
@@ -24,34 +26,34 @@ public class RuntimeDefinitionTest {
 		NamingStrategy bns = new BasicNamingStrategy();
 		
 		RuntimeDefinition appDef = new RuntimeDefinition();
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, 
-				bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, 
-				bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_BOB, 
+				bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, 
+				bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
 
 		//Canonical Names for Property
-		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParamsWAlias.KVP_BOB));
-		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParamsWAlias.FLAG_FALSE));
+		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParams.KVP_BOB));
+		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParams.FLAG_FALSE));
 		
 		//Get properties for Canonical name
-		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperty(paramFullPath + "KVP_BOB"));
-		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperty(paramFullPath + "FLAG_FALSE"));
+		assertEquals(SimpleParams.KVP_BOB, appDef.getProperty(paramFullPath + "KVP_BOB"));
+		assertEquals(SimpleParams.FLAG_FALSE, appDef.getProperty(paramFullPath + "FLAG_FALSE"));
 
 		
 		//Groups
 		assertEquals(1, appDef.getPropertyGroups().size());
-		assertEquals(SimpleParamsWAlias.class, appDef.getPropertyGroups().get(0));
+		assertEquals(SimpleParams.class, appDef.getPropertyGroups().get(0));
 		
 		//prop list
 		assertEquals(2, appDef.getProperties().size());
-		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getProperties().get(0));
-		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getProperties().get(1));
+		assertEquals(SimpleParams.KVP_BOB, appDef.getProperties().get(0));
+		assertEquals(SimpleParams.FLAG_FALSE, appDef.getProperties().get(1));
 		
 		//Properties for Group
-		assertEquals(2, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).size());
-		assertEquals(SimpleParamsWAlias.KVP_BOB, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(0));
-		assertEquals(SimpleParamsWAlias.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParamsWAlias.class).get(1));
-		assertEquals(0, appDef.getPropertiesForGroup(SimpleParamsNoAlias.class).size());		//A random group that is not registered 
+		assertEquals(2, appDef.getPropertiesForGroup(SimpleParams.class).size());
+		assertEquals(SimpleParams.KVP_BOB, appDef.getPropertiesForGroup(SimpleParams.class).get(0));
+		assertEquals(SimpleParams.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParams.class).get(1));
+		assertEquals(0, appDef.getPropertiesForGroup(RandomUnregisteredGroup.class).size());		//A random group that is not registered 
 	}
 	
 	@Test

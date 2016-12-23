@@ -9,8 +9,8 @@ import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.name.BasicNamingStrategy;
-import yarnandtail.andhow.SimpleParamsWAlias;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
+import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -28,18 +28,18 @@ public class CmdLineLoaderTest {
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		appDef = new RuntimeDefinition();
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_BOB, bns.buildNames(SimpleParamsWAlias.KVP_BOB, SimpleParamsWAlias.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.KVP_NULL, bns.buildNames(SimpleParamsWAlias.KVP_NULL, SimpleParamsWAlias.class, "KVP_NULL"));
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_FALSE, bns.buildNames(SimpleParamsWAlias.FLAG_FALSE, SimpleParamsWAlias.class, "FLAG_FALSE"));
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_TRUE, bns.buildNames(SimpleParamsWAlias.FLAG_TRUE, SimpleParamsWAlias.class, "FLAG_TRUE"));
-		appDef.addProperty(SimpleParamsWAlias.class, SimpleParamsWAlias.FLAG_NULL, bns.buildNames(SimpleParamsWAlias.FLAG_NULL, SimpleParamsWAlias.class, "FLAG_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_BOB, bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_NULL, bns.buildNames(SimpleParams.KVP_NULL, SimpleParams.class, "KVP_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
 
 	}
 	
 	@Test
 	public void testCmdLineLoaderUsingExplicitBaseNames() {
 		
-		String basePath = SimpleParamsWAlias.class.getCanonicalName() + ".";
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
 		args.add(basePath + "KVP_BOB" + AndHow.KVP_DELIMITER + "test");
@@ -53,11 +53,11 @@ public class CmdLineLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
-		assertEquals("test", result.getExplicitValue(SimpleParamsWAlias.KVP_BOB));
-		assertEquals("not_null", result.getExplicitValue(SimpleParamsWAlias.KVP_NULL));
-		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParamsWAlias.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParamsWAlias.FLAG_NULL));
+		assertEquals("test", result.getExplicitValue(SimpleParams.KVP_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	
