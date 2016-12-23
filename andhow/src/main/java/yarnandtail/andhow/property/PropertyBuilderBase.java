@@ -28,8 +28,6 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	//a specific subclass.
 	protected B instance;
 	
-	
-	protected PropertyType _paramType = PropertyType.SINGLE_NAME_VALUE;
 	protected ValueType<T> _valueType;
 	protected Trimmer _trimmer;
 	protected T _defaultValue;
@@ -51,11 +49,6 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	
 	protected void setInstance(B instance) {
 		this.instance = instance;
-	}
-	
-	public B paramType(PropertyType paramType) {
-		this._paramType = paramType;
-		return instance;
 	}
 	
 	/**

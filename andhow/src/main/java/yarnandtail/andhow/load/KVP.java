@@ -69,7 +69,7 @@ public class KVP {
 			}
 
 			if (ss.length > 1) {
-				value = TextUtil.trimToNull(ss[1]);
+				value = ss[1];	//preserve spaces to be delt w/ by the trimmer
 			}
 
 			if (ss.length < 3) {

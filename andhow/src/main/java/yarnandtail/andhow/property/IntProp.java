@@ -42,7 +42,7 @@ public class IntProp extends PropertyBase<Integer> {
 		public IntProp build() {
 
 			return new IntProp(_defaultValue, _required, _shortDesc, _validators,
-				_paramType, _valueType, _trimmer, _helpText);
+				PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 		
