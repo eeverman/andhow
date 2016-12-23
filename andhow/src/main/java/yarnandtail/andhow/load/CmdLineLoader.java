@@ -25,12 +25,6 @@ import yarnandtail.andhow.ValueMapWithContext;
  * means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
  * for everything else.
  * 
- * If this loader is passed duplicate entries for the same property (i.e., the
- * property name appears more than once), it is considered a LoaderProblem and
- * will be reported and the app startup stopped.
- * 
- * TODO:  Add these docs to the User Manual.
- * 
  * @author eeverman
  */
 public class CmdLineLoader extends BaseLoader {
