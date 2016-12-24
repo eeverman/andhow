@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
+import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.RuntimeDefinition;
@@ -60,6 +61,9 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParams.KVP_NULL));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -80,6 +84,9 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("3", result.getExplicitValue(SimpleParams.KVP_NULL));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -98,6 +105,9 @@ public class PropFileLoaderTest {
 		PropFileLoader cll = new PropFileLoader();
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
+		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
 		assertNull( result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
@@ -119,6 +129,9 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 		assertNull(result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
@@ -139,10 +152,34 @@ public class PropFileLoaderTest {
 		
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getEffectiveValue(SimpleParams.KVP_BOB));
 		assertEquals("", result.getExplicitValue(SimpleParams.KVP_NULL));
 		assertEquals("", result.getEffectiveValue(SimpleParams.KVP_NULL));
+	}
+	
+	@Test
+	public void testPropFileLoaderWithUnrecognizedPropNames() {
+		
+		ArrayList<PropertyValue> evl = new ArrayList();
+		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams6.properties"));
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		appValuesBuilder.addValues(existing);
+		
+		PropFileLoader cll = new PropFileLoader();
+		
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
+		
+		assertEquals(2, result.getProblems().size());
+		for (LoaderProblem lp : result.getProblems()) {
+			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
+		}
+		
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 	}
 
 }

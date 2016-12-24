@@ -114,6 +114,25 @@ public abstract class LoaderProblem extends Problem {
 		}
 	}
 	
+	public static class UnknownPropertyLoaderProblem extends LoaderProblem {
+		
+		private String unknownPropName;
+		
+		public UnknownPropertyLoaderProblem(
+				Loader loader, String unknownPropName) {
+			badValueCoord = new ValueCoord(loader, null, null);
+		}
+
+		public String getUnknownPropertyName() {
+			return unknownPropName;
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format("The property '{}' is not recognized", unknownPropName);
+		}
+	}
+	
 	public static class SourceNotFoundLoaderProblem extends LoaderProblem {
 
 		String message;
