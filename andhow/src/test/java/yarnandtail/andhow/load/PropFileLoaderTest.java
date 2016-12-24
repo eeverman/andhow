@@ -51,8 +51,6 @@ public class PropFileLoaderTest {
 	@Test
 	public void testPropFileLoaderHappyPath() {
 		
-		String basePath = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
-		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams1.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
@@ -73,8 +71,6 @@ public class PropFileLoaderTest {
 	@Test
 	public void testPropFileLoaderDuplicateEntries() {
 		
-		String basePath = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
-		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams2.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
@@ -89,6 +85,64 @@ public class PropFileLoaderTest {
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testPropFileLoaderEmptyValues() {
+		
+		ArrayList<PropertyValue> evl = new ArrayList();
+		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams3.properties"));
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		appValuesBuilder.addValues(existing);
+		
+		PropFileLoader cll = new PropFileLoader();
+		
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
+		
+		assertNull( result.getExplicitValue(SimpleParams.KVP_BOB));
+		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testPropFileLoaderAllWhitespaceValues() {
+		
+		ArrayList<PropertyValue> evl = new ArrayList();
+		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams4.properties"));
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		appValuesBuilder.addValues(existing);
+		
+		PropFileLoader cll = new PropFileLoader();
+		
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
+		
+		assertNull(result.getExplicitValue(SimpleParams.KVP_BOB));
+		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testPropFileLoaderQuotedStringValues() {
+		
+		ArrayList<PropertyValue> evl = new ArrayList();
+		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams5.properties"));
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		appValuesBuilder.addValues(existing);
+		
+		PropFileLoader cll = new PropFileLoader();
+		
+		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
+		
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.KVP_BOB));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getEffectiveValue(SimpleParams.KVP_BOB));
+		assertEquals("", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals("", result.getEffectiveValue(SimpleParams.KVP_NULL));
 	}
 
 }
