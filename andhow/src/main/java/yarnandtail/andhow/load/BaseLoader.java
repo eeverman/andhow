@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.LoaderProblem.DuplicatePropertyLoaderProblem;
+import yarnandtail.andhow.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
 import yarnandtail.andhow.internal.RuntimeDefinition;
@@ -55,7 +56,7 @@ public abstract class BaseLoader implements Loader {
 				}
 				
 			} else {
-				//TODO need a way to deal w/ these
+				loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
 			}
 
 		}

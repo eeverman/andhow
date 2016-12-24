@@ -114,6 +114,31 @@ public class CmdLineLoaderTest {
 			assertTrue(lp instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 		}
 		
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
+	}
+	
+	@Test
+	public void testCmdLineLoaderWithUnknownProperties() {
+		
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		
+		List<String> args = new ArrayList();
+		args.add(basePath + "XXX" + AndHow.KVP_DELIMITER + "1");
+		args.add(basePath + "YYY" + AndHow.KVP_DELIMITER + "2");
+		
+		
+		CmdLineLoader cll = new CmdLineLoader();
+		
+		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
+		
+		assertEquals(2, result.getProblems().size());
+		for (LoaderProblem lp : result.getProblems()) {
+			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
+		}
+		
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		
 	}
 
 	
