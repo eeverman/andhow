@@ -50,7 +50,7 @@ public class PropFileLoaderTest {
 	}
 	
 	@Test
-	public void testPropFileLoaderHappyPath() {
+	public void testHappyPath() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams1.properties"));
@@ -73,7 +73,7 @@ public class PropFileLoaderTest {
 
 	
 	@Test
-	public void testPropFileLoaderDuplicateEntries() {
+	public void testDuplicateEntries() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams2.properties"));
@@ -95,7 +95,7 @@ public class PropFileLoaderTest {
 	}
 	
 	@Test
-	public void testPropFileLoaderEmptyValues() {
+	public void testEmptyValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams3.properties"));
@@ -109,7 +109,7 @@ public class PropFileLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertNull( result.getExplicitValue(SimpleParams.KVP_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.KVP_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -118,7 +118,7 @@ public class PropFileLoaderTest {
 	}
 	
 	@Test
-	public void testPropFileLoaderAllWhitespaceValues() {
+	public void testAllWhitespaceValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams4.properties"));
@@ -141,7 +141,7 @@ public class PropFileLoaderTest {
 	}
 	
 	@Test
-	public void testPropFileLoaderQuotedStringValues() {
+	public void testQuotedStringValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams5.properties"));

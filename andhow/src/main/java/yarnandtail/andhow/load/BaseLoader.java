@@ -28,8 +28,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param values List of PropertyValues to add to.
 	 * @param loaderProblems A list of LoaderProblems to add to if there is a loader related problem
 	 * @param key The property name
-	 * @param strValue The property value
-	 * @throws ParsingException 
+	 * @param strValue The property value 
 	 */
 	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PropertyValue> values, 
 			List<LoaderProblem> loaderProblems, String key, String strValue) {
@@ -55,7 +54,7 @@ public abstract class BaseLoader implements Loader {
 					}
 				}
 				
-			} else {
+			} else if (this.isUnrecognizedPropertyNamesConsideredAProblem()) {
 				loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
 			}
 
@@ -78,7 +77,14 @@ public abstract class BaseLoader implements Loader {
 		
 		try {
 			
-			String trimmed = prop.getTrimmer().trim(untrimmedString);
+			String trimmed = untrimmedString;
+			
+			if (prop.getValueType().getDestinationType().equals(String.class) && 
+					this.isTrimmingRequiredForStringValues()) {
+				
+				trimmed = prop.getTrimmer().trim(untrimmedString);
+			}
+			
 			
 			if (trimmed != null || prop.getPropertyType().isFlag()) {
 			

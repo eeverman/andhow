@@ -44,4 +44,34 @@ public interface Loader {
 	 * @return 
 	 */
 	String getSpecificLoadDescription();
+	
+	/**
+	 * If true, values for string properties are trimmed by the Trimmer of
+	 * the property they are associated with.
+	 * 
+	 * If false, no trimming is done.  Non-String type property values (like
+	 * Integer or Date type values) are not affected by this.
+	 * 
+	 * Loaders that read from text files need to trim values to separate white
+	 * space and carriage returns from the value.  Loaders that read from more 
+	 * tightly defined sources, like reading properties from 
+	 * java.lang.System.getProperties(), can assume that trimming has
+	 * already happened.
+	 * 
+	 * @return 
+	 */
+	boolean isTrimmingRequiredForStringValues();
+	
+	/**
+	 * If true, an unrecognized name is considered a problem that will stop 
+	 * application startup.
+	 * 
+	 * This is a safety feature because a unrecognized property name in a
+	 * properties file could be a typo.  For other property sources, however,
+	 * like System.properties, there are many non-AndHow related values that
+	 * are expected to be present, so this rule cannot be enforced.
+	 * 
+	 * @return 
+	 */
+	boolean isUnrecognizedPropertyNamesConsideredAProblem();
 }
