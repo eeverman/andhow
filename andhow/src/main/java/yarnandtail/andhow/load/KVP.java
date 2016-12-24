@@ -42,11 +42,14 @@ public class KVP {
 	
 	/**
 	 * Splits a key value pair String into its key and value using the passed delimiter.
-	 * If the delimiter is not found, it is assumed that there is only a name
-	 * and no value, i.e., its a flag type value.
 	 * 
-	 * An UnparsableKVPException is thrown if there is only whitespace before
-	 * the delimiter or if the delimiter occurs more than once.
+	 * If the delimiter is not found, it is assumed that there is only a name
+	 * and no value, i.e., its a flag type value.  The key and value are only split
+	 * on the first instance, subsequent delimiters are considered part of the
+	 * value.
+	 * 
+	 * An ParsingException is thrown if there is only whitespace before
+	 * the delimiter.
 	 * 
 	 * @param arg
 	 * @param delimiter
@@ -57,7 +60,7 @@ public class KVP {
 		arg = TextUtil.trimToNull(arg);
 		
 		if (arg != null) {
-			String[] ss = arg.split(delimiter);
+			String[] ss = arg.split(delimiter, 2);
 			String name = null;
 			String value = null;
 			
@@ -72,11 +75,7 @@ public class KVP {
 				value = ss[1];	//preserve spaces to be delt w/ by the trimmer
 			}
 
-			if (ss.length < 3) {
-				return new KVP(name, value);
-			} else {
-				throw new ParsingException("There can only be one key/name and one value - found an extra", arg);
-			}
+			return new KVP(name, value);
 			
 		} else {
 			return KVP.NULL_KVP;
