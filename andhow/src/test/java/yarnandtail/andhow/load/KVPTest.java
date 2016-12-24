@@ -83,6 +83,25 @@ public class KVPTest {
 		assertEquals("val \t ue", kvp.getValue());
 	}
 	
+	@Test
+	public void splitKVPGoodNameAndValuesWithMultiDelims() throws Exception {
+		
+		KVP kvp = null;
+		
+		kvp = KVP.splitKVP("flag=val=ue", AndHow.KVP_DELIMITER);
+		assertEquals("flag", kvp.getName());
+		assertEquals("val=ue", kvp.getValue());
+		
+		kvp = KVP.splitKVP("flag=v=a=l=u=e", AndHow.KVP_DELIMITER);
+		assertEquals("flag", kvp.getName());
+		assertEquals("v=a=l=u=e", kvp.getValue());
+		
+		kvp = KVP.splitKVP("flag = v = a = l = u = e ", AndHow.KVP_DELIMITER);
+		assertEquals("flag", kvp.getName());
+		assertEquals("v = a = l = u = e", kvp.getValue());
+		
+	}
+	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadEmptyFlagName() throws Exception {
 		KVP.splitKVP("=value", AndHow.KVP_DELIMITER);
