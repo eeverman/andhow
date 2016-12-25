@@ -15,7 +15,12 @@ import yarnandtail.andhow.ValueMapWithContext;
  * other sources where properties can be passed as an array of strings, each
  * of the form name=value.
  * 
- * For FlgProperties (flags), the CmdLineLoader will interpret the presence of
+ * This loader trims incoming values for String type properties using the
+ * Trimmer of the associated Property.
+ * This loader considers it a problem to find unrecognized properties
+ * on the command line and will throw a RuntimeException if that happens.
+ * 
+ * For FlgProp properties (flags), the CmdLineLoader will interpret the presence of
  * the property name as setting the property true.
  * 
  * The JVM considers whitespace as breaks between values, however, it can be
@@ -62,6 +67,16 @@ public class CmdLineLoader extends BaseLoader {
 	@Override
 	public String getSpecificLoadDescription() {
 		return "arguments on the command line at startup";
+	}
+	
+	@Override
+	public boolean isTrimmingRequiredForStringValues() {
+		return true;
+	}
+	
+	@Override
+	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
+		return true;
 	}
 	
 }

@@ -1,6 +1,5 @@
 package yarnandtail.andhow.load;
 
-import yarnandtail.andhow.ParsingException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,8 +7,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import yarnandtail.andhow.*;
 import static yarnandtail.andhow.ReportGenerator.DEFAULT_LINE_WIDTH;
 import yarnandtail.andhow.internal.RuntimeDefinition;
@@ -18,6 +17,11 @@ import yarnandtail.andhow.property.StrProp;
 /**
  * Reads properties from a Java .property file, following standard java conventions
  * for the structure of those file.
+ * 
+ * This loader trims incoming values for String type properties using the
+ * Trimmer of the associated Property.
+ * This loader considers it a problem to find unrecognized properties in a 
+ * properties file and will throw a RuntimeException if that happens.
  * 
  * The PropFileLoader uses the java.util.Properties class to do read properties, 
  * so several behaviours are determined by that class.
@@ -79,10 +83,11 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 
 			if (props != null) {
 
-				for(Entry<Object, Object> entry : props.entrySet()) {
-					if (entry.getKey() != null && entry.getValue() != null) {
-						String k = entry.getKey().toString();
-						String v = entry.getValue().toString();
+				Set<Object> keys = props.keySet();
+				for(Object key : keys) {
+					if (key != null) {
+						String k = key.toString();
+						String v = props.getProperty(k);
 
 						attemptToAdd(appConfigDef, values, problems, k, v);
 					}
@@ -196,6 +201,16 @@ public class PropFileLoader extends BaseLoader implements ConfigSamplePrinter {
 	@Override
 	public String getSpecificLoadDescription() {
 		return specificLoadDescription;
+	}
+	
+	@Override
+	public boolean isTrimmingRequiredForStringValues() {
+		return true;
+	}
+	
+	@Override
+	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
+		return true;
 	}
 	
 	@Override

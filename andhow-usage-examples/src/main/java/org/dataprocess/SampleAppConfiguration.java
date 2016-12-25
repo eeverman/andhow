@@ -3,6 +3,7 @@ package org.dataprocess;
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.load.PropFileLoader;
+import yarnandtail.andhow.load.SysPropLoader;
 
 /**
  * This is an example minimal application configuration.
@@ -25,7 +26,8 @@ public class SampleAppConfiguration {
 	
 	public static void main(String[] args) {
 		AndHow.builder()
-				.loader(new PropFileLoader())
+				.loader(new SysPropLoader())	//Look for props in System.properties
+				.loader(new PropFileLoader())	//And in a properties file
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)
 				.build();
