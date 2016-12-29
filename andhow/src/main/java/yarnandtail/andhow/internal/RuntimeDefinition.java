@@ -125,18 +125,41 @@ public class RuntimeDefinition {
 		constructProblems.add(problem);
 	}
 	
+	/**
+	 * Finds a registered property by any recognized name.
+	 * 
+	 * @param name
+	 * @return 
+	 */
 	public Property<?> getProperty(String name) {
 		return propertiesByNames.get(name);
 	}
 	
+	/**
+	 * Returns the cononical name of a registered property.
+	 * 
+	 * If the property is not registered, null is returned.
+	 * @param prop
+	 * @return 
+	 */
 	public String getCanonicalName(Property<?> prop) {
 		return canonicalNameByProperty.get(prop);
 	}
 	
+	/**
+	 * Returns an unmodifiable list of registered properties.
+	 * 
+	 * @return 
+	 */
 	public List<Property<?>> getProperties() {
 		return Collections.unmodifiableList(properties);
 	}
 	
+	/**
+	 * Returns an unmodifiable list of all registered groups.
+	 * 
+	 * @return 
+	 */
 	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
 		return Collections.unmodifiableList(groupList);
 	}

@@ -69,23 +69,4 @@ public abstract class ValueProblem extends Problem {
 		}
 	}
 	
-	public static class ObjectConversionValueProblem extends ValueProblem {
-		Object obj;
-		
-		public ObjectConversionValueProblem(
-				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
-				Object obj) {
-			
-			propertyValueCoord = new ValueCoord(loader, group, prop);
-			this.obj = obj;
-		}
-		
-		@Override
-		public String getProblemDescription() {
-			return TextUtil.format("The object '{}' could not be converted to type {}",
-					(obj!=null)?obj:TextUtil.NULL_PRINT,
-					this.propertyValueCoord.property.getValueType().getDestinationType().getSimpleName());
-		}
-	}
-	
 }
