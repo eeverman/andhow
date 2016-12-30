@@ -27,8 +27,4 @@ public class AndHowTestBase {
 		return builder;
 	}
 	
-	public static void stopJndi() throws NamingException {
-		SimpleNamingContextBuilder builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-		builder.deactivate();
-	}
 }

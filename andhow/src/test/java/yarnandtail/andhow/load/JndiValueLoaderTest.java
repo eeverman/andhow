@@ -22,8 +22,21 @@ public class JndiValueLoaderTest extends AndHowTestBase {
 	@Before
 	public void setUp() throws NamingException, IllegalArgumentException, IllegalAccessException {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+	}
+	
+	@After
+	public void tearDown() throws NamingException {
+		//AndHowTestBase.stopJndi();
+	}
+
+	/**
+	 * Test of load method, of class JndiValueLoader.
+	 */
+	@Test
+	public void testLoad() throws Exception {
 		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.KVP_BOB), "test");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.KVP_NULL), "not_null");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
@@ -35,24 +48,39 @@ public class JndiValueLoaderTest extends AndHowTestBase {
 				.loader(new JndiValueLoader())
 				.group(SimpleParams.class)
 				.reloadForNonPropduction(reloader);
-	}
-	
-	@After
-	public void tearDown() throws NamingException {
-		AndHowTestBase.stopJndi();
-	}
-
-	/**
-	 * Test of load method, of class JndiValueLoader.
-	 */
-	@Test
-	public void testLoad() {
+		
 		assertEquals("test", SimpleParams.KVP_BOB.getValue());
 		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 	}
+	
+	@Test
+	public void testLoadObjects() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.KVP_BOB), "test");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.KVP_NULL), "not_null");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), Boolean.TRUE);
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
+		jndi.activate();
+		
+		AndHow.builder()
+				.loader(new JndiValueLoader())
+				.group(SimpleParams.class)
+				.reloadForNonPropduction(reloader);
+		
+		
+		assertEquals("test", SimpleParams.KVP_BOB.getValue());
+		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
+		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
+		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
+	}
+
 
 	
 }
