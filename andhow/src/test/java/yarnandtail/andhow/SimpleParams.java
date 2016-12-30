@@ -7,7 +7,7 @@ import yarnandtail.andhow.property.IntProp;
 /**
  * Test set of params w/ one of each type.
  * 
- * Namine is [type]_[default value]
+ * Naming is [type]_[default value]
  * 
  * @author eeverman
  */

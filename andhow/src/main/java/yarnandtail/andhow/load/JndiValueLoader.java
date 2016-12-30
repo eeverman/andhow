@@ -6,14 +6,17 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
 import yarnandtail.andhow.LoaderProblem.NoJndiContextLoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
+import yarnandtail.andhow.property.StrProp;
 
 /**
  * Loads values from a JNDI context.
@@ -92,6 +95,32 @@ public class JndiValueLoader extends BaseLoader {
 	@Override
 	public String getSpecificLoadDescription() {
 		return "JNDI properties in the system-wide JNDI context";
+	}
+	
+	@Override
+	public Class<? extends PropertyGroup> getLoaderConfig() {
+		return CONFIG.class;
+	}
+	
+	@GroupInfo(
+			name="JndiValueLoader Configuration",
+			desc="Application containers use different JNDI root locations to store "
+					+ "environment varibles.  The common ones use either the root \"\" or "
+					+ "\"comp/env/\".  If your container uses something different, one"
+					+ "of these properties must be set.")
+	public static interface CONFIG extends PropertyGroup {
+		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
+				.defaultValue("comp/env/, \"\"")
+				.desc("A comma separated list of standard JNDI root locations to be searched for properties. "
+						+ "Setting this property will replace the standard list.  "
+						+ "Use ADDED_JNDI_ROOTS to add others.  Leading and trailing slashes are optional.")
+				.helpText("The final JNDI URIs will look like this 'java:[root]/[Property Name]").build();
+		
+		StrProp ADDED_JNDI_ROOTS = StrProp.builder()
+				.desc("A comma separated list of JNDI root locations to be added to the standard list for searching. "
+						+ "Setting this property does not affect the STANDARD_JNDI_ROOTS.  Leading and trailing slashes are optional.")
+				.helpText("The final JNDI URIs will look like this 'java:[root]/[Property Name]").build();
+		
 	}
 	
 }
