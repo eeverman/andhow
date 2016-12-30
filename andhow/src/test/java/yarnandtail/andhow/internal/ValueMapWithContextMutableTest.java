@@ -29,7 +29,7 @@ public class ValueMapWithContextMutableTest {
 		
 		List<PropertyValue> firstSet = new ArrayList();
 		
-		firstSet.add(new PropertyValue(SimpleParams.KVP_BOB, "test"));
+		firstSet.add(new PropertyValue(SimpleParams.STR_BOB, "test"));
 		//firstSet.put(SimpleParams.KVP_NULL, "not_null");
 		firstSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.FALSE));
 		firstSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.TRUE));
@@ -37,8 +37,8 @@ public class ValueMapWithContextMutableTest {
 		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet, Collections.emptyList());
 		
 		List<PropertyValue> secondSet = new ArrayList();
-		secondSet.add(new PropertyValue(SimpleParams.KVP_BOB, "blah"));
-		secondSet.add(new PropertyValue(SimpleParams.KVP_NULL, "blah"));
+		secondSet.add(new PropertyValue(SimpleParams.STR_BOB, "blah"));
+		secondSet.add(new PropertyValue(SimpleParams.STR_NULL, "blah"));
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.TRUE));
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.FALSE));
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_NULL, Boolean.FALSE));
@@ -64,8 +64,8 @@ public class ValueMapWithContextMutableTest {
 		acvsToTest.add(builder.getValueMapWithContextImmutable());
 		acvsToTest.add(builder.getValueMapImmutable());
 		for (ValueMap acv : acvsToTest) {
-			assertEquals("test", acv.getExplicitValue(SimpleParams.KVP_BOB));
-			assertEquals("blah", acv.getExplicitValue(SimpleParams.KVP_NULL));
+			assertEquals("test", acv.getExplicitValue(SimpleParams.STR_BOB));
+			assertEquals("blah", acv.getExplicitValue(SimpleParams.STR_NULL));
 			assertEquals(false, acv.getExplicitValue(SimpleParams.FLAG_TRUE));
 			assertEquals(true, acv.getExplicitValue(SimpleParams.FLAG_FALSE));
 			assertEquals(true, acv.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -79,7 +79,7 @@ public class ValueMapWithContextMutableTest {
 		lvsToTest.add(builder.getValueMapWithContextImmutable().getAllValuesLoadedByLoader(cmdLineLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
-			assertEquals("test", lvs.getExplicitValue(SimpleParams.KVP_BOB));
+			assertEquals("test", lvs.getExplicitValue(SimpleParams.STR_BOB));
 			assertEquals(false, lvs.getExplicitValue(SimpleParams.FLAG_TRUE));
 			assertEquals(true, lvs.getExplicitValue(SimpleParams.FLAG_FALSE));
 			assertEquals(true, lvs.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -91,7 +91,7 @@ public class ValueMapWithContextMutableTest {
 		lvsToTest.add(builder.getValueMapWithContextImmutable().getEffectiveValuesLoadedByLoader(cmdLineLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
-			assertEquals("test", lvs.getExplicitValue(SimpleParams.KVP_BOB));
+			assertEquals("test", lvs.getExplicitValue(SimpleParams.STR_BOB));
 			assertEquals(false, lvs.getExplicitValue(SimpleParams.FLAG_TRUE));
 			assertEquals(true, lvs.getExplicitValue(SimpleParams.FLAG_FALSE));
 			assertEquals(true, lvs.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -104,8 +104,8 @@ public class ValueMapWithContextMutableTest {
 		lvsToTest.add(builder.getValueMapWithContextImmutable().getAllValuesLoadedByLoader(propFileLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(5, lvs.getValues().size());
-			assertEquals("blah", lvs.getExplicitValue(SimpleParams.KVP_BOB));
-			assertEquals("blah", lvs.getExplicitValue(SimpleParams.KVP_NULL));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParams.STR_BOB));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParams.STR_NULL));
 			assertEquals(true, lvs.getExplicitValue(SimpleParams.FLAG_TRUE));
 			assertEquals(false, lvs.getExplicitValue(SimpleParams.FLAG_FALSE));
 			assertEquals(false, lvs.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -117,7 +117,7 @@ public class ValueMapWithContextMutableTest {
 		lvsToTest.add(builder.getValueMapWithContextImmutable().getEffectiveValuesLoadedByLoader(propFileLoad));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(1, lvs.getValues().size());
-			assertEquals("blah", lvs.getExplicitValue(SimpleParams.KVP_NULL));
+			assertEquals("blah", lvs.getExplicitValue(SimpleParams.STR_NULL));
 		}
 		
 	}

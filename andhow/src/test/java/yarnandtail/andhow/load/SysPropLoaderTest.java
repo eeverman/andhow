@@ -34,8 +34,8 @@ public class SysPropLoaderTest {
 		
 		appDef = new RuntimeDefinition();
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_BOB, bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_NULL, bns.buildNames(SimpleParams.KVP_NULL, SimpleParams.class, "KVP_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "STR_BOB"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "STR_NULL"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
@@ -66,8 +66,8 @@ public class SysPropLoaderTest {
 	public void testHappyPath() throws Exception {
 		
 		
-		System.setProperty(getPropName(SimpleParams.KVP_BOB), "aaa");
-		System.setProperty(getPropName(SimpleParams.KVP_NULL), "bbb");
+		System.setProperty(getPropName(SimpleParams.STR_BOB), "aaa");
+		System.setProperty(getPropName(SimpleParams.STR_NULL), "bbb");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "t");
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "f");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "y");
@@ -79,8 +79,8 @@ public class SysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertEquals("aaa", result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("bbb", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals("aaa", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bbb", result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -96,8 +96,8 @@ public class SysPropLoaderTest {
 	public void testEmptyValues() throws Exception {
 		
 		
-		System.setProperty(getPropName(SimpleParams.KVP_BOB), "");
-		System.setProperty(getPropName(SimpleParams.KVP_NULL), "");
+		System.setProperty(getPropName(SimpleParams.STR_BOB), "");
+		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
@@ -109,8 +109,8 @@ public class SysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertEquals("", result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -120,8 +120,8 @@ public class SysPropLoaderTest {
 	public void testAllWhitespaceValues() throws Exception {
 		
 		
-		System.setProperty(getPropName(SimpleParams.KVP_BOB), "\t\t\t\t");
-		System.setProperty(getPropName(SimpleParams.KVP_NULL), "\t\t\t\t");
+		System.setProperty(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
+		System.setProperty(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
@@ -134,8 +134,8 @@ public class SysPropLoaderTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
 		//String value coming from this loader do not require trimming by default
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_NULL));
 		
 		//Non-string values still get trimmed
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -147,8 +147,8 @@ public class SysPropLoaderTest {
 	public void testQuotedStringValues() throws Exception {
 		
 		
-		System.setProperty(getPropName(SimpleParams.KVP_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
-		System.setProperty(getPropName(SimpleParams.KVP_NULL), "");
+		System.setProperty(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
+		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
@@ -160,10 +160,10 @@ public class SysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getEffectiveValue(SimpleParams.KVP_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.KVP_NULL));
-		assertEquals("", result.getEffectiveValue(SimpleParams.KVP_NULL));
+		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals("", result.getEffectiveValue(SimpleParams.STR_NULL));
 	}
 	
 	@Test
@@ -178,9 +178,9 @@ public class SysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertNull(result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
-		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getEffectiveValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.FALSE, result.getEffectiveValue(SimpleParams.FLAG_FALSE));
 		assertNull(result.getEffectiveValue(SimpleParams.FLAG_NULL));
