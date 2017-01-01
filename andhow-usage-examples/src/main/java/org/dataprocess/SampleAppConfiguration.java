@@ -2,6 +2,7 @@ package org.dataprocess;
 
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
+import yarnandtail.andhow.load.JndiLoader;
 import yarnandtail.andhow.load.PropFileLoader;
 import yarnandtail.andhow.load.SysPropLoader;
 
@@ -27,6 +28,7 @@ public class SampleAppConfiguration {
 	public static void main(String[] args) {
 		AndHow.builder()
 				.loader(new SysPropLoader())	//Look for props in System.properties
+				.loader(new JndiLoader())		//Look in container provided JNDI context
 				.loader(new PropFileLoader())	//And in a properties file
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)

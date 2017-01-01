@@ -1,7 +1,7 @@
 package yarnandtail.andhow.name;
 
 import java.util.List;
-import static yarnandtail.andhow.Property.EMPTY_STRING_LIST;
+import static yarnandtail.andhow.TextUtil.EMPTY_STRING_LIST;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.NamingStrategy;

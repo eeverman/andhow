@@ -30,9 +30,6 @@ import java.util.List;
  * @author eeverman
  */
 public interface Property<T> {
-	public static final String[] EMPTY_STRING_ARRAY = new String[0];
-	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
-	
 
 	T getValue(ValueMap values);
 	

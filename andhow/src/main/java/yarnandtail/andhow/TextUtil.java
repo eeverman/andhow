@@ -13,6 +13,9 @@ import java.util.List;
  */
 public class TextUtil {
 	
+	public static final String[] EMPTY_STRING_ARRAY = new String[0];
+	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
+	
 	public static final String NULL_PRINT = "[[NULL]]";
 	public static final String SECOND_LINE_INDENT = "  ";
 	
