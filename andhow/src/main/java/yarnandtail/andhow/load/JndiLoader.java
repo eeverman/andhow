@@ -11,6 +11,7 @@ import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
 import yarnandtail.andhow.LoaderProblem.NoJndiContextLoaderProblem;
 import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyValue;
@@ -52,24 +53,33 @@ public class JndiLoader extends BaseLoader {
 		
 		try {
 			InitialContext ctx = new InitialContext();
+			List<String> propNames = new ArrayList();
 			
 			for (Property<?> p : appConfigDef.getProperties()) {
-				String propName = appConfigDef.getCanonicalName(p);
+				
+				//Check the URI name first (more likely), then the classpath style name
+				propNames.add(NamingStrategy.getUriName(appConfigDef.getCanonicalName(p)));
+				propNames.add(appConfigDef.getCanonicalName(p));
 				
 				for (String root : jndiRoots) {
-					try {
-						Object o = ctx.lookup(JNDI_PROTOCOL_NAME + root + propName);
-						
-						if (o != null) {
-							attemptToAdd(appConfigDef, values, problems, p, o);
+					
+					for (String propName : propNames) {
+						try {
+							Object o = ctx.lookup(JNDI_PROTOCOL_NAME + root + propName);
+
+							if (o != null) {
+								attemptToAdd(appConfigDef, values, problems, p, o);
+							}
+
+						} catch (NameNotFoundException nnf) {
+							//Ignore - this is expected
+						} catch (NamingException ex) {
+							problems.add(new IOLoaderProblem(this, appConfigDef.getGroupForProperty(p), p, ex));
 						}
-						
-					} catch (NameNotFoundException nnf) {
-						//Ignore - this is expected
-					} catch (NamingException ex) {
-						problems.add(new IOLoaderProblem(this, appConfigDef.getGroupForProperty(p), p, ex));
 					}
 				}
+				
+				propNames.clear();
 				
 			}
 			

@@ -47,7 +47,25 @@ public interface NamingStrategy {
 		public void setAliases(List<String> aliases) {
 			this.aliases = aliases;
 		}
+	}
+	
+	/**
+	 * Converts a standard classpath style property name to a URI based one.
+	 * 
+	 * Standard classpath style names look like this:  <code>com.acme.bigapp.PROPERTY_NAME</code>.
+	 * A URI version of that would be this: <code>com/acme/bigapp/PROPERTY_NAME</code>.
+	 * 
+	 * No trimming or cleanup is done of the passed classpathNames - they are
+	 * assumed to be in final form.
+	 * Empty and null classpathNames shouldn't happen, but they just return
+	 * themselves, respectively.
+	 * 
+	 * @param classpathName
+	 * @return null if null is passed.
+	 */
+	public static String getUriName(String classpathName) {
+		if (classpathName == null) return null;
 		
-		
+		return classpathName.replaceAll("\\.", "/");
 	}
 }

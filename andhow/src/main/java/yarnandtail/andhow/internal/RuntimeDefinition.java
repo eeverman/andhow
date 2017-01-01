@@ -35,7 +35,7 @@ public class RuntimeDefinition {
 	
 	/**
 	 * Adds a PropertyGroup, its Property and the name and aliases for that property
- to all the collections.
+	 * to all the collections.
 	 * 
 	 * @param group The PropertyGroup parent of the property
 	 * @param property The Property to be added
@@ -117,7 +117,7 @@ public class RuntimeDefinition {
 	
 	/**
 	 * Since code outside this class is adding properties, external code also needs
- to be able to record when it cannot add properties to the definition.
+	 * to be able to record when it cannot add properties to the definition.
 	 * 
 	 * @param problem 
 	 */
