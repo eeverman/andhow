@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.LoaderProblem.DuplicatePropertyLoaderProblem;
+import yarnandtail.andhow.LoaderProblem.ObjectConversionValueProblem;
 import yarnandtail.andhow.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
@@ -23,9 +24,12 @@ public abstract class BaseLoader implements Loader {
 	}
 	
 	/**
+	 * Util method to load a String to a property by name.
+	 * 
+	 * Used for text based loaders.
 	 * 
 	 * @param appConfigDef Used to look up the property name for find the actual property
-	 * @param values List of PropertyValues to add to.
+	 * @param values List of PropertyValues to add to, which should be only the value of this loader.
 	 * @param loaderProblems A list of LoaderProblems to add to if there is a loader related problem
 	 * @param key The property name
 	 * @param strValue The property value 
@@ -56,6 +60,55 @@ public abstract class BaseLoader implements Loader {
 				
 			} else if (this.isUnrecognizedPropertyNamesConsideredAProblem()) {
 				loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
+			}
+
+		}
+	}
+	
+
+	/**
+	 * Util method to attempt to load an object of an unknown type to a property.
+	 * 
+	 * Used for object based loaders where value are not in text form.
+	 * This loader assumes the passed property is a valid property to to load to,
+	 * but it will check to make sure it is not null, which is not treated as an error.
+	 * 
+	 * @param appConfigDef Used to look up the property name for find the actual property
+	 * @param values List of PropertyValues to add to, which should be only the value of this loader.
+	 * @param loaderProblems A list of LoaderProblems to add to if there is a loader related problem
+	 * @param prop The Property to load to
+	 * @param value The Object to be loaded to this property
+	 */
+	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PropertyValue> values, 
+			List<LoaderProblem> loaderProblems, Property prop, Object value) {
+		
+		if (prop != null) {
+			
+			PropertyValue pv = null;
+			
+			if (value.getClass().equals(prop.getValueType().getDestinationType())) {
+
+				pv = new PropertyValue(prop, value);
+
+			} else if (value instanceof String) {
+
+				pv = createValue(appConfigDef, prop, value.toString());
+
+			} else {
+				loaderProblems.add(
+						new ObjectConversionValueProblem(this, appConfigDef.getGroupForProperty(prop), prop, value));
+			}
+			
+			if (pv != null) {
+				
+				PropertyValue dup = findDuplicateProperty(pv, values);
+				
+				if (dup == null) {
+					values.add(pv);
+				} else {
+					loaderProblems.add(new DuplicatePropertyLoaderProblem(
+						this, appConfigDef.getGroupForProperty(prop), prop));
+				}
 			}
 
 		}

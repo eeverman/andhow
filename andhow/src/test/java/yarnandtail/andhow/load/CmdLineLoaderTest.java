@@ -29,8 +29,8 @@ public class CmdLineLoaderTest {
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		appDef = new RuntimeDefinition();
-		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_BOB, bns.buildNames(SimpleParams.KVP_BOB, SimpleParams.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.KVP_NULL, bns.buildNames(SimpleParams.KVP_NULL, SimpleParams.class, "KVP_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "KVP_NULL"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
@@ -56,8 +56,8 @@ public class CmdLineLoaderTest {
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
-		assertEquals("test", result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("not_null", result.getExplicitValue(SimpleParams.KVP_NULL));
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -83,10 +83,10 @@ public class CmdLineLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
 		
-		assertNull(result.getExplicitValue(SimpleParams.KVP_BOB));
-		assertEquals("bob", result.getEffectiveValue(SimpleParams.KVP_BOB));
-		assertNull(result.getExplicitValue(SimpleParams.KVP_NULL));
-		assertNull(result.getEffectiveValue(SimpleParams.KVP_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getEffectiveValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));

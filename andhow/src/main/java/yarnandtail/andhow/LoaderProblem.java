@@ -147,4 +147,37 @@ public abstract class LoaderProblem extends Problem {
 			return "Expected for find data for this loader to load from: " + message;
 		}
 	}
+	
+	public static class NoJndiContextLoaderProblem extends LoaderProblem {
+
+		public NoJndiContextLoaderProblem(Loader loader) {
+			badValueCoord = new ValueCoord(loader, null, null);
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "There is no JNDI Context for the JndiLoader to load from.  " +
+					"If there is no JNDI Context availabler for this entry point to the application, " +
+					"remove the JndiLoader from the list of Loaders.";
+		}
+	}
+	
+	public static class ObjectConversionValueProblem extends LoaderProblem {
+		Object obj;
+		
+		public ObjectConversionValueProblem(
+				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
+				Object obj) {
+			badValueCoord = new ValueCoord(loader, group, prop);
+			this.obj = obj;
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format("The object '{}' could not be converted to type {}",
+					(obj!=null)?obj:TextUtil.NULL_PRINT,
+					badValueCoord.property.getValueType().getDestinationType().getSimpleName());
+		}
+	}
+	
 }

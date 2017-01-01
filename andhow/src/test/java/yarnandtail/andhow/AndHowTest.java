@@ -26,8 +26,8 @@ public class AndHowTest extends AndHowTestBase {
 	String[] cmdLineArgsWFullClassName = new String[0];
 	
 	public static interface RequiredParams extends PropertyGroup {
-		StrProp KVP_BOB = StrProp.builder().defaultValue("Bob").required().build();
-		StrProp KVP_NULL = StrProp.builder().required().build();
+		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").required().build();
+		StrProp STR_NULL_R = StrProp.builder().required().build();
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).required().build();
 		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).required().build();
 		FlagProp FLAG_NULL = FlagProp.builder().required().build();
@@ -43,15 +43,15 @@ public class AndHowTest extends AndHowTestBase {
 		configPtGroups.add(SimpleParams.class);
 		
 		startVals.clear();
-		startVals.put(SimpleParams.KVP_BOB, "test");
-		startVals.put(SimpleParams.KVP_NULL, "not_null");
+		startVals.put(SimpleParams.STR_BOB, "test");
+		startVals.put(SimpleParams.STR_NULL, "not_null");
 		startVals.put(SimpleParams.FLAG_TRUE, Boolean.FALSE);
 		startVals.put(SimpleParams.FLAG_FALSE, Boolean.TRUE);
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "KVP_BOB" + AndHow.KVP_DELIMITER + "test",
-			paramFullPath + "KVP_NULL" + AndHow.KVP_DELIMITER + "not_null",
+			paramFullPath + "STR_BOB" + AndHow.KVP_DELIMITER + "test",
+			paramFullPath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null",
 			paramFullPath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false",
 			paramFullPath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true",
 			paramFullPath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true"
@@ -72,15 +72,15 @@ public class AndHowTest extends AndHowTestBase {
 		AndHow.builder().namingStrategy(basicNaming)
 				.loader(new CmdLineLoader())
 				.group(SimpleParams.class)
-				.forceValue(SimpleParams.KVP_BOB, "test")
-				.forceValue(SimpleParams.KVP_NULL, "not_null")
+				.forceValue(SimpleParams.STR_BOB, "test")
+				.forceValue(SimpleParams.STR_NULL, "not_null")
 				.forceValue(SimpleParams.FLAG_TRUE, Boolean.FALSE)
 				.forceValue(SimpleParams.FLAG_FALSE, Boolean.TRUE)
 				.forceValue(SimpleParams.FLAG_NULL, Boolean.TRUE)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("test", SimpleParams.KVP_BOB.getValue());
-		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals("test", SimpleParams.STR_BOB.getValue());
+		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
@@ -88,8 +88,8 @@ public class AndHowTest extends AndHowTestBase {
 		
 		List<Property<?>> regPts = AndHow.instance().getProperties();
 		
-		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
-		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
+		assertTrue(regPts.contains(SimpleParams.STR_BOB));
+		assertTrue(regPts.contains(SimpleParams.STR_NULL));
 		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
@@ -103,16 +103,16 @@ public class AndHowTest extends AndHowTestBase {
 				.group(SimpleParams.class)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("bob", SimpleParams.KVP_BOB.getValue());
-		assertNull(SimpleParams.KVP_NULL.getValue());
+		assertEquals("bob", SimpleParams.STR_BOB.getValue());
+		assertNull(SimpleParams.STR_NULL.getValue());
 		assertTrue(SimpleParams.FLAG_TRUE.getValue());
 		assertFalse(SimpleParams.FLAG_FALSE.getValue());
 		assertFalse(SimpleParams.FLAG_NULL.getValue());
 		
 		//Test for the presense of the registered param after the reset
 		List<Property<?>> regPts = AndHow.instance().getProperties();
-		assertTrue(regPts.contains(SimpleParams.KVP_BOB));
-		assertTrue(regPts.contains(SimpleParams.KVP_NULL));
+		assertTrue(regPts.contains(SimpleParams.STR_BOB));
+		assertTrue(regPts.contains(SimpleParams.STR_NULL));
 		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
 		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
@@ -128,8 +128,8 @@ public class AndHowTest extends AndHowTestBase {
 				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
 		
-		assertEquals("test", SimpleParams.KVP_BOB.getValue());
-		assertEquals("not_null", SimpleParams.KVP_NULL.getValue());
+		assertEquals("test", SimpleParams.STR_BOB.getValue());
+		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
@@ -171,7 +171,7 @@ public class AndHowTest extends AndHowTestBase {
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(2, ce.getRequirementProblems().size());
-			assertEquals(RequiredParams.KVP_NULL, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.STR_NULL_R, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
 			assertEquals(RequiredParams.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
 		}
 	}
@@ -179,7 +179,7 @@ public class AndHowTest extends AndHowTestBase {
 	@Test(expected = RuntimeException.class)
 	public void testAttemptingToFetchAPropValueBeforeConfigurationShouldThrowARuntimeException() {
 		reloader.destroy();
-		String shouldFail = SimpleParams.KVP_BOB.getValue();
+		String shouldFail = SimpleParams.STR_BOB.getValue();
 	}
 	
 

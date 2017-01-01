@@ -2,7 +2,7 @@ package org.simple;
 
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.load.PropFileLoader;
+import yarnandtail.andhow.load.*;
 
 /**
  * This example has almost no comments b/c it's a minimal example for the AndHow! homepage.
@@ -11,6 +11,8 @@ public class SimpleSample {
 	
 	public static void main(String[] args) {
 		AndHow.builder() /* Simple builder initializes framework */
+				.loader(new SysPropLoader())
+				.loader(new JndiLoader())
 				.loader(new PropFileLoader())
 				.group(MySetOfProps.class)
 				.build();

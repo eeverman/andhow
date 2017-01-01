@@ -17,6 +17,8 @@ public class SimpleSample {
 	
 	public static void main(String[] args) {
 		AndHow.builder() /* 1) Simple builder initializes framework */
+				.loader(new SysPropLoader())
+				.loader(new JndiLoader())
 				.loader(new PropFileLoader())
 				.group(MySetOfProps.class) /* 2) MySetOfProps defined below */
 				.build();
@@ -44,10 +46,10 @@ public class SimpleSample {
 }
 ```
 ### Walking through the example:
-1.	`AndHow` initializes with a simple builder().  _Loaders_, like the `PropFileLoader`,
-	read properties from various sources.  PropFileLoader will look for an _andhow.properties_ file by default,
-	but other locations can be configured and other loaders can be used, such as
-	command line and (soon) JNDI.
+1.	`AndHow` initializes with a simple builder().  _Loaders_ read properties from
+	various sources.  You can determine the order of the loaders - in this example,
+	properties found in System.properties take precedence over values found in
+	the JNDI context, and so on.  Several other loaders are available, including command line. 
 2.	Add `PropertyGroup`s to the list that AndHow will manage.
 3.	`Property` values can be accessed directly from the Property itself - there is
 	no _magic name string_ to fetch properties from a HashMap.
