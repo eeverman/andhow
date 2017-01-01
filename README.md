@@ -1,6 +1,6 @@
 AndHow!  strong.simple.valid.AppConfiguration
 ======
-A strongly typed configuration framework with detailed validation that is simple to use, 
+A strongly typed configuration framework with detailed validation that is simple to use
 for web apps, command line or any application environment.
 
 Key Features
@@ -50,18 +50,23 @@ public class SimpleSample {
 	various sources.  You can determine the order of the loaders - in this example,
 	properties found in System.properties take precedence over values found in
 	the JNDI context, and so on.  Several other loaders are available, including command line. 
-2.	Add `PropertyGroup`s to the list that AndHow will manage.
+2.	Configuration properties are explicitly declared in groups to keep
+	related properties together, then groups are added to the AndHow instance.
 3.	`Property` values can be accessed directly from the Property itself - there is
 	no _magic name string_ to fetch properties from a HashMap.
 	Return values of `getValue()` are _**strongly typed**_.
-4.	Properties are defined as `public static final` constants in interfaces that
-	create logical sets called `PropertyGroups`.  Properties describe themselves
-	in their builders, including the value type (String, Integer, etc), required vs. optional,
-	validation rules and description.  (Members defined in interfaces are `public static final`
-	by default)
+4.	Properties are declared just like Java constants - In fact, they _are_ Java
+	constants.  AndHow takes advantage of the fact that fields declared in
+	interfaces are implicitly `public static final` and the `PropertyGroup` interface
+	is the base for all sets of `Properties`.
+	PropertyGroups are self-describing just by the name you choose for them, but
+	you can also include descriptive annotations.
+	Properties describe themselves in their builders, 
+	including the value type (String, Integer, etc), required vs. optional,
+	validation rules and description.
 
 Of course, this example fails because there is no _andhow.properties_ file.
-This is a good thing - you would not want a misconfigured application to appear to start.
+This is a good thing - you would not want a miss-configured application to appear to start.
 Even better, it doesn't just fail, it prints a sample configuration for each
 of the loaders in use.  For the PropFileLoader it would print this:
 
