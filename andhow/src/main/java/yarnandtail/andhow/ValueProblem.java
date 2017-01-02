@@ -7,25 +7,25 @@ package yarnandtail.andhow;
  */
 public abstract class ValueProblem extends Problem {
 	
-	protected ValueCoord propertyValueCoord;
+	protected ValueCoord badValueCoord;
 	
-	public ValueCoord getPropertyValueCoord() {
-		return propertyValueCoord;
+	public ValueCoord getBadValueCoord() {
+		return badValueCoord;
 	}
 	
 	@Override
 	public String getProblemContext() {
 		
-		if (propertyValueCoord != null) {
+		if (badValueCoord != null) {
 			
 			String loadDesc = UNKNOWN;
 			
-			if (propertyValueCoord.getLoader() != null && 
-					propertyValueCoord.getLoader().getSpecificLoadDescription() != null) {
-				loadDesc = propertyValueCoord.getLoader().getSpecificLoadDescription();
+			if (badValueCoord.getLoader() != null && 
+					badValueCoord.getLoader().getSpecificLoadDescription() != null) {
+				loadDesc = badValueCoord.getLoader().getSpecificLoadDescription();
 			}
 			return TextUtil.format("Property {} loaded from {}", 
-						propertyValueCoord.getPropName(), loadDesc);
+						badValueCoord.getPropName(), loadDesc);
 		} else {
 			return UNKNOWN;
 		}
@@ -39,7 +39,7 @@ public abstract class ValueProblem extends Problem {
 		public InvalidValueProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property<T> prop, 
 				T value, Validator<T> validator) {
-			propertyValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new ValueCoord(loader, group, prop);
 			this.validator = validator;
 			this.value = value;
 		}
@@ -47,25 +47,6 @@ public abstract class ValueProblem extends Problem {
 		@Override
 		public String getProblemDescription() {
 			return validator.getInvalidMessage(value);
-		}
-	}
-	
-	public static class StringConversionValueProblem extends ValueProblem {
-		String str;
-		
-		public StringConversionValueProblem(
-				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
-				String str) {
-			
-			propertyValueCoord = new ValueCoord(loader, group, prop);
-			this.str = str;
-		}
-
-		@Override
-		public String getProblemDescription() {
-			return TextUtil.format("The string '{}' could not be converted to type {}",
-					(str!=null)?str:TextUtil.NULL_PRINT, 
-					this.propertyValueCoord.property.getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	

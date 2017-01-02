@@ -148,15 +148,18 @@ public abstract class LoaderProblem extends Problem {
 		}
 	}
 	
-	public static class NoJndiContextLoaderProblem extends LoaderProblem {
+	/**
+	 * Its not clear what would cause this exception to happen.
+	 */
+	public static class JndiContextLoaderProblem extends LoaderProblem {
 
-		public NoJndiContextLoaderProblem(Loader loader) {
+		public JndiContextLoaderProblem(Loader loader) {
 			badValueCoord = new ValueCoord(loader, null, null);
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return "There is no JNDI Context for the JndiLoader to load from.  " +
+			return "Constructing the JNDI Context for the JndiLoader threw an Exception.  " +
 					"If there is no JNDI Context availabler for this entry point to the application, " +
 					"remove the JndiLoader from the list of Loaders.";
 		}
@@ -177,6 +180,26 @@ public abstract class LoaderProblem extends Problem {
 			return TextUtil.format("The object '{}' could not be converted to type {}",
 					(obj!=null)?obj:TextUtil.NULL_PRINT,
 					badValueCoord.property.getValueType().getDestinationType().getSimpleName());
+		}
+	}
+	
+
+	public static class StringConversionLoaderProblem extends LoaderProblem {
+		String str;
+		
+		public StringConversionLoaderProblem(
+				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
+				String str) {
+			
+			badValueCoord = new ValueCoord(loader, group, prop);
+			this.str = str;
+		}
+
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format("The string '{}' could not be converted to type {}",
+					(str!=null)?str:TextUtil.NULL_PRINT, 
+					this.badValueCoord.property.getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	

@@ -102,20 +102,23 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 					.reloadForNonPropduction(reloader);
 		} catch (AppFatalException e) {
 			
-			
+			//Value Problems (validation)
 			//Due to loading from a prop file, the order of the file is not preserved,
 			//so we cannot know the order that problems were encountered.
 			ArrayList<Property<?>> expectedProblemPoints = new ArrayList();
 			expectedProblemPoints.add(SampleRestClientGroup.REST_HOST);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_PORT);
 			expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
-			expectedProblemPoints.add(SampleRestClientGroup.RETRY_COUNT);
 			
-			assertEquals(4, e.getValueProblems().size());
-			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(0).getPropertyValueCoord().getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(1).getPropertyValueCoord().getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(2).getPropertyValueCoord().getProperty()));
-			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(3).getPropertyValueCoord().getProperty()));
+			assertEquals(3, e.getValueProblems().size());
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(0).getBadValueCoord().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(1).getBadValueCoord().getProperty()));
+			assertTrue(expectedProblemPoints.contains(e.getValueProblems().get(2).getBadValueCoord().getProperty()));
+			
+			//
+			// Loader problems
+			assertEquals(1, e.getLoaderProblems().size());
+			assertEquals(SampleRestClientGroup.RETRY_COUNT, e.getLoaderProblems().get(0).getBadValueCoord().getProperty());
 		}
 		
 

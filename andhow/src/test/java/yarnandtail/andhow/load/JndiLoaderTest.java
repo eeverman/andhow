@@ -10,9 +10,12 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AndHowTestBase;
 import static yarnandtail.andhow.AndHowTestBase.reloader;
+import yarnandtail.andhow.AppFatalException;
+import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.SimpleParams;
+import yarnandtail.andhow.ValueProblem;
 
 /**
  *
@@ -245,5 +248,104 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(new Integer(-9999), SimpleParams.INT_TEN.getValue());
 		assertEquals(new Integer(9999), SimpleParams.INT_NULL.getValue());
 	}
+	
+
+	//
+	//
+	// Non-HappyPath
+	//
+	
+	@Test
+	public void testDuplicateValues() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		
+		//switching values slightly to make sure we are reading the correct ones
+		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
+		jndi.bind("java:" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
+
+		jndi.activate();
+		
+		try {
+			AndHow.builder()
+					.loader(new JndiLoader())
+					.group(SimpleParams.class)
+					.reloadForNonPropduction(reloader);
+		
+			fail("Should not reach this point");
+			
+		} catch (AppFatalException e) {
+			List<LoaderProblem> lps = e.getLoaderProblems();
+			
+			assertEquals(1, lps.size());
+			assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
+			
+		}
+		
+	}
+	
+
+	@Test
+	public void testObjectConversionErrors() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		
+		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
+		jndi.bind("java:" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
+		
+		jndi.activate();
+		
+		try {
+			AndHow.builder()
+					.loader(new JndiLoader())
+					.group(SimpleParams.class)
+					.reloadForNonPropduction(reloader);
+		
+			fail("Should not reach this point");
+			
+		} catch (AppFatalException e) {
+			List<LoaderProblem> lps = e.getLoaderProblems();
+			
+			assertEquals(2, lps.size());
+			assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
+			assertEquals(SimpleParams.INT_TEN, lps.get(0).getBadValueCoord().getProperty());
+			assertTrue(lps.get(1) instanceof LoaderProblem.ObjectConversionValueProblem);
+			assertEquals(SimpleParams.INT_NULL, lps.get(1).getBadValueCoord().getProperty());
+		}
+	}
+	
+	@Test
+	public void testStringConversionErrors() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		
+		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
+		jndi.bind("java:" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
+		
+		jndi.activate();
+		
+		try {
+			AndHow.builder()
+					.loader(new JndiLoader())
+					.group(SimpleParams.class)
+					.reloadForNonPropduction(reloader);
+		
+			fail("Should not reach this point");
+			
+		} catch (AppFatalException e) {
+			List<LoaderProblem> vps = e.getLoaderProblems();
+			
+			assertEquals(2, vps.size());
+			assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);
+			assertEquals(SimpleParams.INT_TEN, vps.get(0).getBadValueCoord().getProperty());
+			assertTrue(vps.get(1) instanceof LoaderProblem.StringConversionLoaderProblem);
+			assertEquals(SimpleParams.INT_NULL, vps.get(1).getBadValueCoord().getProperty());
+		}
+	
+	}
+	
 	
 }
