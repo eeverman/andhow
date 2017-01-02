@@ -9,7 +9,7 @@ import javax.naming.NamingException;
 import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
-import yarnandtail.andhow.LoaderProblem.NoJndiContextLoaderProblem;
+import yarnandtail.andhow.LoaderProblem.JndiContextLoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
@@ -85,7 +85,7 @@ public class JndiLoader extends BaseLoader {
 			
 			
 		} catch (NamingException ex) {
-			problems.add(new NoJndiContextLoaderProblem(this));
+			problems.add(new JndiContextLoaderProblem(this));	//Not sure why this would happen
 		}
 		
 		return new LoaderValues(this, values, problems);

@@ -1,7 +1,5 @@
 package yarnandtail.andhow;
 
-import yarnandtail.andhow.valuetype.TrimStyle;
-
 /**
  *
  * @author eeverman

@@ -45,8 +45,15 @@ public abstract class BaseLoader implements Loader {
 
 			if (prop != null) {
 				
-				PropertyValue pv = createValue(appConfigDef, prop, strValue);
+				PropertyValue pv = null;
 				
+				try {
+					pv = createValue(appConfigDef, prop, strValue);
+				} catch (ParsingException e) {
+					loaderProblems.add(new LoaderProblem.StringConversionLoaderProblem(
+						this, appConfigDef.getGroupForProperty(prop), prop, e.getProblemText()));
+				}
+								
 				if (pv != null) {
 					PropertyValue dup = findDuplicateProperty(pv, values);
 
@@ -92,7 +99,12 @@ public abstract class BaseLoader implements Loader {
 
 			} else if (value instanceof String) {
 
-				pv = createValue(appConfigDef, prop, value.toString());
+				try {
+					pv = createValue(appConfigDef, prop, value.toString());
+				} catch (ParsingException e) {
+					loaderProblems.add(new LoaderProblem.StringConversionLoaderProblem(
+						this, appConfigDef.getGroupForProperty(prop), prop, e.getProblemText()));
+				}
 
 			} else {
 				loaderProblems.add(
@@ -123,41 +135,34 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected <T> PropertyValue createValue(RuntimeDefinition appConfigDef, Property<T> prop, String untrimmedString) {
+	protected <T> PropertyValue createValue(RuntimeDefinition appConfigDef, 
+			Property<T> prop, String untrimmedString) throws ParsingException {
 		
 		ArrayList<ValueProblem> issues = new ArrayList(0);
 		T value = null;
 		
-		try {
-			
-			String trimmed = untrimmedString;
-			
-			if (prop.getValueType().getDestinationType().equals(String.class) && 
-					this.isTrimmingRequiredForStringValues()) {
-				
-				trimmed = prop.getTrimmer().trim(untrimmedString);
-			}
-			
-			
-			if (trimmed != null || prop.getPropertyType().isFlag()) {
-			
-				value = prop.getValueType().convert(trimmed);
+		String trimmed = untrimmedString;
 
-				for (Validator<T> v : prop.getValidators()) {
-					if (! v.isValid(value)) {
-						issues.add(new ValueProblem.InvalidValueProblem(
-								this, appConfigDef.getGroupForProperty(prop), prop, value, v));
-					}
-				}
-			} else {
-				return null;	//No value to create
-			}
-		} catch (ParsingException ex) {
-			issues.add(new ValueProblem.StringConversionValueProblem(
-					this, appConfigDef.getGroupForProperty(prop), prop, untrimmedString));
+		if (prop.getValueType().getDestinationType().equals(String.class) && 
+				this.isTrimmingRequiredForStringValues()) {
+
+			trimmed = prop.getTrimmer().trim(untrimmedString);
 		}
-		
 
+
+		if (trimmed != null || prop.getPropertyType().isFlag()) {
+
+			value = prop.getValueType().convert(trimmed);
+
+			for (Validator<T> v : prop.getValidators()) {
+				if (! v.isValid(value)) {
+					issues.add(new ValueProblem.InvalidValueProblem(
+							this, appConfigDef.getGroupForProperty(prop), prop, value, v));
+				}
+			}
+		} else {
+			return null;	//No value to create
+		}
 		
 		return new PropertyValue(prop, value, issues);
 	}
