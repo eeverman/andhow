@@ -148,9 +148,6 @@ public abstract class LoaderProblem extends Problem {
 		}
 	}
 	
-	/**
-	 * Its not clear what would cause this exception to happen.
-	 */
 	public static class JndiContextLoaderProblem extends LoaderProblem {
 
 		public JndiContextLoaderProblem(Loader loader) {

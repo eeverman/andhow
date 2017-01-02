@@ -20,6 +20,7 @@ public class ReportGenerator {
 			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
 			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
 			printConstructionProblems(out, fatalException.getConstructionProblems(), appDef);
+			printLoaderProblems(out, fatalException.getLoaderProblems(), appDef);
 			printValueProblems(out, fatalException.getValueProblems(), appDef);
 			printRequirementProblems(out, fatalException.getRequirementProblems(), appDef);
 			printProblemHR(out);
@@ -46,11 +47,25 @@ public class ReportGenerator {
 		}
 	}
 	
+	public static void printLoaderProblems(PrintStream out, List<LoaderProblem> probs, RuntimeDefinition appDef) {
+		if (! probs.isEmpty()) {
+			
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", 
+					"LOADER PROBLEMS - Issues that prevent a Loader from loading a value to a Property.");
+			out.println();
+			out.println("Detailed list of Loader Problems:");
+			
+			for (LoaderProblem p : probs) {
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", p.getFullMessage());
+			}
+			
+		}
+	}
+	
 	public static void printValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
-			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules, "
-					+ "or source values that cannot be converted to their destination type.");
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules.");
 			out.println();
 			out.println("Detailed list of Value Problems:");
 			
@@ -83,9 +98,11 @@ public class ReportGenerator {
 	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders) {
 		
 		for (Loader loader : loaders) {
-			if (loader instanceof ConfigSamplePrinter) {
-				ConfigSamplePrinter printer = (ConfigSamplePrinter)loader;
-				
+			
+			ConfigSamplePrinter printer = loader.getConfigSamplePrinter();
+			
+			if (printer != null) {
+
 				printer.printSampleStart(out);
 				
 				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {

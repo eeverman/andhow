@@ -23,6 +23,11 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
+	@Override
+	public ConfigSamplePrinter getConfigSamplePrinter() {
+		return null;	//Each implementation needs to provide its own.
+	}
+	
 	/**
 	 * Util method to load a String to a property by name.
 	 * 

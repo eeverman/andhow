@@ -31,7 +31,7 @@ public interface ConfigSamplePrinter {
 	void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group);
 
 	void printProperty(PrintStream out, Class<? extends PropertyGroup> group, Property<?> prop)
-			throws IllegalArgumentException, IllegalAccessException, SecurityException;
+			throws Exception;
 	
 	void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group);
 	

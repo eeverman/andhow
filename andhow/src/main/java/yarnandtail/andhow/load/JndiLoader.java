@@ -6,6 +6,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
@@ -73,8 +74,6 @@ public class JndiLoader extends BaseLoader {
 
 						} catch (NameNotFoundException nnf) {
 							//Ignore - this is expected
-						} catch (NamingException ex) {
-							problems.add(new IOLoaderProblem(this, appConfigDef.getGroupForProperty(p), p, ex));
 						}
 					}
 				}
@@ -85,6 +84,7 @@ public class JndiLoader extends BaseLoader {
 			
 			
 		} catch (NamingException ex) {
+			//This is fatal and means there likely is no JNDI context
 			problems.add(new JndiContextLoaderProblem(this));	//Not sure why this would happen
 		}
 		
@@ -109,6 +109,11 @@ public class JndiLoader extends BaseLoader {
 	@Override
 	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return CONFIG.class;
+	}
+	
+	@Override
+	public ConfigSamplePrinter getConfigSamplePrinter() {
+		return new JndiLoaderSamplePrinter();
 	}
 	
 
