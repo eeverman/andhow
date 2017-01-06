@@ -15,10 +15,10 @@ import yarnandtail.andhow.SamplePrinter;
  * @author ericeverman
  */
 public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
-	protected Format format;
+	protected PrintFormat format;
 	
 	public JndiLoaderSamplePrinter() {
-		format = new Format();
+		format = new PrintFormat();
 		format.blockCommentStart = "<!--";
 		format.blockCommentEnd = "-->";
 		format.blockCommentSeparator = "  "; //Use between the last text and the comment end if on same line
@@ -30,14 +30,14 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 	}
 	
 	@Override
-	public Format getFormat() {
+	public PrintFormat getFormat() {
 		return format;
 	}
 	
 	@Override
 	public TextBlock getSampleFileStart() {
 		TextBlock tb = new TextBlock(false, false);
-		tb.addLine(new StringLine("<Context>"));
+		tb.addLine("<Context>");
 		return tb;
 	}
 	

@@ -15,10 +15,10 @@ import yarnandtail.andhow.SamplePrinter;
  * @author ericeverman
  */
 public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
-	protected Format format;
+	protected PrintFormat format;
 	
 	public PropFileLoaderSamplePrinter() {
-		format = new Format();
+		format = new PrintFormat();
 		format.blockCommentStart = null;
 		format.blockCommentEnd = null;
 		format.blockCommentSeparator = null;
@@ -30,7 +30,7 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 	}
 	
 	@Override
-	public Format getFormat() {
+	public PrintFormat getFormat() {
 		return format;
 	}
 	
