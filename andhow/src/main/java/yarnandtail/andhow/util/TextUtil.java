@@ -353,4 +353,37 @@ public class TextUtil {
 		
 		return result;
 	}
+	
+	public static String escapeXml(String text) {
+		if (text == null) return null;
+
+		StringBuilder escapedXML = new StringBuilder();
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			switch (c) {
+			case '<':
+				escapedXML.append("&lt;");
+				break;
+			case '>':
+				escapedXML.append("&gt;");
+				break;
+			case '\"':
+				escapedXML.append("&quot;");
+				break;
+			case '&':
+				escapedXML.append("&amp;");
+				break;
+			case '\'':
+				escapedXML.append("&apos;");
+				break;
+			default:
+				if (c > 0x7e) {
+					escapedXML.append("&#" + ((int) c) + ";");
+				} else
+					escapedXML.append(c);
+			}
+		}
+		
+		return escapedXML.toString();
+	}
 }

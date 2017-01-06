@@ -62,7 +62,7 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 			tb.addLine(
 					TextUtil.format("<Environment name=\"{}\" value=\"{}\" type=\"{}\" override=\"false\"/>", 
 						propCanonName, 
-						prop.getDefaultValue(),
+						TextUtil.escapeXml(prop.getDefaultValue().toString()),
 						type)
 			);
 		} else {

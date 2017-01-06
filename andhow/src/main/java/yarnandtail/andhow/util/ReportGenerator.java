@@ -1,6 +1,5 @@
 package yarnandtail.andhow.util;
 
-import yarnandtail.andhow.util.TextUtil;
 import java.io.PrintStream;
 import java.util.List;
 import yarnandtail.andhow.AndHow;
@@ -12,7 +11,6 @@ import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.RequirementProblem;
 import yarnandtail.andhow.ValueProblem;
-import static yarnandtail.andhow.util.TextUtil.SECOND_LINE_INDENT;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.SamplePrinter;
 
@@ -106,7 +104,24 @@ public class ReportGenerator {
 		out.println(TextUtil.repeat("=", DEFAULT_LINE_WIDTH));
 	}
 	
-	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders) {
+	/**
+	 * Print configurations samples for Loaders that support it.
+	 * 
+	 * @param out
+	 * @param appDef
+	 * @param loaders
+	 * @param isDueToErrors If true, the reason for these samples is b/c there was a startup error.
+	 */
+	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders, boolean isDueToErrors) {
+		
+		if (isDueToErrors) {
+			out.println();
+			out.println("== Since there were startup errors, sample configuration "
+					+ "will be printed for each Loader that supports it ==");
+			out.println();
+		}
+		
+		int supportedLoaders = 0;
 		
 		for (Loader loader : loaders) {
 			
@@ -114,6 +129,7 @@ public class ReportGenerator {
 			
 			if (printer != null) {
 
+				supportedLoaders++;
 				printer.printSampleStart(out);
 				
 				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
@@ -137,6 +153,12 @@ public class ReportGenerator {
 			}
 			
 			
+		}
+		
+		if (supportedLoaders == 0) {
+			out.println();
+			out.println("== None of the configured Loaders support creating configuration samples ==");
+			out.println();
 		}
 	}
 	

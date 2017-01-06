@@ -89,7 +89,7 @@ public class AndHowCore implements ValueMap {
 	
 	private void printFailedStartupDetails(AppFatalException afe) {
 		ReportGenerator.printProblems(System.err, afe, runtimeDef);
-		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders);
+		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders, true);
 	}
 
 	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
