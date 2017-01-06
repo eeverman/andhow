@@ -5,7 +5,6 @@ import java.io.PrintStream;
 import java.util.List;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Loader;
 import yarnandtail.andhow.LoaderProblem;
@@ -15,6 +14,7 @@ import yarnandtail.andhow.RequirementProblem;
 import yarnandtail.andhow.ValueProblem;
 import static yarnandtail.andhow.util.TextUtil.SECOND_LINE_INDENT;
 import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  *
@@ -110,7 +110,7 @@ public class ReportGenerator {
 		
 		for (Loader loader : loaders) {
 			
-			ConfigSamplePrinter printer = loader.getConfigSamplePrinter();
+			SamplePrinter printer = loader.getConfigSamplePrinter();
 			
 			if (printer != null) {
 

@@ -25,7 +25,7 @@ public abstract class BaseLoader implements Loader {
 	}
 	
 	@Override
-	public ConfigSamplePrinter getConfigSamplePrinter() {
+	public SamplePrinter getConfigSamplePrinter() {
 		return null;	//Each implementation needs to provide its own.
 	}
 	

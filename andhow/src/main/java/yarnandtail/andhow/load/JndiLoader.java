@@ -1,12 +1,12 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
@@ -22,6 +22,7 @@ import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
 import yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import yarnandtail.andhow.property.StrProp;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  * Loads values from a JNDI context.
@@ -112,7 +113,7 @@ public class JndiLoader extends BaseLoader {
 	}
 	
 	@Override
-	public ConfigSamplePrinter getConfigSamplePrinter() {
+	public SamplePrinter getConfigSamplePrinter() {
 		return new JndiLoaderSamplePrinter();
 	}
 	

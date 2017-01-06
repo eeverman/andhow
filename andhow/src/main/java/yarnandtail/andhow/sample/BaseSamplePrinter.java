@@ -1,23 +1,23 @@
 /*
  */
-package yarnandtail.andhow.load;
+package yarnandtail.andhow.sample;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  *
  * @author ericeverman
  */
-public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
+public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	//private static final String LINE_PREFIX = "# ";
 	
@@ -181,7 +181,7 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 		tb.addLine(TextUtil.format("{} ({}) {}{}", 
 				propFieldName,
 				prop.getValueType().getDestinationType().getSimpleName(),
-				(prop.isRequired())?ConfigSamplePrinter.REQUIRED_KEYWORD:"",
+				(prop.isRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
 				(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
 		
 		if (prop.getDefaultValue() != null) {
@@ -268,14 +268,17 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 			this.wrap = null;
 		}
 		
+		@Override
 		public String getLine(Format format) {
 			return line;
 		}
 		
+		@Override
 		public String getLineComment(Format format) {
 			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + line;
 		}
 		
+		@Override
 		public String getBlockComment(Format format, boolean startComment, boolean endComment) {
 			
 			String out = line;
@@ -292,15 +295,18 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 			return out;
 		}
 		
+		@Override
 		public List<String> getWrappedLine(Format format) {
 			return TextUtil.wrap(line, format.lineWidth, "", format.secondLineIndent);
 		}
 		
+		@Override
 		public List<String> getWrappedLineComment(Format format) {
 			return TextUtil.wrap(line, format.lineWidth, 
 					format.lineCommentPrefix + format.lineCommentPrefixSeparator, format.secondLineIndent);
 		}
 		
+		@Override
 		public List<String> getWrappedBlockComment(Format format, boolean startComment, boolean endComment) {
 			
 			List<String> lines = TextUtil.wrap(line, format.lineWidth, "", format.secondLineIndent);
@@ -328,14 +334,17 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 			wrap = false;
 		}
 		
+		@Override
 		public String getLine(Format format) {
 			return format.hr;
 		}
 		
+		@Override
 		public String getLineComment(Format format) {
 			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + format.hr;
 		}
 		
+		@Override
 		public String getBlockComment(Format format, boolean startComment, boolean endComment) {
 			
 			String out = format.hr;
@@ -352,18 +361,21 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 			return out;
 		}
 		
+		@Override
 		public List<String> getWrappedLine(Format format) {
 			ArrayList<String> lines = new ArrayList();
 			lines.add(format.hr);
 			return lines;
 		}
 		
+		@Override
 		public List<String> getWrappedLineComment(Format format) {
 			ArrayList<String> lines = new ArrayList();
 			lines.add(format.lineCommentPrefix + format.lineCommentPrefixSeparator + format.hr);
 			return lines;
 		}
 		
+		@Override
 		public List<String> getWrappedBlockComment(Format format, boolean startComment, boolean endComment) {
 			ArrayList<String> lines = new ArrayList();
 
@@ -385,19 +397,27 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 	}
 	
 
+	/**
+	 * A blank line will continue the comment or non-comment status of the block.
+	 * Use blankLineBefore/After of a TextBlock to get actual whitespace b/t
+	 * TextBlocks.
+	 */
 	public static class BlankLine extends Line {
 		public BlankLine() {
 			wrap = false;
 		}
 		
+		@Override
 		public String getLine(Format format) {
 			return "";
 		}
 		
+		@Override
 		public String getLineComment(Format format) {
 			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + "";
 		}
 		
+		@Override
 		public String getBlockComment(Format format, boolean startComment, boolean endComment) {
 			
 			String out = "";
@@ -414,18 +434,21 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 			return out;
 		}
 		
+		@Override
 		public List<String> getWrappedLine(Format format) {
 			ArrayList<String> lines = new ArrayList();
 			lines.add("");
 			return lines;
 		}
 		
+		@Override
 		public List<String> getWrappedLineComment(Format format) {
 			ArrayList<String> lines = new ArrayList();
 			lines.add(format.lineCommentPrefix + format.lineCommentPrefixSeparator + "");
 			return lines;
 		}
 		
+		@Override
 		public List<String> getWrappedBlockComment(Format format, boolean startComment, boolean endComment) {
 			ArrayList<String> lines = new ArrayList();
 
@@ -449,12 +472,20 @@ public abstract class BaseSamplePrinter implements ConfigSamplePrinter {
 	public static class TextBlock {
 		boolean wrap;
 		boolean comment;
+		boolean blankLineBefore = false;
+		boolean blankLineAfter = false;
 		
 		ArrayList<Line> lines = new ArrayList();
 		
 		public TextBlock(boolean wrap, boolean comment) {
 			this.wrap = wrap;
 			this.comment = comment;
+		}
+		
+		public TextBlock(boolean wrap, boolean comment, boolean blankLineBefore, boolean blankLineAfter) {
+			this(wrap, comment);
+			this.blankLineBefore = blankLineBefore;
+			this.blankLineAfter = blankLineAfter;
 		}
 		
 		public TextBlock addLine(Line line) {

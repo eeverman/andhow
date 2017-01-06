@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 import yarnandtail.andhow.util.TextUtil;
 import java.io.File;
 import java.io.FileInputStream;
@@ -215,7 +216,7 @@ public class PropFileLoader extends BaseLoader {
 	}
 	
 	@Override
-	public ConfigSamplePrinter getConfigSamplePrinter() {
+	public SamplePrinter getConfigSamplePrinter() {
 		return new PropFileLoaderSamplePrinter();
 	}
 	

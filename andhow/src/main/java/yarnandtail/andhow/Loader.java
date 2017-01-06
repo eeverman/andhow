@@ -83,5 +83,5 @@ public interface Loader {
 	 * 
 	 * @return 
 	 */
-	ConfigSamplePrinter getConfigSamplePrinter();
+	SamplePrinter getConfigSamplePrinter();
 }

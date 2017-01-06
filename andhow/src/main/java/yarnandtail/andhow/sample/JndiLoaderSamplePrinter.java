@@ -1,19 +1,20 @@
 /*
  */
-package yarnandtail.andhow.load;
+package yarnandtail.andhow.sample;
 
+import yarnandtail.andhow.sample.BaseSamplePrinter;
 import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.util.TextUtil;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  *
  * @author ericeverman
  */
-public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements ConfigSamplePrinter {
+public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
 	protected Format format;
 	
 	public JndiLoaderSamplePrinter() {

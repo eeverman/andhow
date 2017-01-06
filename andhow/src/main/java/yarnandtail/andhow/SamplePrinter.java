@@ -11,7 +11,7 @@ import java.io.PrintStream;
  * 
  * @author ericeverman
  */
-public interface ConfigSamplePrinter {
+public interface SamplePrinter {
 	
 	/** Required properties will be marked w/ this text in the sample */
 	static final String REQUIRED_KEYWORD = "REQUIRED";

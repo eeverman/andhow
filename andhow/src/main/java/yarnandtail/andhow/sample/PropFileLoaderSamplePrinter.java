@@ -1,19 +1,20 @@
 /*
  */
-package yarnandtail.andhow.load;
+package yarnandtail.andhow.sample;
 
+import yarnandtail.andhow.sample.BaseSamplePrinter;
 import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.ConfigSamplePrinter;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 import yarnandtail.andhow.util.TextUtil;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  *
  * @author ericeverman
  */
-public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements ConfigSamplePrinter {
+public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
 	protected Format format;
 	
 	public PropFileLoaderSamplePrinter() {
