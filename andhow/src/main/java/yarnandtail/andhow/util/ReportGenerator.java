@@ -1,8 +1,19 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.util;
 
+import yarnandtail.andhow.util.TextUtil;
 import java.io.PrintStream;
 import java.util.List;
-import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
+import yarnandtail.andhow.AndHow;
+import yarnandtail.andhow.AppFatalException;
+import yarnandtail.andhow.ConfigSamplePrinter;
+import yarnandtail.andhow.ConstructionProblem;
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.LoaderProblem;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.RequirementProblem;
+import yarnandtail.andhow.ValueProblem;
+import static yarnandtail.andhow.util.TextUtil.SECOND_LINE_INDENT;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**

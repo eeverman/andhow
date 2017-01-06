@@ -7,7 +7,7 @@ import yarnandtail.andhow.*;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
-import yarnandtail.andhow.ReportGenerator;
+import yarnandtail.andhow.util.ReportGenerator;
 
 /**
  * Actual central instance of the AndHow state after a successful startup.

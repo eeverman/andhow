@@ -1,5 +1,7 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.util.TextUtil;
+
 /**
  * Problems with invalid values, values that cannot be converted to their destination type.
  * 

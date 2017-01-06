@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;

@@ -16,7 +16,7 @@ import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.TextUtil;
+import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ValueMap;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;

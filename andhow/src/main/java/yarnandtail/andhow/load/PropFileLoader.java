@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.util.TextUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import yarnandtail.andhow.*;
-import static yarnandtail.andhow.ReportGenerator.DEFAULT_LINE_WIDTH;
+import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.property.StrProp;
 

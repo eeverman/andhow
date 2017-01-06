@@ -1,5 +1,7 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.util.TextUtil;
+
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
  * 

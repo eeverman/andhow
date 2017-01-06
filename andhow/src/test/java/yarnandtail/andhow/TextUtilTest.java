@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.util.TextUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -7,8 +8,8 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import static yarnandtail.andhow.ReportGenerator.DEFAULT_LINE_WIDTH;
-import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
+import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
+import static yarnandtail.andhow.util.TextUtil.SECOND_LINE_INDENT;
 
 /**
  *

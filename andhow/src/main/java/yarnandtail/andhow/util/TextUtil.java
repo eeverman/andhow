@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.util;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
