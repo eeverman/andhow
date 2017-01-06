@@ -1,9 +1,18 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.util;
 
 import java.io.PrintStream;
 import java.util.List;
-import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
+import yarnandtail.andhow.AndHow;
+import yarnandtail.andhow.AppFatalException;
+import yarnandtail.andhow.ConstructionProblem;
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.LoaderProblem;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.RequirementProblem;
+import yarnandtail.andhow.ValueProblem;
 import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  *
@@ -20,6 +29,7 @@ public class ReportGenerator {
 			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
 			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
 			printConstructionProblems(out, fatalException.getConstructionProblems(), appDef);
+			printLoaderProblems(out, fatalException.getLoaderProblems(), appDef);
 			printValueProblems(out, fatalException.getValueProblems(), appDef);
 			printRequirementProblems(out, fatalException.getRequirementProblems(), appDef);
 			printProblemHR(out);
@@ -46,11 +56,25 @@ public class ReportGenerator {
 		}
 	}
 	
+	public static void printLoaderProblems(PrintStream out, List<LoaderProblem> probs, RuntimeDefinition appDef) {
+		if (! probs.isEmpty()) {
+			
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", 
+					"LOADER PROBLEMS - Issues that prevent a Loader from loading a value to a Property.");
+			out.println();
+			out.println("Detailed list of Loader Problems:");
+			
+			for (LoaderProblem p : probs) {
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", p.getFullMessage());
+			}
+			
+		}
+	}
+	
 	public static void printValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
-			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules, "
-					+ "or source values that cannot be converted to their destination type.");
+			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules.");
 			out.println();
 			out.println("Detailed list of Value Problems:");
 			
@@ -80,12 +104,32 @@ public class ReportGenerator {
 		out.println(TextUtil.repeat("=", DEFAULT_LINE_WIDTH));
 	}
 	
-	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders) {
+	/**
+	 * Print configurations samples for Loaders that support it.
+	 * 
+	 * @param out
+	 * @param appDef
+	 * @param loaders
+	 * @param isDueToErrors If true, the reason for these samples is b/c there was a startup error.
+	 */
+	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders, boolean isDueToErrors) {
+		
+		if (isDueToErrors) {
+			out.println();
+			out.println("== Since there were startup errors, sample configuration "
+					+ "will be printed for each Loader that supports it ==");
+			out.println();
+		}
+		
+		int supportedLoaders = 0;
 		
 		for (Loader loader : loaders) {
-			if (loader instanceof ConfigSamplePrinter) {
-				ConfigSamplePrinter printer = (ConfigSamplePrinter)loader;
-				
+			
+			SamplePrinter printer = loader.getConfigSamplePrinter();
+			
+			if (printer != null) {
+
+				supportedLoaders++;
 				printer.printSampleStart(out);
 				
 				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
@@ -109,6 +153,12 @@ public class ReportGenerator {
 			}
 			
 			
+		}
+		
+		if (supportedLoaders == 0) {
+			out.println();
+			out.println("== None of the configured Loaders support creating configuration samples ==");
+			out.println();
 		}
 	}
 	

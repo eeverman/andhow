@@ -74,4 +74,14 @@ public interface Loader {
 	 * @return 
 	 */
 	boolean isUnrecognizedPropertyNamesConsideredAProblem();
+	
+	/**
+	 * Returns a ConfigSamplePrinter, which can be used to print a configuration
+	 * sample for this Loader.
+	 * 
+	 * This method may return null if there is no sample printer for this loader.
+	 * 
+	 * @return 
+	 */
+	SamplePrinter getConfigSamplePrinter();
 }

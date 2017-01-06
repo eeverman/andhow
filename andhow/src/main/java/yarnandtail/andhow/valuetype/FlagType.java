@@ -1,6 +1,6 @@
 package yarnandtail.andhow.valuetype;
 
-import yarnandtail.andhow.TextUtil;
+import yarnandtail.andhow.util.TextUtil;
 
 /**
  *

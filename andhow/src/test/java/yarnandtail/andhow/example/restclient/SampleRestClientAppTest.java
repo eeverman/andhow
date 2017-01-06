@@ -5,7 +5,9 @@ import yarnandtail.andhow.*;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.load.CmdLineLoader;
+import yarnandtail.andhow.load.JndiLoader;
 import yarnandtail.andhow.load.PropFileLoader;
 
 /**
@@ -83,7 +85,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testInvalidValues() {
+	public void testInvalidValues() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		jndi.activate();
 		
 		cmdLineArgs = new String[] {
 			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
@@ -98,6 +103,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 					.group(SampleRestClientGroup.class)
 					.loader(new CmdLineLoader())
 					.loader(new PropFileLoader())
+					.loader(new JndiLoader())
 					.cmdLineArgs(cmdLineArgs)
 					.reloadForNonPropduction(reloader);
 		} catch (AppFatalException e) {

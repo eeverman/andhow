@@ -1,5 +1,7 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.util.TextUtil;
+
 /**
  * A problem of required values not being specified.
  * @author eeverman

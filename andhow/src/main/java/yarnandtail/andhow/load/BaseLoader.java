@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,11 @@ public abstract class BaseLoader implements Loader {
 	@Override
 	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return null;
+	}
+	
+	@Override
+	public SamplePrinter getConfigSamplePrinter() {
+		return null;	//Each implementation needs to provide its own.
 	}
 	
 	/**

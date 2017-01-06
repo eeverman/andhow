@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,12 +16,13 @@ import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.TextUtil;
+import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ValueMap;
 import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.ValueMapWithContext;
 import yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import yarnandtail.andhow.property.StrProp;
+import yarnandtail.andhow.SamplePrinter;
 
 /**
  * Loads values from a JNDI context.
@@ -73,8 +75,6 @@ public class JndiLoader extends BaseLoader {
 
 						} catch (NameNotFoundException nnf) {
 							//Ignore - this is expected
-						} catch (NamingException ex) {
-							problems.add(new IOLoaderProblem(this, appConfigDef.getGroupForProperty(p), p, ex));
 						}
 					}
 				}
@@ -85,6 +85,7 @@ public class JndiLoader extends BaseLoader {
 			
 			
 		} catch (NamingException ex) {
+			//This is fatal and means there likely is no JNDI context
 			problems.add(new JndiContextLoaderProblem(this));	//Not sure why this would happen
 		}
 		
@@ -109,6 +110,11 @@ public class JndiLoader extends BaseLoader {
 	@Override
 	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return CONFIG.class;
+	}
+	
+	@Override
+	public SamplePrinter getConfigSamplePrinter() {
+		return new JndiLoaderSamplePrinter();
 	}
 	
 

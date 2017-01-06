@@ -1,4 +1,4 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import static yarnandtail.andhow.ReportGenerator.DEFAULT_LINE_WIDTH;
-import static yarnandtail.andhow.TextUtil.SECOND_LINE_INDENT;
 
 /**
  *
@@ -218,5 +216,13 @@ public class TextUtilTest {
 		assertEquals("# xxxqrs tuv", result.get(2));
 		
 	}
+	
+	@Test
+	public void testEscapeXml() {
+		assertEquals("&lt;some text&gt;", TextUtil.escapeXml("<some text>"));
+		assertEquals("&lt;some&amp;text&quot;", TextUtil.escapeXml("<some&text\""));
+		assertEquals("&apos;tis the s&apos;son", TextUtil.escapeXml("'tis the s'son"));
+	}
+			
 	
 }

@@ -1,6 +1,6 @@
 package yarnandtail.andhow.property;
 
-import yarnandtail.andhow.TextUtil;
+import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.Trimmer;
 
 /**

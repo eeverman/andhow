@@ -10,12 +10,7 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AndHowTestBase;
 import static yarnandtail.andhow.AndHowTestBase.reloader;
-import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.NamingStrategy;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.SimpleParams;
-import yarnandtail.andhow.ValueProblem;
+import yarnandtail.andhow.*;
 
 /**
  *

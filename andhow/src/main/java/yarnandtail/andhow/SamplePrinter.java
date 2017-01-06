@@ -11,7 +11,7 @@ import java.io.PrintStream;
  * 
  * @author ericeverman
  */
-public interface ConfigSamplePrinter {
+public interface SamplePrinter {
 	
 	/** Required properties will be marked w/ this text in the sample */
 	static final String REQUIRED_KEYWORD = "REQUIRED";
@@ -31,7 +31,7 @@ public interface ConfigSamplePrinter {
 	void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group);
 
 	void printProperty(PrintStream out, Class<? extends PropertyGroup> group, Property<?> prop)
-			throws IllegalArgumentException, IllegalAccessException, SecurityException;
+			throws Exception;
 	
 	void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group);
 	
