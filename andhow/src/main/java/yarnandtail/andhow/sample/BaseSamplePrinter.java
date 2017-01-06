@@ -129,14 +129,19 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	@Override
 	public void printSampleStart(PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
-		print(out, getSampleStartComment(), getFormat());
+		TextBlock tb = getSampleStartComment();
+		
+		if (tb != null) {
+			tb.setBlankLineAfter(true);
+			print(out, tb, getFormat());
+		}
 	}
 	
 	@Override
 	public void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group) {
 		
 		TextBlock tb = new TextBlock(true, true);
-		tb.isBlankLineBefore();
+		tb.setBlankLineAfter(true);
 		tb.addHR();
 		
 		String name = null;
