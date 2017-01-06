@@ -1,5 +1,3 @@
-/*
- */
 package yarnandtail.andhow.sample;
 
 import java.io.PrintStream;
@@ -30,7 +28,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	public abstract TextBlock getActualProperty(Class<? extends PropertyGroup> group, Property prop) throws Exception;
 	
-	public abstract String getSampleFileEnd();
+	public abstract TextBlock getSampleFileEnd();
 	
 	protected void printIfNotNull(PrintStream out, String line) {
 		if (line != null) {
@@ -138,7 +136,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	public void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group) {
 		
 		TextBlock tb = new TextBlock(true, true);
-		tb.addBlank();
+		tb.isBlankLineBefore();
 		tb.addHR();
 		
 		String name = null;
@@ -226,9 +224,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	@Override
 	public void printSampleEnd(PrintStream out) {
-		out.println();
-		
-		printIfNotNull(out, getSampleFileEnd());
+		TextBlock tb = getSampleFileEnd();
+		print(out, tb, getFormat());
 	}
 	
 }

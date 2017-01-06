@@ -1,12 +1,8 @@
-/*
- */
 package yarnandtail.andhow.sample;
 
-import yarnandtail.andhow.sample.BaseSamplePrinter;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
-import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.SamplePrinter;
 
@@ -74,10 +70,9 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 		
 		return tb;
 	}
-
 	
 	@Override
-	public String getSampleFileEnd() {
+	public TextBlock getSampleFileEnd() {
 		return null;
 	}
 

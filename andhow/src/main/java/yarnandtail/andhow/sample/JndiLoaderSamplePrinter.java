@@ -1,8 +1,5 @@
-/*
- */
 package yarnandtail.andhow.sample;
 
-import yarnandtail.andhow.sample.BaseSamplePrinter;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
@@ -21,7 +18,7 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 		format = new PrintFormat();
 		format.blockCommentStart = "<!--";
 		format.blockCommentEnd = "-->";
-		format.blockCommentSeparator = "  "; //Use between the last text and the comment end if on same line
+		format.blockCommentSeparator = " "; //Use between the last text and the comment end if on same line
 		format.lineCommentPrefix = null;
 		format.lineCommentPrefixSeparator = " ";	//Separate the opening line comment from the text
 		format.secondLineIndent = "\t";
@@ -78,11 +75,10 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 		return tb;
 	}
 
-	
 	@Override
-	public String getSampleFileEnd() {
-		return "</Context>";
+	public TextBlock getSampleFileEnd() {
+		TextBlock tb = new TextBlock(false, false);
+		tb.addLine("</Context>");
+		return tb;
 	}
-
-	
 }
