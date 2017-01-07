@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  *
  * @author ericeverman
  */
-public class StringTypeTest {
+public class StrTypeTest {
 	
 
 	/**
@@ -17,7 +17,7 @@ public class StringTypeTest {
 	 */
 	@Test
 	public void testCast() {
-		StringType qst = StringType.instance();
+		StrType qst = StrType.instance();
 		Object o = "abc";
 		assertEquals("abc", qst.cast(o));
 		assertTrue(qst.cast(o) instanceof String);

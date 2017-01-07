@@ -7,27 +7,27 @@ import yarnandtail.andhow.Validator;
  * 
  * @author ericeverman
  */
-public class IntValidator {
+public abstract class IntValidator implements Validator<Integer> {
+	
+	@Override
+	public boolean isSpecificationValid() {
+		return true;
+	}
+		
+	@Override
+	public String getInvalidSpecificationMessage() {
+		return "THIS VALIDATION IS ALWAYS VALID";
+	}
 	
 	/**
-	 * Validate that an integer is greater than a specified int.
+	 * Validate that an integer is greater than a reference value.
 	 */
-	public static class GreaterThan implements Validator<Integer> {
+	public static class GreaterThan extends IntValidator {
 
 		int ref;
 
 		public GreaterThan(int ref) {
 			this.ref = ref;
-		}
-
-		@Override
-		public boolean isSpecificationValid() {
-			return true;
-		}
-
-		@Override
-		public String getInvalidSpecificationMessage() {
-			return "";
 		}
 
 		@Override
@@ -46,24 +46,14 @@ public class IntValidator {
 	
 
 	/**
-	 * Validate that an integer is greater than or equal to a specified int.
+	 * Validate that an integer is greater than or equal to a reference value.
 	 */
-	public static class GreaterThanOrEqualTo implements Validator<Integer> {
+	public static class GreaterThanOrEqualTo extends IntValidator {
 
 		int ref;
 
 		public GreaterThanOrEqualTo(int ref) {
 			this.ref = ref;
-		}
-
-		@Override
-		public boolean isSpecificationValid() {
-			return true;
-		}
-
-		@Override
-		public String getInvalidSpecificationMessage() {
-			return "The GreaterThanOrEqualTo reference value cannot be null";
 		}
 
 		@Override
@@ -82,24 +72,14 @@ public class IntValidator {
 	
 
 	/**
-	 * Validate that an integer is less than a specified int.
+	 * Validate that an integer is less than a reference value.
 	 */
-	public static class LessThan implements Validator<Integer> {
+	public static class LessThan extends IntValidator {
 
 		int ref;
 
 		public LessThan(int ref) {
 			this.ref = ref;
-		}
-
-		@Override
-		public boolean isSpecificationValid() {
-			return true;
-		}
-
-		@Override
-		public String getInvalidSpecificationMessage() {
-			return "The LessThan reference value cannot be null";
 		}
 
 		@Override
@@ -118,24 +98,14 @@ public class IntValidator {
 	
 
 	/**
-	 * Validate that an integer is less than or equal to a specified int.
+	 * Validate that an integer is less than or equal to a reference value.
 	 */
-	public static class LessThanOrEqualTo implements Validator<Integer> {
+	public static class LessThanOrEqualTo extends IntValidator {
 
 		int ref;
 
 		public LessThanOrEqualTo(int ref) {
 			this.ref = ref;
-		}
-
-		@Override
-		public boolean isSpecificationValid() {
-			return true;
-		}
-
-		@Override
-		public String getInvalidSpecificationMessage() {
-			return "The LessThanOrEqualTo reference value cannot be null";
 		}
 
 		@Override

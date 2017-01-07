@@ -7,15 +7,15 @@ import yarnandtail.andhow.ParsingException;
  *
  * @author eeverman
  */
-public class StringType extends BaseValueType<String> {
+public class StrType extends BaseValueType<String> {
 
-	private static final StringType instance = new StringType();
+	private static final StrType instance = new StrType();
 	
-	private StringType() {
+	private StrType() {
 		super(String.class);
 	}
 	
-	public static StringType instance() {
+	public static StrType instance() {
 		return instance;
 	}
 

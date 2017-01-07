@@ -1,7 +1,11 @@
 package yarnandtail.andhow;
 
 /**
- *
+ * The type of a Property.
+ * 
+ * Also handles parsing and casting of Strings and Objects to the destination
+ * type represented by an instance of a ValueType.
+ * 
  * @author eeverman
  */
 public interface ValueType<T> {

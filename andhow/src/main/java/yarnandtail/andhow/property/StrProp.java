@@ -6,10 +6,13 @@ import yarnandtail.andhow.Trimmer;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.valid.StringValidator;
 import yarnandtail.andhow.ValueType;
-import yarnandtail.andhow.valuetype.StringType;
+import yarnandtail.andhow.valuetype.StrType;
 
 /**
  * A Property that refers to a String value.
+ * 
+ * All the basic Java types use a three letter abv. to keep declaration lines
+ * short, in the form of:  [Type]Prop
  * 
  * By default, this uses the QuotedSpacePreservingTrimmer, which will keep
  * whitespace inside double quotes.
@@ -36,7 +39,7 @@ public class StrProp extends PropertyBase<String> {
 		
 		public StrBuilder() {
 			instance = this;
-			valueType(StringType.instance());
+			valueType(StrType.instance());
 			trimmer(QuotedSpacePreservingTrimmer.instance());
 		}
 
