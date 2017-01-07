@@ -9,8 +9,7 @@ public interface ValueType<T> {
 	Class<T> getDestinationType();
 	
 	/**
-	 * Attempts to convert the passed String into the type represented
-	 * by the destinationType.
+	 * Attempts to parse the passed String into the destinationType.
 	 * 
 	 * All trimming (removing whitespace from around a value) should be assumed
 	 * to already have happened for the incoming sourceValue by a Trimmer.
@@ -23,9 +22,16 @@ public interface ValueType<T> {
 	 * @return
 	 * @throws ParsingException 
 	 */
-	T convert(String sourceValue) throws ParsingException;
+	T parse(String sourceValue) throws ParsingException;
 		
-	boolean isConvertable(String sourceValue);
+	/**
+	 * Returns true if the string can safely be parsed into the destination type
+	 * by the parse() method.
+	 * 
+	 * @param sourceValue
+	 * @return true or false - this should never throw an exception.
+	 */
+	boolean isParsable(String sourceValue);
 	
 	/**
 	 * Attempt to cast the passed object to the generic type T.

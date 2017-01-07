@@ -24,7 +24,7 @@ public class IntType extends BaseValueType<Integer> {
 	}
 
 	@Override
-	public Integer convert(String sourceValue) throws ParsingException {
+	public Integer parse(String sourceValue) throws ParsingException {
 		
 		String effVal = TextUtil.trimToNull(sourceValue);
 		
