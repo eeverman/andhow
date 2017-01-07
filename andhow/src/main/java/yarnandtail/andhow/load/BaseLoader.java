@@ -158,7 +158,7 @@ public abstract class BaseLoader implements Loader {
 
 		if (trimmed != null || prop.getPropertyType().isFlag()) {
 
-			value = prop.getValueType().convert(trimmed);
+			value = prop.getValueType().parse(trimmed);
 
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {

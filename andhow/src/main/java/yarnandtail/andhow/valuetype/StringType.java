@@ -20,7 +20,7 @@ public class StringType extends BaseValueType<String> {
 	}
 
 	@Override
-	public String convert(String sourceValue) throws ParsingException {
+	public String parse(String sourceValue) throws ParsingException {
 		return sourceValue;		//Too simple!  Trimming is handled separately
 	}
 

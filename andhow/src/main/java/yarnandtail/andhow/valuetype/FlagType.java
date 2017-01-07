@@ -23,7 +23,7 @@ public class FlagType extends BaseValueType<Boolean> {
 	}
 
 	@Override
-	public Boolean convert(String sourceValue) throws IllegalArgumentException {
+	public Boolean parse(String sourceValue) throws IllegalArgumentException {
 
 		if (TextUtil.trimToNull(sourceValue) == null) {
 			//regardless of trimming, all whitespace is considered == to the flag is present
