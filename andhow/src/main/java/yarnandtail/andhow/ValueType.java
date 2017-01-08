@@ -23,8 +23,8 @@ public interface ValueType<T> {
 	 * to convert values, which should be handled in this method and rethrown as
 	 * a ParsingException.
 	 * @param sourceValue
-	 * @return
-	 * @throws ParsingException 
+	 * @return null if null, or a value of type T
+	 * @throws ParsingException for any type of failure.
 	 */
 	T parse(String sourceValue) throws ParsingException;
 		

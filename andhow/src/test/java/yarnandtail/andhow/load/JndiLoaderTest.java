@@ -67,6 +67,10 @@ public class JndiLoaderTest extends AndHowTestBase {
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -81,6 +85,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
 		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
+		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
+		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
 	}
 	
 	@Test
@@ -95,6 +101,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "-999");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -109,6 +117,10 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
 		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
+		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
+		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
+		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
+		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
 	}
 	
 	@Test
@@ -192,6 +204,9 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), new Integer(999));
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
 		
 		jndi.activate();
 		
@@ -289,7 +304,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
 		jndi.bind("java:" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
-		
+		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), new Integer(-9999));
 		jndi.activate();
 		
 		try {
@@ -303,11 +318,13 @@ public class JndiLoaderTest extends AndHowTestBase {
 		} catch (AppFatalException e) {
 			List<LoaderProblem> lps = e.getLoaderProblems();
 			
-			assertEquals(2, lps.size());
+			assertEquals(3, lps.size());
 			assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
 			assertEquals(SimpleParams.INT_TEN, lps.get(0).getBadValueCoord().getProperty());
 			assertTrue(lps.get(1) instanceof LoaderProblem.ObjectConversionValueProblem);
 			assertEquals(SimpleParams.INT_NULL, lps.get(1).getBadValueCoord().getProperty());
+			assertTrue(lps.get(2) instanceof LoaderProblem.ObjectConversionValueProblem);
+			assertEquals(SimpleParams.LNG_TEN, lps.get(2).getBadValueCoord().getProperty());
 		}
 	}
 	
@@ -319,7 +336,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
 		jndi.bind("java:" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
-		
+		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
 		jndi.activate();
 		
 		try {
@@ -333,11 +350,13 @@ public class JndiLoaderTest extends AndHowTestBase {
 		} catch (AppFatalException e) {
 			List<LoaderProblem> vps = e.getLoaderProblems();
 			
-			assertEquals(2, vps.size());
+			assertEquals(3, vps.size());
 			assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);
 			assertEquals(SimpleParams.INT_TEN, vps.get(0).getBadValueCoord().getProperty());
 			assertTrue(vps.get(1) instanceof LoaderProblem.StringConversionLoaderProblem);
 			assertEquals(SimpleParams.INT_NULL, vps.get(1).getBadValueCoord().getProperty());
+			assertTrue(vps.get(2) instanceof LoaderProblem.StringConversionLoaderProblem);
+			assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
 		}
 	
 	}

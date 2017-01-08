@@ -4,6 +4,7 @@ package yarnandtail.andhow.valuetype;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import yarnandtail.andhow.ParsingException;
 
 /**
  *
@@ -12,9 +13,18 @@ import static org.junit.Assert.*;
 public class StrTypeTest {
 	
 
-	/**
-	 * Test of cast method, of class QuotedStringType.
-	 */
+	@Test
+	public void testParseHappyPath() throws ParsingException {
+		
+		StrType type = StrType.instance();
+		
+		assertEquals("-1234", type.parse("-1234"));
+		assertEquals("  apple  ", type.parse("  apple  "));
+		assertEquals(" ", type.parse(" "));
+		assertEquals("", type.parse(""));
+		assertNull(type.parse(null));
+	}
+	
 	@Test
 	public void testCast() {
 		StrType qst = StrType.instance();
