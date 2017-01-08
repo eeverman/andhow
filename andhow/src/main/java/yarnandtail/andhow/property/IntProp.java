@@ -11,6 +11,9 @@ import yarnandtail.andhow.ValueType;
 /**
  * A Property that refers to an Integer value.
  * 
+ * All the basic Java types use a three letter abv. to keep declaration lines
+ * short, in the form of:  [Type]Prop
+ * 
  * By default this uses the TrimToNullTrimmer, which removes all whitespace from
  * the value and ultimately null if the value is all whitespace.
  * 

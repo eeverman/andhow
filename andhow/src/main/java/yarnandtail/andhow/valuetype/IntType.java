@@ -4,7 +4,8 @@ import yarnandtail.andhow.ParsingException;
 import yarnandtail.andhow.util.TextUtil;
 
 /**
- *
+ * Type representation of Java Integer objects.
+ * 
  * @author eeverman
  */
 public class IntType extends BaseValueType<Integer> {
@@ -25,17 +26,13 @@ public class IntType extends BaseValueType<Integer> {
 
 	@Override
 	public Integer parse(String sourceValue) throws ParsingException {
-		
-		String effVal = TextUtil.trimToNull(sourceValue);
-		
-		if (effVal != null) {
-			
-			try {
-				return Integer.parseInt(effVal);
-			} catch (Exception e) {
-				throw new ParsingException("Unable to convert to an integer", effVal, e);
-			}
 
+		if (sourceValue != null) {
+			try {
+				return Integer.parseInt(sourceValue);
+			} catch (Exception e) {
+				throw new ParsingException("Unable to convert to an integer", sourceValue, e);
+			}
 		} else {
 			return null;
 		}

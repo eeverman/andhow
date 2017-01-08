@@ -3,6 +3,7 @@ package yarnandtail.andhow;
 import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.property.FlagProp;
 import yarnandtail.andhow.property.IntProp;
+import yarnandtail.andhow.property.LngProp;
 
 /**
  * Test set of params w/ one of each type.
@@ -25,4 +26,8 @@ public interface SimpleParams extends PropertyGroup {
 	//Integers
 	IntProp INT_TEN = IntProp.builder().defaultValue(10).build();
 	IntProp INT_NULL = IntProp.builder().build();
+	
+	//Integers
+	LngProp LNG_TEN = LngProp.builder().defaultValue(10L).build();
+	LngProp LNG_NULL = LngProp.builder().build();
 }
