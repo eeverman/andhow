@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.naming.NamingException;
 import org.junit.After;
@@ -71,6 +72,10 @@ public class JndiLoaderTest extends AndHowTestBase {
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -87,6 +92,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
 		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
 		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
 	
 	@Test
@@ -103,6 +110,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "-999");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01), "2007-11-02T00:00");
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -121,6 +130,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
 		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
 		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
 	
 	@Test
@@ -207,6 +218,9 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + 
 				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
+		jndi.bind("java:comp/env/" + 
+				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
+		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
 		
 		jndi.activate();
 		
@@ -223,6 +237,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
 		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
 		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
+		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
 	
 	@Test
