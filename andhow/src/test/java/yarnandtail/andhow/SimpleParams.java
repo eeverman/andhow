@@ -1,9 +1,11 @@
 package yarnandtail.andhow;
 
+import java.time.LocalDateTime;
 import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.property.FlagProp;
 import yarnandtail.andhow.property.IntProp;
 import yarnandtail.andhow.property.LngProp;
+import yarnandtail.andhow.property.LocalDateTimeProp;
 
 /**
  * Test set of params w/ one of each type.
@@ -27,7 +29,11 @@ public interface SimpleParams extends PropertyGroup {
 	IntProp INT_TEN = IntProp.builder().defaultValue(10).build();
 	IntProp INT_NULL = IntProp.builder().build();
 	
-	//Integers
+	//Long
 	LngProp LNG_TEN = LngProp.builder().defaultValue(10L).build();
 	LngProp LNG_NULL = LngProp.builder().build();
+	
+	//LocalDateTime
+	LocalDateTimeProp LDT_2007_10_01 = LocalDateTimeProp.builder().defaultValue(LocalDateTime.parse("2007-10-01T00:00")).build();
+	LocalDateTimeProp LDT_NULL = LocalDateTimeProp.builder().build();
 }

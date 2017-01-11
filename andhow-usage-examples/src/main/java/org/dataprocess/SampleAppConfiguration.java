@@ -1,5 +1,6 @@
 package org.dataprocess;
 
+import java.time.LocalDateTime;
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.load.JndiLoader;
@@ -32,6 +33,7 @@ public class SampleAppConfiguration {
 				.loader(new PropFileLoader())	//And in a properties file
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)
+				.group(AppInfo.class)
 				.build();
 		
 	
@@ -68,6 +70,14 @@ public class SampleAppConfiguration {
 		IntProp TIMEOUT = IntProp.builder().defaultValue(20).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().build();
 		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
+	}
+	
+	@GroupInfo(name="Application Information", desc="Basic app info for display in the UI")
+	public interface AppInfo extends PropertyGroup {
+		StrProp APP_NAME = StrProp.builder().required().defaultValue("Super Nifty App").build();
+		StrProp APP_PUBLIC_URL = StrProp.builder().required().mustStartWith("http://").defaultValue("http://supercool.org/niftyapp").build();
+		LocalDateTimeProp INCEPTION_DATE = 
+				LocalDateTimeProp.builder().required().defaultValue(LocalDateTime.parse("2017-01-01T00:00")).build();
 	}
 	
 }

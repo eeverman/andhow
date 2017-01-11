@@ -19,8 +19,7 @@ public class LocalDateTimeTypeTest {
 	public void testParseHappyPath() throws ParsingException {
 		
 		LocalDateTimeType type = LocalDateTimeType.instance();
-		
-		
+
 		assertEquals(LocalDateTime.parse("2007-12-03T00:00"), type.parse("2007-12-03T00:00"));
 		assertEquals(LocalDateTime.parse("2007-12-03T23:00"), type.parse("2007-12-03T23:00"));
 		

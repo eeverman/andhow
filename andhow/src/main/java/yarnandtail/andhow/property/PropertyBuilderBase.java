@@ -75,6 +75,12 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 		return instance;
 	}
 	
+	/**
+	 * 
+	 * TODO:  It would be nice to add a String version that can parse
+	 * @param defaultValue
+	 * @return 
+	 */
 	public B defaultValue(T defaultValue) {
 		this._defaultValue = defaultValue;
 		return instance;
