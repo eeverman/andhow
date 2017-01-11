@@ -2,6 +2,7 @@ package yarnandtail.andhow.property;
 
 import java.util.ArrayList;
 import java.util.List;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.ValueType;
@@ -34,6 +35,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	protected boolean _required = false;
 	protected String _shortDesc;
 	protected List<Validator<T>> _validators = new ArrayList();
+	protected List<Alias> _aliases = new ArrayList();
 	protected String _helpText;
 	
 	
@@ -130,6 +132,41 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 */
 	public B validations(List<Validator<T>> validators) {
 		this._validators.addAll(validators);
+		return instance;
+	}
+	
+	/**
+	 * Adds an alternate name for this property that will be recognized when a
+	 * Loader reads a property in from a source, such as JNDI or a properties file.
+	 * @param name
+	 * @return 
+	 */
+	public B inAlias(String name) {
+		_aliases.add(new Alias(name, true, false));
+		return instance;
+	}
+	
+	/**
+	 * Adds an alternate name for this property that can be used if this
+	 * property is exported, such as exporting to System.properties.
+	 * 
+	 * @param name
+	 * @return 
+	 */
+	public B outAlias(String name) {
+		_aliases.add(new Alias(name, false, true));
+		return instance;
+	}
+	
+	/**
+	 * Adds an alternate name for this property that will both be recognized
+	 * when reading in properties and can be used when exporting properties.
+	 * 
+	 * @param name
+	 * @return 
+	 */
+	public B inAndOutAlias(String name) {
+		_aliases.add(new Alias(name, true, true));
 		return instance;
 	}
 	

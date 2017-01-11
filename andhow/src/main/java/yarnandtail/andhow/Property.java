@@ -78,6 +78,22 @@ public interface Property<T> {
 	List<Validator<T>> getValidators();
 	
 	/**
+	 * The list of Aliases declared directly in the creation of this property.
+	 * 
+	 * CAUTION:  This method cannot be used to determine what alias are valid
+	 * to use for a Property - use AndHow.getAlias() instead.  
+	 * Since Properties from unrelated libraries can be
+	 * used in the same application, the main AndHow application level configuration
+	 * must be able to disable aliases that conflict (i.e., two properties are
+	 * aliased as 'my-prop'.
+	 * 
+	 * @return A list of Alias assigned to this Property in the property
+	 *	declaration or an empty list if there are none.
+	 */
+	List<Alias> getConfiguredAliases();
+	
+	
+	/**
 	 * Added details that might be shown if the user requests help.
 	 * Assume that the short description is already shown.
 	 * @return 

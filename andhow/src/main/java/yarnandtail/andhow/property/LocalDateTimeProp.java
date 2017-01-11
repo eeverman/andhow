@@ -2,13 +2,12 @@ package yarnandtail.andhow.property;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Trimmer;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.ValueType;
-import yarnandtail.andhow.valid.LngValidator;
 import yarnandtail.andhow.valid.LocalDateTimeValidator;
-import yarnandtail.andhow.valuetype.LngType;
 import yarnandtail.andhow.valuetype.LocalDateTimeType;
 
 /**
@@ -26,10 +25,10 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 	
 	public LocalDateTimeProp(
 			LocalDateTime defaultValue, boolean required, String shortDesc, List<Validator<LocalDateTime>> validators,
-			PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
+			List<Alias> aliases, PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
 			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText);
+		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static LocalDateTimeBuilder builder() {
@@ -48,7 +47,7 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 		public LocalDateTimeProp build() {
 
 			return new LocalDateTimeProp(_defaultValue, _required, _shortDesc, _validators,
-				PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 		
