@@ -1,6 +1,7 @@
 package yarnandtail.andhow.property;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
@@ -138,11 +139,15 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	/**
 	 * Adds an alternate name for this property that will be recognized when a
 	 * Loader reads a property in from a source, such as JNDI or a properties file.
+	 * 
+	 * If the alias name already exists, it will add 'in-ness' to it.
+	 * Alias names cannot be null, contain whitespace, or these characters:
+	 * <code>;/?:@=&"&lt;&gt;>#%{}|\^~[]`</code>
 	 * @param name
-	 * @return 
+	 * @return A builder for chaining build calls
 	 */
-	public B inAlias(String name) {
-		_aliases.add(new Alias(name, true, false));
+	public B aliasIn(String name) {
+		addAlias(new Alias(name, true, false), _aliases);
 		return instance;
 	}
 	
@@ -150,11 +155,15 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * Adds an alternate name for this property that can be used if this
 	 * property is exported, such as exporting to System.properties.
 	 * 
+	 * If the alias name already exists, it will add 'out-ness' to it.
+	 * Alias names cannot be null, contain whitespace, or these characters:
+	 * <code>;/?:@=&"<>#%{}|\^~[]`</code>
+	 * 
 	 * @param name
-	 * @return 
+	 * @return A builder for chaining build calls
 	 */
-	public B outAlias(String name) {
-		_aliases.add(new Alias(name, false, true));
+	public B aliasOut(String name) {
+		addAlias(new Alias(name, false, true), _aliases);
 		return instance;
 	}
 	
@@ -162,12 +171,44 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * Adds an alternate name for this property that will both be recognized
 	 * when reading in properties and can be used when exporting properties.
 	 * 
+	 * If the alias name already exists, it will add 'in' and 'out' to it.
+	 * Alias names cannot be null, contain whitespace, or these characters:
+	 * <code>;/?:@=&"<>#%{}|\^~[]`</code>
+	 * 
 	 * @param name
-	 * @return 
+	 * @return A builder for chaining build calls
 	 */
-	public B inAndOutAlias(String name) {
-		_aliases.add(new Alias(name, true, true));
+	public B aliasInAndOut(String name) {
+		addAlias(new Alias(name, true, true), _aliases);
 		return instance;
+	}
+	
+	/**
+	 * Used by public alias methods to actually add the Alias.
+	 * 
+	 * This method checks to see if the alias already exists and consolidates
+	 * aliases of the same name, ORing their in/out settings.
+	 * 
+	 * The result is that if two aliases are added with the same name, one in and
+	 * one out, there will be a single alias that is both in and out.
+	 * 
+	 * @param newAlias New alias to add
+	 * @param addToList The list to add to
+	 */
+	protected void addAlias(Alias newAlias, List<Alias> addToList) {
+		String name = newAlias.getName();
+		
+		for (int i = 0; i < addToList.size(); i++) {
+			Alias a = addToList.get(i);
+			
+			if (a.getName().equals(name)) {
+				Alias b = new Alias(name, newAlias.isIn() || a.isIn(), newAlias.isOut() || a.isOut());
+				addToList.set(i, b);
+				return;
+			}
+		}
+		
+		addToList.add(newAlias);
 	}
 	
 	public B helpText(String helpText) {
