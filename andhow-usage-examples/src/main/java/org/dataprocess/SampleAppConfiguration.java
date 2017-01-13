@@ -66,10 +66,14 @@ public class SampleAppConfiguration {
 	
 	@GroupInfo(name="NWIS Configuration", desc="Configures communication to the USGS NWIS service")
 	public interface NwisConfig extends PropertyGroup {
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
-		IntProp TIMEOUT = IntProp.builder().defaultValue(20).build();
-		StrProp QUERY_ENDPOINT = StrProp.builder().build();
-		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
+		/*	This group of properties shows how to use aliases to accomodate
+			legacy configuration.  aliasIn("legacy.name") adds an alternate name
+			by which properties can be refered to in all configuration sources.
+		*/
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("nwis.svs").build();
+		IntProp TIMEOUT = IntProp.builder().defaultValue(20).aliasIn("nwis.to").build();
+		StrProp QUERY_ENDPOINT = StrProp.builder().aliasIn("nwis.query").build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().required().aliasIn("nwis.item").build();
 	}
 	
 	@GroupInfo(name="Application Information", desc="Basic app info for display in the UI")

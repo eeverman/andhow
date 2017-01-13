@@ -1,5 +1,7 @@
 package yarnandtail.andhow.property;
 
+import java.util.List;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Trimmer;
 import yarnandtail.andhow.valuetype.FlagType;
@@ -34,11 +36,11 @@ import yarnandtail.andhow.ValueMap;
 public class FlagProp extends PropertyBase<Boolean> {
 	
 	public FlagProp(
-			Boolean defaultValue, boolean required, String shortDesc,
+			Boolean defaultValue, boolean required, String shortDesc, List<Alias> aliases,
 			PropertyType paramType, ValueType<Boolean> valueType, Trimmer trimmer,
 			String helpText) {
 		
-		super(defaultValue, required, shortDesc, null, paramType, valueType, trimmer, helpText);
+		super(defaultValue, required, shortDesc, null, aliases, paramType, valueType, trimmer, helpText);
 	}
 	
 	@Override
@@ -67,7 +69,7 @@ public class FlagProp extends PropertyBase<Boolean> {
 		@Override
 		public FlagProp build() {
 
-			return new FlagProp(_defaultValue, _required, _shortDesc, 
+			return new FlagProp(_defaultValue, _required, _shortDesc, _aliases,
 				PropertyType.FLAG, _valueType, _trimmer, _helpText);
 
 		}

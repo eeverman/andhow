@@ -1,6 +1,7 @@
 package yarnandtail.andhow.property;
 
 import java.util.List;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Trimmer;
 import yarnandtail.andhow.Validator;
@@ -23,10 +24,10 @@ public class IntProp extends PropertyBase<Integer> {
 	
 	public IntProp(
 			Integer defaultValue, boolean required, String shortDesc, List<Validator<Integer>> validators,
-			PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
+			List<Alias> aliases, PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
 			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText);
+		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static IntBuilder builder() {
@@ -45,7 +46,7 @@ public class IntProp extends PropertyBase<Integer> {
 		public IntProp build() {
 
 			return new IntProp(_defaultValue, _required, _shortDesc, _validators,
-				PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 		

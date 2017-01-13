@@ -1,6 +1,5 @@
 package yarnandtail.andhow;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -76,6 +75,29 @@ public interface Property<T> {
 	 * @return 
 	 */
 	List<Validator<T>> getValidators();
+	
+	/**
+	 * The list of Aliases requested by this property in its declaration.
+	 * 
+	 * CAUTION:  This is NOT necessarily the list of Alias actually available
+	 * for this property - use AndHow.getAlias() for that.
+	 * 
+	 * Since Properties from unrelated libraries can be
+	 * used in the same application, the main AndHow application level configuration
+	 * must be able to disable aliases that conflict (i.e., two properties are
+	 * aliased as 'my-prop'.
+	 * 
+	 * Note that the returned aliases may be coalesced.  For instance, if a property
+	 * is build as:
+	 * <code>IntProp MyProp = IntProp.builder().inAlias("Bob").outAlias("Bob").build();</code>
+	 * getConfiguredAliases() may return a single Alias object w/ the name "Bob",
+	 * marked as being both both in and out.
+	 * 
+	 * @return A list of Alias assigned to this Property in the property
+	 *	declaration or an empty list if there are none.
+	 */
+	List<Alias> getRequestedAliases();
+	
 	
 	/**
 	 * Added details that might be shown if the user requests help.

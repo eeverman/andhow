@@ -25,7 +25,7 @@ public class BasicNamingStrategyTest {
 		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(0, naming.getAliases().size());
+		assertEquals(0, naming.getInAliases().size());
 	}
 
 }

@@ -38,7 +38,7 @@ public class SimpleSample {
 	@GroupInfo(name="Example Property group", desc="One logical set of properties")
 	public interface MySetOfProps extends PropertyGroup {
 		
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build(); // 5)
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
 				.desc("Service name added to end of url for the queries").build();
@@ -64,6 +64,14 @@ public class SimpleSample {
 	Properties describe themselves in their builders, 
 	including the value type (String, Integer, etc), required vs. optional,
 	validation rules and description.
+5.	Each property automatically generates a canonical property name that is
+	used in configuration sources (like system environmental variables) to set
+	that property.  Canonical names are what you would expect for standard Java
+	dot notation.  For instance, the canonical name for SERVICE_URL would be:
+	`SimpleSample.MySetOfProps.SERVICE_URL`
+	However, aliases can be used to work with legacy systems that already have
+	established properties keys/names.  For instance, SERVICE_URL can also be
+	set via the name "url".
 
 Of course, this example fails because there is no _andhow.properties_ file.
 This is a good thing - you would not want a miss-configured application to appear to start.

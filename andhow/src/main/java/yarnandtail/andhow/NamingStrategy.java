@@ -29,23 +29,23 @@ public interface NamingStrategy {
 	
 	public static class Naming {
 		private String canonicalName;
-		private List<String> aliases;
+		private List<String> inAliases;
 
-		public Naming(String canonicalName, List<String> aliases) {
+		public Naming(String canonicalName, List<String> inAliases) {
 			this.canonicalName = canonicalName;
-			this.aliases = aliases;
+			this.inAliases = inAliases;
 		}
 		
 		public String getCanonicalName() {
 			return canonicalName;
 		}
 
-		public List<String> getAliases() {
-			return aliases;
+		public List<String> getInAliases() {
+			return inAliases;
 		}
 
-		public void setAliases(List<String> aliases) {
-			this.aliases = aliases;
+		public void setInAliases(List<String> inAliases) {
+			this.inAliases = inAliases;
 		}
 	}
 	
@@ -67,5 +67,23 @@ public interface NamingStrategy {
 		if (classpathName == null) return null;
 		
 		return classpathName.replaceAll("\\.", "/");
+	}
+	
+	/**
+	 * Returns true if the Uri version of the passed name would be a disctict name
+	 * from the passed name.
+	 * 
+	 * If this returns false, the URI name and the classpathName would be the same.
+	 * 
+	 * If passed null, this returns false.
+	 * 
+	 * @param classpathName
+	 * @return 
+	 */
+	public static boolean isUriNameDistict(String classpathName) {
+		
+		if (classpathName == null) return false;
+		
+		return ! classpathName.equals(getUriName(classpathName));
 	}
 }

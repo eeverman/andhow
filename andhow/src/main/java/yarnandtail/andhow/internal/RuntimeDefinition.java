@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.ConstructionProblem;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.Property;
@@ -28,7 +29,8 @@ public class RuntimeDefinition {
 	
 	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
 	private final List<Class<? extends PropertyGroup>> groupList = new ArrayList();
-	private final Map<String, Property<?>> propertiesByNames = new HashMap();
+	private final Map<Property<?>, List<Alias>> aliasesByProperty = new HashMap();
+	private final Map<String, Property<?>> propertiesByAnyName = new HashMap();
 	private final Map<Property<?>, String> canonicalNameByProperty = new HashMap();
 	private final List<Property<?>> properties = new ArrayList();
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
@@ -48,10 +50,12 @@ public class RuntimeDefinition {
 			throw new RuntimeException("Null values are not allowed when registering a property.");
 		}
 		
+		aliasesByProperty.put(property, property.getRequestedAliases());
+		
 		//Build a list of the canonical name and all the aliases (if any) to simplify later logic
 		ArrayList<String> allNames = new ArrayList();
 		allNames.add(names.getCanonicalName());
-		allNames.addAll(names.getAliases());
+		allNames.addAll(names.getInAliases());
 		
 		if (canonicalNameByProperty.containsKey(property)) {
 			ConstructionProblem.DuplicateProperty dupProp = new ConstructionProblem.DuplicateProperty(
@@ -64,7 +68,7 @@ public class RuntimeDefinition {
 		
 		//Check for duplicate names
 		for (String a : allNames) {
-			Property<?> conflictProp = propertiesByNames.get(a);
+			Property<?> conflictProp = propertiesByAnyName.get(a);
 			if (conflictProp != null) {
 				ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
 					getGroupForProperty(conflictProp),
@@ -100,7 +104,7 @@ public class RuntimeDefinition {
 
 
 		for (String a : allNames) {
-			propertiesByNames.put(a, property);
+			propertiesByAnyName.put(a, property);
 		}
 
 		List<Property<?>> list = propertiesByGroup.get(group);
@@ -132,9 +136,23 @@ public class RuntimeDefinition {
 	 * @return 
 	 */
 	public Property<?> getProperty(String name) {
-		return propertiesByNames.get(name);
+		return propertiesByAnyName.get(name);
 	}
 	
+	/**
+	 * Returns all aliases (in and out) for a property.
+	 * 
+	 * This may be different than the aliases requested for the Property, since
+	 * the application-level configuration has the ability to add and remove
+	 * aliases to mitigate name conflicts.
+	 * 
+	 * @param property
+	 * @return 
+	 */
+	public List<Alias> getAliases(Property<?> property) {
+		return aliasesByProperty.get(property);
+	}
+		
 	/**
 	 * Returns the cononical name of a registered property.
 	 * 

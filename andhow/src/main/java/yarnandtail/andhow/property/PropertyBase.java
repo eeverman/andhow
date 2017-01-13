@@ -18,11 +18,12 @@ public abstract class PropertyBase<T> implements Property<T> {
 	private final boolean required;
 	private final String shortDesc;
 	private final List<Validator<T>> validators;
+	private final List<Alias> aliases;
 	private final String helpText;
 	
 	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
+			List<Alias> aliases, PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
 			String helpText) {
 				
 		//Clean all values to be non-null
@@ -33,6 +34,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 		this.required = required;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
+		this.aliases = (aliases != null)?Collections.unmodifiableList(aliases) : Collections.emptyList();
 		this.helpText = (helpText != null)?helpText:"";
 		
 	}
@@ -60,6 +62,11 @@ public abstract class PropertyBase<T> implements Property<T> {
 	@Override
 	public List<Validator<T>> getValidators() {
 		return validators;
+	}
+	
+	@Override
+	public List<Alias> getRequestedAliases() {
+		return aliases;
 	}
 
 	@Override

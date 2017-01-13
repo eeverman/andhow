@@ -9,8 +9,7 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import yarnandtail.andhow.GroupInfo;
 import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderProblem.IOLoaderProblem;
-import yarnandtail.andhow.LoaderProblem.JndiContextLoaderProblem;
+import yarnandtail.andhow.LoaderProblem.*;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.NamingStrategy;
 import yarnandtail.andhow.Property;
@@ -57,11 +56,24 @@ public class JndiLoader extends BaseLoader {
 			InitialContext ctx = new InitialContext();
 			List<String> propNames = new ArrayList();
 			
-			for (Property<?> p : appConfigDef.getProperties()) {
+			for (Property<?> prop : appConfigDef.getProperties()) {
 				
 				//Check the URI name first (more likely), then the classpath style name
-				propNames.add(NamingStrategy.getUriName(appConfigDef.getCanonicalName(p)));
-				propNames.add(appConfigDef.getCanonicalName(p));
+				if (NamingStrategy.isUriNameDistict(appConfigDef.getCanonicalName(prop))) {
+					propNames.add(NamingStrategy.getUriName(appConfigDef.getCanonicalName(prop)));
+				}
+				
+				propNames.add(appConfigDef.getCanonicalName(prop));
+				
+				//Add all of the 'in' aliases
+				appConfigDef.getAliases(prop).stream().filter(a -> a.isIn()).forEach(a -> {
+					propNames.add(a.getName());
+					
+					//Add the URI style name if it is different
+					if (NamingStrategy.isUriNameDistict(a.getName())) {
+						propNames.add(NamingStrategy.getUriName(a.getName()));
+					}
+				});
 				
 				for (String root : jndiRoots) {
 					
@@ -70,7 +82,7 @@ public class JndiLoader extends BaseLoader {
 							Object o = ctx.lookup(JNDI_PROTOCOL_NAME + root + propName);
 
 							if (o != null) {
-								attemptToAdd(appConfigDef, values, problems, p, o);
+								attemptToAdd(appConfigDef, values, problems, prop, o);
 							}
 
 						} catch (NameNotFoundException nnf) {

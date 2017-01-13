@@ -1,6 +1,7 @@
 package yarnandtail.andhow.property;
 
 import java.util.List;
+import yarnandtail.andhow.Alias;
 import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Trimmer;
 import yarnandtail.andhow.Validator;
@@ -23,10 +24,10 @@ public class StrProp extends PropertyBase<String> {
 	
 	public StrProp(
 			String defaultValue, boolean required, String shortDesc, List<Validator<String>> validators,
-			PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
+			List<Alias> aliases, PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
 			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, paramType, valueType, trimmer, helpText);
+		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static StrBuilder builder() {
@@ -47,7 +48,7 @@ public class StrProp extends PropertyBase<String> {
 		public StrProp build() {
 
 			return new StrProp(_defaultValue, _required, _shortDesc, _validators,
-				PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 		}
 		
 		public StrBuilder mustMatchRegex(String regex) {
