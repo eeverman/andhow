@@ -70,7 +70,7 @@ public class SimpleSample {
 	dot notation.  For instance, the canonical name for SERVICE_URL would be:
 	`SimpleSample.MySetOfProps.SERVICE_URL`
 	However, aliases can be used to work with legacy systems that already have
-	established properties keys/names.  For instance, SERVICE_URL can also be
+	established property keys/names.  For instance, SERVICE_URL can also be
 	set via the name "url".
 
 Of course, this example fails because there is no _andhow.properties_ file.
