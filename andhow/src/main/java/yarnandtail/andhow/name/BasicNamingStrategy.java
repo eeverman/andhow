@@ -29,10 +29,10 @@ public class BasicNamingStrategy implements NamingStrategy {
 		
 		List<String> effectiveAliases = effectiveAliases = EMPTY_STRING_LIST;
 		
-		if (prop.getConfiguredAliases().size() > 0) {
+		if (prop.getRequestedAliases().size() > 0) {
 			effectiveAliases = new ArrayList();
 			
-			List<Alias> aliases = prop.getConfiguredAliases();
+			List<Alias> aliases = prop.getRequestedAliases();
 			
 			for (Alias a : aliases) {
 				if (a.isIn()) effectiveAliases.add(a.getName());

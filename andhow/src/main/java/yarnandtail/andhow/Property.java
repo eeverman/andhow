@@ -77,10 +77,11 @@ public interface Property<T> {
 	List<Validator<T>> getValidators();
 	
 	/**
-	 * The list of Aliases directly assigned to this property when it was declared.
+	 * The list of Aliases requested by this property in its declaration.
 	 * 
-	 * CAUTION:  This method cannot be used to determine what alias are valid
-	 * to use for a Property - use AndHow.getAlias() instead.  
+	 * CAUTION:  This is NOT necessarily the list of Alias actually available
+	 * for this property - use AndHow.getAlias() for that.
+	 * 
 	 * Since Properties from unrelated libraries can be
 	 * used in the same application, the main AndHow application level configuration
 	 * must be able to disable aliases that conflict (i.e., two properties are
@@ -95,7 +96,7 @@ public interface Property<T> {
 	 * @return A list of Alias assigned to this Property in the property
 	 *	declaration or an empty list if there are none.
 	 */
-	List<Alias> getConfiguredAliases();
+	List<Alias> getRequestedAliases();
 	
 	
 	/**

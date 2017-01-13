@@ -223,6 +223,30 @@ public class TextUtilTest {
 		assertEquals("&lt;some&amp;text&quot;", TextUtil.escapeXml("<some&text\""));
 		assertEquals("&apos;tis the s&apos;son", TextUtil.escapeXml("'tis the s'son"));
 	}
+	
+	@Test
+	public void testIsValidPropertyAlias() {
+		
+		//OKs
+		assertTrue(TextUtil.isValidPropertyAlias("a"));
+		assertTrue(TextUtil.isValidPropertyAlias("-a"));
+		assertTrue(TextUtil.isValidPropertyAlias("_a.a_"));
+		assertTrue(TextUtil.isValidPropertyAlias("a-.-a"));
+		assertTrue(TextUtil.isValidPropertyAlias("a-.-a"));
+		
+		//not alloweds
+		assertFalse(TextUtil.isValidPropertyAlias(null));
+		assertFalse(TextUtil.isValidPropertyAlias(""));
+		assertFalse(TextUtil.isValidPropertyAlias("\t"));
+		assertFalse(TextUtil.isValidPropertyAlias(" "));
+		assertFalse(TextUtil.isValidPropertyAlias(" surroundedBySpace "));
+		assertFalse(TextUtil.isValidPropertyAlias("contains space"));
+		assertFalse(TextUtil.isValidPropertyAlias(".startsWithDot"));
+		assertFalse(TextUtil.isValidPropertyAlias("endsWithDot."));
+		assertFalse(TextUtil.isValidPropertyAlias("no=equals"));
+		assertFalse(TextUtil.isValidPropertyAlias("no?question"));
+		assertFalse(TextUtil.isValidPropertyAlias("no/forward/slash"));
+	}
 			
 	
 }

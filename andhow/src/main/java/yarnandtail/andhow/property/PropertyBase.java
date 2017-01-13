@@ -65,7 +65,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	}
 	
 	@Override
-	public List<Alias> getConfiguredAliases() {
+	public List<Alias> getRequestedAliases() {
 		return aliases;
 	}
 
