@@ -32,7 +32,7 @@ public class SimpleSample {
 	@GroupInfo(name="Example Property group", desc="One logical set of properties")
 	public interface MySetOfProps extends PropertyGroup {
 		
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
 				.desc("Service name added to end of url for the queries").build();
