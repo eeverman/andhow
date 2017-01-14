@@ -27,7 +27,7 @@ public class AndHowCore implements ValueMap {
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
-	private final RuntimeDefinition runtimeDef;
+	private final ConstructionDefinition runtimeDef;
 	private final ValueMapWithContext loadedValues;
 	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	private final ArrayList<LoaderProblem> loaderProblems = new ArrayList();
@@ -63,8 +63,9 @@ public class AndHowCore implements ValueMap {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		runtimeDef = AndHowUtil.doRegisterProperties(registeredGroups, loaders, namingStrategy);
-		constructProblems.addAll(runtimeDef.getConstructionProblems());
+		ConstructionDefinitionMutable startupDef = AndHowUtil.doRegisterProperties(registeredGroups, loaders, namingStrategy);
+		constructProblems.addAll(startupDef.getConstructionProblems());
+		runtimeDef = startupDef.toImmutable();
 		
 		//
 		//If there are ConstructionProblems, we can't continue on to attempt to
@@ -76,9 +77,9 @@ public class AndHowCore implements ValueMap {
 		}
 		
 		//Continuing on to load values
-		loadedValues = loadValues().getValueMapWithContextImmutable();
+		loadedValues = loadValues(runtimeDef).getValueMapWithContextImmutable();
 
-		checkForRequiredValues();
+		checkForRequiredValues(runtimeDef);
 
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems() || loaderProblems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(loaderProblems, requirementsProblems, loadedValues);
@@ -115,7 +116,7 @@ public class AndHowCore implements ValueMap {
 		return loadedValues.getEffectiveValue(prop);
 	}
 	
-	private ValueMapWithContext loadValues() {
+	private ValueMapWithContext loadValues(ConstructionDefinition definition) {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
 
 		//force values by adding a fixed value loader before all other loaders
@@ -132,7 +133,7 @@ public class AndHowCore implements ValueMap {
 
 		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(runtimeDef, cmdLineArgs, existingValues);
+			LoaderValues result = loader.load(definition, cmdLineArgs, existingValues);
 			existingValues.addValues(result);
 			loaderProblems.addAll(result.getProblems());
 		}
@@ -141,15 +142,15 @@ public class AndHowCore implements ValueMap {
 	}
 	
 
-	private void checkForRequiredValues() {
+	private void checkForRequiredValues(ConstructionDefinition definition) {
 		
-		for (Property<?> prop : runtimeDef.getProperties()) {
+		for (Property<?> prop : definition.getProperties()) {
 			if (prop.isRequired()) {
 				if (getEffectiveValue(prop) == null) {
 					
 					requirementsProblems.add(
 						new RequirementProblem.RequiredPropertyProblem(
-								runtimeDef.getGroupForProperty(prop), prop));
+								definition.getGroupForProperty(prop), prop));
 				}
 			}
 		}

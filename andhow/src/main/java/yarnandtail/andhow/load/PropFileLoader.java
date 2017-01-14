@@ -6,14 +6,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import yarnandtail.andhow.*;
-import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
-import yarnandtail.andhow.internal.RuntimeDefinition;
 import yarnandtail.andhow.property.StrProp;
 
 /**
@@ -48,7 +45,7 @@ public class PropFileLoader extends BaseLoader {
 	String specificLoadDescription = null;
 	
 	@Override
-	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();

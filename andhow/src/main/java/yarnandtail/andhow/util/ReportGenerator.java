@@ -11,7 +11,7 @@ import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.RequirementProblem;
 import yarnandtail.andhow.ValueProblem;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.SamplePrinter;
 
 /**
@@ -22,7 +22,7 @@ public class ReportGenerator {
 	
 	public static final int DEFAULT_LINE_WIDTH = 90;
 		
-	public static void printProblems(PrintStream out, AppFatalException fatalException, RuntimeDefinition appDef) {
+	public static void printProblems(PrintStream out, AppFatalException fatalException, ConstructionDefinition appDef) {
 		
 		try {
 			printProblemHR(out);
@@ -40,7 +40,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printConstructionProblems(PrintStream out, List<ConstructionProblem> probs, RuntimeDefinition appDef) {
+	public static void printConstructionProblems(PrintStream out, List<ConstructionProblem> probs, ConstructionDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			out.println("CONSTRUCTION PROBLEMS  - Basic problems configuring and starting up the " + AndHow.ANDHOW_INLINE_NAME + " frameowork.");
@@ -56,7 +56,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printLoaderProblems(PrintStream out, List<LoaderProblem> probs, RuntimeDefinition appDef) {
+	public static void printLoaderProblems(PrintStream out, List<LoaderProblem> probs, ConstructionDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", 
@@ -71,7 +71,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printValueProblems(PrintStream out, List<ValueProblem> probs, RuntimeDefinition appDef) {
+	public static void printValueProblems(PrintStream out, List<ValueProblem> probs, ConstructionDefinition appDef) {
 		if (! probs.isEmpty()) {
 			
 			TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "VALUE PROBLEMS - Values that violate validation rules.");
@@ -85,7 +85,7 @@ public class ReportGenerator {
 		}
 	}
 	
-	public static void printRequirementProblems(PrintStream out, List<RequirementProblem> probs, RuntimeDefinition appDef) {
+	public static void printRequirementProblems(PrintStream out, List<RequirementProblem> probs, ConstructionDefinition appDef) {
 		if (! probs.isEmpty()) {
 
 			out.println("REQUIRMENT PROBLEMS - When a required property is not provided");
@@ -112,7 +112,7 @@ public class ReportGenerator {
 	 * @param loaders
 	 * @param isDueToErrors If true, the reason for these samples is b/c there was a startup error.
 	 */
-	public static void printConfigSamples(PrintStream out, RuntimeDefinition appDef, List<Loader> loaders, boolean isDueToErrors) {
+	public static void printConfigSamples(PrintStream out, ConstructionDefinition appDef, List<Loader> loaders, boolean isDueToErrors) {
 		
 		if (isDueToErrors) {
 			out.println();

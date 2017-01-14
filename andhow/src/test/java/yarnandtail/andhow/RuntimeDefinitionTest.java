@@ -2,7 +2,7 @@ package yarnandtail.andhow;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.property.StrProp;
 
@@ -25,7 +25,7 @@ public class RuntimeDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		RuntimeDefinition appDef = new RuntimeDefinition();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, 
 				bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, 
@@ -61,7 +61,7 @@ public class RuntimeDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		RuntimeDefinition appDef = new RuntimeDefinition();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		appDef.addProperty(SampleGroup.class, SampleGroup.STR_1, 
 				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1"));
 		appDef.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
@@ -88,7 +88,7 @@ public class RuntimeDefinitionTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		RuntimeDefinition appDef = new RuntimeDefinition();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
 				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX"));
 		appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 

@@ -30,10 +30,10 @@ public class AndHowUtil {
 	 * @param naming  A naming strategy to use when reading the properties during loading
 	 * @return A fully configured instance
 	 */
-	public static RuntimeDefinition 
+	public static ConstructionDefinitionMutable 
 		doRegisterProperties(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
 
-		RuntimeDefinition appDef = new RuntimeDefinition();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
@@ -59,7 +59,7 @@ public class AndHowUtil {
 
 	}
 		
-	protected static void doRegisterGroup(RuntimeDefinition appDef,
+	protected static void doRegisterGroup(ConstructionDefinitionMutable appDef,
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
 
 		try {

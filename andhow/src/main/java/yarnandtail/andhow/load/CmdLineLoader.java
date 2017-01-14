@@ -4,10 +4,11 @@ import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.AndHow;
+import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.ValueMapWithContext;
 
 /**
@@ -38,7 +39,7 @@ public class CmdLineLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();

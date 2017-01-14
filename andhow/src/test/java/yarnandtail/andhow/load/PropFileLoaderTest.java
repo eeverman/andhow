@@ -8,7 +8,7 @@ import org.junit.Before;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import yarnandtail.andhow.SimpleParams;
@@ -19,7 +19,7 @@ import yarnandtail.andhow.SimpleParams;
  */
 public class PropFileLoaderTest {
 	
-	RuntimeDefinition appDef;
+	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
 	
 	@Before
@@ -28,7 +28,7 @@ public class PropFileLoaderTest {
 		appValuesBuilder = new ValueMapWithContextMutable();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new RuntimeDefinition();
+		appDef = new ConstructionDefinitionMutable();
 		
 		appDef.addProperty(PropFileLoader.CONFIG.class, 
 				PropFileLoader.CONFIG.CLASSPATH_PATH, 
