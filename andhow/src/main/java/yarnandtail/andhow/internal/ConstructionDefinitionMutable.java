@@ -26,7 +26,6 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	private final Map<String, Property<?>> propertiesByAnyName = new HashMap();
 	private final Map<Property<?>, String> canonicalNameByProperty = new HashMap();
 	private final List<Property<?>> properties = new ArrayList();
-	private final List<ConstructionProblem> constructProblems = new ArrayList();
 	
 	/**
 	 * Adds a PropertyGroup, its Property and the name and aliases for that property
@@ -36,7 +35,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	 * @param property The Property to be added
 	 * @param names The names associated w/ this property
 	 */
-	public void addProperty(Class<? extends PropertyGroup> group, Property<?> property, 
+	public ConstructionProblem addProperty(Class<? extends PropertyGroup> group, Property<?> property, 
 			NamingStrategy.Naming names) {
 		
 		if (group == null || property == null || names == null || names.getCanonicalName() == null) {
@@ -55,8 +54,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 					getGroupForProperty(property),
 					property, group, property);
 			
-			constructProblems.add(dupProp);
-			return;
+			return dupProp;
 		}
 		
 		//Check for duplicate names
@@ -67,8 +65,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 					getGroupForProperty(conflictProp),
 						conflictProp, group, property, a);
 						
-				constructProblems.add(notUniqueName);
-				return;
+				return notUniqueName;
 			}
 		}
 		
@@ -79,14 +76,14 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 					ConstructionProblem.InvalidValidationConfiguration(
 					group, property, v);
 				
-				constructProblems.add(badValid);
-				return;
+				return badValid;
 			}
 		}
 		
 		//Check the default value against validation
-		if (checkForInvalidDefaultValue(property, group, names.getCanonicalName())) {
-			return;
+		ConstructionProblem invalidDefault = checkForInvalidDefaultValue(property, group, names.getCanonicalName());
+		if (invalidDefault != null) {
+			return invalidDefault;
 		}
 		
 		//
@@ -110,16 +107,8 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 			groupList.add(group);
 		}
 		
-	}
-	
-	/**
-	 * Since code outside this class is adding properties, external code also needs
-	 * to be able to record when it cannot add properties to the definition.
-	 * 
-	 * @param problem 
-	 */
-	public void addConstructionProblem(ConstructionProblem problem) {
-		constructProblems.add(problem);
+		return  null;
+		
 	}
 	
 	@Override
@@ -168,15 +157,6 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 		
 		return null;
 	}
-
-	/**
-	 * Returns a list of ConstructionProblems found while building the definition.
-	 * 
-	 * @return Never returns null - only an empty list.
-	 */
-	public List<ConstructionProblem> getConstructionProblems() {
-		return Collections.unmodifiableList(constructProblems);
-	}
 	
 	/**
 	 * Checks a Property's default value against its Validators and adds entries
@@ -188,10 +168,9 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	 * @param canonName
 	 * @return True if the default value is invalid.
 	 */
-	protected final <T> boolean checkForInvalidDefaultValue(Property<T> property, 
+	protected final <T> ConstructionProblem.InvalidDefaultValue checkForInvalidDefaultValue(Property<T> property, 
 			Class<? extends PropertyGroup> group, String canonName) {
 		
-		boolean foundProblem = false;
 		
 		if (property.getDefaultValue() != null) {
 			T t = property.getDefaultValue();
@@ -205,14 +184,13 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 								new ConstructionProblem.InvalidDefaultValue(
 										group, property, 
 										v.getInvalidMessage(t));
-						constructProblems.add(problem);
-						foundProblem = true;
+						return problem;
 					}
 				}
 			}
 		}
 		
-		return foundProblem;
+		return null;
 	}
 	
 	/**

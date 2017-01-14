@@ -26,12 +26,15 @@ public class AndHowUtil {
 	 * Build a fully populated ConstructionDefinition from the passed Groups, 
 	 * using the NamingStrategy to generate names for each.
 	 * 
-	 * @param groups The PropertyGroups from which to find Properties.  May be null
+	 * @param groups The PropertyGroups from which to find Properties.  May be null.
+	 * @param loaders The Loaders, which may their own configurable PropertyGroups.
 	 * @param naming  A naming strategy to use when reading the properties during loading
+	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
-	public static ConstructionDefinitionMutable 
-		buildDefinition(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
+	public static ConstructionDefinitionMutable buildDefinition(
+			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
+			NamingStrategy naming, List<ConstructionProblem> problems) {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		
@@ -40,7 +43,7 @@ public class AndHowUtil {
 				Class<? extends PropertyGroup> group = loader.getLoaderConfig();
 				if (group != null) {
 					
-					registerGroup(appDef, group, naming);
+					problems.addAll(registerGroup(appDef, group, naming));
 					
 				}
 			}
@@ -50,32 +53,38 @@ public class AndHowUtil {
 		if (groups != null) {
 			for (Class<? extends PropertyGroup> group : groups) {
 
-				registerGroup(appDef, group, naming);
+				problems.addAll(registerGroup(appDef, group, naming));
 				
 			}
 		}
 		
 		return appDef;
-
 	}
 		
-	protected static void registerGroup(ConstructionDefinitionMutable appDef,
+	protected static List<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
+		
+		ArrayList<ConstructionProblem> problems = new ArrayList();
 
 		try {
 			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
 			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
 				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndProp.property, group, nameAndProp.canonName);
-				appDef.addProperty(group, nameAndProp.property, names);
+				ConstructionProblem p = appDef.addProperty(group, nameAndProp.property, names);
+				
+				if (p != null) {
+					problems.add(p);
+				}
 			}
 			
 		} catch (Exception ex) {
-			ConstructionProblem.SecurityException se = new ConstructionProblem.SecurityException(
-				ex, group);
-			appDef.addConstructionProblem(se);
+			ConstructionProblem.SecurityException se = 
+					new ConstructionProblem.SecurityException(ex, group);
+			problems.add(se);
 		}
-
+		
+		return problems;
 	}
 		
 	public static void printExceptions(List<? extends Exception> exceptions, PrintStream out) {
