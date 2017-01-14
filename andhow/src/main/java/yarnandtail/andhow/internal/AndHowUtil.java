@@ -23,15 +23,15 @@ public class AndHowUtil {
 	
 
 	/**
-	 * Build a fully populated RuntimeDefinition from the Properties contained in
-	 * the passed Groups, using the NamingStrategy to generate names for each.
+	 * Build a fully populated ConstructionDefinition from the passed Groups, 
+	 * using the NamingStrategy to generate names for each.
 	 * 
 	 * @param groups The PropertyGroups from which to find Properties.  May be null
 	 * @param naming  A naming strategy to use when reading the properties during loading
 	 * @return A fully configured instance
 	 */
 	public static ConstructionDefinitionMutable 
-		doRegisterProperties(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
+		buildDefinition(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		
@@ -40,7 +40,7 @@ public class AndHowUtil {
 				Class<? extends PropertyGroup> group = loader.getLoaderConfig();
 				if (group != null) {
 					
-					doRegisterGroup(appDef, group, naming);
+					registerGroup(appDef, group, naming);
 					
 				}
 			}
@@ -50,7 +50,7 @@ public class AndHowUtil {
 		if (groups != null) {
 			for (Class<? extends PropertyGroup> group : groups) {
 
-				doRegisterGroup(appDef, group, naming);
+				registerGroup(appDef, group, naming);
 				
 			}
 		}
@@ -59,7 +59,7 @@ public class AndHowUtil {
 
 	}
 		
-	protected static void doRegisterGroup(ConstructionDefinitionMutable appDef,
+	protected static void registerGroup(ConstructionDefinitionMutable appDef,
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
 
 		try {

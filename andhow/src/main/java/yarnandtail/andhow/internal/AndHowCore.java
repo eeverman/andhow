@@ -63,7 +63,7 @@ public class AndHowCore implements ValueMap {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		ConstructionDefinitionMutable startupDef = AndHowUtil.doRegisterProperties(registeredGroups, loaders, namingStrategy);
+		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(registeredGroups, loaders, namingStrategy);
 		constructProblems.addAll(startupDef.getConstructionProblems());
 		runtimeDef = startupDef.toImmutable();
 		
