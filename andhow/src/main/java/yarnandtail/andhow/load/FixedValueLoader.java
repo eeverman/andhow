@@ -2,9 +2,10 @@ package yarnandtail.andhow.load;
 
 import java.util.Collections;
 import java.util.List;
+import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.ValueMapWithContext;
 
 /**
@@ -27,7 +28,7 @@ public class FixedValueLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
 		return new LoaderValues(this, values, Collections.emptyList());
 	}

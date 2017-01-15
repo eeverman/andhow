@@ -18,7 +18,7 @@ import yarnandtail.andhow.util.ReportGenerator;
  * 
  * @author eeverman
  */
-public class AndHowCore implements ValueMap {
+public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//User config
 	private final ArrayList<PropertyValue> forcedValues = new ArrayList();
 	private final ArrayList<PropertyValue> defaultValues = new ArrayList();
@@ -27,9 +27,9 @@ public class AndHowCore implements ValueMap {
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
-	private final RuntimeDefinition runtimeDef;
+	private final ConstructionDefinition runtimeDef;
 	private final ValueMapWithContext loadedValues;
-	private final List<ConstructionProblem> constructProblems = new ArrayList();
+	private final ProblemList<ConstructionProblem> constructProblems = new ProblemList();
 	private final ArrayList<LoaderProblem> loaderProblems = new ArrayList();
 	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
 	
@@ -63,8 +63,8 @@ public class AndHowCore implements ValueMap {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		runtimeDef = AndHowUtil.doRegisterProperties(registeredGroups, loaders, namingStrategy);
-		constructProblems.addAll(runtimeDef.getConstructionProblems());
+		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(registeredGroups, loaders, namingStrategy, constructProblems);
+		runtimeDef = startupDef.toImmutable();
 		
 		//
 		//If there are ConstructionProblems, we can't continue on to attempt to
@@ -76,9 +76,9 @@ public class AndHowCore implements ValueMap {
 		}
 		
 		//Continuing on to load values
-		loadedValues = loadValues().getValueMapWithContextImmutable();
+		loadedValues = loadValues(runtimeDef).getValueMapWithContextImmutable();
 
-		checkForRequiredValues();
+		checkForRequiredValues(runtimeDef);
 
 		if (requirementsProblems.size() > 0 || loadedValues.hasProblems() || loaderProblems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(loaderProblems, requirementsProblems, loadedValues);
@@ -90,14 +90,6 @@ public class AndHowCore implements ValueMap {
 	private void printFailedStartupDetails(AppFatalException afe) {
 		ReportGenerator.printProblems(System.err, afe, runtimeDef);
 		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders, true);
-	}
-
-	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
-		return runtimeDef.getPropertyGroups();
-	}
-
-	public List<Property<?>> getProperties() {
-		return runtimeDef.getProperties();
 	}
 	
 	@Override
@@ -115,7 +107,7 @@ public class AndHowCore implements ValueMap {
 		return loadedValues.getEffectiveValue(prop);
 	}
 	
-	private ValueMapWithContext loadValues() {
+	private ValueMapWithContext loadValues(ConstructionDefinition definition) {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
 
 		//force values by adding a fixed value loader before all other loaders
@@ -132,7 +124,7 @@ public class AndHowCore implements ValueMap {
 
 		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(runtimeDef, cmdLineArgs, existingValues);
+			LoaderValues result = loader.load(definition, cmdLineArgs, existingValues);
 			existingValues.addValues(result);
 			loaderProblems.addAll(result.getProblems());
 		}
@@ -141,19 +133,58 @@ public class AndHowCore implements ValueMap {
 	}
 	
 
-	private void checkForRequiredValues() {
+	private void checkForRequiredValues(ConstructionDefinition definition) {
 		
-		for (Property<?> prop : runtimeDef.getProperties()) {
+		for (Property<?> prop : definition.getProperties()) {
 			if (prop.isRequired()) {
 				if (getEffectiveValue(prop) == null) {
 					
 					requirementsProblems.add(
 						new RequirementProblem.RequiredPropertyProblem(
-								runtimeDef.getGroupForProperty(prop), prop));
+								definition.getGroupForProperty(prop), prop));
 				}
 			}
 		}
 		
+	}
+
+	
+	//
+	//ConstructionDefinition Interface
+	
+	@Override
+	public List<Alias> getAliases(Property<?> property) {
+		return runtimeDef.getAliases(property);
+	}
+
+	@Override
+	public String getCanonicalName(Property<?> prop) {
+		return runtimeDef.getCanonicalName(prop);
+	}
+
+	@Override
+	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
+		return runtimeDef.getGroupForProperty(prop);
+	}
+
+	@Override
+	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+		return runtimeDef.getPropertiesForGroup(group);
+	}
+
+	@Override
+	public Property<?> getProperty(String name) {
+		return runtimeDef.getProperty(name);
+	}
+	
+	@Override
+	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+		return runtimeDef.getPropertyGroups();
+	}
+
+	@Override
+	public List<Property<?>> getProperties() {
+		return runtimeDef.getProperties();
 	}
 		
 }
