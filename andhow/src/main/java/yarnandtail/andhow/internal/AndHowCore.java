@@ -18,7 +18,7 @@ import yarnandtail.andhow.util.ReportGenerator;
  * 
  * @author eeverman
  */
-public class AndHowCore implements ValueMap {
+public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//User config
 	private final ArrayList<PropertyValue> forcedValues = new ArrayList();
 	private final ArrayList<PropertyValue> defaultValues = new ArrayList();
@@ -29,7 +29,7 @@ public class AndHowCore implements ValueMap {
 	//Internal state
 	private final ConstructionDefinition runtimeDef;
 	private final ValueMapWithContext loadedValues;
-	private final List<ConstructionProblem> constructProblems = new ArrayList();
+	private final ProblemList<ConstructionProblem> constructProblems = new ProblemList();
 	private final ArrayList<LoaderProblem> loaderProblems = new ArrayList();
 	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
 	
@@ -91,14 +91,6 @@ public class AndHowCore implements ValueMap {
 		ReportGenerator.printProblems(System.err, afe, runtimeDef);
 		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders, true);
 	}
-
-	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
-		return runtimeDef.getPropertyGroups();
-	}
-
-	public List<Property<?>> getProperties() {
-		return runtimeDef.getProperties();
-	}
 	
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
@@ -154,6 +146,45 @@ public class AndHowCore implements ValueMap {
 			}
 		}
 		
+	}
+
+	
+	//
+	//ConstructionDefinition Interface
+	
+	@Override
+	public List<Alias> getAliases(Property<?> property) {
+		return runtimeDef.getAliases(property);
+	}
+
+	@Override
+	public String getCanonicalName(Property<?> prop) {
+		return runtimeDef.getCanonicalName(prop);
+	}
+
+	@Override
+	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
+		return runtimeDef.getGroupForProperty(prop);
+	}
+
+	@Override
+	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+		return runtimeDef.getPropertiesForGroup(group);
+	}
+
+	@Override
+	public Property<?> getProperty(String name) {
+		return runtimeDef.getProperty(name);
+	}
+	
+	@Override
+	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+		return runtimeDef.getPropertyGroups();
+	}
+
+	@Override
+	public List<Property<?>> getProperties() {
+		return runtimeDef.getProperties();
 	}
 		
 }

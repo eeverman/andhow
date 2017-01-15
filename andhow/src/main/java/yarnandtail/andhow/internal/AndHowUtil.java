@@ -3,17 +3,7 @@ package yarnandtail.andhow.internal;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.ConstructionProblem;
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueProblem;
-import yarnandtail.andhow.RequirementProblem;
-import yarnandtail.andhow.ValueMapWithContext;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.*;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -34,7 +24,7 @@ public class AndHowUtil {
 	 */
 	public static ConstructionDefinitionMutable buildDefinition(
 			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
-			NamingStrategy naming, List<ConstructionProblem> problems) {
+			NamingStrategy naming, ProblemList<ConstructionProblem> problems) {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		
@@ -61,21 +51,17 @@ public class AndHowUtil {
 		return appDef;
 	}
 		
-	protected static List<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
+	protected static ProblemList<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
 		
-		ArrayList<ConstructionProblem> problems = new ArrayList();
+		ProblemList<ConstructionProblem> problems = new ProblemList();
 
 		try {
 			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
 			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
 				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndProp.property, group, nameAndProp.canonName);
-				ConstructionProblem p = appDef.addProperty(group, nameAndProp.property, names);
-				
-				if (p != null) {
-					problems.add(p);
-				}
+				problems.add(appDef.addProperty(group, nameAndProp.property, names));
 			}
 			
 		} catch (Exception ex) {

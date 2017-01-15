@@ -14,7 +14,7 @@ import yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class RuntimeDefinitionTest {
+public class ConstructionDefinitionMutableTest {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
@@ -64,19 +64,14 @@ public class RuntimeDefinitionTest {
 	public void testDuplicatePropertiesInSeparateGroupWithDistinctNames() throws Exception {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
-		List<ConstructionProblem> problems = new ArrayList();
-		
-		
+		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
-		ConstructionProblem p = appDef.addProperty(SampleGroup.class, SampleGroup.STR_1, 
-				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1"));
 		
-		if (p != null) problems.add(p);
-		
-		p = appDef.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
-				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class, "STR_1_DUP"));
-		
-		if (p != null) problems.add(p);
+		problems.add(appDef.addProperty(SampleGroup.class, SampleGroup.STR_1, 
+				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1")));
+
+		problems.add(appDef.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
+				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class, "STR_1_DUP")));
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -98,23 +93,17 @@ public class RuntimeDefinitionTest {
 	public void testNonValidDefaultValueAndInvalidRegexValidationSpec() {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
-		List<ConstructionProblem> problems = new ArrayList();
-		
+		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
-		ConstructionProblem p = appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
-				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX"));
 		
-		if (p != null) problems.add(p);
+		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
+				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX")));
+
+		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_BAD_DEFAULT")));
 		
-		p = appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_BAD_DEFAULT"));
-		
-		if (p != null) problems.add(p);
-		
-		p = appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_OK_DEFAULT"));
-		
-		if (p != null) problems.add(p);
+		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, 
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_OK_DEFAULT")));
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));
