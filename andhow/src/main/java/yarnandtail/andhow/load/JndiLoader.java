@@ -7,76 +7,65 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import yarnandtail.andhow.GroupInfo;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderProblem.*;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.NamingStrategy;
-import yarnandtail.andhow.Property;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.PropertyValue;
+import yarnandtail.andhow.*;
+import yarnandtail.andhow.LoaderProblem.JndiContextLoaderProblem;
 import yarnandtail.andhow.util.TextUtil;
-import yarnandtail.andhow.ValueMap;
-import yarnandtail.andhow.internal.RuntimeDefinition;
-import yarnandtail.andhow.ValueMapWithContext;
 import yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.SamplePrinter;
 
 /**
  * Loads values from a JNDI context.
- * 
- * This loader can handle two types of objects coming from JNDI:  Either the incoming
- * object must already be of the correct destination type (such as a DateTime object),
- * or it my be a string that is parsable by the associated ValueType to the destination
- * type.
- * 
- * If the incoming value is a String and the destination type is a string, this 
- * loader does not trim the value - the value is assumed to already be in final form.
- * This loader does not consider it a problem to find unrecognized properties
- * in the JNDI context (this would nearly always be the case).
- * 
+ *
+ * This loader can handle two types of objects coming from JNDI: Either the
+ * incoming object must already be of the correct destination type (such as a
+ * DateTime object), or it my be a string that is parsable by the associated
+ * ValueType to the destination type.
+ *
+ * If the incoming value is a String and the destination type is a string, this
+ * loader does not trim the value - the value is assumed to already be in final
+ * form. This loader does not consider it a problem to find unrecognized
+ * properties in the JNDI context (this would nearly always be the case).
+ *
  * @author eeverman
  */
 public class JndiLoader extends BaseLoader {
-	
+
 	static String JNDI_PROTOCOL_NAME = "java:";
-	
-	
+
 	@Override
-	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
-		
+
 		ArrayList<String> jndiRoots = buildJndiRoots(existingValues);
-		
+
 		ArrayList<PropertyValue> values = new ArrayList();
 		ArrayList<LoaderProblem> problems = new ArrayList(0);
-		
+
 		try {
 			InitialContext ctx = new InitialContext();
 			List<String> propNames = new ArrayList();
-			
+
 			for (Property<?> prop : appConfigDef.getProperties()) {
-				
+
 				//Check the URI name first (more likely), then the classpath style name
 				if (NamingStrategy.isUriNameDistict(appConfigDef.getCanonicalName(prop))) {
 					propNames.add(NamingStrategy.getUriName(appConfigDef.getCanonicalName(prop)));
 				}
-				
+
 				propNames.add(appConfigDef.getCanonicalName(prop));
-				
+
 				//Add all of the 'in' aliases
 				appConfigDef.getAliases(prop).stream().filter(a -> a.isIn()).forEach(a -> {
 					propNames.add(a.getName());
-					
+
 					//Add the URI style name if it is different
 					if (NamingStrategy.isUriNameDistict(a.getName())) {
 						propNames.add(NamingStrategy.getUriName(a.getName()));
 					}
 				});
-				
+
 				for (String root : jndiRoots) {
-					
+
 					for (String propName : propNames) {
 						try {
 							Object o = ctx.lookup(JNDI_PROTOCOL_NAME + root + propName);
@@ -90,106 +79,105 @@ public class JndiLoader extends BaseLoader {
 						}
 					}
 				}
-				
+
 				propNames.clear();
-				
+
 			}
-			
-			
+
 		} catch (NamingException ex) {
 			//This is fatal and means there likely is no JNDI context
 			problems.add(new JndiContextLoaderProblem(this));	//Not sure why this would happen
 		}
-		
+
 		return new LoaderValues(this, values, problems);
 	}
-	
+
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
 		return false;
 	}
-	
+
 	@Override
 	public String getSpecificLoadDescription() {
 		return "JNDI properties in the system-wide JNDI context";
 	}
-	
+
 	@Override
 	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return CONFIG.class;
 	}
-	
+
 	@Override
 	public SamplePrinter getConfigSamplePrinter() {
 		return new JndiLoaderSamplePrinter();
 	}
-	
 
 	protected ArrayList<String> buildJndiRoots(ValueMap values) {
 		ArrayList<String> myJndiRoots = new ArrayList();
-		
+
 		List<String> someRoots = split(CONFIG.STANDARD_JNDI_ROOTS.getValue(values));
 		myJndiRoots.addAll(someRoots);
-			
+
 		String addRoots = CONFIG.ADDED_JNDI_ROOTS.getValue(values);
-		
+
 		if (addRoots != null) {
 			someRoots = split(addRoots);
 			myJndiRoots.addAll(someRoots);
 		}
-		
+
 		return myJndiRoots;
 	}
-	
+
 	protected List<String> split(String rootStr) {
-		
+
 		if (rootStr != null) {
 			QuotedSpacePreservingTrimmer trimmer = QuotedSpacePreservingTrimmer.instance();
 			String[] roots = rootStr.split(",");
 
 			for (int i = 0; i < roots.length; i++) {
 				roots[i] = trimmer.trim(roots[i]);
-				
+
 				if (roots[i].length() > 0 && !(roots[i].endsWith("/"))) {
 					roots[i] = roots[i] + "/";
 				}
 			}
-			
+
 			return Arrays.asList(roots);
 		} else {
 			return TextUtil.EMPTY_STRING_LIST;
 		}
-		
+
 	}
-	
+
 	@GroupInfo(
-			name="JndiLoader Configuration",
-			desc="Since application containers use various JNDI roots to store "
-					+ "environment varibles, these properties allow customization. "
-					+ "The most common roots are \"\" or \"comp/env/\". "
-					+ "If your container uses something different, set one of these properties. "
-					+ "All configured JNDI roots will be searched for each application property. "
-					+ "For both properties, trailing slashes will automcatically be added, "
-					+ "however, a leading slash is significant - "
-					+ "is non-standard but allowed and your properties must match.")
+			name = "JndiLoader Configuration",
+			desc = "Since application containers use various JNDI roots to store "
+			+ "environment varibles, these properties allow customization. "
+			+ "The most common roots are \"\" or \"comp/env/\". "
+			+ "If your container uses something different, set one of these properties. "
+			+ "All configured JNDI roots will be searched for each application property. "
+			+ "For both properties, trailing slashes will automcatically be added, "
+			+ "however, a leading slash is significant - "
+			+ "is non-standard but allowed and your properties must match.")
 	public static interface CONFIG extends PropertyGroup {
+
 		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
 				.defaultValue("comp/env/, \"\"")
 				.desc("A comma separated list of standard JNDI root locations to be searched for properties. "
 						+ "Setting this property will replace the standard list, "
 						+ "use ADDED_JNDI_ROOTS to only add to the list. ")
 				.helpText("The final JNDI URIs to be searched will look like this 'java:[root]/[Property Name]'").build();
-		
+
 		StrProp ADDED_JNDI_ROOTS = StrProp.builder()
 				.desc("A comma separated list of JNDI root locations to be added to the standard list for searching. "
 						+ "Setting this property does not affect the STANDARD_JNDI_ROOTS.")
 				.helpText("The final JNDI URIs to be searched will look like this 'java:[root]/[Property Name]'").build();
-		
+
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package yarnandtail.andhow;
 
 import java.util.List;
-import yarnandtail.andhow.internal.RuntimeDefinition;
 
 /**
  * Each instance is responsible for loading values from a particular type of source.
@@ -18,7 +17,7 @@ import yarnandtail.andhow.internal.RuntimeDefinition;
  * @author eeverman
  */
 public interface Loader {
-	LoaderValues load(RuntimeDefinition runtimeDef, List<String> cmdLineArgs,
+	LoaderValues load(ConstructionDefinition runtimeDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues);
 	
 	/**

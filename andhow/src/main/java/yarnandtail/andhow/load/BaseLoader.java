@@ -10,7 +10,7 @@ import yarnandtail.andhow.LoaderProblem.ObjectConversionValueProblem;
 import yarnandtail.andhow.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 
 /**
  *
@@ -40,7 +40,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param key The property name
 	 * @param strValue The property value 
 	 */
-	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(ConstructionDefinition appConfigDef, List<PropertyValue> values, 
 			List<LoaderProblem> loaderProblems, String key, String strValue) {
 		
 		key = TextUtil.trimToNull(key);
@@ -92,7 +92,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param prop The Property to load to
 	 * @param value The Object to be loaded to this property
 	 */
-	protected void attemptToAdd(RuntimeDefinition appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(ConstructionDefinition appConfigDef, List<PropertyValue> values, 
 			List<LoaderProblem> loaderProblems, Property prop, Object value) {
 		
 		if (prop != null) {
@@ -141,7 +141,7 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected <T> PropertyValue createValue(RuntimeDefinition appConfigDef, 
+	protected <T> PropertyValue createValue(ConstructionDefinition appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
 		ArrayList<ValueProblem> issues = new ArrayList(0);

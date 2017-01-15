@@ -12,7 +12,7 @@ import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyGroup.NameAndProperty;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import yarnandtail.andhow.SimpleParams;
@@ -23,7 +23,7 @@ import yarnandtail.andhow.SimpleParams;
  */
 public class SysPropLoaderTest {
 	
-	RuntimeDefinition appDef;
+	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
 	
 	@Before
@@ -32,7 +32,7 @@ public class SysPropLoaderTest {
 		appValuesBuilder = new ValueMapWithContextMutable();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new RuntimeDefinition();
+		appDef = new ConstructionDefinitionMutable();
 		
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "STR_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "STR_NULL"));

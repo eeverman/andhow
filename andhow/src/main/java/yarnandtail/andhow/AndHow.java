@@ -11,7 +11,7 @@ import yarnandtail.andhow.name.BasicNamingStrategy;
  *
  * @author eeverman
  */
-public class AndHow implements ValueMap {
+public class AndHow implements ConstructionDefinition, ValueMap {
 	
 	//
 	//A few app-wide constants
@@ -107,13 +107,8 @@ public class AndHow implements ValueMap {
 
 	}
 	
-	public List<Class<? extends PropertyGroup>> getGroups() {
-		return core.getPropertyGroups();
-	}
-
-	public List<Property<?>> getProperties() {
-		return core.getProperties();
-	}
+	//
+	//ValueMap Interface
 	
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
@@ -128,6 +123,45 @@ public class AndHow implements ValueMap {
 	@Override
 	public <T> T getEffectiveValue(Property<T> prop) {
 		return core.getEffectiveValue(prop);
+	}
+	
+	
+	//
+	//ConstructionDefinition Interface
+	
+	@Override
+	public List<Alias> getAliases(Property<?> property) {
+		return core.getAliases(property);
+	}
+
+	@Override
+	public String getCanonicalName(Property<?> prop) {
+		return core.getCanonicalName(prop);
+	}
+
+	@Override
+	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
+		return core.getGroupForProperty(prop);
+	}
+
+	@Override
+	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+		return core.getPropertiesForGroup(group);
+	}
+
+	@Override
+	public Property<?> getProperty(String name) {
+		return core.getProperty(name);
+	}
+
+	@Override
+	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+		return core.getPropertyGroups();
+	}
+
+	@Override
+	public List<Property<?>> getProperties() {
+		return core.getProperties();
 	}
 	
 

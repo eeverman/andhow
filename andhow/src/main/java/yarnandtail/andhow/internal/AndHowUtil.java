@@ -3,17 +3,7 @@ package yarnandtail.andhow.internal;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.ConstructionProblem;
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueProblem;
-import yarnandtail.andhow.RequirementProblem;
-import yarnandtail.andhow.ValueMapWithContext;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.NamingStrategy;
+import yarnandtail.andhow.*;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -23,24 +13,27 @@ public class AndHowUtil {
 	
 
 	/**
-	 * Build a fully populated RuntimeDefinition from the Properties contained in
-	 * the passed Groups, using the NamingStrategy to generate names for each.
+	 * Build a fully populated ConstructionDefinition from the passed Groups, 
+	 * using the NamingStrategy to generate names for each.
 	 * 
-	 * @param groups The PropertyGroups from which to find Properties.  May be null
+	 * @param groups The PropertyGroups from which to find Properties.  May be null.
+	 * @param loaders The Loaders, which may their own configurable PropertyGroups.
 	 * @param naming  A naming strategy to use when reading the properties during loading
+	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
-	public static RuntimeDefinition 
-		doRegisterProperties(List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, NamingStrategy naming) {
+	public static ConstructionDefinitionMutable buildDefinition(
+			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
+			NamingStrategy naming, ProblemList<ConstructionProblem> problems) {
 
-		RuntimeDefinition appDef = new RuntimeDefinition();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
 				Class<? extends PropertyGroup> group = loader.getLoaderConfig();
 				if (group != null) {
 					
-					doRegisterGroup(appDef, group, naming);
+					problems.addAll(registerGroup(appDef, group, naming));
 					
 				}
 			}
@@ -50,32 +43,34 @@ public class AndHowUtil {
 		if (groups != null) {
 			for (Class<? extends PropertyGroup> group : groups) {
 
-				doRegisterGroup(appDef, group, naming);
+				problems.addAll(registerGroup(appDef, group, naming));
 				
 			}
 		}
 		
 		return appDef;
-
 	}
 		
-	protected static void doRegisterGroup(RuntimeDefinition appDef,
+	protected static ProblemList<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
 			Class<? extends PropertyGroup> group, NamingStrategy naming) {
+		
+		ProblemList<ConstructionProblem> problems = new ProblemList();
 
 		try {
 			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
 			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
 				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndProp.property, group, nameAndProp.canonName);
-				appDef.addProperty(group, nameAndProp.property, names);
+				problems.add(appDef.addProperty(group, nameAndProp.property, names));
 			}
 			
 		} catch (Exception ex) {
-			ConstructionProblem.SecurityException se = new ConstructionProblem.SecurityException(
-				ex, group);
-			appDef.addConstructionProblem(se);
+			ConstructionProblem.SecurityException se = 
+					new ConstructionProblem.SecurityException(ex, group);
+			problems.add(se);
 		}
-
+		
+		return problems;
 	}
 		
 	public static void printExceptions(List<? extends Exception> exceptions, PrintStream out) {

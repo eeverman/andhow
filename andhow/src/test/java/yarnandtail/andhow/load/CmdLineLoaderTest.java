@@ -8,7 +8,7 @@ import org.junit.Before;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.internal.RuntimeDefinition;
+import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import yarnandtail.andhow.SimpleParams;
@@ -19,7 +19,7 @@ import yarnandtail.andhow.SimpleParams;
  */
 public class CmdLineLoaderTest {
 	
-	RuntimeDefinition appDef;
+	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
 
 	@Before
@@ -28,7 +28,7 @@ public class CmdLineLoaderTest {
 		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new RuntimeDefinition();
+		appDef = new ConstructionDefinitionMutable();
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "KVP_NULL"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));

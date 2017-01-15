@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.RuntimeDefinition;
-import yarnandtail.andhow.ValueMapWithContext;
+import yarnandtail.andhow.*;
 
 /**
  * Loads properties from java.lang.System.getProperties().
@@ -38,7 +34,7 @@ public class SysPropLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(RuntimeDefinition appConfigDef, List<String> cmdLineArgs,
+	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
