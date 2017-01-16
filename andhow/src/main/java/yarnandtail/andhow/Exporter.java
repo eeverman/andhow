@@ -40,7 +40,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(PropertyGroup group, ConstructionDefinition definition, ValueMap values);
+	void export(Class<? extends PropertyGroup> group, ConstructionDefinition definition, ValueMap values);
 	
 	public static enum INCLUDE_CANONICAL_NAMES {
 		ALL, ONLY_IF_NO_OUT_ALIAS, NONE;
