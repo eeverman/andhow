@@ -14,13 +14,13 @@ public class SysPropExporter extends BaseExporter {
 	}
 	
 	@Override
-	public void doExport(String name, Property<?> property, 
+	public <T> void doExport(String name, Property<T> property, 
 			ConstructionDefinition definition, ValueMap values) {
 		
-		Object value = property.getValue(values);
+		T value = property.getValue(values);
 		
 		if (value != null) {
-			System.setProperty(name, value.toString());
+			System.setProperty(name, property.getValueType().toString(value));
 		}
 	}
 	

@@ -26,7 +26,7 @@ public abstract class BaseExporter implements Exporter {
 	 * @param definition
 	 * @param values 
 	 */
-	public abstract void doExport(String name, Property<?> property, 
+	public abstract <T> void doExport(String name, Property<T> property, 
 			ConstructionDefinition definition, ValueMap values);
 		
 	
