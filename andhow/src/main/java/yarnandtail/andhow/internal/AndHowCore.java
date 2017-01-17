@@ -25,6 +25,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy namingStrategy;
 	private final List<String> cmdLineArgs = new ArrayList();
+	private final List<ExportGroup> exportGropus = new ArrayList();
 	
 	//Internal state
 	private final ConstructionDefinition runtimeDef;
@@ -185,6 +186,16 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	@Override
 	public List<Property<?>> getProperties() {
 		return runtimeDef.getProperties();
+	}
+	
+	/**
+	 * Bundles an exporter and a PropertyGroup for it to export.
+	 * 
+	 * Exporters that have no group (null) are intended to export everything.
+	 */
+	public static class ExportGroup {
+		Exporter exporter;
+		Class<? extends PropertyGroup> group;
 	}
 		
 }

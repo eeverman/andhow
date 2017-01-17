@@ -1,11 +1,7 @@
 package yarnandtail.andhow;
 
 import java.time.LocalDateTime;
-import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.property.FlagProp;
-import yarnandtail.andhow.property.IntProp;
-import yarnandtail.andhow.property.LngProp;
-import yarnandtail.andhow.property.LocalDateTimeProp;
+import yarnandtail.andhow.property.*;
 
 /**
  * Test set of params w/ one of each type.
