@@ -25,7 +25,6 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private final List<Loader> loaders = new ArrayList();
 	private final NamingStrategy namingStrategy;
 	private final List<String> cmdLineArgs = new ArrayList();
-	private final List<ExportGroup> exportGropus = new ArrayList();
 	
 	//Internal state
 	private final ConstructionDefinition runtimeDef;
@@ -85,6 +84,21 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			AppFatalException afe = AndHowUtil.buildFatalException(loaderProblems, requirementsProblems, loadedValues);
 			printFailedStartupDetails(afe);
 			throw afe;
+		}
+		
+		//Export Values if applicable
+		List<ExportGroup> exportGroups = runtimeDef.getExportGroups();
+		for (ExportGroup eg : exportGroups) {
+			Exporter exporter = eg.getExporter();
+			Class<? extends PropertyGroup> group = eg.getGroup();
+			
+			if (group != null) {
+				exporter.export(group, runtimeDef, this);
+			} else {
+				for (Class<? extends PropertyGroup> grp : runtimeDef.getPropertyGroups()) {
+					exporter.export(grp, runtimeDef, this);
+				}
+			}
 		}
 	}
 	
@@ -187,15 +201,11 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	public List<Property<?>> getProperties() {
 		return runtimeDef.getProperties();
 	}
-	
-	/**
-	 * Bundles an exporter and a PropertyGroup for it to export.
-	 * 
-	 * Exporters that have no group (null) are intended to export everything.
-	 */
-	public static class ExportGroup {
-		Exporter exporter;
-		Class<? extends PropertyGroup> group;
+
+	@Override
+	public List<ExportGroup> getExportGroups() {
+		return runtimeDef.getExportGroups();
 	}
+	
 		
 }

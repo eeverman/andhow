@@ -86,5 +86,12 @@ public interface ConstructionDefinition {
 	 * @return The Property or null if it is not found.
 	 */
 	Property<?> getProperty(String name);
+	
+	/**
+	 * The list of export groups.
+	 * 
+	 * @return 
+	 */
+	List<ExportGroup> getExportGroups();
 
 }

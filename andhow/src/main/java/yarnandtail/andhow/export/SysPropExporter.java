@@ -9,9 +9,12 @@ import yarnandtail.andhow.*;
  */
 public class SysPropExporter extends BaseExporter {
 
-	public SysPropExporter(INCLUDE_CANONICAL_NAMES includeCanonical, INCLUDE_OUT_ALIAS_NAMES includeOutAlias) {
-		super(includeCanonical, includeOutAlias);
-	}
+	/**
+	 * A default constructor is required.
+	 */
+	public SysPropExporter() {}
+
+
 	
 	@Override
 	public <T> void doExport(String name, Property<T> property, 

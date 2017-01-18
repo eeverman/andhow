@@ -140,6 +140,33 @@ public abstract class ConstructionProblem extends Problem {
 		}
 	}
 	
+	public static class ExportException extends ConstructionProblem {
+		Exception exception;
+		String message;
+
+		public ExportException(Exception exception, Class<? extends PropertyGroup> group, String message) {
+			this.exception = exception;
+			this.message = message;
+			badPropertyCoord = new PropertyCoord(group, null);
+		}
+
+		public Exception getException() {
+			return exception;
+		}
+		
+		@Override
+		public String getProblemContext() {
+			return TextUtil.format("PropertyGroup {}", badPropertyCoord.getGroup().getCanonicalName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format(
+				"An error occured while initiating the value export.  The message was: {}",
+				message);
+		}
+	}
+	
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
 

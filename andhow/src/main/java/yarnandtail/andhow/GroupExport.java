@@ -1,10 +1,6 @@
 package yarnandtail.andhow;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.lang.annotation.ElementType;
+import java.lang.annotation.*;
 import yarnandtail.andhow.Exporter.INCLUDE_CANONICAL_NAMES;
 import yarnandtail.andhow.Exporter.INCLUDE_OUT_ALIAS_NAMES;
 
@@ -18,6 +14,7 @@ import yarnandtail.andhow.Exporter.INCLUDE_OUT_ALIAS_NAMES;
  */
 @Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
 @Target(ElementType.TYPE)	//Only use on type declarations
+@Repeatable(GroupExports.class)
 @Documented	//Include values for this annotation in JavaDocs
 public @interface GroupExport {
 	INCLUDE_CANONICAL_NAMES includeCanonicalNames();

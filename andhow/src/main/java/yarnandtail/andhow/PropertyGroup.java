@@ -2,8 +2,7 @@ package yarnandtail.andhow;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A logical and/or functional grouping of Properties.
@@ -11,9 +10,30 @@ import java.util.List;
  * @author eeverman
  */
 public interface PropertyGroup {
-
 	
-
+	static List<Exporter> getExporters(Class<? extends PropertyGroup> group)
+			throws InstantiationException, IllegalAccessException {
+		
+		ArrayList<Exporter> exps = new ArrayList();
+		
+		GroupExport[] groupExports = group.getAnnotationsByType(GroupExport.class);
+		
+		for (GroupExport ge : groupExports) {
+			Class<? extends Exporter> expClass = ge.exporter();
+			
+			Exporter exporter = expClass.newInstance();
+			
+			exporter.setCanonNameOption(ge.includeCanonicalNames());
+			exporter.setExportAliasOption(ge.includeExportAliasNames());
+			
+			exps.add(exporter);
+		}
+		
+		exps.trimToSize();
+		return Collections.unmodifiableList(exps);
+		
+	}
+	
 	/**
 	 * Builds a list of all Properties and their canonical names contained in
 	 * the passed group.

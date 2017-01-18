@@ -16,7 +16,19 @@ package yarnandtail.andhow;
  */
 public interface Exporter {
 	
+	/**
+	 * Specify if canonical names should be exported.
+	 * @param option 
+	 */
+	void setCanonNameOption(INCLUDE_CANONICAL_NAMES option);
 
+	/**
+	 * Specify if export alias names should be exported.
+	 * @param option 
+	 */
+	void setExportAliasOption(INCLUDE_OUT_ALIAS_NAMES option);
+	
+	
 	/**
 	 * Exports all properties.
 	 * 

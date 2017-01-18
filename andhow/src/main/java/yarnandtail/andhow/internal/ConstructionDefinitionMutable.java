@@ -5,13 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.ConstructionProblem;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.Property;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.NamingStrategy;
-import yarnandtail.andhow.ConstructionDefinition;
+import yarnandtail.andhow.*;
 
 /**
  * A mutable version that can be used during AndHow startup.
@@ -26,6 +20,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	private final Map<String, Property<?>> propertiesByAnyName = new HashMap();
 	private final Map<Property<?>, String> canonicalNameByProperty = new HashMap();
 	private final List<Property<?>> properties = new ArrayList();
+	private final List<ExportGroup> exportGroups = new ArrayList();
 	
 	/**
 	 * Adds a PropertyGroup, its Property and the name and aliases for that property
@@ -111,6 +106,10 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 		
 	}
 	
+	public void addExportGroup(ExportGroup exportGroup) {
+		exportGroups.add(exportGroup);
+	}
+	
 	@Override
 	public Property<?> getProperty(String name) {
 		return propertiesByAnyName.get(name);
@@ -158,6 +157,11 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 		return null;
 	}
 	
+	@Override
+	public List<ExportGroup> getExportGroups() {
+		return Collections.unmodifiableList(exportGroups);
+	}
+	
 	/**
 	 * Checks a Property's default value against its Validators and adds entries
 	 * to constructProblems if there are issues.
@@ -201,7 +205,8 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	public ConstructionDefinition toImmutable() {
 		return new ConstructionDefinitionImmutable(groupList, properties,
 			propertiesByGroup, propertiesByAnyName, 
-			aliasesByProperty, canonicalNameByProperty);
+			aliasesByProperty, canonicalNameByProperty, 
+			exportGroups);
 	}
 	
 }

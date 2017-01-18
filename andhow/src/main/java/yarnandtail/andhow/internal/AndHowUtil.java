@@ -3,6 +3,8 @@ package yarnandtail.andhow.internal;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yarnandtail.andhow.*;
 
 /**
@@ -44,6 +46,26 @@ public class AndHowUtil {
 			for (Class<? extends PropertyGroup> group : groups) {
 
 				problems.addAll(registerGroup(appDef, group, naming));
+				
+				try {
+					List<Exporter> exps = PropertyGroup.getExporters(group);
+					
+					for (Exporter e : exps) {
+						ExportGroup eg = new ExportGroup(e, group);
+						appDef.addExportGroup(eg);
+					}
+					
+				} catch (InstantiationException ex) {
+					ConstructionProblem.ExportException ee = 
+							new ConstructionProblem.ExportException(ex, group,
+							"Unable to created a new instance of one of the Exporters for this group.  "
+									+ "Do they all have zero argument constructors?");
+					problems.add(ee);
+				} catch (IllegalAccessException ex) {
+					ConstructionProblem.SecurityException se = 
+						new ConstructionProblem.SecurityException(ex, group);
+					problems.add(se);
+				}
 				
 			}
 		}

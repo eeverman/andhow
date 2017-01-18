@@ -4,17 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
 
+/**
+ * All implementations must have a zero argument constructor.
+ * 
+ * @author ericeverman
+ */
 public abstract class BaseExporter implements Exporter {
 	protected INCLUDE_CANONICAL_NAMES includeCanonical;
 	protected INCLUDE_OUT_ALIAS_NAMES includeOutAlias;
 	
-	public BaseExporter(INCLUDE_CANONICAL_NAMES includeCanonical, INCLUDE_OUT_ALIAS_NAMES includeOutAlias) {
-		if (includeCanonical == null || includeOutAlias == null) {
-			throw new AppFatalException("The Exporter constructor arguments cannot be null");
+
+	@Override
+	public void setExportAliasOption(INCLUDE_OUT_ALIAS_NAMES option) {
+		
+		if (option == null) {
+			throw new AppFatalException("The export alias option cannot be null");
 		}
 		
-		this.includeCanonical = includeCanonical;
-		this.includeOutAlias = includeOutAlias;
+		includeOutAlias = option;
+	}
+
+	@Override
+	public void setCanonNameOption(INCLUDE_CANONICAL_NAMES option) {
+		
+		if (option == null) {
+			throw new AppFatalException("The canonical name option cannot be null");
+		}
+		
+		includeCanonical = option;
 	}
 	
 	
@@ -77,6 +94,9 @@ public abstract class BaseExporter implements Exporter {
 					forEachOrdered(a -> names.add(a.getName()));
 			
 		}
+		
+		names.stream().forEach(n -> doExport(n, property, definition, values));
+		
 	}
 	
 	protected boolean hasOutAlias(Property<?> property, ConstructionDefinition definition) {
