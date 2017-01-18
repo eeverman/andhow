@@ -88,7 +88,12 @@ public interface ConstructionDefinition {
 	Property<?> getProperty(String name);
 	
 	/**
-	 * The list of export groups.
+	 * The list of ExportGroups, which handles exporting property values for use
+	 * outside the AndHow framework.
+	 * 
+	 * An ExportGroup bundles an Exporter implementation with a PropertyGroup to
+	 * be exported.  After startup is complete, each Exporter will export its
+	 * group as configured.
 	 * 
 	 * @return 
 	 */
