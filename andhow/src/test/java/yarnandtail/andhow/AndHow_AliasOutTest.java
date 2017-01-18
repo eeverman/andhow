@@ -60,6 +60,18 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		IntProp intProp2 = IntProp.builder().required().defaultValue(INT2).build();
 	}
 	
+	@GroupExport(
+		exporter=SysPropExporter.class,
+		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
+	)
+	interface AliasGroup2 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().required().build();
+		StrProp strProp2 = StrProp.builder().build();
+		IntProp intProp1 = IntProp.builder().build();
+		IntProp intProp2 = IntProp.builder().required().defaultValue(INT2).build();
+	}
+	
 
 	
 	@Test
@@ -98,6 +110,78 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		//intProp2
 		assertEquals(INT2.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup1.intProp2)));
+	}
+	
+
+	@Test
+	public void testOutAliasForGroup2() {
+		
+		String grp2Name = AliasGroup2.class.getCanonicalName();
+		
+		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+				.loader(new CmdLineLoader())
+				.cmdLineArg(grp2Name + ".strProp1", STR1)
+				.cmdLineArg(grp2Name + ".strProp2", STR2)
+				.cmdLineArg(grp2Name + ".intProp1", INT1.toString())
+				.group(AliasGroup2.class)
+				.reloadForNonPropduction(reloader);
+	
+
+		//
+		//No aliases - all canon names should be present
+		
+		assertEquals(STR1, System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.strProp1)));
+		assertEquals(STR2, System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.strProp2)));
+		assertEquals(INT1.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp1)));
+		assertEquals(INT2.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp2)));
+	}
+	
+	@Test
+	public void testOutAliasForGroup1and2() {
+		
+		String grp2Name = AliasGroup2.class.getCanonicalName();
+		
+		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+				.loader(new CmdLineLoader())
+				.group(AliasGroup1.class)
+				.group(AliasGroup2.class)
+				.cmdLineArg(STR_PROP1_IN, STR1)
+				.cmdLineArg(STR_PROP2_IN_ALIAS, STR2)
+				.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+				.cmdLineArg(grp2Name + ".strProp1", STR1)
+				.cmdLineArg(grp2Name + ".strProp2", STR2)
+				.cmdLineArg(grp2Name + ".intProp1", INT1.toString())
+				.reloadForNonPropduction(reloader);
+		
+		//
+		// Group 1
+		
+		//strProp1
+		assertEquals(STR1, System.getProperty(STR_PROP1_OUT_ALIAS));
+		assertEquals(STR1, System.getProperty(STR_PROP1_IN_AND_OUT_ALIAS));
+		assertNull(System.getProperty(STR_PROP1_IN));
+		assertNull(System.getProperty(AndHow.instance().getCanonicalName(AliasGroup1.strProp1)));
+		
+		//strProp2
+		assertEquals(STR2, System.getProperty(AndHow.instance().getCanonicalName(AliasGroup1.strProp2)));
+		assertNull(System.getProperty(STR_PROP2_IN_ALIAS));
+		
+		//intProp1
+		assertEquals(INT1.toString(), System.getProperty(INT_PROP1_ALIAS));
+		assertNull(System.getProperty(INT_PROP1_ALT_IN1_ALIAS));
+		assertNull(System.getProperty(AndHow.instance().getCanonicalName(AliasGroup1.intProp1)));
+		
+		//intProp2
+		assertEquals(INT2.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup1.intProp2)));
+		
+		
+		//
+		//No aliases for group 2 - all canon names should be present
+		
+		assertEquals(STR1, System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.strProp1)));
+		assertEquals(STR2, System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.strProp2)));
+		assertEquals(INT1.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp1)));
+		assertEquals(INT2.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp2)));
 	}
 	
 
