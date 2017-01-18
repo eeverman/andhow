@@ -1,14 +1,13 @@
 package yarnandtail.andhow;
 
 import java.lang.annotation.*;
-import yarnandtail.andhow.Exporter.INCLUDE_CANONICAL_NAMES;
-import yarnandtail.andhow.Exporter.INCLUDE_OUT_ALIAS_NAMES;
+import yarnandtail.andhow.Exporter.EXPORT_CANONICAL_NAME;
+import yarnandtail.andhow.Exporter.EXPORT_OUT_ALIASES;
+import yarnandtail.andhow.internal.GroupExports;
 
 /**
- * Annotation to allow users to include documentation on PropertyGroups.
- * 
- * When sample configuration or documentation is generated, these values are used
- * to provide better details on groups.
+ * Annotation to direct the Properties in a PropertyGroup to be exported to a
+ * destination such as System.Properties.
  * 
  * @author eeverman
  */
@@ -17,8 +16,29 @@ import yarnandtail.andhow.Exporter.INCLUDE_OUT_ALIAS_NAMES;
 @Repeatable(GroupExports.class)
 @Documented	//Include values for this annotation in JavaDocs
 public @interface GroupExport {
-	INCLUDE_CANONICAL_NAMES includeCanonicalNames();
-	INCLUDE_OUT_ALIAS_NAMES includeExportAliasNames();
+	
+	/**
+	 * Specifies if the canonical name should be used to export property values.
+	 * 
+	 * If this option and exportByOutAliases are both set to export (such as
+	 * setting both to ALWAYS), it is possible to export multiple copies of the
+	 * property value under different names, which is permissable.
+	 * 
+	 * @return 
+	 */
+	EXPORT_CANONICAL_NAME exportByCanonicalName();
+	
+	/**
+	 * Specifies if the out aliases, which are basically aliases for the purpose
+	 * of exports, should be used to export property values.
+	 * 
+	 * If this option and exportByCanonicalName are both set to export (such as
+	 * setting both to ALWAYS), it is possible to export multiple copies of the
+	 * property value under different names, which is permissable.
+	 * 
+	 * @return 
+	 */
+	EXPORT_OUT_ALIASES exportByOutAliases();
 
 	/**
 	 * The class of the exporter to use.

@@ -47,8 +47,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	@GroupExport(
 		exporter=SysPropExporter.class,
-		includeCanonicalNames=Exporter.INCLUDE_CANONICAL_NAMES.ONLY_IF_NO_OUT_ALIAS,
-		includeExportAliasNames=Exporter.INCLUDE_OUT_ALIAS_NAMES.ALL
+		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
 	)
 	interface AliasGroup1 extends PropertyGroup {
 		StrProp strProp1 = StrProp.builder().required()
@@ -63,7 +63,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 
 	
 	@Test
-	public void testFirstSetOfInAliasesViaCmdLine() {
+	public void testOutAliasForGroup1() {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
 				.cmdLineArg(STR_PROP1_IN, STR1)

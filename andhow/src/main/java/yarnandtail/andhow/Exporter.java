@@ -20,13 +20,13 @@ public interface Exporter {
 	 * Specify if canonical names should be exported.
 	 * @param option 
 	 */
-	void setCanonNameOption(INCLUDE_CANONICAL_NAMES option);
+	void setExportByCanonicalName(EXPORT_CANONICAL_NAME option);
 
 	/**
-	 * Specify if export alias names should be exported.
+	 * Specify if out alias names should be exported.
 	 * @param option 
 	 */
-	void setExportAliasOption(INCLUDE_OUT_ALIAS_NAMES option);
+	void setExportByOutAliases(EXPORT_OUT_ALIASES option);
 	
 	
 	/**
@@ -54,11 +54,11 @@ public interface Exporter {
 	 */
 	void export(Class<? extends PropertyGroup> group, ConstructionDefinition definition, ValueMap values);
 	
-	public static enum INCLUDE_CANONICAL_NAMES {
-		ALL, ONLY_IF_NO_OUT_ALIAS, NONE;
+	public static enum EXPORT_CANONICAL_NAME {
+		ALWAYS, ONLY_IF_NO_OUT_ALIAS, NEVER;
 	}
 	
-	public static enum INCLUDE_OUT_ALIAS_NAMES {
-		ALL, NONE;
+	public static enum EXPORT_OUT_ALIASES {
+		ALWAYS, NEVER;
 	}
 }

@@ -10,12 +10,12 @@ import yarnandtail.andhow.*;
  * @author ericeverman
  */
 public abstract class BaseExporter implements Exporter {
-	protected INCLUDE_CANONICAL_NAMES includeCanonical;
-	protected INCLUDE_OUT_ALIAS_NAMES includeOutAlias;
+	protected EXPORT_CANONICAL_NAME includeCanonical;
+	protected EXPORT_OUT_ALIASES includeOutAlias;
 	
 
 	@Override
-	public void setExportAliasOption(INCLUDE_OUT_ALIAS_NAMES option) {
+	public void setExportByOutAliases(EXPORT_OUT_ALIASES option) {
 		
 		if (option == null) {
 			throw new AppFatalException("The export alias option cannot be null");
@@ -25,7 +25,7 @@ public abstract class BaseExporter implements Exporter {
 	}
 
 	@Override
-	public void setCanonNameOption(INCLUDE_CANONICAL_NAMES option) {
+	public void setExportByCanonicalName(EXPORT_CANONICAL_NAME option) {
 		
 		if (option == null) {
 			throw new AppFatalException("The canonical name option cannot be null");
@@ -71,13 +71,13 @@ public abstract class BaseExporter implements Exporter {
 		boolean exportAlias = false;
 		boolean hasOut = hasOutAlias(property, definition);
 		
-		if (INCLUDE_OUT_ALIAS_NAMES.ALL.equals(includeOutAlias) && hasOut) {
+		if (EXPORT_OUT_ALIASES.ALWAYS.equals(includeOutAlias) && hasOut) {
 			exportAlias = true;
 		}
 		
-		if (INCLUDE_CANONICAL_NAMES.ALL.equals(includeCanonical)) {
+		if (EXPORT_CANONICAL_NAME.ALWAYS.equals(includeCanonical)) {
 			exportCanon = true;
-		} else if (INCLUDE_CANONICAL_NAMES.NONE.equals(includeCanonical)) {
+		} else if (EXPORT_CANONICAL_NAME.NEVER.equals(includeCanonical)) {
 			exportCanon = false;
 		} else {
 			exportCanon = !hasOut;

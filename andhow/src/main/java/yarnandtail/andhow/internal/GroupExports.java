@@ -1,10 +1,12 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.internal;
 
 import java.lang.annotation.*;
+import yarnandtail.andhow.GroupExport;
+import yarnandtail.andhow.GroupExport;
 
 /**
- * Required by the Java annotations system to support multiple instances of
- * GroupExport.
+ * Not for general use:  Required by the Java annotations system to support
+ * multiple instances of the GroupExport annotation.
  * 
  * @author eeverman
  */

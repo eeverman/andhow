@@ -11,6 +11,13 @@ import java.util.*;
  */
 public interface PropertyGroup {
 	
+	/**
+	 * Returns the list of Exporters that are annotated for a PropertyGroup.
+	 * @param group
+	 * @return
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException 
+	 */
 	static List<Exporter> getExporters(Class<? extends PropertyGroup> group)
 			throws InstantiationException, IllegalAccessException {
 		
@@ -23,8 +30,8 @@ public interface PropertyGroup {
 			
 			Exporter exporter = expClass.newInstance();
 			
-			exporter.setCanonNameOption(ge.includeCanonicalNames());
-			exporter.setExportAliasOption(ge.includeExportAliasNames());
+			exporter.setExportByCanonicalName(ge.exportByCanonicalName());
+			exporter.setExportByOutAliases(ge.exportByOutAliases());
 			
 			exps.add(exporter);
 		}
