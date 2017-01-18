@@ -1,10 +1,8 @@
 package yarnandtail.andhow.property;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.PropertyType;
 import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.ValueType;
 import yarnandtail.andhow.Property;

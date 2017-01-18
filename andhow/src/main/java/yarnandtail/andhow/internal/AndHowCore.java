@@ -85,6 +85,21 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			printFailedStartupDetails(afe);
 			throw afe;
 		}
+		
+		//Export Values if applicable
+		List<ExportGroup> exportGroups = runtimeDef.getExportGroups();
+		for (ExportGroup eg : exportGroups) {
+			Exporter exporter = eg.getExporter();
+			Class<? extends PropertyGroup> group = eg.getGroup();
+			
+			if (group != null) {
+				exporter.export(group, runtimeDef, this);
+			} else {
+				for (Class<? extends PropertyGroup> grp : runtimeDef.getPropertyGroups()) {
+					exporter.export(grp, runtimeDef, this);
+				}
+			}
+		}
 	}
 	
 	private void printFailedStartupDetails(AppFatalException afe) {
@@ -186,5 +201,11 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	public List<Property<?>> getProperties() {
 		return runtimeDef.getProperties();
 	}
+
+	@Override
+	public List<ExportGroup> getExportGroups() {
+		return runtimeDef.getExportGroups();
+	}
+	
 		
 }

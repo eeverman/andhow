@@ -6,6 +6,7 @@ import yarnandtail.andhow.ParsingException;
 /**
  *
  * @author eeverman
+ * @param <T> The Class type this ValueType represents
  */
 public abstract class BaseValueType<T> implements ValueType<T> {
 
@@ -27,6 +28,15 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 			return true;
 		} catch (ParsingException e) {
 			return false;
+		}
+	}
+	
+	@Override
+	public String toString(T value) {
+		if (value != null) {
+			return value.toString();
+		} else {
+			return null;
 		}
 	}
 	

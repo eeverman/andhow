@@ -3,6 +3,7 @@ package org.dataprocess;
 import java.time.LocalDateTime;
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
+import yarnandtail.andhow.export.SysPropExporter;
 import yarnandtail.andhow.load.JndiLoader;
 import yarnandtail.andhow.load.PropFileLoader;
 import yarnandtail.andhow.load.SysPropLoader;
@@ -64,16 +65,27 @@ public class SampleAppConfiguration {
 		StrProp ITEM_ENDPOINT = StrProp.builder().required().build();
 	}
 	
+	@GroupExport(
+		exporter=SysPropExporter.class,
+		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.NEVER,
+		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
+	)
 	@GroupInfo(name="NWIS Configuration", desc="Configures communication to the USGS NWIS service")
 	public interface NwisConfig extends PropertyGroup {
-		/*	This group of properties shows how to use aliases to accomodate
-			legacy configuration.  aliasIn("legacy.name") adds an alternate name
-			by which properties can be refered to in all configuration sources.
+		/*	This group demonstrates how to use aliases for compatibility with
+			legacy code.  aliasInAndOut("legacy.name") adds an alternate
+			name which will be recognized in all configuration sources - that is 
+			the 'in' portion of aliasInAndOut.
+		
+			'out' means the alias can be used as a name when an exporting, 
+			which is done with the GroupExport annotation, above.  All
+			properties in this group will be written to System.properties
+			using 'out' aliases.
 		*/
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("nwis.svs").build();
-		IntProp TIMEOUT = IntProp.builder().defaultValue(20).aliasIn("nwis.to").build();
-		StrProp QUERY_ENDPOINT = StrProp.builder().aliasIn("nwis.query").build();
-		StrProp ITEM_ENDPOINT = StrProp.builder().required().aliasIn("nwis.item").build();
+		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasInAndOut("nwis.svs").build();
+		IntProp TIMEOUT = IntProp.builder().defaultValue(20).aliasInAndOut("nwis.to").build();
+		StrProp QUERY_ENDPOINT = StrProp.builder().aliasInAndOut("nwis.query").build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().required().aliasInAndOut("nwis.item").build();
 	}
 	
 	@GroupInfo(name="Application Information", desc="Basic app info for display in the UI")

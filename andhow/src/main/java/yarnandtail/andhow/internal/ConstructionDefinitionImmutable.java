@@ -5,10 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.Property;
-import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.ConstructionDefinition;
+import yarnandtail.andhow.*;
 
 /**
  * An immutable instance that can be used during runtime.
@@ -23,6 +20,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	private final Map<String, Property<?>> propertiesByAnyName;
 	private final Map<Property<?>, List<Alias>> aliasesByProperty;
 	private final Map<Property<?>, String> canonicalNameByProperty;
+	private final List<ExportGroup> exportGroups;
 	
 
 	public ConstructionDefinitionImmutable(
@@ -31,7 +29,8 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 			Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup, 
 			Map<String, Property<?>> propertiesByAnyName, 
 			Map<Property<?>, List<Alias>> aliasesByProperty, 
-			Map<Property<?>, String> canonicalNameByProperty) {
+			Map<Property<?>, String> canonicalNameByProperty,
+			List<ExportGroup> exportGroups) {
 		
 
 		//Full detach incomming data from existing collections for immutability
@@ -61,6 +60,11 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 		Map<Property<?>, String> canonByProp = new HashMap();
 		canonByProp.putAll(canonicalNameByProperty);
 		this.canonicalNameByProperty = Collections.unmodifiableMap(canonByProp);
+		
+		ArrayList<ExportGroup> expGroups = new ArrayList();
+		expGroups.addAll(exportGroups);
+		expGroups.trimToSize();
+		this.exportGroups = Collections.unmodifiableList(expGroups);
 		
 	}
 	
@@ -109,6 +113,11 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public List<ExportGroup> getExportGroups() {
+		return exportGroups;
 	}
 
 }
