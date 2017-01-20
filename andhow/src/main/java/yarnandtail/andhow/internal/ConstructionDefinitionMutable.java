@@ -22,6 +22,10 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	private final List<Property<?>> properties = new ArrayList();
 	private final List<ExportGroup> exportGroups = new ArrayList();
 	
+	//This is only used while adding properties to check for duplicate export names.
+	//It is not copied to the immutable version and has no access method.
+	private final HashMap<String, Property<?>> propertiesByExportName = new HashMap();
+	
 	/**
 	 * Adds a PropertyGroup, its Property and the name and aliases for that property
 	 * to all the collections.
@@ -52,17 +56,37 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 			return dupProp;
 		}
 		
-		//Check for duplicate names
-		for (String a : allNames) {
-			Property<?> conflictProp = propertiesByAnyName.get(a);
+		//Check for duplicate 'in' names
+		for (String name : allNames) {
+			Property<?> conflictProp = propertiesByAnyName.get(name);
 			if (conflictProp != null) {
 				ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
 					getGroupForProperty(conflictProp),
-						conflictProp, group, property, a);
+						conflictProp, group, property, name);
 						
 				return notUniqueName;
 			}
 		}
+		
+		//Check for duplicate export (out) names
+		for (Alias a : property.getRequestedAliases()) {
+			if (a.isOut()) {
+				if (! propertiesByExportName.containsKey(a.getName())) {
+					propertiesByExportName.put(a.getName(), property);
+				} else {
+					
+					//Its a dulplicate export name
+					Property<?> conflictProp = propertiesByExportName.get(a.getName());
+					ConstructionProblem.NonUniqueNames notUniqueName = new ConstructionProblem.NonUniqueNames(
+						getGroupForProperty(conflictProp),
+							conflictProp, group, property, a.getName());
+
+					return notUniqueName;
+					
+				}
+			}
+		}
+		
 		
 		//Check for bad internal validation configuration (eg, bad regex string)
 		for (Validator v : property.getValidators()) {
