@@ -1,6 +1,5 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static yarnandtail.andhow.AndHowTestBase.reloader;
@@ -17,10 +16,8 @@ import org.junit.Before;
 import org.junit.After;
 import org.junit.AfterClass;
 
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.PropertyGroup.NameAndProperty;
 import yarnandtail.andhow.export.SysPropExporter;
-import yarnandtail.andhow.load.JndiLoader;
 
 /**
  *
@@ -34,6 +31,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	static final String STR_PROP1_OUT_ALIAS = "strProp1Out";
 	static final String STR_PROP1_IN_AND_OUT_ALIAS = "StrProp1InAndOut";
 	static final String STR_PROP2_IN_ALIAS = "strProp2";
+	static final String STR_PROP2_OUT_ALIAS = "strProp2-out";
 	static final String INT_PROP1_ALIAS = "IntProp1";
 	static final String INT_PROP1_ALT_IN1_ALIAS = "Int.Prop.1-Alt-In!1";
 	
@@ -59,6 +57,28 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 				.aliasIn(INT_PROP1_ALIAS).aliasInAndOut(INT_PROP1_ALIAS).aliasIn(INT_PROP1_ALT_IN1_ALIAS).build();
 		IntProp intProp2 = IntProp.builder().required().defaultValue(INT2).build();
 	}
+	
+
+	//Has dup alias for strProp1
+	interface AliasGroup4 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().required().aliasOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
+	}
+	
+	interface AliasGroup5 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
+		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();	//dup right here in the same group
+	}
+	
+	interface AliasGroup6 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
+		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP2_OUT_ALIAS).build();
+	}
+	
+	interface AliasGroup7 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
+		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP2_OUT_ALIAS).build();
+	}
+
 	
 	@GroupExport(
 		exporter=SysPropExporter.class,
@@ -183,6 +203,82 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		assertEquals(INT1.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp1)));
 		assertEquals(INT2.toString(), System.getProperty(AndHow.instance().getCanonicalName(AliasGroup2.intProp2)));
 	}
+	
+
+	@Test
+	public void testSingleOutDuplicateOfGroup1InOutAlias() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+					.cmdLineArg(STR_PROP2_IN_ALIAS, STR2)
+					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+					.group(AliasGroup1.class)
+					.group(AliasGroup4.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(1, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup4.class, nun.getBadPropertyCoord().group);
+			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.conflictName);
+		}
+	}
+	
+	@Test
+	public void testSingleOutDuplicateWithinASingleGroup() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.group(AliasGroup5.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(1, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup5.strProp2, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup5.class, nun.getBadPropertyCoord().group);
+			assertEquals(STR_PROP1_OUT_ALIAS, nun.conflictName);
+		}
+	}
+	
+	@Test
+	public void testTwoOutOutDuplicatesBetweenTwoGroups() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.group(AliasGroup6.class)
+					.group(AliasGroup7.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(2, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup7.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup7.class, nun.getBadPropertyCoord().group);
+			assertEquals(STR_PROP1_OUT_ALIAS, nun.conflictName);
+		}
+	}
+	
 	
 
 	@Before

@@ -1,13 +1,17 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import static yarnandtail.andhow.AndHowTestBase.reloader;
+
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.property.IntProp;
 import yarnandtail.andhow.property.StrProp;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.load.JndiLoader;
 
@@ -46,6 +50,17 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 				.aliasIn(INT_PROP1_ALIAS).aliasInAndOut(INT_PROP1_ALIAS).aliasIn(INT_PROP1_ALT_IN1_ALIAS).build();
 		IntProp intProp2 = IntProp.builder().required().defaultValue(INT2).build();
 	}
+	
+	//Has dup alias for strProp1
+	interface AliasGroup2 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN).build();
+	}
+	
+	//Has dup alias for strProp1
+	interface AliasGroup3 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN_AND_OUT_ALIAS).build();
+	}
+
 
 	
 	@Test
@@ -184,5 +199,59 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		assertEquals(INT2, AliasGroup1.intProp2.getValue());	//default should still come thru
 	}
 	
+	//
+	// Degenerate cases
 
+	@Test
+	public void testSingleInDuplicateOfGroup1InAlias() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+					.cmdLineArg(STR_PROP2_ALIAS, STR2)
+					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+					.group(AliasGroup1.class)
+					.group(AliasGroup2.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(1, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(STR_PROP1_IN, nun.conflictName);
+		}
+	}
+	
+	@Test
+	public void testSingleInDuplicateOfGroup1InOutAlias() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+					.cmdLineArg(STR_PROP2_ALIAS, STR2)
+					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+					.group(AliasGroup1.class)
+					.group(AliasGroup3.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(1, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.conflictName);
+		}
+	}
+	
 }
