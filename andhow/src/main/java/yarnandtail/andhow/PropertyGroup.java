@@ -72,9 +72,8 @@ public interface PropertyGroup {
 					f.setAccessible(true);
 					cp = (Property) f.get(null);
 				}
-				
-				String name = group.getCanonicalName() + "." + f.getName();	
-				props.add(new NameAndProperty(name, cp));
+					
+				props.add(new NameAndProperty(f.getName(), cp));
 				
 			}
 
@@ -131,7 +130,7 @@ public interface PropertyGroup {
 	}
 	
 	/**
-	 * Gets the canonical name for a Property in the group.
+	 * Gets the true canonical name for a Property in the group.
 	 * 
 	 * The canonical name is of the form:<br/>
 	 * [group canonical name].[field name of the Property within the group]<br/>
@@ -139,6 +138,10 @@ public interface PropertyGroup {
 	 * null is returned.
 	 * 
 	 * Exceptions may be thrown if a security manager blocks access to members.
+	 * 
+	 * Technically the NameingStrategy is in charge of generating names, but the
+	 * canonical name never changes and is based on the package path of a Property
+	 * within a PropertyGroup.
 	 * 
 	 * @param group
 	 * @param property
@@ -163,11 +166,11 @@ public interface PropertyGroup {
 	 * Simple way to pass the canonical name and associated property around
 	 */
 	public static class NameAndProperty {
-		public String canonName;
+		public String fieldName;
 		public Property<?> property;
 		
-		public NameAndProperty(String canonName, Property<?> prop) {
-			this.canonName = canonName;
+		public NameAndProperty(String fieldName, Property<?> prop) {
+			this.fieldName = fieldName;
 			this.property = prop;
 		}
 	}

@@ -1,17 +1,15 @@
 package yarnandtail.andhow.load;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import org.junit.After;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
-import yarnandtail.andhow.LoaderProblem;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.PropertyGroup.NameAndProperty;
-import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
@@ -32,7 +30,7 @@ public class SysPropLoaderTest {
 		appValuesBuilder = new ValueMapWithContextMutable();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new ConstructionDefinitionMutable();
+		appDef = new ConstructionDefinitionMutable(bns);
 		
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "STR_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "STR_NULL"));
@@ -42,7 +40,7 @@ public class SysPropLoaderTest {
 
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			System.clearProperty(nap.canonName);
+			System.clearProperty(PropertyGroup.getCanonicalName(PropertyGroup.class, nap.property));
 		}
 		
 		System.clearProperty("XXX");	//used in one test
@@ -53,7 +51,7 @@ public class SysPropLoaderTest {
 	public void post() throws Exception {
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			System.clearProperty(nap.canonName);
+			System.clearProperty(PropertyGroup.getCanonicalName(PropertyGroup.class, nap.property));
 		}
 		System.clearProperty("XXX");	//used in one test
 	}

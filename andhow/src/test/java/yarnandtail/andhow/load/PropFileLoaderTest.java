@@ -28,7 +28,7 @@ public class PropFileLoaderTest {
 		appValuesBuilder = new ValueMapWithContextMutable();
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new ConstructionDefinitionMutable();
+		appDef = new ConstructionDefinitionMutable(bns);
 		
 		appDef.addProperty(PropFileLoader.CONFIG.class, 
 				PropFileLoader.CONFIG.CLASSPATH_PATH, 

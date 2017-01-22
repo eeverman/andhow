@@ -16,38 +16,20 @@ public interface NamingStrategy {
 	 * @return 
 	 * @deprecated - To hard to remove the existing testing using fieldName right now, so keeping this version.
 	 */
-	Naming buildNames(Property prop, Class<? extends PropertyGroup> containingGroup, String fieldName);
+	PropertyNaming buildNames(Property prop, Class<? extends PropertyGroup> containingGroup, String fieldName);
 	
 	/**
-	 * Builds a list of names for this Property, using the canoicalName
-	 * @param prop
-	 * @param containingGroup
-	 * @param canonicalName
+	 * Transforms a property name found in a property source (like a properties file,
+	 * cmd line argument, env variable, etc.) into the form needed to match the
+	 * expected property names.
+	 * 
+	 * For the nominal case, this means converting it to upper case for case
+	 * insensitive comparison.
+	 * 
+	 * @param name
 	 * @return 
 	 */
-	Naming buildNamesFromCanonical(Property prop, Class<? extends PropertyGroup> containingGroup, String canonicalName);
-	
-	public static class Naming {
-		private String canonicalName;
-		private List<String> inAliases;
-
-		public Naming(String canonicalName, List<String> inAliases) {
-			this.canonicalName = canonicalName;
-			this.inAliases = inAliases;
-		}
-		
-		public String getCanonicalName() {
-			return canonicalName;
-		}
-
-		public List<String> getInAliases() {
-			return inAliases;
-		}
-
-		public void setInAliases(List<String> inAliases) {
-			this.inAliases = inAliases;
-		}
-	}
+	String transformIncomingClasspathName(String name);
 	
 	/**
 	 * Converts a standard classpath style property name to a URI based one.

@@ -14,6 +14,7 @@ import yarnandtail.andhow.*;
  */
 public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 
+	private final NamingStrategy namingStrategy;
 	private final List<Class<? extends PropertyGroup>> groupList;
 	private final List<Property<?>> properties;
 	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup;
@@ -24,6 +25,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	
 
 	public ConstructionDefinitionImmutable(
+			NamingStrategy namingStrategy,
 			List<Class<? extends PropertyGroup>> groupList,
 			List<Property<?>> properties,
 			Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup, 
@@ -32,6 +34,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 			Map<Property<?>, String> canonicalNameByProperty,
 			List<ExportGroup> exportGroups) {
 		
+		this.namingStrategy = namingStrategy;
 
 		//Full detach incomming data from existing collections for immutability
 		
@@ -118,6 +121,11 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	@Override
 	public List<ExportGroup> getExportGroups() {
 		return exportGroups;
+	}
+	
+	@Override
+	public NamingStrategy getNamingStrategy() {
+		return namingStrategy;
 	}
 
 }

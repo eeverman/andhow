@@ -1,7 +1,5 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -29,7 +27,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, 
 				bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, 
@@ -65,7 +63,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		
 		problems.add(appDef.addProperty(SampleGroup.class, SampleGroup.STR_1, 
 				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1")));
@@ -94,7 +92,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		
 		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
 				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX")));

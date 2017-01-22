@@ -1,8 +1,9 @@
 package yarnandtail.andhow.name;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
-import yarnandtail.andhow.NamingStrategy.Naming;
+import yarnandtail.andhow.PropertyNaming;
 import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.SimpleParams;
 
@@ -22,7 +23,7 @@ public class BasicNamingStrategyTest {
 	public void testDefaultNaming() {
 
 		StrProp point = StrProp.builder().build();
-		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
+		PropertyNaming naming = bns.buildNames(point, SimpleParams.class, "BOB");
 		
 		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
 		assertEquals(0, naming.getInAliases().size());

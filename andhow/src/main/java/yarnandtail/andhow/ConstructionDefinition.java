@@ -98,5 +98,11 @@ public interface ConstructionDefinition {
 	 * @return 
 	 */
 	List<ExportGroup> getExportGroups();
+	
+	/**
+	 * Defines how names are created for Properties.
+	 * @return 
+	 */
+	NamingStrategy getNamingStrategy();
 
 }

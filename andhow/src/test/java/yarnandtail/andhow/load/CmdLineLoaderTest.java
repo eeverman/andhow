@@ -28,7 +28,7 @@ public class CmdLineLoaderTest {
 		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
-		appDef = new ConstructionDefinitionMutable();
+		appDef = new ConstructionDefinitionMutable(bns);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "KVP_NULL"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
