@@ -1,8 +1,6 @@
 package yarnandtail.andhow.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.load.FixedValueLoader;
@@ -209,6 +207,11 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	@Override
 	public NamingStrategy getNamingStrategy() {
 		return runtimeDef.getNamingStrategy();
+	}
+	
+	@Override
+	public Map<String, String> getSystemEnvironment() {
+		return runtimeDef.getSystemEnvironment();
 	}
 	
 		

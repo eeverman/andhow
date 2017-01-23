@@ -76,7 +76,7 @@ public class SampleAppConfiguration {
 			legacy code.  aliasInAndOut("legacy.name") adds an alternate
 			name which will be recognized in all configuration sources - that is 
 			the 'in' portion of aliasInAndOut.
-		
+
 			'out' means the alias can be used as a name when an exporting, 
 			which is done with the GroupExport annotation, above.  All
 			properties in this group will be written to System.properties

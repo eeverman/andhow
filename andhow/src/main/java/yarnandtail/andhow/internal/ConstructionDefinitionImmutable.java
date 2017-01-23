@@ -127,5 +127,10 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	public NamingStrategy getNamingStrategy() {
 		return namingStrategy;
 	}
+	
+	@Override
+	public Map<String, String> getSystemEnvironment() {
+		return System.getenv();
+	}
 
 }

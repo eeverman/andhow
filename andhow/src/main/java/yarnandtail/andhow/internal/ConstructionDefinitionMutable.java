@@ -197,6 +197,11 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 		return namingStrategy;
 	}
 	
+	@Override
+	public Map<String, String> getSystemEnvironment() {
+		return System.getenv();
+	}
+	
 	/**
 	 * Checks a Property's default value against its Validators and adds entries
 	 * to constructProblems if there are issues.
