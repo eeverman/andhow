@@ -60,6 +60,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	interface AliasGroup3 extends PropertyGroup {
 		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN_AND_OUT_ALIAS).build();
 	}
+	
+	//Has dup alias for strProp1, but is all lower case
+	interface AliasGroup4 extends PropertyGroup {
+		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN.toLowerCase()).build();
+	}
 
 
 	
@@ -225,6 +230,33 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			
 			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().property);
 			assertEquals(STR_PROP1_IN, nun.conflictName);
+		}
+	}
+	
+
+	@Test
+	public void testSingleInDuplicateOfGroup1InAliasInLowerCase() {
+		
+		try {
+			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+					.loader(new CmdLineLoader())
+					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+					.cmdLineArg(STR_PROP2_ALIAS, STR2)
+					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+					.group(AliasGroup1.class)
+					.group(AliasGroup4.class)
+					.reloadForNonPropduction(reloader);
+			
+			fail("Should have thrown an exception");
+		} catch (AppFatalException e) {
+			List<ConstructionProblem> probs = e.getConstructionProblems();
+			
+			assertEquals(1, probs.size());
+			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+			
+			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(STR_PROP1_IN.toLowerCase(), nun.conflictName);
 		}
 	}
 	
