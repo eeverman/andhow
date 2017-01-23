@@ -1,8 +1,6 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * The defined set and metadata related to the PropertyGroups, Properties and
@@ -105,5 +103,17 @@ public interface ConstructionDefinition {
 	 * @return 
 	 */
 	NamingStrategy getNamingStrategy();
+	
+	/**
+	 * Handles access to System.getEnv().
+	 * 
+	 * Nominally this is the same as calling System.getEnv(), but allows for
+	 * testing by making it possible to inject values into System.getEnv().
+	 * Implementations may also augment or trim down environment variables if
+	 * needed.
+	 * 
+	 * @return 
+	 */
+	Map<String, String> getSystemEnvironment();
 
 }
