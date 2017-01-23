@@ -23,7 +23,6 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private final ArrayList<PropertyValue> forcedValues = new ArrayList();
 	private final ArrayList<PropertyValue> defaultValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
-	private final NamingStrategy namingStrategy;
 	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
@@ -37,7 +36,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			List<Class<? extends PropertyGroup>> registeredGroups, 
 			String[] cmdLineArgs, List<PropertyValue> forceValues, List<PropertyValue> defaultValues) throws AppFatalException {
 		
-		this.namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
+		NamingStrategy namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
@@ -205,6 +204,11 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	@Override
 	public List<ExportGroup> getExportGroups() {
 		return runtimeDef.getExportGroups();
+	}
+
+	@Override
+	public NamingStrategy getNamingStrategy() {
+		return runtimeDef.getNamingStrategy();
 	}
 	
 		
