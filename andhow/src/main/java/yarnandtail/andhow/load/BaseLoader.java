@@ -10,7 +10,6 @@ import yarnandtail.andhow.LoaderProblem.ObjectConversionValueProblem;
 import yarnandtail.andhow.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.ValueProblem;
-import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 
 /**
  *
@@ -47,7 +46,9 @@ public abstract class BaseLoader implements Loader {
 		
 		if (key != null) {
 			
-			Property prop = appConfigDef.getProperty(key);
+			String effKey = appConfigDef.getNamingStrategy().transformIncomingClasspathName(key);
+			
+			Property prop = appConfigDef.getProperty(effKey);
 
 			if (prop != null) {
 				

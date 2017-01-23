@@ -169,6 +169,11 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		return core.getExportGroups();
 	}
 
+	@Override
+	public NamingStrategy getNamingStrategy() {
+		return core.getNamingStrategy();
+	}
+
 	/**
 	 * A builder class, which is the only supported way to construct an AndHow instance.
 	 * 

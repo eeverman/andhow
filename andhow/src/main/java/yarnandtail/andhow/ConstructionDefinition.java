@@ -72,10 +72,11 @@ public interface ConstructionDefinition {
 	List<Class<? extends PropertyGroup>> getPropertyGroups();
 
 	/**
-	 * Finds a registered property by any recognized name, including canonical names
-	 * or aliases.
+	 * Finds a registered property by any recognized classpath style name,
+	 * including the canonical name or 'in' aliases.
 	 * 
-	 * Note that this recognizes only classpath style names, not URI style names.
+	 * Note that this recognizes only classpath style names, not URI style names
+	 * such as would be used in JNDI.
 	 * 
 	 * Some loaders, like the JndiLoader will read both the classpath name, like
 	 * <code>my.property</code> and the URI style name, like <code>my/property</code>.
@@ -85,7 +86,7 @@ public interface ConstructionDefinition {
 	 * @param name
 	 * @return The Property or null if it is not found.
 	 */
-	Property<?> getProperty(String name);
+	Property<?> getProperty(String classpathStyleName);
 	
 	/**
 	 * The list of ExportGroups, which handles exporting property values for use
@@ -98,5 +99,11 @@ public interface ConstructionDefinition {
 	 * @return 
 	 */
 	List<ExportGroup> getExportGroups();
+	
+	/**
+	 * Defines how names are created for Properties.
+	 * @return 
+	 */
+	NamingStrategy getNamingStrategy();
 
 }

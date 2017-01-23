@@ -64,7 +64,8 @@ public abstract class ConstructionProblem extends Problem {
 		@Override
 		public String getProblemDescription() {
 			return TextUtil.format("Has the name '{}' which is a name or alias in use by {}. " +
-					"All names must be unique.",
+					"All names must be unique and, for the BasicNamingStrategy, " +
+					"must be unique in a case insensitive way.",
 					conflictName, refPropertyCoord.getPropName());
 		}
 	}

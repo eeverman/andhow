@@ -3,8 +3,6 @@ package yarnandtail.andhow.internal;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import yarnandtail.andhow.*;
 
 /**
@@ -28,14 +26,14 @@ public class AndHowUtil {
 			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
 			NamingStrategy naming, ProblemList<ConstructionProblem> problems) {
 
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable();
+		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(naming);
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
 				Class<? extends PropertyGroup> group = loader.getLoaderConfig();
 				if (group != null) {
 					
-					problems.addAll(registerGroup(appDef, group, naming));
+					problems.addAll(registerGroup(appDef, group));
 					
 				}
 			}
@@ -45,7 +43,7 @@ public class AndHowUtil {
 		if (groups != null) {
 			for (Class<? extends PropertyGroup> group : groups) {
 
-				problems.addAll(registerGroup(appDef, group, naming));
+				problems.addAll(registerGroup(appDef, group));
 				
 				try {
 					List<Exporter> exps = PropertyGroup.getExporters(group);
@@ -74,7 +72,7 @@ public class AndHowUtil {
 	}
 		
 	protected static ProblemList<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
-			Class<? extends PropertyGroup> group, NamingStrategy naming) {
+			Class<? extends PropertyGroup> group) {
 		
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 
@@ -82,7 +80,7 @@ public class AndHowUtil {
 			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
 			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
-				NamingStrategy.Naming names = naming.buildNamesFromCanonical(nameAndProp.property, group, nameAndProp.canonName);
+				PropertyNaming names = appDef.getNamingStrategy().buildNames(nameAndProp.property, group, nameAndProp.fieldName);
 				problems.add(appDef.addProperty(group, nameAndProp.property, names));
 			}
 			

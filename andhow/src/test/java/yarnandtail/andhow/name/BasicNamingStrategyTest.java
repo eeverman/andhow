@@ -1,8 +1,9 @@
 package yarnandtail.andhow.name;
 
 import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
-import yarnandtail.andhow.NamingStrategy.Naming;
+import yarnandtail.andhow.PropertyNaming;
 import yarnandtail.andhow.property.StrProp;
 import yarnandtail.andhow.SimpleParams;
 
@@ -21,11 +22,20 @@ public class BasicNamingStrategyTest {
 	@Test
 	public void testDefaultNaming() {
 
-		StrProp point = StrProp.builder().build();
-		Naming naming = bns.buildNames(point, SimpleParams.class, "BOB");
+		StrProp point = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
+		PropertyNaming naming = bns.buildNames(point, SimpleParams.class, "Bob");
 		
-		assertEquals(groupFullPath + ".BOB", naming.getCanonicalName());
-		assertEquals(0, naming.getInAliases().size());
+		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActual());
+		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffective());
+		assertEquals(2, naming.getInAliases().size());
+		assertEquals("Mark", naming.getInAliases().get(0).getActual());
+		assertEquals("MARK", naming.getInAliases().get(0).getEffective());
+		assertEquals("Kathy", naming.getInAliases().get(1).getActual());
+		assertEquals("KATHY", naming.getInAliases().get(1).getEffective());
+		assertEquals(3, naming.getAllInNames().size());
+		assertEquals(naming.getCanonicalName(), naming.getAllInNames().get(0));
+		assertEquals(naming.getInAliases().get(0), naming.getAllInNames().get(1));
+		assertEquals(naming.getInAliases().get(1), naming.getAllInNames().get(2));
 	}
 
 }
