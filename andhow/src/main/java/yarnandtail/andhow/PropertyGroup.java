@@ -42,7 +42,7 @@ public interface PropertyGroup {
 	}
 	
 	/**
-	 * Builds a list of all Properties and their canonical names contained in
+	 * Builds a list of all Properties and their field names contained in
 	 * the passed group.
 	 * 
 	 * Exceptions may be thrown if a security manager blocks access to members.

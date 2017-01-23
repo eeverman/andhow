@@ -38,21 +38,24 @@ public class SysPropLoaderTest {
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
 
-		//Clear all known system properties
-		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			System.clearProperty(PropertyGroup.getCanonicalName(PropertyGroup.class, nap.property));
-		}
-		
-		System.clearProperty("XXX");	//used in one test
+		clearSysProps();
 		
 	}
 	
 	@After
 	public void post() throws Exception {
+		clearSysProps();
+	}
+	
+	void clearSysProps() throws Exception {
+		BasicNamingStrategy bns = new BasicNamingStrategy();
+		
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			System.clearProperty(PropertyGroup.getCanonicalName(PropertyGroup.class, nap.property));
+			String canon = bns.buildNames(nap.property, SimpleParams.class, nap.fieldName).getCanonicalName().getActual();
+			System.clearProperty(canon);
 		}
+		
 		System.clearProperty("XXX");	//used in one test
 	}
 	

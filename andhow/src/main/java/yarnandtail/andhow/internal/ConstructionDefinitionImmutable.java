@@ -72,8 +72,8 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	}
 	
 	@Override
-	public Property<?> getProperty(String name) {
-		return propertiesByAnyName.get(name);
+	public Property<?> getProperty(String classpathStyleName) {
+		return propertiesByAnyName.get(namingStrategy.transformIncomingClasspathName(classpathStyleName));
 	}
 	
 	@Override
