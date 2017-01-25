@@ -152,9 +152,9 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHow.builder()
+				.loader(new FixedValueLoader(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")))
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
-				.forceValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -184,10 +184,12 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHow.builder()
+				.loader(new FixedValueLoader(
+						new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "zip,xy/z/"),
+						new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")
+				))
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
-				.forceValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "zip,xy/z/")
-				.forceValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());

@@ -18,8 +18,6 @@ import yarnandtail.andhow.util.ReportGenerator;
  */
 public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//User config
-	private final ArrayList<PropertyValue> forcedValues = new ArrayList();
-	private final ArrayList<PropertyValue> defaultValues = new ArrayList();
 	private final List<Loader> loaders = new ArrayList();
 	private final List<String> cmdLineArgs = new ArrayList();
 	
@@ -32,7 +30,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PropertyValue> forceValues, List<PropertyValue> defaultValues) throws AppFatalException {
+			String[] cmdLineArgs) throws AppFatalException {
 		
 		NamingStrategy namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
 		
@@ -44,16 +42,6 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 					constructProblems.add(new ConstructionProblem.DuplicateLoader(loader));
 				}
 			}
-		}
-		
-		if (forceValues != null) {
-			this.forcedValues.addAll(forceValues);
-			this.forcedValues.trimToSize();
-		}
-		
-		if (defaultValues != null) {
-			this.defaultValues.addAll(defaultValues);
-			this.defaultValues.trimToSize();
 		}
 		
 		if (cmdLineArgs != null && cmdLineArgs.length > 0) {
@@ -121,18 +109,6 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	
 	private ValueMapWithContext loadValues(ConstructionDefinition definition) {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
-
-		//force values by adding a fixed value loader before all other loaders
-		if (forcedValues.size() > 0) {
-			FixedValueLoader fvl = new FixedValueLoader(forcedValues);
-			loaders.add(0, fvl);
-		}
-		
-		//Set instance specific default values by adding a fixed loader after all other laoders
-		if (defaultValues.size() > 0) {
-			FixedValueLoader fvl = new FixedValueLoader(defaultValues);
-			loaders.add(fvl);
-		}
 
 		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {

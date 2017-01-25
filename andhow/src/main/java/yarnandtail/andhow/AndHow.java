@@ -43,11 +43,9 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 */
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs, List<PropertyValue> forcedValues, 
-			List<PropertyValue> defaultValues)
+			String[] cmdLineArgs)
 			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, 
-				forcedValues, defaultValues);
+		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs);
 		reloader = new Reloader(this);
 	}
 	
@@ -83,21 +81,20 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 * @param loaders
 	 * @param registeredGroups
 	 * @param cmdLineArgs
-	 * @param forcedValues
 	 * @return
 	 * @throws AppFatalException 
 	 */
 	private static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs, 
-			List<PropertyValue> forcedValues, List<PropertyValue> defaultValues) throws AppFatalException, RuntimeException {
+			List<Class<? extends PropertyGroup>> registeredGroups, 
+			String[] cmdLineArgs) throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
 				throw new RuntimeException("Already constructed!");
 			} else {
 				singleInstance = new AndHow(naming, loaders, registeredGroups, 
-						cmdLineArgs, forcedValues, defaultValues);
+						cmdLineArgs);
 				return singleInstance.reloader;
 			}
 		}
@@ -219,8 +216,6 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 */
 	public static class AndHowBuilder {
 		//User config
-		private final ArrayList<PropertyValue> _forcedValues = new ArrayList();
-		private final ArrayList<PropertyValue> _defaultValues = new ArrayList();
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = new BasicNamingStrategy();
 		private final List<String> _cmdLineArgs = new ArrayList();
@@ -272,151 +267,6 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		public AndHowBuilder groups(Collection<Class<? extends PropertyGroup>> groups) {
 			this._groups.addAll(groups);
 			return this;
-		}
-
-		/**
-		 * Force a Property to have a specific value.
-		 * 
-		 * Avoid using the forceValue(s) methods - consider using the defaultValue(s)
-		 * methods instead.  If a value is forced, all other configuration for it
-		 * will be ignored and it essentially becomes a constant.
-		 * This is the sledgehammer of setting values.
-		 * 
-		 * Why you might use this:  If a particular entry point to an application
-		 * requires some guaranteed configuration unique to the entry point.
-		 * For instance, a calculation module might be runnable as part of a
-		 * cluster of servers that communicate together to process tasks, or it
-		 * may run stand-alone from command-line startup.  For the command-line
-		 * entry point to the application, you might force a property that turns
-		 * off communication to other instances running in the cluster.
-		 * 
-		 * This is implemented by including an implicit fixed-value loader that
-		 * loads values before the other loaders run.  The first loaded value wins,
-		 * so this effectively forces values.
-		 * 
-		 * @param property The property to force
-		 * @param value The value to set
-		 * @return 
-		 * @throws AppFatalException if there is already a default value assigned to this property
-		 */
-		public <T> AndHowBuilder forceValue(Property<T> property, T value) {
-
-			if (checkForExistingProperty(_forcedValues, property)) {
-				throwFatal("Cannot assign two forced values to a Property");
-			}
-
-			_forcedValues.add(new PropertyValue(property, value));
-			return this;
-		}
-
-		/**
-		 * Force a list of Properties to have a specific values.
-		 * 
-		 * Avoid using the forceValue(s) methods - consider using the defaultValue(s)
-		 * methods instead.  If a value is forced, all other configuration for it
-		 * will be ignored and it essentially becomes a constant.
-		 * This is the sledgehammer of setting values.
-		 * 
-		 * Why you might use this:  If a particular entry point to an application
-		 * requires some guaranteed configuration unique to the entry point.
-		 * For instance, a calculation module might be runnable as part of a
-		 * cluster of servers that communicate together to process tasks, or it
-		 * may run stand-alone from command-line startup.  For the command-line
-		 * entry point to the application, you might force a property that turns
-		 * off communication to other instances running in the cluster.
-		 * 
-		 * This is implemented by including an implicit fixed-value loader that
-		 * loads values before the other loaders run.  The first loaded value wins,
-		 * so this effectively forces values.
-		 * 
-		 * @param forcedValues A list w/ Properties and values bundled into a PropertyValue.
-		 * @return 
-		 * @throws AppFatalException if there is already a default value assigned to any of these properties
-		 */
-		public AndHowBuilder forceValues(List<PropertyValue> forcedValues) {
-			
-			for (PropertyValue pv : forcedValues) {
-				if (checkForExistingProperty(_forcedValues, pv.getProperty())) {
-					throwFatal("Cannot assign two forced values to a Property");
-				}
-				
-				_forcedValues.add(pv);
-			}
-			
-			return this;
-		}
-		
-		/**
-		 * Sets a default value for the Property, overriding the default defined
-		 * in the Property itself, if any.
-		 * 
-		 * Why you might use this:  There may be defaults that make sense for
-		 * particular entry points of an application.  A module might default its
-		 * output format to html when started as a web application and pdf when
-		 * started from command-line.
-		 * 
-		 * Since Loaders like the PropFileLoader take parameters to configure them,
-		 * you can easily set a default Property value here that would direct a
-		 * loader to look for a specific config file for this entry point, such
-		 * as cmd-line-startup.properties.
-		 * 
-		 * This is implemented by including an implicit fixed-value loader that
-		 * loads values after the other loaders run.
-		 * 
-		 * @param property
-		 * @param value
-		 * @return 
-		 * @throws AppFatalException if there is already a default value assigned to this property
-		 */
-		public <T> AndHowBuilder defaultValue(Property<T> property, T value) {
-
-			if (checkForExistingProperty(_defaultValues, property)) {
-				throwFatal("Cannot assign two default values to a Property");
-			}
-			_defaultValues.add(new PropertyValue(property, value));
-			return this;
-		}
-		
-		/**
-		 * Sets default values for a list of Properties, overriding the defaults
-		 * defined in the Property themselves, if any.
-		 * 
-		 * Why you might use this:  There may be defaults that make sense for
-		 * particular entry points of an application.  A module might default its
-		 * output format to html when started as a web application and pdf when
-		 * started from command-line.
-		 * 
-		 * Since Loaders like the PropFileLoader take parameters to configure them,
-		 * you can easily set a default Property value here that would direct a
-		 * loader to look for a specific config file for this entry point, such
-		 * as cmd-line-startup.properties.
-		 * 
-		 * This is implemented by including an implicit fixed-value loader that
-		 * loads values after the other loaders run.
-		 * 
-		 * @param defaultVals A list w/ Properties and values bundled into a PropertyValue.
-		 * @return 
-		 * @throws AppFatalException if there is already a default value assigned to any of these properties
-		 */
-		public AndHowBuilder defaultValues(List<PropertyValue> defaultVals) {
-			
-			for (PropertyValue pv : defaultVals) {
-				if (checkForExistingProperty(_defaultValues, pv.getProperty())) {
-					throwFatal("Cannot assign two default values to a Property");
-				}
-				
-				_defaultValues.add(pv);
-			}
-			
-			return this;
-		}
-		
-		private boolean checkForExistingProperty(List<PropertyValue> propList, Property toBeFound) {
-			for (PropertyValue pv : propList) {
-				if (pv.getProperty() ==  toBeFound) return true;
-			}
-			
-			return false;
 		}
 
 		/**
@@ -489,7 +339,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 */
 		public void build() throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
+			AndHow.build(_namingStrategy, _loaders, _groups,  args);
 		}
 
 		/**
@@ -510,7 +360,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 */
 		public AndHow.Reloader buildForNonPropduction() throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			return AndHow.build(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
+			return AndHow.build(_namingStrategy, _loaders, _groups,  args);
 		}
 		
 		/**
@@ -524,7 +374,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 */
 		public void reloadForNonPropduction(AndHow.Reloader reloader) throws AppFatalException {
 			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			reloader.reload(_namingStrategy, _loaders, _groups,  args, _forcedValues, _defaultValues);
+			reloader.reload(_namingStrategy, _loaders, _groups,  args);
 		}
 
 	}
@@ -547,17 +397,14 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @param loaders
 		 * @param registeredGroups
 		 * @param cmdLineArgs
-		 * @param forcedValues
-		 * @param defaultValues
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
-				List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs, 
-				List<PropertyValue> forcedValues, List<PropertyValue> defaultValues) 
+				List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs, forcedValues, defaultValues);
+				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs);
 			}
 		}
 		

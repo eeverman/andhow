@@ -1,11 +1,9 @@
 package yarnandtail.andhow.load;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.LoaderValues;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.ValueMapWithContext;
 
 /**
@@ -25,6 +23,10 @@ public class FixedValueLoader extends BaseLoader {
 			
 	public FixedValueLoader(List<PropertyValue> values) {
 		this.values = values;
+	}
+	
+	public FixedValueLoader(PropertyValue... values) {
+		this.values = Arrays.asList(values);
 	}
 	
 	@Override
