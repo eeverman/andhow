@@ -12,11 +12,12 @@ public interface NamingStrategy {
 	 * Build a list of names for the Property
 	 * @param prop The Property to be named
 	 * @param containingGroup Properties must be contained in a PropertyGroup to be exposed
-	 * @param fieldName The name of the static field in the containingGroup that refers to the prop
 	 * @return 
-	 * @deprecated - To hard to remove the existing testing using fieldName right now, so keeping this version.
+	 * @throws An exception if there is a security exception trying to read fields
+	 *	inside of the containingGroup via reflection.
 	 */
-	PropertyNaming buildNames(Property prop, Class<? extends PropertyGroup> containingGroup, String fieldName);
+	PropertyNaming buildNames(
+			Property prop, Class<? extends PropertyGroup> containingGroup) throws Exception;
 	
 	/**
 	 * Transforms a property name found in a property source (like a properties file,

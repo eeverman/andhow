@@ -1,6 +1,8 @@
 package yarnandtail.andhow.name;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yarnandtail.andhow.*;
 
 /**
@@ -14,16 +16,11 @@ public class BasicNamingStrategy implements NamingStrategy {
 
 	@Override
 	public PropertyNaming buildNames(Property prop, 
-			Class<? extends PropertyGroup> parentGroup, String fieldName) {
-		
-		//In theory a NamingStrategy could generate a different form of
-		//canonicalName, but it would be constrary to what users expect based
-		//on the dot.path of a property.
-		//if you really need to tack something on to canonical names, add it as
-		//an auto-generated alias when the aliases are added, below.
-		String canonicalName = parentGroup.getCanonicalName() + "." + fieldName;
-		
-		return buildNamesFromCanonical(prop, parentGroup, canonicalName);
+			Class<? extends PropertyGroup> parentGroup) throws Exception {
+
+		String canonName = PropertyGroup.getCanonicalName(parentGroup, prop);
+		return buildNamesFromCanonical(prop, parentGroup, canonName);
+
 	}
 	
 	public PropertyNaming buildNamesFromCanonical(Property prop, 
