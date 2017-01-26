@@ -2,11 +2,7 @@ package yarnandtail.andhow.property;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.PropertyType;
-import yarnandtail.andhow.Trimmer;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.ValueType;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.valid.LocalDateTimeValidator;
 import yarnandtail.andhow.valuetype.LocalDateTimeType;
 
@@ -25,7 +21,7 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 	
 	public LocalDateTimeProp(
 			LocalDateTime defaultValue, boolean required, String shortDesc, List<Validator<LocalDateTime>> validators,
-			List<Alias> aliases, PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
+			List<AName> aliases, PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

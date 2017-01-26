@@ -1,12 +1,8 @@
 package yarnandtail.andhow.property;
 
 import java.util.List;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.PropertyType;
-import yarnandtail.andhow.Trimmer;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.valuetype.FlagType;
-import yarnandtail.andhow.ValueType;
-import yarnandtail.andhow.ValueMap;
 
 /**
  * A True/False switch that is never null and behaves similarly to a unix cmd line switch.
@@ -36,7 +32,7 @@ import yarnandtail.andhow.ValueMap;
 public class FlagProp extends PropertyBase<Boolean> {
 	
 	public FlagProp(
-			Boolean defaultValue, boolean required, String shortDesc, List<Alias> aliases,
+			Boolean defaultValue, boolean required, String shortDesc, List<AName> aliases,
 			PropertyType paramType, ValueType<Boolean> valueType, Trimmer trimmer,
 			String helpText) {
 		

@@ -52,7 +52,7 @@ public class SysPropLoaderTest {
 		
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			String canon = bns.buildNames(nap.property, SimpleParams.class, nap.fieldName).getCanonicalName().getActual();
+			String canon = bns.buildNames(nap.property, SimpleParams.class, nap.fieldName).getCanonicalName().getActualName();
 			System.clearProperty(canon);
 		}
 		

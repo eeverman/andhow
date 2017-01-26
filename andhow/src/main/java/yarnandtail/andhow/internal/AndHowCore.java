@@ -139,7 +139,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//ConstructionDefinition Interface
 	
 	@Override
-	public List<Alias> getAliases(Property<?> property) {
+	public List<EffectiveName> getAliases(Property<?> property) {
 		return runtimeDef.getAliases(property);
 	}
 

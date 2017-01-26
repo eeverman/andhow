@@ -91,7 +91,7 @@ public abstract class BaseExporter implements Exporter {
 			
 			definition.getAliases(property).stream().
 					filter(a -> a.isOut()).
-					forEachOrdered(a -> names.add(a.getName()));
+					forEachOrdered(a -> names.add(a.getActualName()));
 			
 		}
 		
@@ -100,9 +100,9 @@ public abstract class BaseExporter implements Exporter {
 	}
 	
 	protected boolean hasOutAlias(Property<?> property, ConstructionDefinition definition) {
-		List<Alias> aliases = definition.getAliases(property);
+		List<EffectiveName> aliases = definition.getAliases(property);
 		
-		for (Alias a : aliases) {
+		for (EffectiveName a : aliases) {
 			if (a.isOut()) {
 				return true;
 			}

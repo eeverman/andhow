@@ -29,7 +29,7 @@ public interface NamingStrategy {
 	 * @param name
 	 * @return 
 	 */
-	String transformIncomingClasspathName(String name);
+	String toEffectiveName(String name);
 	
 	/**
 	 * Converts a standard classpath style property name to a URI based one.

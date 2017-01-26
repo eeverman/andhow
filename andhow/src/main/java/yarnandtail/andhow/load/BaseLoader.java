@@ -46,7 +46,7 @@ public abstract class BaseLoader implements Loader {
 		
 		if (key != null) {
 			
-			String effKey = appConfigDef.getNamingStrategy().transformIncomingClasspathName(key);
+			String effKey = appConfigDef.getNamingStrategy().toEffectiveName(key);
 			
 			Property prop = appConfigDef.getProperty(effKey);
 

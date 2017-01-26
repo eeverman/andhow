@@ -56,11 +56,11 @@ public class JndiLoader extends BaseLoader {
 
 				//Add all of the 'in' aliases
 				appConfigDef.getAliases(prop).stream().filter(a -> a.isIn()).forEach(a -> {
-					propNames.add(a.getName());
+					propNames.add(a.getActualName());
 
 					//Add the URI style name if it is different
-					if (NamingStrategy.isUriNameDistict(a.getName())) {
-						propNames.add(NamingStrategy.getUriName(a.getName()));
+					if (NamingStrategy.isUriNameDistict(a.getActualName())) {
+						propNames.add(NamingStrategy.getUriName(a.getActualName()));
 					}
 				});
 

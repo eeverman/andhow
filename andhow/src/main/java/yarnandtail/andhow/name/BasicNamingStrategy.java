@@ -2,17 +2,15 @@ package yarnandtail.andhow.name;
 
 import java.util.*;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.PropertyNaming.Name;
-
-import static yarnandtail.andhow.util.TextUtil.EMPTY_STRING_LIST;
 
 /**
- *
+ * Case insensitive naming.
+ * 
  * @author eeverman
  */
 public class BasicNamingStrategy implements NamingStrategy {
 	
-	List<Name> EMPTY_NAMES = Collections.emptyList();
+	List<EffectiveName> EMPTY_NAMES = Collections.emptyList();
 
 	@Override
 	public PropertyNaming buildNames(Property prop, 
@@ -31,27 +29,32 @@ public class BasicNamingStrategy implements NamingStrategy {
 	public PropertyNaming buildNamesFromCanonical(Property prop, 
 			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
 		
-		Name canon = new Name(canonicalName, canonicalName.toUpperCase());
+		EffectiveName canon = new EffectiveName(canonicalName, toEffectiveName(canonicalName), true, true);
 		
-		List<Name> inAliases = EMPTY_NAMES;
+		List<EffectiveName> effAliases = EMPTY_NAMES;
 		
 		if (prop.getRequestedAliases().size() > 0) {
-			inAliases = new ArrayList();
+			effAliases = new ArrayList();
 			
-			List<Alias> aliases = prop.getRequestedAliases();
+			List<AName> reqAliases = prop.getRequestedAliases();
 			
-			for (Alias a : aliases) {
-				if (a.isIn()) inAliases.add(new Name(a.getName(), a.getName().toUpperCase()));
+			for (AName a : reqAliases) {
+				
+				EffectiveName en = new EffectiveName(
+						a.getActualName(), toEffectiveName(a.getActualName()),
+						a.isIn(), a.isOut());
+				
+				effAliases.add(en);
 			}
 		}
 		
 
-		PropertyNaming naming = new PropertyNaming(canon, inAliases);
+		PropertyNaming naming = new PropertyNaming(canon, effAliases);
 		return naming;
 	}
 	
 	@Override
-	public String transformIncomingClasspathName(String name) {
+	public String toEffectiveName(String name) {
 		if (name != null) {
 			return name.toUpperCase();
 		} else {
