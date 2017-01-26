@@ -67,59 +67,6 @@ public class AndHowTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testForcingValuesViaAppConfig() {
-		
-		AndHow.builder().namingStrategy(basicNaming)
-				.loader(new CmdLineLoader())
-				.group(SimpleParams.class)
-				.forceValue(SimpleParams.STR_BOB, "test")
-				.forceValue(SimpleParams.STR_NULL, "not_null")
-				.forceValue(SimpleParams.FLAG_TRUE, Boolean.FALSE)
-				.forceValue(SimpleParams.FLAG_FALSE, Boolean.TRUE)
-				.forceValue(SimpleParams.FLAG_NULL, Boolean.TRUE)
-				.reloadForNonPropduction(reloader);
-		
-		assertEquals("test", SimpleParams.STR_BOB.getValue());
-		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
-		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
-		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
-		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		
-		
-		List<Property<?>> regPts = AndHow.instance().getProperties();
-		
-		assertTrue(regPts.contains(SimpleParams.STR_BOB));
-		assertTrue(regPts.contains(SimpleParams.STR_NULL));
-		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
-		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
-		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
-	}
-	
-	@Test
-	public void testDefaultValuesViaLoadingWithNoUserValuesSet() {
-		
-		AndHow.builder().namingStrategy(basicNaming)
-				.loader(new CmdLineLoader())
-				.group(SimpleParams.class)
-				.reloadForNonPropduction(reloader);
-		
-		assertEquals("bob", SimpleParams.STR_BOB.getValue());
-		assertNull(SimpleParams.STR_NULL.getValue());
-		assertTrue(SimpleParams.FLAG_TRUE.getValue());
-		assertFalse(SimpleParams.FLAG_FALSE.getValue());
-		assertFalse(SimpleParams.FLAG_NULL.getValue());
-		
-		//Test for the presense of the registered param after the reset
-		List<Property<?>> regPts = AndHow.instance().getProperties();
-		assertTrue(regPts.contains(SimpleParams.STR_BOB));
-		assertTrue(regPts.contains(SimpleParams.STR_NULL));
-		assertTrue(regPts.contains(SimpleParams.FLAG_TRUE));
-		assertTrue(regPts.contains(SimpleParams.FLAG_FALSE));
-		assertTrue(regPts.contains(SimpleParams.FLAG_NULL));
-	}
-	
-	
-	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
 		AndHow.builder()
 				.namingStrategy(basicNaming)

@@ -17,6 +17,16 @@ import java.util.List;
  * @author eeverman
  */
 public interface Loader {
+	
+	/**
+	 * Builds up a list of LoaderValues by loading property values from a configuration
+	 * source.
+	 * 
+	 * @param runtimeDef
+	 * @param cmdLineArgs All loaders receive the command line args even though they only apply to the cmd line loader
+	 * @param existingValues
+	 * @return 
+	 */
 	LoaderValues load(ConstructionDefinition runtimeDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues);
 	
