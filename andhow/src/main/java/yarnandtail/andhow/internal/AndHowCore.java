@@ -2,8 +2,6 @@ package yarnandtail.andhow.internal;
 
 import java.util.*;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.load.FixedValueLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.util.ReportGenerator;
 
@@ -89,7 +87,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	
 	private void printFailedStartupDetails(AppFatalException afe) {
 		ReportGenerator.printProblems(System.err, afe, runtimeDef);
-		ReportGenerator.printConfigSamples(System.err, runtimeDef, loaders, true);
+		ReportGenerator.printConfigSamples(runtimeDef, System.err, loaders, true);
 	}
 	
 	@Override

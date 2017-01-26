@@ -2,13 +2,11 @@ package yarnandtail.andhow.sample;
 
 import java.io.PrintStream;
 import java.util.List;
-import yarnandtail.andhow.GroupInfo;
-import yarnandtail.andhow.Property;
-import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.util.TextUtil;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.SamplePrinter;
 import yarnandtail.andhow.sample.TextLine.HRLine;
+
+import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 
 /**
  *
@@ -127,7 +125,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 
 	@Override
-	public void printSampleStart(PrintStream out) {
+	public void printSampleStart(ConstructionDefinition definition, PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
 		TextBlock tb = getSampleStartComment();
 		
@@ -138,7 +136,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 	
 	@Override
-	public void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group) {
+	public void printPropertyGroupStart(ConstructionDefinition definition, 
+			PrintStream out, Class<? extends PropertyGroup> group) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.setBlankLineAfter(true);
@@ -176,59 +175,74 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	
 	@Override
-	public void printProperty(PrintStream out, Class<? extends PropertyGroup> group,
-			Property<?> prop) throws Exception {
+	public void printProperty(ConstructionDefinition definition, PrintStream out,
+			Class<? extends PropertyGroup> group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.addBlank();
 
 		
-		String propFieldName = PropertyGroup.getFieldName(group, prop);
-		
-		tb.addLine(TextUtil.format("{} ({}) {}{}", 
-				propFieldName,
-				prop.getValueType().getDestinationType().getSimpleName(),
-				(prop.isRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
-				(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
-		
-		if (prop.getDefaultValue() != null) {
-			tb.addLine(DEFAULT_VALUE_TEXT + ": " + prop.getDefaultValue());
-		}
-		
-		if (TextUtil.trimToNull(prop.getHelpText()) != null) {
-			tb.addLine(prop.getHelpText());
-		}
-		
-		if (prop.getValidators().size() == 1) {
-			tb.addLine(
-				TextUtil.format(THE_VALUE_MUST_TEXT + " " + prop.getValidators().get(0).getTheValueMustDescription())
-			);
-		}
-		
-		if (prop.getValidators().size() > 1) {
-			tb.addLine(THE_VALUE_MUST_TEXT + ":");	
-			for (Validator v : prop.getValidators()) {
-				tb.addLine("\t- " + v.getTheValueMustDescription());
+		try {
+			
+			String propFieldName = PropertyGroup.getFieldName(group, prop);
+					
+			tb.addLine(TextUtil.format("{} ({}) {}{}", 
+					propFieldName,
+					prop.getValueType().getDestinationType().getSimpleName(),
+					(prop.isRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
+					(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
+
+			//TODO:  Add default names here
+
+						
+			if (prop.getDefaultValue() != null) {
+				tb.addLine(DEFAULT_VALUE_TEXT + ": " + prop.getDefaultValue());
 			}
+
+			if (TextUtil.trimToNull(prop.getHelpText()) != null) {
+				tb.addLine(prop.getHelpText());
+			}
+
+			if (prop.getValidators().size() == 1) {
+				tb.addLine(
+					TextUtil.format(THE_VALUE_MUST_TEXT + " " + prop.getValidators().get(0).getTheValueMustDescription())
+				);
+			}
+
+			if (prop.getValidators().size() > 1) {
+				tb.addLine(THE_VALUE_MUST_TEXT + ":");	
+				for (Validator v : prop.getValidators()) {
+					tb.addLine("\t- " + v.getTheValueMustDescription());
+				}
+			}
+
+			print(out, tb, getFormat());
+
+			TextBlock aptb = getActualProperty(group, prop);
+			aptb.setBlankLineAfter(true);	//Always want a space after
+
+			print(out, aptb, getFormat());
+		
+		} catch (Exception ex) {
+			
+			tb.addLine(TextUtil.format("SECURITY EXCEPTION TRYING TO ACCESS FIELDS IN {}. " +
+					"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
+					"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.", group.getCanonicalName()));
+			print(out, tb, getFormat());
 		}
 		
-		print(out, tb, getFormat());
-		
-		TextBlock aptb = getActualProperty(group, prop);
-		aptb.setBlankLineAfter(true);	//Always want a space after
-		
-		print(out, aptb, getFormat());
 		
 	}
 	
 	
 
 	@Override
-	public void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group) {
+	public void printPropertyGroupEnd(ConstructionDefinition definition, 
+			PrintStream out, Class<? extends PropertyGroup> group) {
 	}
 	
 	@Override
-	public void printSampleEnd(PrintStream out) {
+	public void printSampleEnd(ConstructionDefinition definition, PrintStream out) {
 		TextBlock tb = getSampleFileEnd();
 		print(out, tb, getFormat());
 	}
