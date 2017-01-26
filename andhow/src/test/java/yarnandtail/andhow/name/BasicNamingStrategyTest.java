@@ -26,16 +26,19 @@ public class BasicNamingStrategyTest {
 		PropertyNaming naming = bns.buildNames(point, SimpleParams.class, "Bob");
 		
 		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActualName());
-		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffectiveName());
-		assertEquals(2, naming.getAllInNames().size());
-		assertEquals("Mark", naming.getAllInNames().get(0).getActualName());
-		assertEquals("MARK", naming.getAllInNames().get(0).getEffectiveName());
-		assertEquals("Kathy", naming.getAllInNames().get(1).getActualName());
-		assertEquals("KATHY", naming.getAllInNames().get(1).getEffectiveName());
-		assertEquals(3, naming.getAllInNames().size());
-		assertEquals(naming.getCanonicalName(), naming.getAllInNames().get(0));
-		assertEquals(naming.getAllInNames().get(0), naming.getAllInNames().get(1));
-		assertEquals(naming.getAllInNames().get(1), naming.getAllInNames().get(2));
+		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffectiveInName());
+		
+		//In Names
+		assertEquals(2, naming.getInAliases().size());
+		assertEquals("Mark", naming.getInAliases().get(0).getActualName());
+		assertEquals("MARK", naming.getInAliases().get(0).getEffectiveInName());
+		assertEquals("Kathy", naming.getInAliases().get(1).getActualName());
+		assertEquals("KATHY", naming.getInAliases().get(1).getEffectiveInName());
+		
+		//out Names
+		assertEquals(1, naming.getOutAliases().size());
+		assertEquals("Kathy", naming.getOutAliases().get(0).getActualName());
+		assertEquals("Kathy", naming.getOutAliases().get(0).getEffectiveOutName());
 	}
 
 }

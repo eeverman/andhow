@@ -96,7 +96,7 @@ public interface Property<T> {
 	 * @return A list of Alias assigned to this Property in the property
 	 *	declaration or an empty list if there are none.
 	 */
-	List<AName> getRequestedAliases();
+	List<Name> getRequestedAliases();
 	
 	
 	/**

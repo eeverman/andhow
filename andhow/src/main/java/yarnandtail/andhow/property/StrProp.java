@@ -20,7 +20,7 @@ public class StrProp extends PropertyBase<String> {
 	
 	public StrProp(
 			String defaultValue, boolean required, String shortDesc, List<Validator<String>> validators,
-			List<AName> aliases, PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

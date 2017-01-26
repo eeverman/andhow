@@ -8,13 +8,13 @@ import yarnandtail.andhow.util.TextUtil;
  * 
  * @author ericeverman
  */
-public class AName {
+public class Name {
 
 	private final boolean in;
 	private final boolean out;
 	private final String actual;
 
-	public AName(String name, boolean in, boolean out) {
+	public Name(String name, boolean in, boolean out) {
 		if (name == null || name.length() == 0) {
 			throw new AppFatalException("The name cannot be empty or null");
 		} else if (! TextUtil.isValidPropertyAlias(name)) {

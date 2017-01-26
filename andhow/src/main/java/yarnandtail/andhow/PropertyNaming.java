@@ -46,27 +46,25 @@ public class PropertyNaming {
 	}
 	
 	/**
-	 * A list of the canonical name and any in-type aliases merged together.
+	 * A list of the in-type aliases.
 	 * 
 	 * @return 
 	 */
-	public List<EffectiveName> getAllInNames() {
+	public List<EffectiveName> getInAliases() {
 		
 		ArrayList<EffectiveName> ns = new ArrayList();
-		ns.add(canonicalName);
 		aliases.stream().filter(a -> a.isIn()).forEachOrdered(a -> ns.add(a));
 		return Collections.unmodifiableList(ns);
 	}
 	
 	/**
-	 * A list of the canonical name and any out-type aliases merged together.
+	 * A list of the out-type aliases.
 	 * 
 	 * @return 
 	 */
-	public List<EffectiveName> getAllOutNames() {
+	public List<EffectiveName> getOutAliases() {
 		
 		ArrayList<EffectiveName> ns = new ArrayList();
-		ns.add(canonicalName);
 		aliases.stream().filter(a -> a.isOut()).forEachOrdered(a -> ns.add(a));
 		return Collections.unmodifiableList(ns);
 	}

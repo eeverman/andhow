@@ -303,7 +303,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			System.getProperties().remove(PropertyGroup.getCanonicalName(group, nap.property));
 			
-			for (AName a : nap.property.getRequestedAliases()) {
+			for (Name a : nap.property.getRequestedAliases()) {
 				System.getProperties().remove(a.getActualName());
 			}
 	

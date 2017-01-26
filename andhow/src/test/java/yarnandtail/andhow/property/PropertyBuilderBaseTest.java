@@ -40,11 +40,11 @@ public class PropertyBuilderBaseTest {
 		builder.aliasInAndOut("Kathy");
 		
 		assertEquals(5, builder._aliases.size());
-		AName mike = builder._aliases.stream().filter(a -> a.getActualName().equals("Mike")).findFirst().get();
-		AName bob = builder._aliases.stream().filter(a -> a.getActualName().equals("Bob")).findFirst().get();
-		AName carl = builder._aliases.stream().filter(a -> a.getActualName().equals("Carl")).findFirst().get();
-		AName sally = builder._aliases.stream().filter(a -> a.getActualName().equals("Sally")).findFirst().get();
-		AName kathy = builder._aliases.stream().filter(a -> a.getActualName().equals("Kathy")).findFirst().get();
+		Name mike = builder._aliases.stream().filter(a -> a.getActualName().equals("Mike")).findFirst().get();
+		Name bob = builder._aliases.stream().filter(a -> a.getActualName().equals("Bob")).findFirst().get();
+		Name carl = builder._aliases.stream().filter(a -> a.getActualName().equals("Carl")).findFirst().get();
+		Name sally = builder._aliases.stream().filter(a -> a.getActualName().equals("Sally")).findFirst().get();
+		Name kathy = builder._aliases.stream().filter(a -> a.getActualName().equals("Kathy")).findFirst().get();
 		
 		assertTrue(mike.isIn() && mike.isOut());
 		assertTrue(bob.isIn() && bob.isOut());

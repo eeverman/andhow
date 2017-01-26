@@ -20,7 +20,7 @@ public class IntProp extends PropertyBase<Integer> {
 	
 	public IntProp(
 			Integer defaultValue, boolean required, String shortDesc, List<Validator<Integer>> validators,
-			List<AName> aliases, PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

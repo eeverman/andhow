@@ -21,7 +21,7 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 	
 	public LocalDateTimeProp(
 			LocalDateTime defaultValue, boolean required, String shortDesc, List<Validator<LocalDateTime>> validators,
-			List<AName> aliases, PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<LocalDateTime> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

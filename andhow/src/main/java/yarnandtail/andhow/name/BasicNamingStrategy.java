@@ -36,9 +36,9 @@ public class BasicNamingStrategy implements NamingStrategy {
 		if (prop.getRequestedAliases().size() > 0) {
 			effAliases = new ArrayList();
 			
-			List<AName> reqAliases = prop.getRequestedAliases();
+			List<Name> reqAliases = prop.getRequestedAliases();
 			
-			for (AName a : reqAliases) {
+			for (Name a : reqAliases) {
 				
 				EffectiveName en = new EffectiveName(
 						a.getActualName(), toEffectiveName(a.getActualName()),

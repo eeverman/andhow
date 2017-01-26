@@ -32,7 +32,7 @@ import yarnandtail.andhow.valuetype.FlagType;
 public class FlagProp extends PropertyBase<Boolean> {
 	
 	public FlagProp(
-			Boolean defaultValue, boolean required, String shortDesc, List<AName> aliases,
+			Boolean defaultValue, boolean required, String shortDesc, List<Name> aliases,
 			PropertyType paramType, ValueType<Boolean> valueType, Trimmer trimmer,
 			String helpText) {
 		

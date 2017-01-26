@@ -20,7 +20,7 @@ public class LngProp extends PropertyBase<Long> {
 	
 	public LngProp(
 			Long defaultValue, boolean required, String shortDesc, List<Validator<Long>> validators,
-			List<AName> aliases, PropertyType paramType, ValueType<Long> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<Long> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
