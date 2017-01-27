@@ -141,6 +141,20 @@ public abstract class ConstructionProblem extends Problem {
 		}
 	}
 	
+
+	public static class PropertyNotPartOfGroup extends ConstructionProblem {	
+
+		public PropertyNotPartOfGroup(Class<? extends PropertyGroup> group, Property<?> prop) {
+			this.badPropertyCoord = new PropertyCoord(group, prop);
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return TextUtil.format(
+					"This property is not part of the group its is being added to.");
+		}
+	}
+	
 	public static class ExportException extends ConstructionProblem {
 		Exception exception;
 		String message;

@@ -28,10 +28,8 @@ public class ConstructionDefinitionImmutableTest {
 		NamingStrategy bns = new BasicNamingStrategy();
 		
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
-		cdm.addProperty(SimpleParams.class, SimpleParams.STR_BOB, 
-				bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class));
-		cdm.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, 
-				bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class));
+		cdm.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
+		cdm.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
 		
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
@@ -68,11 +66,9 @@ public class ConstructionDefinitionImmutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
 		
-		problems.add(cdm.addProperty(SampleGroup.class, SampleGroup.STR_1, 
-				bns.buildNames(SampleGroup.STR_1, SampleGroup.class)));
+		problems.add(cdm.addProperty(SampleGroup.class, SampleGroup.STR_1));
 
-		problems.add(cdm.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
-				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class)));
+		problems.add(cdm.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP));
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
 		
@@ -99,14 +95,11 @@ public class ConstructionDefinitionImmutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
 		
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
-				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class)));
+		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
 
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class)));
+		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
 		
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class)));
+		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
 		

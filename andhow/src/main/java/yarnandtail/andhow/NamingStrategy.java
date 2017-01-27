@@ -12,7 +12,7 @@ public interface NamingStrategy {
 	 * Build a list of names for the Property
 	 * @param prop The Property to be named
 	 * @param containingGroup Properties must be contained in a PropertyGroup to be exposed
-	 * @return 
+	 * @return Null if the passed Property is not part of the PropertyGroup.
 	 * @throws An exception if there is a security exception trying to read fields
 	 *	inside of the containingGroup via reflection.
 	 */

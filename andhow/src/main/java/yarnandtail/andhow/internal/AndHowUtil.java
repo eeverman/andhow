@@ -80,8 +80,7 @@ public class AndHowUtil {
 			List<PropertyGroup.NameAndProperty> nameAndProperties = PropertyGroup.getProperties(group);
 			
 			for (PropertyGroup.NameAndProperty nameAndProp : nameAndProperties) {
-				PropertyNaming names = appDef.getNamingStrategy().buildNames(nameAndProp.property, group);
-				problems.add(appDef.addProperty(group, nameAndProp.property, names));
+				problems.add(appDef.addProperty(group, nameAndProp.property));
 			}
 			
 		} catch (Exception ex) {

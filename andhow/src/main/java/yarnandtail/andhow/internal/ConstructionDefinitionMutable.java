@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import yarnandtail.andhow.*;
+import yarnandtail.andhow.ConstructionProblem.PropertyNotPartOfGroup;
+import yarnandtail.andhow.ConstructionProblem.SecurityException;
 
 /**
  * A mutable version that can be used during AndHow startup.
@@ -37,14 +41,26 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	 * 
 	 * @param group The PropertyGroup parent of the property
 	 * @param property The Property to be added
-	 * @param names The names associated w/ this property
 	 */
-	public ConstructionProblem addProperty(Class<? extends PropertyGroup> group, Property<?> property, 
-			PropertyNaming names) {
+	public ConstructionProblem addProperty(Class<? extends PropertyGroup> group, Property<?> property) {
 		
-		if (group == null || property == null || names == null || names.getCanonicalName() == null) {
+		PropertyNaming names = null;
+		
+		if (group == null || property == null) {
 			throw new RuntimeException("Null values are not allowed when registering a property.");
 		}
+		
+		try {
+			names = namingStrategy.buildNames(property, group);
+			
+			if (names == null) {
+				return new PropertyNotPartOfGroup(group, property);
+			}
+		} catch (Exception ex) {
+			return new SecurityException(ex, group);
+		}
+		
+
 		
 		aliasesByProperty.put(property, names.getAliases());
 		

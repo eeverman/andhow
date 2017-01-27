@@ -26,6 +26,8 @@ public class BasicNamingStrategy implements NamingStrategy {
 	public PropertyNaming buildNamesFromCanonical(Property prop, 
 			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
 		
+		if (canonicalName == null) return null;
+		
 		EffectiveName canon = new EffectiveName(canonicalName, toEffectiveName(canonicalName), true, true);
 		
 		List<EffectiveName> effAliases = EMPTY_NAMES;
