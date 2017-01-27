@@ -56,7 +56,7 @@ public interface NamingStrategy {
 	 * @param classpathName
 	 * @return null if null is passed.
 	 */
-	public static String getUriName(String classpathName) {
+	default String getUriName(String classpathName) {
 		if (classpathName == null) return null;
 		
 		return classpathName.replaceAll("\\.", "/");
@@ -73,7 +73,7 @@ public interface NamingStrategy {
 	 * @param classpathName
 	 * @return 
 	 */
-	public static boolean isUriNameDistict(String classpathName) {
+	public default boolean isUriNameDistict(String classpathName) {
 		
 		if (classpathName == null) return false;
 		

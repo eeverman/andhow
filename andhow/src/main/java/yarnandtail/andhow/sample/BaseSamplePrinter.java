@@ -24,7 +24,10 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	 */
 	public abstract TextBlock getSampleStartComment(ConstructionDefinition definition);
 	
-	public abstract TextBlock getActualProperty(Class<? extends PropertyGroup> group, Property prop) throws Exception;
+	public abstract String getInAliaseString(ConstructionDefinition definition, EffectiveName name);
+	
+	public abstract TextBlock getActualProperty(ConstructionDefinition definition, 
+			Class<? extends PropertyGroup> group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
 	
@@ -192,10 +195,11 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 					(prop.isRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
 					(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
 
-			//TODO:  Add default names here
 			List<EffectiveName> effAliases = definition.getAliases(prop);
 			List<String> inAliases = new ArrayList();
-			effAliases.stream().filter(a -> a.isIn()).forEachOrdered(a -> inAliases.add(a.getActualName()));
+			effAliases.stream().filter(a -> a.isIn()).forEachOrdered(a -> {
+				inAliases.add(getInAliaseString(definition, a));
+			});
 			if (inAliases.size() > 0) {
 				tb.addLine(TextUtil.format("Recognized aliases: {}", String.join(", ", inAliases)));
 			}
@@ -223,7 +227,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 
 			print(out, tb, getFormat());
 
-			TextBlock aptb = getActualProperty(group, prop);
+			TextBlock aptb = getActualProperty(definition, group, prop);
 			aptb.setBlankLineAfter(true);	//Always want a space after
 
 			print(out, aptb, getFormat());

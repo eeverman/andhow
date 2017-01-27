@@ -164,10 +164,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testInAliasesViaJndiCompEnvUrlNames() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 
-		jndi.bind("java:comp/env/" + NamingStrategy.getUriName(STR_PROP1_IN), STR1);
-		jndi.bind("java:comp/env/" + NamingStrategy.getUriName(STR_PROP2_ALIAS), STR2);
-		jndi.bind("java:comp/env/" + NamingStrategy.getUriName(INT_PROP1_ALIAS), INT1.toString());
+		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP1_IN), STR1);
+		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP2_ALIAS), STR2);
+		jndi.bind("java:comp/env/" + bns.getUriName(INT_PROP1_ALIAS), INT1.toString());
 
 		jndi.activate();
 		
@@ -186,10 +187,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testInAliasesViaJndiRootUrlNames() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 
-		jndi.bind("java:" + NamingStrategy.getUriName(STR_PROP1_IN), STR1);
-		jndi.bind("java:" + NamingStrategy.getUriName(STR_PROP2_ALIAS), STR2);
-		jndi.bind("java:" + NamingStrategy.getUriName(INT_PROP1_ALIAS), INT1.toString());
+		jndi.bind("java:" + bns.getUriName(STR_PROP1_IN), STR1);
+		jndi.bind("java:" + bns.getUriName(STR_PROP2_ALIAS), STR2);
+		jndi.bind("java:" + bns.getUriName(INT_PROP1_ALIAS), INT1.toString());
 
 		jndi.activate();
 		

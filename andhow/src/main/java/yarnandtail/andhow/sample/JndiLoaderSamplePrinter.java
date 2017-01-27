@@ -46,11 +46,18 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 	}
 	
 	@Override
-	public TextBlock getActualProperty(Class<? extends PropertyGroup> group, Property prop) throws Exception {
+	public String getInAliaseString(ConstructionDefinition definition, EffectiveName name) {
+		return definition.getNamingStrategy().getUriName(name.getActualName());
+	}
+	
+	
+	@Override
+	public TextBlock getActualProperty(ConstructionDefinition definition, 
+			Class<? extends PropertyGroup> group, Property prop) throws Exception {
 		
 		TextBlock tb = new TextBlock(false, false);
 		
-		String propCanonName = NamingStrategy.getUriName(PropertyGroup.getCanonicalName(group, prop));
+		String propCanonName = definition.getNamingStrategy().getUriName(PropertyGroup.getCanonicalName(group, prop));
 		String type = prop.getValueType().getDestinationType().getCanonicalName();
 
 		

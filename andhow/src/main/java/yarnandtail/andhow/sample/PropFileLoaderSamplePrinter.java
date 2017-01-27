@@ -46,7 +46,13 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 	}
 	
 	@Override
-	public TextBlock getActualProperty(Class<? extends PropertyGroup> group, Property prop) throws Exception {
+	public String getInAliaseString(ConstructionDefinition definition, EffectiveName name) {
+		return name.getActualName();
+	}
+	
+	@Override
+	public TextBlock getActualProperty(ConstructionDefinition definition, 
+			Class<? extends PropertyGroup> group, Property prop) throws Exception {
 		
 		TextBlock tb = new TextBlock(false, false);
 		
