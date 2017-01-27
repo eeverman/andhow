@@ -2,16 +2,18 @@ package yarnandtail.andhow.load;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.naming.NamingException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AndHowTestBase;
+
 import static yarnandtail.andhow.AndHowTestBase.reloader;
+
 import yarnandtail.andhow.*;
+import yarnandtail.andhow.name.BasicNamingStrategy;
 
 /**
  *
@@ -42,29 +44,30 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-
+		BasicNamingStrategy bns = new BasicNamingStrategy();
+		
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -127,13 +130,14 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-
+		BasicNamingStrategy bns = new BasicNamingStrategy();
+		
 		jndi.bind("java:/test/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:/test/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
 		jndi.bind("java:test/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
 		jndi.bind("java:test/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
 		jndi.bind("java:test/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
 		jndi.bind("java:myapp/root/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should still work
@@ -159,12 +163,13 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsFromAddedAndReplacementNonStdPaths() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-
+		BasicNamingStrategy bns = new BasicNamingStrategy();
+		
 		jndi.bind("java:zip/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:xy/z/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
 		jndi.bind("java:/test/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
 		jndi.bind("java:test/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
 		jndi.bind("java:test/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
 		jndi.bind("java:myapp/root/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
@@ -194,23 +199,24 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromObjectsCompEnv() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), Boolean.TRUE);
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), new Integer(999));
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
 		jndi.bind("java:comp/env/" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
 		jndi.bind("java:comp/env/" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
 		
 		jndi.activate();
@@ -236,18 +242,19 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromObjectsRoot() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null2");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null2");
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Integer(-9999));
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Integer(9999));
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Integer(9999));
 		
 		jndi.activate();
 		
@@ -276,11 +283,12 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testDuplicateValues() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
 
 		jndi.activate();
 		
@@ -307,10 +315,11 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testObjectConversionErrors() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), new Integer(-9999));
 		jndi.activate();
 		
@@ -339,10 +348,11 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testStringConversionErrors() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
 		jndi.bind("java:" + 
-				NamingStrategy.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
+				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
 		jndi.activate();
 		

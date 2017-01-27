@@ -48,8 +48,8 @@ public class JndiLoader extends BaseLoader {
 			for (Property<?> prop : appConfigDef.getProperties()) {
 
 				//Check the URI name first (more likely), then the classpath style name
-				if (NamingStrategy.isUriNameDistict(appConfigDef.getCanonicalName(prop))) {
-					propNames.add(NamingStrategy.getUriName(appConfigDef.getCanonicalName(prop)));
+				if (appConfigDef.getNamingStrategy().isUriNameDistict(appConfigDef.getCanonicalName(prop))) {
+					propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
 				}
 
 				propNames.add(appConfigDef.getCanonicalName(prop));
@@ -59,8 +59,8 @@ public class JndiLoader extends BaseLoader {
 					propNames.add(a.getActualName());
 
 					//Add the URI style name if it is different
-					if (NamingStrategy.isUriNameDistict(a.getActualName())) {
-						propNames.add(NamingStrategy.getUriName(a.getActualName()));
+					if (appConfigDef.getNamingStrategy().isUriNameDistict(a.getActualName())) {
+						propNames.add(appConfigDef.getNamingStrategy().getUriName(a.getActualName()));
 					}
 				});
 
