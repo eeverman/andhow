@@ -19,17 +19,6 @@ import yarnandtail.andhow.*;
  */
 public class JndiLoaderTest extends AndHowTestBase {
 	
-	
-	@Before
-	public void setUp() throws NamingException, IllegalArgumentException, IllegalAccessException {
-		
-	}
-	
-	@After
-	public void tearDown() throws NamingException {
-		//AndHowTestBase.stopJndi();
-	}
-	
 	@Test
 	public void testSplit() {
 		JndiLoader loader = new JndiLoader();

@@ -1,11 +1,12 @@
 package yarnandtail.andhow.name;
 
+import org.junit.Before;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import yarnandtail.andhow.PropertyNaming;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -20,10 +21,9 @@ public class BasicNamingStrategyTest {
 	final BasicNamingStrategy bns = new BasicNamingStrategy();
 	
 	@Test
-	public void testDefaultNaming() {
+	public void testDefaultNaming() throws Exception {
 
-		StrProp point = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
-		PropertyNaming naming = bns.buildNames(point, SimpleParams.class, "Bob");
+		PropertyNaming naming = bns.buildNames(SimpleParams.Bob, SimpleParams.class);
 		
 		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActualName());
 		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffectiveInName());
@@ -39,6 +39,10 @@ public class BasicNamingStrategyTest {
 		assertEquals(1, naming.getOutAliases().size());
 		assertEquals("Kathy", naming.getOutAliases().get(0).getActualName());
 		assertEquals("Kathy", naming.getOutAliases().get(0).getEffectiveOutName());
+	}
+	
+	public interface SimpleParams extends PropertyGroup {
+		StrProp Bob = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
 	}
 
 }

@@ -23,17 +23,17 @@ public class CmdLineLoaderTest {
 	ValueMapWithContextMutable appValuesBuilder;
 
 	@Before
-	public void init() {
+	public void init() throws Exception {
 		appValuesBuilder = new ValueMapWithContextMutable();
 		
 		BasicNamingStrategy bns = new BasicNamingStrategy();
 		
 		appDef = new ConstructionDefinitionMutable(bns);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "KVP_NULL"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class));
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class));
 
 	}
 	
@@ -43,8 +43,8 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "KVP_BOB" + AndHow.KVP_DELIMITER + "test");
-		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null");
 		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false");
 		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
@@ -70,8 +70,8 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "KVP_BOB" + AndHow.KVP_DELIMITER + "");
-		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "");
+		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "");
@@ -98,9 +98,9 @@ public class CmdLineLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "1");
-		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "2");
-		args.add(basePath + "KVP_NULL" + AndHow.KVP_DELIMITER + "3");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "1");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "2");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "3");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "false");
 		

@@ -4,7 +4,6 @@ package yarnandtail.andhow;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import yarnandtail.andhow.internal.ConstructionDefinitionImmutable;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.property.StrProp;
@@ -24,25 +23,25 @@ public class ConstructionDefinitionImmutableTest {
 	public interface RandomUnregisteredGroup extends PropertyGroup { StrProp STR_RND = StrProp.builder().build(); }
 	
 	@Test
-	public void testHappyPath() {
+	public void testHappyPath() throws Exception {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
 		cdm.addProperty(SimpleParams.class, SimpleParams.STR_BOB, 
-				bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "KVP_BOB"));
+				bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class));
 		cdm.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, 
-				bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
+				bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class));
 		
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
 		
 		//Canonical Names for Property
-		assertEquals(paramFullPath + "KVP_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
+		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
 		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParams.FLAG_FALSE));
 		
 		//Get properties for Canonical name
-		assertEquals(SimpleParams.STR_BOB, appDef.getProperty(paramFullPath + "KVP_BOB"));
+		assertEquals(SimpleParams.STR_BOB, appDef.getProperty(paramFullPath + "STR_BOB"));
 		assertEquals(SimpleParams.FLAG_FALSE, appDef.getProperty(paramFullPath + "FLAG_FALSE"));
 
 		
@@ -70,10 +69,10 @@ public class ConstructionDefinitionImmutableTest {
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
 		
 		problems.add(cdm.addProperty(SampleGroup.class, SampleGroup.STR_1, 
-				bns.buildNames(SampleGroup.STR_1, SampleGroup.class, "STR_1")));
+				bns.buildNames(SampleGroup.STR_1, SampleGroup.class)));
 
 		problems.add(cdm.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP, 
-				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class, "STR_1_DUP")));
+				bns.buildNames(SampleGroupDup.STR_1_DUP, SampleGroupDup.class)));
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
 		
@@ -94,20 +93,20 @@ public class ConstructionDefinitionImmutableTest {
 
 	
 	@Test
-	public void testNonValidDefaultValueAndInvalidRegexValidationSpec() {
+	public void testNonValidDefaultValueAndInvalidRegexValidationSpec() throws Exception {
 		
 		NamingStrategy bns = new BasicNamingStrategy();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
 		
 		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, 
-				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class, "NAME_WITH_BAD_REGEX")));
+				bns.buildNames(BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX, BadDefaultAndValidationGroup.class)));
 
 		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_BAD_DEFAULT")));
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT, BadDefaultAndValidationGroup.class)));
 		
 		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, 
-				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class, "COLOR_WITH_OK_DEFAULT")));
+				bns.buildNames(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, BadDefaultAndValidationGroup.class)));
 		
 		ConstructionDefinition appDef = cdm.toImmutable();
 		
