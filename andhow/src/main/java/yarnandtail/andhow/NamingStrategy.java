@@ -33,6 +33,16 @@ public interface NamingStrategy {
 	String toEffectiveName(String name);
 	
 	/**
+	 * Returns a description of how names are matched for use in samples and documentation.
+	 * 
+	 * For case insensitive matching, it might return something like:
+	 * Names are matched in a case insensitive way, so "Bob" would match "bOB".
+	 * 
+	 * @return A short string to be used in generated samples and documentation.
+	 */
+	String getNameMatchingDescription();
+	
+	/**
 	 * Converts a standard classpath style property name to a URI based one.
 	 * 
 	 * Standard classpath style names look like this:  <code>com.acme.bigapp.PROPERTY_NAME</code>.

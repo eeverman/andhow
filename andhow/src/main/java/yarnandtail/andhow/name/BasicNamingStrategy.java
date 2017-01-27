@@ -61,4 +61,10 @@ public class BasicNamingStrategy implements NamingStrategy {
 		}
 	}
 	
+	@Override
+	public String getNameMatchingDescription() {
+		return "When reading property names, matching is done in a case insensitive way, " +
+				"so 'Bob' would match 'bOB'.";
+	}
+	
 }

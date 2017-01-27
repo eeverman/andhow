@@ -1,12 +1,12 @@
 package yarnandtail.andhow.sample;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.sample.TextLine.HRLine;
 
-import static yarnandtail.andhow.util.ReportGenerator.DEFAULT_LINE_WIDTH;
 
 /**
  *
@@ -22,7 +22,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	 * Must provide its own line comment prefix if the format has no block comment.
 	 * @return 
 	 */
-	public abstract TextBlock getSampleStartComment();
+	public abstract TextBlock getSampleStartComment(ConstructionDefinition definition);
 	
 	public abstract TextBlock getActualProperty(Class<? extends PropertyGroup> group, Property prop) throws Exception;
 	
@@ -127,7 +127,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	@Override
 	public void printSampleStart(ConstructionDefinition definition, PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
-		TextBlock tb = getSampleStartComment();
+		TextBlock tb = getSampleStartComment(definition);
 		
 		if (tb != null) {
 			tb.setBlankLineAfter(true);
@@ -193,7 +193,12 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 					(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
 
 			//TODO:  Add default names here
-
+			List<EffectiveName> effAliases = definition.getAliases(prop);
+			List<String> inAliases = new ArrayList();
+			effAliases.stream().filter(a -> a.isIn()).forEachOrdered(a -> inAliases.add(a.getActualName()));
+			if (inAliases.size() > 0) {
+				tb.addLine(TextUtil.format("Recognized aliases: {}", String.join(", ", inAliases)));
+			}
 						
 			if (prop.getDefaultValue() != null) {
 				tb.addLine(DEFAULT_VALUE_TEXT + ": " + prop.getDefaultValue());
