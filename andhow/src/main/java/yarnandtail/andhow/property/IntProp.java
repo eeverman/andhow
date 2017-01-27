@@ -1,13 +1,9 @@
 package yarnandtail.andhow.property;
 
 import java.util.List;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.PropertyType;
-import yarnandtail.andhow.Trimmer;
-import yarnandtail.andhow.Validator;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.valid.IntValidator;
 import yarnandtail.andhow.valuetype.IntType;
-import yarnandtail.andhow.ValueType;
 
 /**
  * A Property that refers to an Integer value.
@@ -24,7 +20,7 @@ public class IntProp extends PropertyBase<Integer> {
 	
 	public IntProp(
 			Integer defaultValue, boolean required, String shortDesc, List<Validator<Integer>> validators,
-			List<Alias> aliases, PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<Integer> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

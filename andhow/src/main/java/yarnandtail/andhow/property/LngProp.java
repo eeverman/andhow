@@ -1,11 +1,7 @@
 package yarnandtail.andhow.property;
 
 import java.util.List;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.PropertyType;
-import yarnandtail.andhow.Trimmer;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.ValueType;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.valid.LngValidator;
 import yarnandtail.andhow.valuetype.LngType;
 
@@ -24,7 +20,7 @@ public class LngProp extends PropertyBase<Long> {
 	
 	public LngProp(
 			Long defaultValue, boolean required, String shortDesc, List<Validator<Long>> validators,
-			List<Alias> aliases, PropertyType paramType, ValueType<Long> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<Long> valueType, Trimmer trimmer,
 			String helpText) {
 		
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);

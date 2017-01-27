@@ -12,11 +12,12 @@ public interface NamingStrategy {
 	 * Build a list of names for the Property
 	 * @param prop The Property to be named
 	 * @param containingGroup Properties must be contained in a PropertyGroup to be exposed
-	 * @param fieldName The name of the static field in the containingGroup that refers to the prop
-	 * @return 
-	 * @deprecated - To hard to remove the existing testing using fieldName right now, so keeping this version.
+	 * @return Null if the passed Property is not part of the PropertyGroup.
+	 * @throws An exception if there is a security exception trying to read fields
+	 *	inside of the containingGroup via reflection.
 	 */
-	PropertyNaming buildNames(Property prop, Class<? extends PropertyGroup> containingGroup, String fieldName);
+	PropertyNaming buildNames(
+			Property prop, Class<? extends PropertyGroup> containingGroup) throws Exception;
 	
 	/**
 	 * Transforms a property name found in a property source (like a properties file,
@@ -29,7 +30,17 @@ public interface NamingStrategy {
 	 * @param name
 	 * @return 
 	 */
-	String transformIncomingClasspathName(String name);
+	String toEffectiveName(String name);
+	
+	/**
+	 * Returns a description of how names are matched for use in samples and documentation.
+	 * 
+	 * For case insensitive matching, it might return something like:
+	 * Names are matched in a case insensitive way, so "Bob" would match "bOB".
+	 * 
+	 * @return A short string to be used in generated samples and documentation.
+	 */
+	String getNameMatchingDescription();
 	
 	/**
 	 * Converts a standard classpath style property name to a URI based one.

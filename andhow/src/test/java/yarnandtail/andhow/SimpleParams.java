@@ -13,8 +13,8 @@ import yarnandtail.andhow.property.*;
 public interface SimpleParams extends PropertyGroup {
 	
 	//Strings
-	StrProp STR_BOB = StrProp.builder().defaultValue("bob").build();
-	StrProp STR_NULL = StrProp.builder().build();
+	StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("StringyBob").defaultValue("bob").build();
+	StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
 	
 	//Flags
 	FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();

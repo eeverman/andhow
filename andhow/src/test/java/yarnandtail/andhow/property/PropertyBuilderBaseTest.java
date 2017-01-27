@@ -1,9 +1,10 @@
 package yarnandtail.andhow.property;
 
 import org.junit.Test;
+import yarnandtail.andhow.*;
+
 import static org.junit.Assert.*;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.AppFatalException;
+
 import yarnandtail.andhow.valuetype.FlagType;
 
 /**
@@ -39,11 +40,11 @@ public class PropertyBuilderBaseTest {
 		builder.aliasInAndOut("Kathy");
 		
 		assertEquals(5, builder._aliases.size());
-		Alias mike = builder._aliases.stream().filter(a -> a.getName().equals("Mike")).findFirst().get();
-		Alias bob = builder._aliases.stream().filter(a -> a.getName().equals("Bob")).findFirst().get();
-		Alias carl = builder._aliases.stream().filter(a -> a.getName().equals("Carl")).findFirst().get();
-		Alias sally = builder._aliases.stream().filter(a -> a.getName().equals("Sally")).findFirst().get();
-		Alias kathy = builder._aliases.stream().filter(a -> a.getName().equals("Kathy")).findFirst().get();
+		Name mike = builder._aliases.stream().filter(a -> a.getActualName().equals("Mike")).findFirst().get();
+		Name bob = builder._aliases.stream().filter(a -> a.getActualName().equals("Bob")).findFirst().get();
+		Name carl = builder._aliases.stream().filter(a -> a.getActualName().equals("Carl")).findFirst().get();
+		Name sally = builder._aliases.stream().filter(a -> a.getActualName().equals("Sally")).findFirst().get();
+		Name kathy = builder._aliases.stream().filter(a -> a.getActualName().equals("Kathy")).findFirst().get();
 		
 		assertTrue(mike.isIn() && mike.isOut());
 		assertTrue(bob.isIn() && bob.isOut());

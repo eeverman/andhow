@@ -112,7 +112,8 @@ public class ReportGenerator {
 	 * @param loaders
 	 * @param isDueToErrors If true, the reason for these samples is b/c there was a startup error.
 	 */
-	public static void printConfigSamples(PrintStream out, ConstructionDefinition appDef, List<Loader> loaders, boolean isDueToErrors) {
+	public static void printConfigSamples(ConstructionDefinition appDef, PrintStream out, 
+			List<Loader> loaders, boolean isDueToErrors) {
 		
 		if (isDueToErrors) {
 			out.println();
@@ -130,15 +131,15 @@ public class ReportGenerator {
 			if (printer != null) {
 
 				supportedLoaders++;
-				printer.printSampleStart(out);
+				printer.printSampleStart(appDef, out);
 				
 				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
 					
-					printer.printPropertyGroupStart(out, group);
+					printer.printPropertyGroupStart(appDef, out, group);
 					
 					try {
 						for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
-							printer.printProperty(out, group, prop);
+							printer.printProperty(appDef, out, group, prop);
 						}
 					} catch (Exception ex) {
 						TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
@@ -146,10 +147,10 @@ public class ReportGenerator {
 								"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
 					}
 					
-					printer.printPropertyGroupEnd(out, group);
+					printer.printPropertyGroupEnd(appDef, out, group);
 				}
 				
-				printer.printSampleEnd(out);
+				printer.printSampleEnd(appDef, out);
 			}
 			
 			

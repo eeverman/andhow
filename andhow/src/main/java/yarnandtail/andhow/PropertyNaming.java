@@ -12,16 +12,16 @@ import java.util.*;
  */
 public class PropertyNaming {
 
-	private final Name canonicalName;
-	private final List<Name> inAliases;
+	private final EffectiveName canonicalName;
+	private final List<EffectiveName> aliases;
 
-	public PropertyNaming(Name canonicalName, List<Name> inAliases) {
+	public PropertyNaming(EffectiveName canonicalName, List<EffectiveName> aliases) {
 		this.canonicalName = canonicalName;
 		
-		if (inAliases != null) {
-			this.inAliases = inAliases;
+		if (aliases != null) {
+			this.aliases = Collections.unmodifiableList(aliases);
 		} else {
-			this.inAliases = Collections.emptyList();
+			this.aliases = Collections.emptyList();
 		}
 	}
 
@@ -29,71 +29,44 @@ public class PropertyNaming {
 	 * The canonical name of the property.
 	 * @return 
 	 */
-	public Name getCanonicalName() {
+	public EffectiveName getCanonicalName() {
 		return canonicalName;
 	}
 
 	/**
-	 * All In aliases for the property.
+	 * All aliases for the property.
 	 * 
 	 * The naming strategy may be directed to add or remove aliases from the ones
 	 * requested for a property to resolve conflicts, but nominally this is the
-	 * list of in-type aliases requested by the Property.
+	 * list of aliases (both in and out aliases) requested by the Property.
 	 * @return 
 	 */
-	public List<Name> getInAliases() {
-		return inAliases;
+	public List<EffectiveName> getAliases() {
+		return aliases;
 	}
 	
 	/**
-	 * A list of the canonical name and any aliases merged together.
+	 * A list of the in-type aliases.
 	 * 
 	 * @return 
 	 */
-	public List<Name> getAllInNames() {
+	public List<EffectiveName> getInAliases() {
 		
-		ArrayList<Name> ns = new ArrayList();
-		ns.add(canonicalName);
-		ns.addAll(inAliases);
+		ArrayList<EffectiveName> ns = new ArrayList();
+		aliases.stream().filter(a -> a.isIn()).forEachOrdered(a -> ns.add(a));
 		return Collections.unmodifiableList(ns);
 	}
 	
-	
 	/**
-	 * A single name with its canonical version and effective version.
+	 * A list of the out-type aliases.
 	 * 
-	 * A NamingStrategy may clean up or change the case of a name from its
-	 * actual name to its effective name.
-	 * 
+	 * @return 
 	 */
-	public static class Name {
-		private String actual;
-		private String effective;
-
-		public Name(String actual, String effective) {
-			this.actual = actual;
-			this.effective = effective;
-		}
-
-		/**
-		 * Actual canonical version of the name.
-		 * @return 
-		 */
-		public String getActual() {
-			return actual;
-		}
-
-		/**
-		 * NamingStrategy cleaned up version of the name.
-		 * This is the name that should be used to match on when reading properties
-		 * names from files.
-		 * @return 
-		 */
-		public String getEffective() {
-			return effective;
-		}
+	public List<EffectiveName> getOutAliases() {
 		
-		
+		ArrayList<EffectiveName> ns = new ArrayList();
+		aliases.stream().filter(a -> a.isOut()).forEachOrdered(a -> ns.add(a));
+		return Collections.unmodifiableList(ns);
 	}
 
 }

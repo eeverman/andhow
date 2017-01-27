@@ -32,11 +32,11 @@ public class SysPropLoaderTest {
 		
 		appDef = new ConstructionDefinitionMutable(bns);
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "STR_BOB"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "STR_NULL"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
 
 		clearSysProps();
 		
@@ -52,7 +52,7 @@ public class SysPropLoaderTest {
 		
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
-			String canon = bns.buildNames(nap.property, SimpleParams.class, nap.fieldName).getCanonicalName().getActual();
+			String canon = bns.buildNames(nap.property, SimpleParams.class).getCanonicalName().getActualName();
 			System.clearProperty(canon);
 		}
 		

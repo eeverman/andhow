@@ -1,14 +1,12 @@
 package yarnandtail.andhow.load;
 
 import java.util.*;
-import org.junit.After;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.PropertyGroup.NameAndProperty;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
@@ -17,7 +15,7 @@ import yarnandtail.andhow.internal.ValueMapWithContextMutable;
  *
  * @author eeverman
  */
-public class SystemEnvironmentLoaderTest1 {
+public class SystemEnvironmentLoaderTest {
 	
 	TestConstructionDefinition appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -30,11 +28,11 @@ public class SystemEnvironmentLoaderTest1 {
 		
 		appDef = new TestConstructionDefinition();
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB, bns.buildNames(SimpleParams.STR_BOB, SimpleParams.class, "STR_BOB"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL, bns.buildNames(SimpleParams.STR_NULL, SimpleParams.class, "STR_NULL"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE, bns.buildNames(SimpleParams.FLAG_FALSE, SimpleParams.class, "FLAG_FALSE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE, bns.buildNames(SimpleParams.FLAG_TRUE, SimpleParams.class, "FLAG_TRUE"));
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL, bns.buildNames(SimpleParams.FLAG_NULL, SimpleParams.class, "FLAG_NULL"));
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
+		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
 		
 	}
 	

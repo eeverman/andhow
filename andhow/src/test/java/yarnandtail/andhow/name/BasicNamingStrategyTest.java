@@ -1,11 +1,12 @@
 package yarnandtail.andhow.name;
 
+import org.junit.Before;
+
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import yarnandtail.andhow.PropertyNaming;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.property.StrProp;
-import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -20,22 +21,28 @@ public class BasicNamingStrategyTest {
 	final BasicNamingStrategy bns = new BasicNamingStrategy();
 	
 	@Test
-	public void testDefaultNaming() {
+	public void testDefaultNaming() throws Exception {
 
-		StrProp point = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
-		PropertyNaming naming = bns.buildNames(point, SimpleParams.class, "Bob");
+		PropertyNaming naming = bns.buildNames(SimpleParams.Bob, SimpleParams.class);
 		
-		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActual());
-		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffective());
+		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActualName());
+		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffectiveInName());
+		
+		//In Names
 		assertEquals(2, naming.getInAliases().size());
-		assertEquals("Mark", naming.getInAliases().get(0).getActual());
-		assertEquals("MARK", naming.getInAliases().get(0).getEffective());
-		assertEquals("Kathy", naming.getInAliases().get(1).getActual());
-		assertEquals("KATHY", naming.getInAliases().get(1).getEffective());
-		assertEquals(3, naming.getAllInNames().size());
-		assertEquals(naming.getCanonicalName(), naming.getAllInNames().get(0));
-		assertEquals(naming.getInAliases().get(0), naming.getAllInNames().get(1));
-		assertEquals(naming.getInAliases().get(1), naming.getAllInNames().get(2));
+		assertEquals("Mark", naming.getInAliases().get(0).getActualName());
+		assertEquals("MARK", naming.getInAliases().get(0).getEffectiveInName());
+		assertEquals("Kathy", naming.getInAliases().get(1).getActualName());
+		assertEquals("KATHY", naming.getInAliases().get(1).getEffectiveInName());
+		
+		//out Names
+		assertEquals(1, naming.getOutAliases().size());
+		assertEquals("Kathy", naming.getOutAliases().get(0).getActualName());
+		assertEquals("Kathy", naming.getOutAliases().get(0).getEffectiveOutName());
+	}
+	
+	public interface SimpleParams extends PropertyGroup {
+		StrProp Bob = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
 	}
 
 }

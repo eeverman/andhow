@@ -2,11 +2,7 @@ package yarnandtail.andhow.property;
 
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.Alias;
-import yarnandtail.andhow.Validator;
-import yarnandtail.andhow.ValueType;
-import yarnandtail.andhow.Property;
-import yarnandtail.andhow.Trimmer;
+import yarnandtail.andhow.*;
 
 /**
  * A generic PropertyBuilder class which needs to be fully implemented as an
@@ -34,7 +30,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	protected boolean _required = false;
 	protected String _shortDesc;
 	protected List<Validator<T>> _validators = new ArrayList();
-	protected List<Alias> _aliases = new ArrayList();
+	protected List<Name> _aliases = new ArrayList();
 	protected String _helpText;
 	
 	
@@ -145,7 +141,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * @return A builder for chaining build calls
 	 */
 	public B aliasIn(String name) {
-		addAlias(new Alias(name, true, false), _aliases);
+		addAlias(new Name(name, true, false), _aliases);
 		return instance;
 	}
 	
@@ -161,7 +157,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * @return A builder for chaining build calls
 	 */
 	public B aliasOut(String name) {
-		addAlias(new Alias(name, false, true), _aliases);
+		addAlias(new Name(name, false, true), _aliases);
 		return instance;
 	}
 	
@@ -177,7 +173,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * @return A builder for chaining build calls
 	 */
 	public B aliasInAndOut(String name) {
-		addAlias(new Alias(name, true, true), _aliases);
+		addAlias(new Name(name, true, true), _aliases);
 		return instance;
 	}
 	
@@ -193,14 +189,14 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * @param newAlias New alias to add
 	 * @param addToList The list to add to
 	 */
-	protected void addAlias(Alias newAlias, List<Alias> addToList) {
-		String name = newAlias.getName();
+	protected void addAlias(Name newAlias, List<Name> addToList) {
+		String name = newAlias.getActualName();
 		
 		for (int i = 0; i < addToList.size(); i++) {
-			Alias a = addToList.get(i);
+			Name a = addToList.get(i);
 			
-			if (a.getName().equals(name)) {
-				Alias b = new Alias(name, newAlias.isIn() || a.isIn(), newAlias.isOut() || a.isOut());
+			if (a.getActualName().equals(name)) {
+				Name b = new Name(name, newAlias.isIn() || a.isIn(), newAlias.isOut() || a.isOut());
 				addToList.set(i, b);
 				return;
 			}

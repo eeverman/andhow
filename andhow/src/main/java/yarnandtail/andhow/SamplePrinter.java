@@ -3,11 +3,13 @@ package yarnandtail.andhow;
 import java.io.PrintStream;
 
 /**
- * Can write a sample configuration to the passed in PrintStream.
+ * Statelessly writes a sample configuration to the passed in PrintStream.
  * 
- * This is intended to be implemented by Loaders who support writing configuration
- * samples.  If AndHow fails to startup correctly, each Loader implementing this
- * interface will create a sample configuration for the user to start from.
+ * Implementers may be invoked by request or when configuration initiation fails.
+ * Each type of configuration source has a Loader associated with it, and that
+ * loader can have a SamplePrinter instance associated with it so that when a
+ * particular loader is used (such as a properties file loader), its possible to
+ * print a sample configuration if the startup fails.
  * 
  * @author ericeverman
  */
@@ -26,14 +28,15 @@ public interface SamplePrinter {
 	/** Lead-in for a default value */
 	static final String DEFAULT_VALUE_TEXT = "Default Value";
 	
-	void printSampleStart(PrintStream out);
+	void printSampleStart(ConstructionDefinition definition, PrintStream out);
 	
-	void printPropertyGroupStart(PrintStream out, Class<? extends PropertyGroup> group);
+	void printPropertyGroupStart(ConstructionDefinition definition, PrintStream out, 
+			Class<? extends PropertyGroup> group);
 
-	void printProperty(PrintStream out, Class<? extends PropertyGroup> group, Property<?> prop)
-			throws Exception;
+	void printProperty(ConstructionDefinition definition, PrintStream out, 
+			Class<? extends PropertyGroup> group, Property<?> prop);
 	
-	void printPropertyGroupEnd(PrintStream out, Class<? extends PropertyGroup> group);
+	void printPropertyGroupEnd(ConstructionDefinition definition, PrintStream out, Class<? extends PropertyGroup> group);
 	
-	void printSampleEnd(PrintStream out);
+	void printSampleEnd(ConstructionDefinition definition, PrintStream out);
 }

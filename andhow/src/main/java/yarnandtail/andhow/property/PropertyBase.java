@@ -18,12 +18,12 @@ public abstract class PropertyBase<T> implements Property<T> {
 	private final boolean required;
 	private final String shortDesc;
 	private final List<Validator<T>> validators;
-	private final List<Alias> aliases;
+	private final List<Name> aliases;
 	private final String helpText;
 	
 	public PropertyBase(
 			T defaultValue, boolean required, String shortDesc, List<Validator<T>> validators,
-			List<Alias> aliases, PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
+			List<Name> aliases, PropertyType paramType, ValueType<T> valueType, Trimmer trimmer,
 			String helpText) {
 				
 		//Clean all values to be non-null
@@ -65,7 +65,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	}
 	
 	@Override
-	public List<Alias> getRequestedAliases() {
+	public List<Name> getRequestedAliases() {
 		return aliases;
 	}
 

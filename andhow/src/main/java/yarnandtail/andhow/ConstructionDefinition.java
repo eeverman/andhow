@@ -27,7 +27,7 @@ public interface ConstructionDefinition {
 	 * @param property
 	 * @return
 	 */
-	List<Alias> getAliases(Property<?> property);
+	List<EffectiveName> getAliases(Property<?> property);
 
 	/**
 	 * Returns the canonical name of a registered property.

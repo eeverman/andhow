@@ -19,7 +19,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	private final List<Property<?>> properties;
 	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup;
 	private final Map<String, Property<?>> propertiesByAnyName;
-	private final Map<Property<?>, List<Alias>> aliasesByProperty;
+	private final Map<Property<?>, List<EffectiveName>> aliasesByProperty;
 	private final Map<Property<?>, String> canonicalNameByProperty;
 	private final List<ExportGroup> exportGroups;
 	
@@ -30,7 +30,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 			List<Property<?>> properties,
 			Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup, 
 			Map<String, Property<?>> propertiesByAnyName, 
-			Map<Property<?>, List<Alias>> aliasesByProperty, 
+			Map<Property<?>, List<EffectiveName>> aliasesByProperty, 
 			Map<Property<?>, String> canonicalNameByProperty,
 			List<ExportGroup> exportGroups) {
 		
@@ -56,7 +56,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 		propsByName.putAll(propertiesByAnyName);
 		this.propertiesByAnyName = Collections.unmodifiableMap(propsByName);
 		
-		Map<Property<?>, List<Alias>> alsByProp = new HashMap();
+		Map<Property<?>, List<EffectiveName>> alsByProp = new HashMap();
 		alsByProp.putAll(aliasesByProperty);
 		this.aliasesByProperty = Collections.unmodifiableMap(alsByProp);
 
@@ -73,11 +73,11 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	
 	@Override
 	public Property<?> getProperty(String classpathStyleName) {
-		return propertiesByAnyName.get(namingStrategy.transformIncomingClasspathName(classpathStyleName));
+		return propertiesByAnyName.get(namingStrategy.toEffectiveName(classpathStyleName));
 	}
 	
 	@Override
-	public List<Alias> getAliases(Property<?> property) {
+	public List<EffectiveName> getAliases(Property<?> property) {
 		return Collections.unmodifiableList(aliasesByProperty.get(property));
 	}
 		

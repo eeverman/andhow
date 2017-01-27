@@ -124,7 +124,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	//ConstructionDefinition Interface
 	
 	@Override
-	public List<Alias> getAliases(Property<?> property) {
+	public List<EffectiveName> getAliases(Property<?> property) {
 		return core.getAliases(property);
 	}
 
