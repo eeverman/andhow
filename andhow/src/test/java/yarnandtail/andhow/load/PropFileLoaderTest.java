@@ -3,15 +3,14 @@ package yarnandtail.andhow.load;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
-import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -168,7 +167,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(2, result.getProblems().size());
-		for (LoaderProblem lp : result.getProblems()) {
+		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 		}
 		

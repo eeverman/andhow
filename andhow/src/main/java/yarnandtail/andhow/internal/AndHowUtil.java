@@ -24,7 +24,7 @@ public class AndHowUtil {
 	 */
 	public static ConstructionDefinitionMutable buildDefinition(
 			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
-			NamingStrategy naming, ProblemList<ConstructionProblem> problems) {
+			NamingStrategy naming, ProblemList<Problem> problems) {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(naming);
 		
@@ -98,25 +98,13 @@ public class AndHowUtil {
 		}
 	}
 	
-	public static AppFatalException buildFatalException(List<LoaderProblem> loaderProblems, 
-			List<RequirementProblem> requirementsProblems, ValueMapWithContext loadedValues) {
+	public static AppFatalException buildFatalException(ProblemList<Problem> problems) {
 		
-		ArrayList<ValueProblem> pvps = new ArrayList();
-		
-		//build list of ValueProblems
-		
-		if (loadedValues != null) {
-			for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
-				for (PropertyValue pv : lvs.getValues()) {
-					pvps.addAll(pv.getIssues());
-				}
-			}
-		}
 		
 		return new AppFatalException(
 				"Unable to complete application configuration due to problems. " +
 				"See the System.err out or the log files for complete details.",
-				loaderProblems, pvps, requirementsProblems);
+				problems);
 		
 	}
 }

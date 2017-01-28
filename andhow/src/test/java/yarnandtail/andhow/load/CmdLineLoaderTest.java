@@ -3,15 +3,14 @@ package yarnandtail.andhow.load;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
-import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
-import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -110,7 +109,7 @@ public class CmdLineLoaderTest {
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
 		assertEquals(3, result.getProblems().size());
-		for (LoaderProblem lp : result.getProblems()) {
+		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 		}
 		
@@ -133,7 +132,7 @@ public class CmdLineLoaderTest {
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
 		assertEquals(2, result.getProblems().size());
-		for (LoaderProblem lp : result.getProblems()) {
+		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 		}
 		

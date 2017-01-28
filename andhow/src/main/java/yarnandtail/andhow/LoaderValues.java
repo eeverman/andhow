@@ -16,16 +16,20 @@ public class LoaderValues implements ValueMap {
 	
 	private final Loader loader;
 	private final List<PropertyValue> values;
-	private final List<LoaderProblem> problems;
-	private boolean problem = false;
+	private final ProblemList<Problem> problems;
+	private boolean valueProblem = false;
 
 	public LoaderValues(Loader loader, List<PropertyValue> inValues, List<LoaderProblem> problems) {
+		
+		
+		this.problems = new ProblemList();
 		
 		if (loader == null) {
 			throw new RuntimeException("The loader cannot be null");
 		}
 		
 		this.loader = loader;
+		this.problems.addAll(problems);
 		
 		if (inValues != null && inValues.size() > 0) {
 			ArrayList newValues = new ArrayList();
@@ -34,23 +38,15 @@ public class LoaderValues implements ValueMap {
 			values = Collections.unmodifiableList(newValues);
 			
 			
-			//check for problems
+			//check for value problems
 			for (PropertyValue pv : values) {
-				if (pv.hasIssues()) {
-					problem = true;
-					break;
-				}
+				this.problems.addAll(pv.getIssues());
 			}
 			
 		} else {
 			values = EMPTY_PROP_VALUE_LIST;
 		}
 		
-		this.problems = problems;
-		
-		if (problems != null && problems.size() > 0) {
-			problem = true;
-		}
 	}
 
 	public Loader getLoader() {
@@ -102,21 +98,12 @@ public class LoaderValues implements ValueMap {
 		return values.stream().anyMatch(p -> p.getProperty().equals(prop));
 	}
 	
-	/**
-	 * Returns true if any value or loader has any sort of issue (invalid value,
-	 * parsing error, etc).
-	 * 
-	 * @return 
-	 */
-	public boolean hasProblems() {
-		return problem;
-	}
 
 	/**
-	 * Returns loader related problems, if any.
-	 * @return May be null
+	 * Returns loader and value problems, if any.
+	 * @return Never null
 	 */
-	public List<LoaderProblem> getProblems() {
+	public ProblemList<Problem> getProblems() {
 		return problems;
 	}
 }

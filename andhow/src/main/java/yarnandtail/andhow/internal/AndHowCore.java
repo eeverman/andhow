@@ -22,9 +22,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//Internal state
 	private final ConstructionDefinition runtimeDef;
 	private final ValueMapWithContext loadedValues;
-	private final ProblemList<ConstructionProblem> constructProblems = new ProblemList();
-	private final ArrayList<LoaderProblem> loaderProblems = new ArrayList();
-	private final ArrayList<RequirementProblem> requirementsProblems = new ArrayList();
+	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
 			List<Class<? extends PropertyGroup>> registeredGroups, 
@@ -37,7 +35,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 				if (! this.loaders.contains(loader)) {
 					this.loaders.add(loader);
 				} else {
-					constructProblems.add(new ConstructionProblem.DuplicateLoader(loader));
+					problems.add(new ConstructionProblem.DuplicateLoader(loader));
 				}
 			}
 		}
@@ -46,25 +44,29 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
 
-		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(registeredGroups, loaders, namingStrategy, constructProblems);
+		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(registeredGroups, loaders, namingStrategy, problems);
 		runtimeDef = startupDef.toImmutable();
 		
 		//
 		//If there are ConstructionProblems, we can't continue on to attempt to
 		//load values.
-		if (constructProblems.size() > 0) {
-			AppFatalException afe = new AppFatalException(constructProblems);
+		if (problems.size() > 0) {
+			AppFatalException afe = new AppFatalException(
+				"There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
+				"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +
+				"See System.err, out or the log files for more details.",
+					problems);
 			printFailedStartupDetails(afe);
 			throw afe;
 		}
 		
 		//Continuing on to load values
-		loadedValues = loadValues(runtimeDef).getValueMapWithContextImmutable();
+		loadedValues = loadValues(runtimeDef, problems).getValueMapWithContextImmutable();
 
-		checkForRequiredValues(runtimeDef);
+		checkForRequiredValues(runtimeDef, problems);
 
-		if (requirementsProblems.size() > 0 || loadedValues.hasProblems() || loaderProblems.size() > 0) {
-			AppFatalException afe = AndHowUtil.buildFatalException(loaderProblems, requirementsProblems, loadedValues);
+		if (problems.size() > 0) {
+			AppFatalException afe = AndHowUtil.buildFatalException(problems);
 			printFailedStartupDetails(afe);
 			throw afe;
 		}
@@ -105,27 +107,28 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		return loadedValues.getEffectiveValue(prop);
 	}
 	
-	private ValueMapWithContext loadValues(ConstructionDefinition definition) {
+	//TODO:  Snhouldn't this be stateless and pass in the loaer list?
+	private ValueMapWithContext loadValues(ConstructionDefinition definition, ProblemList<Problem> problems) {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
 
 		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {
 			LoaderValues result = loader.load(definition, cmdLineArgs, existingValues);
 			existingValues.addValues(result);
-			loaderProblems.addAll(result.getProblems());
+			problems.addAll(result.getProblems());
 		}
 
 		return existingValues;
 	}
 	
 
-	private void checkForRequiredValues(ConstructionDefinition definition) {
+	private void checkForRequiredValues(ConstructionDefinition definition, ProblemList<Problem> problems) {
 		
 		for (Property<?> prop : definition.getProperties()) {
 			if (prop.isRequired()) {
 				if (getEffectiveValue(prop) == null) {
 					
-					requirementsProblems.add(
+					problems.add(
 						new RequirementProblem.RequiredPropertyProblem(
 								definition.getGroupForProperty(prop), prop));
 				}
