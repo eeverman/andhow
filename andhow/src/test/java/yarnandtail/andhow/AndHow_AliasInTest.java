@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.List;
 
 import static yarnandtail.andhow.AndHowTestBase.reloader;
@@ -224,14 +225,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(1, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
 			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().property);
-			assertEquals(STR_PROP1_IN, nun.conflictName);
+			assertEquals(STR_PROP1_IN, nun.getConflictName());
 		}
 	}
 	
@@ -251,14 +252,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(1, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
 			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
-			assertEquals(STR_PROP1_IN.toLowerCase(), nun.conflictName);
+			assertEquals(STR_PROP1_IN.toLowerCase(), nun.getConflictName());
 		}
 	}
 	
@@ -277,14 +278,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(1, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
 			assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().property);
-			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.conflictName);
+			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
 		}
 	}
 	

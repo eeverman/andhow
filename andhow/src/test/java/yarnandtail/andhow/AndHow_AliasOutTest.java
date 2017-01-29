@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.List;
 
 import static yarnandtail.andhow.AndHowTestBase.reloader;
@@ -220,7 +221,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(1, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
@@ -228,7 +229,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
 			assertEquals(AliasGroup4.class, nun.getBadPropertyCoord().group);
-			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.conflictName);
+			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
 		}
 	}
 	
@@ -243,7 +244,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(1, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
@@ -251,7 +252,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			assertEquals(AliasGroup5.strProp2, nun.getBadPropertyCoord().property);
 			assertEquals(AliasGroup5.class, nun.getBadPropertyCoord().group);
-			assertEquals(STR_PROP1_OUT_ALIAS, nun.conflictName);
+			assertEquals(STR_PROP1_OUT_ALIAS, nun.getConflictName());
 		}
 	}
 	
@@ -267,7 +268,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getConstructionProblems();
+			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
 			assertEquals(2, probs.size());
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
@@ -275,7 +276,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			
 			assertEquals(AliasGroup7.strProp1, nun.getBadPropertyCoord().property);
 			assertEquals(AliasGroup7.class, nun.getBadPropertyCoord().group);
-			assertEquals(STR_PROP1_OUT_ALIAS, nun.conflictName);
+			assertEquals(STR_PROP1_OUT_ALIAS, nun.getConflictName());
 		}
 	}
 	

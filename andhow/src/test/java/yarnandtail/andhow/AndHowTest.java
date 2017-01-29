@@ -1,11 +1,14 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.name.BasicNamingStrategy;
@@ -95,10 +98,10 @@ public class AndHowTest extends AndHowTestBase {
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
-			assertEquals(1, ce.getConstructionProblems().size());
-			assertTrue(ce.getConstructionProblems().get(0) instanceof ConstructionProblem.DuplicateLoader);
+			assertEquals(1, ce.getProblems().filter(ConstructionProblem.class).size());
+			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
 			
-			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getConstructionProblems().get(0);
+			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
 			assertEquals(loaders.get(0), dl.getLoader());
 		}
 	}
@@ -117,9 +120,9 @@ public class AndHowTest extends AndHowTestBase {
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
-			assertEquals(2, ce.getRequirementProblems().size());
-			assertEquals(RequiredParams.STR_NULL_R, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
-			assertEquals(RequiredParams.FLAG_NULL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
+			assertEquals(2, ce.getProblems().filter(RequirementProblem.class).size());
+			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
+			assertEquals(RequiredParams.FLAG_NULL, ce.getProblems().filter(RequirementProblem.class).get(1).getPropertyCoord().getProperty());
 		}
 	}
 	

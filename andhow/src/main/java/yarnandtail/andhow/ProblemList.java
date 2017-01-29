@@ -24,23 +24,8 @@ public class ProblemList<P extends Problem> extends ArrayList<P> {
 		}
 	}
 	
-	public List<ConstructionProblem> getConstructionProblems() {
-		return this.stream().filter(p -> p instanceof ConstructionProblem)
-				.map(c -> (ConstructionProblem)c).collect(Collectors.toList());
-	}
-
-	public List<LoaderProblem> getLoaderProblems() {
-		return this.stream().filter(p -> p instanceof LoaderProblem)
-				.map(c -> (LoaderProblem)c).collect(Collectors.toList());
-	}
-
-	public List<ValueProblem> getValueProblems() {
-		return this.stream().filter(p -> p instanceof ValueProblem)
-				.map(c -> (ValueProblem)c).collect(Collectors.toList());
-	}
-
-	public List<RequirementProblem> getRequirementProblems() {
-		return this.stream().filter(p -> p instanceof RequirementProblem)
-				.map(c -> (RequirementProblem)c).collect(Collectors.toList());
+	public <P extends Problem> List<P> filter(Class<P> clazz) {
+		return this.stream().filter(p -> clazz.isInstance(p))
+				.map(c -> clazz.cast(c)).collect(Collectors.toList());
 	}
 }

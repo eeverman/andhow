@@ -33,20 +33,8 @@ public class AppFatalException extends RuntimeException {
 		}
 	}
 	
-	public List<ConstructionProblem> getConstructionProblems() {
-		return problems.getConstructionProblems();
+	public ProblemList<Problem> getProblems() {
+		return problems;
 	}
-
-	public List<LoaderProblem> getLoaderProblems() {
-		return problems.getLoaderProblems();
-	}
-
-	public List<ValueProblem> getValueProblems() {
-		return problems.getValueProblems();
-	}
-
-	public List<RequirementProblem> getRequirementProblems() {
-		return problems.getRequirementProblems();
-	}
-
+	
 }

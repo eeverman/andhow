@@ -1,5 +1,11 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.internal;
 
+import yarnandtail.andhow.AndHow;
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.Problem;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
+import yarnandtail.andhow.Validator;
 import yarnandtail.andhow.util.TextUtil;
 
 /**
