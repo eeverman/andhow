@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;

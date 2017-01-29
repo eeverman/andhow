@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams1.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -70,7 +71,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams2.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -92,7 +93,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams3.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -115,7 +116,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams4.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -138,7 +139,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams5.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -159,7 +160,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams6.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();

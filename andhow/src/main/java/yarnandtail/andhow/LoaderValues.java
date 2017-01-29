@@ -17,9 +17,8 @@ public class LoaderValues implements ValueMap {
 	private final Loader loader;
 	private final List<PropertyValue> values;
 	private final ProblemList<Problem> problems;
-	private boolean valueProblem = false;
 
-	public LoaderValues(Loader loader, List<PropertyValue> inValues, List<LoaderProblem> problems) {
+	public LoaderValues(Loader loader, List<PropertyValue> inValues, ProblemList<Problem> problems) {
 		
 		
 		this.problems = new ProblemList();

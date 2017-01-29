@@ -14,6 +14,23 @@ import java.util.stream.Collectors;
  * @param <P> A subclass of Problem
  */
 public class ProblemList<P extends Problem> extends ArrayList<P> {
+		
+	/** Empty immutable */
+	public static final ProblemList<Problem> EMPTY_LIST = new ProblemList() {
+		@Override
+		public boolean add(Problem problem) {
+			throw new UnsupportedOperationException();
+		}
+
+	};	
+			
+	public ProblemList(int initialCapacity) {
+		super(initialCapacity);
+	}
+
+
+	public ProblemList() {
+	}
 
 	@Override
 	public boolean add(P problem) {

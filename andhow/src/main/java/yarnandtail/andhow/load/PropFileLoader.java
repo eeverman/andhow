@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 import yarnandtail.andhow.util.TextUtil;
 import java.io.File;
@@ -49,7 +50,7 @@ public class PropFileLoader extends BaseLoader {
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
-		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		Properties props = null;
 		
 		String filePath = existingValues.getEffectiveValue(CONFIG.FILESYSTEM_PATH);

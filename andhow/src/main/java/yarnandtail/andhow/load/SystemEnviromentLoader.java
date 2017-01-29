@@ -36,7 +36,7 @@ public class SystemEnviromentLoader extends BaseLoader {
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
-		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		
 		Map<String, String> props = appConfigDef.getSystemEnvironment();
 		Set<String> keys = props.keySet();

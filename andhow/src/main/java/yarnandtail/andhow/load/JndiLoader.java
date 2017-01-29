@@ -8,7 +8,7 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.LoaderProblem.JndiContextLoaderProblem;
+import yarnandtail.andhow.internal.LoaderProblem.JndiContextLoaderProblem;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import yarnandtail.andhow.property.StrProp;
@@ -39,7 +39,7 @@ public class JndiLoader extends BaseLoader {
 		ArrayList<String> jndiRoots = buildJndiRoots(existingValues);
 
 		ArrayList<PropertyValue> values = new ArrayList();
-		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 
 		try {
 			InitialContext ctx = new InitialContext();

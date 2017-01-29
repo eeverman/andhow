@@ -1,10 +1,7 @@
 package yarnandtail.andhow.load;
 
 import java.util.*;
-import yarnandtail.andhow.ConstructionDefinition;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueMapWithContext;
+import yarnandtail.andhow.*;
 
 /**
  * A utility loader that is used internally to put fixed values into the effective
@@ -32,7 +29,7 @@ public class FixedValueLoader extends BaseLoader {
 	@Override
 	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
-		return new LoaderValues(this, values, Collections.emptyList());
+		return new LoaderValues(this, values, ProblemList.EMPTY_LIST);
 	}
 	
 	@Override

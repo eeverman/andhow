@@ -1,14 +1,13 @@
 package yarnandtail.andhow.internal;
 
-import yarnandtail.andhow.internal.ValueMapImmutable;
-import yarnandtail.andhow.internal.ValueMapWithContextMutable;
-import yarnandtail.andhow.internal.ValueMapWithContextImmutable;
 import yarnandtail.andhow.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import yarnandtail.andhow.PropertyValue;
 import yarnandtail.andhow.load.CmdLineLoader;
 import yarnandtail.andhow.load.PropFileLoader;
@@ -34,7 +33,7 @@ public class ValueMapWithContextMutableTest {
 		firstSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.FALSE));
 		firstSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.TRUE));
 		firstSet.add(new PropertyValue(SimpleParams.FLAG_NULL, Boolean.TRUE));
-		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet, Collections.emptyList());
+		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet, new ProblemList<Problem>());
 		
 		List<PropertyValue> secondSet = new ArrayList();
 		secondSet.add(new PropertyValue(SimpleParams.STR_BOB, "blah"));
@@ -42,7 +41,7 @@ public class ValueMapWithContextMutableTest {
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.TRUE));
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.FALSE));
 		secondSet.add(new PropertyValue(SimpleParams.FLAG_NULL, Boolean.FALSE));
-		LoaderValues secondLoaderValues = new LoaderValues(propFileLoad, secondSet, Collections.emptyList());
+		LoaderValues secondLoaderValues = new LoaderValues(propFileLoad, secondSet, new ProblemList<Problem>());
 		
 		builder.addValues(firstLoaderValues);
 		builder.addValues(secondLoaderValues);

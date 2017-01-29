@@ -38,7 +38,7 @@ public class SysPropLoader extends BaseLoader {
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
-		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		
 		Properties props = System.getProperties();
 		Set<Object> keys = props.keySet();

@@ -1,15 +1,11 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
-import yarnandtail.andhow.AndHow;
-import yarnandtail.andhow.ConstructionDefinition;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import yarnandtail.andhow.ValueMapWithContext;
 
 /**
  * Intended to reads properties from the command line, but could be used for
@@ -43,7 +39,7 @@ public class CmdLineLoader extends BaseLoader {
 			ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
-		ArrayList<LoaderProblem> problems = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		
 		if (cmdLineArgs != null) {
 			for (String s : cmdLineArgs) {

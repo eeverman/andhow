@@ -6,7 +6,7 @@ import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AppFatalException;
 import yarnandtail.andhow.internal.ConstructionProblem;
 import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderProblem;
+import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.RequirementProblem;

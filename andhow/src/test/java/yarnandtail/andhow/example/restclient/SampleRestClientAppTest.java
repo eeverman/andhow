@@ -1,8 +1,11 @@
 package yarnandtail.andhow.example.restclient;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
 import yarnandtail.andhow.*;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;

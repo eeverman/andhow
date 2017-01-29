@@ -1,5 +1,9 @@
-package yarnandtail.andhow;
+package yarnandtail.andhow.internal;
 
+import yarnandtail.andhow.Loader;
+import yarnandtail.andhow.Problem;
+import yarnandtail.andhow.Property;
+import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -178,7 +182,7 @@ public abstract class LoaderProblem extends Problem {
 		public String getProblemDescription() {
 			return TextUtil.format("The object '{}' could not be converted to type {}",
 					(obj!=null)?obj:TextUtil.NULL_PRINT,
-					badValueCoord.property.getValueType().getDestinationType().getSimpleName());
+					getBadValueCoord().getProperty().getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	
@@ -198,7 +202,7 @@ public abstract class LoaderProblem extends Problem {
 		public String getProblemDescription() {
 			return TextUtil.format("The string '{}' could not be converted to type {}",
 					(str!=null)?str:TextUtil.NULL_PRINT, 
-					this.badValueCoord.property.getValueType().getDestinationType().getSimpleName());
+					getBadValueCoord().getProperty().getValueType().getDestinationType().getSimpleName());
 		}
 	}
 	
