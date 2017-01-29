@@ -1,5 +1,6 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.RequirementProblem;
 import yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.ArrayList;
 import java.util.HashMap;

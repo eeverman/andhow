@@ -1,6 +1,9 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.RequirementProblem;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import yarnandtail.andhow.load.CmdLineLoader;
