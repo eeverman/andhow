@@ -1,20 +1,19 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
+
+import static yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
 
 /**
- * Simple class to bundle a Property, its value and any associated issues with the Property.
+ * Simple class to bundle a Property, its value and any associated problems with the Property.
  * 
  * @author eeverman
  */
 public class PropertyValue {
-	private static final List<ValueProblem> EMPTY_ISSUE_LIST = Collections.emptyList();
-	
+
 	private Property<?> property;
 	private Object value;
-	private List<ValueProblem> issues;
+	private ProblemList<Problem> problems;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -34,7 +33,7 @@ public class PropertyValue {
 				//Don't do a deep dive into the problems - if there are no problems,
 				//great, but if there are problems its a complex state that we can't
 				//really compare.
-				return (! hasIssues() && ! other.hasIssues());
+				return (! hasProblems() && ! other.hasProblems());
 			}
 		}
 		
@@ -47,7 +46,7 @@ public class PropertyValue {
 		if (property != null) hash*=property.hashCode();
 		if (value != null) hash*=value.hashCode();
 		
-		for (ValueProblem p : issues) {
+		for (Problem p : problems) {
 			hash*=p.hashCode();
 		}
 		
@@ -57,19 +56,17 @@ public class PropertyValue {
 	public PropertyValue(Property<?> prop, Object value) {
 		this.property = prop;
 		this.value = value;
-		this.issues = EMPTY_ISSUE_LIST;
+		this.problems = EMPTY_PROBLEM_LIST;
 	}
 	
-	public PropertyValue(Property<?> prop, Object value, List<ValueProblem> inIssues) {
+	public PropertyValue(Property<?> prop, Object value, ProblemList<Problem> inIssues) {
 		this.property = prop;
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			List<ValueProblem> newIssues = new ArrayList(inIssues.size());
-			newIssues.addAll(inIssues);
-			issues = Collections.unmodifiableList(newIssues);
+			problems = new UnmodifiableProblemList(inIssues);
 		} else {
-			this.issues = EMPTY_ISSUE_LIST;
+			this.problems = EMPTY_PROBLEM_LIST;
 		}
 	}
 
@@ -81,12 +78,12 @@ public class PropertyValue {
 		return value;
 	}
 
-	public boolean hasIssues() {
-		return issues.size() > 0;
+	public boolean hasProblems() {
+		return problems.size() > 0;
 	}
 	
-	public List<ValueProblem> getIssues() {
-		return issues;	//Already unmodifiable
+	public ProblemList<Problem> getProblems() {
+		return problems;	//Already unmodifiable
 	}
 	
 }

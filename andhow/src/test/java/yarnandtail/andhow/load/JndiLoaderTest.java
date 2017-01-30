@@ -1,5 +1,6 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.Test;
@@ -301,7 +302,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 			fail("Should not reach this point");
 			
 		} catch (AppFatalException e) {
-			List<LoaderProblem> lps = e.getLoaderProblems();
+			List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
 			
 			assertEquals(1, lps.size());
 			assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
@@ -332,7 +333,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 			fail("Should not reach this point");
 			
 		} catch (AppFatalException e) {
-			List<LoaderProblem> lps = e.getLoaderProblems();
+			List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
 			
 			assertEquals(3, lps.size());
 			assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
@@ -365,7 +366,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 			fail("Should not reach this point");
 			
 		} catch (AppFatalException e) {
-			List<LoaderProblem> vps = e.getLoaderProblems();
+			List<LoaderProblem> vps = e.getProblems().filter(LoaderProblem.class);
 			
 			assertEquals(3, vps.size());
 			assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);

@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.ConstructionProblem.PropertyNotPartOfGroup;
-import yarnandtail.andhow.ConstructionProblem.SecurityException;
+import yarnandtail.andhow.internal.ConstructionProblem.PropertyNotPartOfGroup;
+import yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
 
 /**
  * A mutable version that can be used during AndHow startup.

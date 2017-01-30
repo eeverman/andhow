@@ -1,6 +1,9 @@
 package yarnandtail.andhow;
 
+import yarnandtail.andhow.internal.RequirementProblem;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import yarnandtail.andhow.load.CmdLineLoader;
@@ -73,10 +76,10 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 					.reloadForNonPropduction(reloader);
 			fail();
 		} catch (AppFatalException ce) {
-			assertEquals(3, ce.getRequirementProblems().size());
-			assertEquals(UI_CONFIG.DISPLAY_NAME, ce.getRequirementProblems().get(0).getPropertyCoord().getProperty());
-			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ce.getRequirementProblems().get(1).getPropertyCoord().getProperty());
-			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ce.getRequirementProblems().get(2).getPropertyCoord().getProperty());
+			assertEquals(3, ce.getProblems().filter(RequirementProblem.class).size());
+			assertEquals(UI_CONFIG.DISPLAY_NAME, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
+			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ce.getProblems().filter(RequirementProblem.class).get(1).getPropertyCoord().getProperty());
+			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ce.getProblems().filter(RequirementProblem.class).get(2).getPropertyCoord().getProperty());
 		}
 	}
 	

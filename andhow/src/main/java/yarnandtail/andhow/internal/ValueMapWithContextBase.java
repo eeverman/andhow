@@ -5,11 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueMapWithContext;
-import yarnandtail.andhow.Property;
+import yarnandtail.andhow.*;
 
 /**
  * Shared base implementation for both immutable and mutable versions.
@@ -57,7 +53,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 				//remove
 				effValues.removeIf((PropertyValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
 			}
-			return new LoaderValues(loader, effValues, Collections.emptyList());
+			return new LoaderValues(loader, effValues, ProblemList.EMPTY_PROBLEM_LIST);
 		} else {
 			return null;
 		}

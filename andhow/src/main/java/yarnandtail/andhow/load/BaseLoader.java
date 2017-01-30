@@ -1,15 +1,16 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ParsingException;
 import java.util.ArrayList;
 import java.util.List;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.LoaderProblem.DuplicatePropertyLoaderProblem;
-import yarnandtail.andhow.LoaderProblem.ObjectConversionValueProblem;
-import yarnandtail.andhow.LoaderProblem.UnknownPropertyLoaderProblem;
+import yarnandtail.andhow.internal.LoaderProblem.DuplicatePropertyLoaderProblem;
+import yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProblem;
+import yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueProblem;
+import yarnandtail.andhow.internal.ValueProblem;
 
 /**
  *
@@ -35,12 +36,12 @@ public abstract class BaseLoader implements Loader {
 	 * 
 	 * @param appConfigDef Used to look up the property name for find the actual property
 	 * @param values List of PropertyValues to add to, which should be only the value of this loader.
-	 * @param loaderProblems A list of LoaderProblems to add to if there is a loader related problem
+	 * @param loaderProblems A list of Problems to add to if there is a loader related problem
 	 * @param key The property name
 	 * @param strValue The property value 
 	 */
 	protected void attemptToAdd(ConstructionDefinition appConfigDef, List<PropertyValue> values, 
-			List<LoaderProblem> loaderProblems, String key, String strValue) {
+			ProblemList<Problem> loaderProblems, String key, String strValue) {
 		
 		key = TextUtil.trimToNull(key);
 		
@@ -94,7 +95,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param value The Object to be loaded to this property
 	 */
 	protected void attemptToAdd(ConstructionDefinition appConfigDef, List<PropertyValue> values, 
-			List<LoaderProblem> loaderProblems, Property prop, Object value) {
+			ProblemList<Problem> loaderProblems, Property prop, Object value) {
 		
 		if (prop != null) {
 			
@@ -145,7 +146,7 @@ public abstract class BaseLoader implements Loader {
 	protected <T> PropertyValue createValue(ConstructionDefinition appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
-		ArrayList<ValueProblem> issues = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		T value = null;
 		
 		String trimmed = untrimmedString;
@@ -163,7 +164,7 @@ public abstract class BaseLoader implements Loader {
 
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {
-					issues.add(new ValueProblem.InvalidValueProblem(
+					problems.add(new ValueProblem.InvalidValueProblem(
 							this, appConfigDef.getGroupForProperty(prop), prop, value, v));
 				}
 			}
@@ -171,7 +172,7 @@ public abstract class BaseLoader implements Loader {
 			return null;	//No value to create
 		}
 		
-		return new PropertyValue(prop, value, issues);
+		return new PropertyValue(prop, value, problems);
 	}
 	
 }

@@ -31,7 +31,7 @@ public class ValueMapWithContextImmutable extends ValueMapWithContextBase {
 		//Check for problems
 		boolean willHaveProblem = false;
 		for (LoaderValues lvs : structuredValues) {
-			if (lvs.hasProblems()) {
+			if (lvs.getProblems().size() > 0) {
 				willHaveProblem = true;
 				break;
 			}

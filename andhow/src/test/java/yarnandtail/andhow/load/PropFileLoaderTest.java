@@ -1,17 +1,17 @@
 package yarnandtail.andhow.load;
 
+import yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
-import yarnandtail.andhow.LoaderProblem;
-import yarnandtail.andhow.LoaderValues;
-import yarnandtail.andhow.PropertyValue;
+import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import yarnandtail.andhow.name.BasicNamingStrategy;
 import yarnandtail.andhow.internal.ValueMapWithContextMutable;
-import yarnandtail.andhow.SimpleParams;
 
 /**
  *
@@ -48,7 +48,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams1.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -56,7 +56,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -71,7 +71,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams2.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -79,7 +79,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("3", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -93,7 +93,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams3.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -101,7 +101,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -116,7 +116,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams4.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -124,7 +124,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -139,7 +139,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams5.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -147,7 +147,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -160,7 +160,7 @@ public class PropFileLoaderTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(PropFileLoader.CONFIG.CLASSPATH_PATH, "/yarnandtail/andhow/load/SimpleParams6.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, Collections.emptyList());
+		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropFileLoader cll = new PropFileLoader();
@@ -168,11 +168,11 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(2, result.getProblems().size());
-		for (LoaderProblem lp : result.getProblems()) {
+		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 		}
 		
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 	}
 

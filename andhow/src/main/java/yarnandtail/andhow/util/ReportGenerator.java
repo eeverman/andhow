@@ -4,13 +4,13 @@ import java.io.PrintStream;
 import java.util.List;
 import yarnandtail.andhow.AndHow;
 import yarnandtail.andhow.AppFatalException;
-import yarnandtail.andhow.ConstructionProblem;
+import yarnandtail.andhow.internal.ConstructionProblem;
 import yarnandtail.andhow.Loader;
-import yarnandtail.andhow.LoaderProblem;
+import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
-import yarnandtail.andhow.RequirementProblem;
-import yarnandtail.andhow.ValueProblem;
+import yarnandtail.andhow.internal.RequirementProblem;
+import yarnandtail.andhow.internal.ValueProblem;
 import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.SamplePrinter;
 
@@ -28,10 +28,10 @@ public class ReportGenerator {
 			printProblemHR(out);
 			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
 			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
-			printConstructionProblems(out, fatalException.getConstructionProblems(), appDef);
-			printLoaderProblems(out, fatalException.getLoaderProblems(), appDef);
-			printValueProblems(out, fatalException.getValueProblems(), appDef);
-			printRequirementProblems(out, fatalException.getRequirementProblems(), appDef);
+			printConstructionProblems(out, fatalException.getProblems().filter(ConstructionProblem.class), appDef);
+			printLoaderProblems(out, fatalException.getProblems().filter(LoaderProblem.class), appDef);
+			printValueProblems(out, fatalException.getProblems().filter(ValueProblem.class), appDef);
+			printRequirementProblems(out, fatalException.getProblems().filter(RequirementProblem.class), appDef);
 			printProblemHR(out);
 		} catch (Exception e) {
 			out.println("Uh oh.  There was an Exception while printing the list of problems with the app config.");

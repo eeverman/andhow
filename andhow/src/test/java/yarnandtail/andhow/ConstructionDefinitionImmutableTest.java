@@ -1,6 +1,8 @@
 package yarnandtail.andhow;
 
 
+import yarnandtail.andhow.internal.ConstructionProblem;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;

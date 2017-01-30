@@ -24,7 +24,7 @@ public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	
 	public void addValues(LoaderValues values) {
 		loadedValuesList.add(values);
-		if (values.hasProblems()) problem = true;
+		if (values.getProblems().size() > 0) problem = true;
 	}
 	
 	@Override
