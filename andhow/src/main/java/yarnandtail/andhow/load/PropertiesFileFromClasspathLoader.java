@@ -20,7 +20,7 @@ import yarnandtail.andhow.property.StrProp;
  * This loader considers it a problem to find unrecognized properties in a 
  * properties file and will throw a RuntimeException if that happens.
  * 
- * The PropFileLoader uses the java.util.Properties class to do read properties, 
+ * The PropFileLoader uses the java.util.Properties class to read properties, 
  * so several behaviours are determined by that class.
  * 
  * In rare cases, whitespace handling of the JVM Properties file parser may be an issue. 
@@ -38,13 +38,14 @@ import yarnandtail.andhow.property.StrProp;
  * 
  * @author eeverman
  */
-public class PropFileFromClasspathLoader extends BaseLoader {
+public class PropertiesFileFromClasspathLoader extends PropertiesFileBaseLoader {
 
+	/** Store it as a list, but we currently only accept one */
 	List<StrProp> classpaths;
 	
 	String specificLoadDescription = null;
 	
-	public PropFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
+	public PropertiesFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
 		classpaths = new ArrayList();
 		classpaths.add(classpathOfPropertyFile);
 		classpaths = Collections.unmodifiableList(classpaths);
@@ -72,6 +73,9 @@ public class PropFileFromClasspathLoader extends BaseLoader {
 			}
 		}
 		
+		//
+		// No properties file found
+		
 		LoaderProblem p = new LoaderProblem.SourceNotFoundLoaderProblem(this, 
 				TextUtil.format("Could not find a properties file to read at any of these " + 
 					"configured locations: {}, ",
@@ -85,78 +89,25 @@ public class PropFileFromClasspathLoader extends BaseLoader {
 	public LoaderValues load(ConstructionDefinition appConfigDef,
 			ValueMapWithContext existingValues, String path) {
 		
-
 		specificLoadDescription = "file on classpath at: " + path;
 					
-		ArrayList<PropertyValue> values = new ArrayList();
-		ProblemList<Problem> problems = new ProblemList();
-		Properties props = null;
-
-		
 		try {
 
-			props = loadPropertiesFromClasspath(path);
-
+			InputStream inS = PropertiesFileFromClasspathLoader.class.getResourceAsStream(path);
+			Properties props = loadPropertiesFromInputStream(inS, "classpath", path);
 
 			if (props != null) {
-
-				Set<Object> keys = props.keySet();
-				for(Object key : keys) {
-					if (key != null) {
-						String k = key.toString();
-						String v = props.getProperty(k);
-
-						attemptToAdd(appConfigDef, values, problems, k, v);
-					}
-				}
-
-				values.trimToSize();
-				return new LoaderValues(this, values, problems);
+				return load(appConfigDef, existingValues, props);
+			} else {
+				return null;
 			}
+			
 		} catch (LoaderException e) {
-			problems.add(new LoaderProblem.IOLoaderProblem(this, null, null, e));
-			return new LoaderValues(this, values, problems);
+			return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, null, null, e));
 		}
-		
-		return null;
-		
-		
-	}
-	
-	/**
-	 * 
-	 * @param classpath
-	 * @return
-	 * @throws yarnandtail.andhow.load.LoaderException
-	 */
-	protected Properties loadPropertiesFromClasspath(String classpath)
-			throws LoaderException {
-		
-		InputStream inS = PropFileFromClasspathLoader.class.getResourceAsStream(classpath);
-		return loadPropertiesFromInputStream(inS, classpath);
-	}
-	
-	/**
-	 * 
-	 * @param inputStream
-	 * @param fromPath
-	 * @return
-	 * @throws yarnandtail.andhow.load.LoaderException
-	 */
-	protected Properties loadPropertiesFromInputStream(
-			InputStream inputStream, String fromPath) throws LoaderException {
 
-		if (inputStream == null) return null;
-		
-		try {
-			Properties props = new Properties();
-			props.load(inputStream);
-			return props;
-		} catch (Exception e) {
-			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
-		}
-	
 	}
+	
 	
 	@Override
 	public List<Property> getUserLoaderConfig() {
@@ -172,20 +123,6 @@ public class PropFileFromClasspathLoader extends BaseLoader {
 		return specificLoadDescription;
 	}
 	
-	@Override
-	public boolean isTrimmingRequiredForStringValues() {
-		return true;
-	}
-	
-	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
-		return true;
-	}
-	
-	@Override
-	public SamplePrinter getConfigSamplePrinter() {
-		return new PropFileLoaderSamplePrinter();
-	}
 	
 
 	
