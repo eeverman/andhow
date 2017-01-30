@@ -10,9 +10,9 @@ import yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
  * 
  * @author ericeverman
  */
-public abstract class PropertiesFileBaseLoader extends BaseLoader {
+public abstract class PropertyFileBaseLoader extends BaseLoader {
 
-	public PropertiesFileBaseLoader() {
+	public PropertyFileBaseLoader() {
 	}
 
 	/**

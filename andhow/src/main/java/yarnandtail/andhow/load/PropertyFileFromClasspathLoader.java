@@ -1,11 +1,7 @@
 package yarnandtail.andhow.load;
 
 import yarnandtail.andhow.internal.LoaderProblem;
-import yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 import yarnandtail.andhow.util.TextUtil;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import yarnandtail.andhow.*;
@@ -38,14 +34,14 @@ import yarnandtail.andhow.property.StrProp;
  * 
  * @author eeverman
  */
-public class PropertiesFileFromClasspathLoader extends PropertiesFileBaseLoader {
+public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 
 	/** Store it as a list, but we currently only accept one */
 	List<StrProp> classpaths;
 	
 	String specificLoadDescription = null;
 	
-	public PropertiesFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
+	public PropertyFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
 		classpaths = new ArrayList();
 		classpaths.add(classpathOfPropertyFile);
 		classpaths = Collections.unmodifiableList(classpaths);
@@ -93,7 +89,7 @@ public class PropertiesFileFromClasspathLoader extends PropertiesFileBaseLoader 
 					
 		try {
 
-			InputStream inS = PropertiesFileFromClasspathLoader.class.getResourceAsStream(path);
+			InputStream inS = PropertyFileFromClasspathLoader.class.getResourceAsStream(path);
 			Properties props = loadPropertiesFromInputStream(inS, "classpath", path);
 
 			if (props != null) {
