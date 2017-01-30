@@ -3,6 +3,7 @@ package yarnandtail.andhow;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
 
 /**
  * The Properties and values loaded by a Loader.
@@ -17,18 +18,34 @@ public class LoaderValues implements ValueMap {
 	private final Loader loader;
 	private final List<PropertyValue> values;
 	private final ProblemList<Problem> problems;
-
+	
+	
+	/**
+	 * A constructor when there is just a problem to report.
+	 * 
+	 * @param loader
+	 * @param problems 
+	 */
+	public LoaderValues(Loader loader, Problem problem) {
+		ProblemList<Problem> probs = new ProblemList();
+		probs.add(problem);
+		this.problems = new UnmodifiableProblemList(probs);
+		
+		this.loader = loader;
+		values = EMPTY_PROP_VALUE_LIST;
+	}
+	
 	public LoaderValues(Loader loader, List<PropertyValue> inValues, ProblemList<Problem> problems) {
 		
-		
-		this.problems = new ProblemList();
+		ProblemList<Problem> myProblems = new ProblemList();
+		myProblems.addAll(problems);
 		
 		if (loader == null) {
 			throw new RuntimeException("The loader cannot be null");
 		}
 		
 		this.loader = loader;
-		this.problems.addAll(problems);
+		
 		
 		if (inValues != null && inValues.size() > 0) {
 			ArrayList newValues = new ArrayList();
@@ -39,13 +56,14 @@ public class LoaderValues implements ValueMap {
 			
 			//check for value problems
 			for (PropertyValue pv : values) {
-				this.problems.addAll(pv.getProblems());
+				myProblems.addAll(pv.getProblems());
 			}
 			
 		} else {
 			values = EMPTY_PROP_VALUE_LIST;
 		}
 		
+		this.problems = new UnmodifiableProblemList(myProblems);
 	}
 
 	public Loader getLoader() {

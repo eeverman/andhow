@@ -39,6 +39,20 @@ public interface Loader {
 	Class<? extends PropertyGroup> getLoaderConfig();
 	
 	/**
+	 * A list of properties that the user has specified as being configuration
+	 * properties for this Loader.
+	 * 
+	 * Typically these Properties have been specified in the Loader constructor
+	 * or builder.
+	 * 
+	 * Any Properties returned from this method must have been registered for
+	 * configuration.
+	 * 
+	 * @return 
+	 */
+	List<Property> getUserLoaderConfig();
+	
+	/**
 	 * For this particular load, where was info loaded from?
 	 * 
 	 * This may vary from run to run based on config params.  For instance,

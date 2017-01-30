@@ -1,10 +1,9 @@
 package yarnandtail.andhow.load;
 
+import java.util.*;
 import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.util.TextUtil;
 import yarnandtail.andhow.ParsingException;
-import java.util.ArrayList;
-import java.util.List;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.internal.LoaderProblem.DuplicatePropertyLoaderProblem;
 import yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProblem;
@@ -22,6 +21,11 @@ public abstract class BaseLoader implements Loader {
 	@Override
 	public Class<? extends PropertyGroup> getLoaderConfig() {
 		return null;
+	}
+	
+	@Override
+	public List<Property> getUserLoaderConfig() {
+		return Collections.emptyList();
 	}
 	
 	@Override
