@@ -53,7 +53,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 				//remove
 				effValues.removeIf((PropertyValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
 			}
-			return new LoaderValues(loader, effValues, ProblemList.EMPTY_LIST);
+			return new LoaderValues(loader, effValues, ProblemList.EMPTY_PROBLEM_LIST);
 		} else {
 			return null;
 		}

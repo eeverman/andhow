@@ -56,7 +56,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("kvpNullValue", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -79,7 +79,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("kvpBobValue", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("3", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -101,7 +101,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -124,7 +124,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -147,7 +147,7 @@ public class PropFileLoaderTest {
 		LoaderValues result = cll.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -172,7 +172,7 @@ public class PropFileLoaderTest {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 		}
 		
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 	}
 

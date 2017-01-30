@@ -1,5 +1,6 @@
 package yarnandtail.andhow.example.restclient;
 
+import yarnandtail.andhow.internal.ValueProblem;
 import yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
 import yarnandtail.andhow.*;

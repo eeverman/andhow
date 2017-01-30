@@ -10,7 +10,7 @@ import yarnandtail.andhow.internal.LoaderProblem.DuplicatePropertyLoaderProblem;
 import yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProblem;
 import yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
 import yarnandtail.andhow.PropertyValue;
-import yarnandtail.andhow.ValueProblem;
+import yarnandtail.andhow.internal.ValueProblem;
 
 /**
  *
@@ -146,7 +146,7 @@ public abstract class BaseLoader implements Loader {
 	protected <T> PropertyValue createValue(ConstructionDefinition appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
-		ArrayList<ValueProblem> issues = new ArrayList(0);
+		ProblemList<Problem> problems = new ProblemList();
 		T value = null;
 		
 		String trimmed = untrimmedString;
@@ -164,7 +164,7 @@ public abstract class BaseLoader implements Loader {
 
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {
-					issues.add(new ValueProblem.InvalidValueProblem(
+					problems.add(new ValueProblem.InvalidValueProblem(
 							this, appConfigDef.getGroupForProperty(prop), prop, value, v));
 				}
 			}
@@ -172,7 +172,7 @@ public abstract class BaseLoader implements Loader {
 			return null;	//No value to create
 		}
 		
-		return new PropertyValue(prop, value, issues);
+		return new PropertyValue(prop, value, problems);
 	}
 	
 }

@@ -55,7 +55,7 @@ public class CmdLineLoaderTest {
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -81,7 +81,7 @@ public class CmdLineLoaderTest {
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -114,7 +114,7 @@ public class CmdLineLoaderTest {
 			assertTrue(lp instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 		}
 		
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 	}
 	
@@ -137,7 +137,7 @@ public class CmdLineLoaderTest {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 		}
 		
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 	}
 

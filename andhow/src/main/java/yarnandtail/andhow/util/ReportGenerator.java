@@ -10,7 +10,7 @@ import yarnandtail.andhow.internal.LoaderProblem;
 import yarnandtail.andhow.Property;
 import yarnandtail.andhow.PropertyGroup;
 import yarnandtail.andhow.internal.RequirementProblem;
-import yarnandtail.andhow.ValueProblem;
+import yarnandtail.andhow.internal.ValueProblem;
 import yarnandtail.andhow.ConstructionDefinition;
 import yarnandtail.andhow.SamplePrinter;
 

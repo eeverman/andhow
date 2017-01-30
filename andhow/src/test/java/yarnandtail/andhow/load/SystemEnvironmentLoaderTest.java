@@ -56,7 +56,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("aaa", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bbb", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -80,7 +80,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("aaa", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bbb", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -110,7 +110,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -134,7 +134,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
@@ -158,7 +158,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		//String value coming from this loader do not require trimming by default
 		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
@@ -185,7 +185,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getEffectiveValue(SimpleParams.STR_BOB));
@@ -203,7 +203,7 @@ public class SystemEnvironmentLoaderTest {
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasIssues()).count());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));

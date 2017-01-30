@@ -1,7 +1,7 @@
 package yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 /**
@@ -16,16 +16,14 @@ import java.util.stream.Collectors;
 public class ProblemList<P extends Problem> extends ArrayList<P> {
 		
 	/** Empty immutable */
-	public static final ProblemList<Problem> EMPTY_LIST = new ProblemList() {
-		@Override
-		public boolean add(Problem problem) {
-			throw new UnsupportedOperationException();
-		}
-
-	};	
+	public static final ProblemList<Problem> EMPTY_PROBLEM_LIST = new UnmodifiableProblemList<Problem>();
 			
 	public ProblemList(int initialCapacity) {
 		super(initialCapacity);
+	}
+	
+	public ProblemList(ProblemList<P> problems) {
+		super(problems);
 	}
 
 
@@ -45,4 +43,113 @@ public class ProblemList<P extends Problem> extends ArrayList<P> {
 		return this.stream().filter(p -> clazz.isInstance(p))
 				.map(c -> clazz.cast(c)).collect(Collectors.toList());
 	}
+	
+	public static class UnmodifiableProblemList<P extends Problem> extends ProblemList<P> {
+		
+		public UnmodifiableProblemList(ProblemList<P> problems) {
+			super(problems);
+			super.trimToSize();
+		}
+		
+		public UnmodifiableProblemList() {
+			super(0);
+		}
+
+		@Override
+		public boolean add(P problem) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void sort(Comparator<? super P> c) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void replaceAll(UnaryOperator<P> operator) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean removeIf(Predicate<? super P> filter) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Iterator<P> iterator() {
+			throw new UnsupportedOperationException();	//iterator allows mods, so block
+		}
+
+        public ListIterator<P> listIterator()   {
+			throw new UnsupportedOperationException();	//iterator allows mods, so block
+		}
+
+        public ListIterator<P> listIterator(final int index) {
+            throw new UnsupportedOperationException();	//iterator allows mods, so block
+        }
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		protected void removeRange(int fromIndex, int toIndex) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean addAll(int index, Collection<? extends P> c) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends P> c) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public P remove(int index) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void add(int index, P element) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public P set(int index, P element) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void ensureCapacity(int minCapacity) {
+			return;
+		}
+
+		@Override
+		public void trimToSize() {
+			return;
+		}
+		
+		
+		
+	}
+	
 }

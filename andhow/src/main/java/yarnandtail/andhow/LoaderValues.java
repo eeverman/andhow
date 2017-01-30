@@ -39,7 +39,7 @@ public class LoaderValues implements ValueMap {
 			
 			//check for value problems
 			for (PropertyValue pv : values) {
-				this.problems.addAll(pv.getIssues());
+				this.problems.addAll(pv.getProblems());
 			}
 			
 		} else {
