@@ -19,7 +19,7 @@ import yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class PropertyFileFromFileLoaderUnitTest {
+public class PropertyFileFromFilesystemLoaderUnitTest {
 	
 	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -70,7 +70,7 @@ public class PropertyFileFromFileLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFileLoader pfl = new PropertyFileFromFileLoader(TestProps.FILEPATH);
+		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -92,7 +92,7 @@ public class PropertyFileFromFileLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFileLoader pfl = new PropertyFileFromFileLoader(TestProps.FILEPATH);
+		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -117,7 +117,7 @@ public class PropertyFileFromFileLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFileLoader pfl = new PropertyFileFromFileLoader(TestProps.FILEPATH);
+		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		

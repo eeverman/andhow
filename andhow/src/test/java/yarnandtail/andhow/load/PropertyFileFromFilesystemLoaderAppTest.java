@@ -21,7 +21,7 @@ import static yarnandtail.andhow.AndHowTestBase.reloader;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropertyFileFromFileLoaderAppTest {
+public class PropertyFileFromFilesystemLoaderAppTest {
 
 	File tempPropertiesFile = null;
 	
@@ -52,7 +52,7 @@ public class PropertyFileFromFileLoaderAppTest {
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+				.loader(new PropertyFileFromFilesystemLoader(TestProps.FILEPATH))
 				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
 				.group(SimpleParams.class)
@@ -74,7 +74,7 @@ public class PropertyFileFromFileLoaderAppTest {
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
 					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+					.loader(new PropertyFileFromFilesystemLoader(TestProps.FILEPATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
 					.group(SimpleParams.class)
@@ -99,7 +99,7 @@ public class PropertyFileFromFileLoaderAppTest {
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+				.loader(new PropertyFileFromFilesystemLoader(TestProps.FILEPATH))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
@@ -115,7 +115,7 @@ public class PropertyFileFromFileLoaderAppTest {
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
 					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+					.loader(new PropertyFileFromFilesystemLoader(TestProps.FILEPATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.group(SimpleParams.class)

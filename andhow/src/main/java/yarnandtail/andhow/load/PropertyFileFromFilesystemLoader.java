@@ -42,14 +42,14 @@ import yarnandtail.andhow.property.StrProp;
  * 
  * @author eeverman
  */
-public class PropertyFileFromFileLoader extends PropertyFileBaseLoader {
+public class PropertyFileFromFilesystemLoader extends PropertyFileBaseLoader {
 
 	/** Store it as a list, but we currently only accept one */
 	StrProp filepath;
 	
 	String specificLoadDescription = null;
 	
-	public PropertyFileFromFileLoader(StrProp filePathOfPropertyFile) {
+	public PropertyFileFromFilesystemLoader(StrProp filePathOfPropertyFile) {
 		filepath = filePathOfPropertyFile;
 	}
 	
