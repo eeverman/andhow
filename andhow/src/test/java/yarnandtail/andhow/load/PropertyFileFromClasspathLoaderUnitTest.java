@@ -17,7 +17,7 @@ import yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class PropertyFileFromClasspathLoaderTest {
+public class PropertyFileFromClasspathLoaderUnitTest {
 	
 	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -199,6 +199,10 @@ public class PropertyFileFromClasspathLoaderTest {
 		
 	}
 	
+	/**
+	 * The loader itself is OK w/ not having its parameter specified - it just
+	 * ignores.
+	 */
 	@Test
 	public void testPropFileLoaderWithNoClasspathConfigured() {
 		
@@ -211,13 +215,7 @@ public class PropertyFileFromClasspathLoaderTest {
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
-		assertEquals(1, result.getProblems().size());
-		for (Problem lp : result.getProblems()) {
-			assertTrue(lp instanceof LoaderProblem.SourceNotFoundLoaderProblem);
-		}
-		
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
-		
+		assertEquals(0, result.getProblems().size());
 	}
 
 }

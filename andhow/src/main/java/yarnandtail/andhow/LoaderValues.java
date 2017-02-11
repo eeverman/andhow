@@ -35,6 +35,17 @@ public class LoaderValues implements ValueMap {
 		values = EMPTY_PROP_VALUE_LIST;
 	}
 	
+	/**
+	 * A constructor when there is no problem, but there were no values loaded.
+	 * 
+	 * @param loader
+	 */
+	public LoaderValues(Loader loader) {
+		this.problems = new UnmodifiableProblemList();
+		this.loader = loader;
+		values = EMPTY_PROP_VALUE_LIST;
+	}
+	
 	public LoaderValues(Loader loader, List<PropertyValue> inValues, ProblemList<Problem> problems) {
 		
 		ProblemList<Problem> myProblems = new ProblemList();

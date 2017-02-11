@@ -28,17 +28,6 @@ public class AndHowUtil {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(naming);
 		
-		if (loaders != null) {
-			for (Loader loader : loaders) {
-				Class<? extends PropertyGroup> group = loader.getLoaderConfig();
-				if (group != null) {
-					
-					problems.addAll(registerGroup(appDef, group));
-					
-				}
-			}
-		}
-		
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
 			for (Class<? extends PropertyGroup> group : groups) {
@@ -65,6 +54,26 @@ public class AndHowUtil {
 					problems.add(se);
 				}
 				
+			}
+		}
+		
+		//Loaders must be after properties b/c the loaders may look for registered
+		//Properties.
+		
+		if (loaders != null) {
+			for (Loader loader : loaders) {
+				
+				//Add any implicit properties used to configure this loader
+				if (loader.getLoaderConfig() != null) {
+					problems.addAll(registerGroup(appDef, loader.getLoaderConfig()));
+				}
+				
+				//Check that user specified config properties for this loader are registered
+				for (Property p : loader.getUserLoaderConfig()) {
+					if (appDef.getCanonicalName(p) == null) {
+						problems.add(new ConstructionProblem.LoaderPropertyNotRegistered(loader, p));
+					}
+				}
 			}
 		}
 		

@@ -48,7 +48,7 @@ public interface Loader {
 	 * Any Properties returned from this method must have been registered for
 	 * configuration.
 	 * 
-	 * @return 
+	 * @return Never null.  Either an empty list or populated.
 	 */
 	List<Property> getUserLoaderConfig();
 	

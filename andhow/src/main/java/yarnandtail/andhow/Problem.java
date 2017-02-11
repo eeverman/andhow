@@ -35,7 +35,7 @@ public abstract class Problem {
 	/**
 	 * The problem description, for the user.
 	 * 
-	 * It should be able to be tacked on to the 
+	 * It should be able to be tacked on to the problem context.
 	 * @return 
 	 */
 	public abstract String getProblemDescription();

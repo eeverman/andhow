@@ -8,16 +8,24 @@ import yarnandtail.andhow.*;
 import yarnandtail.andhow.property.StrProp;
 
 /**
- * Reads properties from a Java .property file, following standard java conventions
+ * Reads from a Java .property file on the classpath, following standard java conventions
  * for the structure of those file.
+ * 
+ * This loader finds the properties file to load from based on a classpath property
+ * it is passed in its constructor.  Since this loader expects to find a value
+ * loaded for that property, an earlier loader must have loaded a value for it.
+ * 
+ * It is considered an error if its configured classpath does not point to a valid
+ * properties file.  It is not considered an error if the classpath property has
+ * not been assigned a value.
  * 
  * This loader trims incoming values for String type properties using the
  * Trimmer of the associated Property.
  * This loader considers it a problem to find unrecognized properties in a 
  * properties file and will throw a RuntimeException if that happens.
  * 
- * The PropFileLoader uses the java.util.Properties class to read properties, 
- * so several behaviours are determined by that class.
+ * Properties File Loaders use the java.util.Properties class to read properties, 
+ * so several behaviors are determined by that class.
  * 
  * In rare cases, whitespace handling of the JVM Properties file parser may be an issue. 
  * The property value is generally terminated by the end of the line. Whitespace 
@@ -37,55 +45,44 @@ import yarnandtail.andhow.property.StrProp;
 public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 
 	/** Store it as a list, but we currently only accept one */
-	List<StrProp> classpaths;
+	StrProp classpath;
 	
 	String specificLoadDescription = null;
 	
 	public PropertyFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
-		classpaths = new ArrayList();
-		classpaths.add(classpathOfPropertyFile);
-		classpaths = Collections.unmodifiableList(classpaths);
+		classpath = classpathOfPropertyFile;
 	}
 	
 
 	@Override
 	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
+
+		String path = existingValues.getEffectiveValue(classpath);
+		specificLoadDescription = "file on classpath at: " + path;
 		
-		List<String> triedPaths = new ArrayList();
-		
-		for (StrProp prop : classpaths) {
-			
-			String path = existingValues.getEffectiveValue(prop);
-			
-			if (path != null) {
-			
-				triedPaths.add(path);
+		if (path != null) {
+
+			LoaderValues vals = load(appConfigDef, existingValues, path);
+			if (vals != null) {
+				return vals;
+			} else {
+				LoaderProblem p = new LoaderProblem.SourceNotFoundLoaderProblem(this, 
+						TextUtil.format("Could not find a properties file on the classpath at " + 
+							"the configured location: {}", path)
+				);
 				
-				LoaderValues vals = load(appConfigDef, existingValues, path);
-				if (vals != null) {
-					return vals;
-				}
+				return new LoaderValues(this, p);
 			}
+		} else {
+			//The classpath to load from is not specified, so just ignore it
+			return new LoaderValues(this);
 		}
-		
-		//
-		// No properties file found
-		
-		LoaderProblem p = new LoaderProblem.SourceNotFoundLoaderProblem(this, 
-				TextUtil.format("Could not find a properties file to read at any of these " + 
-					"configured locations: {}, ",
-				String.join(", ", triedPaths))
-		);
-		
-		return new LoaderValues(this, p);
 	}
 	
 	
 	public LoaderValues load(ConstructionDefinition appConfigDef,
 			ValueMapWithContext existingValues, String path) {
-		
-		specificLoadDescription = "file on classpath at: " + path;
 					
 		try {
 
@@ -108,7 +105,7 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 	@Override
 	public List<Property> getUserLoaderConfig() {
 		ArrayList<Property> list = new ArrayList();
-		list.addAll(classpaths);
+		list.add(classpath);
 		return list;
 	}
 	
@@ -116,7 +113,12 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 	
 	@Override
 	public String getSpecificLoadDescription() {
-		return specificLoadDescription;
+		
+		if (specificLoadDescription != null) {
+			return specificLoadDescription;
+		} else {
+			return "file on classpath at: " + classpath.getValue();
+		}
 	}
 	
 	
