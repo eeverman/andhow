@@ -1,7 +1,10 @@
 package yarnandtail.andhow.load;
 
+import java.io.File;
+import java.net.URL;
 import java.util.List;
-import org.junit.Test;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
@@ -18,25 +21,46 @@ import static yarnandtail.andhow.AndHowTestBase.reloader;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropertyFileFromClasspathLoaderAppTest {
+public class PropertyFileFromFileLoaderAppTest {
+
+	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
-		StrProp CLAZZ_PATH = StrProp.builder().build();
+		StrProp FILEPATH = StrProp.builder().build();
+	}
+	
+
+	@Before
+	public void init() throws Exception {
+		
+		//copy a properties file to a temp location
+		URL inputUrl = getClass().getResource("/yarnandtail/andhow/load/SimpleParams1.properties");
+		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
+		tempPropertiesFile.deleteOnExit();
+		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
+
+	}
+	
+	@After
+	public void afterTest() {
+		if (tempPropertiesFile != null) {
+			tempPropertiesFile.delete();
+		}
 	}
 	
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-						"/yarnandtail/andhow/load/SimpleParams1.properties")
+				.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+						tempPropertiesFile.getAbsolutePath())
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
 		
 
-		assertEquals("/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
+		assertEquals(tempPropertiesFile.getAbsolutePath(), TestProps.FILEPATH.getValue());
 		assertEquals("kvpBobValue", SimpleParams.STR_BOB.getValue());
 		assertEquals("kvpNullValue", SimpleParams.STR_NULL.getValue());
 		assertEquals(Boolean.FALSE, SimpleParams.FLAG_TRUE.getValue());
@@ -50,9 +74,9 @@ public class PropertyFileFromClasspathLoaderAppTest {
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
 					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/yarnandtail/andhow/load/SimpleParams1.properties")
+					.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+							tempPropertiesFile.getAbsolutePath())
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.reloadForNonPropduction(reloader);
@@ -66,7 +90,7 @@ public class PropertyFileFromClasspathLoaderAppTest {
 	}
 	
 	/**
-	 * It is not an error to not specify the classpath param, it just means the laoder
+	 * It is not an error to not specify the file path property, it just means the loader
 	 * will not find anything.
 	 * 
 	 * @throws Exception 
@@ -75,7 +99,7 @@ public class PropertyFileFromClasspathLoaderAppTest {
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
 				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
+				.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
@@ -91,8 +115,8 @@ public class PropertyFileFromClasspathLoaderAppTest {
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
 					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+					.loader(new PropertyFileFromFileLoader(TestProps.FILEPATH))
+					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.group(SimpleParams.class)
 					.group(TestProps.class)

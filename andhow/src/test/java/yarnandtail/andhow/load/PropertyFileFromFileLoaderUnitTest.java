@@ -46,6 +46,7 @@ public class PropertyFileFromFileLoaderUnitTest {
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
 		
+		//copy a properties file to a temp location
 		URL inputUrl = getClass().getResource("/yarnandtail/andhow/load/SimpleParams1.properties");
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
@@ -60,8 +61,6 @@ public class PropertyFileFromFileLoaderUnitTest {
 		}
 	}
 	
-	
-	//TODO:  WRITE SOMETHING THAT COPIES THE CLASSPATH FILE TO A TEMP FILE
 	
 	@Test
 	public void testHappyPath() {
