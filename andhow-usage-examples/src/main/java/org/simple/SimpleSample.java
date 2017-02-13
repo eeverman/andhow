@@ -13,7 +13,7 @@ public class SimpleSample {
 		AndHow.builder() /* Simple builder initializes framework */
 				.loader(new SysPropLoader())
 				.loader(new JndiLoader())
-				.loader(new PropFileLoader())
+				.loader(new PropertyFileFromClasspathLoader(MySetOfProps.CLASSPATH_PROP))
 				.group(MySetOfProps.class)
 				.build();
 	
@@ -36,5 +36,6 @@ public class SimpleSample {
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
 				.desc("Service name added to end of url for the queries").build();
+		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file").build();
 	}
 }

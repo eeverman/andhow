@@ -119,6 +119,39 @@ public abstract class ConstructionProblem extends Problem {
 		}
 	}
 	
+	public static class LoaderPropertyNotRegistered extends ConstructionProblem {
+		Loader loader;
+		Property property;
+		
+		public LoaderPropertyNotRegistered(Loader loader, Property property) {
+			this.loader = loader;
+			this.property = property;
+		}
+
+		public Loader getLoader() {
+			return loader;
+		}
+		
+		public Property getProperty() {
+			return property;
+		}
+		
+		@Override
+		public String getProblemContext() {
+			return TextUtil.format("The {} loader's Property of type {}", 
+					loader.getClass().getCanonicalName(), 
+					property.getValueType().getDestinationType().getSimpleName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "This loader has a Property declared in its constructor, " +
+					"but that property is not added to the application configuration. " +
+					"Add the Property to a PropertyGroup and add the group to " +
+					"the configuration via builder.group(myGroup.class).";
+		}
+	}
+	
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
 

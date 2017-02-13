@@ -77,7 +77,24 @@ public class ProblemList<P extends Problem> extends ArrayList<P> {
 
 		@Override
 		public Iterator<P> iterator() {
-			throw new UnsupportedOperationException();	//iterator allows mods, so block
+			Iterator<P> delegate = super.iterator();
+			return new Iterator<P>() {
+				@Override
+				public boolean hasNext() {
+					return delegate.hasNext();
+				}
+
+				@Override
+				public P next() {
+					return delegate.next();
+				}
+
+				@Override
+				public void remove() {
+					throw new UnsupportedOperationException();
+				}
+
+			};
 		}
 
         public ListIterator<P> listIterator()   {
