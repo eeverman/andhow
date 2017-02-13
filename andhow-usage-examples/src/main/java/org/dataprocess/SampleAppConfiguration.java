@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.export.SysPropExporter;
-import yarnandtail.andhow.load.JndiLoader;
-import yarnandtail.andhow.load.PropFileLoader;
-import yarnandtail.andhow.load.SysPropLoader;
+import yarnandtail.andhow.load.*;
 
 /**
  * This is an example minimal application configuration.
@@ -31,7 +29,7 @@ public class SampleAppConfiguration {
 		AndHow.builder()
 				.loader(new SysPropLoader())	//Look for props in System.properties
 				.loader(new JndiLoader())		//Look in container provided JNDI context
-				.loader(new PropFileLoader())	//And in a properties file
+				.loader(new PropertyFileFromClasspathLoader(AppInfo.CLASSPATH_PROP))	//And in a properties file
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)
 				.group(AppInfo.class)
@@ -94,6 +92,7 @@ public class SampleAppConfiguration {
 		StrProp APP_PUBLIC_URL = StrProp.builder().required().mustStartWith("http://").defaultValue("http://supercool.org/niftyapp").build();
 		LocalDateTimeProp INCEPTION_DATE = 
 				LocalDateTimeProp.builder().required().defaultValue(LocalDateTime.parse("2017-01-01T00:00")).build();
+		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of a properties file for config.").build();
 	}
 	
 }

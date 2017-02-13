@@ -14,55 +14,41 @@ public abstract class PropertyFileBaseLoader extends BaseLoader {
 
 	public PropertyFileBaseLoader() {
 	}
-
-	/**
-	 * Read an input stream into a Java properties file.
-	 * 
-	 * If the InputStream is null, null is returned.  If an exception is encountered
-	 * reading the file, a LoaderException is thrown.
-	 * 
-	 * @param inputStream
-	 * @param sourceType What the fromPath is, eg, 'classpath', 'file path', etc.
-	 * @param fromPath The path the inputstream was opened on.
-	 * @return
-	 * @throws yarnandtail.andhow.load.LoaderException
-	 */
-	protected Properties loadPropertiesFromInputStream(InputStream inputStream, 
-			String sourceType, String fromPath) throws LoaderException {
+	
+	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
+			String fromPath, ConstructionDefinition appConfigDef,
+			ValueMapWithContext existingValues) throws LoaderException {
+		
 		
 		if (inputStream == null) {
-			return null;
+			Exception e = new IllegalArgumentException("The InputStream cannot be null");
+			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
 		}
 		
 		try {
 			Properties props = new Properties();
 			props.load(inputStream);
-			return props;
-		} catch (Exception e) {
-			throw new LoaderException(e, this, "properties file at " + sourceType + ": '" + fromPath + "'");
-		}
-	}
-	
-
-	public LoaderValues load(ConstructionDefinition appConfigDef,
-			ValueMapWithContext existingValues, Properties props) {
 			
-		ArrayList<PropertyValue> values = new ArrayList();
-		ProblemList<Problem> problems = new ProblemList();
+			ArrayList<PropertyValue> values = new ArrayList();
+			ProblemList<Problem> problems = new ProblemList();
 
-		Set<Object> keys = props.keySet();
-		for(Object key : keys) {
-			if (key != null) {
-				String k = key.toString();
-				String v = props.getProperty(k);
+			Set<Object> keys = props.keySet();
+			for(Object key : keys) {
+				if (key != null) {
+					String k = key.toString();
+					String v = props.getProperty(k);
 
-				attemptToAdd(appConfigDef, values, problems, k, v);
+					attemptToAdd(appConfigDef, values, problems, k, v);
+				}
 			}
-		}
 
-		values.trimToSize();
-		return new LoaderValues(this, values, problems);
-				
+			values.trimToSize();
+			return new LoaderValues(this, values, problems);
+			
+		} catch (Exception e) {
+			//These are nominally IO exceptions
+			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
+		}
 	}
 
 	@Override

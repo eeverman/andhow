@@ -11,7 +11,7 @@ Complete Usage Example
 ```java
 import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
-import yarnandtail.andhow.load.PropFileLoader;
+import yarnandtail.andhow.load.*;
 
 public class SimpleSample {
 	
@@ -19,7 +19,7 @@ public class SimpleSample {
 		AndHow.builder() /* 1) Simple builder initializes framework */
 				.loader(new SysPropLoader())
 				.loader(new JndiLoader())
-				.loader(new PropFileLoader())
+				.loader(new PropertyFileFromClasspathLoader(MySetOfProps.CLASSPATH_PROP))
 				.group(MySetOfProps.class) /* 2) MySetOfProps defined below */
 				.build();
 	
@@ -42,6 +42,8 @@ public class SimpleSample {
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
 				.desc("Service name added to end of url for the queries").build();
+		// 6)
+		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file").build();
 	}
 }
 ```
@@ -49,7 +51,9 @@ public class SimpleSample {
 1.	`AndHow` initializes with a simple builder().  _Loaders_ read properties from
 	various sources.  You can determine the order of the loaders - in this example,
 	properties found in System.properties take precedence over values found in
-	the JNDI context, and so on.  Several other loaders are available, including command line. 
+	the JNDI context, and so on.  Several other loaders are available, including command line.
+	The 3rd loader, the property file loader, will load from a Java properties file
+	on the classpath.  Naturally, the location of the property file is itself a property.
 2.	Configuration properties are explicitly declared in groups to keep
 	related properties together, then groups are added to the AndHow instance.
 3.	`Property` values can be accessed directly from the Property itself - there is
@@ -72,11 +76,16 @@ public class SimpleSample {
 	However, aliases can be used to work with legacy systems that already have
 	established property keys/names.  For instance, SERVICE_URL can also be
 	set via the name "url".
+ 6. The CLASSPATH_PROP Property and its usage by the property loader shows how
+	AndHow can be used to configure itself.  If you want to load from a properties
+	file and specify the location on command line or as an environment variable,
+	this is how you would do it.
 
-Of course, this example fails because there is no _andhow.properties_ file.
-This is a good thing - you would not want a miss-configured application to appear to start.
-Even better, it doesn't just fail, it prints a sample configuration for each
-of the loaders in use.  For the PropFileLoader it would print this:
+This example will probably fail to start up because none of the Properties marked
+as required will be configured.  This is a good thing - you don't want a miss-
+configured application to appear to start.  Even better, it doesn't just fail,
+it prints a sample configuration for each of the loaders in use.  For the Property
+file loader, it would print something this:
 
 ```properties
 ##########################################################################################

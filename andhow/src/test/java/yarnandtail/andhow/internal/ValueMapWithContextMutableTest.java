@@ -2,15 +2,15 @@ package yarnandtail.andhow.internal;
 
 import yarnandtail.andhow.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 import yarnandtail.andhow.PropertyValue;
+import yarnandtail.andhow.example.restclient.SampleRestClientGroup;
 import yarnandtail.andhow.load.CmdLineLoader;
-import yarnandtail.andhow.load.PropFileLoader;
+import yarnandtail.andhow.load.PropertyFileFromClasspathLoader;
 
 /**
  *
@@ -24,7 +24,7 @@ public class ValueMapWithContextMutableTest {
 		ValueMapWithContextMutable builder = new ValueMapWithContextMutable();
 		
 		Loader cmdLineLoad = new CmdLineLoader();
-		Loader propFileLoad = new PropFileLoader();
+		Loader propFileLoad = new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		
 		List<PropertyValue> firstSet = new ArrayList();
 		

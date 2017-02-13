@@ -74,19 +74,16 @@ public abstract class LoaderProblem extends Problem {
 	public static class IOLoaderProblem extends LoaderProblem {
 
 		Exception exception;
-		//String msg;
+		String resourcePath;
 		
-		public IOLoaderProblem(
-				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
-				Exception exception) {
-			badValueCoord = new ValueCoord(loader, group, prop);
+		public IOLoaderProblem(Loader loader, Exception exception, String resourcePath) {
+			badValueCoord = new ValueCoord(loader, null, null);
 			this.exception = exception;
-			//this.msg = msg;
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return exception.getMessage();
+			return "There was an IO error while reading from: " + resourcePath + " Original error message: " + exception.getMessage();
 		}
 	}
 	

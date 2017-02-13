@@ -11,6 +11,7 @@ import yarnandtail.andhow.PropertyGroup;
  */
 public interface SampleRestClientGroup extends PropertyGroup {
 	
+	StrProp CLASSPATH_PROP_FILE = StrProp.builder().desc("Classpath location of a properties file w/ props").build();
 	StrProp APP_NAME = StrProp.builder().aliasIn("app.name").aliasIn("app_name").build();
 	StrProp REST_HOST = StrProp.builder().mustMatchRegex(".*\\.usgs\\.gov") .required().build();
 	IntProp REST_PORT = IntProp.builder().required().mustBeGreaterThanOrEqualTo(80).mustBeLessThan(10000).build();

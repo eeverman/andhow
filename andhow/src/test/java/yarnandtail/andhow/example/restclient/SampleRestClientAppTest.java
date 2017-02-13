@@ -10,9 +10,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import yarnandtail.andhow.load.CmdLineLoader;
-import yarnandtail.andhow.load.JndiLoader;
-import yarnandtail.andhow.load.PropFileLoader;
+import yarnandtail.andhow.load.*;
 
 /**
  *
@@ -20,8 +18,8 @@ import yarnandtail.andhow.load.PropFileLoader;
  */
 public class SampleRestClientAppTest extends AndHowTestBase {
 	
-	String propFileLoaderConfigBaseName = PropFileLoader.CONFIG.class.getCanonicalName() + ".";
 	String[] cmdLineArgs = new String[0];
+	private static final String GROUP_PATH = "yarnandtail.andhow.example.restclient.SampleRestClientGroup";
 
 	
 	@Before
@@ -35,20 +33,20 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
-				"/yarnandtail/andhow/example/restclient/all.points.speced.properties",
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+				"/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 				
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
 				.loader(new CmdLineLoader())
-				.loader(new PropFileLoader())
+				.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
-				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
+				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
 		assertEquals("  Big App  ", SampleRestClientGroup.APP_NAME.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
 		assertEquals(new Integer(8080), SampleRestClientGroup.REST_PORT.getValue());
@@ -64,20 +62,20 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testMinimumPropsAreSet() {
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
-				"/yarnandtail/andhow/example/restclient/minimum.points.speced.properties",
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+				"/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
 		};
 				
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
 				.loader(new CmdLineLoader())
-				.loader(new PropFileLoader())
+				.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
-				PropFileLoader.CONFIG.CLASSPATH_PATH.getValue());
+				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
 		assertEquals(new Integer(8080), SampleRestClientGroup.REST_PORT.getValue());
 		assertEquals("query/", SampleRestClientGroup.REST_SERVICE_NAME.getValue());	//a default value
@@ -95,8 +93,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		jndi.activate();
 		
 		cmdLineArgs = new String[] {
-			propFileLoaderConfigBaseName + "CLASSPATH_PATH" + AndHow.KVP_DELIMITER + 
-				"/yarnandtail/andhow/example/restclient/invalid.properties",
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+				"/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
 				
 				
@@ -106,7 +104,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			AndHow.builder()
 					.group(SampleRestClientGroup.class)
 					.loader(new CmdLineLoader())
-					.loader(new PropFileLoader())
+					.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 					.loader(new JndiLoader())
 					.cmdLineArgs(cmdLineArgs)
 					.reloadForNonPropduction(reloader);
