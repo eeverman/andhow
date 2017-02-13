@@ -76,7 +76,7 @@ public class SimpleSample {
 	However, aliases can be used to work with legacy systems that already have
 	established property keys/names.  For instance, SERVICE_URL can also be
 	set via the name "url".
- 6. The CLASSPATH_PROP Property and its usage by the property loader shows how
+6.  The CLASSPATH_PROP Property and its usage by the property loader shows how
 	AndHow can be used to configure itself.  If you want to load from a properties
 	file and specify the location on command line or as an environment variable,
 	this is how you would do it.
