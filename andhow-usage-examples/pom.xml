@@ -2,11 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
+		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
-		<groupId>yarnandtail</groupId>
 		<version>0.3.0-SNAPSHOT</version>
 	</parent>
 
+	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-usage-examples</artifactId>
 	
 	<!-- This really isn't meant to be packaged up at all - its sample code -->
@@ -22,12 +23,4 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
 </project>
