@@ -37,7 +37,7 @@ public class PropertyFileFromFilesystemLoaderAppTest {
 	public void init() throws Exception {
 		
 		//copy a properties file to a temp location
-		URL inputUrl = getClass().getResource("/yarnandtail/andhow/load/SimpleParams1.properties");
+		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);

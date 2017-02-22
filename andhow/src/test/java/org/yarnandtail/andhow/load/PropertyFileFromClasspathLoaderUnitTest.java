@@ -54,7 +54,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testHappyPath() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams1.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams1.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -77,7 +77,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testDuplicateEntries() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams2.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams2.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -99,7 +99,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testEmptyValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams3.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams3.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -122,7 +122,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testAllWhitespaceValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams4.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams4.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -145,7 +145,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testQuotedStringValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams5.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams5.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -166,7 +166,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testPropFileLoaderWithUnrecognizedPropNames() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/SimpleParams6.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams6.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -187,7 +187,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testPropFileLoaderWithMissingFile() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/XXXXXXX.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -212,7 +212,7 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 	public void testPropFileLoaderWithNoClasspathConfigured() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		//evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/yarnandtail/andhow/load/XXXXXXX.properties"));
+		//evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		

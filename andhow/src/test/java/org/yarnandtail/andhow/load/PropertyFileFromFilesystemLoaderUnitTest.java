@@ -52,7 +52,7 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
 		
 		//copy a properties file to a temp location
-		URL inputUrl = getClass().getResource("/yarnandtail/andhow/load/SimpleParams1.properties");
+		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
@@ -93,7 +93,7 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 	public void testPropFileLoaderWithMissingFile() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.FILEPATH, "/yarnandtail/andhow/load/XXXXXXX.properties"));
+		evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -118,7 +118,7 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 	public void testPropFileLoaderWithNoClasspathConfigured() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		//evl.add(new PropertyValue(TestProps.FILEPATH, "/yarnandtail/andhow/load/XXXXXXX.properties"));
+		//evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		

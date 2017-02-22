@@ -9,9 +9,9 @@ Strong Typing **&** Detailed validation **&** Simple to use **&** Fails Fast **&
 Complete Usage Example
 --------------
 ```java
-import yarnandtail.andhow.property.*;
-import yarnandtail.andhow.*;
-import yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.property.*;
+import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.load.*;
 
 public class SimpleSample {
 	

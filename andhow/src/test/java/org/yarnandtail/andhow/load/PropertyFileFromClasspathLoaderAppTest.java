@@ -33,13 +33,13 @@ public class PropertyFileFromClasspathLoaderAppTest {
 				.loader(new CmdLineLoader())
 				.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
 				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-						"/yarnandtail/andhow/load/SimpleParams1.properties")
+						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
 		
 
-		assertEquals("/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
+		assertEquals("/org/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
 		assertEquals("kvpBobValue", SimpleParams.STR_BOB.getValue());
 		assertEquals("kvpNullValue", SimpleParams.STR_NULL.getValue());
 		assertEquals(Boolean.FALSE, SimpleParams.FLAG_TRUE.getValue());
@@ -55,7 +55,7 @@ public class PropertyFileFromClasspathLoaderAppTest {
 					.loader(new CmdLineLoader())
 					.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/yarnandtail/andhow/load/SimpleParams1.properties")
+							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.reloadForNonPropduction(reloader);
