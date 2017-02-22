@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow;
 
-import java.util.Arrays;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**

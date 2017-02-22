@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.util;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Text utility used for formatting output for reports, auto generated descriptions

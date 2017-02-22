@@ -1,14 +1,7 @@
 package org.yarnandtail.andhow.name;
 
-import org.yarnandtail.andhow.EffectiveName;
-import org.yarnandtail.andhow.PropertyNaming;
-import org.yarnandtail.andhow.NamingStrategy;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.Name;
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.yarnandtail.andhow.*;
 
 /**
  * Case insensitive naming.

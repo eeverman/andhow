@@ -1,7 +1,5 @@
 package org.yarnandtail.andhow;
 
-import java.util.List;
-
 /**
  *
  * @author eeverman

@@ -1,11 +1,6 @@
 package org.yarnandtail.andhow.sample;
 
-import org.yarnandtail.andhow.ConstructionDefinition;
-import org.yarnandtail.andhow.EffectiveName;
-import org.yarnandtail.andhow.SamplePrinter;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**

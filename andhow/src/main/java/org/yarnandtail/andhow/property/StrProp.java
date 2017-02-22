@@ -1,11 +1,7 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.ValueType;
-import org.yarnandtail.andhow.PropertyType;
-import org.yarnandtail.andhow.Validator;
-import org.yarnandtail.andhow.Trimmer;
-import org.yarnandtail.andhow.Name;
 import java.util.List;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.valid.StringValidator;
 import org.yarnandtail.andhow.valuetype.StrType;
 

@@ -1,14 +1,12 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.ConstructionDefinition;
-import org.yarnandtail.andhow.LoaderValues;
-import org.yarnandtail.andhow.ValueMapWithContext;
-import org.yarnandtail.andhow.Property;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.util.TextUtil;
-import java.util.*;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  * Reads from a Java .property file from the filesystem, following standard java conventions

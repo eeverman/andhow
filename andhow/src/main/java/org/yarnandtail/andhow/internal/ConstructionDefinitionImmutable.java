@@ -1,16 +1,7 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.ConstructionDefinition;
-import org.yarnandtail.andhow.ExportGroup;
-import org.yarnandtail.andhow.EffectiveName;
-import org.yarnandtail.andhow.NamingStrategy;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.PropertyGroup;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import org.yarnandtail.andhow.*;
 
 /**
  * An immutable instance that can be used during runtime.

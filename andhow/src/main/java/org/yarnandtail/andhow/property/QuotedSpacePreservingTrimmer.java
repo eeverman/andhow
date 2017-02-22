@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.util.TextUtil;
 import org.yarnandtail.andhow.Trimmer;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  * This trimmer trims to null and treats double quotes as whitespace

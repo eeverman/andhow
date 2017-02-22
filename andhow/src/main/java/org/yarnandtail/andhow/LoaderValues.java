@@ -1,8 +1,6 @@
 package org.yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
 
 /**

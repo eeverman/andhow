@@ -1,12 +1,8 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.ValueType;
-import org.yarnandtail.andhow.Validator;
-import org.yarnandtail.andhow.Trimmer;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.Name;
 import java.util.ArrayList;
 import java.util.List;
+import org.yarnandtail.andhow.*;
 
 /**
  * A generic PropertyBuilder class which needs to be fully implemented as an

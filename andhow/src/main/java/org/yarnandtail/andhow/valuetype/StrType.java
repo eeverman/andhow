@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.util.TextUtil;
 import org.yarnandtail.andhow.ParsingException;
 
 /**

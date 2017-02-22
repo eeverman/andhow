@@ -1,17 +1,11 @@
 package org.yarnandtail.andhow.sample;
 
-import org.yarnandtail.andhow.GroupInfo;
-import org.yarnandtail.andhow.Validator;
-import org.yarnandtail.andhow.ConstructionDefinition;
-import org.yarnandtail.andhow.EffectiveName;
-import org.yarnandtail.andhow.SamplePrinter;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.sample.TextLine.HRLine;
+import org.yarnandtail.andhow.util.TextUtil;
 
 
 /**

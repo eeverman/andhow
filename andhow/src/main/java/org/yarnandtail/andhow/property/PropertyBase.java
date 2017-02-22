@@ -1,15 +1,8 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.PropertyType;
-import org.yarnandtail.andhow.Validator;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.Trimmer;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.ValueMap;
-import org.yarnandtail.andhow.Name;
-import org.yarnandtail.andhow.ValueType;
 import java.util.Collections;
 import java.util.List;
+import org.yarnandtail.andhow.*;
 
 /**
  *
