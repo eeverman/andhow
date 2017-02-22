@@ -1,10 +1,10 @@
 package org.dataprocess;
 
 import java.time.LocalDateTime;
-import yarnandtail.andhow.property.*;
 import yarnandtail.andhow.*;
 import yarnandtail.andhow.export.SysPropExporter;
 import yarnandtail.andhow.load.*;
+import yarnandtail.andhow.property.*;
 
 /**
  * This is an example minimal application configuration.
