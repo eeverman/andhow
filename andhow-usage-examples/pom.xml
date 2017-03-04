@@ -17,7 +17,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>yarnandtail</groupId>
+			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow</artifactId>
 			<version>${project.version}</version>
 		</dependency>

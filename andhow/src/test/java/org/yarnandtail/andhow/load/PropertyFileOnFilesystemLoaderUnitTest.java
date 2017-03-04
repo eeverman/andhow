@@ -24,7 +24,7 @@ import org.yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class PropertyFileFromFilesystemLoaderUnitTest {
+public class PropertyFileOnFilesystemLoaderUnitTest {
 	
 	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -72,10 +72,10 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -94,10 +94,10 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -119,10 +119,10 @@ public class PropertyFileFromFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		//evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromFilesystemLoader pfl = new PropertyFileFromFilesystemLoader(TestProps.FILEPATH);
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		

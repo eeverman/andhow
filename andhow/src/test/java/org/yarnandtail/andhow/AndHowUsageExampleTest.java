@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.load.CmdLineLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
@@ -41,7 +41,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		AndHow.builder()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-				.loader(new CmdLineLoader())
+				.loader(new StringArgumentLoader())
 				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
 		
@@ -56,7 +56,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testOptionalValuesAreUnset() {
 		AndHow.builder()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-				.loader(new CmdLineLoader())
+				.loader(new StringArgumentLoader())
 				.cmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.cmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
 				.cmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
@@ -75,7 +75,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		try {
 			AndHow.builder()
 					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-					.loader(new CmdLineLoader())
+					.loader(new StringArgumentLoader())
 					.reloadForNonPropduction(reloader);
 			fail();
 		} catch (AppFatalException ce) {
