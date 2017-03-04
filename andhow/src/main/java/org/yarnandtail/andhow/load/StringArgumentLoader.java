@@ -14,22 +14,22 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  * Trimmer of the associated Property.
  * This loader considers it a problem to find unrecognized properties
  * on the command line and will throw a RuntimeException if that happens.
- * 
- * For FlgProp properties (flags), the CmdLineLoader will interpret the presence of
+ *
+ * For FlgProp properties (flags), the StringArgumentLoader will interpret the presence of
  * the property name as setting the property true.
- * 
+ *
  * The JVM considers whitespace as breaks between values, however, it can be
- * escaped with a backslash to include it in the value passed to the CmdLineLoader.
- * After the CmdLineLoader receives the value, each individual Property will use
+ * escaped with a backslash to include it in the value passed to the StringArgumentLoader.
+ * After the StringArgumentLoader receives the value, each individual Property will use
  * its Trimmer to remove whitespace according to its own rules.  Generally that
  * means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
  * for everything else.
  * 
  * @author eeverman
  */
-public class CmdLineLoader extends BaseLoader {
+public class StringArgumentLoader extends BaseLoader {
 	
-	public CmdLineLoader() {
+	public StringArgumentLoader() {
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class CmdLineLoader extends BaseLoader {
 	
 	@Override
 	public String getSpecificLoadDescription() {
-		return "arguments on the command line at startup";
+		return "string arguments from the command line at startup";
 	}
 	
 	@Override

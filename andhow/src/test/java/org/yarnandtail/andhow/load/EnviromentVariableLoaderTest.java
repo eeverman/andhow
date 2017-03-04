@@ -18,7 +18,7 @@ import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
  *
  * @author eeverman
  */
-public class SystemEnvironmentLoaderTest {
+public class EnviromentVariableLoaderTest {
 	
 	TestConstructionDefinition appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -54,7 +54,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "f");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "y");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -78,7 +78,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -108,7 +108,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -132,7 +132,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -156,7 +156,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -183,7 +183,7 @@ public class SystemEnvironmentLoaderTest {
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "");
 		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		
@@ -201,7 +201,7 @@ public class SystemEnvironmentLoaderTest {
 		
 		appDef.addEnvVar("XXX", "aaa");
 		
-		SystemEnviromentLoader spl = new SystemEnviromentLoader();
+		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
 		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
 		

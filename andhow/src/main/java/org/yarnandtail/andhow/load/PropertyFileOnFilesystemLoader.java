@@ -1,23 +1,23 @@
 package org.yarnandtail.andhow.load;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * Reads from a Java .property file on the classpath, following standard java conventions
+ * Reads from a Java .property file from the filesystem, following standard java conventions
  * for the structure of those file.
  * 
- * This loader finds the properties file to loadJavaPropsToAndhowProps from based on a classpath property
+ * This loader finds the properties file to loadJavaPropsToAndhowProps from based on a file path property
  it is passed in its constructor.  Since this loader expects to find a value
  loaded for that property, an earlier loader must have loaded a value for it.
  
- It is considered an error if its configured classpath does not point to a valid
- properties file.  It is not considered an error if the classpath property has
+ It is considered an error if its configured file path does not point to a valid
+ properties file.  It is not considered an error if the file path property has
  not been assigned a value.
  
  This loader trims incoming values for String type properties using the
@@ -43,15 +43,15 @@ import org.yarnandtail.andhow.property.StrProp;
  * 
  * @author eeverman
  */
-public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
+public class PropertyFileOnFilesystemLoader extends PropertyFileBaseLoader {
 
 	/** Store it as a list, but we currently only accept one */
-	StrProp classpath;
+	StrProp filepath;
 	
 	String specificLoadDescription = null;
 	
-	public PropertyFileFromClasspathLoader(StrProp classpathOfPropertyFile) {
-		classpath = classpathOfPropertyFile;
+	public PropertyFileOnFilesystemLoader(StrProp filePathOfPropertyFile) {
+		filepath = filePathOfPropertyFile;
 	}
 	
 
@@ -59,8 +59,9 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
 			ValueMapWithContext existingValues) {
 
-		String path = existingValues.getEffectiveValue(classpath);
-		specificLoadDescription = "file on classpath at: " + path;
+		String path = existingValues.getEffectiveValue(filepath);
+		specificLoadDescription = TextUtil.format("file on the file system at path : {} ({})",
+					path, getAbsPath(path)) ;
 		
 		if (path != null) {
 
@@ -68,13 +69,13 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 			return vals;
 			
 		} else {
-			//The classpath is not specified, so just ignore
+			//The filepath to loadJavaPropsToAndhowProps from is not specified, so just ignore it
 			return new LoaderValues(this);
 		}
 	}
 	
 	/**
-	 * Load from a non-null classpath path.
+	 * Load from a non-null filesystem path.
 	 * 
 	 * @param appConfigDef
 	 * @param existingValues
@@ -83,28 +84,31 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 	 */
 	public LoaderValues load(ConstructionDefinition appConfigDef,
 			ValueMapWithContext existingValues, String path) {
-					
-		try (InputStream inS = PropertyFileFromClasspathLoader.class.getResourceAsStream(path)) {
+		
+		try {
+			File propFile = new File(path);
 
-			if (inS == null) {
-				//If the file is not there, the inS is null (no exception thrown)
-				return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file at classpath:" + path));
+			try (FileInputStream inS = new FileInputStream(propFile)) {
+				
+				return loadInputStreamToProps(inS, path, appConfigDef, existingValues);
+
+			} catch (FileNotFoundException e) {
+				return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file on filesystem:" + path));
 			}
-			
-			return loadInputStreamToProps(inS, path, appConfigDef, existingValues);
-			
+
 		} catch (LoaderException e) {
-			return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, e.getCause(), "classpath:" + path));
+			return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, e.getCause(), "filesystem:" + path));
 		} catch (IOException ioe) {
-			return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, ioe, "classpath:" + path));
+			return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, ioe, "filesystem:" + path));
 		}
+				
 	}
 	
 	
 	@Override
 	public List<Property> getUserLoaderConfig() {
 		ArrayList<Property> list = new ArrayList();
-		list.add(classpath);
+		list.add(filepath);
 		return list;
 	}
 	
@@ -116,8 +120,27 @@ public class PropertyFileFromClasspathLoader extends PropertyFileBaseLoader {
 		if (specificLoadDescription != null) {
 			return specificLoadDescription;
 		} else {
-			return "file on classpath at: " + classpath.getValue();
+			
+			return TextUtil.format("file on the file system at path : {} ({})",
+					filepath.getValue(), getAbsPath(filepath.getValue())) ;
 		}
+	}
+	
+	/**
+	 * Completely safe way to convert a file system path to an absolute path.
+	 * never errors or returns null.
+	 * @param anything
+	 * @return 
+	 */
+	private String getAbsPath(String anything) {
+		
+		try {
+			File f = new File(anything);
+			return f.getAbsolutePath();
+		} catch (Exception e) {
+			return "[Unknown absolute path]";
+		}
+		
 	}
 	
 	

@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
  *
  * @author eeverman
  */
-public class CmdLineLoaderTest {
+public class StringArgumentLoaderTest {
 	
 	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -53,7 +53,7 @@ public class CmdLineLoaderTest {
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
 		
 		
-		CmdLineLoader cll = new CmdLineLoader();
+		StringArgumentLoader cll = new StringArgumentLoader();
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
@@ -79,7 +79,7 @@ public class CmdLineLoaderTest {
 		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "");
 		
-		CmdLineLoader cll = new CmdLineLoader();
+		StringArgumentLoader cll = new StringArgumentLoader();
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
@@ -108,7 +108,7 @@ public class CmdLineLoaderTest {
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "false");
 		
 		
-		CmdLineLoader cll = new CmdLineLoader();
+		StringArgumentLoader cll = new StringArgumentLoader();
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		
@@ -131,7 +131,7 @@ public class CmdLineLoaderTest {
 		args.add(basePath + "YYY" + AndHow.KVP_DELIMITER + "2");
 		
 		
-		CmdLineLoader cll = new CmdLineLoader();
+		StringArgumentLoader cll = new StringArgumentLoader();
 		
 		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
 		

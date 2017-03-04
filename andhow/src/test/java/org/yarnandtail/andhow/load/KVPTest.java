@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.load.CmdLineLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 
 /**
  *

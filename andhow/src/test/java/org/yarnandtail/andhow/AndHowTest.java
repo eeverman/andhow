@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.yarnandtail.andhow.load.CmdLineLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.BasicNamingStrategy;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -41,7 +41,7 @@ public class AndHowTest extends AndHowTestBase {
 	public void setup() {
 		
 		loaders.clear();
-		loaders.add(new CmdLineLoader());
+		loaders.add(new StringArgumentLoader());
 		
 		configPtGroups.clear();
 		configPtGroups.add(SimpleParams.class);

@@ -22,7 +22,7 @@ import org.yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class PropertyFileFromClasspathLoaderUnitTest {
+public class PropertyFileOnClasspathLoaderUnitTest {
 	
 	ConstructionDefinitionMutable appDef;
 	ValueMapWithContextMutable appValuesBuilder;
@@ -55,10 +55,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams1.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -78,10 +78,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams2.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -100,10 +100,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams3.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -123,10 +123,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams4.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -146,10 +146,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams5.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -167,10 +167,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams6.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -188,10 +188,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		
@@ -213,10 +213,10 @@ public class PropertyFileFromClasspathLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		//evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new CmdLineLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileFromClasspathLoader pfl = new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH);
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH);
 		
 		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
 		

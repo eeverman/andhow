@@ -3,8 +3,11 @@ package org.yarnandtail.andhow.load;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.AppFatalException;
 import org.yarnandtail.andhow.PropertyGroup;
+import java.io.File;
+import java.net.URL;
 import java.util.List;
-import org.junit.Test;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
 import org.yarnandtail.andhow.*;
 
 import static org.junit.Assert.*;
@@ -21,25 +24,46 @@ import static org.yarnandtail.andhow.AndHowTestBase.reloader;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropertyFileFromClasspathLoaderAppTest {
+public class PropertyFileOnFilesystemLoaderAppTest {
+
+	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
-		StrProp CLAZZ_PATH = StrProp.builder().build();
+		StrProp FILEPATH = StrProp.builder().build();
+	}
+	
+
+	@Before
+	public void init() throws Exception {
+		
+		//copy a properties file to a temp location
+		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
+		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
+		tempPropertiesFile.deleteOnExit();
+		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
+
+	}
+	
+	@After
+	public void afterTest() {
+		if (tempPropertiesFile != null) {
+			tempPropertiesFile.delete();
+		}
 	}
 	
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
-				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+				.loader(new StringArgumentLoader())
+				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+						tempPropertiesFile.getAbsolutePath())
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
 		
 
-		assertEquals("/org/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
+		assertEquals(tempPropertiesFile.getAbsolutePath(), TestProps.FILEPATH.getValue());
 		assertEquals("kvpBobValue", SimpleParams.STR_BOB.getValue());
 		assertEquals("kvpNullValue", SimpleParams.STR_NULL.getValue());
 		assertEquals(Boolean.FALSE, SimpleParams.FLAG_TRUE.getValue());
@@ -52,10 +76,10 @@ public class PropertyFileFromClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
-					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+					.loader(new StringArgumentLoader())
+					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+							tempPropertiesFile.getAbsolutePath())
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.reloadForNonPropduction(reloader);
@@ -69,7 +93,7 @@ public class PropertyFileFromClasspathLoaderAppTest {
 	}
 	
 	/**
-	 * It is not an error to not specify the classpath param, it just means the laoder
+	 * It is not an error to not specify the file path property, it just means the loader
 	 * will not find anything.
 	 * 
 	 * @throws Exception 
@@ -77,8 +101,8 @@ public class PropertyFileFromClasspathLoaderAppTest {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
-				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
+				.loader(new StringArgumentLoader())
+				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
@@ -93,9 +117,9 @@ public class PropertyFileFromClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
-					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromClasspathLoader(TestProps.CLAZZ_PATH))
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+					.loader(new StringArgumentLoader())
+					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.group(SimpleParams.class)
 					.group(TestProps.class)

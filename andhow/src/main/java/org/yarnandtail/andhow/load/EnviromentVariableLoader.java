@@ -26,9 +26,9 @@ import org.yarnandtail.andhow.*;
  * 
  * @author eeverman
  */
-public class SystemEnviromentLoader extends BaseLoader {
+public class EnviromentVariableLoader extends BaseLoader {
 	
-	public SystemEnviromentLoader() {
+	public EnviromentVariableLoader() {
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
 
-import org.yarnandtail.andhow.load.CmdLineLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.BasicNamingStrategy;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -104,7 +104,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	@Test
 	public void testOutAliasForGroup1() {
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
-				.loader(new CmdLineLoader())
+				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN, STR1)
 				.cmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 				.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -146,7 +146,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
-				.loader(new CmdLineLoader())
+				.loader(new StringArgumentLoader())
 				.cmdLineArg(grp2Name + ".strProp1", STR1)
 				.cmdLineArg(grp2Name + ".strProp2", STR2)
 				.cmdLineArg(grp2Name + ".intProp1", INT1.toString())
@@ -169,7 +169,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
 		AndHow.builder().namingStrategy(new BasicNamingStrategy())
-				.loader(new CmdLineLoader())
+				.loader(new StringArgumentLoader())
 				.group(AliasGroup1.class)
 				.group(AliasGroup2.class)
 				.cmdLineArg(STR_PROP1_IN, STR1)
@@ -217,7 +217,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
-					.loader(new CmdLineLoader())
+					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -244,7 +244,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
-					.loader(new CmdLineLoader())
+					.loader(new StringArgumentLoader())
 					.group(AliasGroup5.class)
 					.reloadForNonPropduction(reloader);
 			
@@ -267,7 +267,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new BasicNamingStrategy())
-					.loader(new CmdLineLoader())
+					.loader(new StringArgumentLoader())
 					.group(AliasGroup6.class)
 					.group(AliasGroup7.class)
 					.reloadForNonPropduction(reloader);

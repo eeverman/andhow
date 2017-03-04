@@ -1,8 +1,8 @@
 package org.yarnandtail.andhow.example.restclient;
 
 import org.yarnandtail.andhow.load.JndiLoader;
-import org.yarnandtail.andhow.load.CmdLineLoader;
-import org.yarnandtail.andhow.load.PropertyFileFromClasspathLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.AppFatalException;
 import org.yarnandtail.andhow.internal.ValueProblem;
@@ -45,8 +45,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+				.loader(new StringArgumentLoader())
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
 				.reloadForNonPropduction(reloader);
 		
@@ -74,8 +74,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.loader(new CmdLineLoader())
-				.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+				.loader(new StringArgumentLoader())
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
 				.reloadForNonPropduction(reloader);
 		
@@ -108,8 +108,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			//Error expected b/c some values are invalid
 			AndHow.builder()
 					.group(SampleRestClientGroup.class)
-					.loader(new CmdLineLoader())
-					.loader(new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+					.loader(new StringArgumentLoader())
+					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 					.loader(new JndiLoader())
 					.cmdLineArgs(cmdLineArgs)
 					.reloadForNonPropduction(reloader);

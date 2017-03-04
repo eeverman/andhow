@@ -13,8 +13,8 @@ import org.yarnandtail.andhow.*;
 import static org.junit.Assert.*;
 
 import org.yarnandtail.andhow.example.restclient.SampleRestClientGroup;
-import org.yarnandtail.andhow.load.CmdLineLoader;
-import org.yarnandtail.andhow.load.PropertyFileFromClasspathLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 
 /**
  *
@@ -27,8 +27,8 @@ public class ValueMapWithContextMutableTest {
 		
 		ValueMapWithContextMutable builder = new ValueMapWithContextMutable();
 		
-		Loader cmdLineLoad = new CmdLineLoader();
-		Loader propFileLoad = new PropertyFileFromClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
+		Loader cmdLineLoad = new StringArgumentLoader();
+		Loader propFileLoad = new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		
 		List<PropertyValue> firstSet = new ArrayList();
 		
