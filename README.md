@@ -17,9 +17,9 @@ public class SimpleSample {
 	
 	public static void main(String[] args) {
 		AndHow.builder() /* 1) Simple builder initializes framework */
-				.loader(new SysPropLoader())
+				.loader(new SystemPropertyLoader())
 				.loader(new JndiLoader())
-				.loader(new PropertyFileFromClasspathLoader(MySetOfProps.CLASSPATH_PROP))
+				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))
 				.group(MySetOfProps.class) /* 2) MySetOfProps defined below */
 				.build();
 	
@@ -42,7 +42,7 @@ public class SimpleSample {
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().required()
 				.desc("Service name added to end of url for the queries").build();
-		// 6)
+		// 6)		
 		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file").build();
 	}
 }
@@ -51,9 +51,10 @@ public class SimpleSample {
 1.	`AndHow` initializes with a simple builder().  _Loaders_ read properties from
 	various sources.  You can determine the order of the loaders - in this example,
 	properties found in System.properties take precedence over values found in
-	the JNDI context, and so on.  Several other loaders are available, including command line.
+	the JNDI context, and so on.
 	The 3rd loader, the property file loader, will load from a Java properties file
 	on the classpath.  Naturally, the location of the property file is itself a property.
+	Loaders are available for most common scenarios, including reading from command line.
 2.	Configuration properties are explicitly declared in groups to keep
 	related properties together, then groups are added to the AndHow instance.
 3.	`Property` values can be accessed directly from the Property itself - there is

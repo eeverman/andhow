@@ -1,10 +1,10 @@
 package org.dataprocess;
 
 import java.time.LocalDateTime;
-import yarnandtail.andhow.*;
-import yarnandtail.andhow.export.SysPropExporter;
-import yarnandtail.andhow.load.*;
-import yarnandtail.andhow.property.*;
+import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.export.SysPropExporter;
+import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.property.*;
 
 /**
  * This is an example minimal application configuration.
@@ -27,9 +27,9 @@ public class SampleAppConfiguration {
 	
 	public static void main(String[] args) {
 		AndHow.builder()
-				.loader(new SysPropLoader())	//Look for props in System.properties
+				.loader(new SystemPropertyLoader())	//Look for props in System.properties
 				.loader(new JndiLoader())		//Look in container provided JNDI context
-				.loader(new PropertyFileFromClasspathLoader(AppInfo.CLASSPATH_PROP))	//And in a properties file
+				.loader(new PropertyFileOnClasspathLoader(AppInfo.CLASSPATH_PROP))	//And in a properties file
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)
 				.group(AppInfo.class)
