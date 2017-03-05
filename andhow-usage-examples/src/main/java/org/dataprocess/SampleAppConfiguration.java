@@ -29,7 +29,8 @@ public class SampleAppConfiguration {
 		AndHow.builder()
 				.loader(new SystemPropertyLoader())	//Look for props in System.properties
 				.loader(new JndiLoader())		//Look in container provided JNDI context
-				.loader(new PropertyFileOnClasspathLoader(AppInfo.CLASSPATH_PROP))	//And in a properties file
+				.loader(new PropertyFileOnClasspathLoader(AppInfo.CLASSPATH_PROP_FILE))	//And in a prop file on classpath
+				.loader(new PropertyFileOnFilesystemLoader(AppInfo.FILESYSTEM_PROP_FILE))	//And in the file system
 				.group(AquariusConfig.class)
 				.group(NwisConfig.class)
 				.group(AppInfo.class)
@@ -92,7 +93,8 @@ public class SampleAppConfiguration {
 		StrProp APP_PUBLIC_URL = StrProp.builder().required().mustStartWith("http://").defaultValue("http://supercool.org/niftyapp").build();
 		LocalDateTimeProp INCEPTION_DATE = 
 				LocalDateTimeProp.builder().required().defaultValue(LocalDateTime.parse("2017-01-01T00:00")).build();
-		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of a properties file for config.").build();
+		StrProp CLASSPATH_PROP_FILE = StrProp.builder().desc("Classpath location of a properties file for config.").build();
+		StrProp FILESYSTEM_PROP_FILE = StrProp.builder().desc("Filesystem location of a properties file for config.").build();
 	}
 	
 }
