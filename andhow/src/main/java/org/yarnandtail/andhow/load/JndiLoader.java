@@ -104,7 +104,7 @@ public class JndiLoader extends BaseLoader {
 	}
 
 	@Override
-	public Class<? extends PropertyGroup> getLoaderConfig() {
+	public Class<? extends PropertyGroup> getClassConfig() {
 		return CONFIG.class;
 	}
 
@@ -174,6 +174,16 @@ public class JndiLoader extends BaseLoader {
 						+ "Setting this property does not affect the STANDARD_JNDI_ROOTS.")
 				.helpText("The final JNDI URIs to be searched will look like this 'java:[root]/[Property Name]'").build();
 
+	}
+	
+	@Override
+	public String getLoaderType() {
+		return "JNDI";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return null;
 	}
 
 }

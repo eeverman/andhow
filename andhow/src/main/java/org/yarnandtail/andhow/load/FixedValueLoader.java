@@ -48,4 +48,14 @@ public class FixedValueLoader extends BaseLoader {
 		return "a list of fixed values passed in by the construction code (not dynamically loaded)";
 	}
 	
+	@Override
+	public String getLoaderType() {
+		return "FixedValue";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return "FromJavaSourceCode";
+	}
+	
 }

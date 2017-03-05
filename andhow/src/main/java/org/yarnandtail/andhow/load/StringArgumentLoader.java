@@ -74,4 +74,14 @@ public class StringArgumentLoader extends BaseLoader {
 		return true;
 	}
 	
+	
+	@Override
+	public String getLoaderType() {
+		return "KeyValuePair";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return "FromSingleString";
+	}
 }

@@ -18,12 +18,12 @@ public abstract class BaseLoader implements Loader {
 	
 	
 	@Override
-	public Class<? extends PropertyGroup> getLoaderConfig() {
+	public Class<? extends PropertyGroup> getClassConfig() {
 		return null;
 	}
 	
 	@Override
-	public List<Property> getUserLoaderConfig() {
+	public List<Property> getInstanceConfig() {
 		return Collections.emptyList();
 	}
 	

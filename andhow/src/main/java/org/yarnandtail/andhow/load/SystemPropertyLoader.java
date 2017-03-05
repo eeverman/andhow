@@ -67,4 +67,15 @@ public class SystemPropertyLoader extends BaseLoader {
 	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
 		return false;
 	}
+	
+	
+	@Override
+	public String getLoaderType() {
+		return "SystemProperty";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return null;
+	}
 }

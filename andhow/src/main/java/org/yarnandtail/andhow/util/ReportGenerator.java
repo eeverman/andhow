@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.util;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.List;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.internal.*;
@@ -113,6 +114,9 @@ public class ReportGenerator {
 			out.println();
 		}
 		
+		//Set of loader type-dialect's that have been printed.  Skip duplicates.
+		HashSet<String> printedLoaderTypes = new HashSet();
+		
 		int supportedLoaders = 0;
 		
 		for (Loader loader : loaders) {
@@ -120,28 +124,35 @@ public class ReportGenerator {
 			SamplePrinter printer = loader.getConfigSamplePrinter();
 			
 			if (printer != null) {
+				
+				String fullType = TextUtil.trimToEmpty(loader.getLoaderType()) + 
+						"---" + TextUtil.trimToEmpty(loader.getLoaderDialect());
+				
+				if (! printedLoaderTypes.contains(fullType)) {
+					printedLoaderTypes.add(fullType);
+					
+					supportedLoaders++;
+					printer.printSampleStart(appDef, out);
 
-				supportedLoaders++;
-				printer.printSampleStart(appDef, out);
-				
-				for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
-					
-					printer.printPropertyGroupStart(appDef, out, group);
-					
-					try {
-						for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
-							printer.printProperty(appDef, out, group, prop);
+					for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
+
+						printer.printPropertyGroupStart(appDef, out, group);
+
+						try {
+							for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
+								printer.printProperty(appDef, out, group, prop);
+							}
+						} catch (Exception ex) {
+							TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
+									"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
+									"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
 						}
-					} catch (Exception ex) {
-						TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
-								"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
-								"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
+
+						printer.printPropertyGroupEnd(appDef, out, group);
 					}
-					
-					printer.printPropertyGroupEnd(appDef, out, group);
+
+					printer.printSampleEnd(appDef, out);
 				}
-				
-				printer.printSampleEnd(appDef, out);
 			}
 			
 			
