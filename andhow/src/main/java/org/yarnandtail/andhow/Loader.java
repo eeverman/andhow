@@ -3,17 +3,18 @@ package org.yarnandtail.andhow;
 import java.util.List;
 
 /**
- * Each instance is responsible for loading values from a particular type of source.
- * 
+ * Each instance is responsible for loading values from a particular type of
+ * source.
+ *
  * Implementations may define a set of Properties used to control the behavior
- of the loader, which are returned from getClassConfig().  During AndHow
- startup, these parameters will are automatically added to the list of registered
- Properties.  Values for these properties need to be loaded by a preceding loader
- or <em>forced</em> in the AndHowBuilder.
- * 
+ * of the loader, which are returned from getClassConfig(). During AndHow
+ * startup, these parameters will are automatically added to the list of
+ * registered Properties. Values for these properties need to be loaded by a
+ * preceding loader or <em>forced</em> in the AndHowBuilder.
+ *
  * Instances should not hold state because they are held in memory for the life
  * of the application.
- * 
+ *
  * @author eeverman
  */
 public interface Loader {
@@ -124,4 +125,36 @@ public interface Loader {
 	 * @return 
 	 */
 	SamplePrinter getConfigSamplePrinter();
+	
+	/**
+	 * The type of the loader, such as JNDI, PropertyFile, SystemProperty,
+	 * etc..
+	 * 
+	 * The actual return value is arbitrary, but should be consistent between
+	 * loaders of the same type.
+	 * 
+	 * The values returned by getLoaderType and getLoaderDialect are used to
+	 * removed duplicate loader types when printing sample files.  If two loader
+	 * instances are of the same type and dialect, only one will print the sample
+	 * file.
+	 * 
+	 * @return Must never returns null.
+	 */
+	String getLoaderType();
+	
+	/**
+	 * The type dialect of the loader.  For property files, this might be
+	 * either KeyValuePair or xml for example.
+	 * 
+	 * The actual return value is arbitrary, but should be consistent between
+	 * loaders of the same type and dialect.
+	 * 
+	 * The values returned by getLoaderType and getLoaderDialect are used to
+	 * removed duplicate loader types when printing sample files.  If two loader
+	 * instances are of the same type and dialect, only one will print the sample
+	 * file.
+	 * 
+	 * @return May return null if there is no meaningful dialect for this type.
+	 */
+	String getLoaderDialect();
 }

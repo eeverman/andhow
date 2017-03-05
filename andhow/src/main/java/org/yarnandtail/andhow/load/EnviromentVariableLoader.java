@@ -67,4 +67,14 @@ public class EnviromentVariableLoader extends BaseLoader {
 	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
 		return false;
 	}
+	
+	@Override
+	public String getLoaderType() {
+		return "EnvironmentVariable";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return null;
+	}
 }

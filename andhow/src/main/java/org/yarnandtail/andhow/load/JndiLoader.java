@@ -175,5 +175,15 @@ public class JndiLoader extends BaseLoader {
 				.helpText("The final JNDI URIs to be searched will look like this 'java:[root]/[Property Name]'").build();
 
 	}
+	
+	@Override
+	public String getLoaderType() {
+		return "JNDI";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return null;
+	}
 
 }

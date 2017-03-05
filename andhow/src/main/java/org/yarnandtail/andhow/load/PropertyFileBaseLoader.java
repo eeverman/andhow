@@ -65,5 +65,15 @@ public abstract class PropertyFileBaseLoader extends BaseLoader {
 	public SamplePrinter getConfigSamplePrinter() {
 		return new PropFileLoaderSamplePrinter();
 	}
+	
+	@Override
+	public String getLoaderType() {
+		return "PropertyFile";
+	}
+	
+	@Override
+	public String getLoaderDialect() {
+		return "KeyValuePair";
+	}
 
 }
