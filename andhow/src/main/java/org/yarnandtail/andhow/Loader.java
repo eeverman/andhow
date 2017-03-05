@@ -6,10 +6,10 @@ import java.util.List;
  * Each instance is responsible for loading values from a particular type of source.
  * 
  * Implementations may define a set of Properties used to control the behavior
- * of the loader, which are returned from getLoaderConfig().  During AndHow
- * startup, these parameters will are automatically added to the list of registered
- * Properties.  Values for these properties need to be loaded by a preceding loader
- * or <em>forced</em> in the AndHowBuilder.
+ of the loader, which are returned from getClassConfig().  During AndHow
+ startup, these parameters will are automatically added to the list of registered
+ Properties.  Values for these properties need to be loaded by a preceding loader
+ or <em>forced</em> in the AndHowBuilder.
  * 
  * Instances should not hold state because they are held in memory for the life
  * of the application.
@@ -31,26 +31,43 @@ public interface Loader {
 			ValueMapWithContext existingValues);
 	
 	/**
-	 * A group of Properties used to control the loader's behavior, such
-	 * the location of a properties file to load from.
-	 * 
-	 * @return 
+	 * A group of Properties used to globally configure all instance of a type
+	 * of loader.
+	 *
+	 * For loaders that are intended to be single instance (i.e. a JNDI loader)
+	 * or loaders that can be multi-instance (PropertyFile loaders) but need to
+	 * share some common configuration can return a PropertyGroup from this
+	 * method that is their global configuration interface.
+	 *
+	 * For configuration properties that should vary between instances of the
+	 * same loader class, accept them in the Loader constructor. (See
+	 * getInstanceConfig)
+	 *
+	 * The PropertyGroup returned from this method will be included in sample
+	 * config files. It is up to the Loader class to read from those configured
+	 * properties if the user configures them.
+	 *
+	 * @return
 	 */
-	Class<? extends PropertyGroup> getLoaderConfig();
+	Class<? extends PropertyGroup> getClassConfig();
 	
 	/**
 	 * A list of properties that the user has specified as being configuration
 	 * properties for this Loader.
 	 * 
 	 * Typically these Properties have been specified in the Loader constructor
-	 * or builder.
+	 * or builder.  An example usage would be passing in a Property that specifies
+	 * the location of a properties file to read from.  This is the preferred way
+	 * to configure a loader because its clear to the user and it allows each
+	 * instance of a loader to be configured differently, e.g., so PropertyFile
+	 * loaders that load from different locations.
 	 * 
 	 * Any Properties returned from this method must have been registered for
 	 * configuration.
 	 * 
 	 * @return Never null.  Either an empty list or populated.
 	 */
-	List<Property> getUserLoaderConfig();
+	List<Property> getInstanceConfig();
 	
 	/**
 	 * For this particular load, where was info loaded from?

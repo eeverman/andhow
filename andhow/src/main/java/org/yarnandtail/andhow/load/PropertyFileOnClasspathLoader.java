@@ -102,7 +102,7 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 	
 	
 	@Override
-	public List<Property> getUserLoaderConfig() {
+	public List<Property> getInstanceConfig() {
 		ArrayList<Property> list = new ArrayList();
 		list.add(classpath);
 		return list;

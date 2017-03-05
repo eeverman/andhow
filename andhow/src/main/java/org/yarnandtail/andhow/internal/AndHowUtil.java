@@ -63,12 +63,12 @@ public class AndHowUtil {
 			for (Loader loader : loaders) {
 				
 				//Add any implicit properties used to configure this loader
-				if (loader.getLoaderConfig() != null) {
-					problems.addAll(registerGroup(appDef, loader.getLoaderConfig()));
+				if (loader.getClassConfig() != null) {
+					problems.addAll(registerGroup(appDef, loader.getClassConfig()));
 				}
 				
 				//Check that user specified config properties for this loader are registered
-				for (Property p : loader.getUserLoaderConfig()) {
+				for (Property p : loader.getInstanceConfig()) {
 					if (appDef.getCanonicalName(p) == null) {
 						problems.add(new ConstructionProblem.LoaderPropertyNotRegistered(loader, p));
 					}
