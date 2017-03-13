@@ -1,14 +1,9 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.ParsingException;
-import org.yarnandtail.andhow.load.KVP;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
-import org.junit.Before;
+import org.junit.Test;
 import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.ParsingException;
 
 /**
  *

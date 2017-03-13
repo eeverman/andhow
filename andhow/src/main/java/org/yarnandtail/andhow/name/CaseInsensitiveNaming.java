@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.*;
  * 
  * @author eeverman
  */
-public class BasicNamingStrategy implements NamingStrategy {
+public class CaseInsensitiveNaming implements NamingStrategy {
 	
 	List<EffectiveName> EMPTY_NAMES = Collections.emptyList();
 

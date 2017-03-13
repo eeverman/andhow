@@ -1,21 +1,14 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.PropertyValue;
-import org.yarnandtail.andhow.AppFatalException;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.internal.LoaderProblem;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
+import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
-
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
-
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.internal.LoaderProblem;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
  *
@@ -46,7 +39,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -132,7 +125,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:/test/" + 
 				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -165,7 +158,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromStringsFromAddedAndReplacementNonStdPaths() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:zip/" + 
 				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -201,7 +194,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromObjectsCompEnv() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -244,7 +237,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testHappyPathFromObjectsRoot() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
@@ -285,7 +278,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testDuplicateValues() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
@@ -317,7 +310,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testObjectConversionErrors() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
 		jndi.bind("java:" + 
@@ -350,7 +343,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	public void testStringConversionErrors() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:" + PropertyGroup.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
 		jndi.bind("java:" + 

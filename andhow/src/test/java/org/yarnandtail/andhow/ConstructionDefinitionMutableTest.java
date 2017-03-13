@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 
 /**
@@ -30,7 +30,7 @@ public class ConstructionDefinitionMutableTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		
-		NamingStrategy bns = new BasicNamingStrategy();
+		NamingStrategy bns = new CaseInsensitiveNaming();
 		
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
@@ -64,7 +64,7 @@ public class ConstructionDefinitionMutableTest {
 	@Test
 	public void testDuplicatePropertiesInSeparateGroupWithDistinctNames() throws Exception {
 		
-		NamingStrategy bns = new BasicNamingStrategy();
+		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		
@@ -91,7 +91,7 @@ public class ConstructionDefinitionMutableTest {
 	@Test
 	public void testNonValidDefaultValueAndInvalidRegexValidationSpec() throws Exception {
 		
-		NamingStrategy bns = new BasicNamingStrategy();
+		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
 		

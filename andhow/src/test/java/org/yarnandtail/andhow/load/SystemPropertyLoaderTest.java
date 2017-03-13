@@ -1,20 +1,17 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.load.SystemPropertyLoader;
 import org.junit.After;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 import org.junit.Before;
+import org.junit.Test;
 import org.yarnandtail.andhow.LoaderValues;
 import org.yarnandtail.andhow.Property;
 import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.PropertyGroup.NameAndProperty;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
-import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import org.yarnandtail.andhow.SimpleParams;
+import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
+import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
  *
@@ -29,7 +26,7 @@ public class SystemPropertyLoaderTest {
 	public void init() throws Exception {
 		
 		appValuesBuilder = new ValueMapWithContextMutable();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		appDef = new ConstructionDefinitionMutable(bns);
 		
@@ -49,7 +46,7 @@ public class SystemPropertyLoaderTest {
 	}
 	
 	void clearSysProps() throws Exception {
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//Clear all known system properties
 		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {

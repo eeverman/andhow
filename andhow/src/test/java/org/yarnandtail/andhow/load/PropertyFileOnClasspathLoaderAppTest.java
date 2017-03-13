@@ -1,20 +1,14 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AppFatalException;
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.List;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.*;
-
-import static org.junit.Assert.*;
-
+import static org.yarnandtail.andhow.AndHowTestBase.reloader;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-
-import static org.yarnandtail.andhow.AndHowTestBase.reloader;
 
 /**
  * Just like the unit test version, but builds an entire AppConfig instance so
@@ -29,7 +23,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	
 	@Test
 	public void testHappyPath() throws Exception {
-		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 				.loader(new StringArgumentLoader())
 				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
@@ -51,7 +45,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
 		try {
-			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 					.loader(new StringArgumentLoader())
 					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
@@ -76,7 +70,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	 */
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
-		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 				.loader(new StringArgumentLoader())
 				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.group(SimpleParams.class)
@@ -92,7 +86,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
 		try {
-			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 					.loader(new StringArgumentLoader())
 					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 

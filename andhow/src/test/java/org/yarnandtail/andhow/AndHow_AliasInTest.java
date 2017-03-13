@@ -9,7 +9,7 @@ import java.util.List;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
 
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.junit.Test;
@@ -74,7 +74,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testFirstSetOfInAliasesViaCmdLine() {
-		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN, STR1)
 				.cmdLineArg(STR_PROP2_ALIAS, STR2)
@@ -90,7 +90,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testSecondSetOfInAliasesViaCmdLine() {
-		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.cmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
@@ -105,7 +105,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testThirdSetOfInAliasesViaCmdLine() {
-		AndHow.builder().namingStrategy(new BasicNamingStrategy())
+		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.cmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
@@ -168,7 +168,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testInAliasesViaJndiCompEnvUrlNames() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 
 		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP1_IN), STR1);
 		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP2_ALIAS), STR2);
@@ -191,7 +191,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testInAliasesViaJndiRootUrlNames() throws Exception {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 
 		jndi.bind("java:" + bns.getUriName(STR_PROP1_IN), STR1);
 		jndi.bind("java:" + bns.getUriName(STR_PROP2_ALIAS), STR2);
@@ -217,7 +217,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InAlias() {
 		
 		try {
-			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
@@ -244,7 +244,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InAliasInLowerCase() {
 		
 		try {
-			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
@@ -270,7 +270,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			AndHow.builder().namingStrategy(new BasicNamingStrategy())
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
 					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
