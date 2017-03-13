@@ -1,8 +1,7 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
-
 import static org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
+import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
 
 /**
  * Simple class to bundle a Property, its value and any associated problems with the Property.

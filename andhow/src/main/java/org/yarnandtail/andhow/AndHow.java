@@ -2,7 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
  *
@@ -217,7 +217,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	public static class AndHowBuilder {
 		//User config
 		private final List<Loader> _loaders = new ArrayList();
-		private NamingStrategy _namingStrategy = new BasicNamingStrategy();
+		private NamingStrategy _namingStrategy = new CaseInsensitiveNaming();
 		private final List<String> _cmdLineArgs = new ArrayList();
 		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
 
@@ -303,7 +303,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * Sets the naming strategy, which determines how the property names
 		 * are realized when used in config files, JNDI and cmd line arguments.
 		 * 
-		 * If unspecified, BasicNamingStrategy is used.
+		 * If unspecified, CaseInsensitiveNaming is used.
 		 * 
 		 * @param namingStrategy
 		 * @return 

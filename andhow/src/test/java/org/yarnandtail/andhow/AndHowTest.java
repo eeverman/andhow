@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 
@@ -23,7 +23,7 @@ import org.yarnandtail.andhow.property.StrProp;
 public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
-	BasicNamingStrategy basicNaming = new BasicNamingStrategy();
+	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
 	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();

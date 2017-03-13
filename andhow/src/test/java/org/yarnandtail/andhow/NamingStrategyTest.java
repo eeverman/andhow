@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow;
 
 import org.junit.Test;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 import static org.junit.Assert.*;
 
@@ -19,12 +19,12 @@ public class NamingStrategyTest {
 	@Test
 	public void testGetUriName() {
 		
-		BasicNamingStrategy bns = new BasicNamingStrategy();
+		CaseInsensitiveNaming naming = new CaseInsensitiveNaming();
 		
-		assertEquals("org/cyborg/alfa/rest/ENPOINT_URL", bns.getUriName("org.cyborg.alfa.rest.ENPOINT_URL"));
-		assertEquals("ENPOINT_URL", bns.getUriName("ENPOINT_URL"));
-		assertEquals("", bns.getUriName(""));	//shouldn't happen
-		assertNull(bns.getUriName(null));	//shouldn't happen, unless part of a chain of conversions
+		assertEquals("org/cyborg/alfa/rest/ENPOINT_URL", naming.getUriName("org.cyborg.alfa.rest.ENPOINT_URL"));
+		assertEquals("ENPOINT_URL", naming.getUriName("ENPOINT_URL"));
+		assertEquals("", naming.getUriName(""));	//shouldn't happen
+		assertNull(naming.getUriName(null));	//shouldn't happen, unless part of a chain of conversions
 	}
 
 

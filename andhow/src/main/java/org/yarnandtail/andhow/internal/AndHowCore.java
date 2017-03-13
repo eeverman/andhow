@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.internal;
 
 import java.util.*;
 import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.util.ReportGenerator;
 
 /**
@@ -28,7 +28,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			List<Class<? extends PropertyGroup>> registeredGroups, 
 			String[] cmdLineArgs) throws AppFatalException {
 		
-		NamingStrategy namingStrategy = (naming != null)?naming:new BasicNamingStrategy();
+		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
 		
 		if (loaders != null) {
 			for (Loader loader : loaders) {

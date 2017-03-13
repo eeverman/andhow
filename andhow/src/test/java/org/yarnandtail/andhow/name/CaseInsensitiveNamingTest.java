@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.name;
 
-import org.yarnandtail.andhow.name.BasicNamingStrategy;
 import org.yarnandtail.andhow.PropertyNaming;
 import org.yarnandtail.andhow.PropertyGroup;
-import org.junit.Before;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,13 +12,13 @@ import org.yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class BasicNamingStrategyTest {
+public class CaseInsensitiveNamingTest {
 
 	//Using SimpleParams as an arbitrary group to use for naming
 	final String groupFullPath = SimpleParams.class.getCanonicalName();
 		
 	//Stateless, so ok to have a single instance
-	final BasicNamingStrategy bns = new BasicNamingStrategy();
+	final CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 	
 	@Test
 	public void testDefaultNaming() throws Exception {
