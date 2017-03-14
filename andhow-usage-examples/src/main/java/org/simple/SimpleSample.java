@@ -12,6 +12,7 @@ public class SimpleSample {
 	
 	public static void main(String[] args) {
 		AndHow.builder() /* 1) Simple builder initializes framework */
+				.cmdLineArgs(args)
 				.loader(new SystemPropertyLoader())
 				.loader(new JndiLoader())
 				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))

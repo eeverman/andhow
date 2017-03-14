@@ -107,12 +107,15 @@ public class ReportGenerator {
 	public static void printConfigSamples(ConstructionDefinition appDef, PrintStream out, 
 			List<Loader> loaders, boolean isDueToErrors) {
 		
+		out.println();
 		if (isDueToErrors) {
-			out.println();
 			out.println("== Since there were startup errors, sample configuration "
 					+ "will be printed for each Loader that supports it ==");
-			out.println();
+		} else {
+			out.println("== As requested, sample configuration "
+					+ "will be printed for each Loader that supports it ==");
 		}
+		out.println();
 		
 		//Set of loader type-dialect's that have been printed.  Skip duplicates.
 		HashSet<String> printedLoaderTypes = new HashSet();
