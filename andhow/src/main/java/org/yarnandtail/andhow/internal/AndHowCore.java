@@ -43,8 +43,15 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		if (cmdLineArgs != null && cmdLineArgs.length > 0) {
 			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
 		}
+		
+		//The global options are always added to the list of registered groups
+		ArrayList<Class<? extends PropertyGroup>> effRegGroups = new ArrayList();
+		if (registeredGroups != null) {
+			effRegGroups.addAll(registeredGroups);
+		}
+		effRegGroups.add(Options.class);
 
-		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(registeredGroups, loaders, namingStrategy, problems);
+		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
 		runtimeDef = startupDef.toImmutable();
 		
 		//
@@ -84,6 +91,11 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 					exporter.export(grp, runtimeDef, this);
 				}
 			}
+		}
+		
+		//Print samples (if requested)
+		if (Options.CREATE_SAMPLES.getValue(this)) {
+			ReportGenerator.printConfigSamples(runtimeDef, System.out, loaders, false);
 		}
 	}
 	
