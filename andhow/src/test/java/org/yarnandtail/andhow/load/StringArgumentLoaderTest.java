@@ -36,7 +36,7 @@ public class StringArgumentLoaderTest {
 	}
 	
 	@Test
-	public void testCmdLineLoaderHappyPath() {
+	public void testCmdLineLoaderHappyPathAsList() {
 		
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
@@ -48,9 +48,35 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader();
+		StringArgumentLoader cll = new StringArgumentLoader(args);
 		
-		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
+		
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testCmdLineLoaderHappyPathAsArray() {
+		
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		
+		List<String> args = new ArrayList();
+		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null");
+		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
+		
+		
+		StringArgumentLoader cll = new StringArgumentLoader(args.toArray(new String[5]));
+		
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -74,9 +100,9 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "");
 		
-		StringArgumentLoader cll = new StringArgumentLoader();
+		StringArgumentLoader cll = new StringArgumentLoader(args);
 		
-		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -103,9 +129,9 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "false");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader();
+		StringArgumentLoader cll = new StringArgumentLoader(args);
 		
-		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
 		assertEquals(3, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -126,9 +152,9 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "YYY" + AndHow.KVP_DELIMITER + "2");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader();
+		StringArgumentLoader cll = new StringArgumentLoader(args);
 		
-		LoaderValues result = cll.load(appDef, args, appValuesBuilder);
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {

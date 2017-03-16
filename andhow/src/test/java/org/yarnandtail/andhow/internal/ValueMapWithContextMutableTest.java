@@ -27,7 +27,7 @@ public class ValueMapWithContextMutableTest {
 		
 		ValueMapWithContextMutable builder = new ValueMapWithContextMutable();
 		
-		Loader cmdLineLoad = new StringArgumentLoader();
+		Loader cmdLineLoad = new StringArgumentLoader(new String[]{});
 		Loader propFileLoad = new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		
 		List<PropertyValue> firstSet = new ArrayList();

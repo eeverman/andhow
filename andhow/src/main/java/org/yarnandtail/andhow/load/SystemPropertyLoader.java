@@ -31,8 +31,7 @@ public class SystemPropertyLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues) {
+	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();

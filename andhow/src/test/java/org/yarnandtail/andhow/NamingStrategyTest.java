@@ -1,9 +1,8 @@
 package org.yarnandtail.andhow;
 
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-
-import static org.junit.Assert.*;
 
 /**
  *

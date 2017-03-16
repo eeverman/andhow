@@ -1,23 +1,16 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AppFatalException;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.List;
-
+import static org.junit.Assert.*;
+import org.junit.Test;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
-
+import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.load.JndiLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.load.JndiLoader;
 
 /**
  *
@@ -75,7 +68,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testFirstSetOfInAliasesViaCmdLine() {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN, STR1)
 				.cmdLineArg(STR_PROP2_ALIAS, STR2)
 				.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -91,7 +83,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testSecondSetOfInAliasesViaCmdLine() {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.cmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
 				.cmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
@@ -106,7 +97,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testThirdSetOfInAliasesViaCmdLine() {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new StringArgumentLoader())
 				.cmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.cmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
 				.cmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
@@ -218,7 +208,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
 					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -245,7 +234,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
 					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -271,7 +259,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.loader(new StringArgumentLoader())
 					.cmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.cmdLineArg(STR_PROP2_ALIAS, STR2)
 					.cmdLineArg(INT_PROP1_ALIAS, INT1.toString())

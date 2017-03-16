@@ -7,10 +7,14 @@ import java.util.List;
  * source.
  *
  * Implementations may define a set of Properties used to control the behavior
- * of the loader, which are returned from getClassConfig(). During AndHow
- * startup, these parameters will are automatically added to the list of
+ * of all instances of a loader, which are returned from getClassConfig().
+ * During AndHow startup, these parameters will be automatically added to the list of
  * registered Properties. Values for these properties need to be loaded by a
  * preceding loader or <em>forced</em> in the AndHowBuilder.
+ * 
+ * Implementations may also define instance level configuration by returning
+ * a list of Properties from getInstanceConfig().  These properties must have been
+ * added to the groups added to the AndHow builder via addGroup().
  *
  * Instances should not hold state because they are held in memory for the life
  * of the application.
@@ -24,11 +28,10 @@ public interface Loader {
 	 * source.
 	 * 
 	 * @param runtimeDef
-	 * @param cmdLineArgs All loaders receive the command line args even though they only apply to the cmd line loader
 	 * @param existingValues
 	 * @return 
 	 */
-	LoaderValues load(ConstructionDefinition runtimeDef, List<String> cmdLineArgs,
+	LoaderValues load(ConstructionDefinition runtimeDef,
 			ValueMapWithContext existingValues);
 	
 	/**

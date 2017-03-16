@@ -1,10 +1,9 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.AndHow;
-import javax.naming.NamingException;
 import java.util.logging.*;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+import javax.naming.NamingException;
 import org.junit.BeforeClass;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
  * All tests using AppConfig must extend this class so they have access to the

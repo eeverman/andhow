@@ -14,10 +14,9 @@ public class ReallySimpleApp {
 	
 	public static void main(String[] args) {
 		AndHow.builder()
-				.cmdLineArgs(args)
-				.loader(new StringArgumentLoader())	/* Used to read cmdLine args */
+				.cmdLineArgs(args) /* Implicitly adds a loader for these cmd line args */
 				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))
-				.group(MySetOfProps.class) /* 2) MySetOfProps defined below */
+				.group(MySetOfProps.class) /* MySetOfProps defined below */
 				.build();
 	
 		System.out.println("Examples of using the configured properties (they initially have default values)");

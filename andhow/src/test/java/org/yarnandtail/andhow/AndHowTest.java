@@ -1,16 +1,14 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.internal.RequirementProblem;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 import org.junit.Before;
+import org.junit.Test;
+import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
@@ -24,7 +22,6 @@ public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
-	List<Loader> loaders = new ArrayList();
 	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
@@ -39,9 +36,6 @@ public class AndHowTest extends AndHowTestBase {
 	
 	@Before
 	public void setup() {
-		
-		loaders.clear();
-		loaders.add(new StringArgumentLoader());
 		
 		configPtGroups.clear();
 		configPtGroups.add(SimpleParams.class);
@@ -74,7 +68,6 @@ public class AndHowTest extends AndHowTestBase {
 	public void testCmdLineLoaderUsingClassBaseName() {
 		AndHow.builder()
 				.namingStrategy(basicNaming)
-				.loaders(loaders)
 				.groups(configPtGroups)
 				.cmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
@@ -88,6 +81,9 @@ public class AndHowTest extends AndHowTestBase {
 	
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
+		
+		List<Loader> loaders = new ArrayList();
+		loaders.add(new StringArgumentLoader(cmdLineArgsWFullClassName));
 		
 		try {
 
@@ -113,7 +109,6 @@ public class AndHowTest extends AndHowTestBase {
 		try {
 				AndHow.builder()
 					.namingStrategy(basicNaming)
-					.loaders(loaders)
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
 					.cmdLineArgs(cmdLineArgsWFullClassName)
