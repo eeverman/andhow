@@ -24,10 +24,9 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new StringArgumentLoader())
-				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.reloadForNonPropduction(reloader);
@@ -46,10 +45,9 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.loader(new StringArgumentLoader())
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.reloadForNonPropduction(reloader);
@@ -71,7 +69,6 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new StringArgumentLoader())
 				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
@@ -87,10 +84,9 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.loader(new StringArgumentLoader())
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.reloadForNonPropduction(reloader);

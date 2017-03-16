@@ -1,12 +1,11 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.property.LocalDateTimeProp;
-import org.yarnandtail.andhow.property.IntProp;
-import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.property.FlagProp;
-import org.yarnandtail.andhow.property.LngProp;
-import org.yarnandtail.andhow.PropertyGroup;
 import java.time.LocalDateTime;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.IntProp;
+import org.yarnandtail.andhow.property.LngProp;
+import org.yarnandtail.andhow.property.LocalDateTimeProp;
+import org.yarnandtail.andhow.property.StrProp;
 
 /**
  * Test set of params w/ one of each type.

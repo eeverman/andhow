@@ -45,9 +45,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.loader(new StringArgumentLoader())
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
@@ -74,9 +73,8 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.loader(new StringArgumentLoader())
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.cmdLineArgs(cmdLineArgs)
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
@@ -108,10 +106,9 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			//Error expected b/c some values are invalid
 			AndHow.builder()
 					.group(SampleRestClientGroup.class)
-					.loader(new StringArgumentLoader())
+					.cmdLineArgs(cmdLineArgs)
 					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 					.loader(new JndiLoader())
-					.cmdLineArgs(cmdLineArgs)
 					.reloadForNonPropduction(reloader);
 		} catch (AppFatalException e) {
 			

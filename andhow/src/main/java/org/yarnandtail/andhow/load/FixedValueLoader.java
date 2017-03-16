@@ -28,8 +28,7 @@ public class FixedValueLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues) {
+	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 		return new LoaderValues(this, values, ProblemList.EMPTY_PROBLEM_LIST);
 	}
 	

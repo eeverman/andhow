@@ -17,7 +17,6 @@ import org.yarnandtail.andhow.util.ReportGenerator;
 public class AndHowCore implements ConstructionDefinition, ValueMap {
 	//User config
 	private final List<Loader> loaders = new ArrayList();
-	private final List<String> cmdLineArgs = new ArrayList();
 	
 	//Internal state
 	private final ConstructionDefinition runtimeDef;
@@ -25,8 +24,8 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs) throws AppFatalException {
+			List<Class<? extends PropertyGroup>> registeredGroups) 
+			throws AppFatalException {
 		
 		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
 		
@@ -38,11 +37,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 					problems.add(new ConstructionProblem.DuplicateLoader(loader));
 				}
 			}
-		}
-		
-		if (cmdLineArgs != null && cmdLineArgs.length > 0) {
-			this.cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
-		}
+		}		
 		
 		//The global options are always added to the list of registered groups
 		ArrayList<Class<? extends PropertyGroup>> effRegGroups = new ArrayList();
@@ -119,13 +114,12 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		return loadedValues.getEffectiveValue(prop);
 	}
 	
-	//TODO:  Snhouldn't this be stateless and pass in the loaer list?
+	//TODO:  Shouldn't this be stateless and pass in the loader list?
 	private ValueMapWithContext loadValues(ConstructionDefinition definition, ProblemList<Problem> problems) {
 		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
 
-		//LoaderState state = new LoaderState(cmdLineArgs, existingValues, runtimeDef);
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(definition, cmdLineArgs, existingValues);
+			LoaderValues result = loader.load(definition, existingValues);
 			existingValues.addValues(result);
 			problems.addAll(result.getProblems());
 		}

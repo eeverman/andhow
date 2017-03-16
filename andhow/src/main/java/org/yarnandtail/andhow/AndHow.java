@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
@@ -42,10 +43,9 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 * @throws AppFatalException 
 	 */
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs)
+			List<Class<? extends PropertyGroup>> registeredGroups)
 			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs);
+		core = new AndHowCore(naming, loaders, registeredGroups);
 		reloader = new Reloader(this);
 	}
 	
@@ -86,15 +86,14 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 */
 	private static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups, 
-			String[] cmdLineArgs) throws AppFatalException, RuntimeException {
+			List<Class<? extends PropertyGroup>> registeredGroups)
+			throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
 			if (singleInstance != null) {
 				throw new RuntimeException("Already constructed!");
 			} else {
-				singleInstance = new AndHow(naming, loaders, registeredGroups, 
-						cmdLineArgs);
+				singleInstance = new AndHow(naming, loaders, registeredGroups);
 				return singleInstance.reloader;
 			}
 		}
@@ -220,6 +219,13 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		private NamingStrategy _namingStrategy = new CaseInsensitiveNaming();
 		private final List<String> _cmdLineArgs = new ArrayList();
 		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
+		
+		//
+		//Internal state
+		
+		//The position at which the cmd line loader should be added.
+		//May be null if not needed.
+		private Integer addCmdLineLoaderAtPosition = null;
 
 		/**
 		 * Add a loader to the list of loaders.  Loaders are used in the order added.
@@ -270,13 +276,24 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		}
 
 		/**
-		 * Adds the command line arguments to the list being build of cmd line args.
+		 * Adds the command line arguments, keeping any previously added.
+		 * 
+		 * Note that adding cmd line args implicitly add a StringArgumentLoader
+		 * at the point in code where the first cmd line argument is added, thus
+		 * determining the load order of cmd line arguments in relation to other
+		 * loaders.
 		 * 
 		 * @param commandLineArgs
 		 * @return 
 		 */
 		public AndHowBuilder cmdLineArgs(String[] commandLineArgs) {
 			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
+			
+			//Record where the cmd line loader should go, if not already determined
+			if (addCmdLineLoaderAtPosition == null) {
+				addCmdLineLoaderAtPosition = _loaders.size();
+			}
+			
 			return this;
 		}
 
@@ -296,6 +313,12 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 			} else {
 				_cmdLineArgs.add(key);
 			}
+			
+			//Record where the cmd line loader should go, if not already determined
+			if (addCmdLineLoaderAtPosition == null) {
+				addCmdLineLoaderAtPosition = _loaders.size();
+			}
+			
 			return this;
 		}
 
@@ -338,8 +361,14 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @throws AppFatalException If the startup fails.
 		 */
 		public void build() throws AppFatalException {
-			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			AndHow.build(_namingStrategy, _loaders, _groups,  args);
+
+			//If the user added cmd line args, add a loader for them at the correct
+			//position wrt other loaders.
+			if (addCmdLineLoaderAtPosition != null) {
+				_loaders.add(addCmdLineLoaderAtPosition, new StringArgumentLoader(_cmdLineArgs));
+			}
+			
+			AndHow.build(_namingStrategy, _loaders, _groups);
 		}
 
 		/**
@@ -359,8 +388,14 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public AndHow.Reloader buildForNonPropduction() throws AppFatalException {
-			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			return AndHow.build(_namingStrategy, _loaders, _groups,  args);
+			
+			//If the user added cmd line args, add a loader for them at the correct
+			//position wrt other loaders.
+			if (addCmdLineLoaderAtPosition != null) {
+				_loaders.add(addCmdLineLoaderAtPosition, new StringArgumentLoader(_cmdLineArgs));
+			}
+			
+			return AndHow.build(_namingStrategy, _loaders, _groups);
 		}
 		
 		/**
@@ -373,8 +408,14 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public void reloadForNonPropduction(AndHow.Reloader reloader) throws AppFatalException {
-			String[] args = _cmdLineArgs.toArray(new String[_cmdLineArgs.size()]);
-			reloader.reload(_namingStrategy, _loaders, _groups,  args);
+			
+			//If the user added cmd line args, add a loader for them at the correct
+			//position wrt other loaders.
+			if (addCmdLineLoaderAtPosition != null) {
+				_loaders.add(addCmdLineLoaderAtPosition, new StringArgumentLoader(_cmdLineArgs));
+			}
+			
+			reloader.reload(_namingStrategy, _loaders, _groups);
 		}
 
 	}
@@ -400,11 +441,11 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
-				List<Class<? extends PropertyGroup>> registeredGroups, String[] cmdLineArgs) 
+				List<Class<? extends PropertyGroup>> registeredGroups) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, registeredGroups, cmdLineArgs);
+				instance.core = new AndHowCore(naming, loaders, registeredGroups);
 			}
 		}
 		

@@ -51,7 +51,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -75,7 +75,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -105,7 +105,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -129,7 +129,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -153,7 +153,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -180,7 +180,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -198,7 +198,7 @@ public class EnviromentVariableLoaderTest {
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
 		
-		LoaderValues result = spl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

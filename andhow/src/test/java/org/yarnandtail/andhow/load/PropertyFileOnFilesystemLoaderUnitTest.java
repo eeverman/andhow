@@ -65,12 +65,12 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
-		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
-		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -87,12 +87,12 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
-		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, appValuesBuilder);
 		
 		assertEquals(1, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -112,12 +112,12 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
 		//evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new StringArgumentLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
 		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader(TestProps.FILEPATH);
 		
-		LoaderValues result = pfl.load(appDef, null, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 	}

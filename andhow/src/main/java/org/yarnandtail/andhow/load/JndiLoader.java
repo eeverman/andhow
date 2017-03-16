@@ -29,8 +29,7 @@ public class JndiLoader extends BaseLoader {
 	static String JNDI_PROTOCOL_NAME = "java:";
 
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues) {
+	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 
 		ArrayList<String> jndiRoots = buildJndiRoots(existingValues);
 

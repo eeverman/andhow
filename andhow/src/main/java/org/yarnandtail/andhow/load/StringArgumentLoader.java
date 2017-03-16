@@ -1,6 +1,8 @@
 package org.yarnandtail.andhow.load;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -29,12 +31,43 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  */
 public class StringArgumentLoader extends BaseLoader {
 	
-	public StringArgumentLoader() {
+	private final List<String> cmdLineArgs;
+	
+	/**
+	 * Construct using a list of Strings, each string containing a key-value pair.
+	 * 
+	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
+	 * AndHow.KVP_DELIMITER.
+	 * 
+	 * @param inCmdLineArgs 
+	 */
+	public StringArgumentLoader(List<String> inCmdLineArgs) {
+		if (inCmdLineArgs != null && inCmdLineArgs.size() > 0) {
+			cmdLineArgs = new ArrayList();
+			cmdLineArgs.addAll(inCmdLineArgs);
+		} else {
+			cmdLineArgs = Collections.emptyList();
+		}
+	}
+	
+	/**
+	 * Construct using an array of Strings, each string containing a key-value pair.
+	 * 
+	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
+	 * AndHow.KVP_DELIMITER.
+	 * 
+	 * @param inCmdLineArgs 
+	 */
+	public StringArgumentLoader(String[] inCmdLineArgs) {
+		if (inCmdLineArgs != null && inCmdLineArgs.length > 0) {
+			cmdLineArgs = Arrays.asList(inCmdLineArgs);
+		} else {
+			cmdLineArgs = Collections.emptyList();
+		}
 	}
 	
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, List<String> cmdLineArgs,
-			ValueMapWithContext existingValues) {
+	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
