@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * A name for a Property, either incoming (when read by a property

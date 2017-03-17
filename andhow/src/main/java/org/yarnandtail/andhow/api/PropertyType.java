@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * The broad type of the Property

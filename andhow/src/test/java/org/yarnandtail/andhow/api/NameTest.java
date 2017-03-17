@@ -1,5 +1,6 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.api.Name;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;

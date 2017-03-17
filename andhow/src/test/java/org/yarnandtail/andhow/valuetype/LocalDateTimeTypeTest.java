@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import org.yarnandtail.andhow.ParsingException;
+import org.yarnandtail.andhow.api.ParsingException;
 
 /**
  *

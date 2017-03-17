@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.PropertyGroup;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;

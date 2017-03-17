@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.ParsingException;
+import org.yarnandtail.andhow.api.ParsingException;
 
 /**
  *

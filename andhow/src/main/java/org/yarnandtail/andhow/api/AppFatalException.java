@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * An exception that causes configuration processing to stop b/c it cannot proceed.

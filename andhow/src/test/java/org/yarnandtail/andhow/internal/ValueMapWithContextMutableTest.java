@@ -1,10 +1,11 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.LoaderValues;
-import org.yarnandtail.andhow.Problem;
-import org.yarnandtail.andhow.Loader;
-import org.yarnandtail.andhow.ProblemList;
-import org.yarnandtail.andhow.ValueMap;
+import org.yarnandtail.andhow.api.PropertyValue;
+import org.yarnandtail.andhow.api.LoaderValues;
+import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.Loader;
+import org.yarnandtail.andhow.api.ProblemList;
+import org.yarnandtail.andhow.api.ValueMap;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;

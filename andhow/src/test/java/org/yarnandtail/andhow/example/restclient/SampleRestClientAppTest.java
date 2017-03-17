@@ -1,10 +1,11 @@
 package org.yarnandtail.andhow.example.restclient;
 
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.load.JndiLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.AppFatalException;
+import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;

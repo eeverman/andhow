@@ -1,5 +1,9 @@
 package org.yarnandtail.andhow.internal;
 
+import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.PropertyGroup;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.util.TextUtil;
 

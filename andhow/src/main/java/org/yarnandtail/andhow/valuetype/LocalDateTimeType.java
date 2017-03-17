@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.valuetype;
 
 import java.time.LocalDateTime;
-import org.yarnandtail.andhow.ParsingException;
+import org.yarnandtail.andhow.api.ParsingException;
 
 /**
  * Type representation of Java LocalDateTime objects.

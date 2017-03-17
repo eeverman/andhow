@@ -1,7 +1,7 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 import java.util.*;
-import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
+import org.yarnandtail.andhow.api.ProblemList.UnmodifiableProblemList;
 
 /**
  * The Properties and values loaded by a Loader.

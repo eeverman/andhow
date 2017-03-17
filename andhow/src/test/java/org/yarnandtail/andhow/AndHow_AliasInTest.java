@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.PropertyGroup;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -223,7 +225,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().getProperty());
 			assertEquals(STR_PROP1_IN, nun.getConflictName());
 		}
 	}
@@ -249,7 +251,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().getProperty());
 			assertEquals(STR_PROP1_IN.toLowerCase(), nun.getConflictName());
 		}
 	}
@@ -274,7 +276,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().property);
+			assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().getProperty());
 			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
 		}
 	}

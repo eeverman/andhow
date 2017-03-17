@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * Simple class to bundle a Property, its value and any associated problems with the Property.
@@ -52,7 +52,7 @@ public class PropertyValue {
 	public PropertyValue(Property<?> prop, Object value) {
 		this.property = prop;
 		this.value = value;
-		this.problems = org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
+		this.problems = org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
 	}
 	
 	public PropertyValue(Property<?> prop, Object value, ProblemList<Problem> inIssues) {
@@ -60,9 +60,9 @@ public class PropertyValue {
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			problems = new org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList(inIssues);
+			problems = new org.yarnandtail.andhow.api.ProblemList.UnmodifiableProblemList(inIssues);
 		} else {
-			this.problems = org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
+			this.problems = org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
 		}
 	}
 

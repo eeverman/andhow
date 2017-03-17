@@ -2,8 +2,8 @@ package org.yarnandtail.andhow.internal;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.ValueMap;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.api.ValueMap;
 
 /**
  *

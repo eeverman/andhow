@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.Loader;
+import org.yarnandtail.andhow.api.Loader;
 
 /**
  * An internal exception that a Loader can throw to be caught internally and converted to a LoaderProblem.

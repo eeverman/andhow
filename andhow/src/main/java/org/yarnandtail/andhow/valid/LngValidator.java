@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.valid;
 
-import org.yarnandtail.andhow.Validator;
+import org.yarnandtail.andhow.api.Validator;
 
 /**
  * A collection of Long validation types

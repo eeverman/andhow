@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.valid;
 
 import java.time.LocalDateTime;
-import org.yarnandtail.andhow.Validator;
+import org.yarnandtail.andhow.api.Validator;
 
 /**
  * A collection of LocalDateTime validation types

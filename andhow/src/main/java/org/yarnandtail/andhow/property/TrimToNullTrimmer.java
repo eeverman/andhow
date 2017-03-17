@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.property;
 
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.Trimmer;
+import org.yarnandtail.andhow.api.Trimmer;
 
 /**
  * This trimmer trims to null.

@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.api.PropertyGroup;
 import java.time.LocalDateTime;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;

@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.LoaderValues;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
