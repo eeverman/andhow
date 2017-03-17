@@ -41,11 +41,11 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null");
-		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
 		
 		
 		StringArgumentLoader cll = new StringArgumentLoader(args);
@@ -67,11 +67,11 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null");
-		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
 		
 		
 		StringArgumentLoader cll = new StringArgumentLoader(args.toArray(new String[5]));
@@ -94,11 +94,11 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + AndHow.KVP_DELIMITER + "");
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "");
+		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "");
 		
 		StringArgumentLoader cll = new StringArgumentLoader(args);
 		
@@ -122,11 +122,11 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "1");
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "2");
-		args.add(basePath + "STR_NULL" + AndHow.KVP_DELIMITER + "3");
-		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "false");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "1");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "2");
+		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "3");
+		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "false");
 		
 		
 		StringArgumentLoader cll = new StringArgumentLoader(args);
@@ -148,8 +148,8 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "XXX" + AndHow.KVP_DELIMITER + "1");
-		args.add(basePath + "YYY" + AndHow.KVP_DELIMITER + "2");
+		args.add(basePath + "XXX" + StringArgumentLoader.KVP_DELIMITER + "1");
+		args.add(basePath + "YYY" + StringArgumentLoader.KVP_DELIMITER + "2");
 		
 		
 		StringArgumentLoader cll = new StringArgumentLoader(args);

@@ -1,18 +1,16 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.util.TextUtil;
-
 /**
  * A name for a Property that has been processed by a NamingStrategy to create
- an effectiveIn name, which may be different than the original name.
- * 
- * The NamingStrategy is also responsible to creating an effectiveIn name.  An
- effectiveIn name is the name that is matched on when trying to match up incoming
- properties names found by a Loader.  This is distinct from the actual name to
- accommodate case insensitive naming.  For instance, if a property is aliased
- as 'bob', the effectiveIn name may be 'BOB' with all incoming names also converted
- to uppercase.
- * 
+ * an effectiveIn name, which may be different than the original name.
+ *
+ * The NamingStrategy is also responsible to creating an effectiveIn name. An
+ * effectiveIn name is the name that is matched on when trying to match up
+ * incoming properties names found by a Loader. This is distinct from the actual
+ * name to accommodate case insensitive naming. For instance, if a property is
+ * aliased as 'bob', the effectiveIn name may be 'BOB' with all incoming names
+ * also converted to uppercase.
+ *
  * @author ericeverman
  */
 public class EffectiveName extends Name {
@@ -35,9 +33,9 @@ public class EffectiveName extends Name {
 		
 		if (effectiveIn == null || effectiveIn.length() == 0) {
 			throw new AppFatalException("The effective 'in' name cannot be empty or null");
-		} else if (! TextUtil.isValidPropertyAlias(effectiveIn)) {
+		} else if (! Name.isValidPropertyName(effectiveIn)) {
 			throw new AppFatalException("The effective 'in' name cannot contain whitespace or special characters from this list: "
-					+ TextUtil.ILLEGAL_PROPERTY_ALIAS_CHARACTERS);
+					+ Name.ILLEGAL_PROPERTY_NAME_CHARS);
 		}
 
 		this.effectiveIn = effectiveIn;
@@ -59,14 +57,14 @@ public class EffectiveName extends Name {
 		
 		if (effectiveIn == null || effectiveIn.length() == 0) {
 			throw new AppFatalException("The effective 'in' name cannot be empty or null");
-		} else if (! TextUtil.isValidPropertyAlias(effectiveIn)) {
+		} else if (! Name.isValidPropertyName(effectiveIn)) {
 			throw new AppFatalException("The effective 'in' name cannot contain whitespace or special characters from this list: "
-					+ TextUtil.ILLEGAL_PROPERTY_ALIAS_CHARACTERS);
+					+ Name.ILLEGAL_PROPERTY_NAME_CHARS);
 		} else if (effectiveOut == null || effectiveOut.length() == 0) {
 			throw new AppFatalException("The effective 'out' name cannot be empty or null");
-		} else if (! TextUtil.isValidPropertyAlias(effectiveOut)) {
+		} else if (! Name.isValidPropertyName(effectiveOut)) {
 			throw new AppFatalException("The effective 'out' name cannot contain whitespace or special characters from this list: "
-					+ TextUtil.ILLEGAL_PROPERTY_ALIAS_CHARACTERS);
+					+ Name.ILLEGAL_PROPERTY_NAME_CHARS);
 		}
 
 		this.effectiveIn = effectiveIn;

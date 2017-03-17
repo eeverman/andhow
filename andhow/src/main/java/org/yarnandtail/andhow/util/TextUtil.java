@@ -11,14 +11,6 @@ import java.util.*;
  */
 public class TextUtil {
 	
-	/**
-	 * These characters are not allowed in Property aliases because they may collide
-	 * with characters allowed in various formats, in particular, uri style JNDI
-	 * names or property files conventions.
-	 * 
-	 * URLs require encoding for these characters: [whitespace];/?:@=&"<>#%{}|\^~[]`
-	 */
-	public static String ILLEGAL_PROPERTY_ALIAS_CHARACTERS = " \t\n\r;/?:@=&\"<>#%{}|\\^~[]`";
 	
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	public static final List<String> EMPTY_STRING_LIST = Collections.emptyList();
@@ -394,32 +386,4 @@ public class TextUtil {
 		return escapedXML.toString();
 	}
 	
-	/**
-	 * Returns true if the alias contains no special characters, as defined in
-	 * ILLEGAL_PROPERTY_ALIAS_CHARACTERS.
-	 * 
-	 * The alias is also not allowed to be null, empty, or start/end with a
-	 * dot (.) character.
-	 * 
-	 * @param name
-	 * @return 
-	 */
-	public static boolean isValidPropertyAlias(String name) {
-
-		if (name == null || name.length() == 0) {
-			return false;
-		}
-		
-		if (name.startsWith(".") || name.endsWith(".")) {
-			return false;
-		}
-		
-		for (char c : ILLEGAL_PROPERTY_ALIAS_CHARACTERS.toCharArray()) {
-			if (name.indexOf(c) > -1) {
-				return false;
-			}
-		}
-
-		return true;
-	}
 }

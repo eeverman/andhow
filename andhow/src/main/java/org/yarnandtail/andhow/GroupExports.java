@@ -1,7 +1,6 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow;
 
 import java.lang.annotation.*;
-import org.yarnandtail.andhow.GroupExport;
 
 /**
  * Not for general use:  Required by the Java annotations system to support

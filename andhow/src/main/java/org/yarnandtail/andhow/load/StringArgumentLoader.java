@@ -30,6 +30,11 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  * @author eeverman
  */
 public class StringArgumentLoader extends BaseLoader {
+
+	/**
+	 * The default delimiter between a key and a value.
+	 */
+	public static final String KVP_DELIMITER = "=";
 	
 	private final List<String> cmdLineArgs;
 	
@@ -75,7 +80,7 @@ public class StringArgumentLoader extends BaseLoader {
 		if (cmdLineArgs != null) {
 			for (String s : cmdLineArgs) {
 				try {
-					KVP kvp = KVP.splitKVP(s, AndHow.KVP_DELIMITER);
+					KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
 
 					attemptToAdd(appConfigDef, values, problems, kvp.getName(), kvp.getValue());
 

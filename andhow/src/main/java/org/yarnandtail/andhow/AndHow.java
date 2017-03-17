@@ -3,7 +3,6 @@ package org.yarnandtail.andhow;
 import java.util.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
  *
@@ -14,15 +13,10 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	//
 	//A few app-wide constants
 	public static final String ANDHOW_INLINE_NAME = "AndHow";
-	public static final String ANDHOW_NAME = ANDHOW_INLINE_NAME + "!";
+	public static final String ANDHOW_NAME = "AndHow!";
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 	
-	/**
-	 * In text formats, this is the default delimiter between a key and a value.
-	 * Known usage:  The CmdLineLoader uses this value to parse values.
-	 */
-	public static final String KVP_DELIMITER = "=";
 	
 	
 	private static AndHow singleInstance;
@@ -216,7 +210,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	public static class AndHowBuilder {
 		//User config
 		private final List<Loader> _loaders = new ArrayList();
-		private NamingStrategy _namingStrategy = new CaseInsensitiveNaming();
+		private NamingStrategy _namingStrategy = null;
 		private final List<String> _cmdLineArgs = new ArrayList();
 		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
 		
@@ -309,7 +303,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		public AndHowBuilder cmdLineArg(String key, String value) {
 			
 			if (value != null) {
-				_cmdLineArgs.add(key + AndHow.KVP_DELIMITER + value);
+				_cmdLineArgs.add(key + StringArgumentLoader.KVP_DELIMITER + value);
 			} else {
 				_cmdLineArgs.add(key);
 			}

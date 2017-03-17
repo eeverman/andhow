@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+import org.yarnandtail.andhow.load.SystemPropertyLoader;
 
 /**
  *
@@ -38,7 +39,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 				
@@ -66,7 +67,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testMinimumPropsAreSet() {
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
 		};
 				
@@ -96,7 +97,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		jndi.activate();
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + AndHow.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
 				
