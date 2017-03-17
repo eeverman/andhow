@@ -11,8 +11,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
-import org.yarnandtail.andhow.api.PropertyGroup.NameAndProperty;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.export.SysPropExporter;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -291,11 +292,11 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	}
 	
 	public static void deleteTestSysProps(Class<? extends PropertyGroup> group) throws Exception {
-		List<NameAndProperty> properties = PropertyGroup.getProperties(group);
+		List<NameAndProperty> properties = AndHowUtil.getProperties(group);
 		
 		for (NameAndProperty nap : properties) {
 			
-			System.getProperties().remove(PropertyGroup.getCanonicalName(group, nap.property));
+			System.getProperties().remove(AndHowUtil.getCanonicalName(group, nap.property));
 			
 			for (Name a : nap.property.getRequestedAliases()) {
 				System.getProperties().remove(a.getActualName());

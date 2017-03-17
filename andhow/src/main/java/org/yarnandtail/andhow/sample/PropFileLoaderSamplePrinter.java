@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.api.SamplePrinter;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.ConstructionDefinition;
 import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -61,7 +62,7 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 		
 		TextBlock tb = new TextBlock(false, false);
 		
-		String propCanonName = PropertyGroup.getCanonicalName(group, prop);
+		String propCanonName = AndHowUtil.getCanonicalName(group, prop);
 		
 		if (prop.getDefaultValue() != null) {
 			tb.addLine(

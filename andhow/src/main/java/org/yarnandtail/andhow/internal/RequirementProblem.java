@@ -11,7 +11,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author eeverman
  * 
  */
-public abstract class RequirementProblem extends Problem {
+public abstract class RequirementProblem implements Problem {
 	
 	/** The Property that actually has the problem */
 	protected PropertyCoord propertyCoord;
@@ -24,6 +24,12 @@ public abstract class RequirementProblem extends Problem {
 	 */
 	public PropertyCoord getPropertyCoord() {
 		return propertyCoord;
+	}
+	
+	
+	@Override
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 		
 	public static class RequiredPropertyProblem extends RequirementProblem {

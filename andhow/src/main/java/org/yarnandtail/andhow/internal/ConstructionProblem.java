@@ -14,7 +14,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 
  * @author ericeverman
  */
-public abstract class ConstructionProblem extends Problem {
+public abstract class ConstructionProblem implements Problem {
 	
 	/** The Property that actually has the problem */
 	protected PropertyCoord badPropertyCoord;
@@ -47,6 +47,11 @@ public abstract class ConstructionProblem extends Problem {
 		} else {
 			return UNKNOWN;
 		}
+	}
+	
+	@Override
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 	
 	

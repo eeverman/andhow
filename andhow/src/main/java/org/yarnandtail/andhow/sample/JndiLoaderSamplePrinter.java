@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.api.SamplePrinter;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.ConstructionDefinition;
 import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -62,7 +63,7 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 		
 		TextBlock tb = new TextBlock(false, false);
 		
-		String propCanonName = definition.getNamingStrategy().getUriName(PropertyGroup.getCanonicalName(group, prop));
+		String propCanonName = definition.getNamingStrategy().getUriName(AndHowUtil.getCanonicalName(group, prop));
 		String type = prop.getValueType().getDestinationType().getCanonicalName();
 
 		

@@ -80,10 +80,10 @@ public class ConstructionDefinitionMutableTest {
 		
 		assertEquals(SampleGroup.STR_1, dpcp.getRefPropertyCoord().getProperty());
 		assertEquals(SampleGroup.class, dpcp.getRefPropertyCoord().getGroup());
-		assertEquals(PropertyGroup.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
+		assertEquals(AndHowUtil.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
 		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadPropertyCoord().getProperty());
 		assertEquals(SampleGroupDup.class, dpcp.getBadPropertyCoord().getGroup());
-		assertEquals(PropertyGroup.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
+		assertEquals(AndHowUtil.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
 	}
 
 	
