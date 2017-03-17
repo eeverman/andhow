@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.SystemPropertyLoader;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
@@ -23,11 +24,11 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void setup() {
 		
 		cmdLineArgsWFullClassName = new String[] {
-			uiFullPath + "DISPLAY_NAME" + AndHow.KVP_DELIMITER + "My App",
-			uiFullPath + "BACKGROUP_COLOR" + AndHow.KVP_DELIMITER + "ffffff",
-			svsFullPath + "REST_ENDPOINT_URL" + AndHow.KVP_DELIMITER + "google.com",
-			svsFullPath + "RETRY_COUNT" + AndHow.KVP_DELIMITER + "4",
-			svsFullPath + "TIMEOUT_SECONDS" + AndHow.KVP_DELIMITER + "10"
+			uiFullPath + "DISPLAY_NAME" + StringArgumentLoader.KVP_DELIMITER + "My App",
+			uiFullPath + "BACKGROUP_COLOR" + StringArgumentLoader.KVP_DELIMITER + "ffffff",
+			svsFullPath + "REST_ENDPOINT_URL" + StringArgumentLoader.KVP_DELIMITER + "google.com",
+			svsFullPath + "RETRY_COUNT" + StringArgumentLoader.KVP_DELIMITER + "4",
+			svsFullPath + "TIMEOUT_SECONDS" + StringArgumentLoader.KVP_DELIMITER + "10"
 		};
 		
 	}

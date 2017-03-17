@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.SystemPropertyLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -48,11 +49,11 @@ public class AndHowTest extends AndHowTestBase {
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + AndHow.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + AndHow.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + AndHow.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + AndHow.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + AndHow.KVP_DELIMITER + "true"
+			paramFullPath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test",
+			paramFullPath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null",
+			paramFullPath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false",
+			paramFullPath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true",
+			paramFullPath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true"
 		};
 		
 	}
