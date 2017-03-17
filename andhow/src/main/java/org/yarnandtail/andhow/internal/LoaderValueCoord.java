@@ -2,8 +2,7 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.PropertyGroup;
-import org.yarnandtail.andhow.internal.PropertyCoord;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * Location of a value, as loaded by a specific loader for a specific Property.

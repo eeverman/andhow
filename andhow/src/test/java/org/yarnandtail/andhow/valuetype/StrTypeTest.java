@@ -2,11 +2,8 @@
  */
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.valuetype.StrType;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
+import org.junit.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**

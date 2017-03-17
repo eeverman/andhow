@@ -1,13 +1,10 @@
 package org.yarnandtail.andhow.name;
 
-import org.yarnandtail.andhow.api.PropertyNaming;
-import org.yarnandtail.andhow.api.PropertyGroup;
-import org.yarnandtail.andhow.api.Name;
-import org.yarnandtail.andhow.api.EffectiveName;
-import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.NamingStrategy;
-import java.util.*;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.PropertyGroup;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowUtil;
 
 /**

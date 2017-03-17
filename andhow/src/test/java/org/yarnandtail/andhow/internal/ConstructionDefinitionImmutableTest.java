@@ -1,15 +1,11 @@
 package org.yarnandtail.andhow.internal;
 
 
-import org.yarnandtail.andhow.api.ProblemList;
-import org.yarnandtail.andhow.api.PropertyGroup;
-import org.yarnandtail.andhow.api.NamingStrategy;
-import org.yarnandtail.andhow.api.ConstructionDefinition;
+import org.yarnandtail.andhow.PropertyGroup;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 

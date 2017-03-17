@@ -1,23 +1,20 @@
 package org.yarnandtail.andhow.example.restclient;
 
-import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.load.JndiLoader;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.internal.LoaderProblem;
 import java.util.ArrayList;
-
 import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.AndHowTestBase;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
-import org.yarnandtail.andhow.load.SystemPropertyLoader;
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.internal.LoaderProblem;
+import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.load.JndiLoader;
+import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.StringArgumentLoader;
 
 /**
  *

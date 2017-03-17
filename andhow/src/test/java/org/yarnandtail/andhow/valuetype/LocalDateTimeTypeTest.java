@@ -2,12 +2,9 @@
  */
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.valuetype.LocalDateTimeType;
 import java.time.LocalDateTime;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
+import org.junit.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**

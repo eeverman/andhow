@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
 
 /**
@@ -81,7 +82,7 @@ public interface ConstructionDefinition {
 	 * The URI style name is just a means of reading properties in another system - 
 	 * for AndHow the URI style name is not considered an actual name.
 	 *
-	 * @param name
+	 * @param classpathStyleName
 	 * @return The Property or null if it is not found.
 	 */
 	Property<?> getProperty(String classpathStyleName);

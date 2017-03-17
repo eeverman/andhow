@@ -1,6 +1,8 @@
 package org.yarnandtail.andhow.api;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Names by which a Property is recognized.

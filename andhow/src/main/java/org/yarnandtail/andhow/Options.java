@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.api.PropertyGroup;
 import org.yarnandtail.andhow.property.FlagProp;
 
 /**

@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow;
 
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import org.junit.BeforeClass;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;

@@ -1,14 +1,9 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.property.FlagProp;
-import org.yarnandtail.andhow.property.TrimToNullTrimmer;
-import org.yarnandtail.andhow.property.PropertyBuilderBase;
+import static org.junit.Assert.*;
+import org.junit.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Name;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**

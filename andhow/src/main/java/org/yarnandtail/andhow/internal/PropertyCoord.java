@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.PropertyGroup;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * Logical location of a Property (Group and Property).

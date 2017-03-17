@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.PropertyGroup;
+
 /**
  * Bundles an exporter and a PropertyGroup for it to export.
  * 

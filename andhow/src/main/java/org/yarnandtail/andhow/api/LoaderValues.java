@@ -1,7 +1,8 @@
 package org.yarnandtail.andhow.api;
 
-import java.util.*;
-import org.yarnandtail.andhow.api.ProblemList.UnmodifiableProblemList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Properties and values loaded by a Loader.
@@ -22,12 +23,12 @@ public class LoaderValues implements ValueMap {
 	 * A constructor when there is just a problem to report.
 	 * 
 	 * @param loader
-	 * @param problems 
+	 * @param problem
 	 */
 	public LoaderValues(Loader loader, Problem problem) {
 		ProblemList<Problem> probs = new ProblemList();
 		probs.add(problem);
-		this.problems = new UnmodifiableProblemList(probs);
+		this.problems = new ProblemList.UnmodifiableProblemList(probs);
 		
 		this.loader = loader;
 		values = EMPTY_PROP_VALUE_LIST;
@@ -39,7 +40,7 @@ public class LoaderValues implements ValueMap {
 	 * @param loader
 	 */
 	public LoaderValues(Loader loader) {
-		this.problems = new UnmodifiableProblemList();
+		this.problems = new ProblemList.UnmodifiableProblemList();
 		this.loader = loader;
 		values = EMPTY_PROP_VALUE_LIST;
 	}
@@ -72,7 +73,7 @@ public class LoaderValues implements ValueMap {
 			values = EMPTY_PROP_VALUE_LIST;
 		}
 		
-		this.problems = new UnmodifiableProblemList(myProblems);
+		this.problems = new ProblemList.UnmodifiableProblemList(myProblems);
 	}
 
 	public Loader getLoader() {

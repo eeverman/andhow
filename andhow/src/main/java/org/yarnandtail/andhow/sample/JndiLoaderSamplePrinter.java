@@ -1,11 +1,8 @@
 package org.yarnandtail.andhow.sample;
 
-import org.yarnandtail.andhow.api.PropertyGroup;
-import org.yarnandtail.andhow.api.EffectiveName;
-import org.yarnandtail.andhow.api.SamplePrinter;
-import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.ConstructionDefinition;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.util.TextUtil;
 

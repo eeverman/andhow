@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.load;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**

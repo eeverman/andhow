@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.PropertyGroup;
+
 /**
  * The Exporter provides support for legacy applications that expect
  * to find key/value pairs in a specific source, such as system properties.

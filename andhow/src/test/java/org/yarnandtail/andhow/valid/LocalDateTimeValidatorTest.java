@@ -1,12 +1,9 @@
 package org.yarnandtail.andhow.valid;
 
-import org.yarnandtail.andhow.valid.LocalDateTimeValidator;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *
