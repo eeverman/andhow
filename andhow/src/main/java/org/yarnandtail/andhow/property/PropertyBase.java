@@ -2,7 +2,8 @@ package org.yarnandtail.andhow.property;
 
 import java.util.Collections;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.api.*;
 
 /**
  *

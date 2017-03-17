@@ -4,13 +4,10 @@ import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.LoaderValues;
-import org.yarnandtail.andhow.Property;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.PropertyGroup.NameAndProperty;
 import org.yarnandtail.andhow.SimpleParams;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
+import org.yarnandtail.andhow.api.LoaderValues;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
@@ -49,7 +46,7 @@ public class SystemPropertyLoaderTest {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//Clear all known system properties
-		for (NameAndProperty nap : PropertyGroup.getProperties(SimpleParams.class)) {
+		for (NameAndProperty nap : AndHowUtil.getProperties(SimpleParams.class)) {
 			String canon = bns.buildNames(nap.property, SimpleParams.class).getCanonicalName().getActualName();
 			System.clearProperty(canon);
 		}
@@ -58,7 +55,7 @@ public class SystemPropertyLoaderTest {
 	}
 	
 	protected String getPropName(Property p) throws Exception {
-		return PropertyGroup.getCanonicalName(SimpleParams.class, p);
+		return AndHowUtil.getCanonicalName(SimpleParams.class, p);
 	}
 	
 	@Test

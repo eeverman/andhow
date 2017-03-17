@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.internal;
 
 import java.util.*;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 
 /**
  * Shared base implementation for both immutable and mutable versions.

@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -9,10 +10,10 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 
  * @author ericeverman
  */
-public abstract class LoaderProblem extends Problem {
+public abstract class LoaderProblem implements Problem {
 	
 	/** The Property that actually has the problem */
-	protected ValueCoord badValueCoord;
+	protected LoaderValueCoord badValueCoord;
 	
 	/**
 	 * The Property that has the problem.
@@ -21,6 +22,12 @@ public abstract class LoaderProblem extends Problem {
 	 */
 	public PropertyCoord getBadValueCoord() {
 		return badValueCoord;
+	}
+	
+		
+	@Override
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 	
 	@Override
@@ -74,7 +81,7 @@ public abstract class LoaderProblem extends Problem {
 		String resourcePath;
 		
 		public IOLoaderProblem(Loader loader, Exception exception, String resourcePath) {
-			badValueCoord = new ValueCoord(loader, null, null);
+			badValueCoord = new LoaderValueCoord(loader, null, null);
 			this.exception = exception;
 		}
 		
@@ -91,7 +98,7 @@ public abstract class LoaderProblem extends Problem {
 		public ParsingLoaderProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
 				Exception exception) {
-			badValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.exception = exception;
 		}
 		
@@ -105,7 +112,7 @@ public abstract class LoaderProblem extends Problem {
 		
 		public DuplicatePropertyLoaderProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property prop) {
-			badValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new LoaderValueCoord(loader, group, prop);
 		}
 		
 		@Override
@@ -120,7 +127,7 @@ public abstract class LoaderProblem extends Problem {
 		
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {
-			badValueCoord = new ValueCoord(loader, null, null);
+			badValueCoord = new LoaderValueCoord(loader, null, null);
 		}
 
 		public String getUnknownPropertyName() {
@@ -138,7 +145,7 @@ public abstract class LoaderProblem extends Problem {
 		String message;
 		
 		public SourceNotFoundLoaderProblem(Loader loader, String message) {
-			badValueCoord = new ValueCoord(loader, null, null);
+			badValueCoord = new LoaderValueCoord(loader, null, null);
 			this.message = message;
 		}
 		
@@ -151,7 +158,7 @@ public abstract class LoaderProblem extends Problem {
 	public static class JndiContextLoaderProblem extends LoaderProblem {
 
 		public JndiContextLoaderProblem(Loader loader) {
-			badValueCoord = new ValueCoord(loader, null, null);
+			badValueCoord = new LoaderValueCoord(loader, null, null);
 		}
 		
 		@Override
@@ -168,7 +175,7 @@ public abstract class LoaderProblem extends Problem {
 		public ObjectConversionValueProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
 				Object obj) {
-			badValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.obj = obj;
 		}
 		
@@ -188,7 +195,7 @@ public abstract class LoaderProblem extends Problem {
 				Loader loader, Class<? extends PropertyGroup> group, Property prop, 
 				String str) {
 			
-			badValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.str = str;
 		}
 

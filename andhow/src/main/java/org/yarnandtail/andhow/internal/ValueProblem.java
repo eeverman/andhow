@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -8,12 +9,18 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 
  * @author eeverman
  */
-public abstract class ValueProblem extends Problem {
+public abstract class ValueProblem implements Problem {
 	
-	protected ValueCoord badValueCoord;
+	protected LoaderValueCoord badValueCoord;
 	
-	public ValueCoord getBadValueCoord() {
+	public LoaderValueCoord getBadValueCoord() {
 		return badValueCoord;
+	}
+	
+	
+	@Override
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 	
 	@Override
@@ -35,14 +42,14 @@ public abstract class ValueProblem extends Problem {
 	}
 	
 	public static class InvalidValueProblem<T> extends ValueProblem {
-		ValueCoord def;
+		LoaderValueCoord def;
 		Validator<T> validator;
 		T value;
 		
 		public InvalidValueProblem(
 				Loader loader, Class<? extends PropertyGroup> group, Property<T> prop, 
 				T value, Validator<T> validator) {
-			badValueCoord = new ValueCoord(loader, group, prop);
+			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.validator = validator;
 			this.value = value;
 		}

@@ -1,16 +1,15 @@
 package org.yarnandtail.andhow;
 
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import static org.junit.Assert.*;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
-import org.yarnandtail.andhow.PropertyGroup.NameAndProperty;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.SysPropExporter;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -218,8 +217,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().property);
-			assertEquals(AliasGroup4.class, nun.getBadPropertyCoord().group);
+			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().getProperty());
+			assertEquals(AliasGroup4.class, nun.getBadPropertyCoord().getGroup());
 			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
 		}
 	}
@@ -240,8 +239,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup5.strProp2, nun.getBadPropertyCoord().property);
-			assertEquals(AliasGroup5.class, nun.getBadPropertyCoord().group);
+			assertEquals(AliasGroup5.strProp2, nun.getBadPropertyCoord().getProperty());
+			assertEquals(AliasGroup5.class, nun.getBadPropertyCoord().getGroup());
 			assertEquals(STR_PROP1_OUT_ALIAS, nun.getConflictName());
 		}
 	}
@@ -263,8 +262,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
 			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
 			
-			assertEquals(AliasGroup7.strProp1, nun.getBadPropertyCoord().property);
-			assertEquals(AliasGroup7.class, nun.getBadPropertyCoord().group);
+			assertEquals(AliasGroup7.strProp1, nun.getBadPropertyCoord().getProperty());
+			assertEquals(AliasGroup7.class, nun.getBadPropertyCoord().getGroup());
 			assertEquals(STR_PROP1_OUT_ALIAS, nun.getConflictName());
 		}
 	}
@@ -287,11 +286,11 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	}
 	
 	public static void deleteTestSysProps(Class<? extends PropertyGroup> group) throws Exception {
-		List<NameAndProperty> properties = PropertyGroup.getProperties(group);
+		List<NameAndProperty> properties = AndHowUtil.getProperties(group);
 		
 		for (NameAndProperty nap : properties) {
 			
-			System.getProperties().remove(PropertyGroup.getCanonicalName(group, nap.property));
+			System.getProperties().remove(AndHowUtil.getCanonicalName(group, nap.property));
 			
 			for (Name a : nap.property.getRequestedAliases()) {
 				System.getProperties().remove(a.getActualName());

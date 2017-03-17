@@ -1,7 +1,9 @@
 package org.yarnandtail.andhow.internal;
 
-import java.util.*;
-import org.yarnandtail.andhow.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.yarnandtail.andhow.api.*;
 
 /**
  *

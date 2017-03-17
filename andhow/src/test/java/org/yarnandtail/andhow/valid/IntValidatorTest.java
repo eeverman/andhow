@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.valid;
 
-import org.yarnandtail.andhow.valid.IntValidator;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *

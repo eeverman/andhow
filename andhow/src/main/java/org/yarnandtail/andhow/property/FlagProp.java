@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.property;
 
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**

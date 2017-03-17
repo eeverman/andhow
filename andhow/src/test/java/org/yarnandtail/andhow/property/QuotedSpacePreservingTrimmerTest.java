@@ -2,10 +2,8 @@
  */
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 /**
  *

@@ -4,10 +4,16 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.After;
 import static org.junit.Assert.*;
-import org.yarnandtail.andhow.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.yarnandtail.andhow.AndHow;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+import org.yarnandtail.andhow.SimpleParams;
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -48,7 +54,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+				.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
 				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 				.group(SimpleParams.class)
@@ -69,7 +75,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
 					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 					.group(SimpleParams.class)
@@ -108,7 +114,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 					.group(SimpleParams.class)

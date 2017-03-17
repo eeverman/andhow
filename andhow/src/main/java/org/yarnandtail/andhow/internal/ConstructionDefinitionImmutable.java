@@ -1,7 +1,8 @@
 package org.yarnandtail.andhow.internal;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 
 /**
  * An immutable instance that can be used during runtime.

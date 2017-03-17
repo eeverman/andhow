@@ -1,11 +1,9 @@
 package org.yarnandtail.andhow.name;
 
-import org.yarnandtail.andhow.PropertyNaming;
-import org.yarnandtail.andhow.PropertyGroup;
-
-import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.PropertyNaming;
 import org.yarnandtail.andhow.property.StrProp;
 
 /**
@@ -39,6 +37,17 @@ public class CaseInsensitiveNamingTest {
 		assertEquals(1, naming.getOutAliases().size());
 		assertEquals("Kathy", naming.getOutAliases().get(0).getActualName());
 		assertEquals("Kathy", naming.getOutAliases().get(0).getEffectiveOutName());
+	}
+	
+	@Test
+	public void testGetUriName() {
+		
+		CaseInsensitiveNaming naming = new CaseInsensitiveNaming();
+		
+		assertEquals("org/cyborg/alfa/rest/ENPOINT_URL", naming.getUriName("org.cyborg.alfa.rest.ENPOINT_URL"));
+		assertEquals("ENPOINT_URL", naming.getUriName("ENPOINT_URL"));
+		assertEquals("", naming.getUriName(""));	//shouldn't happen
+		assertNull(naming.getUriName(null));	//shouldn't happen, unless part of a chain of conversions
 	}
 	
 	public interface SimpleParams extends PropertyGroup {

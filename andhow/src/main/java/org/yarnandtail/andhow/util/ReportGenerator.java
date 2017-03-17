@@ -1,9 +1,11 @@
 package org.yarnandtail.andhow.util;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
 
 /**

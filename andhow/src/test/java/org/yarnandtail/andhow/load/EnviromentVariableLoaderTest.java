@@ -1,10 +1,15 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.SimpleParams;
+import org.yarnandtail.andhow.api.LoaderValues;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
 import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -36,7 +41,7 @@ public class EnviromentVariableLoaderTest {
 	
 	
 	protected String getPropName(Property p) throws Exception {
-		return PropertyGroup.getCanonicalName(SimpleParams.class, p);
+		return AndHowUtil.getCanonicalName(SimpleParams.class, p);
 	}
 	
 	@Test

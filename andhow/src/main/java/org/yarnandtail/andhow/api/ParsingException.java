@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * An exception where a String is unreadable or unconvertable to a target type.

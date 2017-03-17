@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.load;
 
 import java.util.Arrays;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 
 /**
  * A utility loader that is used internally to put fixed values into the effective

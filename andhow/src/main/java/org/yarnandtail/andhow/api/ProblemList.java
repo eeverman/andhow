@@ -1,7 +1,8 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**

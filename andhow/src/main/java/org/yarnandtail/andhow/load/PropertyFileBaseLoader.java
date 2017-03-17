@@ -1,8 +1,10 @@
 package org.yarnandtail.andhow.load;
 
 import java.io.InputStream;
-import java.util.*;
-import org.yarnandtail.andhow.*;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 
 /**

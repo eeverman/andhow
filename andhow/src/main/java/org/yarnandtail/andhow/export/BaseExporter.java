@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.export;
 		
+import org.yarnandtail.andhow.PropertyGroup;
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 
 /**
  * All implementations must have a zero argument constructor.

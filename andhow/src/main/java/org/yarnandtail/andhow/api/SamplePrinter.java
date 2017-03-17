@@ -1,5 +1,6 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 
 /**

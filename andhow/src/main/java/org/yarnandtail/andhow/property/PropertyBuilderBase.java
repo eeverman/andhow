@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.property;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 
 /**
  * A generic PropertyBuilder class which needs to be fully implemented as an

@@ -1,4 +1,6 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
+
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  *
@@ -11,8 +13,7 @@ public interface NamingStrategy {
 	 * @param prop The Property to be named
 	 * @param containingGroup Properties must be contained in a PropertyGroup to be exposed
 	 * @return Null if the passed Property is not part of the PropertyGroup.
-	 * @throws An exception if there is a security exception trying to read fields
-	 *	inside of the containingGroup via reflection.
+	 * @throws java.lang.Exception A security exception trying to read fields of a PropertyGroup via reflection.
 	 */
 	PropertyNaming buildNames(
 			Property prop, Class<? extends PropertyGroup> containingGroup) throws Exception;

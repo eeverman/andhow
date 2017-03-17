@@ -1,9 +1,9 @@
 package org.yarnandtail.andhow.example.restclient;
 
-import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.property.StrProp;
 
 /**
  *

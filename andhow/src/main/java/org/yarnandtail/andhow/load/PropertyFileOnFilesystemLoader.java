@@ -3,7 +3,7 @@ package org.yarnandtail.andhow.load;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;

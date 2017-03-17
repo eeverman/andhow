@@ -3,9 +3,9 @@ package org.yarnandtail.andhow;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.load.SystemPropertyLoader;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 

@@ -1,9 +1,12 @@
 package org.yarnandtail.andhow.sample;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.GroupInfo;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.sample.TextLine.HRLine;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -187,7 +190,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		
 		try {
 			
-			String propFieldName = PropertyGroup.getFieldName(group, prop);
+			String propFieldName = AndHowUtil.getFieldName(group, prop);
 					
 			tb.addLine(TextUtil.format("{} ({}) {}{}", 
 					propFieldName,

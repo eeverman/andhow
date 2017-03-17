@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.util.Collections;
 import java.util.List;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem.DuplicatePropertyLoaderProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProblem;

@@ -4,11 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import org.junit.Test;
-
 import static org.junit.Assert.*;
-
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  *

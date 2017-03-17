@@ -1,7 +1,8 @@
 package org.yarnandtail.andhow.internal;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ConstructionProblem.PropertyNotPartOfGroup;
 import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
 

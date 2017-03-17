@@ -1,4 +1,6 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
+
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * The Exporter provides support for legacy applications that expect

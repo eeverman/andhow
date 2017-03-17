@@ -1,5 +1,6 @@
 package howto.force.config.sample.printing;
 
+import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.load.*;

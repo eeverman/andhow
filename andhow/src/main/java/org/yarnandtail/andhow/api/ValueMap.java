@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.api;
 
 /**
  * The values that are loaded or otherwise specified for a set of Properties

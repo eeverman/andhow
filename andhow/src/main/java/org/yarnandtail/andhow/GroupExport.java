@@ -1,6 +1,8 @@
 package org.yarnandtail.andhow;
 
 import java.lang.annotation.*;
+import org.yarnandtail.andhow.api.Exporter;
+import org.yarnandtail.andhow.internal.GroupExports;
 
 /**
  * Annotation to direct the Properties in a PropertyGroup to be exported to a
@@ -23,7 +25,7 @@ public @interface GroupExport {
 	 * 
 	 * @return 
 	 */
-	org.yarnandtail.andhow.Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName();
+	org.yarnandtail.andhow.api.Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName();
 	
 	/**
 	 * Specifies if the out aliases, which are basically aliases for the purpose
@@ -35,7 +37,7 @@ public @interface GroupExport {
 	 * 
 	 * @return 
 	 */
-	org.yarnandtail.andhow.Exporter.EXPORT_OUT_ALIASES exportByOutAliases();
+	org.yarnandtail.andhow.api.Exporter.EXPORT_OUT_ALIASES exportByOutAliases();
 
 	/**
 	 * The class of the exporter to use.

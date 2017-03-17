@@ -3,8 +3,12 @@ package org.yarnandtail.andhow.load;
 import java.util.List;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.AndHow;
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+import org.yarnandtail.andhow.SimpleParams;
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.internal.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -24,7 +28,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+				.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 				.group(SimpleParams.class)
@@ -45,7 +49,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.group(SimpleParams.class)
@@ -84,7 +88,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(PropertyGroup.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
 					.group(SimpleParams.class)

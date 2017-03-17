@@ -1,6 +1,8 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -9,7 +11,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 
  * @author ericeverman
  */
-public abstract class ConstructionProblem extends Problem {
+public abstract class ConstructionProblem implements Problem {
 	
 	/** The Property that actually has the problem */
 	protected PropertyCoord badPropertyCoord;
@@ -42,6 +44,11 @@ public abstract class ConstructionProblem extends Problem {
 		} else {
 			return UNKNOWN;
 		}
+	}
+	
+	@Override
+	public String getFullMessage() {
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 	
 	
