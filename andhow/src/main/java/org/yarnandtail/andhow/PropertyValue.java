@@ -1,8 +1,5 @@
 package org.yarnandtail.andhow;
 
-import static org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
-import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
-
 /**
  * Simple class to bundle a Property, its value and any associated problems with the Property.
  * 
@@ -10,9 +7,9 @@ import org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList;
  */
 public class PropertyValue {
 
-	private Property<?> property;
-	private Object value;
-	private ProblemList<Problem> problems;
+	private final Property<?> property;
+	private final Object value;
+	private final ProblemList<Problem> problems;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -55,7 +52,7 @@ public class PropertyValue {
 	public PropertyValue(Property<?> prop, Object value) {
 		this.property = prop;
 		this.value = value;
-		this.problems = EMPTY_PROBLEM_LIST;
+		this.problems = org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
 	}
 	
 	public PropertyValue(Property<?> prop, Object value, ProblemList<Problem> inIssues) {
@@ -63,9 +60,9 @@ public class PropertyValue {
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			problems = new UnmodifiableProblemList(inIssues);
+			problems = new org.yarnandtail.andhow.ProblemList.UnmodifiableProblemList(inIssues);
 		} else {
-			this.problems = EMPTY_PROBLEM_LIST;
+			this.problems = org.yarnandtail.andhow.ProblemList.EMPTY_PROBLEM_LIST;
 		}
 	}
 
