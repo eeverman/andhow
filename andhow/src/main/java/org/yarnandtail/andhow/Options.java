@@ -5,15 +5,15 @@ import org.yarnandtail.andhow.property.FlagProp;
 /**
  * Global options to configure AndHow behavior.
  * 
- * This PropertyGroup is always implicitly added to the list of registered groups.
- * Configuration instances should not directly add it because it will result in
- * a duplicate PropertyGroup configuration error.
- * 
- * Convention:  All options will have aliases.  To make naming collisions less
- * likely, all aliases will start with 'AH'.
- * 
- * Implementation Note:  All Properties here must be optional, since the
- * framework itself should have no requirements to operate.
+ * This BasePropertyGroup is always implicitly added to the list of registered groups.
+ Configuration instances should not directly add it because it will result in
+ a duplicate BasePropertyGroup configuration error.
+ 
+ Convention:  All options will have aliases.  To make naming collisions less
+ likely, all aliases will start with 'AH'.
+ 
+ Implementation Note:  All Properties here must be optional, since the
+ framework itself should have no requirements to operate.
  * 
  * @author ericeverman
  */

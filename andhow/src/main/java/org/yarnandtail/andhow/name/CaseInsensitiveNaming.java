@@ -1,11 +1,11 @@
 package org.yarnandtail.andhow.name;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowUtil;
+import org.yarnandtail.andhow.util.AndHowUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Case insensitive naming.
@@ -18,7 +18,7 @@ public class CaseInsensitiveNaming implements NamingStrategy {
 
 	@Override
 	public PropertyNaming buildNames(Property prop, 
-			Class<? extends PropertyGroup> parentGroup) throws Exception {
+			Class<? extends BasePropertyGroup> parentGroup) throws Exception {
 
 		String canonName = AndHowUtil.getCanonicalName(parentGroup, prop);
 		return buildNamesFromCanonical(prop, parentGroup, canonName);
@@ -26,7 +26,7 @@ public class CaseInsensitiveNaming implements NamingStrategy {
 	}
 	
 	public PropertyNaming buildNamesFromCanonical(Property prop, 
-			Class<? extends PropertyGroup> parentGroup, String canonicalName) {
+			Class<? extends BasePropertyGroup> parentGroup, String canonicalName) {
 		
 		if (canonicalName == null) return null;
 		

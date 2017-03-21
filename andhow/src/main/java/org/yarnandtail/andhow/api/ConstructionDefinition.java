@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.api;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
 
 /**
@@ -40,13 +39,13 @@ public interface ConstructionDefinition {
 	String getCanonicalName(Property<?> prop);
 
 	/**
-	 * Finds the PropertyGroup containing the specified Property.
+	 * Finds the BasePropertyGroup containing the specified Property.
 	 *
 	 * @param prop
 	 * @return May return null if the Property is not in any group, or during
 	 * construction, if the group has not finished registering all of its properties.
 	 */
-	Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop);
+	Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop);
 
 	/**
 	 * Returns an unmodifiable list of registered properties.
@@ -61,14 +60,14 @@ public interface ConstructionDefinition {
 	 * @param group
 	 * @return
 	 */
-	List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group);
+	List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group);
 	
 	/**
 	 * Returns an unmodifiable list of all registered groups.
 	 *
 	 * @return
 	 */
-	List<Class<? extends PropertyGroup>> getPropertyGroups();
+	List<Class<? extends BasePropertyGroup>> getPropertyGroups();
 
 	/**
 	 * Finds a registered property by any recognized classpath style name,
@@ -91,9 +90,9 @@ public interface ConstructionDefinition {
 	 * The list of ExportGroups, which handles exporting property values for use
 	 * outside the AndHow framework.
 	 * 
-	 * An ExportGroup bundles an Exporter implementation with a PropertyGroup to
-	 * be exported.  After startup is complete, each Exporter will export its
-	 * group as configured.
+	 * An ExportGroup bundles an Exporter implementation with a BasePropertyGroup to
+ be exported.  After startup is complete, each Exporter will export its
+ group as configured.
 	 * 
 	 * @return 
 	 */

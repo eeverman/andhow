@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.Collections;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
@@ -10,6 +9,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProble
 import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  *
@@ -19,7 +19,7 @@ public abstract class BaseLoader implements Loader {
 	
 	
 	@Override
-	public Class<? extends PropertyGroup> getClassConfig() {
+	public Class<? extends BasePropertyGroup> getClassConfig() {
 		return null;
 	}
 	

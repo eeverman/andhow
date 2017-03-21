@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.api;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.List;
 
 /**
@@ -40,21 +39,21 @@ public interface Loader {
 	 * of loader.
 	 *
 	 * For loaders that are intended to be single instance (i.e. a JNDI loader)
-	 * or loaders that can be multi-instance (PropertyFile loaders) but need to
-	 * share some common configuration can return a PropertyGroup from this
-	 * method that is their global configuration interface.
-	 *
-	 * For configuration properties that should vary between instances of the
-	 * same loader class, accept them in the Loader constructor. (See
-	 * getInstanceConfig)
-	 *
-	 * The PropertyGroup returned from this method will be included in sample
-	 * config files. It is up to the Loader class to read from those configured
-	 * properties if the user configures them.
+ or loaders that can be multi-instance (PropertyFile loaders) but need to
+ share some common configuration can return a BasePropertyGroup from this
+ method that is their global configuration interface.
+
+ For configuration properties that should vary between instances of the
+ same loader class, accept them in the Loader constructor. (See
+ getInstanceConfig)
+
+ The BasePropertyGroup returned from this method will be included in sample
+ config files. It is up to the Loader class to read from those configured
+ properties if the user configures them.
 	 *
 	 * @return
 	 */
-	Class<? extends PropertyGroup> getClassConfig();
+	Class<? extends BasePropertyGroup> getClassConfig();
 	
 	/**
 	 * A list of properties that the user has specified as being configuration

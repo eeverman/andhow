@@ -1,9 +1,9 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
@@ -57,8 +57,8 @@ public abstract class ConstructionProblem implements Problem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
-				Class<? extends PropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
+				Class<? extends BasePropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends BasePropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
 			
 			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
 			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
@@ -81,8 +81,8 @@ public abstract class ConstructionProblem implements Problem {
 	public static class DuplicateProperty extends ConstructionProblem {
 
 		public DuplicateProperty(
-				Class<? extends PropertyGroup> refGroup, Property<?> refProperty, 
-				Class<? extends PropertyGroup> badGroup, Property<?> badProperty) {
+				Class<? extends BasePropertyGroup> refGroup, Property<?> refProperty, 
+				Class<? extends BasePropertyGroup> badGroup, Property<?> badProperty) {
 			
 			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
 			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
@@ -157,7 +157,7 @@ public abstract class ConstructionProblem implements Problem {
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
 
-		public SecurityException(Exception exception, Class<? extends PropertyGroup> group) {
+		public SecurityException(Exception exception, Class<? extends BasePropertyGroup> group) {
 			this.exception = exception;
 			badPropertyCoord = new PropertyCoord(group, null);
 		}
@@ -185,7 +185,7 @@ public abstract class ConstructionProblem implements Problem {
 
 	public static class PropertyNotPartOfGroup extends ConstructionProblem {	
 
-		public PropertyNotPartOfGroup(Class<? extends PropertyGroup> group, Property<?> prop) {
+		public PropertyNotPartOfGroup(Class<? extends BasePropertyGroup> group, Property<?> prop) {
 			this.badPropertyCoord = new PropertyCoord(group, prop);
 		}
 		
@@ -200,7 +200,7 @@ public abstract class ConstructionProblem implements Problem {
 		Exception exception;
 		String message;
 
-		public ExportException(Exception exception, Class<? extends PropertyGroup> group, String message) {
+		public ExportException(Exception exception, Class<? extends BasePropertyGroup> group, String message) {
 			this.exception = exception;
 			this.message = message;
 			badPropertyCoord = new PropertyCoord(group, null);
@@ -226,7 +226,7 @@ public abstract class ConstructionProblem implements Problem {
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
 
-		public InvalidDefaultValue(Class<? extends PropertyGroup> group, Property<?> prop, String invalidMessage) {
+		public InvalidDefaultValue(Class<? extends BasePropertyGroup> group, Property<?> prop, String invalidMessage) {
 			this.badPropertyCoord = new PropertyCoord(group, prop);
 			this.invalidMessage = invalidMessage;
 		}
@@ -247,7 +247,7 @@ public abstract class ConstructionProblem implements Problem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Class<? extends PropertyGroup> group, Property<?> property, Validator<?> valid) {
+				Class<? extends BasePropertyGroup> group, Property<?> property, Validator<?> valid) {
 			
 			this.badPropertyCoord = new PropertyCoord(group, property);
 			this.valid = valid;

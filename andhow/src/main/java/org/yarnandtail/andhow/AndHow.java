@@ -4,6 +4,7 @@ import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  *
@@ -38,7 +39,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 * @throws AppFatalException 
 	 */
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups)
+			List<Class<? extends BasePropertyGroup>> registeredGroups)
 			throws AppFatalException {
 		core = new AndHowCore(naming, loaders, registeredGroups);
 		reloader = new Reloader(this);
@@ -81,7 +82,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	 */
 	private static Reloader build(
 			NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups)
+			List<Class<? extends BasePropertyGroup>> registeredGroups)
 			throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
@@ -128,12 +129,12 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	}
 
 	@Override
-	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
+	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
 		return core.getGroupForProperty(prop);
 	}
 
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
 		return core.getPropertiesForGroup(group);
 	}
 
@@ -143,7 +144,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	}
 
 	@Override
-	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
 		return core.getPropertyGroups();
 	}
 
@@ -213,7 +214,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = null;
 		private final List<String> _cmdLineArgs = new ArrayList();
-		List<Class<? extends PropertyGroup>> _groups = new ArrayList();
+		List<Class<? extends BasePropertyGroup>> _groups = new ArrayList();
 		
 		//
 		//Internal state
@@ -251,7 +252,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @param group
 		 * @return 
 		 */
-		public AndHowBuilder group(Class<? extends PropertyGroup> group) {
+		public AndHowBuilder group(Class<? extends BasePropertyGroup> group) {
 			_groups.add(group);
 			return this;
 		}
@@ -265,7 +266,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @param groups
 		 * @return 
 		 */
-		public AndHowBuilder groups(Collection<Class<? extends PropertyGroup>> groups) {
+		public AndHowBuilder groups(Collection<Class<? extends BasePropertyGroup>> groups) {
 			this._groups.addAll(groups);
 			return this;
 		}
@@ -436,7 +437,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
-				List<Class<? extends PropertyGroup>> registeredGroups) 
+				List<Class<? extends BasePropertyGroup>> registeredGroups) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {

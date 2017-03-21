@@ -1,14 +1,14 @@
 package org.yarnandtail.andhow.sample;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.GroupInfo;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowUtil;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.sample.TextLine.HRLine;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 
 /**
@@ -30,7 +30,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	public abstract String getInAliaseString(ConstructionDefinition definition, EffectiveName name);
 	
 	public abstract TextBlock getActualProperty(ConstructionDefinition definition, 
-			Class<? extends PropertyGroup> group, Property prop) throws Exception;
+			Class<? extends BasePropertyGroup> group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
 	
@@ -143,7 +143,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	@Override
 	public void printPropertyGroupStart(ConstructionDefinition definition, 
-			PrintStream out, Class<? extends PropertyGroup> group) {
+			PrintStream out, Class<? extends BasePropertyGroup> group) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.setBlankLineAfter(true);
@@ -182,7 +182,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	@Override
 	public void printProperty(ConstructionDefinition definition, PrintStream out,
-			Class<? extends PropertyGroup> group, Property<?> prop) {
+			Class<? extends BasePropertyGroup> group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.addBlank();
@@ -250,7 +250,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 
 	@Override
 	public void printPropertyGroupEnd(ConstructionDefinition definition, 
-			PrintStream out, Class<? extends PropertyGroup> group) {
+			PrintStream out, Class<? extends BasePropertyGroup> group) {
 	}
 	
 	@Override

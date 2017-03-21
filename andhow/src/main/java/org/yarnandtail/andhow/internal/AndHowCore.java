@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.util.ReportGenerator;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Actual central instance of the AndHow state after a successful startup.
@@ -29,7 +29,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends PropertyGroup>> registeredGroups) 
+			List<Class<? extends BasePropertyGroup>> registeredGroups) 
 			throws AppFatalException {
 		
 		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
@@ -45,7 +45,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		}		
 		
 		//The global options are always added to the list of registered groups
-		ArrayList<Class<? extends PropertyGroup>> effRegGroups = new ArrayList();
+		ArrayList<Class<? extends BasePropertyGroup>> effRegGroups = new ArrayList();
 		if (registeredGroups != null) {
 			effRegGroups.addAll(registeredGroups);
 		}
@@ -82,12 +82,12 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		List<ExportGroup> exportGroups = runtimeDef.getExportGroups();
 		for (ExportGroup eg : exportGroups) {
 			Exporter exporter = eg.getExporter();
-			Class<? extends PropertyGroup> group = eg.getGroup();
+			Class<? extends BasePropertyGroup> group = eg.getGroup();
 			
 			if (group != null) {
 				exporter.export(group, runtimeDef, this);
 			} else {
-				for (Class<? extends PropertyGroup> grp : runtimeDef.getPropertyGroups()) {
+				for (Class<? extends BasePropertyGroup> grp : runtimeDef.getPropertyGroups()) {
 					exporter.export(grp, runtimeDef, this);
 				}
 			}
@@ -163,12 +163,12 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 
 	@Override
-	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
+	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
 		return runtimeDef.getGroupForProperty(prop);
 	}
 
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
 		return runtimeDef.getPropertiesForGroup(group);
 	}
 
@@ -178,7 +178,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 	
 	@Override
-	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
 		return runtimeDef.getPropertyGroups();
 	}
 

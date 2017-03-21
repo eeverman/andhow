@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Location of a value, as loaded by a specific loader for a specific Property.
@@ -16,7 +16,7 @@ public class LoaderValueCoord extends PropertyCoord {
 
 	Loader loader;
 
-	public LoaderValueCoord(Loader loader, Class<? extends PropertyGroup> group, Property<?> prop) {
+	public LoaderValueCoord(Loader loader, Class<? extends BasePropertyGroup> group, Property<?> prop) {
 		super(group, prop);
 		this.loader = loader;
 	}

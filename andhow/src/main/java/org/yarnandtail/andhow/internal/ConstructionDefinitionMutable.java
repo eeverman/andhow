@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ConstructionProblem.PropertyNotPartOfGroup;
 import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * A mutable version that can be used during AndHow startup.
@@ -14,8 +14,8 @@ import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
 public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	
 	private final NamingStrategy namingStrategy;
-	private final Map<Class<? extends PropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
-	private final List<Class<? extends PropertyGroup>> groupList = new ArrayList();
+	private final Map<Class<? extends BasePropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
+	private final List<Class<? extends BasePropertyGroup>> groupList = new ArrayList();
 	private final Map<Property<?>, List<EffectiveName>> aliasesByProperty = new HashMap();
 	private final Map<String, Property<?>> propertiesByAnyName = new HashMap();
 	private final Map<Property<?>, String> canonicalNameByProperty = new HashMap();
@@ -31,13 +31,13 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	}
 	
 	/**
-	 * Adds a PropertyGroup, its Property and the name and aliases for that property
-	 * to all the collections.
+	 * Adds a BasePropertyGroup, its Property and the name and aliases for that property
+ to all the collections.
 	 * 
-	 * @param group The PropertyGroup parent of the property
+	 * @param group The BasePropertyGroup parent of the property
 	 * @param property The Property to be added
 	 */
-	public ConstructionProblem addProperty(Class<? extends PropertyGroup> group, Property<?> property) {
+	public ConstructionProblem addProperty(Class<? extends BasePropertyGroup> group, Property<?> property) {
 		
 		PropertyNaming names = null;
 		
@@ -171,12 +171,12 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	}
 	
 	@Override
-	public List<Class<? extends PropertyGroup>> getPropertyGroups() {
+	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
 		return Collections.unmodifiableList(groupList);
 	}
 	
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends PropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
 		List<Property<?>> pts = propertiesByGroup.get(group);
 		
 		if (pts != null) {
@@ -187,8 +187,8 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	}
 	
 	@Override
-	public Class<? extends PropertyGroup> getGroupForProperty(Property<?> prop) {
-		for (Class<? extends PropertyGroup> group : groupList) {
+	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
+		for (Class<? extends BasePropertyGroup> group : groupList) {
 			if (propertiesByGroup.get(group).contains(prop)) {
 				return group;
 			}
@@ -223,7 +223,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	 * @return True if the default value is invalid.
 	 */
 	protected final <T> ConstructionProblem.InvalidDefaultValue checkForInvalidDefaultValue(Property<T> property, 
-			Class<? extends PropertyGroup> group, String canonName) {
+			Class<? extends BasePropertyGroup> group, String canonName) {
 		
 		
 		if (property.getDefaultValue() != null) {

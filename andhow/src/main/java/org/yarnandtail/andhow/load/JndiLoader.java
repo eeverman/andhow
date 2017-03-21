@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Loads values from a JNDI context.
@@ -109,7 +109,7 @@ public class JndiLoader extends BaseLoader {
 	}
 
 	@Override
-	public Class<? extends PropertyGroup> getClassConfig() {
+	public Class<? extends BasePropertyGroup> getClassConfig() {
 		return CONFIG.class;
 	}
 
@@ -165,7 +165,7 @@ public class JndiLoader extends BaseLoader {
 			+ "For both properties, trailing slashes will automcatically be added, "
 			+ "however, a leading slash is significant - "
 			+ "is non-standard but allowed and your properties must match.")
-	public static interface CONFIG extends PropertyGroup {
+	public static interface CONFIG extends BasePropertyGroup {
 
 		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
 				.defaultValue("comp/env/, \"\"")

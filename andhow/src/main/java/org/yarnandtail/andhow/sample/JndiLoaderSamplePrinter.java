@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow.sample;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowUtil;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  *
@@ -56,7 +56,7 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 	
 	@Override
 	public TextBlock getActualProperty(ConstructionDefinition definition, 
-			Class<? extends PropertyGroup> group, Property prop) throws Exception {
+			Class<? extends BasePropertyGroup> group, Property prop) throws Exception {
 		
 		TextBlock tb = new TextBlock(false, false);
 		

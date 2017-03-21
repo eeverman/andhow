@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.util.ArrayList;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
@@ -12,6 +13,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  *

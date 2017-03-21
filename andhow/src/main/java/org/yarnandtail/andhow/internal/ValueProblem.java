@@ -1,8 +1,8 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Problems with invalid values, values that cannot be converted to their destination type.
@@ -47,7 +47,7 @@ public abstract class ValueProblem implements Problem {
 		T value;
 		
 		public InvalidValueProblem(
-				Loader loader, Class<? extends PropertyGroup> group, Property<T> prop, 
+				Loader loader, Class<? extends BasePropertyGroup> group, Property<T> prop, 
 				T value, Validator<T> validator) {
 			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.validator = validator;

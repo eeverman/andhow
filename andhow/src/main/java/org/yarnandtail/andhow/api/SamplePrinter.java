@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.api;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 
 /**
@@ -32,12 +31,12 @@ public interface SamplePrinter {
 	void printSampleStart(ConstructionDefinition definition, PrintStream out);
 	
 	void printPropertyGroupStart(ConstructionDefinition definition, PrintStream out, 
-			Class<? extends PropertyGroup> group);
+			Class<? extends BasePropertyGroup> group);
 
 	void printProperty(ConstructionDefinition definition, PrintStream out, 
-			Class<? extends PropertyGroup> group, Property<?> prop);
+			Class<? extends BasePropertyGroup> group, Property<?> prop);
 	
-	void printPropertyGroupEnd(ConstructionDefinition definition, PrintStream out, Class<? extends PropertyGroup> group);
+	void printPropertyGroupEnd(ConstructionDefinition definition, PrintStream out, Class<? extends BasePropertyGroup> group);
 	
 	void printSampleEnd(ConstructionDefinition definition, PrintStream out);
 }

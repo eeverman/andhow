@@ -1,12 +1,13 @@
-package org.yarnandtail.andhow.util;
+package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.List;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  *
@@ -139,7 +140,7 @@ public class ReportGenerator {
 					supportedLoaders++;
 					printer.printSampleStart(appDef, out);
 
-					for (Class<? extends PropertyGroup> group : appDef.getPropertyGroups()) {
+					for (Class<? extends BasePropertyGroup> group : appDef.getPropertyGroups()) {
 
 						printer.printPropertyGroupStart(appDef, out, group);
 

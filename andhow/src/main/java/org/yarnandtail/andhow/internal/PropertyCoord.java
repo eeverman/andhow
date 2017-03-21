@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.internal;
 
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Logical location of a Property (Group and Property).
@@ -11,10 +12,10 @@ import org.yarnandtail.andhow.PropertyGroup;
 public class PropertyCoord {
 
 	Property<?> property;
-	Class<? extends PropertyGroup> group;
+	Class<? extends BasePropertyGroup> group;
 	String name;
 
-	public PropertyCoord(Class<? extends PropertyGroup> group, Property<?> prop) {
+	public PropertyCoord(Class<? extends BasePropertyGroup> group, Property<?> prop) {
 		this.property = prop;
 		this.group = group;
 		if (group != null && property != null) {
@@ -43,7 +44,7 @@ public class PropertyCoord {
 	 * The group containing the Property, if that can be determined.
 	 * @return May return null.
 	 */
-	public Class<? extends PropertyGroup> getGroup() {
+	public Class<? extends BasePropertyGroup> getGroup() {
 		return group;
 	}
 
