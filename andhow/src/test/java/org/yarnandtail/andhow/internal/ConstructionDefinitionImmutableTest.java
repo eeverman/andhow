@@ -1,13 +1,17 @@
 package org.yarnandtail.andhow.internal;
 
 
-import org.yarnandtail.andhow.PropertyGroup;
+
+import org.yarnandtail.andhow.util.AndHowUtil;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  *
@@ -127,7 +131,7 @@ public class ConstructionDefinitionImmutableTest {
 	/**
 	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
 	 */
-	public static interface BadDefaultAndValidationGroup extends PropertyGroup {
+	public static interface BadDefaultAndValidationGroup extends BasePropertyGroup {
 		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
 		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
 		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();

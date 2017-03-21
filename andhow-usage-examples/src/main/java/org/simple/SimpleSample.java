@@ -4,10 +4,10 @@ package org.simple;
  * This example has almost no comments b/c it's a minimal example for the AndHow! homepage.
  */
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.PropertyGroup;
 
 public class SimpleSample {
 	

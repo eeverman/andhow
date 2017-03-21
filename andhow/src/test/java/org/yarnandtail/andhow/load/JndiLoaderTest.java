@@ -2,16 +2,20 @@ package org.yarnandtail.andhow.load;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.AndHowTestBase;
+
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.PropertyValue;
-import org.yarnandtail.andhow.internal.AndHowUtil;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 

@@ -2,8 +2,8 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * A problem of required values not being specified.
@@ -18,7 +18,7 @@ public abstract class RequirementProblem implements Problem {
 	/**
 	 * The required property that has not been given a value.
 	 * 
-	 * This may have a null Property if the issue is a required PropertyGroup.
+	 * This may have a null Property if the issue is a required BasePropertyGroup.
 	 * @return 
 	 */
 	public PropertyCoord getPropertyCoord() {
@@ -33,7 +33,7 @@ public abstract class RequirementProblem implements Problem {
 		
 	public static class RequiredPropertyProblem extends RequirementProblem {
 		
-		public RequiredPropertyProblem(Class<? extends PropertyGroup> group, Property<?> prop) {
+		public RequiredPropertyProblem(Class<? extends BasePropertyGroup> group, Property<?> prop) {
 			propertyCoord = new PropertyCoord(group, prop);
 		}
 		
@@ -51,7 +51,7 @@ public abstract class RequirementProblem implements Problem {
 
 	public static class RequiredPropertyGroupProblem extends RequirementProblem {
 		
-		public RequiredPropertyGroupProblem(Class<? extends PropertyGroup> group) {
+		public RequiredPropertyGroupProblem(Class<? extends BasePropertyGroup> group) {
 			propertyCoord = new PropertyCoord(group, null);
 		}
 		

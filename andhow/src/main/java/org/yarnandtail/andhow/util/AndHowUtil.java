@@ -1,6 +1,5 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.util;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -9,6 +8,10 @@ import java.util.Collections;
 import java.util.List;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.api.BasePropertyGroup;
+import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
+import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -28,14 +31,14 @@ public class AndHowUtil {
 	 * @return A fully configured instance
 	 */
 	public static ConstructionDefinitionMutable buildDefinition(
-			List<Class<? extends PropertyGroup>> groups, List<Loader> loaders, 
+			List<Class<? extends BasePropertyGroup>> groups, List<Loader> loaders, 
 			NamingStrategy naming, ProblemList<Problem> problems) {
 
 		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(naming);
 		
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
-			for (Class<? extends PropertyGroup> group : groups) {
+			for (Class<? extends BasePropertyGroup> group : groups) {
 
 				problems.addAll(registerGroup(appDef, group));
 				
@@ -86,7 +89,7 @@ public class AndHowUtil {
 	}
 		
 	protected static ProblemList<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
-			Class<? extends PropertyGroup> group) {
+			Class<? extends BasePropertyGroup> group) {
 		
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 
@@ -124,13 +127,13 @@ public class AndHowUtil {
 	
 
 	/**
-	 * Returns the list of Exporters that are annotated for a PropertyGroup.
+	 * Returns the list of Exporters that are annotated for a BasePropertyGroup.
 	 * @param group
 	 * @return
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException 
 	 */
-	public static List<Exporter> getExporters(Class<? extends PropertyGroup> group)
+	public static List<Exporter> getExporters(Class<? extends BasePropertyGroup> group)
 			throws InstantiationException, IllegalAccessException {
 		
 		ArrayList<Exporter> exps = new ArrayList();
@@ -165,7 +168,7 @@ public class AndHowUtil {
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	public static List<NameAndProperty> getProperties(Class<? extends PropertyGroup> group) 
+	public static List<NameAndProperty> getProperties(Class<? extends BasePropertyGroup> group) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		List<NameAndProperty> props = new ArrayList();
@@ -213,7 +216,7 @@ public class AndHowUtil {
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	public static String getFieldName(Class<? extends PropertyGroup> group, Property<?> property) 
+	public static String getFieldName(Class<? extends BasePropertyGroup> group, Property<?> property) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		Field[] fields = group.getDeclaredFields();
@@ -246,14 +249,14 @@ public class AndHowUtil {
 	 * 
 	 * The canonical name is of the form:<br/>
 	 * [group canonical name].[field name of the Property within the group]<br/>
-	 * thus, it is require that the Property be a field within the group, otherwise
-	 * null is returned.
-	 * 
-	 * Exceptions may be thrown if a security manager blocks access to members.
-	 * 
-	 * Technically the NameingStrategy is in charge of generating names, but the
-	 * canonical name never changes and is based on the package path of a Property
-	 * within a PropertyGroup.
+ thus, it is require that the Property be a field within the group, otherwise
+ null is returned.
+ 
+ Exceptions may be thrown if a security manager blocks access to members.
+ 
+ Technically the NameingStrategy is in charge of generating names, but the
+ canonical name never changes and is based on the package path of a Property
+ within a BasePropertyGroup.
 	 * 
 	 * @param group
 	 * @param property
@@ -262,7 +265,7 @@ public class AndHowUtil {
 	 * @throws IllegalAccessException
 	 * @throws SecurityException 
 	 */
-	public static String getCanonicalName(Class<? extends PropertyGroup> group, Property<?> property) 
+	public static String getCanonicalName(Class<? extends BasePropertyGroup> group, Property<?> property) 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		String fieldName = getFieldName(group, property);

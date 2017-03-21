@@ -1,10 +1,11 @@
 package org.yarnandtail.andhow.name;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.api.PropertyNaming;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  *

@@ -1,10 +1,14 @@
 package org.yarnandtail.andhow;
 
 import java.util.List;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.JndiLoader;

@@ -1,9 +1,9 @@
 package howto.force.config.sample.printing;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * A simple app to demonstrate that sample configuration can be forced at startup.

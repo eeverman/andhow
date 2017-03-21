@@ -1,7 +1,9 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
+
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
@@ -20,7 +22,7 @@ public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
-	ArrayList<Class<? extends PropertyGroup>> configPtGroups = new ArrayList();
+	ArrayList<Class<? extends BasePropertyGroup>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	

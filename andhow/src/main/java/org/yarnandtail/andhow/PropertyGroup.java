@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.api.BasePropertyGroup;
+
 /**
  * A logical and/or functional grouping of Properties.
  * 
@@ -21,11 +23,9 @@ package org.yarnandtail.andhow;
  * }
  * </pre>
  * 
- * This interface is used by the user, thus it is in the root package.  It is also
- * used by several interfaces in the api package and there isn't an easy way around
- * that.
  * 
  * @author eeverman
  */
-public interface PropertyGroup {
+public interface PropertyGroup extends BasePropertyGroup {
+
 }

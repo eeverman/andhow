@@ -1,18 +1,22 @@
 package org.yarnandtail.andhow.load;
 
 import java.util.List;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.yarnandtail.andhow.AndHow;
+
 import static org.yarnandtail.andhow.AndHowTestBase.reloader;
+
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.internal.AndHowUtil;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * Just like the unit test version, but builds an entire AppConfig instance so
