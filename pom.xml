@@ -188,8 +188,9 @@
 						<version>2.5.3</version>
 						<configuration>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>verify sign deploy</goals>
+							<goals>deploy</goals>
 						</configuration>
 					</plugin>
 					<plugin>
