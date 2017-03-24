@@ -189,7 +189,7 @@
 						<configuration>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>verify deploy</goals>
+							<goals>verify sign deploy</goals>
 						</configuration>
 					</plugin>
 					<plugin>
