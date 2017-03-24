@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -190,7 +190,7 @@
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>deploy</goals>
+							<goals>sign deploy</goals>
 						</configuration>
 					</plugin>
 					<plugin>
