@@ -18,18 +18,16 @@ public interface ValueMap {
 	 * If not configured via one of the Loaders, null is returned, not the default
 	 * value.
 	 * 
-	 * @param <T>
-	 * @param prop
-	 * @return 
+	 * @param <T> prop The property to get the value for
+	 * @return The value, if explicitly set, or null if not explicity set.
 	 */
 	<T> T getExplicitValue(Property<T> prop);
 	
 	/**
 	 * The explicitly value, or if that is null, the default (which may also be null).
 	 * 
-	 * @param <T>
-	 * @param prop
-	 * @return 
+	 * @param prop The property to get the value for.
+	 * @return The explicit value or, if no explicit, the default value.  Otherwise null.
 	 */
 	<T> T  getEffectiveValue(Property<T> prop);
 	
@@ -39,8 +37,8 @@ public interface ValueMap {
 	 * At the moment, that means it would also return a non-null value, however,
 	 * future versions may support explicit nulls.
 	 * 
-	 * @param prop
-	 * @return 
+	 * @param prop The property to check
+	 * @return True if this value is explicitly set.
 	 */
 	boolean isExplicitlySet(Property<?> prop);
 }

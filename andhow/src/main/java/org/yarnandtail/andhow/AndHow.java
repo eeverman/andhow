@@ -47,7 +47,7 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	
 	/**
 	 * Returns a builder that can be used one time to build the AndHow instance.
-	 * @return 
+	 * @return A builder instance
 	 */
 	public static AndHowBuilder builder() {
 		return new AndHowBuilder();

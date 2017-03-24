@@ -46,8 +46,8 @@
 		<connection>scm:git:git@github.com:eeverman/andhow.git</connection>
 		<developerConnection>scm:git:git@github.com:eeverman/andhow.git</developerConnection>
 		<url>https://github.com/eeverman/andhow/tree/master</url>
-    <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	
 	<distributionManagement>
 		<snapshotRepository>
@@ -62,6 +62,8 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven-javadoc-plugin-version>2.10.4</maven-javadoc-plugin-version>
+		<maven-source-plugin-version>2.4</maven-source-plugin-version>
 	</properties>
 	
 	
@@ -136,7 +138,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version>
+						<version>${maven-source-plugin-version}</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -149,7 +151,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
+						<version>${maven-javadoc-plugin-version}</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -193,6 +195,61 @@
 				</plugins>
 			</build>
 		</profile>
-	</profiles>
+
+			
+			<profile>
+				<!-- Override the default the super POM -->
+				<id>release-profile</id>
+
+				<activation>
+					<property>
+						<name>performRelease</name>
+						<value>true</value>
+					</property>
+				</activation>
+
+				<build>
+					<plugins>
+						<plugin>
+							<inherited>true</inherited>
+							<artifactId>maven-source-plugin</artifactId>
+							<version>${maven-source-plugin-version}</version>
+							<executions>
+								<execution>
+									<id>attach-sources</id>
+									<goals>
+										<goal>jar</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-javadoc-plugin</artifactId>
+							<version>${maven-javadoc-plugin-version}</version>
+							<executions>
+								<execution>
+									<id>attach-javadocs</id>
+									<goals>
+										<goal>jar</goal>
+									</goals>
+								</execution>
+							</executions>
+							<configuration>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</plugin>
+						<plugin>
+							<inherited>true</inherited>
+							<artifactId>maven-deploy-plugin</artifactId>
+							<version>2.8.2</version>
+							<configuration>
+								<updateReleaseInfo>true</updateReleaseInfo>
+							</configuration>
+						</plugin>
+					</plugins>
+				</build>
+			</profile>
+		</profiles>
 	
 </project>
