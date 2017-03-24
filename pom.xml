@@ -190,7 +190,7 @@
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>sign deploy</goals>
+							<goals>verify deploy</goals>
 						</configuration>
 					</plugin>
 					<plugin>
