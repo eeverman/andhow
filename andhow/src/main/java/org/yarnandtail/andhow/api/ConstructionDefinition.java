@@ -24,8 +24,8 @@ public interface ConstructionDefinition {
 	 * the application-level configuration has the ability to add and remove
 	 * aliases to mitigate name conflicts.
 	 *
-	 * @param property
-	 * @return
+	 * @param property The property to fetch naming information for
+	 * @return All aliases available for this property.
 	 */
 	List<EffectiveName> getAliases(Property<?> property);
 
@@ -33,39 +33,41 @@ public interface ConstructionDefinition {
 	 * Returns the canonical name of a registered property.
 	 *
 	 * If the property is not registered, null is returned.
-	 * @param prop
-	 * @return
+	 * @param prop The property to get the canonical name for
+	 * @return The canonical name
 	 */
 	String getCanonicalName(Property<?> prop);
 
 	/**
 	 * Finds the BasePropertyGroup containing the specified Property.
 	 *
-	 * @param prop
+	 * @param prop The property to get the PropertyGroup for
 	 * @return May return null if the Property is not in any group, or during
 	 * construction, if the group has not finished registering all of its properties.
 	 */
 	Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop);
 
 	/**
-	 * Returns an unmodifiable list of registered properties.
+	 * Returns a complete list of all registered properties.
 	 *
-	 * @return
+	 * @return An unmodifiable list of registered properties.
 	 */
 	List<Property<?>> getProperties();
 
 	/**
 	 * Returns a list of Properties registered in the passed group.
+	 * 
 	 * If the group is unregistered or has no properties, an empty list is returned.
-	 * @param group
-	 * @return
+	 * 
+	 * @param group The group to get Properties for
+	 * @return An unmodifiable list of Properties
 	 */
 	List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group);
 	
 	/**
-	 * Returns an unmodifiable list of all registered groups.
+	 * Returns a list of all registered groups.
 	 *
-	 * @return
+	 * @return An unmodifiable list of BasePropertyGroups
 	 */
 	List<Class<? extends BasePropertyGroup>> getPropertyGroups();
 
@@ -81,7 +83,7 @@ public interface ConstructionDefinition {
 	 * The URI style name is just a means of reading properties in another system - 
 	 * for AndHow the URI style name is not considered an actual name.
 	 *
-	 * @param classpathStyleName
+	 * @param classpathStyleName A path to a property in the classpath style.
 	 * @return The Property or null if it is not found.
 	 */
 	Property<?> getProperty(String classpathStyleName);
@@ -90,17 +92,18 @@ public interface ConstructionDefinition {
 	 * The list of ExportGroups, which handles exporting property values for use
 	 * outside the AndHow framework.
 	 * 
-	 * An ExportGroup bundles an Exporter implementation with a BasePropertyGroup to
- be exported.  After startup is complete, each Exporter will export its
- group as configured.
+	 * An ExportGroup bundles an Exporter implementation with a BasePropertyGroup
+	 * to be exported.  After startup is complete, each Exporter will export its
+	 * group as configured.
 	 * 
-	 * @return 
+	 * @return An unmodifiable list of export groups.
 	 */
 	List<ExportGroup> getExportGroups();
 	
 	/**
 	 * Defines how names are created for Properties.
-	 * @return 
+	 * 
+	 * @return The NamingStrategy in use.
 	 */
 	NamingStrategy getNamingStrategy();
 	
@@ -112,7 +115,7 @@ public interface ConstructionDefinition {
 	 * Implementations may also augment or trim down environment variables if
 	 * needed.
 	 * 
-	 * @return 
+	 * @return A map containing the system env at the time of startup.
 	 */
 	Map<String, String> getSystemEnvironment();
 
