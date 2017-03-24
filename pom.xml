@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -189,7 +189,7 @@
 						<configuration>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>deploy</goals>
+							<goals>verify deploy</goals>
 						</configuration>
 					</plugin>
 					<plugin>
