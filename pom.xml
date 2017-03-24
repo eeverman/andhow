@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.3.0</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -46,7 +46,7 @@
 		<connection>scm:git:git@github.com:eeverman/andhow.git</connection>
 		<developerConnection>scm:git:git@github.com:eeverman/andhow.git</developerConnection>
 		<url>https://github.com/eeverman/andhow/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>andhow-parent-0.3.0</tag>
   </scm>
 	
 	<distributionManagement>
