@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -187,7 +187,7 @@
 						<artifactId>maven-release-plugin</artifactId>
 						<version>2.5.3</version>
 						<configuration>
-							<arguments>-X remoteDeploy=true</arguments>
+							<arguments>remoteDeploy=true</arguments>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>-->
 							<useReleaseProfile>false</useReleaseProfile>
