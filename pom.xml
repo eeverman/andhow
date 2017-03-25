@@ -187,9 +187,9 @@
 						<artifactId>maven-release-plugin</artifactId>
 						<version>2.5.3</version>
 						<configuration>
-							<arguments>-X</arguments>
+							<arguments>-X remoteDeploy=true</arguments>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
-							<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>
+							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>-->
 							<useReleaseProfile>false</useReleaseProfile>
 							<goals>verify deploy</goals>
 						</configuration>
