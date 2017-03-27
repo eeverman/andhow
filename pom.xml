@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.3.0-SNAPSHOT</version>
+	<version>0.3.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -107,9 +107,7 @@
 		<profile>
 			<id>IncludeInAllProfiles</id>
 			<activation>
-				<property>
-					<name>!skipTheProfileThatIsAlwaysRequired</name>
-				</property>
+				<activeByDefault>true</activeByDefault>
 			</activation>
 			<build>
 				<plugins>
@@ -122,6 +120,72 @@
 							<target>1.8</target>
 						</configuration>
 					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin-version}</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin-version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<keyname>${yarnandtail.gpg.keyname}</keyname>
+									<passphraseServerId>${yarnandtail.gpg.keyname}</passphraseServerId>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-release-plugin</artifactId>
+						<version>2.5.3</version>
+						<configuration>
+							<autoVersionSubmodules>true</autoVersionSubmodules>
+							<useReleaseProfile>false</useReleaseProfile>
+							<goals>verify deploy</goals>
+						</configuration>
+					</plugin>
+					<plugin>
+						<inherited>true</inherited>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<version>2.8.2</version>
+						<configuration>
+							<updateReleaseInfo>true</updateReleaseInfo>
+						</configuration>
+					</plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -129,7 +193,7 @@
 			<id>remoteDeployProfile</id>
 			<activation>
 				<property>
-					<name>remoteDeploy</name>
+					<name>XXXremoteDeploy</name>
 					<value>true</value>
 				</property>
 			</activation>
@@ -187,8 +251,9 @@
 						<artifactId>maven-release-plugin</artifactId>
 						<version>2.5.3</version>
 						<configuration>
+							<arguments>remoteDeploy=true</arguments>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
-							<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>
+							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>-->
 							<useReleaseProfile>false</useReleaseProfile>
 							<goals>verify deploy</goals>
 						</configuration>
