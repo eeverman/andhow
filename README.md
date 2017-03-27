@@ -1,11 +1,25 @@
-AndHow!  strong.simple.valid.AppConfiguration
+AndHow!  strong.valid.simple.AppConfiguration
 ======
-A strongly typed configuration framework with detailed validation that is simple to use
+Strongly typed configuration with detailed validation that is simple to use
 for web apps, command line or any application environment.
 
 Key Features
 --------------
-Strong Typing **&** Detailed validation **&** Simple to use **&** Fails Fast **&** Self Documenting
+**&?! Strong Typing**
+**&?! Simple to use**
+**&?! Detailed validation**
+**&?! Fails Fast**
+**&?! Self Documenting & Sample Generating**
+--------------
+Use it via Maven (available on Maven Central)
+--------------
+```xml
+<dependency>
+    <groupId>org.yarnandtail</groupId>
+    <artifactId>andhow</artifactId>
+    <version>0.3.0</version>
+</dependency>
+```
 Complete Usage Example
 --------------
 ```java
@@ -108,7 +122,8 @@ org.simple.SimpleSample.MySetOfProps.QUERY_ENDPOINT = [String]
 ##########################################################################################
 ```	
 
-Read more about [project goals and details](https://github.com/eeverman/andhow/wiki).
+Ready to try it?  Copy some code from the [usage examples](https://github.com/eeverman/andhow/tree/master/andhow-usage-examples).
+Read more in depth about [AndHow!s features](https://github.com/eeverman/andhow/wiki).
 [Contact me](https://github.com/eeverman) if you have questions or would like to help.
 	
 _**&?!**_
