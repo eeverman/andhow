@@ -5,11 +5,11 @@ for web apps, command line or any application environment.
 
 Key Features
 --------------
-**&?! Strong Typing**
-**&?! Simple to use**
-**&?! Detailed validation**
-**&?! Fails Fast**
-**&?! Self Documenting & Sample Generating**
+**&?! Strong Typing**  
+**&?! Simple to use**  
+**&?! Detailed validation**  
+**&?! Fails Fast**  
+**&?! Self Documenting & Sample Generating**  
 --------------
 Use it via Maven (available on Maven Central)
 --------------
