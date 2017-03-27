@@ -10,6 +10,7 @@ Key Features
 **&?! Detailed validation**  
 **&?! Fails Fast**  
 **&?! Self Documenting & Sample Generating**  
+
 Use it via Maven (available on Maven Central)
 --------------
 ```xml
