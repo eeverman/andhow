@@ -8,8 +8,10 @@ Key Features
 **&?! Strong Typing**  
 **&?! Simple to use**  
 **&?! Detailed validation**  
+**&?! Load values from any source**  
 **&?! Fails Fast**  
 **&?! Self Documenting & Sample Generating**  
+[more details & features...](https://github.com/eeverman/andhow/wiki)  
 
 Use it via Maven (available on Maven Central)
 --------------
