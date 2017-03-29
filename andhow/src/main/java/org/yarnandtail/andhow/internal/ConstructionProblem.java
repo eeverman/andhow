@@ -120,6 +120,33 @@ public abstract class ConstructionProblem implements Problem {
 					"Loaders of the same type are allowed, but they must be separate instances.";
 		}
 	}
+
+	
+	public static class LoaderPropertyIsNull extends ConstructionProblem {
+		Loader loader;
+		
+		public LoaderPropertyIsNull(Loader loader) {
+			this.loader = loader;
+		}
+
+		public Loader getLoader() {
+			return loader;
+		}
+		
+		@Override
+		public String getProblemContext() {
+			return TextUtil.format("{} loader", 
+					loader.getClass().getSimpleName());
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			return "This loader expects a Property passed in its constructor, " +
+					"however, a null value was passed.  " +
+					"This is not a property pointing to null configuration value - " +
+					"The actual reference to the property is null. ";
+		}
+	}
 	
 	public static class LoaderPropertyNotRegistered extends ConstructionProblem {
 		Loader loader;

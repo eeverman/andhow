@@ -17,6 +17,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyIsNull;
 
 /**
  * Just like the unit test version, but builds an entire AppConfig instance so
@@ -49,6 +50,26 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	}
 	
 	@Test
+	public void testNullReferencePropLoaderProperty() throws Exception {
+		
+		try {
+			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
+					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.CLAZZ_PATH), 
+							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+					.loader(new PropertyFileOnClasspathLoader(null))
+					.group(SimpleParams.class)
+					.group(TestProps.class)	//This must be declared or the Prop loader can't work
+					.reloadForNonPropduction(reloader);
+		
+			fail("The Property loader config parameter is not registered, so it should have failed");
+		} catch (AppFatalException afe) {
+			List<LoaderPropertyIsNull> probs = afe.getProblems().filter(LoaderPropertyIsNull.class);
+			assertEquals(1, probs.size());
+		}
+
+	}
+	
+	@Test
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
 		try {
@@ -65,7 +86,6 @@ public class PropertyFileOnClasspathLoaderAppTest {
 			List<LoaderPropertyNotRegistered> probs = afe.getProblems().filter(LoaderPropertyNotRegistered.class);
 			assertEquals(1, probs.size());
 		}
-
 	}
 	
 	/**
