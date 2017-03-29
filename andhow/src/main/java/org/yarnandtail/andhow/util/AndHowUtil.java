@@ -78,7 +78,9 @@ public class AndHowUtil {
 				
 				//Check that user specified config properties for this loader are registered
 				for (Property p : loader.getInstanceConfig()) {
-					if (appDef.getCanonicalName(p) == null) {
+					if (p == null) {
+						problems.add(new ConstructionProblem.LoaderPropertyIsNull(loader));
+					} else if (appDef.getCanonicalName(p) == null) {
 						problems.add(new ConstructionProblem.LoaderPropertyNotRegistered(loader, p));
 					}
 				}
