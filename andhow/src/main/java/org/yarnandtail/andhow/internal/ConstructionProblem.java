@@ -140,17 +140,19 @@ public abstract class ConstructionProblem implements Problem {
 		
 		@Override
 		public String getProblemContext() {
-			return TextUtil.format("The {} loader's Property of type {}", 
-					loader.getClass().getCanonicalName(), 
+			return TextUtil.format("{} loader's {} property of type {}", 
+					loader.getClass().getSimpleName(),
+					property.getClass().getSimpleName(),
 					property.getValueType().getDestinationType().getSimpleName());
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return "This loader has a Property declared in its constructor, " +
-					"but that property is not added to the application configuration. " +
-					"Add the Property to a PropertyGroup and add the group to " +
-					"the configuration via builder.group(myGroup.class).";
+			return TextUtil.format("This loader has a {} property passed in its constructor, " +
+					"but the property is not part of any of the PropertyGroups added during AndHow's initiation. " +
+					"Ensure the property is declared in a PropertyGroup and that the group " +
+					"is added to AndHow in its initiation.",
+					property.getClass().getSimpleName());
 		}
 	}
 	
