@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -77,6 +78,15 @@ public class AndHowTest extends AndHowTestBase {
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
+		assertEquals(new Integer(10), SimpleParams.INT_TEN.getValue());
+		assertNull(SimpleParams.INT_NULL.getValue());
+		assertEquals(new Long(10), SimpleParams.LNG_TEN.getValue());
+		assertNull(SimpleParams.LNG_NULL.getValue());
+		assertEquals(new Double(10), SimpleParams.DBL_TEN.getValue());
+		assertNull(SimpleParams.DBL_NULL.getValue());
+		assertEquals(LocalDateTime.parse("2007-10-01T00:00"), SimpleParams.LDT_2007_10_01.getValue());
+		assertNull(SimpleParams.LDT_NULL.getValue());
+
 	}
 	
 	@Test
