@@ -8,8 +8,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.property.IntProp;
-import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.property.*;
 
 /**
  *
@@ -30,7 +29,9 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 			uiFullPath + "BACKGROUP_COLOR" + StringArgumentLoader.KVP_DELIMITER + "ffffff",
 			svsFullPath + "REST_ENDPOINT_URL" + StringArgumentLoader.KVP_DELIMITER + "google.com",
 			svsFullPath + "RETRY_COUNT" + StringArgumentLoader.KVP_DELIMITER + "4",
-			svsFullPath + "TIMEOUT_SECONDS" + StringArgumentLoader.KVP_DELIMITER + "10"
+			svsFullPath + "TIMEOUT_SECONDS" + StringArgumentLoader.KVP_DELIMITER + "10",
+			svsFullPath + "GRAVITY" + StringArgumentLoader.KVP_DELIMITER + "9.8",
+			svsFullPath + "PIE" + StringArgumentLoader.KVP_DELIMITER + "3.14"
 		};
 		
 	}
@@ -47,6 +48,8 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertEquals("google.com", SERVICE_CONFIG.REST_ENDPOINT_URL.getValue());
 		assertEquals(new Integer(4), SERVICE_CONFIG.RETRY_COUNT.getValue());
 		assertEquals(new Integer(10), SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
+		assertEquals(new Double(9.8), SERVICE_CONFIG.GRAVITY.getValue(), .00000001d);
+		assertEquals(new Double(3.14), SERVICE_CONFIG.PIE.getValue(), .00000001d);
 	}
 	
 	@Test
@@ -90,6 +93,9 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		StrProp REST_ENDPOINT_URL = StrProp.builder().required().build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).build();
 		IntProp TIMEOUT_SECONDS = IntProp.builder().required().build();
+		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).mustBeLessThan(10.2d).build();
+		DblProp PIE = DblProp.builder().mustBeGreaterThanOrEqualTo(3.1).mustBeLessThanOrEqualTo(3.2).build();
+
 	}
 	
 

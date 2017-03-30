@@ -51,17 +51,17 @@ public class DblProp extends PropertyBase<Double> {
 			return instance;
 		}
 		
-		public DblBuilder mustBeGreaterThanOrEqualTo(long reference) {
+		public DblBuilder mustBeGreaterThanOrEqualTo(double reference) {
 			validation(new DblValidator.GreaterThanOrEqualTo(reference));
 			return instance;
 		}
 		
-		public DblBuilder mustBeLessThan(long reference) {
+		public DblBuilder mustBeLessThan(double reference) {
 			validation(new DblValidator.LessThan(reference));
 			return instance;
 		}
 		
-		public DblBuilder mustBeLessThanOrEqualTo(long reference) {
+		public DblBuilder mustBeLessThanOrEqualTo(double reference) {
 			validation(new DblValidator.LessThanOrEqualTo(reference));
 			return instance;
 		}

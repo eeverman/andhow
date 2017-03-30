@@ -30,6 +30,10 @@ public interface SimpleParams extends PropertyGroup {
 	LngProp LNG_TEN = LngProp.builder().defaultValue(10L).build();
 	LngProp LNG_NULL = LngProp.builder().build();
 	
+	//Double
+	DblProp DBL_TEN = DblProp.builder().defaultValue(10d).build();
+	DblProp DBL_NULL = DblProp.builder().build();
+	
 	//LocalDateTime
 	LocalDateTimeProp LDT_2007_10_01 = LocalDateTimeProp.builder().defaultValue(LocalDateTime.parse("2007-10-01T00:00")).build();
 	LocalDateTimeProp LDT_NULL = LocalDateTimeProp.builder().build();
