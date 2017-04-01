@@ -19,7 +19,7 @@ Use it via Maven (available on Maven Central)
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 Complete Usage Example
