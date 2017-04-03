@@ -128,6 +128,7 @@ public abstract class LoaderProblem implements Problem {
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {
 			badValueCoord = new LoaderValueCoord(loader, null, null);
+			this.unknownPropName = unknownPropName;
 		}
 
 		public String getUnknownPropertyName() {

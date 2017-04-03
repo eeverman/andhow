@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -171,9 +171,20 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		LoaderValues result = pfl.load(appDef, appValuesBuilder);
 		
+		//These are the two bad property names in the file
+		List<String> badPropNames = Arrays.asList(new String[] {
+			"org.yarnandtail.andhow.SimpleParams.XXX",
+			"org.yarnandtail.andhow.SimpleXXXXXX.STR_BOB"});
+		
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
+			
+			LoaderProblem.UnknownPropertyLoaderProblem uplp = (LoaderProblem.UnknownPropertyLoaderProblem)lp;
+			
+			//The problem description should contain one of the bad names
+			assertTrue(
+				badPropNames.stream().anyMatch(n -> uplp.getProblemDescription().contains(n)));
 		}
 		
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
