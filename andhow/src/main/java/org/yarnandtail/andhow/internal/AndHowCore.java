@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.internal;
 
+import java.io.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,15 +94,44 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 			}
 		}
 		
-		//Print samples (if requested)
+		//Print samples (if requested) to System.out
 		if (Options.CREATE_SAMPLES.getValue(this)) {
-			ReportGenerator.printConfigSamples(runtimeDef, System.out, loaders, false);
+			
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(os);
+		
+			ReportGenerator.printConfigSamples(runtimeDef, ps, loaders, false);
+
+			try {
+				String message = os.toString("UTF8");
+				System.out.println(message);
+			} catch (UnsupportedEncodingException ex) {
+				//This shouldn't happen, but don't want to have the message burried
+				ReportGenerator.printConfigSamples(runtimeDef, System.out, loaders, true);
+			}
 		}
 	}
 	
+	/**
+	 * Prints failed startup details to System.err
+	 * 
+	 * @param afe 
+	 */
 	private void printFailedStartupDetails(AppFatalException afe) {
-		ReportGenerator.printProblems(System.err, afe, runtimeDef);
-		ReportGenerator.printConfigSamples(runtimeDef, System.err, loaders, true);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(os);
+		
+		ReportGenerator.printProblems(ps, afe, runtimeDef);
+		ReportGenerator.printConfigSamples(runtimeDef, ps, loaders, true);
+		
+		try {
+			String message = os.toString("UTF8");
+			System.err.println(message);
+		} catch (UnsupportedEncodingException ex) {
+			//This shouldn't happen, but don't want to have the message burried
+			ReportGenerator.printProblems(System.err, afe, runtimeDef);
+			ReportGenerator.printConfigSamples(runtimeDef, System.err, loaders, true);
+		}
 	}
 	
 	@Override

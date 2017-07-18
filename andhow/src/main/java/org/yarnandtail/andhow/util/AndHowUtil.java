@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.util;
 
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -109,12 +108,6 @@ public class AndHowUtil {
 		}
 		
 		return problems;
-	}
-		
-	public static void printExceptions(List<? extends Exception> exceptions, PrintStream out) {
-		for (Exception ne : exceptions) {
-			out.println(ne.getMessage());
-		}
 	}
 	
 	public static AppFatalException buildFatalException(ProblemList<Problem> problems) {
