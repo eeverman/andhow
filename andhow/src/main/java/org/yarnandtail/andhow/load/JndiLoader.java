@@ -82,6 +82,8 @@ public class JndiLoader extends BaseLoader {
 							//a root cause of NameNotFound for simple NNF exceptions.
 							if (ne.getRootCause() instanceof NameNotFoundException) {
 								//Ignore - expected
+							} else {
+								throw ne;
 							}
 						}
 					}
