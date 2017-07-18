@@ -75,8 +75,14 @@ public class JndiLoader extends BaseLoader {
 								attemptToAdd(appConfigDef, values, problems, prop, o);
 							}
 
-						} catch (NameNotFoundException nnf) {
+						} catch (NameNotFoundException nnfe) {
 							//Ignore - this is expected
+						} catch (NamingException ne) {
+							//Glassfish seems to be throwing this error w/
+							//a root cause of NameNotFound for simple NNF exceptions.
+							if (ne.getRootCause() instanceof NameNotFoundException) {
+								//Ignore - expected
+							}
 						}
 					}
 				}
@@ -134,6 +140,15 @@ public class JndiLoader extends BaseLoader {
 		return myJndiRoots;
 	}
 
+	/**
+	 * Spits a comma separate list of JNDI roots into individual root strings.
+	 * 
+	 * Each non-empty root is given a trailing forward slash if it does not already
+	 * have one.
+	 * 
+	 * @param rootStr
+	 * @return A list of JNDI root strings
+	 */
 	protected List<String> split(String rootStr) {
 
 		if (rootStr != null) {
