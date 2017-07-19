@@ -35,23 +35,24 @@ public interface Loader {
 			ValueMapWithContext existingValues);
 	
 	/**
-	 * A group of Properties used to globally configure all instance of a type
-	 * of loader.
+	 * Returns a PropertyGroup used to globally configure a class of Loader.
 	 *
-	 * For loaders that are intended to be single instance (i.e. a JNDI loader)
- or loaders that can be multi-instance (PropertyFile loaders) but need to
- share some common configuration can return a BasePropertyGroup from this
- method that is their global configuration interface.
-
- For configuration properties that should vary between instances of the
- same loader class, accept them in the Loader constructor. (See
- getInstanceConfig)
-
- The BasePropertyGroup returned from this method will be included in sample
- config files. It is up to the Loader class to read from those configured
- properties if the user configures them.
+	 * For loaders that are intended to be single instance and thus have a single
+	 * set of configuration properties, this method allows them to report
+	 * their configuration PropertyGroup so it can be included in the list of
+	 * registered groups.   Examples of such loaders would be as system wide 
+	 * naming services like JNDI or a JNDI derivative (like LDAP via JNDI).
 	 *
-	 * @return
+	 * The BasePropertyGroup returned from this method will be registered and
+	 * included in generated sample config files.  Loader classes should 
+	 * provide default Property values so they work w/o configuration if possible.
+	 *
+	 * For configuration properties that should vary between instances of the
+	 * same loader class, the loader class should accept Properties in its
+	 * constructor. Those properties should then be returned by getInstanceConfig().
+	 * 
+	 * @return A PropertyGroup that defines configuration for this class, or null
+	 * if there is none.
 	 */
 	Class<? extends BasePropertyGroup> getClassConfig();
 	
