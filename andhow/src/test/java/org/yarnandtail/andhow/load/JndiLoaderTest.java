@@ -30,17 +30,24 @@ public class JndiLoaderTest extends AndHowTestBase {
 		JndiLoader loader = new JndiLoader();
 		
 		//This is the default
-		List<String> result = loader.split("comp/env/, \"\"");
+		List<String> result = loader.split("java:comp/env/, \"\",");
 		assertEquals(2, result.size());
-		assertEquals("comp/env/", result.get(0));
+		assertEquals("java:comp/env/", result.get(0));
 		assertEquals("", result.get(1));
 		
-		//Should add a trailing slash if missing
-		result = loader.split(" comp/env , \"_\",x/y/z");
+		//Should leave prefix completely unmodified (not add a trailing slash)
+		result = loader.split(" comp/env , , \"_\",x/y/z");
 		assertEquals(3, result.size());
-		assertEquals("comp/env/", result.get(0));
-		assertEquals("_/", result.get(1));
-		assertEquals("x/y/z/", result.get(2));
+		assertEquals("comp/env", result.get(0));
+		assertEquals("_", result.get(1));
+		assertEquals("x/y/z", result.get(2));
+		
+		//Should be able to indicate an empty string and whitespace w/ double quotes.
+		result = loader.split(" comp/env , \"\" , \" \"");
+		assertEquals(3, result.size());
+		assertEquals("comp/env", result.get(0));
+		assertEquals("", result.get(1));
+		assertEquals(" ", result.get(2));
 	}
 
 
@@ -52,15 +59,15 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
@@ -98,11 +105,11 @@ public class JndiLoaderTest extends AndHowTestBase {
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
 
 		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
+		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
+		jndi.bind("" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
 		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
+		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
+		jndi.bind("" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "-999");
 		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
@@ -149,7 +156,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHow.builder()
-				.loader(new FixedValueLoader(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")))
+				.loader(new FixedValueLoader(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")))
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
 				.reloadForNonPropduction(reloader);
@@ -183,8 +190,8 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		AndHow.builder()
 				.loader(new FixedValueLoader(
-						new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "zip,xy/z/"),
-						new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "/test,    test  ,   myapp/root")
+						new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
+						new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				))
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
