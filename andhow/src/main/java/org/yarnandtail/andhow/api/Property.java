@@ -30,21 +30,63 @@ import java.util.List;
  */
 public interface Property<T> {
 
+	/**
+	 * Identical to the no-arg method, but for a localized domain.
+	 * 
+	 * getValue() with no arguments is the typical way to retrieve this
+	 * value.  This method allows a localized domain of values to be used.
+	 * 
+	 * @return May be null, unless the property is marked as required.
+	 */
 	T getValue(ValueMap values);
 	
+	/**
+	 * Returns the effective value of this property.
+	 * 
+	 * The effective value is the explicitly configured value, or if that is null,
+	 * the default value.
+	 * 
+	 * @return May be null, unless the property is marked as required.
+	 */
 	T getValue();
 	
+	/**
+	 * Identical to the no-arg method, but for a localized domain.
+	 * 
+	 * getExplicitValue() with no arguments is the typical way to retrieve this
+	 * value.  This method allows a localized domain of values to be used.
+	 * 
+	 * @return May be null
+	 */
 	T getExplicitValue(ValueMap values);
 	
+	/**
+	 * The value loaded for this value by a Loader from user configuration.
+	 * 
+	 * @return May be null
+	 */
 	T getExplicitValue();
 	
+	/**
+	 * The default value, as defined when this property was build.
+	 * 
+	 * @return May be null
+	 */
 	T getDefaultValue();
 	
+	/**
+	 * If true, the effective value must be non-null to be considered valid.
+	 * 
+	 * The effective value is the explicitly configured value, or if that is null,
+	 * the default value.
+	 * 
+	 * @return True if a non-null value is required.
+	 */
 	boolean isRequired();
 	
 	/**
 	 * The basic type of the property:  Flag, name/value, multi=value.
-	 * @return 
+	 * @return Never null
 	 */
 	PropertyType getPropertyType();
 	
@@ -52,7 +94,7 @@ public interface Property<T> {
 	 * The type of the value (String, Number, Integer, etc).
 	 * For Properties that allow multiple values (not yet implemented), an array
 	 * of values of the specified type can be fetched.
-	 * @return 
+	 * @return Never null
 	 */
 	ValueType<T> getValueType();
 	
@@ -60,19 +102,19 @@ public interface Property<T> {
 	 * The Trimmer responsible for trimming String values before they are converted
 	 * to the appropriate property type.
 	 * 
-	 * @return 
+	 * @return Never null
 	 */
 	Trimmer getTrimmer();
 	
 	/**
 	 * A short sentence description.
-	 * @return 
+	 * @return May be null
 	 */
 	String getShortDescription();
 	
 	/**
 	 * List of validators to validate the converted value.
-	 * @return 
+	 * @return An unmodifiable list of Validators.  Never null.
 	 */
 	List<Validator<T>> getValidators();
 	
@@ -102,7 +144,7 @@ public interface Property<T> {
 	/**
 	 * Added details that might be shown if the user requests help.
 	 * Assume that the short description is already shown.
-	 * @return 
+	 * @return May be null
 	 */
 	String getHelpText();
 
