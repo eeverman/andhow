@@ -25,7 +25,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	ValueMapWithContextMutable appValuesBuilder;
 	
 	public static interface TestProps extends PropertyGroup {
-		StrProp CLAZZ_PATH = StrProp.builder().required().build();
+		StrProp CLAZZ_PATH = StrProp.builder().nonNull().build();
 	}
 	
 	@Before

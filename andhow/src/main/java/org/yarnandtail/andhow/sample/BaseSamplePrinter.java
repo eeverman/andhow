@@ -195,7 +195,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 			tb.addLine(TextUtil.format("{} ({}) {}{}", 
 					propFieldName,
 					prop.getValueType().getDestinationType().getSimpleName(),
-					(prop.isRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
+					(prop.mustBeNonNull())?SamplePrinter.REQUIRED_KEYWORD:"",
 					(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
 
 			List<EffectiveName> effAliases = definition.getAliases(prop);

@@ -31,9 +31,9 @@ public abstract class RequirementProblem implements Problem {
 		return getProblemContext() + ": " + getProblemDescription();
 	}
 		
-	public static class RequiredPropertyProblem extends RequirementProblem {
+	public static class NonNullPropertyProblem extends RequirementProblem {
 		
-		public RequiredPropertyProblem(Class<? extends BasePropertyGroup> group, Property<?> prop) {
+		public NonNullPropertyProblem(Class<? extends BasePropertyGroup> group, Property<?> prop) {
 			propertyCoord = new PropertyCoord(group, prop);
 		}
 		
@@ -44,7 +44,7 @@ public abstract class RequirementProblem implements Problem {
 		
 		@Override
 		public String getProblemDescription() {
-			return "This Property is required - value must be found by one of the loaders";
+			return "This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value";
 		}
 	}
 	

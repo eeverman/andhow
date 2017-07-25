@@ -28,11 +28,11 @@ public class AndHowTest extends AndHowTestBase {
 	String[] cmdLineArgsWFullClassName = new String[0];
 	
 	public static interface RequiredParams extends PropertyGroup {
-		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").required().build();
-		StrProp STR_NULL_R = StrProp.builder().required().build();
-		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).required().build();
-		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).required().build();
-		FlagProp FLAG_NULL = FlagProp.builder().required().build();
+		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").nonNull().build();
+		StrProp STR_NULL_R = StrProp.builder().nonNull().build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).nonNull().build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).nonNull().build();
+		FlagProp FLAG_NULL = FlagProp.builder().nonNull().build();
 	}
 	
 	@Before

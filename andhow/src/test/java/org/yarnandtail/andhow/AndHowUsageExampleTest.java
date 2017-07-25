@@ -85,14 +85,14 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	}
 	
 	public static interface UI_CONFIG extends PropertyGroup {
-		StrProp DISPLAY_NAME = StrProp.builder().required().build();
+		StrProp DISPLAY_NAME = StrProp.builder().nonNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 	
 	public static interface SERVICE_CONFIG extends PropertyGroup {
-		StrProp REST_ENDPOINT_URL = StrProp.builder().required().build();
+		StrProp REST_ENDPOINT_URL = StrProp.builder().nonNull().build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).build();
-		IntProp TIMEOUT_SECONDS = IntProp.builder().required().build();
+		IntProp TIMEOUT_SECONDS = IntProp.builder().nonNull().build();
 		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).mustBeLessThan(10.2d).build();
 		DblProp PIE = DblProp.builder().mustBeGreaterThanOrEqualTo(3.1).mustBeLessThanOrEqualTo(3.2).build();
 

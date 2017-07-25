@@ -30,7 +30,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
-		StrProp FILEPATH = StrProp.builder().required().build();
+		StrProp FILEPATH = StrProp.builder().nonNull().build();
 	}
 	
 	@Before
