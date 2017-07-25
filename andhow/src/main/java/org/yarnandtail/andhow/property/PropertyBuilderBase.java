@@ -27,7 +27,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	protected ValueType<T> _valueType;
 	protected Trimmer _trimmer;
 	protected T _defaultValue;
-	protected boolean _required = false;
+	protected boolean _nonNull = false;
 	protected String _shortDesc;
 	protected List<Validator<T>> _validators = new ArrayList();
 	protected List<Name> _aliases = new ArrayList();
@@ -73,8 +73,11 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	}
 	
 	/**
+	 * Assigns a default value for the property.
 	 * 
-	 * TODO:  It would be nice to add a String version that can parse
+	 * The default value must pass all assigned validation rules, including
+	 * being nonNull, if set.
+	 * 
 	 * @param defaultValue
 	 * @return 
 	 */
@@ -82,14 +85,17 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 		this._defaultValue = defaultValue;
 		return instance;
 	}
-		
-	public B setRequired(boolean required) {
-		this._required = required;
-		return instance;
-	}
 	
-	public B required() {
-		this._required = true;
+	/**
+	 * If set, the effective value must be non-null to be considered valid.
+	 * 
+	 * The effective value is the explicitly configured value, or if that is null,
+	 * the default value.
+	 * 
+	 * @return 
+	 */
+	public B nonNull() {
+		this._nonNull = true;
 		return instance;
 	}
 	

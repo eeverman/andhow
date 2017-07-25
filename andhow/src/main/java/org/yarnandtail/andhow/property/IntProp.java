@@ -41,7 +41,7 @@ public class IntProp extends PropertyBase<Integer> {
 		@Override
 		public IntProp build() {
 
-			return new IntProp(_defaultValue, _required, _shortDesc, _validators,
+			return new IntProp(_defaultValue, _nonNull, _shortDesc, _validators,
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}

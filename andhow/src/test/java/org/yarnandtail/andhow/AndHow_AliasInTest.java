@@ -42,29 +42,29 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	private static final Integer INT2 = 9237347;
 	
 	interface AliasGroup1 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().required()
+		StrProp strProp1 = StrProp.builder().nonNull()
 				.aliasIn(STR_PROP1_IN).aliasOut(STR_PROP1_OUT_ALIAS).aliasInAndOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 		
 		StrProp strProp2 = StrProp.builder()
 				.aliasIn(STR_PROP2_ALIAS).aliasOut(STR_PROP2_ALIAS).aliasIn(STR_PROP2_IN_ALT1_ALIAS).aliasIn(STR_PROP2_IN_ALT2_ALIAS).build();
 		IntProp intProp1 = IntProp.builder()
 				.aliasIn(INT_PROP1_ALIAS).aliasInAndOut(INT_PROP1_ALIAS).aliasIn(INT_PROP1_ALT_IN1_ALIAS).build();
-		IntProp intProp2 = IntProp.builder().required().defaultValue(INT2).build();
+		IntProp intProp2 = IntProp.builder().nonNull().defaultValue(INT2).build();
 	}
 	
 	//Has dup alias for strProp1
 	interface AliasGroup2 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN).build();
+		StrProp strProp1 = StrProp.builder().nonNull().aliasIn(STR_PROP1_IN).build();
 	}
 	
 	//Has dup alias for strProp1
 	interface AliasGroup3 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN_AND_OUT_ALIAS).build();
+		StrProp strProp1 = StrProp.builder().nonNull().aliasIn(STR_PROP1_IN_AND_OUT_ALIAS).build();
 	}
 	
 	//Has dup alias for strProp1, but is all lower case
 	interface AliasGroup4 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().required().aliasIn(STR_PROP1_IN.toLowerCase()).build();
+		StrProp strProp1 = StrProp.builder().nonNull().aliasIn(STR_PROP1_IN.toLowerCase()).build();
 	}
 
 

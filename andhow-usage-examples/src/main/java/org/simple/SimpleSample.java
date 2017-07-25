@@ -37,7 +37,7 @@ public class SimpleSample {
 		
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build(); // 5)
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
-		StrProp QUERY_ENDPOINT = StrProp.builder().required()
+		StrProp QUERY_ENDPOINT = StrProp.builder().nonNull()
 				.desc("Service name added to end of url for the queries").build();
 		// 6)		
 		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file").build();

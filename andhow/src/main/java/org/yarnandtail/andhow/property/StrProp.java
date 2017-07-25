@@ -43,7 +43,7 @@ public class StrProp extends PropertyBase<String> {
 		@Override
 		public StrProp build() {
 
-			return new StrProp(_defaultValue, _required, _shortDesc, _validators,
+			return new StrProp(_defaultValue, _nonNull, _shortDesc, _validators,
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 		}
 		

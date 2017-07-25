@@ -71,7 +71,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		//Continuing on to load values
 		loadedValues = loadValues(runtimeDef, problems).getValueMapWithContextImmutable();
 
-		checkForRequiredValues(runtimeDef, problems);
+		checkForValuesWhichMustBeNonNull(runtimeDef, problems);
 
 		if (problems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(problems);
@@ -163,14 +163,14 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 	
 
-	private void checkForRequiredValues(ConstructionDefinition definition, ProblemList<Problem> problems) {
+	private void checkForValuesWhichMustBeNonNull(ConstructionDefinition definition, ProblemList<Problem> problems) {
 		
 		for (Property<?> prop : definition.getProperties()) {
-			if (prop.isRequired()) {
+			if (prop.mustBeNonNull()) {
 				if (getEffectiveValue(prop) == null) {
 					
 					problems.add(
-						new RequirementProblem.RequiredPropertyProblem(
+						new RequirementProblem.NonNullPropertyProblem(
 								definition.getGroupForProperty(prop), prop));
 				}
 			}

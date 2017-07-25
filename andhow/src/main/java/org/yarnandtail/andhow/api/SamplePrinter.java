@@ -16,11 +16,11 @@ import java.io.PrintStream;
 public interface SamplePrinter {
 	
 	/** Required properties will be marked w/ this text in the sample */
-	static final String REQUIRED_KEYWORD = "REQUIRED";
+	static final String REQUIRED_KEYWORD = "NON-NULL";
 	
 	/** A general explanation for a sample header of what a required property is */
 	static final String REQUIRED_HEADER_TEXT = "Properties marked " + REQUIRED_KEYWORD + 
-			" must be given a value or a RuntimeException will be thrown.";
+			" must be given a non-null value or have a non-null default, or a RuntimeException will be thrown.";
 	
 	/** Lead-in text for validation requirements */
 	static final String THE_VALUE_MUST_TEXT = "The property value must";
