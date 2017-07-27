@@ -27,8 +27,8 @@ public class StrPropTest extends PropertyTestBase {
 		assertEquals("AbCdefg", ValidationGroup.ABC_ANY_CASE.getValue());
 		assertEquals("ABCdefg", ValidationGroup.ABC_UPPER_CASE.getValue());
 		
-		assertEquals("Lowercase Only", ValidationGroup.USER_NAME.getShortDescription());
-		assertEquals("Ends w/ @gmail.com", ValidationGroup.GMAIL_ANY_CASE.getShortDescription());
+		assertEquals("Lowercase Only", ValidationGroup.USER_NAME.getDescription());
+		assertEquals("Ends w/ @gmail.com", ValidationGroup.GMAIL_ANY_CASE.getDescription());
 		assertEquals("helpMe", ValidationGroup.GMAIL_LOWER_CASE.getHelpText());
 	}
 	

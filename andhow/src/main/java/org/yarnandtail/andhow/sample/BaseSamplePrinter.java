@@ -196,7 +196,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 					propFieldName,
 					prop.getValueType().getDestinationType().getSimpleName(),
 					(prop.isNonNullRequired())?SamplePrinter.REQUIRED_KEYWORD:"",
-					(TextUtil.trimToNull(prop.getShortDescription()) == null)?"":" - " + prop.getShortDescription()));
+					(TextUtil.trimToNull(prop.getDescription()) == null)?"":" - " + prop.getDescription()));
 
 			List<EffectiveName> effAliases = definition.getAliases(prop);
 			List<String> inAliases = new ArrayList();
