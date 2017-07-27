@@ -166,7 +166,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	private void checkForValuesWhichMustBeNonNull(ConstructionDefinition definition, ProblemList<Problem> problems) {
 		
 		for (Property<?> prop : definition.getProperties()) {
-			if (prop.mustBeNonNull()) {
+			if (prop.isNonNullRequired()) {
 				if (getEffectiveValue(prop) == null) {
 					
 					problems.add(
