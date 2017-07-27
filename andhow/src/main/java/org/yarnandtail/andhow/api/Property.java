@@ -107,10 +107,15 @@ public interface Property<T> {
 	Trimmer getTrimmer();
 	
 	/**
-	 * A short sentence description.
+	 * A description of the property, what it is for and what it does in the system.
+	 * 
+	 * When the description is presented, the canonical name, validation requirements
+	 * and helpText is presented as well, so it does not need to all be included in
+	 * the description.
+	 * 
 	 * @return May be null
 	 */
-	String getShortDescription();
+	String getDescription();
 	
 	/**
 	 * List of validators to validate the converted value.
@@ -142,8 +147,14 @@ public interface Property<T> {
 	
 	
 	/**
-	 * Added details that might be shown if the user requests help.
-	 * Assume that the short description is already shown.
+	 * Added details that will be shown if the user requests help.
+	 * 
+	 * Assume that the the canonical name, validation requirements
+	 * and description are presented as well.
+	 * 
+	 * Help text can provide added details, such as details on how to specify
+	 * special values or interrelated properties.
+	 * 
 	 * @return May be null
 	 */
 	String getHelpText();

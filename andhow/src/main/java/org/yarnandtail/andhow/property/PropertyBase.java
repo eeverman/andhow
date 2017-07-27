@@ -56,7 +56,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	}
 	
 	@Override
-	public String getShortDescription() {
+	public String getDescription() {
 		return shortDesc;
 	}
 	

@@ -41,7 +41,7 @@ public class DblProp extends PropertyBase<Double> {
 		@Override
 		public DblProp build() {
 
-			return new DblProp(_defaultValue, _nonNull, _shortDesc, _validators,
+			return new DblProp(_defaultValue, _nonNull, _desc, _validators,
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}

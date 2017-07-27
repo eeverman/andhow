@@ -28,7 +28,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	protected Trimmer _trimmer;
 	protected T _defaultValue;
 	protected boolean _nonNull = false;
-	protected String _shortDesc;
+	protected String _desc;
 	protected List<Validator<T>> _validators = new ArrayList();
 	protected List<Name> _aliases = new ArrayList();
 	protected String _helpText;
@@ -109,8 +109,8 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 		return description(shortDesc);
 	}
 	
-	public B description(String shortDesc) {
-		this._shortDesc = shortDesc;
+	public B description(String desc) {
+		this._desc = desc;
 		return instance;
 	}
 	

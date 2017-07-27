@@ -41,7 +41,7 @@ public class LngProp extends PropertyBase<Long> {
 		@Override
 		public LngProp build() {
 
-			return new LngProp(_defaultValue, _nonNull, _shortDesc, _validators,
+			return new LngProp(_defaultValue, _nonNull, _desc, _validators,
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
