@@ -218,7 +218,7 @@ public class JndiLoader extends BaseLoader {
 	public static interface CONFIG extends BasePropertyGroup {
 
 		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
-				.defaultValue("java:comp/env/,java:,\"\"").nonNull()
+				.defaultValue("java:comp/env/,java:,\"\"").mustBeNonNull()
 				.desc("A comma separated list of standard JNDI root locations to be searched for properties. "
 						+ "Setting this property will replace the standard list, "
 						+ "use ADDED_JNDI_ROOTS to only add to the list. ")

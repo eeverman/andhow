@@ -63,7 +63,7 @@ public class SampleAppConfiguration {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().build();
-		StrProp ITEM_ENDPOINT = StrProp.builder().nonNull().build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().mustBeNonNull().build();
 	}
 	
 	@GroupExport(
@@ -86,15 +86,15 @@ public class SampleAppConfiguration {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasInAndOut("nwis.svs").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(20).aliasInAndOut("nwis.to").build();
 		StrProp QUERY_ENDPOINT = StrProp.builder().aliasInAndOut("nwis.query").build();
-		StrProp ITEM_ENDPOINT = StrProp.builder().nonNull().aliasInAndOut("nwis.item").build();
+		StrProp ITEM_ENDPOINT = StrProp.builder().mustBeNonNull().aliasInAndOut("nwis.item").build();
 	}
 	
 	@GroupInfo(name="Application Information", desc="Basic app info for display in the UI")
 	public interface AppInfo extends PropertyGroup {
-		StrProp APP_NAME = StrProp.builder().nonNull().defaultValue("Super Nifty App").build();
-		StrProp APP_PUBLIC_URL = StrProp.builder().nonNull().mustStartWith("http://").defaultValue("http://supercool.org/niftyapp").build();
+		StrProp APP_NAME = StrProp.builder().mustBeNonNull().defaultValue("Super Nifty App").build();
+		StrProp APP_PUBLIC_URL = StrProp.builder().mustBeNonNull().mustStartWith("http://").defaultValue("http://supercool.org/niftyapp").build();
 		LocalDateTimeProp INCEPTION_DATE = 
-				LocalDateTimeProp.builder().nonNull().defaultValue(LocalDateTime.parse("2017-01-01T00:00")).build();
+				LocalDateTimeProp.builder().mustBeNonNull().defaultValue(LocalDateTime.parse("2017-01-01T00:00")).build();
 		StrProp CLASSPATH_PROP_FILE = StrProp.builder().desc("Classpath location of a properties file for config.").build();
 		StrProp FILESYSTEM_PROP_FILE = StrProp.builder().desc("Filesystem location of a properties file for config.").build();
 	}

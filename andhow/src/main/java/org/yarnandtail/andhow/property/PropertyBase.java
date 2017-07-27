@@ -6,7 +6,8 @@ import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
 
 /**
- *
+ * Base property implementation that handles most of state information and common methods.
+ * 
  * @author eeverman
  */
 public abstract class PropertyBase<T> implements Property<T> {
@@ -14,7 +15,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	private final PropertyType paramType;
 	private final ValueType<T> valueType;
 	private final Trimmer trimmer;
-	private final T defaultValue;
+	private final T defValue;
 	private final boolean nonNull;
 	private final String shortDesc;
 	private final List<Validator<T>> validators;
@@ -30,7 +31,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 		this.paramType = paramType;
 		this.valueType = valueType;
 		this.trimmer = trimmer;
-		this.defaultValue = defaultValue;
+		this.defValue = defaultValue;
 		this.nonNull = nonNull;
 		this.shortDesc = (shortDesc != null)?shortDesc:"";
 		this.validators = (validators != null)?Collections.unmodifiableList(validators) : Collections.emptyList();
@@ -75,7 +76,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	}
 	
 	@Override
-	public boolean mustBeNonNull() {
+	public boolean isNonNullRequired() {
 		return nonNull;
 	}
 	
@@ -107,7 +108,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	@Override
 	public T getDefaultValue() {
-		return defaultValue;
+		return defValue;
 	}
 	
 }

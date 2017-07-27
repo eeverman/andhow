@@ -48,19 +48,19 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
 	)
 	interface AliasGroup1 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().nonNull()
+		StrProp strProp1 = StrProp.builder().mustBeNonNull()
 				.aliasIn(STR_PROP1_IN).aliasOut(STR_PROP1_OUT_ALIAS).aliasInAndOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 		StrProp strProp2 = StrProp.builder()
 				.aliasIn(STR_PROP2_IN_ALIAS).build();
 		IntProp intProp1 = IntProp.builder()
 				.aliasIn(INT_PROP1_ALIAS).aliasInAndOut(INT_PROP1_ALIAS).aliasIn(INT_PROP1_ALT_IN1_ALIAS).build();
-		IntProp intProp2 = IntProp.builder().nonNull().defaultValue(INT2).build();
+		IntProp intProp2 = IntProp.builder().mustBeNonNull().defaultValue(INT2).build();
 	}
 	
 
 	//Has dup alias for strProp1
 	interface AliasGroup4 extends PropertyGroup {
-		StrProp strProp1 = StrProp.builder().nonNull().aliasOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
+		StrProp strProp1 = StrProp.builder().mustBeNonNull().aliasOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 	}
 	
 	interface AliasGroup5 extends PropertyGroup {
@@ -85,10 +85,10 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
 	)
 	interface AliasGroup2 extends BasePropertyGroup {
-		StrProp strProp1 = StrProp.builder().nonNull().build();
+		StrProp strProp1 = StrProp.builder().mustBeNonNull().build();
 		StrProp strProp2 = StrProp.builder().build();
 		IntProp intProp1 = IntProp.builder().build();
-		IntProp intProp2 = IntProp.builder().nonNull().defaultValue(INT2).build();
+		IntProp intProp2 = IntProp.builder().mustBeNonNull().defaultValue(INT2).build();
 	}
 	
 

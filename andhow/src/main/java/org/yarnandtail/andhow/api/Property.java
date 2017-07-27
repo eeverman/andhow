@@ -82,7 +82,7 @@ public interface Property<T> {
 	 * 
 	 * @return True if a non-null value is required.
 	 */
-	boolean mustBeNonNull();
+	boolean isNonNullRequired();
 	
 	/**
 	 * The basic type of the property:  Flag, name/value, multi=value.
