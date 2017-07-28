@@ -32,8 +32,6 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  */
 public class JndiLoader extends BaseLoader {
 
-	static String JNDI_PROTOCOL_NAME = "java:";
-
 	@Override
 	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 
