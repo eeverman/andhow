@@ -104,7 +104,9 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 
 			try {
 				String message = os.toString("UTF8");
-				System.out.println(message);
+				
+				//Add separator prefix to prevent log prefixes from indenting 1st line
+				System.out.println(System.lineSeparator() + message);
 			} catch (UnsupportedEncodingException ex) {
 				//This shouldn't happen, but don't want to have the message burried
 				ReportGenerator.printConfigSamples(runtimeDef, System.out, loaders, true);
@@ -126,7 +128,9 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		
 		try {
 			String message = os.toString("UTF8");
-			System.err.println(message);
+			
+			//Add separator prefix to prevent log prefixes from indenting 1st line
+			System.err.println(System.lineSeparator() + message);
 		} catch (UnsupportedEncodingException ex) {
 			//This shouldn't happen, but don't want to have the message burried
 			ReportGenerator.printProblems(System.err, afe, runtimeDef);
