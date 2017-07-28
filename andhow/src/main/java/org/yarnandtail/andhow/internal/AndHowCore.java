@@ -95,7 +95,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		}
 		
 		//Print samples (if requested) to System.out
-		if (Options.CREATE_SAMPLES.getValue(this)) {
+		if (getEffectiveValue(Options.CREATE_SAMPLES)) {
 			
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			PrintStream ps = new PrintStream(os);

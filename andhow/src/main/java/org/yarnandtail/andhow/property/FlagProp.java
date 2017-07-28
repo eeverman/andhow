@@ -40,8 +40,8 @@ public class FlagProp extends PropertyBase<Boolean> {
 	}
 	
 	@Override
-	public Boolean getValue(ValueMap values) {
-		Boolean b = super.getValue(values);
+	public Boolean getValue() {
+		Boolean b = super.getValue();
 		
 		if (b != null) {
 			return b;

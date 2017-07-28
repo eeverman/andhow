@@ -29,16 +29,6 @@ import java.util.List;
  * @author eeverman
  */
 public interface Property<T> {
-
-	/**
-	 * Identical to the no-arg method, but for a localized domain.
-	 * 
-	 * getValue() with no arguments is the typical way to retrieve this
-	 * value.  This method allows a localized domain of values to be used.
-	 * 
-	 * @return May be null, unless the property is marked as required.
-	 */
-	T getValue(ValueMap values);
 	
 	/**
 	 * Returns the effective value of this property.

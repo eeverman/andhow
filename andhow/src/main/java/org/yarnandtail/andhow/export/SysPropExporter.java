@@ -21,8 +21,7 @@ public class SysPropExporter extends BaseExporter {
 	@Override
 	public <T> void doExport(String name, Property<T> property, 
 			ConstructionDefinition definition, ValueMap values) {
-		
-		T value = property.getValue(values);
+		T value = values.getEffectiveValue(property);
 		
 		if (value != null) {
 			System.setProperty(name, property.getValueType().toString(value));

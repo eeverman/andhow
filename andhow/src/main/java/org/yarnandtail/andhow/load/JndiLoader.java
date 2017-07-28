@@ -122,12 +122,13 @@ public class JndiLoader extends BaseLoader {
 		//Add the added roots to the search list first, since they are pretty
 		//likely to be the correct ones if someone explicitly added them.
 		//We still check them all anyway, since a duplicate entry would be ambiguous.
-		if (CONFIG.ADDED_JNDI_ROOTS.getValue(values) != null) {
-			List<String> addRoots = split(CONFIG.ADDED_JNDI_ROOTS.getValue(values));
+		
+		if (values.getEffectiveValue(CONFIG.ADDED_JNDI_ROOTS) != null) {
+			List<String> addRoots = split(values.getEffectiveValue(CONFIG.ADDED_JNDI_ROOTS));
 			myJndiRoots.addAll(addRoots);
 		}
 		
-		List<String> addRoots = split(CONFIG.STANDARD_JNDI_ROOTS.getValue(values));
+		List<String> addRoots = split(values.getEffectiveValue(CONFIG.STANDARD_JNDI_ROOTS));
 		myJndiRoots.addAll(addRoots);
 
 		return myJndiRoots;
