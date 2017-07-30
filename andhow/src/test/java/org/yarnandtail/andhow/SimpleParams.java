@@ -2,7 +2,6 @@ package org.yarnandtail.andhow;
 
 import java.time.LocalDateTime;
 import org.yarnandtail.andhow.property.*;
-import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * Test set of params w/ one of each type.
