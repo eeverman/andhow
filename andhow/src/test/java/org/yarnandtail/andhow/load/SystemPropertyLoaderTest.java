@@ -182,7 +182,7 @@ public class SystemPropertyLoaderTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getEffectiveValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.FALSE, result.getEffectiveValue(SimpleParams.FLAG_FALSE));
-		assertNull(result.getEffectiveValue(SimpleParams.FLAG_NULL));
+		assertFalse(result.getEffectiveValue(SimpleParams.FLAG_NULL));
 	}
 
 	

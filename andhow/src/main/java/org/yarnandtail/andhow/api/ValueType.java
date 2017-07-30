@@ -61,7 +61,8 @@ public interface ValueType<T> {
 	 * AndHow uses this internally to cast values known to already be of type T,
 	 * but were stored in a generic way.
 	 * If used for unknown types that are not castable to T, it will throw
-	 * a RuntimeException.
+	 * a RuntimeException, though this should never happen unless used by
+	 * application code.
 	 * 
 	 * @param o
 	 * @return
