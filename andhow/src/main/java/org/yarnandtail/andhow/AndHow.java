@@ -110,8 +110,8 @@ public class AndHow implements ConstructionDefinition, ValueMap {
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> prop) {
-		return core.getEffectiveValue(prop);
+	public <T> T getValue(Property<T> prop) {
+		return core.getValue(prop);
 	}
 	
 	

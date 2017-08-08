@@ -110,9 +110,9 @@ public class StringArgumentLoaderTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertNull(result.getEffectiveValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));

@@ -34,31 +34,24 @@ public interface Property<T> {
 	 * Returns the effective value of this property.
 	 * 
 	 * The effective value is the explicitly configured value, or if that is null,
-	 * the default value.
+	 * the default value.  Explicitly setting a property to null is not possible
+	 * because it will just be ignored and the default used instead.
 	 * 
 	 * @return May be null, unless the property is marked as required.
 	 */
 	T getValue();
 	
 	/**
-	 * Identical to the no-arg method, but for a localized domain.
+	 * The value found and loaded for this value by a Loader.
 	 * 
-	 * getExplicitValue() with no arguments is the typical way to retrieve this
-	 * value.  This method allows a localized domain of values to be used.
-	 * 
-	 * @return May be null
-	 */
-	T getExplicitValue(ValueMap values);
-	
-	/**
-	 * The value loaded for this value by a Loader from user configuration.
+	 * If no non-null value was found by a loader for this property, null is returned.
 	 * 
 	 * @return May be null
 	 */
 	T getExplicitValue();
 	
 	/**
-	 * The default value, as defined when this property was build.
+	 * The default value, as defined when this Property was constructed.
 	 * 
 	 * @return May be null
 	 */

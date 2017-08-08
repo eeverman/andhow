@@ -44,8 +44,8 @@ public class ValueMapWithContextImmutable extends ValueMapWithContextBase {
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> prop) {
-		return effectiveValues.getEffectiveValue(prop);
+	public <T> T getValue(Property<T> prop) {
+		return effectiveValues.getValue(prop);
 	}
 
 	@Override

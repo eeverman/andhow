@@ -82,25 +82,20 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	@Override
 	public T getValue() {
-		ValueMap values = AndHow.instance();
-
-		T v = getExplicitValue(values);
+		
+		T v = getExplicitValue();
 		if (v != null) {
 			return v;
 		} else {
 			return getDefaultValue();
-		}	
-	}
+		}
 	
-	@Override
-	public T getExplicitValue(ValueMap values) {
-		Object v = values.getExplicitValue(this);
-		return valueType.cast(v);
 	}
 	
 	@Override
 	public final T getExplicitValue() {
-		return getExplicitValue(AndHow.instance());
+		Object v = AndHow.instance().getExplicitValue(this);
+		return valueType.cast(v);
 	}
 	
 	@Override

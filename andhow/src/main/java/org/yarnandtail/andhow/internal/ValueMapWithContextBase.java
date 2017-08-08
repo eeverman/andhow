@@ -15,15 +15,30 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 
 	//
 	// implementation independent methods to be used w/ subclasses
-	protected final <T> T getValue(List<LoaderValues> valuesList, Property<T> prop) {
+	protected final <T> T getExplicitValue(List<LoaderValues> valuesList, Property<T> prop) {
 		return prop.getValueType().cast(valuesList.stream().filter((LoaderValues lv) -> lv.isExplicitlySet(prop)).
 						map((LoaderValues lv) -> lv.getExplicitValue(prop)).findFirst().orElse(null)
 		);
 	}
 	
+	/**
+	 * Returns the effective value from the values that are loaded so far.
+	 * 
+	 * This should follow the same semantics as Property values, but it operates
+	 * on a potentially partially loaded list of values.  This is typically
+	 * invoked during the load process to get configuration for the loaders
+	 * themselves.
+	 * 
+	 * @param <T>
+	 * @param valuesList
+	 * @param prop
+	 * @return 
+	 */
 	protected final <T> T getEffectiveValue(List<LoaderValues> valuesList, Property<T> prop) {
-		if (isPropertyPresent(valuesList, prop)) {
-			return getValue(valuesList, prop);
+		T v = getExplicitValue(valuesList, prop);
+		
+		if (v != null) {
+			return v;
 		} else {
 			return prop.getDefaultValue();
 		}
