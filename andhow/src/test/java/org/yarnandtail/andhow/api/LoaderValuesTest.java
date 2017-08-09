@@ -13,7 +13,7 @@ import org.yarnandtail.andhow.PropertyGroup;
 /**
  * @author eeverman
  */
-public class LoaderValueTest {
+public class LoaderValuesTest {
 	
 	private static final String CLASSPATH_TO_USE = "/org/yarnandtail/andhow/load/SimpleParams1.properties";
 
