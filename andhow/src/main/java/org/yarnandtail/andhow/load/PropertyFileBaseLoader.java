@@ -18,8 +18,8 @@ public abstract class PropertyFileBaseLoader extends BaseLoader {
 	}
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
-			String fromPath, ConstructionDefinition appConfigDef,
-			ValueMapWithContext existingValues) throws LoaderException {
+			String fromPath, GlobalScopeConfiguration appConfigDef,
+			PropertyValuesWithContext existingValues) throws LoaderException {
 		
 		
 		if (inputStream == null) {

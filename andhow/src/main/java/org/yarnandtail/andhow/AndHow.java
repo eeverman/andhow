@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  *
  * @author eeverman
  */
-public class AndHow implements ConstructionDefinition, ValueMap {
+public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	
 	//
 	//A few app-wide constants

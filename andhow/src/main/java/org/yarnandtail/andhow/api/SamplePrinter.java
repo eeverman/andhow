@@ -28,15 +28,15 @@ public interface SamplePrinter {
 	/** Lead-in for a default value */
 	static final String DEFAULT_VALUE_TEXT = "Default Value";
 	
-	void printSampleStart(ConstructionDefinition definition, PrintStream out);
+	void printSampleStart(GlobalScopeConfiguration definition, PrintStream out);
 	
-	void printPropertyGroupStart(ConstructionDefinition definition, PrintStream out, 
+	void printPropertyGroupStart(GlobalScopeConfiguration definition, PrintStream out, 
 			Class<? extends BasePropertyGroup> group);
 
-	void printProperty(ConstructionDefinition definition, PrintStream out, 
+	void printProperty(GlobalScopeConfiguration definition, PrintStream out, 
 			Class<? extends BasePropertyGroup> group, Property<?> prop);
 	
-	void printPropertyGroupEnd(ConstructionDefinition definition, PrintStream out, Class<? extends BasePropertyGroup> group);
+	void printPropertyGroupEnd(GlobalScopeConfiguration definition, PrintStream out, Class<? extends BasePropertyGroup> group);
 	
-	void printSampleEnd(ConstructionDefinition definition, PrintStream out);
+	void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out);
 }

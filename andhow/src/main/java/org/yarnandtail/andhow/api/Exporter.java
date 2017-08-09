@@ -39,7 +39,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(ConstructionDefinition definition, ValueMap values);
+	void export(GlobalScopeConfiguration definition, PropertyValues values);
 	
 	/**
 	 * Exports a BasePropertyGroup.
@@ -52,7 +52,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(Class<? extends BasePropertyGroup> group, ConstructionDefinition definition, ValueMap values);
+	void export(Class<? extends BasePropertyGroup> group, GlobalScopeConfiguration definition, PropertyValues values);
 	
 	public static enum EXPORT_CANONICAL_NAME {
 		ALWAYS, ONLY_IF_NO_OUT_ALIAS, NEVER;

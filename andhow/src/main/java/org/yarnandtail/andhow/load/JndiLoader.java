@@ -33,7 +33,7 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
 public class JndiLoader extends BaseLoader {
 
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
+	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 
 		List<String> jndiRoots = buildJndiRoots(existingValues);
 
@@ -116,7 +116,7 @@ public class JndiLoader extends BaseLoader {
 	 * @param values The configuration state.
 	 * @return Never null and never non-empty.
 	 */
-	protected List<String> buildJndiRoots(ValueMap values) {
+	protected List<String> buildJndiRoots(PropertyValues values) {
 		ArrayList<String> myJndiRoots = new ArrayList();
 
 		//Add the added roots to the search list first, since they are pretty
@@ -142,7 +142,7 @@ public class JndiLoader extends BaseLoader {
 	 * @param prop
 	 * @return An ordered list of jndi names, with (hopefully) the most likely names first.
 	 */
-	protected List<String> buildJndiNames(ConstructionDefinition appConfigDef, List<String> roots, Property prop) {
+	protected List<String> buildJndiNames(GlobalScopeConfiguration appConfigDef, List<String> roots, Property prop) {
 		
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value

@@ -28,7 +28,7 @@ public class FixedValueLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
+	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 		return new LoaderValues(this, values, ProblemList.EMPTY_PROBLEM_LIST);
 	}
 	

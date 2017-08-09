@@ -32,7 +32,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
 		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
 
@@ -66,7 +66,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
 		
 		problems.add(appDef.addProperty(SampleGroup.class, SampleGroup.STR_1));
 
@@ -93,7 +93,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
 		
 		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
 

@@ -9,7 +9,7 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  * 
  * @author eeverman
  */
-public class ConstructionDefinitionImmutable implements ConstructionDefinition {
+public class GlobalScopeConfigurationImmutable implements GlobalScopeConfiguration {
 
 	private final NamingStrategy namingStrategy;
 	private final List<Class<? extends BasePropertyGroup>> groupList;
@@ -21,7 +21,7 @@ public class ConstructionDefinitionImmutable implements ConstructionDefinition {
 	private final List<ExportGroup> exportGroups;
 	
 
-	public ConstructionDefinitionImmutable(
+	public GlobalScopeConfigurationImmutable(
 			NamingStrategy namingStrategy,
 			List<Class<? extends BasePropertyGroup>> groupList,
 			List<Property<?>> properties,

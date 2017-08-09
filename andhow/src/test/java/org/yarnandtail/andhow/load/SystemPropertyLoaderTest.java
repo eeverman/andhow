@@ -19,16 +19,16 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
  */
 public class SystemPropertyLoaderTest {
 	
-	ConstructionDefinitionMutable appDef;
-	ValueMapWithContextMutable appValuesBuilder;
+	GlobalScopeConfigurationMutable appDef;
+	PropertyValuesWithContextMutable appValuesBuilder;
 	
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new ValueMapWithContextMutable();
+		appValuesBuilder = new PropertyValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new ConstructionDefinitionMutable(bns);
+		appDef = new GlobalScopeConfigurationMutable(bns);
 		
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);

@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public interface ValueMapWithContext extends ValueMap {
+public interface PropertyValuesWithContext extends PropertyValues {
 	
 	/**
 	 * Returns true if any value or loader has any sort of issue (invalid value,
@@ -63,7 +63,7 @@ public interface ValueMapWithContext extends ValueMap {
 	 * Unmodifiable minimum data for Properties to retrieve their data from.
 	 * @return 
 	 */
-	ValueMap getValueMapImmutable();
+	PropertyValues getValueMapImmutable();
 	
 	/**
 	 * Unmodifiable minimum data collection to store the structure of how data
@@ -74,6 +74,6 @@ public interface ValueMapWithContext extends ValueMap {
 	 * 
 	 * @return 
 	 */
-	ValueMapWithContext getValueMapWithContextImmutable();
+	PropertyValuesWithContext getValueMapWithContextImmutable();
 
 }

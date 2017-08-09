@@ -25,11 +25,11 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	 * Must provide its own line comment prefix if the format has no block comment.
 	 * @return 
 	 */
-	public abstract TextBlock getSampleStartComment(ConstructionDefinition definition);
+	public abstract TextBlock getSampleStartComment(GlobalScopeConfiguration definition);
 	
-	public abstract String getInAliaseString(ConstructionDefinition definition, EffectiveName name);
+	public abstract String getInAliaseString(GlobalScopeConfiguration definition, EffectiveName name);
 	
-	public abstract TextBlock getActualProperty(ConstructionDefinition definition, 
+	public abstract TextBlock getActualProperty(GlobalScopeConfiguration definition, 
 			Class<? extends BasePropertyGroup> group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
@@ -131,7 +131,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 
 	@Override
-	public void printSampleStart(ConstructionDefinition definition, PrintStream out) {
+	public void printSampleStart(GlobalScopeConfiguration definition, PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
 		TextBlock tb = getSampleStartComment(definition);
 		
@@ -142,7 +142,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 	
 	@Override
-	public void printPropertyGroupStart(ConstructionDefinition definition, 
+	public void printPropertyGroupStart(GlobalScopeConfiguration definition, 
 			PrintStream out, Class<? extends BasePropertyGroup> group) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -181,7 +181,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	
 	@Override
-	public void printProperty(ConstructionDefinition definition, PrintStream out,
+	public void printProperty(GlobalScopeConfiguration definition, PrintStream out,
 			Class<? extends BasePropertyGroup> group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -249,12 +249,12 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 
 	@Override
-	public void printPropertyGroupEnd(ConstructionDefinition definition, 
+	public void printPropertyGroupEnd(GlobalScopeConfiguration definition, 
 			PrintStream out, Class<? extends BasePropertyGroup> group) {
 	}
 	
 	@Override
-	public void printSampleEnd(ConstructionDefinition definition, PrintStream out) {
+	public void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out) {
 		TextBlock tb = getSampleFileEnd();
 		print(out, tb, getFormat());
 	}
