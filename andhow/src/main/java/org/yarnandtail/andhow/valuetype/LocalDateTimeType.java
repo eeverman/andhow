@@ -11,6 +11,9 @@ import org.yarnandtail.andhow.api.ParsingException;
  * 
  * See the parse() method for more parsing examples.
  * 
+ * This class is threadsafe and uses a singleton pattern to prevent multiple
+ * instances, since all users can safely use the same instance.
+ * 
  * @author eeverman
  */
 public class LocalDateTimeType extends BaseValueType<LocalDateTime> {

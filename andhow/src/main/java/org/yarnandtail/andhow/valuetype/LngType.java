@@ -5,6 +5,9 @@ import org.yarnandtail.andhow.api.ParsingException;
 /**
  * Type representation of Java Long objects.
  * 
+ * This class is threadsafe and uses a singleton pattern to prevent multiple
+ * instances, since all users can safely use the same instance.
+ * 
  * @author eeverman
  */
 public class LngType extends BaseValueType<Long> {
