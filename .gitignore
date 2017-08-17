@@ -7,3 +7,9 @@
 /andhow/target/
 nbproject/project.properties
 /andhow/nbproject/
+/andhow copy/nbproject/
+/andhow copy/target/
+/andhow-compile-processor/nbproject/
+/andhow-compile-processor/target/
+/andhow-compile-processor copy/target/
+/andhow-api/target/

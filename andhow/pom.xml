@@ -11,7 +11,7 @@
 	<packaging>jar</packaging>
 	<name>AndHow</name>
 	<description>
-	Simple typed and validated configuration loading for web apps, command line or any environment application.
+		Simple typed and validated configuration loading for web apps, command line or any environment application.
 	</description>
 
 	<dependencies>
@@ -31,5 +31,23 @@
 			<version>2.5</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!--
+					-proc:none turns off annotation processors so that the
+					AndHowCompileProcessor does not attempt to process the
+					AndHow module itself.
+					-->
+					<compilerArgument>
+						-proc:none
+					</compilerArgument>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
