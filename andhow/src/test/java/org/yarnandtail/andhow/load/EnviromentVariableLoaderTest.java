@@ -12,8 +12,8 @@ import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.LoaderValues;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
-import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
+import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
 /**
@@ -22,16 +22,16 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
  */
 public class EnviromentVariableLoaderTest {
 	
-	TestConstructionDefinition appDef;
-	ValueMapWithContextMutable appValuesBuilder;
+	TestGlobalScopeConfiguration appDef;
+	PropertyValuesWithContextMutable appValuesBuilder;
 	
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new ValueMapWithContextMutable();
+		appValuesBuilder = new PropertyValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new TestConstructionDefinition();
+		appDef = new TestGlobalScopeConfiguration();
 		
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
 		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
@@ -218,11 +218,11 @@ public class EnviromentVariableLoaderTest {
 		assertFalse(result.getValue(SimpleParams.FLAG_NULL));
 	}
 	
-	public static class TestConstructionDefinition extends ConstructionDefinitionMutable {
+	public static class TestGlobalScopeConfiguration extends GlobalScopeConfigurationMutable {
 		
 		HashMap<String, String> envVars = new HashMap();
 
-		public TestConstructionDefinition() {
+		public TestGlobalScopeConfiguration() {
 			super(new CaseInsensitiveNaming());
 		}
 		

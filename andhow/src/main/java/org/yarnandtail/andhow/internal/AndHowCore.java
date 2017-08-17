@@ -20,13 +20,13 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  * 
  * @author eeverman
  */
-public class AndHowCore implements ConstructionDefinition, ValueMap {
+public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	//User config
 	private final List<Loader> loaders = new ArrayList();
 	
 	//Internal state
-	private final ConstructionDefinition runtimeDef;
-	private final ValueMapWithContext loadedValues;
+	private final GlobalScopeConfiguration runtimeDef;
+	private final PropertyValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
@@ -52,7 +52,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		}
 		effRegGroups.add(Options.class);
 
-		ConstructionDefinitionMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
+		GlobalScopeConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
 		runtimeDef = startupDef.toImmutable();
 		
 		//
@@ -154,8 +154,8 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 	
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private ValueMapWithContext loadValues(ConstructionDefinition definition, ProblemList<Problem> problems) {
-		ValueMapWithContextMutable existingValues = new ValueMapWithContextMutable();
+	private PropertyValuesWithContext loadValues(GlobalScopeConfiguration definition, ProblemList<Problem> problems) {
+		PropertyValuesWithContextMutable existingValues = new PropertyValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
 			LoaderValues result = loader.load(definition, existingValues);
@@ -167,7 +167,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 	
 
-	private void checkForValuesWhichMustBeNonNull(ConstructionDefinition definition, ProblemList<Problem> problems) {
+	private void checkForValuesWhichMustBeNonNull(GlobalScopeConfiguration definition, ProblemList<Problem> problems) {
 		
 		for (Property<?> prop : definition.getProperties()) {
 			if (prop.isNonNullRequired()) {

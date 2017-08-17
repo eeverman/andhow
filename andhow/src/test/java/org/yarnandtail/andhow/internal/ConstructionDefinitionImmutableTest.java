@@ -32,12 +32,12 @@ public class ConstructionDefinitionImmutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		
-		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
 		cdm.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
 		cdm.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
 		
 		
-		ConstructionDefinition appDef = cdm.toImmutable();
+		GlobalScopeConfiguration appDef = cdm.toImmutable();
 		
 		//Canonical Names for Property
 		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
@@ -69,13 +69,13 @@ public class ConstructionDefinitionImmutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
 		
 		problems.add(cdm.addProperty(SampleGroup.class, SampleGroup.STR_1));
 
 		problems.add(cdm.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP));
 		
-		ConstructionDefinition appDef = cdm.toImmutable();
+		GlobalScopeConfiguration appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -98,7 +98,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		ConstructionDefinitionMutable cdm = new ConstructionDefinitionMutable(bns);
+		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
 		
 		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
 
@@ -106,7 +106,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
-		ConstructionDefinition appDef = cdm.toImmutable();
+		GlobalScopeConfiguration appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));

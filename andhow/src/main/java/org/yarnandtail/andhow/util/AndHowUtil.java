@@ -8,7 +8,7 @@ import java.util.List;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.api.BasePropertyGroup;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
+import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 
@@ -29,11 +29,11 @@ public class AndHowUtil {
 	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
-	public static ConstructionDefinitionMutable buildDefinition(
+	public static GlobalScopeConfigurationMutable buildDefinition(
 			List<Class<? extends BasePropertyGroup>> groups, List<Loader> loaders, 
 			NamingStrategy naming, ProblemList<Problem> problems) {
 
-		ConstructionDefinitionMutable appDef = new ConstructionDefinitionMutable(naming);
+		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(naming);
 		
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
@@ -89,7 +89,7 @@ public class AndHowUtil {
 		return appDef;
 	}
 		
-	protected static ProblemList<ConstructionProblem> registerGroup(ConstructionDefinitionMutable appDef,
+	protected static ProblemList<ConstructionProblem> registerGroup(GlobalScopeConfigurationMutable appDef,
 			Class<? extends BasePropertyGroup> group) {
 		
 		ProblemList<ConstructionProblem> problems = new ProblemList();

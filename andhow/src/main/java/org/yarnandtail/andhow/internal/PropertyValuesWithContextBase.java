@@ -8,9 +8,9 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public abstract class ValueMapWithContextBase implements ValueMapWithContext {
+public abstract class PropertyValuesWithContextBase implements PropertyValuesWithContext {
 	
-	public ValueMapWithContextBase() {
+	public PropertyValuesWithContextBase() {
 	}
 
 	//
@@ -70,7 +70,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 		}
 	}
 	
-	public ValueMapImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
+	public PropertyValuesImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
 		
 		Map<Property<?>, Object> effValues = new HashMap();
 		
@@ -82,7 +82,7 @@ public abstract class ValueMapWithContextBase implements ValueMapWithContext {
 		}
 		
 		
-		return new ValueMapImmutable(effValues); 
+		return new PropertyValuesImmutable(effValues); 
 	}
 	
 }

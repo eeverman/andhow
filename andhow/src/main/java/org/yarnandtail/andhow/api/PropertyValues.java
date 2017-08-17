@@ -10,7 +10,7 @@ package org.yarnandtail.andhow.api;
  * 
  * @author eeverman
  */
-public interface ValueMap {
+public interface PropertyValues {
 	/**
 	 * The value found and loaded for this value by a Loader.
 	 * 

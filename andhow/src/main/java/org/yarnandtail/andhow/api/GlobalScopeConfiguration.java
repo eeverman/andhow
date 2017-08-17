@@ -13,7 +13,7 @@ import java.util.*;
  * 
  * @author eeverman
  */
-public interface ConstructionDefinition {
+public interface GlobalScopeConfiguration {
 
 	public static final List<Property<?>> EMPTY_PROPERTY_LIST = Collections.unmodifiableList(new ArrayList());
 	

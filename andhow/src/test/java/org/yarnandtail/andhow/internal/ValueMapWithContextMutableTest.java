@@ -19,7 +19,7 @@ public class ValueMapWithContextMutableTest {
 	@Test
 	public void testBuilder() {
 		
-		ValueMapWithContextMutable builder = new ValueMapWithContextMutable();
+		PropertyValuesWithContextMutable builder = new PropertyValuesWithContextMutable();
 		
 		Loader cmdLineLoad = new StringArgumentLoader(new String[]{});
 		Loader propFileLoad = new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
@@ -48,19 +48,19 @@ public class ValueMapWithContextMutableTest {
 		//Lists of stuff to test b/c lots of the tests deal w/ ensuring that the
 		//data is the same regardless of where we read it from
 		ArrayList<LoaderValues> lvsToTest = new ArrayList();
-		ArrayList<ValueMap> acvsToTest = new ArrayList();
+		ArrayList<PropertyValues> acvsToTest = new ArrayList();
 		
 		//
 		//Test basic class types
-		assertTrue(builder.getValueMapWithContextImmutable() instanceof ValueMapWithContextImmutable);
-		assertTrue(builder.getValueMapImmutable() instanceof ValueMapImmutable);
+		assertTrue(builder.getValueMapWithContextImmutable() instanceof PropertyValuesWithContextImmutable);
+		assertTrue(builder.getValueMapImmutable() instanceof PropertyValuesImmutable);
 		
 		//These should all be the values from the firstSet except KVP_NULL
 		acvsToTest.clear();
 		acvsToTest.add(builder);
 		acvsToTest.add(builder.getValueMapWithContextImmutable());
 		acvsToTest.add(builder.getValueMapImmutable());
-		for (ValueMap acv : acvsToTest) {
+		for (PropertyValues acv : acvsToTest) {
 			assertEquals("test", acv.getExplicitValue(SimpleParams.STR_BOB));
 			assertEquals("blah", acv.getExplicitValue(SimpleParams.STR_NULL));
 			assertEquals(false, acv.getExplicitValue(SimpleParams.FLAG_TRUE));

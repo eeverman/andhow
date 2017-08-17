@@ -45,18 +45,18 @@ public abstract class BaseExporter implements Exporter {
 	 * @param values 
 	 */
 	public abstract <T> void doExport(String name, Property<T> property, 
-			ConstructionDefinition definition, ValueMap values);
+			GlobalScopeConfiguration definition, PropertyValues values);
 		
 	
 	@Override
-	public void export(ConstructionDefinition definition, ValueMap values) {
+	public void export(GlobalScopeConfiguration definition, PropertyValues values) {
 		for (Class<? extends BasePropertyGroup> pg : definition.getPropertyGroups()) {
 			export(pg, definition, values);
 		}
 	}
 
 	@Override
-	public void export(Class<? extends BasePropertyGroup> group, ConstructionDefinition definition, ValueMap values) {
+	public void export(Class<? extends BasePropertyGroup> group, GlobalScopeConfiguration definition, PropertyValues values) {
 		List<Property<?>> props = definition.getPropertiesForGroup(group);
 		
 		for (Property<?> prop : props) {
@@ -64,7 +64,7 @@ public abstract class BaseExporter implements Exporter {
 		}
 	}
 	
-	public void export(Property<?> property, ConstructionDefinition definition, ValueMap values) {
+	public void export(Property<?> property, GlobalScopeConfiguration definition, PropertyValues values) {
 		
 		List<String> names = new ArrayList();
 		
@@ -100,7 +100,7 @@ public abstract class BaseExporter implements Exporter {
 		
 	}
 	
-	protected boolean hasOutAlias(Property<?> property, ConstructionDefinition definition) {
+	protected boolean hasOutAlias(Property<?> property, GlobalScopeConfiguration definition) {
 		List<EffectiveName> aliases = definition.getAliases(property);
 		
 		for (EffectiveName a : aliases) {

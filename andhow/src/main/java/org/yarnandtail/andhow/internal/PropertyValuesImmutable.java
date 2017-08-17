@@ -3,13 +3,14 @@ package org.yarnandtail.andhow.internal;
 import java.util.HashMap;
 import java.util.Map;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.ValueMap;
+import org.yarnandtail.andhow.api.PropertyValues;
 
 /**
- *
+ * Immutable implementation of PropertyValues.
+ * 
  * @author eeverman
  */
-public class ValueMapImmutable implements ValueMap {
+public class PropertyValuesImmutable implements PropertyValues {
 	
 	/** 
 	 * All the Properties and associated values registered and actually in use,
@@ -18,7 +19,7 @@ public class ValueMapImmutable implements ValueMap {
 	private final Map<Property<?>, Object> loadedValues = new HashMap();
 	
 
-	public ValueMapImmutable(Map<Property<?>, Object> loadedValues) {
+	public PropertyValuesImmutable(Map<Property<?>, Object> loadedValues) {
 		this.loadedValues.putAll(loadedValues);
 	}
 

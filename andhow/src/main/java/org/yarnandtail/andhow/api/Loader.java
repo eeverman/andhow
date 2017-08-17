@@ -31,8 +31,8 @@ public interface Loader {
 	 * @param existingValues
 	 * @return 
 	 */
-	LoaderValues load(ConstructionDefinition runtimeDef,
-			ValueMapWithContext existingValues);
+	LoaderValues load(GlobalScopeConfiguration runtimeDef,
+			PropertyValuesWithContext existingValues);
 	
 	/**
 	 * Returns a PropertyGroup used to globally configure a class of Loader.

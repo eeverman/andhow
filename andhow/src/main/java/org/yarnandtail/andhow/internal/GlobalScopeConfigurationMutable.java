@@ -11,7 +11,7 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  * 
  * @author eeverman
  */
-public class ConstructionDefinitionMutable implements ConstructionDefinition {
+public class GlobalScopeConfigurationMutable implements GlobalScopeConfiguration {
 	
 	private final NamingStrategy namingStrategy;
 	private final Map<Class<? extends BasePropertyGroup>, List<Property<?>>> propertiesByGroup = new HashMap();
@@ -26,7 +26,7 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	//It is not copied to the immutable version and has no access method.
 	private final HashMap<String, Property<?>> propertiesByExportName = new HashMap();
 
-	public ConstructionDefinitionMutable(NamingStrategy namingStrategy) {
+	public GlobalScopeConfigurationMutable(NamingStrategy namingStrategy) {
 		this.namingStrategy = namingStrategy;
 	}
 	
@@ -252,8 +252,8 @@ public class ConstructionDefinitionMutable implements ConstructionDefinition {
 	 * 
 	 * @return 
 	 */
-	public ConstructionDefinition toImmutable() {
-		return new ConstructionDefinitionImmutable(namingStrategy, groupList, properties,
+	public GlobalScopeConfiguration toImmutable() {
+		return new GlobalScopeConfigurationImmutable(namingStrategy, groupList, properties,
 			propertiesByGroup, propertiesByAnyName, 
 			aliasesByProperty, canonicalNameByProperty, 
 			exportGroups);

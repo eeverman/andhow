@@ -1,8 +1,8 @@
 package org.yarnandtail.andhow.export;
 
-import org.yarnandtail.andhow.api.ConstructionDefinition;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.ValueMap;
+import org.yarnandtail.andhow.api.GlobalScopeConfiguration;
+import org.yarnandtail.andhow.api.PropertyValues;
 
 /**
  * Exports Properties to System.Properties.
@@ -20,7 +20,7 @@ public class SysPropExporter extends BaseExporter {
 	
 	@Override
 	public <T> void doExport(String name, Property<T> property, 
-			ConstructionDefinition definition, ValueMap values) {
+			GlobalScopeConfiguration definition, PropertyValues values) {
 		T value = values.getValue(property);
 		
 		if (value != null) {

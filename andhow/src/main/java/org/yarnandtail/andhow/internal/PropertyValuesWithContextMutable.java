@@ -6,16 +6,17 @@ import java.util.List;
 import org.yarnandtail.andhow.api.*;
 
 /**
- *
+ * Mutable PropertyValues implementation w/ context info.
+ * 
  * @author eeverman
  */
-public class ValueMapWithContextMutable extends ValueMapWithContextBase {
+public class PropertyValuesWithContextMutable extends PropertyValuesWithContextBase {
 	
 	/** List of maps of values that were loaded by each loader */
 	private final ArrayList<LoaderValues> loadedValuesList = new ArrayList();
 	private boolean problem = false;
 	
-	public ValueMapWithContextMutable() {
+	public PropertyValuesWithContextMutable() {
 	}
 	
 	public void addValues(LoaderValues values) {
@@ -24,8 +25,8 @@ public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	}
 	
 	@Override
-	public ValueMapWithContext getValueMapWithContextImmutable() {
-		return new ValueMapWithContextImmutable(loadedValuesList);
+	public PropertyValuesWithContext getValueMapWithContextImmutable() {
+		return new PropertyValuesWithContextImmutable(loadedValuesList);
 	}
 	
 	@Override
@@ -59,7 +60,7 @@ public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	}
 
 	@Override
-	public ValueMap getValueMapImmutable() {
+	public PropertyValues getValueMapImmutable() {
 		return buildValueMapImmutable(loadedValuesList);
 	}
 

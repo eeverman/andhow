@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public class LoaderValues implements ValueMap {
+public class LoaderValues implements PropertyValues {
 	public static final List<PropertyValue> EMPTY_PROP_VALUE_LIST = Collections.emptyList();
 	
 	private final Loader loader;

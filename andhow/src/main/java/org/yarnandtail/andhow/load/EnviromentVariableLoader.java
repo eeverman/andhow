@@ -34,7 +34,7 @@ public class EnviromentVariableLoader extends BaseLoader {
 	}
 	
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
+	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();

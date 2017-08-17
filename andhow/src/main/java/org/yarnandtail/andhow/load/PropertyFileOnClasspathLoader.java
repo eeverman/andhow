@@ -56,7 +56,7 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 	
 
 	@Override
-	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
+	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 
 		String path = existingValues.getValue(classpath);
 		specificLoadDescription = "file on classpath at: " + path;
@@ -80,8 +80,8 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 	 * @param path
 	 * @return 
 	 */
-	public LoaderValues load(ConstructionDefinition appConfigDef,
-			ValueMapWithContext existingValues, String path) {
+	public LoaderValues load(GlobalScopeConfiguration appConfigDef,
+			PropertyValuesWithContext existingValues, String path) {
 					
 		try (InputStream inS = PropertyFileOnClasspathLoader.class.getResourceAsStream(path)) {
 

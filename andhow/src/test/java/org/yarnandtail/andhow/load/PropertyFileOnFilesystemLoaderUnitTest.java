@@ -12,9 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.ConstructionDefinitionMutable;
+import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.internal.ValueMapWithContextMutable;
+import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
@@ -25,8 +25,8 @@ import org.yarnandtail.andhow.PropertyGroup;
  */
 public class PropertyFileOnFilesystemLoaderUnitTest {
 	
-	ConstructionDefinitionMutable appDef;
-	ValueMapWithContextMutable appValuesBuilder;
+	GlobalScopeConfigurationMutable appDef;
+	PropertyValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
@@ -36,10 +36,10 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new ValueMapWithContextMutable();
+		appValuesBuilder = new PropertyValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new ConstructionDefinitionMutable(bns);
+		appDef = new GlobalScopeConfigurationMutable(bns);
 		
 		appDef.addProperty(TestProps.class, TestProps.FILEPATH);
 
