@@ -58,7 +58,7 @@ public class PropertyFileOnFilesystemLoader extends PropertyFileBaseLoader {
 	@Override
 	public LoaderValues load(ConstructionDefinition appConfigDef, ValueMapWithContext existingValues) {
 
-		String path = existingValues.getEffectiveValue(filepath);
+		String path = existingValues.getValue(filepath);
 		specificLoadDescription = TextUtil.format("file on the file system at path : {} ({})",
 					path, getAbsPath(path)) ;
 		

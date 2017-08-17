@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * The Properties and values loaded by a Loader.
+ * The Properties and values loaded by a single Loader.
  * 
  * Only Properties for which a Loader found a value will be in the collection.
  * 
@@ -103,7 +103,7 @@ public class LoaderValues implements ValueMap {
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> prop) {
+	public <T> T getValue(Property<T> prop) {
 		if (prop == null) {
 			return null;
 		}
@@ -122,7 +122,7 @@ public class LoaderValues implements ValueMap {
 	 */
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
-		return values.stream().anyMatch(p -> p.getProperty().equals(prop));
+		return getExplicitValue(prop) != null;
 	}
 	
 

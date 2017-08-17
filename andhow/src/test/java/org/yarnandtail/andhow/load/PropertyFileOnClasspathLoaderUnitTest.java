@@ -108,7 +108,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
@@ -131,7 +131,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("bob", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
@@ -154,9 +154,9 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		
 		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("  two_spaces_&_two_tabs\t\t", result.getEffectiveValue(SimpleParams.STR_BOB));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getValue(SimpleParams.STR_BOB));
 		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("", result.getEffectiveValue(SimpleParams.STR_NULL));
+		assertEquals("", result.getValue(SimpleParams.STR_NULL));
 	}
 	
 	@Test

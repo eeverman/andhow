@@ -95,7 +95,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		}
 		
 		//Print samples (if requested) to System.out
-		if (Options.CREATE_SAMPLES.getValue(this)) {
+		if (getValue(Options.CREATE_SAMPLES)) {
 			
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			PrintStream ps = new PrintStream(os);
@@ -149,8 +149,8 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> prop) {
-		return loadedValues.getEffectiveValue(prop);
+	public <T> T getValue(Property<T> prop) {
+		return loadedValues.getValue(prop);
 	}
 	
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
@@ -171,7 +171,7 @@ public class AndHowCore implements ConstructionDefinition, ValueMap {
 		
 		for (Property<?> prop : definition.getProperties()) {
 			if (prop.isNonNullRequired()) {
-				if (getEffectiveValue(prop) == null) {
+				if (getValue(prop) == null) {
 					
 					problems.add(
 						new RequirementProblem.NonNullPropertyProblem(

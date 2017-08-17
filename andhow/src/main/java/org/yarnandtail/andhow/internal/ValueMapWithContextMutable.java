@@ -30,11 +30,11 @@ public class ValueMapWithContextMutable extends ValueMapWithContextBase {
 	
 	@Override
 	public <T> T getExplicitValue(Property<T> prop) {
-		return getValue(loadedValuesList, prop);
+		return getExplicitValue(loadedValuesList, prop);
 	}
 	
 	@Override
-	public <T> T getEffectiveValue(Property<T> prop) {
+	public <T> T getValue(Property<T> prop) {
 		return getEffectiveValue(loadedValuesList, prop);
 	}
 
