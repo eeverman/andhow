@@ -243,11 +243,9 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			
 			while (current != null) {
 				if (current instanceof TypeElement) {
-					trace("Adding Type " + ((TypeElement) current).getQualifiedName());
 					add((TypeElement)current);
 					current = current.getEnclosingElement();
 				} else if (current instanceof PackageElement) {
-					trace("Adding Pkg " + ((PackageElement) current).getQualifiedName());
 					add((PackageElement)current);
 					break;
 				} else {
