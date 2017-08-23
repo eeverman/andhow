@@ -1,8 +1,11 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.compile.GlobalPropertyGroupStub;
+import org.yarnandtail.andhow.compile.AndHowCompileProcessor;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
-import static org.yarnandtail.andhow.internal.AndHowCompileProcessor.*;
+import static org.yarnandtail.andhow.compile.AndHowCompileProcessor.*;
 
 /**
  *
@@ -37,7 +40,7 @@ public class AndHowCompileProcessorTest {
 		assertTrue(actual.contains("value=\"org.yarnandtail.andhow.internal.AndHowCompileProcessor\","));
 		assertTrue(actual.contains("comments=\"Proxy for " + myPkg + "." + myClass));
 		assertTrue(actual.contains("public class " + pnm.getClassName()));
-		assertTrue(actual.contains("extends " + GlobalPropertyGroupServiceProxy.class.getCanonicalName()));
+		assertTrue(actual.contains("extends " + GlobalPropertyGroupStub.class.getCanonicalName()));
 	}
 
 	
@@ -51,8 +54,8 @@ public class AndHowCompileProcessorTest {
 		pnm.add("MyClass");
 		
 		
-		assertEquals("$GlobalPropProxy$MyClass$MyInnerClass$MyConfig", pnm.getClassName());
-		assertEquals("a.b.c.$GlobalPropProxy$MyClass$MyInnerClass$MyConfig", pnm.getQualifiedName());
+		assertEquals("$GlobalPropGrpStub$MyClass$MyInnerClass$MyConfig", pnm.getClassName());
+		assertEquals("a.b.c.$GlobalPropGrpStub$MyClass$MyInnerClass$MyConfig", pnm.getQualifiedName());
 	}
 	
 }

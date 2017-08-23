@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.compile;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -6,12 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.api.BasePropertyGroup;
 import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  *
  * @author ericeverman
  */
-public class GlobalPropertyGroupServiceProxy {
+public abstract class GlobalPropertyGroupStub {
+	
+	
+	public abstract String getSimpleRootName();
+	
+	public abstract String[][] getGroupPaths();
 	
 	public List<NameAndProperty> getProperties() 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {

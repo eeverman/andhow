@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.compile;
 
 import java.io.*;
 import java.lang.annotation.ElementType;
@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
+import static javax.lang.model.element.ElementKind.*;
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.GlobalPropertyGroup;
 
@@ -17,14 +18,14 @@ import org.yarnandtail.andhow.GlobalPropertyGroup;
  *
  * @author ericeverman
  */
-@SupportedAnnotationTypes("org.yarnandtail.andhow.GlobalPropertyGroup")
+@SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
 
-	public static final String GENERATED_CLASS_PREFIX = "$GlobalPropProxy";
+	public static final String GENERATED_CLASS_PREFIX = "$GlobalPropGrpStub";
 	public static final String GENERATED_CLASS_NESTED_SEP = "$";
 	
 	private static final String SERVICES_PACKAGE = "";
-	private static final String RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.PropertyGroup";
+	private static final String RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.GlobalPropertyGroupStub";
 
 	//Static to insure all generated classes have the same timestamp
 	private static Calendar runDate;
@@ -106,7 +107,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			trace("No annotated elements found");
 		}
 
-		return true;
+		return false;
 
 	}
 
@@ -133,10 +134,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 			//String template = new String(Files.readAllBytes(Paths.get(getClass().getResource(templatePath).toURI())));
 			String source = String.format(buf.toString(),
-					genSimpleName,
-					pkgName, causeSimpleName,
-					GlobalPropertyGroupServiceProxy.class.getCanonicalName(),
-					this.getClass().getCanonicalName(), runDate
+					pkgName, genSimpleName,
+					causeSimpleName,
+					GlobalPropertyGroupStub.class.getCanonicalName(),
+					this.getClass().getCanonicalName(), runDate,
+					"Build a 2d array here..."
 			);
 			return source;
 		} catch (Exception ex) {
@@ -172,6 +174,23 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			error("Error attempting to write the generated class file: " + genFullName, ex);
 		}
 	}
+	
+	public List<List<String>> buildGroupList(Element start) {
+		ElementKind kind = start.getKind();
+		
+		switch (kind) {
+			case INTERFACE:
+			case CLASS:
+				break;
+			case FIELD:
+			case LOCAL_VARIABLE:
+				break;
+			default:
+				//ignore
+		}
+		
+		return null;
+	}
 
 	public static void trace(String msg) {
 		System.out.println("AndHowCompileProcessor: " + msg);
@@ -186,97 +205,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		throw new RuntimeException(msg, e);
 	}
 	
-	/**
-	 * First element is the most leafy enclosed element.
-	 */
-	public static class ProxyNameModel extends ArrayList<String> {
-		private String pkg;
-		
-		public ProxyNameModel(String pkgName) {
-			pkg = pkgName;
-		}
-		
-		public String getPackageName() {
-			if (pkg != null) {
-				return pkg;
-			} else {
-				return "";
-			}
-		}
-		
-		public String getQualifiedName() {
-			if (pkg != null && pkg.length() > 0) {
-				return pkg + "." + getClassName();
-			} else {
-				return getClassName();
-			}
-		}
-		
-		public String getClassName() {
-			StringBuffer sb = new StringBuffer();
-			
-			sb.append(GENERATED_CLASS_PREFIX);
-			
-			for (int i = this.size() - 1; i >=0; i--) {
-				sb.append(GENERATED_CLASS_NESTED_SEP).append(this.get(i));
-			}
-			
-			return sb.toString();
-		}
-	}
 	
-	/**
-	 * First element is the most leafy enclosed element.
-	 */
-	public static class GroupModel extends ArrayList<TypeElement> {
-		private PackageElement pkg;
-		
-		GroupModel() {
-			super();
-		}
-		
-		GroupModel(TypeElement te) {
-			super();
-			
-			add(te);
-			Element current = te.getEnclosingElement();
-			
-			while (current != null) {
-				if (current instanceof TypeElement) {
-					add((TypeElement)current);
-					current = current.getEnclosingElement();
-				} else if (current instanceof PackageElement) {
-					add((PackageElement)current);
-					break;
-				} else {
-					error("Unexpected nested type '" + current + "' for " + te.getQualifiedName());
-				}
-			}
-		}
-
-		public boolean add(PackageElement e) {
-			pkg = e;
-			return true;
-		}
-		
-		public PackageElement getPackage() {
-			return pkg;
-		}
-		
-		public TypeElement getLeafElement() {
-			return get(0);
-		}
-		
-		public ProxyNameModel buildNameModel() {
-			ProxyNameModel pnm = new ProxyNameModel(pkg.getQualifiedName().toString());
-			
-			for (TypeElement te : this) {
-				pnm.add(te.getSimpleName().toString());
-			}
-			
-			return pnm;
-		}
-		
-	}
 
 }
