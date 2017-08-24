@@ -17,7 +17,9 @@ public class SampleGlobalPropertyGroupStubTest {
 		SampleGlobalPropertyGroupStub stub = new SampleGlobalPropertyGroupStub();
 		List<Class<?>> gropus = stub.getGroups();
 		
-		assertEquals(SampleNestedPropGroup.Nested.Config.class, gropus.get(0));
+		assertEquals(SampleNestedPropGroup.class, gropus.get(0));
+		assertEquals(SampleNestedPropGroup.Nest1.Config.class, gropus.get(1));
+		assertEquals(SampleNestedPropGroup.Nest2.Config.class, gropus.get(2));
 
 	}
 }

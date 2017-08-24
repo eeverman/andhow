@@ -19,6 +19,55 @@ public abstract class GlobalPropertyGroupStub {
 	
 	public abstract String[][] getGroupPaths();
 	
+	public String getCanonicalRootName() {
+
+		String pkgName = "";
+		
+		Package pkg = this.getClass().getPackage();
+		
+		if (pkg != null && pkg.getName().length() > 0) {
+			pkgName = pkg.getName() + ".";
+		}
+		
+		return pkgName + getSimpleRootName();
+	}
+	
+
+	public List<Class<?>> getGroups() throws Exception {
+		List<Class<?>> groups = new ArrayList();
+		
+		Class<?> rootClazz = Class.forName(getCanonicalRootName());
+		
+		
+		for (String[] path : getGroupPaths()) {
+			
+			Class<?> currentClazz = rootClazz;
+			
+			for (String step : path) {
+				currentClazz = findClass(currentClazz, step);
+			}
+			
+			groups.add(currentClazz);
+			
+		}
+		
+		return groups;
+	}
+	
+	public Class<?> findClass(Class<?> parent, String childName) throws Exception {
+		Class<?>[] clazzes = parent.getDeclaredClasses();
+		
+		for (Class<?> clazz : clazzes) {
+			if (childName.equals(clazz.getSimpleName())) {
+				return clazz;
+			}
+		}
+		
+		throw new Exception(parent.getCanonicalName() + 
+				" does not contain a nested class or interface named " + childName);
+		
+	}
+	
 	public List<NameAndProperty> getProperties() 
 		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
