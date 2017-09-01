@@ -37,7 +37,7 @@ public class AndHowCompileProcessorTest {
 		System.out.println(actual);
 		
 		assertTrue(actual.contains("package " + myPkg));
-		assertTrue(actual.contains("value=\"org.yarnandtail.andhow.internal.AndHowCompileProcessor\","));
+		assertTrue(actual.contains("value=\"org.yarnandtail.andhow.compile.AndHowCompileProcessor\","));
 		assertTrue(actual.contains("comments=\"Proxy for " + myPkg + "." + myClass));
 		assertTrue(actual.contains("public class " + pnm.getClassName()));
 		assertTrue(actual.contains("extends " + GlobalPropertyGroupStub.class.getCanonicalName()));

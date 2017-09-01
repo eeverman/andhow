@@ -60,6 +60,24 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			} catch (IOException ex) {
 				//Ignore - This just means the file doesn't exist
 			}
+			
+			//
+			//Experimental scanning
+			AndHowElementScanner6 st = new AndHowElementScanner6(this.processingEnv);
+			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
+			for (Element e : roundEnv.getRootElements()) {
+				ClassScannerState ret = st.scan(e, "");
+				
+				for (String root : ret.propertyRoots) {
+					System.out.println("Found Root: " + root);
+				}
+				
+				for (String err : ret.errors) {
+					System.out.println("Found Error: " + err);
+				}
+			}
+					
+			
 
 			for (Element e : globalGroups) {
 
@@ -69,6 +87,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					GroupModel groupModel = new GroupModel(ie);
 
 					trace("Writing proxy class for " + ie.getQualifiedName());
+					
+
 					
 
 					writeClassFile(filer, groupModel);
