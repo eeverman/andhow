@@ -63,18 +63,24 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			
 			//
 			//Experimental scanning
-			AndHowElementScanner6 st = new AndHowElementScanner6(this.processingEnv);
 			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
 			for (Element e : roundEnv.getRootElements()) {
-				ClassScannerState ret = st.scan(e, "");
 				
-				for (String root : ret.propertyRoots) {
-					System.out.println("Found Root: " + root);
+				TypeElement te = (TypeElement)e;
+				AndHowElementScanner7 st = new AndHowElementScanner7(this.processingEnv);
+				CompileUnit ret = st.scan(e, "");
+				
+				for (TypeElement[] paths : ret.getPropertyRoots()) {
+					System.out.println("Found PropertyGroup Root: " + paths[0].getQualifiedName());
+					for (TypeElement type : paths) {
+						System.out.println("  - " + type.getQualifiedName());
+					}
 				}
 				
-				for (String err : ret.errors) {
+				for (String err : ret.getErrors()) {
 					System.out.println("Found Error: " + err);
 				}
+				
 			}
 					
 			
