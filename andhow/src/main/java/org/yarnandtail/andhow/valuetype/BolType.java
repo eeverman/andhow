@@ -3,37 +3,36 @@ package org.yarnandtail.andhow.valuetype;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * Metadata and parsing for a Boolean type which is never null (nix flag behavior).
+ * Metadata and parsing for the Boolean type.
  * 
  * This class is threadsafe and uses a singleton pattern to prevent multiple
  * instances, since all users can safely use the same instance.
  * 
  * @author eeverman
  */
-public class FlagType extends BaseValueType<Boolean> {
+public class BolType extends BaseValueType<Boolean> {
 
-	private static final FlagType instance = new FlagType();
+	private static final BolType instance = new BolType();
 	
-	private FlagType() {
+	private BolType() {
 		super(Boolean.class);
 	}
 	
-	public static FlagType get() {
+	public static BolType get() {
 		return instance;
 	}
 	
-	public static FlagType instance() {
+	public static BolType instance() {
 		return instance;
 	}
 
 	@Override
 	public Boolean parse(String sourceValue) throws IllegalArgumentException {
 
-		if (TextUtil.trimToNull(sourceValue) == null) {
-			//regardless of trimming, all whitespace is considered == to the flag is present
-			return true;
-		} else {
+		if (TextUtil.trimToNull(sourceValue) != null) {
 			return TextUtil.toBoolean(sourceValue);
+		} else {
+			return null;
 		}
 	}
 	

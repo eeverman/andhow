@@ -59,6 +59,7 @@ public class SampleAppConfiguration {
 
 	
 	@GroupInfo(name="Aquarius Configuration", desc="Configures communication to the USGS Aquarius service")
+	@GlobalPropertyGroup
 	public interface AquariusConfig extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();

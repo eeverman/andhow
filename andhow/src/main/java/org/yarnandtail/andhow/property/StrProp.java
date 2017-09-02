@@ -19,11 +19,11 @@ import org.yarnandtail.andhow.valuetype.StrType;
 public class StrProp extends PropertyBase<String> {
 	
 	public StrProp(
-			String defaultValue, boolean required, String shortDesc, List<Validator<String>> validators,
+			String defaultValue, boolean nonNull, String shortDesc, List<Validator<String>> validators,
 			List<Name> aliases, PropertyType paramType, ValueType<String> valueType, Trimmer trimmer,
 			String helpText) {
 		
-		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
+		super(defaultValue, nonNull, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 	
 	public static StrBuilder builder() {

@@ -11,24 +11,21 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * true (but not null).  Best used for on/off flags, particularly if used from
  * command line where a <i>null</i> value makes no sense.
  * 
- * A FlagProp is similar to a Boolean Property, but with these differences:
+ * A FlagProp is similar to a BolProp, but with these differences:
  * <ul>
  * <li>A Flag is never null - it will always return true or false.  Thus,
- * A FlagPropery will never throw a RequirementProblem error during configuration -
+ * A FlagProp will never throw a RequirementProblem error during configuration -
  * it always has a value.</li>
- * <li>FlagProperty.isNonNullRequired() always returns true, as if mustNotBeNull()
+ * <li>FlagProp.isNonNullRequired() always returns true, as if mustNotBeNull()
  * was called on the builder.
- * <li>FlagProperty.getDefaultValue() normally returns false, but it could be set
- * to default to true in the builder.  In that case a loader would need to find
- * it explicitly set to false to change its value.
+ * <li>FlagProp.getDefaultValue() never returns null and defaults to false.
+ * Via the constructor or builder, it is possible to set the default to be true.
+ * In that case a loader would need to find it explicitly set to false to change its value.
  * <li>Loaders will interpret the presence of the flag as setting the flag to
  * True (where possible).  For instance, if a Flag is aliased as <em>-enableTorpedos</em>,
  * including <code>-enableTorpedos</code> as a command line argument will cause
  * the CmdLineLoader to set it to true.</li>
  * </ul>
- * 
- * Explicitly setting a flag true or false on the command line is allowed, such
- * as <code>enableTorpedos=true</code>.
  * 
  * <h3>The technical details</h3>
  * What a value is assigned to a FlagProp, it is first trimmed by the

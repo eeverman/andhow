@@ -3,7 +3,11 @@ package org.yarnandtail.andhow.valuetype;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
- *
+ * Metadata and parsing for the String type.
+ * 
+ * This class is threadsafe and uses a singleton pattern to prevent multiple
+ * instances, since all users can safely use the same instance.
+ * 
  * @author eeverman
  */
 public class StrType extends BaseValueType<String> {
