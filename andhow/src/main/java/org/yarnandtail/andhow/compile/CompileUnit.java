@@ -43,7 +43,10 @@ public class CompileUnit {
 	}
 	
 	public void popType() {
-		stack.poll();
+		TypeElement head = stack.poll();
+		if (head.equals(activePropertyRoot)) {
+			activePropertyRoot = null;	//no longer in a prop container
+		}
 	}
 	
 	/**

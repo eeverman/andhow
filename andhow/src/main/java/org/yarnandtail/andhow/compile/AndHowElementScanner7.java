@@ -5,6 +5,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.*;
+import static javax.lang.model.util.ElementFilter.*;
 
 /**
  *
@@ -37,6 +38,8 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		requiredMods.add(Modifier.PUBLIC);
 		requiredMods.add(Modifier.STATIC);
 	}
+	
+
 
 	@Override
 	public CompileUnit visitTypeParameter(TypeParameterElement e, String p) {
@@ -74,7 +77,10 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	public CompileUnit visitType(TypeElement e, String p) {
 		System.out.println("visitType: " + e.toString() + " Type: " + e.asType().toString() + " Kind: " + e.asType().getKind());
 		this.DEFAULT_VALUE.pushType(e);
-		super.visitType(e, p); //To change body of generated methods, choose Tools | Templates.
+		
+		scan(fieldsIn(e.getEnclosedElements()), p);
+		scan(typesIn(e.getEnclosedElements()), p);
+		
 		this.DEFAULT_VALUE.popType();
 		
 		return DEFAULT_VALUE;
