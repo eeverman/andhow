@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
+import com.sun.source.util.Trees;
 import java.util.*;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
@@ -19,6 +20,8 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	TypeElement propertyTypeElem;
 	TypeMirror propertyTypeMirror;
 	
+	private Trees trees;
+	
 	//Modifiers required on Properties
 	Collection<Modifier> requiredMods;
 
@@ -28,6 +31,7 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		super(new CompileUnit());
 		
 		processEnv = processingEnv;
+		trees = Trees.instance(processingEnv);
 		elemUtils = processEnv.getElementUtils();
 		typeUtils = processEnv.getTypeUtils();
 		propertyTypeElem = processingEnv.getElementUtils().getTypeElement("org.yarnandtail.andhow.api.Property");
@@ -57,17 +61,22 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	public CompileUnit visitVariable(VariableElement e, String p) {
 
 		boolean isProp = typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(propertyTypeMirror));
+		
 		System.out.println("visitVariable: " + e.toString() + " Type: " + typeUtils.erasure(e.asType()) + 
 				" Kind: " + e.asType().getKind() + " is a Property: " + isProp +
-				" A prop is " + typeUtils.erasure(propertyTypeMirror));
+				" of type " + typeUtils.erasure(propertyTypeMirror) +
+				" of final value " + e.getConstantValue());
 		
 		if (isProp) {
+
 			 DEFAULT_VALUE.typeContainsProperty();
 			 
 			if (! e.getModifiers().containsAll(requiredMods)) {
 				DEFAULT_VALUE.addPropertyError(e.getSimpleName().toString(), "Does not have required modifiers");
 			}
 		}
+		AndHowTreeScanner ts = new AndHowTreeScanner();
+		trees.getTree(e).accept(ts, "");
 		
 		return DEFAULT_VALUE;
 	

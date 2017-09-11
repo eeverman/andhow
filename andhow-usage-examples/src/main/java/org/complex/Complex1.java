@@ -53,4 +53,9 @@ public class Complex1 {
 			public static final StrProp DECLAIRED_IN_Class4_1 = StrProp.builder().build();
 		}
 	}
+	
+	//
+	//Some weird examples
+	
+	public static final StrProp refTo_DECLAIRED_IN_Class4_1 = Class4.Class4_1.DECLAIRED_IN_Class4_1;
 }

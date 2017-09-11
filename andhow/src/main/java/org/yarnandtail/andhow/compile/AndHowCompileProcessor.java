@@ -1,5 +1,11 @@
 package org.yarnandtail.andhow.compile;
 
+import com.sun.source.util.Trees;
+import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.io.*;
 import java.lang.annotation.ElementType;
 import java.net.URISyntaxException;
@@ -16,6 +22,10 @@ import org.yarnandtail.andhow.GlobalPropertyGroup;
 
 /**
  *
+ * Note: check to ensure that Props are not referenced in static init blocks b/c
+ * we may need to load the class (and run its init) before andHow init can
+ * complete, causing a circular init loop.
+ *
  * @author ericeverman
  */
 @SupportedAnnotationTypes("*")
@@ -23,17 +33,22 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	public static final String GENERATED_CLASS_PREFIX = "$GlobalPropGrpStub";
 	public static final String GENERATED_CLASS_NESTED_SEP = "$";
-	
+
 	private static final String SERVICES_PACKAGE = "";
 	private static final String RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.GlobalPropertyGroupStub";
 
 	//Static to insure all generated classes have the same timestamp
 	private static Calendar runDate;
 
+	private Trees trees;
+//	private TreeMaker make;
+//	private Name.Table names;
+
 	public AndHowCompileProcessor() {
 		//required by Processor API
 		runDate = new GregorianCalendar();
 	}
+
 
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -60,42 +75,38 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			} catch (IOException ex) {
 				//Ignore - This just means the file doesn't exist
 			}
-			
+
 			//
 			//Experimental scanning
 			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
 			for (Element e : roundEnv.getRootElements()) {
 				
-				TypeElement te = (TypeElement)e;
+
+				TypeElement te = (TypeElement) e;
 				AndHowElementScanner7 st = new AndHowElementScanner7(this.processingEnv);
 				CompileUnit ret = st.scan(e, "");
-				
+
 				for (TypeElement[] paths : ret.getPropertyRoots()) {
 					System.out.println("Found PropertyGroup Root: " + paths[0].getQualifiedName());
 					for (TypeElement type : paths) {
 						System.out.println("  - " + type.getQualifiedName());
 					}
 				}
-				
+
 				for (String err : ret.getErrors()) {
 					System.out.println("Found Error: " + err);
 				}
-				
+
 			}
-					
-			
 
 			for (Element e : globalGroups) {
 
 				if (e.getKind().equals(ElementKind.INTERFACE)) {
 					TypeElement ie = (TypeElement) e;
-					
+
 					GroupModel groupModel = new GroupModel(ie);
 
 					trace("Writing proxy class for " + ie.getQualifiedName());
-					
-
-					
 
 					writeClassFile(filer, groupModel);
 
@@ -155,7 +166,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				buf.append(line).append(System.lineSeparator());
 				line = reader.readLine();
 			}
-			
+
 			reader.close();
 
 			//String template = new String(Files.readAllBytes(Paths.get(getClass().getResource(templatePath).toURI())));
@@ -200,10 +211,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			error("Error attempting to write the generated class file: " + genFullName, ex);
 		}
 	}
-	
+
 	public List<List<String>> buildGroupList(Element start) {
 		ElementKind kind = start.getKind();
-		
+
 		switch (kind) {
 			case INTERFACE:
 			case CLASS:
@@ -212,16 +223,16 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			case LOCAL_VARIABLE:
 				break;
 			default:
-				//ignore
+			//ignore
 		}
-		
+
 		return null;
 	}
 
 	public static void trace(String msg) {
 		System.out.println("AndHowCompileProcessor: " + msg);
 	}
-	
+
 	public static void error(String msg) {
 		error(msg, null);
 	}
@@ -230,7 +241,5 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		System.err.println("AndHowCompileProcessor: " + msg);
 		throw new RuntimeException(msg, e);
 	}
-	
-	
 
 }
