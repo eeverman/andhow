@@ -42,44 +42,33 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		requiredMods.add(Modifier.PUBLIC);
 		requiredMods.add(Modifier.STATIC);
 	}
-	
-
-
-	@Override
-	public CompileUnit visitTypeParameter(TypeParameterElement e, String p) {
-		System.out.println("visitTypeParameter: " + e.toString() + " Type: " + e.asType().toString() + " Kind: " + e.asType().getKind());
-		return super.visitTypeParameter(e, p); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public CompileUnit visitExecutable(ExecutableElement e, String p) {
-		System.out.println("visitExecutable: " + e.toString() + " Type: " + e.asType().toString() + " Kind: " + e.asType().getKind());
-		return super.visitExecutable(e, p); //To change body of generated methods, choose Tools | Templates.
-	}
 
 	@Override
 	public CompileUnit visitVariable(VariableElement e, String p) {
 
-		boolean isProp = typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(propertyTypeMirror));
+		boolean isPropType = typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(propertyTypeMirror));
 		
-		System.out.println("visitVariable: " + e.toString() + " Type: " + typeUtils.erasure(e.asType()) + 
-				" Kind: " + e.asType().getKind() + " is a Property: " + isProp +
-				" of type " + typeUtils.erasure(propertyTypeMirror) +
-				" of final value " + e.getConstantValue());
-		
-		if (isProp) {
-
-			 DEFAULT_VALUE.typeContainsProperty();
-			 
-			if (! e.getModifiers().containsAll(requiredMods)) {
-				DEFAULT_VALUE.addPropertyError(e.getSimpleName().toString(), "Does not have required modifiers");
+		if (isPropType) {
+			System.out.println("Found AndHow Property variable " + e.getSimpleName().toString() + " Type: " + typeUtils.erasure(e.asType()));
+			
+			AndHowTreeScanner ts = new AndHowTreeScanner();
+			PropertyMarker marker = new PropertyMarker();
+			ts.scan(trees.getPath(e), marker);
+			if (marker.isProperty()) {
+				System.out.println("###### WE THINK THIS IS A PROPERTY ASSIGNMENT #######");
+				DEFAULT_VALUE.foundProperty(e.getSimpleName().toString());
+				
+				
+				if (! e.getModifiers().containsAll(requiredMods)) {
+					DEFAULT_VALUE.addPropertyError(e.getSimpleName().toString(), "Does not have required modifiers");
+				}
 			}
+		} else {
+			System.out.println("Skipping variable " + e.toString() + " Type: " + typeUtils.erasure(e.asType()));	
 		}
-		AndHowTreeScanner ts = new AndHowTreeScanner();
-		trees.getTree(e).accept(ts, "");
 		
 		return DEFAULT_VALUE;
-	
+		
 	}
 
 	@Override
@@ -94,18 +83,5 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		
 		return DEFAULT_VALUE;
 	}
-
-	@Override
-	public CompileUnit visitPackage(PackageElement e, String p) {
-		System.out.println("visitPackage: " + e.toString() + " Type: " + e.asType().toString() + " Kind: " + e.asType().getKind());
-		return super.visitPackage(e, p); //To change body of generated methods, choose Tools | Templates.
-	}
-
-	@Override
-	public CompileUnit visitUnknown(Element e, String p) {
-		System.out.println("visitUnknown: " + e.toString() + " Type: " + e.asType().toString() + " Kind: " + e.asType().getKind());
-		return super.visitUnknown(e, p); //To change body of generated methods, choose Tools | Templates.
-	}
-	
 
 }

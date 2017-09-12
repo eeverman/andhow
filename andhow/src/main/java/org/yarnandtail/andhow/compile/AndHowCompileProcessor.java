@@ -86,9 +86,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				AndHowElementScanner7 st = new AndHowElementScanner7(this.processingEnv);
 				CompileUnit ret = st.scan(e, "");
 
-				for (TypeElement[] paths : ret.getPropertyRoots()) {
-					System.out.println("Found PropertyGroup Root: " + paths[0].getQualifiedName());
-					for (TypeElement type : paths) {
+				for (CompileUnit.Property p : ret.getProperties()) {
+					System.out.println("Found PropertyGroup Root: " + p.getName());
+					
+					StringBuffer sb = new StringBuffer();
+					for (TypeElement type : p.getPath()) {
 						System.out.println("  - " + type.getQualifiedName());
 					}
 				}

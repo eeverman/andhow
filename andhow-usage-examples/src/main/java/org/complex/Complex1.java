@@ -9,6 +9,8 @@ import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.PropertyType;
+import org.yarnandtail.andhow.valuetype.StrType;
 
 public class Complex1 {
 	
@@ -58,4 +60,7 @@ public class Complex1 {
 	//Some weird examples
 	
 	public static final StrProp refTo_DECLAIRED_IN_Class4_1 = Class4.Class4_1.DECLAIRED_IN_Class4_1;
+	public static final StrProp DIRECT_CONSTRUCTOR = new StrProp(
+			"happy", false, "Direct Const", null, null, 
+			PropertyType.SINGLE_NAME_VALUE, StrType.instance(), QuotedSpacePreservingTrimmer.instance(), "");
 }
