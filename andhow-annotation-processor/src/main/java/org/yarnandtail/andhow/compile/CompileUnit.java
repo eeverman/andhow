@@ -85,7 +85,12 @@ public class CompileUnit {
 	}
 	
 	public static class Property {
+		
+		/** The first TypeElement in the list is the top level class.
+		 * Others are nested inner classes on the path to the property. */
 		private final TypeElement[] parents;
+		
+		/** the name of the variable to which the property is assigned */
 		private final String name;
 		
 		public Property(TypeElement[] parents, String name) {
