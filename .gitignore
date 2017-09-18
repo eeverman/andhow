@@ -13,3 +13,11 @@ nbproject/project.properties
 /andhow-compile-processor/target/
 /andhow-compile-processor copy/target/
 /andhow-api/target/
+/andhow-annotation-processor/nbproject/
+/andhow-annotation-processor/target/
+/andhow-annotation-processor copy/nbproject/
+/andhow-annotation-processor copy/target/
+/andhow-annotation-processor tests/nbproject/
+/andhow-annotation-processor tests/target/
+/andhow-annotation-processor-tests/nbproject/
+/andhow-annotation-processor-tests/target/

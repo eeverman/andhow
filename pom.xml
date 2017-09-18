@@ -69,6 +69,8 @@
 	
 	<modules>
 		<module>andhow</module>
+		<module>andhow-annotation-processor</module>
+		<module>andhow-annotation-processor-tests</module>
 		<module>andhow-usage-examples</module>
 	</modules>
 

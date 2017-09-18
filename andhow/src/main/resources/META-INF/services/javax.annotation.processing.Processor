@@ -1,2 +1,0 @@
-# Register the AndHowCompileProcessor as a compile-time processor.
-org.yarnandtail.andhow.compile.AndHowCompileProcessor
