@@ -1,8 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
 import java.util.*;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 /**
  * Metadata about a Type (the compile-time representation of a class) as it is compiled.
@@ -12,7 +10,7 @@ import javax.lang.model.element.TypeElement;
  interface would be contained within the metadata of the parent class.
  
  This class is used by doing a depth first scan of a Type.  Each Type as it is
- found is found is pushType()'ed, building up a stack of the nested structure.
+ found is found is pushType()'ed, building up a innerPathStack of the nested structure.
  Within a type, variables are scanned.  If an AndHow Property is discovered,
  foundProperty() is called to mark the Type as parent to a Property.
  
@@ -24,26 +22,23 @@ import javax.lang.model.element.TypeElement;
  */
 public class CompileUnit {
 	
-	private TypeElement root;
-	private ArrayDeque<TypeElement> stack = new ArrayDeque();
-	private List<Property> properties = new ArrayList();
-
-	private List<String> errors = new ArrayList();
+	private final String classCanonName;
+	private final ArrayDeque<String> innerPathStack = new ArrayDeque();
 	
-	public CompileUnit() {
+	private PropertyRegistrationList registrations;	//late init
 
+	private final List<String> errors = new ArrayList();
+	
+	public CompileUnit(String classCanonName) {
+		this.classCanonName = classCanonName;
 	}
 	
-	public void pushType(TypeElement element) {
-		stack.push(element);
-		
-		if (root == null) {
-			root = element;
-		}
+	public void pushType(String simpleName) {
+		innerPathStack.push(simpleName);
 	}
 	
-	public TypeElement popType() {
-		return stack.poll();
+	public String popType() {
+		return innerPathStack.pollLast();
 	}
 	
 	/**
@@ -54,58 +49,47 @@ public class CompileUnit {
 	 * interface), this method has no effect.
 	 */
 	public void foundProperty(String name) {
-		Property prop = new Property(stack.toArray(new TypeElement[stack.size()]), name);
-		properties.add(prop);
+
+		if (registrations == null) {
+			registrations = new PropertyRegistrationList(classCanonName);
+		}
+		
+		registrations.add(name, getInnerPath());
+	}
+	
+	public String[] getInnerPath() {
+		
+		String[] innerPath = null;
+		
+		if (innerPathStack != null && innerPathStack.size() > 0) {
+			innerPath =  innerPathStack.toArray(new String[innerPathStack.size()]);
+		}
+
+		return innerPath;
 	}
 	
 	public void addPropertyError(String propName, String msg) {
-		String path = stack.peek().getQualifiedName().toString();
-		
-		errors.add("The AndHow Property '" + propName + "' in " + path + " is invalid: " + msg);
+		errors.add("The AndHow Property '" + propName + "' in " + classCanonName + " is invalid: " + msg);
 	}
  
-	public TypeElement getRoot() {
-		return stack.getLast();
+	public String getCanonicalRootName() {
+		return classCanonName;
 	}
 
-	public List<Property> getProperties() {
-		return properties;
+	public PropertyRegistrationList getRegistrations() {
+		return registrations;
 	}
 
 	public List<String> getErrors() {
 		return errors;
 	}
 	
-	public boolean containsErrors() {
+	public boolean hasErrors() {
 		return ! errors.isEmpty();
 	}
 	
-	public boolean containsProperties() {
-		return ! properties.isEmpty();
-	}
-	
-	public static class Property {
-		
-		/** The first TypeElement in the list is the top level class.
-		 * Others are nested inner classes on the path to the property. */
-		private final TypeElement[] parents;
-		
-		/** the name of the variable to which the property is assigned */
-		private final String name;
-		
-		public Property(TypeElement[] parents, String name) {
-			this.parents = parents;
-			this.name = name;
-		}
-
-		public TypeElement[] getParents() {
-			return parents;
-		}
-
-		public String getName() {
-			return name;
-		}
-		
+	public boolean hasRegistrations() {
+		return registrations != null && ! registrations.isEmpty();
 	}
 
 }
