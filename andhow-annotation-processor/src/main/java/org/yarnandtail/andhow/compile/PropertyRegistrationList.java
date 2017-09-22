@@ -94,10 +94,10 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @param innerPath The 'path' of nested inner class/interfaces from outer to inner
 	 * @return
 	 */
-//	public boolean add(String name, List<String> innerPath) {
-//		PropertyRegistration reg = new PropertyRegistration(classCanonName, name, innerPath);
-//		lastReg = reg;
-//		return super.add(reg);
-//	}
+	public boolean add(String name, List<String> innerPath) {
+		PropertyRegistration reg = new PropertyRegistration(classCanonName, name, innerPath);
+		lastReg = reg;
+		return super.add(reg);
+	}
 
 }

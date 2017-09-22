@@ -6,7 +6,6 @@
 package org.yarnandtail.andhow.compile;
 
 import com.sun.source.tree.*;
-import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 
 /**
@@ -17,15 +16,15 @@ public class AndHowTreeScanner extends TreePathScanner<PropertyMarker, PropertyM
 
 	@Override
 	public PropertyMarker visitClass(ClassTree ct, PropertyMarker p) {
-		System.out.println("Tree: visitClass: " + ct.getSimpleName().toString());
+		//System.out.println("Tree: visitClass: " + ct.getSimpleName().toString());
 		return super.visitClass(ct, p); //To change body of generated methods, choose Tools | Templates.
 	}
 
 	@Override
 	public PropertyMarker visitNewClass(NewClassTree nct, PropertyMarker p) {
-		System.out.println("Tree: visitNewClass");
+		//System.out.println("Tree: visitNewClass");
 		
-		p.markDirectConstruc();
+		p.markDirectConstruct();
 		return p;
 		//No need to scan any further
 		//return super.visitNewClass(nct, p);
@@ -72,7 +71,7 @@ public class AndHowTreeScanner extends TreePathScanner<PropertyMarker, PropertyM
 			p.markBuild();
 		}
 		
-		if (p.isProperty()) {
+		if (p.isNewProperty()) {
 			return p;	//No need to scan any deeper
 		} else {
 			return super.visitMemberSelect(mst, p);

@@ -23,7 +23,7 @@ import java.util.*;
 public class CompileUnit {
 	
 	private final String classCanonName;
-	private final ArrayDeque<String> innerPathStack = new ArrayDeque();
+	private final ArrayDeque<SimpleType> innerPathStack = new ArrayDeque();
 	
 	private PropertyRegistrationList registrations;	//late init
 
@@ -33,11 +33,11 @@ public class CompileUnit {
 		this.classCanonName = classCanonName;
 	}
 	
-	public void pushType(String simpleName) {
+	public void pushType(SimpleType simpleName) {
 		innerPathStack.push(simpleName);
 	}
 	
-	public String popType() {
+	public SimpleType popType() {
 		return innerPathStack.pollLast();
 	}
 	
@@ -47,25 +47,47 @@ public class CompileUnit {
 	 * 
 	 * If there was a Property found in an enclosing type (such as a nested
 	 * interface), this method has no effect.
+	 * @param variableElement A SimpleType representing a variable to which
+		an AndHow property is constructed and assigned to.
 	 */
-	public void foundProperty(String name) {
+	public void foundProperty(SimpleVariable variableElement) {
 
-		if (registrations == null) {
-			registrations = new PropertyRegistrationList(classCanonName);
-		}
 		
-		registrations.add(name, getInnerPath());
+		if (variableElement.isStatic() && variableElement.isFinal()) {
+			if (registrations == null) {
+				registrations = new PropertyRegistrationList(classCanonName);
+			}
+
+			registrations.add(variableElement.getName(), getInnerPathNames());
+		} else {
+			addPropertyError(variableElement.getName(), "New AndHow Properties must be assigned to a static final field.");
+		}
 	}
 	
-	public String[] getInnerPath() {
+	public List<SimpleType> getInnerPath() {
 		
-		String[] innerPath = null;
+		List<SimpleType> innerPath = null;
 		
 		if (innerPathStack != null && innerPathStack.size() > 0) {
-			innerPath =  innerPathStack.toArray(new String[innerPathStack.size()]);
+			innerPath = new ArrayList(innerPathStack);
 		}
 
-		return innerPath;
+		return Collections.EMPTY_LIST;
+	}
+	
+	public List<String> getInnerPathNames() {
+		
+		List<String> pathNames = null;
+		
+		if (innerPathStack != null && innerPathStack.size() > 0) {
+			pathNames = new ArrayList();
+			
+			for (SimpleType se : innerPathStack) {
+				pathNames.add(se.getName());
+			}
+		}
+
+		return Collections.EMPTY_LIST;
 	}
 	
 	public void addPropertyError(String propName, String msg) {
@@ -91,5 +113,6 @@ public class CompileUnit {
 	public boolean hasRegistrations() {
 		return registrations != null && ! registrations.isEmpty();
 	}
+	
 
 }

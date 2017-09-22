@@ -58,14 +58,15 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			AndHowTreeScanner ts = new AndHowTreeScanner();
 			PropertyMarker marker = new PropertyMarker();
 			ts.scan(trees.getPath(e), marker);
-			if (marker.isProperty()) {
+			if (marker.isNewProperty()) {
 				System.out.println("###### WE THINK THIS IS A PROPERTY ASSIGNMENT #######");
 
-				compileUnit.foundProperty(e.getSimpleName().toString());
+				compileUnit.foundProperty(
+						new SimpleVariable(e.getSimpleName().toString(),
+						e.getModifiers().contains(Modifier.STATIC),
+						e.getModifiers().contains(Modifier.FINAL))
+				);
 
-				if (!e.getModifiers().containsAll(requiredMods)) {
-					compileUnit.addPropertyError(e.getSimpleName().toString(), "Does not have required modifiers");
-				}
 			}
 		} else {
 			System.out.println("Skipping variable " + e.toString() + " Type: " + typeUtils.erasure(e.asType()));
@@ -82,11 +83,12 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			System.out.println("visitType: (root) " + e.getQualifiedName().toString());
 
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
-		} else {
-			System.out.println("visitType: (inner) " + e.getQualifiedName().toString());
 		}
 				
-		this.compileUnit.pushType(e.getSimpleName().toString());
+		//TODO:  This is not right, but it seems to work - why??
+		this.compileUnit.pushType(
+				new SimpleType(e.getSimpleName().toString(), e.getModifiers().contains(Modifier.STATIC))
+		);
 
 		scan(fieldsIn(e.getEnclosedElements()), p);
 		scan(typesIn(e.getEnclosedElements()), p);
