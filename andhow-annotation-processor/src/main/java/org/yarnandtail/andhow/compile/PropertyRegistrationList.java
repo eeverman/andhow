@@ -21,12 +21,29 @@ import java.util.List;
  */
 public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 
-	private final String classCanonName;
+	private final String rootCanonName;
 	private PropertyRegistration lastReg;
 
+	/**
+	 * Construct a new registration list for properties in a specific top level
+	 * class.
+	 * 
+	 * @param classCanonName The fully qualified canonical path of the root class.
+	 */
 	public PropertyRegistrationList(String classCanonName) {
-		this.classCanonName = classCanonName;
+		this.rootCanonName = classCanonName;
 	}
+
+	/**
+	 * The root / top level class which contains (either directly or indirectly)
+	 * the properties listed within it.
+	 * 
+	 * @return 
+	 */
+	public String getRootCanonicalName() {
+		return rootCanonName;
+	}
+	
 
 	/**
 	 * Adds a registration using the innerPath specified in the passed registration.
@@ -58,9 +75,9 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 		PropertyRegistration reg;
 		
 		if (lastReg != null) {
-			reg = new PropertyRegistration(classCanonName, name, lastReg.getInnerPath());
+			reg = new PropertyRegistration(rootCanonName, name, lastReg.getInnerPath());
 		} else {
-			reg = new PropertyRegistration(classCanonName, name);
+			reg = new PropertyRegistration(rootCanonName, name);
 		}
 		lastReg = reg;
 		return super.add(reg);
@@ -78,7 +95,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @return
 	 */
 	public boolean add(String name, String... innerPath) {
-		PropertyRegistration reg = new PropertyRegistration(classCanonName, name, innerPath);
+		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
 		lastReg = reg;
 		return super.add(reg);
 	}
@@ -95,7 +112,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @return
 	 */
 	public boolean add(String name, List<String> innerPath) {
-		PropertyRegistration reg = new PropertyRegistration(classCanonName, name, innerPath);
+		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
 		lastReg = reg;
 		return super.add(reg);
 	}

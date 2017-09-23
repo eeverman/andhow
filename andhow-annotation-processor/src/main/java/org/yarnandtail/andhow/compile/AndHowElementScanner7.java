@@ -86,6 +86,8 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		}
 				
 		//TODO:  This is not right, but it seems to work - why??
+		//The current convention is to NOT push the TLC, but we seem to get the
+		//correct paths printed out (maybe they are not right??)
 		this.compileUnit.pushType(
 				new SimpleType(e.getSimpleName().toString(), e.getModifiers().contains(Modifier.STATIC))
 		);

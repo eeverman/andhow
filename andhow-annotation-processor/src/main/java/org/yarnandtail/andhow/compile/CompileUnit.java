@@ -37,6 +37,10 @@ public class CompileUnit {
 		innerPathStack.push(simpleName);
 	}
 	
+	public void pushType(String name, boolean _static) {
+		pushType(new SimpleType(name, _static));
+	}
+	
 	public SimpleType popType() {
 		return innerPathStack.pollLast();
 	}
@@ -49,8 +53,9 @@ public class CompileUnit {
 	 * interface), this method has no effect.
 	 * @param variableElement A SimpleType representing a variable to which
 		an AndHow property is constructed and assigned to.
+	 * @return True if the property could be added, false if an error was registered instead.
 	 */
-	public void foundProperty(SimpleVariable variableElement) {
+	public boolean foundProperty(SimpleVariable variableElement) {
 
 		
 		if (variableElement.isStatic() && variableElement.isFinal()) {
@@ -59,9 +64,16 @@ public class CompileUnit {
 			}
 
 			registrations.add(variableElement.getName(), getInnerPathNames());
+			
+			return true;
 		} else {
 			addPropertyError(variableElement.getName(), "New AndHow Properties must be assigned to a static final field.");
+			return false;
 		}
+	}
+	
+	public boolean foundProperty(String name, boolean _static, boolean _final) {
+		return foundProperty(new SimpleVariable(name, _static, _final));
 	}
 	
 	public List<SimpleType> getInnerPath() {
@@ -70,9 +82,11 @@ public class CompileUnit {
 		
 		if (innerPathStack != null && innerPathStack.size() > 0) {
 			innerPath = new ArrayList(innerPathStack);
+		} else {
+			innerPath = Collections.EMPTY_LIST;
 		}
 
-		return Collections.EMPTY_LIST;
+		return innerPath;
 	}
 	
 	public List<String> getInnerPathNames() {
@@ -85,9 +99,11 @@ public class CompileUnit {
 			for (SimpleType se : innerPathStack) {
 				pathNames.add(se.getName());
 			}
+		} else {
+			pathNames = Collections.EMPTY_LIST;
 		}
 
-		return Collections.EMPTY_LIST;
+		return pathNames;
 	}
 	
 	public void addPropertyError(String propName, String msg) {
