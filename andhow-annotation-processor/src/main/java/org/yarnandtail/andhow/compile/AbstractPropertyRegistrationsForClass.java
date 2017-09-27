@@ -11,7 +11,7 @@ public abstract class AbstractPropertyRegistrationsForClass implements PropertyR
 	
 	@Override
 	public List<PropertyRegistration> getRegistrationList() {
-		PropertyRegistrationList list = new PropertyRegistrationList(getCanonicalRootName());
+		PropertyRegistrationList list = new PropertyRegistrationList(getRootCanonicalName());
 		addPropertyRegistrations(list);
 		return Collections.unmodifiableList(list);
 	}

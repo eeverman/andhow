@@ -18,33 +18,29 @@ import static javax.lang.model.util.ElementFilter.*;
  */
 public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> {
 
-	ProcessingEnvironment processEnv;
-	Types typeUtils;
-	Elements elemUtils;
-	TypeElement propertyTypeElem;
-	TypeMirror propertyTypeMirror;
-	CompileUnit compileUnit;		//Info on a single compileable file
+	private final Types typeUtils;
+	private final TypeElement propertyTypeElem;
+	private final TypeMirror propertyTypeMirror;
+	private final Trees trees;
+	
+	CompileUnit compileUnit;		//Info on a single compileable file.  Late init.
 
-	private Trees trees;
-
-	//Modifiers required on Properties
-	Collection<Modifier> requiredMods;
-
-	public AndHowElementScanner7(ProcessingEnvironment processingEnv) {
+	/**
+	 * 
+	 * @param processingEnv	The ProcessingEnvironment that a javax.annotation.processing.Processor
+	 * is initialized with.
+	 * @param typeNameOfAndHowProperty The fully qualified name of the interface that
+	 * all AndHow Properties implement.
+	 */
+	public AndHowElementScanner7(ProcessingEnvironment processingEnv, String typeNameOfAndHowProperty) {
 
 		super(null);
 
-		processEnv = processingEnv;
 		trees = Trees.instance(processingEnv);
-		elemUtils = processEnv.getElementUtils();
-		typeUtils = processEnv.getTypeUtils();
-		propertyTypeElem = processingEnv.getElementUtils().getTypeElement("org.yarnandtail.andhow.api.Property");
+		typeUtils = processingEnv.getTypeUtils();
+		propertyTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowProperty);
 		propertyTypeMirror = propertyTypeElem.asType();
 
-		requiredMods = new ArrayList();
-		requiredMods.add(Modifier.FINAL);
-		requiredMods.add(Modifier.PUBLIC);
-		requiredMods.add(Modifier.STATIC);
 	}
 
 	@Override
@@ -73,7 +69,7 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 						"' but it is just a reference to an existing property.");
 			}
 		} else {
-			//System.out.println("Skipping variable " + e.toString() + " Type: " + typeUtils.erasure(e.asType()));
+			//Skip the property b/c it is not a of type that is an AndHow Property
 		}
 
 		return compileUnit;
@@ -88,8 +84,6 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			//Just entered a top level class.
 			//Construct a new CompileUnit to record state and scan its contents
 			
-			System.out.println("visitType: (root) " + e.getQualifiedName().toString());
-
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
 			
 			scan(fieldsIn(e.getEnclosedElements()), p);

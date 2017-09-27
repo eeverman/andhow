@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface PropertyRegistrationsForClass {
 
-	String getCanonicalRootName();
+	String getRootCanonicalName();
 
 	List<PropertyRegistration> getRegistrationList();
 

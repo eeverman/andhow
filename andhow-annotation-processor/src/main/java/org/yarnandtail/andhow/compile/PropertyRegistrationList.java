@@ -1,7 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A List of Registrations with simplified add methods that make it
@@ -115,6 +114,13 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
 		lastReg = reg;
 		return super.add(reg);
+	}
+	
+	/**
+	 * Sorts in lexagraphical order.
+	 */
+	public void sort() {
+		sort(Comparator.naturalOrder());
 	}
 
 }

@@ -27,7 +27,7 @@ public class __PropertySample_PropertyRegistrationForClass extends AbstractPrope
 	}
 
 	@Override
-	public String getCanonicalRootName() {
+	public String getRootCanonicalName() {
 		return "org.yarnandtail.andhow.compile.PropertySample";
 	}
 

@@ -3,15 +3,13 @@ package org.yarnandtail.andhow.compile;
 import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
 
 import static javax.lang.model.element.ElementKind.*;
 
 import javax.tools.FileObject;
-import org.yarnandtail.andhow.GlobalPropertyGroup;
+import org.yarnandtail.andhow.api.Property;
 
 /**
  *
@@ -47,8 +45,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		Filer filer = this.processingEnv.getFiler();
 
 
-		StringBuffer existingServiceFileContent = new StringBuffer();
-		StringBuffer newServiceFileContent = new StringBuffer();
+		StringBuilder existingServiceFileContent = new StringBuilder();
+		StringBuilder newServiceFileContent = new StringBuilder();
 
 		try {
 
@@ -71,7 +69,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 
 			TypeElement te = (TypeElement) e;
-			AndHowElementScanner7 st = new AndHowElementScanner7(this.processingEnv);
+			AndHowElementScanner7 st = new AndHowElementScanner7(this.processingEnv, Property.class.getCanonicalName());
 			CompileUnit ret = st.scan(e);
 
 			if (ret.hasRegistrations()) {

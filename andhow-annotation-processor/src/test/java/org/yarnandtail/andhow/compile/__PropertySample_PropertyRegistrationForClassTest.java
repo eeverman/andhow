@@ -20,7 +20,7 @@ public class __PropertySample_PropertyRegistrationForClassTest {
 		PropertyRegistrationsForClass regsForClass = new __PropertySample_PropertyRegistrationForClass();
 		List<PropertyRegistration> regs = regsForClass.getRegistrationList();
 		
-		assertEquals(CN, regsForClass.getCanonicalRootName());	//test assumption
+		assertEquals(CN, regsForClass.getRootCanonicalName());	//test assumption
 		
 		//
 		//Canonical Property Names

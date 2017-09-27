@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author ericeverman
  */
-public class PropertyRegistration {
+public class PropertyRegistration implements Comparable<PropertyRegistration> {
 
 	private final String classCanonName;
 	private final String[] innerPath;
@@ -82,6 +82,20 @@ public class PropertyRegistration {
 	public String[] getInnerPath() {
 		return innerPath;
 	}
+	
+	/**
+	 * The number of nested inner classes / interfaces from the root class to
+	 * the inner class containing the AndHow Property.
+	 * 
+	 * @return 
+	 */
+	public int getInnerPathLength() {
+		if (innerPath == null) {
+			return 0;
+		} else {
+			return innerPath.length;
+		}
+	}
 
 	/**
 	 * The AndHow canonical name of the property, which is the root canonical
@@ -108,6 +122,36 @@ public class PropertyRegistration {
 	 */
 	public String getJavaCanonicalParentName() {
 		return NameUtil.getJavaCanonicalParentName(classCanonName, innerPath);
+	}
+
+	/**
+	 * Comparison that results in sorting from root properties to the most
+	 * nested, incrementally by each inner path step.
+	 * 
+	 * @param o
+	 * @return 
+	 */
+	@Override
+	public int compareTo(PropertyRegistration o) {
+
+		if (getInnerPathLength() == 0) {
+			if (o.getInnerPathLength() == 0) {
+				return getPropertyName().compareTo(o.getPropertyName());
+			} else {
+				return -1;
+			}
+		} else {
+			for (int i = 0; i < getInnerPathLength() && i < o.getInnerPathLength(); i++) {
+				int comp = innerPath[i].compareTo(o.innerPath[i]);
+				
+				if (comp != 0) {
+					return comp;
+				}
+			}
+			
+			return getPropertyName().compareTo(o.getPropertyName());
+		}
+		
 	}
 	
 }

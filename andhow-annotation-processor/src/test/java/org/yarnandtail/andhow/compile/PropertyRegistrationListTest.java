@@ -40,6 +40,22 @@ public class PropertyRegistrationListTest {
 		assertEquals(className + ".Inner3.Henry", list.get(7).getCanonicalPropertyName());
 		assertEquals(className + ".Ivy", list.get(8).getCanonicalPropertyName());
 		assertEquals(className + ".Jay", list.get(9).getCanonicalPropertyName());
+		
+		//
+		//Check sorted order
+		list.sort();
+		
+		assertEquals(className + ".Andy", list.get(0).getCanonicalPropertyName());
+		assertEquals(className + ".Bob", list.get(1).getCanonicalPropertyName());
+		assertEquals(className + ".Ivy", list.get(2).getCanonicalPropertyName());
+		assertEquals(className + ".Jay", list.get(3).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Cindy", list.get(4).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Doug", list.get(5).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Inner2.Evan", list.get(6).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Inner2.Flyn", list.get(7).getCanonicalPropertyName());
+		assertEquals(className + ".Inner3.George", list.get(8).getCanonicalPropertyName());
+		assertEquals(className + ".Inner3.Henry", list.get(9).getCanonicalPropertyName());
+
 	}
 	
 	@Test
@@ -59,6 +75,16 @@ public class PropertyRegistrationListTest {
 		assertEquals(className + ".Inner3.Cindy", list.get(2).getCanonicalPropertyName());
 		assertEquals(className + ".Doug", list.get(3).getCanonicalPropertyName());
 		assertEquals(className + ".Evan", list.get(4).getCanonicalPropertyName());
+		
+		//
+		//Check sorted order
+		list.sort();
+		
+		assertEquals(className + ".Doug", list.get(0).getCanonicalPropertyName());
+		assertEquals(className + ".Evan", list.get(1).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Inner2.Andy", list.get(2).getCanonicalPropertyName());
+		assertEquals(className + ".Inner1.Inner2.Bob", list.get(3).getCanonicalPropertyName());
+		assertEquals(className + ".Inner3.Cindy", list.get(4).getCanonicalPropertyName());
 
 	}
 
