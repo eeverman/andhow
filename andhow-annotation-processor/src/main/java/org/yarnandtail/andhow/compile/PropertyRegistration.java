@@ -91,11 +91,7 @@ public class PropertyRegistration {
 	 * @return
 	 */
 	public String getCanonicalPropertyName() {
-		if (innerPath != null && innerPath.length > 0) {
-			return classCanonName + "." + String.join(".", innerPath) + "." + propName;
-		} else {
-			return classCanonName + "." + propName;
-		}
+		return NameUtil.getCanonicalPropertyName(classCanonName, propName, innerPath);
 	}
 
 	/**
@@ -111,51 +107,7 @@ public class PropertyRegistration {
 	 * @return
 	 */
 	public String getJavaCanonicalParentName() {
-		return getJavaCanonicalParentName(classCanonName, innerPath);
+		return NameUtil.getJavaCanonicalParentName(classCanonName, innerPath);
 	}
 	
-	/**
-	 * The Java canonical name of the direct parent of the AndHow Property.
-	 *
-	 * This may be the canonical name of the root class if there is no
-	 * inner path, or it may include an inner path.  Java canonical names
-	 * which include inner classes use the dollar sign as a delimiter once
-	 * the path goes 'internal' and that syntax is required if constructing
-	 * the class via <code>Class.forName</code>
-	 * <p>
-	 * Example path: <code>com.fastco.ClassName$InnerClass</code>
-	 * @param classCanonName
-	 * @param innerPath
-	 * @return
-	 */
-	public static String getJavaCanonicalParentName(String classCanonName, String[] innerPath) {
-		if (innerPath != null && innerPath.length > 0) {
-			return classCanonName + "$" + String.join("$", innerPath);
-		} else {
-			return classCanonName;
-		}
-	}
-	
-	/**
-	 * The Java canonical name of the direct parent of the AndHow Property.
-	 *
-	 * This may be the canonical name of the root class if there is no
-	 * inner path, or it may include an inner path.  Java canonical names
-	 * which include inner classes use the dollar sign as a delimiter once
-	 * the path goes 'internal' and that syntax is required if constructing
-	 * the class via <code>Class.forName</code>
-	 * <p>
-	 * Example path: <code>com.fastco.ClassName$InnerClass</code>
-	 * @param classCanonName
-	 * @param innerPath
-	 * @return
-	 */
-	public static String getJavaCanonicalParentName(String classCanonName, List<String> innerPath) {
-		if (innerPath != null && innerPath.size() > 0) {
-			return classCanonName + "$" + String.join("$", innerPath);
-		} else {
-			return classCanonName;
-		}
-	}
-
 }

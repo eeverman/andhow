@@ -29,7 +29,7 @@ public class NonStaticInnerClassSample {
 				//JVM banned
 				//private static final StrProp STRING = StrProp.builder().build();
 				
-				private final StrProp STRING = StrProp.builder().build();
+				private final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
 			}
 		}
 

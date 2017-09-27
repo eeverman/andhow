@@ -53,23 +53,27 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		boolean isPropType = typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(propertyTypeMirror));
 
 		if (isPropType) {
-			System.out.println("Found AndHow Property variable " + e.getSimpleName().toString() + " Type: " + typeUtils.erasure(e.asType()));
 
-			AndHowTreeScanner ts = new AndHowTreeScanner();
+			PropertyVariableTreeScanner ts = new PropertyVariableTreeScanner();
 			PropertyMarker marker = new PropertyMarker();
 			ts.scan(trees.getPath(e), marker);
 			if (marker.isNewProperty()) {
-				System.out.println("###### WE THINK THIS IS A PROPERTY ASSIGNMENT #######");
-
-				compileUnit.foundProperty(
+				compileUnit.addProperty(
 						new SimpleVariable(e.getSimpleName().toString(),
 						e.getModifiers().contains(Modifier.STATIC),
 						e.getModifiers().contains(Modifier.FINAL))
 				);
+				
+				System.out.println("Found new AndHow Property " + 
+					NameUtil.getCanonicalPropertyName(compileUnit.getCanonicalRootName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
+				);
 
+			} else {
+				System.out.println("Found an AndHow Property variable '" + e.getSimpleName().toString() + "' in '" + compileUnit.getCanonicalRootName() +
+						"' but it is just a reference to an existing property.");
 			}
 		} else {
-			System.out.println("Skipping variable " + e.toString() + " Type: " + typeUtils.erasure(e.asType()));
+			//System.out.println("Skipping variable " + e.toString() + " Type: " + typeUtils.erasure(e.asType()));
 		}
 
 		return compileUnit;
@@ -80,22 +84,32 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	public CompileUnit visitType(TypeElement e, String p) {
 		
 		if (compileUnit == null) {
+			
+			//Just entered a top level class.
+			//Construct a new CompileUnit to record state and scan its contents
+			
 			System.out.println("visitType: (root) " + e.getQualifiedName().toString());
 
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
+			
+			scan(fieldsIn(e.getEnclosedElements()), p);
+			scan(typesIn(e.getEnclosedElements()), p);
+		} else {
+				
+			//Just entered an inner class (at an arbitrary level of nexting)
+			//Push it onto the CompileUnit stack and scan its contents
+			
+			this.compileUnit.pushType(e.getSimpleName().toString(), e.getModifiers().contains(Modifier.STATIC));
+			
+			scan(fieldsIn(e.getEnclosedElements()), p);
+			scan(typesIn(e.getEnclosedElements()), p);
+
+			//Now leaving the inner class
+			this.compileUnit.popType();
 		}
 				
-		//TODO:  This is not right, but it seems to work - why??
-		//The current convention is to NOT push the TLC, but we seem to get the
-		//correct paths printed out (maybe they are not right??)
-		this.compileUnit.pushType(
-				new SimpleType(e.getSimpleName().toString(), e.getModifiers().contains(Modifier.STATIC))
-		);
 
-		scan(fieldsIn(e.getEnclosedElements()), p);
-		scan(typesIn(e.getEnclosedElements()), p);
 
-		this.compileUnit.popType();
 
 		return compileUnit;
 	}

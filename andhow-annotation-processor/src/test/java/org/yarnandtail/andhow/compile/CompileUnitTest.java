@@ -31,105 +31,71 @@ public class CompileUnitTest {
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
 		//root prop
-		cu.foundProperty(new SimpleVariable(PROP1_NAME, true, true));
+		cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//0
 		
-		//1st inner class
-		cu.pushType(INNER1_SIMP_NAME, true);
-		cu.foundProperty(new SimpleVariable(PROP1_NAME, true, true));
-		
-		//2nd inner class
-		cu.pushType(INNER2_SIMP_NAME, true);
-		cu.foundProperty(new SimpleVariable(PROP1_NAME, true, true));
-		cu.foundProperty(new SimpleVariable(PROP2_NAME, true, true));
-		
-		//one more at 1st inner level
-		cu.popType();
-		cu.foundProperty(new SimpleVariable(PROP2_NAME, true, true));
+		{
+			//1st inner class
+			cu.pushType(INNER1_SIMP_NAME, true);
+			cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//1
+
+			{
+				//2nd inner class
+				cu.pushType(INNER2_SIMP_NAME, true);
+				
+				//Check inner path order
+				assertEquals(2, cu.getInnerPath().size());
+				assertEquals(INNER1_SIMP_NAME, cu.getInnerPath().get(0).getName());
+				assertEquals(INNER2_SIMP_NAME, cu.getInnerPath().get(1).getName());
+				assertEquals(INNER1_SIMP_NAME, cu.getInnerPathNames().get(0));
+				assertEquals(INNER2_SIMP_NAME, cu.getInnerPathNames().get(1));
+				//
+				
+				cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//2
+				cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//3
+				cu.popType();
+				
+				//Check we have the right inner path remaining
+				assertEquals(1, cu.getInnerPath().size());
+				assertEquals(INNER1_SIMP_NAME, cu.getInnerPathNames().get(0));
+			}
+
+			//one more at 1st inner level
+			cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//4
+			cu.popType();
+		}
 		
 		//one more at root level
-		cu.popType();
-		cu.foundProperty(new SimpleVariable(PROP2_NAME, true, true));
+		cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//5
 		
 		PropertyRegistrationList list = cu.getRegistrations();
 		
 		assertEquals(6, list.size());
 		assertFalse(cu.hasErrors());
-		
 		assertEquals(ROOT_QUAL_NAME, list.getRootCanonicalName());
+		
+		
+		//Checking all properties
 		assertEquals(ROOT_QUAL_NAME + "." + PROP1_NAME, list.get(0).getCanonicalPropertyName());
+		assertEquals(ROOT_QUAL_NAME, list.get(0).getCanonicalRootName());
+		assertEquals(ROOT_QUAL_NAME, list.get(0).getJavaCanonicalParentName());
+		//
 		assertEquals(ROOT_QUAL_NAME + "." + INNER1_SIMP_NAME + "." + PROP1_NAME, list.get(1).getCanonicalPropertyName());
 		assertEquals(ROOT_QUAL_NAME, list.get(1).getCanonicalRootName());
 		assertEquals(ROOT_QUAL_NAME + "$" + INNER1_SIMP_NAME, list.get(1).getJavaCanonicalParentName());
+		//
+		assertEquals(ROOT_QUAL_NAME + "." + INNER1_SIMP_NAME + "." + INNER2_SIMP_NAME + "." + PROP1_NAME, list.get(2).getCanonicalPropertyName());
+		assertEquals(ROOT_QUAL_NAME + "$" + INNER1_SIMP_NAME + "$" + INNER2_SIMP_NAME, list.get(2).getJavaCanonicalParentName());
+		//
+		assertEquals(ROOT_QUAL_NAME + "." + INNER1_SIMP_NAME + "." + INNER2_SIMP_NAME + "." + PROP2_NAME, list.get(3).getCanonicalPropertyName());
+		assertEquals(ROOT_QUAL_NAME + "$" + INNER1_SIMP_NAME + "$" + INNER2_SIMP_NAME, list.get(3).getJavaCanonicalParentName());
+		//
+		assertEquals(ROOT_QUAL_NAME + "." + INNER1_SIMP_NAME + "." + PROP2_NAME, list.get(4).getCanonicalPropertyName());
+		assertEquals(ROOT_QUAL_NAME + "$" + INNER1_SIMP_NAME, list.get(4).getJavaCanonicalParentName());
+		//
+		assertEquals(ROOT_QUAL_NAME + "." + PROP2_NAME, list.get(5).getCanonicalPropertyName());
+		assertEquals(ROOT_QUAL_NAME, list.get(5).getCanonicalRootName());
+		assertEquals(ROOT_QUAL_NAME, list.get(5).getJavaCanonicalParentName());
 	}
 
-	/**
-	 * Test of popType method, of class CompileUnit.
-	 */
-	@Test
-	public void testPopType() {
-	}
-
-	/**
-	 * Test of foundProperty method, of class CompileUnit.
-	 */
-	@Test
-	public void testFoundProperty() {
-	}
-
-	/**
-	 * Test of getInnerPath method, of class CompileUnit.
-	 */
-	@Test
-	public void testGetInnerPath() {
-	}
-
-	/**
-	 * Test of getInnerPathNames method, of class CompileUnit.
-	 */
-	@Test
-	public void testGetInnerPathNames() {
-	}
-
-	/**
-	 * Test of addPropertyError method, of class CompileUnit.
-	 */
-	@Test
-	public void testAddPropertyError() {
-	}
-
-	/**
-	 * Test of getCanonicalRootName method, of class CompileUnit.
-	 */
-	@Test
-	public void testGetCanonicalRootName() {
-	}
-
-	/**
-	 * Test of getRegistrations method, of class CompileUnit.
-	 */
-	@Test
-	public void testGetRegistrations() {
-	}
-
-	/**
-	 * Test of getErrors method, of class CompileUnit.
-	 */
-	@Test
-	public void testGetErrors() {
-	}
-
-	/**
-	 * Test of hasErrors method, of class CompileUnit.
-	 */
-	@Test
-	public void testHasErrors() {
-	}
-
-	/**
-	 * Test of hasRegistrations method, of class CompileUnit.
-	 */
-	@Test
-	public void testHasRegistrations() {
-	}
 	
 }
