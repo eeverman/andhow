@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -123,6 +123,118 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	public String getJavaCanonicalParentName() {
 		return NameUtil.getJavaCanonicalParentName(classCanonName, innerPath);
 	}
+	
+	/**
+	 * Equivalent to compareTo for just the root class and its fully qualified path.
+	 * 
+	 * @param o Comp the classCanonName name of this PropertyRegistration
+	 * @return 
+	 */
+	public int compareRootTo(PropertyRegistration o) {
+
+		if (classCanonName.equals(o.classCanonName)) {
+			
+			return 0;	//easy
+			
+		} else {
+			//These are Properties from different root classes - check each step of the fully qualified name
+			
+			String[] thisPath = classCanonName.split("\\.");
+			String[] thatPath = o.classCanonName.split("\\.");
+			
+			int minLen = Math.min(thisPath.length, thatPath.length);
+			
+			for (int i = 0; i < minLen; i++) {
+				
+				if (i == (minLen - 1)) {
+					//last comparable step
+					
+					if (thisPath.length < thatPath.length) {
+						return -1;
+					} else if (thisPath.length > thatPath.length) {
+						return 1;
+					} else {
+						return thisPath[i].compareTo(thatPath[i]);
+					}
+					
+				} else {
+					
+					int comp = thisPath[i].compareTo(thatPath[i]);
+					
+					if (comp != 0) {
+						return comp;
+					}
+					
+				}
+				
+			}
+			
+			return 0;
+		}
+	}
+	
+
+	/**
+	 * Equivalent to compareTo for just the inner path class and its fully qualified path.
+	 * 
+	 * @param o Comp the classCanonName name of this PropertyRegistration
+	 * @return 
+	 */
+	public int compareInnerPathTo(PropertyRegistration o) {
+
+		String[] thisPath = innerPath;
+		String[] thatPath = o.innerPath;
+		
+		
+		//Check the null combinations
+		if (thisPath == null) {
+			if (thatPath == null) {
+				return 0;
+			} else {
+				return -1;
+			}
+		} else if (thatPath == null) {
+			return 1;
+		}
+		
+
+		int minLen = Math.min(thisPath.length, thatPath.length);
+
+		for (int i = 0; i < minLen; i++) {
+
+			if (i == (minLen - 1)) {
+				//last comparable step
+
+				int comp = thisPath[i].compareTo(thatPath[i]);
+				
+				if (comp != 0) {
+					return comp;
+				} else {
+					
+					if (thisPath.length < thatPath.length) {
+						return -1;
+					} else if (thisPath.length > thatPath.length) {
+						return 1;
+					} else {
+						return 0;
+					}
+					
+				}
+
+			} else {
+
+				int comp = thisPath[i].compareTo(thatPath[i]);
+
+				if (comp != 0) {
+					return comp;
+				}
+
+			}
+
+		}
+
+		return 0;
+	}
 
 	/**
 	 * Comparison that results in sorting from root properties to the most
@@ -133,24 +245,20 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 */
 	@Override
 	public int compareTo(PropertyRegistration o) {
-
-		if (getInnerPathLength() == 0) {
-			if (o.getInnerPathLength() == 0) {
-				return getPropertyName().compareTo(o.getPropertyName());
-			} else {
-				return -1;
-			}
-		} else {
-			for (int i = 0; i < getInnerPathLength() && i < o.getInnerPathLength(); i++) {
-				int comp = innerPath[i].compareTo(o.innerPath[i]);
-				
-				if (comp != 0) {
-					return comp;
-				}
-			}
-			
-			return getPropertyName().compareTo(o.getPropertyName());
+		
+		int comp = compareRootTo(o);
+		
+		if (comp != 0) {
+			return comp;
 		}
+		
+		comp = compareInnerPathTo(o);
+		
+		if (comp != 0) {
+			return comp;
+		}
+		
+		return getPropertyName().compareTo(o.getPropertyName());
 		
 	}
 	
