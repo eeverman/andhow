@@ -96,6 +96,36 @@ public class CompileUnitTest {
 		assertEquals(ROOT_QUAL_NAME, list.get(5).getCanonicalRootName());
 		assertEquals(ROOT_QUAL_NAME, list.get(5).getJavaCanonicalParentName());
 	}
+	
+	@Test
+	public void testGetPackageName() {
+		CompileUnit cu = new CompileUnit("org.big.comp.MyClass");
+		assertEquals("org.big.comp", cu.getRootPackageName());
+		
+		cu = new CompileUnit("a.MyClass");
+		assertEquals("a", cu.getRootPackageName());
+		
+		cu = new CompileUnit("a.b.MyClass");
+		assertEquals("a.b", cu.getRootPackageName());
+		
+		cu = new CompileUnit("MyClass");
+		assertNull(cu.getRootPackageName());
+	}
+	
+	@Test
+	public void testGetRootSimpleName() {
+		CompileUnit cu = new CompileUnit("org.big.comp.MyClass");
+		assertEquals("MyClass", cu.getRootSimpleName());
+		
+		cu = new CompileUnit("a.MyClass");
+		assertEquals("MyClass", cu.getRootSimpleName());
+		
+		cu = new CompileUnit("a.b.MyClass");
+		assertEquals("MyClass", cu.getRootSimpleName());
+		
+		cu = new CompileUnit("MyClass");
+		assertEquals("MyClass", cu.getRootSimpleName());
+	}
 
 	
 }

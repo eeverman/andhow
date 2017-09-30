@@ -17,7 +17,7 @@ public class __PropertySample_PropertyRegistrationForClassTest {
 		String CN = "org.yarnandtail.andhow.compile.PropertySample";
 		String CN_DOT = CN + ".";
 		
-		PropertyRegistrationsForClass regsForClass = new __PropertySample_PropertyRegistrationForClass();
+		PropertyRegistrar regsForClass = new __PropertySample_PropertyRegistrationForClass();
 		List<PropertyRegistration> regs = regsForClass.getRegistrationList();
 		
 		assertEquals(CN, regsForClass.getRootCanonicalName());	//test assumption

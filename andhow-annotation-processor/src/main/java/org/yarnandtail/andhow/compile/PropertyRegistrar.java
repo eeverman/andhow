@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author ericeverman
  */
-public interface PropertyRegistrationsForClass {
+public interface PropertyRegistrar {
 
 	String getRootCanonicalName();
 

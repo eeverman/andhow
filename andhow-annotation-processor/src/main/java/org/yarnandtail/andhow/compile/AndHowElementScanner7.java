@@ -61,11 +61,11 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 				);
 				
 				System.out.println("Found new AndHow Property " + 
-					NameUtil.getCanonicalPropertyName(compileUnit.getCanonicalRootName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
+					NameUtil.getCanonicalPropertyName(compileUnit.getRootCanonicalName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
 				);
 
 			} else {
-				System.out.println("Found an AndHow Property variable '" + e.getSimpleName().toString() + "' in '" + compileUnit.getCanonicalRootName() +
+				System.out.println("Found an AndHow Property variable '" + e.getSimpleName().toString() + "' in '" + compileUnit.getRootCanonicalName() +
 						"' but it is just a reference to an existing property.");
 			}
 		} else {

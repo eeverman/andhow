@@ -6,7 +6,6 @@ import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
 
-import static javax.lang.model.element.ElementKind.*;
 
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.api.Property;
@@ -73,10 +72,20 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			CompileUnit ret = st.scan(e);
 
 			if (ret.hasRegistrations()) {
+				
+				PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
+				
+				PropertyRegistrationList regs = ret.getRegistrations();
+				
 				for (PropertyRegistration p : ret.getRegistrations()) {
-
-					System.out.println("Found Property '" + p.getCanonicalPropertyName() + "'in : " + p.getCanonicalRootName() + " parent class: " + p.getJavaCanonicalParentName());
-
+					System.out.println("Found Property '" + p.getCanonicalPropertyName() + 
+							"' in : " + p.getCanonicalRootName() + " parent class: " + p.getJavaCanonicalParentName());
+				}
+				
+				try {
+					writeClassFile(filer, gen, e);
+				} catch (Exception ex) {
+					error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
 				}
 			}
 
@@ -133,87 +142,24 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		return false;
 
 	}
-//
-//	public String generateClassString(String pkgName, String genSimpleName, String causeSimpleName) {
-//		String templatePath
-//				= "/" + this.getClass().getCanonicalName().replace(".", "/") + "_Template.txt";
-//
-//		try {
-//
-//			InputStream in = AndHowCompileProcessor.class.getResourceAsStream(templatePath);
-//			if (in == null) {
-//				throw new Exception("resource not found: " + templatePath);
-//			}
-//
-//			StringBuffer buf = new StringBuffer();
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-//			String line = reader.readLine();
-//			while (line != null) {
-//				buf.append(line).append(System.lineSeparator());
-//				line = reader.readLine();
-//			}
-//
-//			reader.close();
-//
-//			//String template = new String(Files.readAllBytes(Paths.get(getClass().getResource(templatePath).toURI())));
-//			String source = String.format(buf.toString(),
-//					pkgName, genSimpleName,
-//					causeSimpleName,
-//					GlobalPropertyGroupStub.class.getCanonicalName(),
-//					this.getClass().getCanonicalName(), runDate,
-//					"Build a 2d array here..."
-//			);
-//			return source;
-//		} catch (Exception ex) {
-//			error("Error finding or formatting '" + templatePath + "'", ex);
-//			return null;	//error throws a runtime
-//		}
-//
-//	}
-//
-//	public void writeClassFile(Filer filer, GroupModel causingElement) {
-//
-//		String genFullName = "";
-//
-//		try {
-//
-//			String causeFullName = causingElement.getLeafElement().getQualifiedName().toString();
-//			String causeSimpleName = causingElement.getLeafElement().getSimpleName().toString();
-//			String pkgName = causingElement.getPackage().getQualifiedName().toString();
-//			String genSimpleName = causingElement.buildNameModel().getClassName();
-//			genFullName = (pkgName.length() > 0) ? pkgName + "." + genSimpleName : genSimpleName;
-//
-//			String classContent = this.generateClassString(pkgName, genSimpleName, causeSimpleName);
-//
-//			trace("Writing " + genFullName + " as a generated source file");
-//
-//			FileObject classFile = filer.createSourceFile(
-//					genFullName, new Element[]{causingElement.getLeafElement()});
-//
-//			try (Writer writer = classFile.openWriter()) {
-//				writer.write(classContent);
-//			}
-//		} catch (IOException ex) {
-//			error("Error attempting to write the generated class file: " + genFullName, ex);
-//		}
-//	}
 
-	public List<List<String>> buildGroupList(Element start) {
-		ElementKind kind = start.getKind();
+	public void writeClassFile(Filer filer, PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
 
-		switch (kind) {
-			case INTERFACE:
-			case CLASS:
-				break;
-			case FIELD:
-			case LOCAL_VARIABLE:
-				break;
-			default:
-			//ignore
+		String genFullName = null;
+		
+			
+		String classContent = generator.generateSource();
+
+		trace("Writing " + generator.buildGeneratedClassFullName() + " as a generated source file");
+
+		FileObject classFile = filer.createSourceFile(generator.buildGeneratedClassFullName(), causingElement);
+
+		try (Writer writer = classFile.openWriter()) {
+			writer.write(classContent);
 		}
-
-		return null;
+			
 	}
+		
 
 	public static void trace(String msg) {
 		System.out.println("AndHowCompileProcessor: " + msg);
@@ -225,6 +171,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	public static void error(String msg, Exception e) {
 		System.err.println("AndHowCompileProcessor: " + msg);
+		e.printStackTrace(System.err);
 		throw new RuntimeException(msg, e);
 	}
 

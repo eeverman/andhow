@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author ericeverman
  */
-public abstract class AbstractPropertyRegistrationsForClass implements PropertyRegistrationsForClass {
+public abstract class AbstractPropertyRegistrar implements PropertyRegistrar {
 	
 	@Override
 	public List<PropertyRegistration> getRegistrationList() {

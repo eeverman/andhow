@@ -4,7 +4,7 @@ package org.yarnandtail.andhow.compile;
  *
  * @author ericeverman
  */
-public class __PropertySample_PropertyRegistrationForClass extends AbstractPropertyRegistrationsForClass {
+public class __PropertySample_PropertyRegistrationForClass extends AbstractPropertyRegistrar {
 
 	
 	@Override

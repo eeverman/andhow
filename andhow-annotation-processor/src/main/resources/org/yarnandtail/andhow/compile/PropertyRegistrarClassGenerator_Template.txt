@@ -1,0 +1,21 @@
+%1$s
+
+import org.yarnandtail.andhow.compile.AbstractPropertyRegistrar;
+import org.yarnandtail.andhow.compile.PropertyRegistrationList;
+
+@javax.annotation.Generated(
+	value="%6$s",
+	date="%7$s",
+	comments="Proxy for %2$s registered as a service provider in META-INF/services/%5$s")
+public class %4$s extends AbstractPropertyRegistrar {
+
+	@Override
+	public String getRootCanonicalName() { return "%2$s"; }
+
+	@Override
+	public void addPropertyRegistrations(PropertyRegistrationList list) {
+%8$s
+	}
+
+}
+

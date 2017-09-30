@@ -189,8 +189,42 @@ public class CompileUnit {
 	 *
 	 * @return
 	 */
-	public String getCanonicalRootName() {
+	public String getRootCanonicalName() {
 		return classCanonName;
+	}
+	
+	/**
+	 * Get just the simple name of the root class.
+	 * 
+	 * @return 
+	 */
+	public String getRootSimpleName() {
+		
+		int dotPos = classCanonName.lastIndexOf(".");
+		
+		if (dotPos > 0) {
+			return classCanonName.substring(dotPos + 1);
+		} else {
+			return classCanonName;
+		}
+		
+	}
+	
+	/**
+	 * Get just the package of the root class.
+	 * 
+	 * @return null if the root class is in the default package.
+	 */
+	public String getRootPackageName() {
+		
+		int dotPos = classCanonName.lastIndexOf(".");
+		
+		if (dotPos > 0) {
+			return classCanonName.substring(0, dotPos);
+		} else {
+			return null;
+		}
+		
 	}
 
 	/**
