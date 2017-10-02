@@ -1,9 +1,14 @@
 package org.yarnandtail.andhow.compile;
 
+import com.google.testing.compile.Compilation;
+import com.google.testing.compile.JavaFileObjects;
 import java.util.*;
+import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.Before;
 
+import static com.google.testing.compile.CompilationSubject.assertThat;
+import static com.google.testing.compile.Compiler.javac;
 import static org.junit.Assert.*;
 
 /**
@@ -138,18 +143,60 @@ public class PropertyRegistrarClassGeneratorTest {
 		assertEquals("list.add(\"" + PROP1_NAME + "\", \"" + INNER1_SIMP_NAME + "\", \"" + INNER2_SIMP_NAME + "\");", eachAdds[3]);
 		assertEquals("list.add(\"" + PROP2_NAME + "\");", eachAdds[4]);	//No inner path b/c in inherits from above
 	}
+	
+	/**
+	 * Basic gross test that the generated source is compilable
+	 */
+	@Test
+	public void testGenerate_simple() throws Exception {
+		
+		PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(
+				simpleCompileUnit(), AndHowCompileProcessor.class, runDate);
+		String sourceStr = gen.generateSource();
+		
+		Compilation compilation
+				= javac()
+						.compile(JavaFileObjects.forSourceString(gen.buildGeneratedClassFullName(), sourceStr));
+		
+		assertThat(compilation).succeeded();
+
+	}
+	
+	/**
+	 * Basic gross test that the generated source is compilable
+	 */
+	@Test
+	public void testGenerate_simpleCompileUnit_DefaultPkg() throws Exception {
+		
+		PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(
+				simpleCompileUnit_DefaultPkg(), AndHowCompileProcessor.class, runDate);
+		String sourceStr = gen.generateSource();
+		
+		Compilation compilation
+				= javac()
+						.compile(JavaFileObjects.forSourceString(gen.buildGeneratedClassFullName(), sourceStr));
+		
+		assertThat(compilation).succeeded();
+
+	}
 
 	/**
-	 * Test this at some other level
+	 * Basic gross test that the generated source is compilable
 	 */
-//	@Test
-//	public void testGenerate() throws Exception {
-//		
-//		PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(complexCompileUnit(), runDate);
-//		String result = gen.generateSource();
-//		
-//		System.out.println(result);
-//	}
+	@Test
+	public void testGenerate_complex() throws Exception {
+		
+		PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(
+				complexCompileUnit(), AndHowCompileProcessor.class, runDate);
+		String sourceStr = gen.generateSource();
+		
+		Compilation compilation
+				= javac()
+						.compile(JavaFileObjects.forSourceString(gen.buildGeneratedClassFullName(), sourceStr));
+		
+		assertThat(compilation).succeeded();
+
+	}
 	
 	
 	public CompileUnit simpleCompileUnit() {
