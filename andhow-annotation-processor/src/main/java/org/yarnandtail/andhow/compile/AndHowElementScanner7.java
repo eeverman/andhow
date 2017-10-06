@@ -1,11 +1,13 @@
 package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.util.NameUtil;
 import com.sun.source.util.Trees;
 import java.util.*;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.*;
+
 import static javax.lang.model.util.ElementFilter.*;
 
 /**
@@ -60,12 +62,12 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 						e.getModifiers().contains(Modifier.FINAL))
 				);
 				
-				System.out.println("Found new AndHow Property " + 
+				System.out.println("ES: Found new AndHow Property " + 
 					NameUtil.getCanonicalPropertyName(compileUnit.getRootCanonicalName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
 				);
 
 			} else {
-				System.out.println("Found an AndHow Property variable '" + e.getSimpleName().toString() + "' in '" + compileUnit.getRootCanonicalName() +
+				System.out.println("ES: Found an AndHow Property variable '" + e.getSimpleName().toString() + "' in '" + compileUnit.getRootCanonicalName() +
 						"' but it is just a reference to an existing property.");
 			}
 		} else {
@@ -84,14 +86,19 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			//Just entered a top level class.
 			//Construct a new CompileUnit to record state and scan its contents
 			
+			System.out.println("ES: Entering top level " + e.getQualifiedName().toString());
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
 			
 			scan(fieldsIn(e.getEnclosedElements()), p);
 			scan(typesIn(e.getEnclosedElements()), p);
+			
+			System.out.println("ES: Leaving top level " + e.getQualifiedName().toString());
 		} else {
 				
 			//Just entered an inner class (at an arbitrary level of nexting)
 			//Push it onto the CompileUnit stack and scan its contents
+			
+			System.out.println("ES: Entering inner " + e.getSimpleName().toString());
 			
 			this.compileUnit.pushType(e.getSimpleName().toString(), e.getModifiers().contains(Modifier.STATIC));
 			
@@ -100,11 +107,13 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 
 			//Now leaving the inner class
 			this.compileUnit.popType();
+			
+			System.out.println("ES: Leaving inner " + e.getSimpleName().toString());
 		}
 				
 
 
-
+		System.out.println("ES: Returning comp unit");
 		return compileUnit;
 	}
 

@@ -1,8 +1,12 @@
 package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.service.PropertyRegistrationList;
+import org.yarnandtail.andhow.service.PropertyRegistrar;
+import org.yarnandtail.andhow.service.PropertyRegistration;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import org.yarnandtail.andhow.util.IOUtil;
 
 
 /**
@@ -36,22 +40,7 @@ public class PropertyRegistrarClassGenerator {
 	}
 	
 	public String getTemplate() throws Exception {
-		
-		InputStream in = AndHowCompileProcessor.class.getResourceAsStream(getTemplatePath());
-		if (in == null) {
-			throw new Exception("Unable to find the template resource: " + getTemplatePath());
-		}
-
-		StringBuilder buf = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"))) {
-			String line = reader.readLine();
-			while (line != null) {
-				buf.append(line).append(System.lineSeparator());
-				line = reader.readLine();
-			}
-		}
-		
-		return buf.toString();
+		return IOUtil.getUTF8ResourceAsString(getTemplatePath());
 	}
 	
 	public String generateSource() throws Exception {

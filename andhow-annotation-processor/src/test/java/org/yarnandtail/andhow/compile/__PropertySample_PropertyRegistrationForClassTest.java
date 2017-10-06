@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.service.PropertyRegistrar;
+import org.yarnandtail.andhow.service.PropertyRegistration;
 import java.util.List;
 import org.junit.Test;
 

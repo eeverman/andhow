@@ -1,6 +1,8 @@
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.andhow.service;
 
+import org.yarnandtail.andhow.service.PropertyRegistrationList;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**

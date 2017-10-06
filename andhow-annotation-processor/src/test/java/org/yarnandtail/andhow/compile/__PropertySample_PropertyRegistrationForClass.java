@@ -1,5 +1,8 @@
 package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.service.AbstractPropertyRegistrar;
+import org.yarnandtail.andhow.service.PropertyRegistrationList;
+
 /**
  *
  * @author ericeverman

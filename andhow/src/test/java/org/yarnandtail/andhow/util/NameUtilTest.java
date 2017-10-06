@@ -1,5 +1,6 @@
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.andhow.util;
 
+import org.yarnandtail.andhow.util.NameUtil;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;

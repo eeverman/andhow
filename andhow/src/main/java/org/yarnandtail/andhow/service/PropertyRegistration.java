@@ -1,5 +1,6 @@
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.andhow.service;
 
+import org.yarnandtail.andhow.util.NameUtil;
 import java.util.*;
 
 /**

@@ -1,7 +1,8 @@
 /*
  */
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.andhow.service;
 
+import org.yarnandtail.andhow.service.PropertyRegistration;
 import java.util.List;
 import org.junit.Test;
 

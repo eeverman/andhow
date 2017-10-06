@@ -1,7 +1,7 @@
 %1$s
 
-import org.yarnandtail.andhow.compile.AbstractPropertyRegistrar;
-import org.yarnandtail.andhow.compile.PropertyRegistrationList;
+import org.yarnandtail.andhow.service.AbstractPropertyRegistrar;
+import org.yarnandtail.andhow.service.PropertyRegistrationList;
 
 @javax.annotation.Generated(
 	value="%6$s",

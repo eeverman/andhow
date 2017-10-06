@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.andhow.service;
 
 import java.util.*;
 

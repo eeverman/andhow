@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.compile;
 
+import org.yarnandtail.andhow.service.PropertyRegistrationList;
+import org.yarnandtail.andhow.util.NameUtil;
 import java.util.*;
 
 /**
