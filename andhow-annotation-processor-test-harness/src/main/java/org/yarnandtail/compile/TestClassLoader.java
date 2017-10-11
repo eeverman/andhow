@@ -4,7 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- *
+ * See limitation notes at the top of the MemoryFileManager.
+ * 
  * @author ericeverman
  */
 public class TestClassLoader extends ClassLoader {

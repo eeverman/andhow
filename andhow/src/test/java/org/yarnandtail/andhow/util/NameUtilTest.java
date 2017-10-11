@@ -139,6 +139,40 @@ public class NameUtilTest {
 		);
 	}
 	
+
+	/**
+	 * Test of getCanonicalParentName method, of class NameUtil.
+	 */
+	@Test
+	public void testGetCanonicalParentName_StringList() {
+		assertEquals(
+				"a.b.c.MyClass.a.b.c",
+				NameUtil.getCanonicalParentName("a.b.c.MyClass", new String[] {"a", "b", "c"})
+		);
+		
+		assertEquals(
+				"MyClass.a.b.c",
+				NameUtil.getCanonicalParentName("MyClass", new String[] {"a", "b", "c"})
+		);
+		
+		assertEquals(
+				"a.b.c.MyClass",
+				NameUtil.getCanonicalParentName("a.b.c.MyClass", new String[] {})
+		);
+		
+		assertEquals(
+				"a.b.c.MyClass",
+				NameUtil.getCanonicalParentName("a.b.c.MyClass", null)
+		);
+		
+		
+		assertEquals(
+				"a.b.c.MyClass.$a.b.$c",
+				NameUtil.getCanonicalParentName("a.b.c.MyClass", new String[] {"$a", "b", "$c"})
+		);
+	}
+	
+	
 	private List<String> list(String... array) {
 		return Arrays.asList(array);
 	}

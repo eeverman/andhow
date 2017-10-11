@@ -11,7 +11,13 @@
 	<packaging>jar</packaging>
 	<name>AndHow Annotation Processor Tests</name>
 	<description>
-		Compile-time testing of the annotation processor.
+		'Real world' compile-time testing of the annotation processor.
+		Its impossible/hard to fully replicate the compile time environment
+		including annotation processing, class generation, service loading, etc..
+		This module contains standard and edge case classes container AndHow
+		properties.  Unit tests then check to ensure that PropertyRegistrars
+		were generated and registered as services for each top level class
+		containing Properties.
 	</description>
 
 	<dependencies>
@@ -34,36 +40,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.google.testing.compile</groupId>
-			<artifactId>compile-testing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<scope>test</scope>
-			<version>2.44.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.opera</groupId>
-			<artifactId>operadriver</artifactId>
-			<scope>test</scope>
-			<version>1.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.seleniumhq.selenium</groupId>
-					<artifactId>selenium-remote-driver</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

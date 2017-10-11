@@ -37,34 +37,8 @@
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.google.testing.compile</groupId>
 			<artifactId>compile-testing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<scope>test</scope>
-			<version>2.44.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.opera</groupId>
-			<artifactId>operadriver</artifactId>
-			<scope>test</scope>
-			<version>1.5</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.seleniumhq.selenium</groupId>
-					<artifactId>selenium-remote-driver</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 	<build>

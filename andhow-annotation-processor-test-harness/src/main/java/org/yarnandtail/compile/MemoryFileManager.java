@@ -6,7 +6,17 @@ import java.util.Map;
 import javax.tools.*;
 
 /**
- *
+ * A lot of this code was borrowed from here:
+ * https://gist.github.com/johncarl81/46306590cbdde5a3003f
+ * 
+ * One weakness of this setup:  There is no distiction of Location.  Methods like
+ * getFileForOutput() ignore the Location and just store the file to the same
+ * memory file structure.  If a non-Java resource file is written to Location.SOURCE_OUTPUT,
+ * it will not be copied over by the compiler to the /classes directory, effectively
+ * removing it from the final artifact.  However, the TestClassLoader built on
+ * top of this FileManager will see that resource file via getResourceAsStream().
+ * This can hide bugs where the wrong Location is selected for file output.
+ * 
  * @author ericeverman
  */
 public class MemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {

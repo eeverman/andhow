@@ -126,6 +126,22 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	}
 	
 	/**
+	 * The Java canonical name of the direct parent of the AndHow Property.
+	 *
+	 * This may be the canonical name of the root class if there is no
+	 * inner path, or it may include an inner path.  Java canonical names
+	 * which include inner classes use the dollar sign as a delimiter once
+	 * the path goes 'internal' and that syntax is required if constructing
+	 * the class via <code>Class.forName</code>
+	 * <p>
+	 * Example path: <code>com.fastco.ClassName$InnerClass</code>
+	 * @return
+	 */
+	public String getCanonicalParentName() {
+		return NameUtil.getCanonicalParentName(classCanonName, innerPath);
+	}
+	
+	/**
 	 * Equivalent to compareTo for just the root class and its fully qualified path.
 	 * 
 	 * @param o Comp the classCanonName name of this PropertyRegistration
