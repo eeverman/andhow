@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.api;
 
 import java.util.List;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  * An AutoPropertyGroup is generated as a proxy for any class containing AndHow Properties.
@@ -42,5 +43,5 @@ public interface AutoPropertyGroup extends BasePropertyGroup {
 	 *
 	 * @return An unmodifiable list of registered properties.
 	 */
-	List<Property<?>> getProperties();
+	List<NameAndProperty> getProperties();
 }

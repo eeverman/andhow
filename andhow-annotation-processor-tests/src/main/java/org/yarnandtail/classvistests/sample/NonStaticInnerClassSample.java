@@ -20,7 +20,12 @@ public class NonStaticInnerClassSample {
 		//instance parent defined, so the nonstatic PI_DC class is kind of like
 		//a top level class.  Thus, static fields are JVM allowed.
 		class PI_DC {
-			private static final StrProp STRING = StrProp.builder().build();
+			
+			//The JVM may optimize away private vars that are not used.
+			//How to handle that possibility??  Should we gracefully ignore
+			//NoSuchFieldException when they happen and the field has non-public
+			//visibility?  Would need to track visibility in that case.
+			private static final StrProp STRING = StrProp.builder().build();	//get erased by the JVM
 			public static final StrProp STRING_PUB = StrProp.builder().build();
 			public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
 			

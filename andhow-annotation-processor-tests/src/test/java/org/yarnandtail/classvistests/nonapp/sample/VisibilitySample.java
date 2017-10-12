@@ -1,7 +1,9 @@
-package org.yarnandtail.classvistests.sample;
+package org.yarnandtail.classvistests.nonapp.sample;
 
 /**
- *
+ * Non-application related.  Just a general test of what the visibility modifiers
+ * do when they are nested in inner classes and interfaces.
+ * 
  * @author ericeverman
  */
 //Default visibility is the most restrictive available for a top level class

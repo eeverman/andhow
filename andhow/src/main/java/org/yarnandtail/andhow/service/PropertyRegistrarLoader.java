@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  * Dedicated wrapper for a java.util.ServiceLoader that loads PropertyRegistrar instances.
@@ -68,6 +69,7 @@ public class PropertyRegistrarLoader {
 				
 				if (grp == null) {
 					grp = new AutoPropertyGroupImpl(registration.getCanonicalParentName(), registration.getJavaCanonicalParentName());
+					groups.put(grpName, grp);
 				}
 				
 				Class<?> group = null;
@@ -100,7 +102,8 @@ public class PropertyRegistrarLoader {
 					continue;
 				}
 				
-				grp.addProperty(prop);
+				NameAndProperty nap = new NameAndProperty(registration.getPropertyName(), prop);
+				grp.addProperty(nap);
 			}
 		}
 		

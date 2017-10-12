@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.api;
 
 import java.util.*;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  *
@@ -10,7 +11,7 @@ public class AutoPropertyGroupImpl implements AutoPropertyGroup {
 
 	private final String canonicalName;
 	private final String javaCanonicalName;
-	private final List<Property<?>> props = new ArrayList();
+	private final List<NameAndProperty> props = new ArrayList();
 	
 	/**
 	 * Constructs a new instance w/ final unmodifiable fields.
@@ -23,7 +24,7 @@ public class AutoPropertyGroupImpl implements AutoPropertyGroup {
 		this.javaCanonicalName = javaCanonicalName;
 	}
 	
-	public void addProperty(Property<?> prop) {
+	public void addProperty(NameAndProperty prop) {
 		props.add(prop);
 	}
 	
@@ -38,7 +39,7 @@ public class AutoPropertyGroupImpl implements AutoPropertyGroup {
 	}
 
 	@Override
-	public List<Property<?>> getProperties() {
+	public List<NameAndProperty> getProperties() {
 		return Collections.unmodifiableList(props);
 	}
 

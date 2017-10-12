@@ -1,4 +1,4 @@
-package org.yarnandtail.classvistests.sample;
+package org.yarnandtail.classvistests.nonapp.sample;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -47,7 +47,7 @@ public class VisibilitySampleTest {
 		Class<?> PI = findInnerClass(root, "PI");
 
 		assertEquals(
-				"org.yarnandtail.classvistests.sample.VisibilitySample.PI",
+				"org.yarnandtail.classvistests.nonapp.sample.VisibilitySample.PI",
 				PI.getCanonicalName());
 
 		assertTrue(PI.isInterface());
@@ -61,7 +61,7 @@ public class VisibilitySampleTest {
 		
 		//Class<?> pi = VisibilitySample.PI;	//Not visible
 		//Also Not visible
-		//DefaultClass.PI = (VisibilitySample.PI)Class.forName(org.yarnandtail.classvistests.sample..VisibilitySample$PI);
+		//DefaultClass.PI = (VisibilitySample.PI)Class.forName(org.yarnandtail.classvistests.nonapp.sample..VisibilitySample$PI);
 
 	}
 
@@ -71,12 +71,12 @@ public class VisibilitySampleTest {
 		Class<?> PI = findInnerClass(root, "PI");
 		Class<?> PI_DC = findInnerClass(PI, "PI_DC");
 		
-		Class<?> PI_DC_forname = Class.forName("org.yarnandtail.classvistests.sample.VisibilitySample$PI$PI_DC");
+		Class<?> PI_DC_forname = Class.forName("org.yarnandtail.classvistests.nonapp.sample.VisibilitySample$PI$PI_DC");
 
 		assertEquals(PI_DC_forname, PI_DC);
 		
 		assertEquals(
-				"org.yarnandtail.classvistests.sample.VisibilitySample.PI.PI_DC",
+				"org.yarnandtail.classvistests.nonapp.sample.VisibilitySample.PI.PI_DC",
 				PI_DC.getCanonicalName());
 		
 		assertFalse(PI_DC.isInterface());
@@ -102,7 +102,7 @@ public class VisibilitySampleTest {
 		Class<?> PI_DI = findInnerClass(PI, "PI_DI");
 
 		assertEquals(
-				"org.yarnandtail.classvistests.sample.VisibilitySample.PI.PI_DI",
+				"org.yarnandtail.classvistests.nonapp.sample.VisibilitySample.PI.PI_DI",
 				PI_DI.getCanonicalName());
 
 		assertTrue(PI_DI.isInterface());
