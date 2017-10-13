@@ -78,7 +78,7 @@ public class PropertyRegistrarLoader {
 				try {
 					
 					group = Class.forName(registration.getJavaCanonicalParentName());
-					Field f = group.getField(registration.getPropertyName());
+					Field f = group.getDeclaredField(registration.getPropertyName());
 					
 					try {
 						prop = (Property) f.get(null);
