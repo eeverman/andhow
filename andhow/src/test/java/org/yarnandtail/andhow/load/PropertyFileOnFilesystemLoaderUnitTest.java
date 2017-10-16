@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -26,6 +25,8 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @author eeverman
  */
 public class PropertyFileOnFilesystemLoaderUnitTest {
+	
+	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropertyFileOnFilesystemLoaderUnitTest.properties";
 	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
@@ -66,7 +67,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 		
 		//copy a properties file to a temp location
-		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
+		URL inputUrl = getClass().getResource(CLASSPATH_OF_PROPS);
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);

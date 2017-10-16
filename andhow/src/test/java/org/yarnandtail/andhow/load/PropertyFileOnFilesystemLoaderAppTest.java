@@ -16,7 +16,6 @@ import static org.yarnandtail.andhow.AndHowTestBase.reloader;
 
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;

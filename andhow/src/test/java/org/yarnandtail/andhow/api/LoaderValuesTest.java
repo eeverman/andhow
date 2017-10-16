@@ -6,7 +6,6 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
 

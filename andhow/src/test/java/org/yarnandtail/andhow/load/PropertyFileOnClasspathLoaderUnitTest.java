@@ -21,6 +21,8 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  */
 public class PropertyFileOnClasspathLoaderUnitTest {
 	
+	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropertyFileOnClasspathLoaderUnitTest_SimpleParams";
+	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
@@ -64,7 +66,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testHappyPath() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams1.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "1.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -87,7 +89,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testDuplicateEntries() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams2.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "2.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -109,7 +111,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testEmptyValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams3.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "3.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -132,7 +134,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testAllWhitespaceValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams4.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "4.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -155,7 +157,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testQuotedStringValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams5.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "5.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -176,7 +178,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testPropFileLoaderWithUnrecognizedPropNames() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams6.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "6.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -186,8 +188,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		//These are the two bad property names in the file
 		List<String> badPropNames = Arrays.asList(new String[] {
-			"org.yarnandtail.andhow.SimpleParams.XXX",
-			"org.yarnandtail.andhow.SimpleXXXXXX.STR_BOB"});
+			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
+			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
 		
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
