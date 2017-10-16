@@ -55,20 +55,20 @@ public class PropertyRegistrarLoader {
 	 * 
 	 * @return 
 	 */
-	public List<AutoPropertyGroup> getGroups() {
+	public List<GroupProxy> getGroups() {
 		
 		//AndHow canonical group name to group mapping
-		LinkedHashMap <String, AutoPropertyGroupImpl> groups = new LinkedHashMap();
+		LinkedHashMap <String, GroupProxyMutable> groups = new LinkedHashMap();
 		
 		List<PropertyRegistrar> registrars = getPropertyRegistrars();
 		
 		for (PropertyRegistrar registrar : registrars) {
 			for (PropertyRegistration registration : registrar.getRegistrationList()) {
 				String grpName = registration.getCanonicalParentName();
-				AutoPropertyGroupImpl grp = groups.get(grpName);
+				GroupProxyMutable grp = groups.get(grpName);
 				
 				if (grp == null) {
-					grp = new AutoPropertyGroupImpl(registration.getCanonicalParentName(), registration.getJavaCanonicalParentName());
+					grp = new GroupProxyMutable(registration.getCanonicalParentName(), registration.getJavaCanonicalParentName());
 					groups.put(grpName, grp);
 				}
 				
@@ -108,7 +108,7 @@ public class PropertyRegistrarLoader {
 		}
 		
 		
-		List<AutoPropertyGroup> list = new ArrayList();
+		List<GroupProxy> list = new ArrayList();
 		list.addAll(groups.values());
 		return list;
 	}

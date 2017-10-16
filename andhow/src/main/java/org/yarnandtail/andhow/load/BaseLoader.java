@@ -9,7 +9,6 @@ import org.yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProble
 import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  *
@@ -19,7 +18,7 @@ public abstract class BaseLoader implements Loader {
 	
 	
 	@Override
-	public Class<? extends BasePropertyGroup> getClassConfig() {
+	public Class<?> getClassConfig() {
 		return null;
 	}
 	
@@ -63,7 +62,7 @@ public abstract class BaseLoader implements Loader {
 					pv = createValue(appConfigDef, prop, strValue);
 				} catch (ParsingException e) {
 					loaderProblems.add(new LoaderProblem.StringConversionLoaderProblem(
-						this, appConfigDef.getGroupForProperty(prop), prop, e.getProblemText()));
+						this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop, e.getProblemText()));
 				}
 								
 				if (pv != null) {
@@ -73,7 +72,7 @@ public abstract class BaseLoader implements Loader {
 						values.add(pv);
 					} else {
 						loaderProblems.add(new DuplicatePropertyLoaderProblem(
-							this, appConfigDef.getGroupForProperty(prop), prop));
+							this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop));
 					}
 				}
 				
@@ -115,12 +114,12 @@ public abstract class BaseLoader implements Loader {
 					pv = createValue(appConfigDef, prop, value.toString());
 				} catch (ParsingException e) {
 					loaderProblems.add(new LoaderProblem.StringConversionLoaderProblem(
-						this, appConfigDef.getGroupForProperty(prop), prop, e.getProblemText()));
+						this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop, e.getProblemText()));
 				}
 
 			} else {
 				loaderProblems.add(
-						new ObjectConversionValueProblem(this, appConfigDef.getGroupForProperty(prop), prop, value));
+						new ObjectConversionValueProblem(this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop, value));
 			}
 			
 			if (pv != null) {
@@ -131,7 +130,7 @@ public abstract class BaseLoader implements Loader {
 					values.add(pv);
 				} else {
 					loaderProblems.add(new DuplicatePropertyLoaderProblem(
-						this, appConfigDef.getGroupForProperty(prop), prop));
+						this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop));
 				}
 			}
 
@@ -169,7 +168,7 @@ public abstract class BaseLoader implements Loader {
 			for (Validator<T> v : prop.getValidators()) {
 				if (! v.isValid(value)) {
 					problems.add(new ValueProblem.InvalidValueProblem(
-							this, appConfigDef.getGroupForProperty(prop), prop, value, v));
+							this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop, value, v));
 				}
 			}
 		} else {

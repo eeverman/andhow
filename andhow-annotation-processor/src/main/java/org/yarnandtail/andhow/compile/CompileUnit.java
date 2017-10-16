@@ -181,7 +181,7 @@ public class CompileUnit {
 			errors = new ArrayList();
 		}
 
-		String parentName = NameUtil.getJavaCanonicalParentName(classCanonName, this.getInnerPathNames());
+		String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
 		
 		errors.add("The AndHow Property '" + propName + "' in " + parentName + " is invalid: " + msg);
 	}

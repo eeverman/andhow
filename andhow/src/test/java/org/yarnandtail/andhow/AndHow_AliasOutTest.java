@@ -17,6 +17,7 @@ import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -289,12 +290,12 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		deleteTestSysProps(AliasGroup1.class);
 	}
 	
-	public static void deleteTestSysProps(Class<? extends BasePropertyGroup> group) throws Exception {
+	public static void deleteTestSysProps(Class<?> group) throws Exception {
 		List<NameAndProperty> properties = AndHowUtil.getProperties(group);
 		
 		for (NameAndProperty nap : properties) {
 			
-			System.getProperties().remove(AndHowUtil.getCanonicalName(group, nap.property));
+			System.getProperties().remove(NameUtil.getAndHowName(group, nap.property));
 			
 			for (Name a : nap.property.getRequestedAliases()) {
 				System.getProperties().remove(a.getActualName());

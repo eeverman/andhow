@@ -47,7 +47,7 @@ public abstract class ValueProblem implements Problem {
 		T value;
 		
 		public InvalidValueProblem(
-				Loader loader, Class<? extends BasePropertyGroup> group, Property<T> prop, 
+				Loader loader, Class<?> group, Property<T> prop, 
 				T value, Validator<T> validator) {
 			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.validator = validator;

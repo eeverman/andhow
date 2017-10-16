@@ -31,12 +31,12 @@ public interface SamplePrinter {
 	void printSampleStart(GlobalScopeConfiguration definition, PrintStream out);
 	
 	void printPropertyGroupStart(GlobalScopeConfiguration definition, PrintStream out, 
-			Class<? extends BasePropertyGroup> group);
+			GroupProxy group);
 
 	void printProperty(GlobalScopeConfiguration definition, PrintStream out, 
-			Class<? extends BasePropertyGroup> group, Property<?> prop);
+			GroupProxy group, Property<?> prop);
 	
-	void printPropertyGroupEnd(GlobalScopeConfiguration definition, PrintStream out, Class<? extends BasePropertyGroup> group);
+	void printPropertyGroupEnd(GlobalScopeConfiguration definition, PrintStream out, GroupProxy group);
 	
 	void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out);
 }

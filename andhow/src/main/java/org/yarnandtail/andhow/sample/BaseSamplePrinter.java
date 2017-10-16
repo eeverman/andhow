@@ -30,7 +30,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	public abstract String getInAliaseString(GlobalScopeConfiguration definition, EffectiveName name);
 	
 	public abstract TextBlock getActualProperty(GlobalScopeConfiguration definition, 
-			Class<? extends BasePropertyGroup> group, Property prop) throws Exception;
+			GroupProxy group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
 	
@@ -143,7 +143,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	@Override
 	public void printPropertyGroupStart(GlobalScopeConfiguration definition, 
-			PrintStream out, Class<? extends BasePropertyGroup> group) {
+			PrintStream out, GroupProxy group) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.setBlankLineAfter(true);
@@ -152,7 +152,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		String name = null;
 		String desc = null;
 		
-		GroupInfo groupDesc = group.getAnnotation(GroupInfo.class);
+		GroupInfo groupDesc = group.getProxiedGroup().getAnnotation(GroupInfo.class);
 		if (groupDesc != null) {
 			name = TextUtil.trimToNull(groupDesc.name());
 			desc = TextUtil.trimToNull(groupDesc.desc());
@@ -182,7 +182,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	@Override
 	public void printProperty(GlobalScopeConfiguration definition, PrintStream out,
-			Class<? extends BasePropertyGroup> group, Property<?> prop) {
+			GroupProxy group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
 		tb.addBlank();
@@ -190,7 +190,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		
 		try {
 			
-			String propFieldName = AndHowUtil.getFieldName(group, prop);
+			String propFieldName = group.getSimpleName(prop);
 					
 			tb.addLine(TextUtil.format("{} ({}) {}{}", 
 					propFieldName,
@@ -250,7 +250,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 
 	@Override
 	public void printPropertyGroupEnd(GlobalScopeConfiguration definition, 
-			PrintStream out, Class<? extends BasePropertyGroup> group) {
+			PrintStream out, GroupProxy group) {
 	}
 	
 	@Override

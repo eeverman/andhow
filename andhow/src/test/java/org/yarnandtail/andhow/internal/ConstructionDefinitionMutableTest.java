@@ -6,12 +6,14 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.NamingStrategy;
 import org.yarnandtail.andhow.api.ProblemList;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -21,7 +23,11 @@ public class ConstructionDefinitionMutableTest {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
-	//Two PropGroups w/ a duplicate (shared) property
+	public interface SimpleParams {
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+	}
+	
 	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
 	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
 	
@@ -33,8 +39,11 @@ public class ConstructionDefinitionMutableTest {
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		
 		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
+		
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(proxy, SimpleParams.STR_BOB);
+		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
 
 		//Canonical Names for Property
 		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
@@ -47,7 +56,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		//Groups
 		assertEquals(1, appDef.getPropertyGroups().size());
-		assertEquals(SimpleParams.class, appDef.getPropertyGroups().get(0));
+		assertEquals(proxy, appDef.getPropertyGroups().get(0));
 		
 		//prop list
 		assertEquals(2, appDef.getProperties().size());
@@ -55,10 +64,9 @@ public class ConstructionDefinitionMutableTest {
 		assertEquals(SimpleParams.FLAG_FALSE, appDef.getProperties().get(1));
 		
 		//Properties for Group
-		assertEquals(2, appDef.getPropertiesForGroup(SimpleParams.class).size());
-		assertEquals(SimpleParams.STR_BOB, appDef.getPropertiesForGroup(SimpleParams.class).get(0));
-		assertEquals(SimpleParams.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParams.class).get(1));
-		assertEquals(0, appDef.getPropertiesForGroup(RandomUnregisteredGroup.class).size());		//A random group that is not registered 
+		assertEquals(2, appDef.getPropertiesForGroup(proxy).size());
+		assertEquals(SimpleParams.STR_BOB, appDef.getPropertiesForGroup(proxy).get(0));
+		assertEquals(SimpleParams.FLAG_FALSE, appDef.getPropertiesForGroup(proxy).get(1));
 	}
 	
 	@Test
@@ -68,9 +76,11 @@ public class ConstructionDefinitionMutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		problems.add(appDef.addProperty(SampleGroup.class, SampleGroup.STR_1));
-
-		problems.add(appDef.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP));
+		GroupProxy sampleGroupProxy = AndHowUtil.buildGroupProxy(SampleGroup.class);
+		GroupProxy sampleGroupDupProxy = AndHowUtil.buildGroupProxy(SampleGroupDup.class);
+		
+		problems.add(appDef.addProperty(sampleGroupProxy, SampleGroup.STR_1));
+		problems.add(appDef.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -81,10 +91,10 @@ public class ConstructionDefinitionMutableTest {
 		
 		assertEquals(SampleGroup.STR_1, dpcp.getRefPropertyCoord().getProperty());
 		assertEquals(SampleGroup.class, dpcp.getRefPropertyCoord().getGroup());
-		assertEquals(AndHowUtil.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
+		assertEquals(NameUtil.getAndHowName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
 		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadPropertyCoord().getProperty());
 		assertEquals(SampleGroupDup.class, dpcp.getBadPropertyCoord().getGroup());
-		assertEquals(AndHowUtil.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
+		assertEquals(NameUtil.getAndHowName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
 	}
 
 	
@@ -95,11 +105,11 @@ public class ConstructionDefinitionMutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
-
-		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(BadDefaultAndValidationGroup.class);
 		
-		problems.add(appDef.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
+		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
+		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
+		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));
@@ -128,6 +138,5 @@ public class ConstructionDefinitionMutableTest {
 		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
 		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
 		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();
-
 	}
 }

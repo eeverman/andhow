@@ -106,7 +106,7 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * @return
 	 */
 	public String getCanonicalPropertyName() {
-		return NameUtil.getCanonicalPropertyName(classCanonName, propName, innerPath);
+		return NameUtil.getAndHowName(classCanonName, propName, innerPath);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * @return
 	 */
 	public String getJavaCanonicalParentName() {
-		return NameUtil.getJavaCanonicalParentName(classCanonName, innerPath);
+		return NameUtil.getJavaName(classCanonName, innerPath);
 	}
 	
 	/**
@@ -138,7 +138,7 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * @return
 	 */
 	public String getCanonicalParentName() {
-		return NameUtil.getCanonicalParentName(classCanonName, innerPath);
+		return NameUtil.getAndHowName(classCanonName, innerPath);
 	}
 	
 	/**

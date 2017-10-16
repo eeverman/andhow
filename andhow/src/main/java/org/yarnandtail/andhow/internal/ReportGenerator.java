@@ -140,7 +140,7 @@ public class ReportGenerator {
 					supportedLoaders++;
 					printer.printSampleStart(appDef, out);
 
-					for (Class<? extends BasePropertyGroup> group : appDef.getPropertyGroups()) {
+					for (GroupProxy group : appDef.getPropertyGroups()) {
 
 						printer.printPropertyGroupStart(appDef, out, group);
 

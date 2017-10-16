@@ -6,14 +6,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -24,8 +24,19 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().mustBeNonNull().build();
+	}
+	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
 	@Before
@@ -36,14 +47,16 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		appDef.addProperty(TestProps.class, TestProps.CLAZZ_PATH);
+		GroupProxy simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(AndHowUtil.buildGroupProxy(TestProps.class), TestProps.CLAZZ_PATH);
 
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_BOB);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 
 	}
 	

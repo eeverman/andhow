@@ -18,15 +18,15 @@ public class CaseInsensitiveNaming implements NamingStrategy {
 
 	@Override
 	public PropertyNaming buildNames(Property prop, 
-			Class<? extends BasePropertyGroup> parentGroup) throws Exception {
+			GroupProxy parentGroup) throws Exception {
 
-		String canonName = AndHowUtil.getCanonicalName(parentGroup, prop);
+		String canonName = parentGroup.getCanonicalName(prop);
 		return buildNamesFromCanonical(prop, parentGroup, canonName);
 
 	}
 	
 	public PropertyNaming buildNamesFromCanonical(Property prop, 
-			Class<? extends BasePropertyGroup> parentGroup, String canonicalName) {
+			GroupProxy parentGroup, String canonicalName) {
 		
 		if (canonicalName == null) return null;
 		

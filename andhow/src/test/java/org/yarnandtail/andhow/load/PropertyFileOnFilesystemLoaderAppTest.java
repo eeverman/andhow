@@ -22,6 +22,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  * Just like the unit test version, but builds an entire AppConfig instance so
@@ -58,7 +59,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-				.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+				.cmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
 				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 				.group(SimpleParams.class)
@@ -79,7 +80,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+					.cmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
 					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 					.group(SimpleParams.class)
@@ -118,7 +119,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 		
 		try {
 			AndHow.builder().namingStrategy(new CaseInsensitiveNaming())
-					.cmdLineArg(AndHowUtil.getCanonicalName(TestProps.class, TestProps.FILEPATH), 
+					.cmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
 					.group(SimpleParams.class)

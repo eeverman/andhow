@@ -55,11 +55,11 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 	
 	@Override
 	public TextBlock getActualProperty(GlobalScopeConfiguration definition, 
-			Class<? extends BasePropertyGroup> group, Property prop) throws Exception {
+			GroupProxy group, Property prop) throws Exception {
 		
 		TextBlock tb = new TextBlock(false, false);
 		
-		String propCanonName = AndHowUtil.getCanonicalName(group, prop);
+		String propCanonName = group.getCanonicalName(prop);
 		
 		if (prop.getDefaultValue() != null) {
 			tb.addLine(

@@ -9,12 +9,12 @@ public interface NamingStrategy {
 	/**
 	 * Build a list of names for the Property
 	 * @param prop The Property to be named
-	 * @param containingGroup Properties must be contained in a BasePropertyGroup to be exposed
-	 * @return Null if the passed Property is not part of the BasePropertyGroup.
-	 * @throws java.lang.Exception A security exception trying to read fields of a BasePropertyGroup via reflection.
+	 * @param containingGroup Properties are contained in Group
+	 * @return Null if the passed Property is not part of the Group.
+	 * @throws java.lang.Exception A security exception trying to read fields of a Group via reflection.
 	 */
 	PropertyNaming buildNames(
-			Property prop, Class<? extends BasePropertyGroup> containingGroup) throws Exception;
+			Property prop, GroupProxy containingGroup) throws Exception;
 	
 	/**
 	 * Transforms a property name found in a property source (like a properties file,

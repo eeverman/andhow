@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
@@ -96,7 +95,7 @@ public abstract class LoaderProblem implements Problem {
 		Exception exception;
 		
 		public ParsingLoaderProblem(
-				Loader loader, Class<? extends BasePropertyGroup> group, Property prop, 
+				Loader loader, Class<?> group, Property prop, 
 				Exception exception) {
 			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.exception = exception;
@@ -111,7 +110,7 @@ public abstract class LoaderProblem implements Problem {
 	public static class DuplicatePropertyLoaderProblem extends LoaderProblem {
 		
 		public DuplicatePropertyLoaderProblem(
-				Loader loader, Class<? extends BasePropertyGroup> group, Property prop) {
+				Loader loader, Class<?> group, Property prop) {
 			badValueCoord = new LoaderValueCoord(loader, group, prop);
 		}
 		
@@ -174,7 +173,7 @@ public abstract class LoaderProblem implements Problem {
 		Object obj;
 		
 		public ObjectConversionValueProblem(
-				Loader loader, Class<? extends BasePropertyGroup> group, Property prop, 
+				Loader loader, Class<?> group, Property prop, 
 				Object obj) {
 			badValueCoord = new LoaderValueCoord(loader, group, prop);
 			this.obj = obj;
@@ -193,7 +192,7 @@ public abstract class LoaderProblem implements Problem {
 		String str;
 		
 		public StringConversionLoaderProblem(
-				Loader loader, Class<? extends BasePropertyGroup> group, Property prop, 
+				Loader loader, Class<?> group, Property prop, 
 				String str) {
 			
 			badValueCoord = new LoaderValueCoord(loader, group, prop);

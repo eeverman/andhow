@@ -5,6 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.api.BasePropertyGroup;
@@ -14,67 +16,75 @@ import org.yarnandtail.andhow.internal.NameAndProperty;
 
 /**
  * Utilities used by AndHow during initial construction.
+ *
  * @author eeverman
  */
 public class AndHowUtil {
-	
 
 	/**
-	 * Build a fully populated ConstructionDefinition from the passed Groups, 
+	 * Build a fully populated ConstructionDefinition from the passed Groups,
 	 * using the NamingStrategy to generate names for each.
-	 * 
-	 * @param groups The PropertyGroups from which to find Properties.  May be null.
-	 * @param loaders The Loaders, which may their own configurable PropertyGroups.
-	 * @param naming  A naming strategy to use when reading the properties during loading
+	 *
+	 * @param groups The PropertyGroups from which to find Properties. May be
+	 * null.
+	 * @param loaders The Loaders, which may their own configurable
+	 * PropertyGroups.
+	 * @param naming A naming strategy to use when reading the properties during
+	 * loading
 	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
 	public static GlobalScopeConfigurationMutable buildDefinition(
-			List<Class<? extends BasePropertyGroup>> groups, List<Loader> loaders, 
+			List<GroupProxy> groups, List<Loader> loaders,
 			NamingStrategy naming, ProblemList<Problem> problems) {
 
 		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(naming);
-		
+
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
-			for (Class<? extends BasePropertyGroup> group : groups) {
+			for (GroupProxy group : groups) {
 
 				problems.addAll(registerGroup(appDef, group));
-				
+
 				try {
 					List<Exporter> exps = getExporters(group);
-					
+
 					for (Exporter e : exps) {
 						ExportGroup eg = new ExportGroup(e, group);
 						appDef.addExportGroup(eg);
 					}
-					
+
 				} catch (InstantiationException ex) {
-					ConstructionProblem.ExportException ee = 
-							new ConstructionProblem.ExportException(ex, group,
-							"Unable to created a new instance of one of the Exporters for this group.  "
+					ConstructionProblem.ExportException ee
+							= new ConstructionProblem.ExportException(ex, group,
+									"Unable to created a new instance of one of the Exporters for this group.  "
 									+ "Do they all have zero argument constructors?");
 					problems.add(ee);
 				} catch (IllegalAccessException ex) {
-					ConstructionProblem.SecurityException se = 
-						new ConstructionProblem.SecurityException(ex, group);
+					ConstructionProblem.SecurityException se
+							= new ConstructionProblem.SecurityException(ex, group.getProxiedGroup());
 					problems.add(se);
 				}
-				
+
 			}
 		}
-		
+
 		//Loaders must be after properties b/c the loaders may look for registered
 		//Properties.
-		
 		if (loaders != null) {
 			for (Loader loader : loaders) {
-				
+
 				//Add any implicit properties used to configure this loader
 				if (loader.getClassConfig() != null) {
-					problems.addAll(registerGroup(appDef, loader.getClassConfig()));
+					try {
+						problems.addAll(registerGroup(appDef, AndHowUtil.buildGroupProxy(loader.getClassConfig())));
+					} catch (Exception ex) {
+						ConstructionProblem.SecurityException ee
+								= new ConstructionProblem.SecurityException(ex, loader.getClassConfig());
+						problems.add(ee);
+					}
 				}
-				
+
 				//Check that user specified config properties for this loader are registered
 				for (Property p : loader.getInstanceConfig()) {
 					if (p == null) {
@@ -85,89 +95,88 @@ public class AndHowUtil {
 				}
 			}
 		}
-		
+
 		return appDef;
 	}
-		
+
 	protected static ProblemList<ConstructionProblem> registerGroup(GlobalScopeConfigurationMutable appDef,
-			Class<? extends BasePropertyGroup> group) {
-		
+			GroupProxy group) {
+
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 
 		try {
-			List<NameAndProperty> nameAndProperties = getProperties(group);
-			
+			List<NameAndProperty> nameAndProperties = group.getProperties();
+
 			for (NameAndProperty nameAndProp : nameAndProperties) {
 				problems.add(appDef.addProperty(group, nameAndProp.property));
 			}
-			
+
 		} catch (Exception ex) {
-			ConstructionProblem.SecurityException se = 
-					new ConstructionProblem.SecurityException(ex, group);
+			ConstructionProblem.SecurityException se
+					= new ConstructionProblem.SecurityException(ex, group.getProxiedGroup());
 			problems.add(se);
 		}
-		
+
 		return problems;
 	}
-	
+
 	public static AppFatalException buildFatalException(ProblemList<Problem> problems) {
-		
-		
+
 		return new AppFatalException(
-				"Unable to complete application configuration due to problems. " +
-				"See the System.err out or the log files for complete details.",
+				"Unable to complete application configuration due to problems. "
+				+ "See the System.err out or the log files for complete details.",
 				problems);
-		
+
 	}
-	
 
 	/**
 	 * Returns the list of Exporters that are annotated for a BasePropertyGroup.
+	 *
 	 * @param group
 	 * @return
 	 * @throws InstantiationException
-	 * @throws IllegalAccessException 
+	 * @throws IllegalAccessException
 	 */
-	public static List<Exporter> getExporters(Class<? extends BasePropertyGroup> group)
+	public static List<Exporter> getExporters(GroupProxy group)
 			throws InstantiationException, IllegalAccessException {
-		
+
 		ArrayList<Exporter> exps = new ArrayList();
-		
-		GroupExport[] groupExports = group.getAnnotationsByType(GroupExport.class);
-		
+
+		GroupExport[] groupExports = group.getProxiedGroup().getAnnotationsByType(GroupExport.class);
+
 		for (GroupExport ge : groupExports) {
 			Class<? extends Exporter> expClass = ge.exporter();
-			
+
 			Exporter exporter = expClass.newInstance();
-			
+
 			exporter.setExportByCanonicalName(ge.exportByCanonicalName());
 			exporter.setExportByOutAliases(ge.exportByOutAliases());
-			
+
 			exps.add(exporter);
 		}
-		
+
 		exps.trimToSize();
 		return Collections.unmodifiableList(exps);
-		
+
 	}
-	
+
 	/**
-	 * Builds a list of all Properties and their field names contained in
-	 * the passed group.
-	 * 
+	 * Builds a list of all Properties and their field names contained in the
+	 * passed class.
+	 *
 	 * Exceptions may be thrown if a security manager blocks access to members.
-	 * 
+	 *
 	 * @param group
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
-	 * @throws SecurityException 
+	 * @throws SecurityException
 	 */
-	public static List<NameAndProperty> getProperties(Class<? extends BasePropertyGroup> group) 
-		throws IllegalArgumentException, IllegalAccessException, SecurityException {
+	public static List<NameAndProperty> getProperties(Class<?> group)
+			throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		List<NameAndProperty> props = new ArrayList();
-		
+
 		Field[] fields = group.getDeclaredFields();
 
 		for (Field f : fields) {
@@ -178,41 +187,45 @@ public class AndHowUtil {
 
 				try {
 					cp = (Property) f.get(null);
-				} catch (Exception ex) {	
+				} catch (Exception ex) {
 					f.setAccessible(true);
 					cp = (Property) f.get(null);
 				}
-					
+
 				props.add(new NameAndProperty(f.getName(), cp));
-				
+
 			}
 
 		}
-		
+
 		return props;
 	}
 	
+	public static GroupProxy buildGroupProxy(Class<?> group)
+			throws IllegalArgumentException, IllegalAccessException, SecurityException {
+		
+		List<NameAndProperty> naps = getProperties(group);
+		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group), NameUtil.getJavaName(group), naps);
+		
+		return groupProxy;
+	}
 	
+
 	/**
-	 * Gets the field name for a property in the group,
-	 * which is just the last portion of the canonical name.
-	 * 
-	 * The canonical name is of the form:<br/>
-	 * [group canonical name].[field name of the Property within the group]<br/>
-	 * thus, it is require that the Property be a field within the group, otherwise
-	 * null is returned.
-	 * 
+	 * Gets the field name for a property in a class, which is just the last
+	 * portion of the canonical name.
+	 *
 	 * Exceptions may be thrown if a security manager blocks access to members.
-	 * 
+	 *
 	 * @param group
 	 * @param property
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
-	 * @throws SecurityException 
+	 * @throws SecurityException
 	 */
-	public static String getFieldName(Class<? extends BasePropertyGroup> group, Property<?> property) 
-		throws IllegalArgumentException, IllegalAccessException, SecurityException {
+	public static String getFieldName(Class<?> group, Property<?> property)
+			throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		Field[] fields = group.getDeclaredFields();
 
@@ -224,51 +237,20 @@ public class AndHowUtil {
 
 				try {
 					cp = (Property) f.get(null);
-				} catch (Exception ex) {	
+				} catch (Exception ex) {
 					f.setAccessible(true);
 					cp = (Property) f.get(null);
 				}
-				
+
 				if (cp.equals(property)) {
 					return f.getName();
 				}
 			}
 
 		}
-		
+
 		return null;
 	}
-	
-	/**
-	 * Gets the true canonical name for a Property in the group.
-	 * 
-	 * The canonical name is of the form:<br/>
-	 * [group canonical name].[field name of the Property within the group]<br/>
- thus, it is require that the Property be a field within the group, otherwise
- null is returned.
- 
- Exceptions may be thrown if a security manager blocks access to members.
- 
- Technically the NameingStrategy is in charge of generating names, but the
- canonical name never changes and is based on the package path of a Property
- within a BasePropertyGroup.
-	 * 
-	 * @param group
-	 * @param property
-	 * @return
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
-	 * @throws SecurityException 
-	 */
-	public static String getCanonicalName(Class<? extends BasePropertyGroup> group, Property<?> property) 
-		throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
-		String fieldName = getFieldName(group, property);
-		
-		if (fieldName != null) {
-			return group.getCanonicalName() + "." + fieldName;
-		} else {
-			return null;
-		}
-	}
+
 }

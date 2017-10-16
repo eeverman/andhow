@@ -1,10 +1,15 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
+import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -39,7 +44,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * @throws AppFatalException 
 	 */
 	private AndHow(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends BasePropertyGroup>> registeredGroups)
+			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
 		core = new AndHowCore(naming, loaders, registeredGroups);
 		reloader = new Reloader(this);
@@ -64,6 +69,25 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		}
 	}
 	
+	public static Reloader buildDefaultInstance() {
+		synchronized (lock) {
+			if (singleInstance != null) {
+				throw new RuntimeException("Already constructed!");
+			} else {
+				List<Loader> loaders = new ArrayList();
+				loaders.add(new SystemPropertyLoader());
+				loaders.add(new EnviromentVariableLoader());
+				
+				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+				
+				List<GroupProxy> proxies = registrar.getGroups();
+				
+				singleInstance = new AndHow(null, loaders, proxies);
+				return singleInstance.reloader;
+			}
+		}
+	}
+	
 	/**
 	 * Private build method, invoked only by the inner AndHowBuilder class.
 	 * 
@@ -80,9 +104,9 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * @return
 	 * @throws AppFatalException 
 	 */
-	private static Reloader build(
+	private static Reloader buildFromProxies(
 			NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends BasePropertyGroup>> registeredGroups)
+			List<GroupProxy> registeredGroups)
 			throws AppFatalException, RuntimeException {
 
 		synchronized (lock) {
@@ -93,11 +117,56 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				return singleInstance.reloader;
 			}
 		}
+	}
+	
+	private static Reloader build(
+			NamingStrategy naming, List<Loader> loaders, 
+			List<Class<?>> registeredGroups)
+			throws AppFatalException, RuntimeException {
+
+		synchronized (lock) {
+			if (singleInstance != null) {
+				throw new RuntimeException("Already constructed!");
+			} else {
+				singleInstance = new AndHow(naming, loaders, convertClassesToGroups(registeredGroups));
+				return singleInstance.reloader;
+			}
+		}
+	}
+	
+	private static List<GroupProxy> convertClassesToGroups(Collection<Class<?>> registeredGroups)
+			throws AppFatalException, RuntimeException {
+
+				
+		final ProblemList<Problem> problems = new ProblemList();
+		final List<GroupProxy> groupProxies = new ArrayList();
+
+		for (Class<?> clazz : registeredGroups) {
+
+			try {
+				GroupProxy gp = AndHowUtil.buildGroupProxy(clazz);
+				groupProxies.add(gp);
+			} catch (Exception ex) {
+				problems.add(new ConstructionProblem.SecurityException(ex, Options.class));
+			}
+
+		}
+
+		if (problems.isEmpty()) {
+			return groupProxies;
+		} else {
+			AppFatalException afe = new AppFatalException(
+				"There is a problem converting the AndHow Properties contained in the registered " +
+				"groups - likely this is a security issue.",
+					problems);
+			throw afe;
+		}
+
 
 	}
 	
 	//
-	//ValueMap Interface
+	//PropertyValues Interface
 	
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
@@ -129,12 +198,12 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	}
 
 	@Override
-	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
+	public GroupProxy getGroupForProperty(Property<?> prop) {
 		return core.getGroupForProperty(prop);
 	}
 
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
 		return core.getPropertiesForGroup(group);
 	}
 
@@ -144,7 +213,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	}
 
 	@Override
-	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
+	public List<GroupProxy> getPropertyGroups() {
 		return core.getPropertyGroups();
 	}
 
@@ -214,7 +283,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = null;
 		private final List<String> _cmdLineArgs = new ArrayList();
-		List<Class<? extends BasePropertyGroup>> _groups = new ArrayList();
+		private final List<Class<?>> _groups = new ArrayList();
 		
 		//
 		//Internal state
@@ -266,7 +335,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @param groups
 		 * @return 
 		 */
-		public AndHowBuilder groups(Collection<Class<? extends BasePropertyGroup>> groups) {
+		public AndHowBuilder groups(Collection<Class<?>> groups) {
 			this._groups.addAll(groups);
 			return this;
 		}
@@ -437,11 +506,11 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @throws AppFatalException 
 		 */
 		public void reload(NamingStrategy naming, List<Loader> loaders, 
-				List<Class<? extends BasePropertyGroup>> registeredGroups) 
+				List<Class<?>> registeredGroups) 
 				throws AppFatalException {
 			
 			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, registeredGroups);
+				instance.core = new AndHowCore(naming, loaders, AndHow.convertClassesToGroups(registeredGroups));
 			}
 		}
 		

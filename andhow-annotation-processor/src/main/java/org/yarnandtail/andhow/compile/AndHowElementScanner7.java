@@ -63,7 +63,7 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 				);
 				
 				System.out.println("ES: Found new AndHow Property " + 
-					NameUtil.getCanonicalPropertyName(compileUnit.getRootCanonicalName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
+					NameUtil.getAndHowName(compileUnit.getRootCanonicalName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames())
 				);
 
 			} else {

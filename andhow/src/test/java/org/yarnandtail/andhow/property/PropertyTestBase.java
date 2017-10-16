@@ -25,10 +25,10 @@ public class PropertyTestBase extends AndHowTestBase {
 	}
 	
 	public <T extends AndHowTestBase> void  buildConfig(T testClass, String propFileSuffix,
-			Class<? extends BasePropertyGroup>... group) {
+			Class<?>... group) {
 		
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
-		List<Class<? extends BasePropertyGroup>> groups = Arrays.asList(group);
+		List<Class<?>> groups = Arrays.asList(group);
 				
 		AndHow.builder()
 				.group(TEST_CONFIG.class)

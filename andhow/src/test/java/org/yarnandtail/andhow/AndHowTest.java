@@ -14,6 +14,7 @@ import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -23,7 +24,7 @@ public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
-	ArrayList<Class<? extends BasePropertyGroup>> configPtGroups = new ArrayList();
+	ArrayList<Class<?>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	
@@ -36,7 +37,7 @@ public class AndHowTest extends AndHowTestBase {
 	}
 	
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		
 		configPtGroups.clear();
 		configPtGroups.add(SimpleParams.class);

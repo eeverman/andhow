@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.internal;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * An immutable instance that can be used during runtime.
@@ -12,9 +11,9 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
 public class GlobalScopeConfigurationImmutable implements GlobalScopeConfiguration {
 
 	private final NamingStrategy namingStrategy;
-	private final List<Class<? extends BasePropertyGroup>> groupList;
+	private final List<GroupProxy> groupList;
 	private final List<Property<?>> properties;
-	private final Map<Class<? extends BasePropertyGroup>, List<Property<?>>> propertiesByGroup;
+	private final Map<GroupProxy, List<Property<?>>> propertiesByGroup;
 	private final Map<String, Property<?>> propertiesByAnyName;
 	private final Map<Property<?>, List<EffectiveName>> aliasesByProperty;
 	private final Map<Property<?>, String> canonicalNameByProperty;
@@ -23,9 +22,9 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 
 	public GlobalScopeConfigurationImmutable(
 			NamingStrategy namingStrategy,
-			List<Class<? extends BasePropertyGroup>> groupList,
+			List<GroupProxy> groupList,
 			List<Property<?>> properties,
-			Map<Class<? extends BasePropertyGroup>, List<Property<?>>> propertiesByGroup, 
+			Map<GroupProxy, List<Property<?>>> propertiesByGroup, 
 			Map<String, Property<?>> propertiesByAnyName, 
 			Map<Property<?>, List<EffectiveName>> aliasesByProperty, 
 			Map<Property<?>, String> canonicalNameByProperty,
@@ -35,7 +34,7 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 
 		//Full detach incomming data from existing collections for immutability
 		
-		ArrayList<Class<? extends BasePropertyGroup>> gl = new ArrayList();
+		ArrayList<GroupProxy> gl = new ArrayList();
 		gl.addAll(groupList);
 		gl.trimToSize();
 		this.groupList = Collections.unmodifiableList(gl);
@@ -45,7 +44,7 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 		props.trimToSize();
 		this.properties = Collections.unmodifiableList(props);
 		
-		Map<Class<? extends BasePropertyGroup>, List<Property<?>>> propsByGrp = new HashMap();
+		Map<GroupProxy, List<Property<?>>> propsByGrp = new HashMap();
 		propsByGrp.putAll(propertiesByGroup);
 		this.propertiesByGroup = Collections.unmodifiableMap(propsByGrp);
 		
@@ -89,12 +88,12 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 	}
 	
 	@Override
-	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
+	public List<GroupProxy> getPropertyGroups() {
 		return groupList;
 	}
 	
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
 		List<Property<?>> pts = propertiesByGroup.get(group);
 		
 		if (pts != null) {
@@ -105,8 +104,8 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 	}
 	
 	@Override
-	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
-		for (Class<? extends BasePropertyGroup> group : groupList) {
+	public GroupProxy getGroupForProperty(Property<?> prop) {
+		for (GroupProxy group : groupList) {
 			if (propertiesByGroup.get(group).contains(prop)) {
 				return group;
 			}

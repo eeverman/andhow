@@ -7,11 +7,12 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -21,20 +22,38 @@ public class ConstructionDefinitionImmutableTest {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
+	public interface SimpleParams {
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+	}
+	
 	//Two PropGroups w/ a duplicate (shared) property
 	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
 	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
 	
 	public interface RandomUnregisteredGroup extends PropertyGroup { StrProp STR_RND = StrProp.builder().build(); }
 	
+	/**
+	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
+	 */
+	public static interface BadDefaultAndValidationGroup extends BasePropertyGroup {
+		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
+		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
+		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();
+
+	}
+
+	
 	@Test
 	public void testHappyPath() throws Exception {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
 		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
-		cdm.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		cdm.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
+		cdm.addProperty(proxy, SimpleParams.STR_BOB);
+		cdm.addProperty(proxy, SimpleParams.FLAG_FALSE);
 		
 		
 		GlobalScopeConfiguration appDef = cdm.toImmutable();
@@ -50,7 +69,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		//Groups
 		assertEquals(1, appDef.getPropertyGroups().size());
-		assertEquals(SimpleParams.class, appDef.getPropertyGroups().get(0));
+		assertEquals(proxy, appDef.getPropertyGroups().get(0));
 		
 		//prop list
 		assertEquals(2, appDef.getProperties().size());
@@ -58,10 +77,9 @@ public class ConstructionDefinitionImmutableTest {
 		assertEquals(SimpleParams.FLAG_FALSE, appDef.getProperties().get(1));
 		
 		//Properties for Group
-		assertEquals(2, appDef.getPropertiesForGroup(SimpleParams.class).size());
-		assertEquals(SimpleParams.STR_BOB, appDef.getPropertiesForGroup(SimpleParams.class).get(0));
-		assertEquals(SimpleParams.FLAG_FALSE, appDef.getPropertiesForGroup(SimpleParams.class).get(1));
-		assertEquals(0, appDef.getPropertiesForGroup(RandomUnregisteredGroup.class).size());		//A random group that is not registered 
+		assertEquals(2, appDef.getPropertiesForGroup(proxy).size());
+		assertEquals(SimpleParams.STR_BOB, appDef.getPropertiesForGroup(proxy).get(0));
+		assertEquals(SimpleParams.FLAG_FALSE, appDef.getPropertiesForGroup(proxy).get(1));
 	}
 	
 	@Test
@@ -71,9 +89,12 @@ public class ConstructionDefinitionImmutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
 		
-		problems.add(cdm.addProperty(SampleGroup.class, SampleGroup.STR_1));
+		GroupProxy sampleGroupProxy = AndHowUtil.buildGroupProxy(SampleGroup.class);
+		GroupProxy sampleGroupDupProxy = AndHowUtil.buildGroupProxy(SampleGroupDup.class);
+		
+		problems.add(cdm.addProperty(sampleGroupProxy, SampleGroup.STR_1));
 
-		problems.add(cdm.addProperty(SampleGroupDup.class, SampleGroupDup.STR_1_DUP));
+		problems.add(cdm.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
 		
 		GlobalScopeConfiguration appDef = cdm.toImmutable();
 		
@@ -86,10 +107,10 @@ public class ConstructionDefinitionImmutableTest {
 		
 		assertEquals(SampleGroup.STR_1, dpcp.getRefPropertyCoord().getProperty());
 		assertEquals(SampleGroup.class, dpcp.getRefPropertyCoord().getGroup());
-		assertEquals(AndHowUtil.getCanonicalName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
+		assertEquals(NameUtil.getAndHowName(SampleGroup.class, SampleGroup.STR_1), dpcp.getRefPropertyCoord().getPropName());
 		assertEquals(SampleGroupDup.STR_1_DUP, dpcp.getBadPropertyCoord().getProperty());
 		assertEquals(SampleGroupDup.class, dpcp.getBadPropertyCoord().getGroup());
-		assertEquals(AndHowUtil.getCanonicalName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
+		assertEquals(NameUtil.getAndHowName(SampleGroupDup.class, SampleGroupDup.STR_1_DUP), dpcp.getBadPropertyCoord().getPropName());
 	}
 
 	
@@ -100,11 +121,13 @@ public class ConstructionDefinitionImmutableTest {
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
 		
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
-
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(BadDefaultAndValidationGroup.class);
 		
-		problems.add(cdm.addProperty(BadDefaultAndValidationGroup.class, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
+
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
+		
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
 		GlobalScopeConfiguration appDef = cdm.toImmutable();
 		
@@ -128,13 +151,5 @@ public class ConstructionDefinitionImmutableTest {
 
 	}
 	
-	/**
-	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
-	 */
-	public static interface BadDefaultAndValidationGroup extends BasePropertyGroup {
-		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
-		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
-		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();
 
-	}
 }
