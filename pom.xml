@@ -73,6 +73,7 @@
 		<module>andhow-annotation-processor-tests</module>
 		<module>andhow-annotation-processor-test-harness</module>
 		<module>andhow-usage-examples</module>
+		<module>andhow-default-behavior-test</module>
 	</modules>
 
 	<repositories>
