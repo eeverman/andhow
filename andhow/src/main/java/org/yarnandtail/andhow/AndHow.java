@@ -1,8 +1,6 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
@@ -62,10 +60,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
-			throw new RuntimeException(ANDHOW_INLINE_NAME + " has not been initialized.  " +
-					"Possible causes:  1) There is a race condition where Property access may happen before configuration " +
-					"2) There is no configuration at the entry point to the application. " +
-					"Refer to " + ANDHOW_URL + " for code examples and FAQs.");
+			buildDefaultInstance();
+			return singleInstance;
 		}
 	}
 	
@@ -77,6 +73,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				List<Loader> loaders = new ArrayList();
 				loaders.add(new SystemPropertyLoader());
 				loaders.add(new EnviromentVariableLoader());
+				loaders.add(new AndHowPropertyFileLoader());
 				
 				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
 				
