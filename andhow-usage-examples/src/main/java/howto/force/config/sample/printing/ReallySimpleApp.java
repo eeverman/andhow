@@ -38,7 +38,6 @@ public class ReallySimpleApp {
 	
 	//Normally PropertyGroups would be in separate file - combined here for simplicity
 	@GroupInfo(name="Example Property group", desc="One logical set of properties - all are optional")
-	@GlobalPropertyGroup
 	public interface MySetOfProps extends PropertyGroup {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").defaultValue("http://server.com/").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();

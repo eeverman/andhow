@@ -70,10 +70,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			if (singleInstance != null) {
 				throw new RuntimeException("Already constructed!");
 			} else {
-				List<Loader> loaders = new ArrayList();
-				loaders.add(new SystemPropertyLoader());
-				loaders.add(new EnviromentVariableLoader());
-				loaders.add(new AndHowPropertyFileLoader());
+				List<Loader> loaders = getDefaultLoaders();
 				
 				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
 				
@@ -83,6 +80,18 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				return singleInstance.reloader;
 			}
 		}
+	}
+	
+	/**
+	 * Returns a list of new loaders that are used for default configuration.
+	 * @return 
+	 */
+	public static List<Loader> getDefaultLoaders() {
+		List<Loader> loaders = new ArrayList();
+		loaders.add(new SystemPropertyLoader());
+		loaders.add(new EnviromentVariableLoader());
+		loaders.add(new AndHowPropertyFileLoader());
+		return loaders;
 	}
 	
 	/**
@@ -489,6 +498,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		private Reloader(AndHow instance) {
 			this.instance = instance;
 		}
+		
 		/**
 		 * Forces a reload of the AndHow state.
 		 * 
@@ -508,6 +518,24 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			
 			synchronized (AndHow.lock) {
 				instance.core = new AndHowCore(naming, loaders, AndHow.convertClassesToGroups(registeredGroups));
+			}
+		}
+		
+		/**
+		 * Forces a reload using the default loaders and the auto-registered groups
+		 * 
+		 * @throws AppFatalException 
+		 */
+		public void reload() 
+				throws AppFatalException {
+			
+			synchronized (AndHow.lock) {
+				List<Loader> loaders = getDefaultLoaders();
+				
+				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+				List<GroupProxy> proxies = registrar.getGroups();
+				
+				instance.core = new AndHowCore(null, loaders, proxies);
 			}
 		}
 		

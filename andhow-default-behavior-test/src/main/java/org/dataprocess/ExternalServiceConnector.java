@@ -1,12 +1,7 @@
 package org.dataprocess;
 
-import org.yarnandtail.andhow.api.Exporter;
-import java.time.LocalDateTime;
 import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.export.SysPropExporter;
-import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.property.*;
-import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * This is an example minimal application configuration.
@@ -49,7 +44,6 @@ public class ExternalServiceConnector {
 
 	
 	@GroupInfo(name="Connection configuration to some external service", desc="Configures communication to the USGS Aquarius service")
-	@GlobalPropertyGroup
 	public interface ConnectionConfig {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").mustBeNonNull().build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).desc("Timeout in seconds") .build();

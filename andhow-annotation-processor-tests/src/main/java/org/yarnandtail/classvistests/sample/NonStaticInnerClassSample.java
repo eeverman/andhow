@@ -25,7 +25,7 @@ public class NonStaticInnerClassSample {
 			//How to handle that possibility??  Should we gracefully ignore
 			//NoSuchFieldException when they happen and the field has non-public
 			//visibility?  Would need to track visibility in that case.
-			private static final StrProp STRING = StrProp.builder().build();	//get erased by the JVM
+			private static final StrProp STRING = StrProp.builder().build();
 			public static final StrProp STRING_PUB = StrProp.builder().build();
 			public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
 			

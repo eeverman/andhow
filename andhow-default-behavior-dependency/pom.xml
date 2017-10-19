@@ -7,12 +7,12 @@
 	</parent>
 
 	<groupId>org.yarnandtail</groupId>
-	<artifactId>andhow-default-behavior-test</artifactId>
+	<artifactId>andhow-default-behavior-dependency</artifactId>
 	
 	<!-- This really isn't meant to be packaged up at all - its sample code -->
 	<packaging>jar</packaging>
-	<name>andhow-default-behavior-test</name>
-	<description>Usage examples of the AndHow! configuration frameork.</description>
+	<name>andhow-default-behavior-dependency</name>
+	<description>Sample to be used as a compiled jar by the andhow-default-behavior-test to test property behavior in external compiled libraries.</description>
 
 	<dependencies>
 		<dependency>
@@ -23,11 +23,6 @@
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow-annotation-processor</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-default-behavior-dependency</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
