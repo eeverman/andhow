@@ -1,6 +1,7 @@
 package org.dataprocess;
 
 import org.junit.Test;
+import org.yarnandtail.andhow.AndHowTestBase;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +9,7 @@ import static org.junit.Assert.*;
  *
  * @author ericeverman
  */
-public class ExternalServiceConnectorTest {
+public class ExternalServiceConnectorTest extends AndHowTestBase {
 	
 	public ExternalServiceConnectorTest() {
 	}
@@ -19,6 +20,8 @@ public class ExternalServiceConnectorTest {
 	 */
 	@Test
 	public void testAllConfigValues() {
+		reloader.reloadDefaultInstance(null);
+		
 		ExternalServiceConnector esc = new ExternalServiceConnector();
 		assertEquals("http://forwardcorp.com/service/", esc.getConnectionUrl());
 		assertEquals(60, esc.getConnectionTimeout());

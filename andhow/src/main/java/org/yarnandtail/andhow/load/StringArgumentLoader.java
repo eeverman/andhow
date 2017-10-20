@@ -60,7 +60,7 @@ public class StringArgumentLoader extends BaseLoader {
 	 * 
 	 * @param inCmdLineArgs 
 	 */
-	public StringArgumentLoader(String[] inCmdLineArgs) {
+	public StringArgumentLoader(String... inCmdLineArgs) {
 		if (inCmdLineArgs != null && inCmdLineArgs.length > 0) {
 			cmdLineArgs = Arrays.asList(inCmdLineArgs);
 		} else {
