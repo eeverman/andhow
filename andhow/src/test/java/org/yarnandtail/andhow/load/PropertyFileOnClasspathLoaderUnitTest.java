@@ -6,14 +6,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -21,11 +21,24 @@ import org.yarnandtail.andhow.PropertyGroup;
  */
 public class PropertyFileOnClasspathLoaderUnitTest {
 	
+	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropertyFileOnClasspathLoaderUnitTest_SimpleParams";
+	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().mustBeNonNull().build();
+	}
+	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
 	@Before
@@ -36,14 +49,16 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		appDef.addProperty(TestProps.class, TestProps.CLAZZ_PATH);
+		GroupProxy simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(AndHowUtil.buildGroupProxy(TestProps.class), TestProps.CLAZZ_PATH);
 
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_BOB);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 
 	}
 	
@@ -51,7 +66,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testHappyPath() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams1.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "1.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -74,7 +89,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testDuplicateEntries() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams2.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "2.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -96,7 +111,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testEmptyValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams3.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "3.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -119,7 +134,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testAllWhitespaceValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams4.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "4.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -142,7 +157,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testQuotedStringValues() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams5.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "5.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -163,7 +178,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	public void testPropFileLoaderWithUnrecognizedPropNames() {
 		
 		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/SimpleParams6.properties"));
+		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "6.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -173,8 +188,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		//These are the two bad property names in the file
 		List<String> badPropNames = Arrays.asList(new String[] {
-			"org.yarnandtail.andhow.SimpleParams.XXX",
-			"org.yarnandtail.andhow.SimpleXXXXXX.STR_BOB"});
+			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
+			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
 		
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {

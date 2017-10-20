@@ -9,7 +9,6 @@ import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Actual central instance of the AndHow state after a successful startup.
@@ -30,7 +29,7 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
-			List<Class<? extends BasePropertyGroup>> registeredGroups) 
+			List<GroupProxy> registeredGroups) 
 			throws AppFatalException {
 		
 		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
@@ -46,11 +45,18 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		}		
 		
 		//The global options are always added to the list of registered groups
-		ArrayList<Class<? extends BasePropertyGroup>> effRegGroups = new ArrayList();
+		ArrayList<GroupProxy> effRegGroups = new ArrayList();
 		if (registeredGroups != null) {
 			effRegGroups.addAll(registeredGroups);
 		}
-		effRegGroups.add(Options.class);
+		
+		try {
+			GroupProxy options = AndHowUtil.buildGroupProxy(Options.class);
+			effRegGroups.add(options);
+		} catch (Exception ex) {
+			problems.add(new ConstructionProblem.SecurityException(ex, Options.class));
+		}
+
 
 		GlobalScopeConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
 		runtimeDef = startupDef.toImmutable();
@@ -83,12 +89,12 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		List<ExportGroup> exportGroups = runtimeDef.getExportGroups();
 		for (ExportGroup eg : exportGroups) {
 			Exporter exporter = eg.getExporter();
-			Class<? extends BasePropertyGroup> group = eg.getGroup();
+			GroupProxy group = eg.getGroup();
 			
 			if (group != null) {
 				exporter.export(group, runtimeDef, this);
 			} else {
-				for (Class<? extends BasePropertyGroup> grp : runtimeDef.getPropertyGroups()) {
+				for (GroupProxy grp : runtimeDef.getPropertyGroups()) {
 					exporter.export(grp, runtimeDef, this);
 				}
 			}
@@ -175,7 +181,7 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 					
 					problems.add(
 						new RequirementProblem.NonNullPropertyProblem(
-								definition.getGroupForProperty(prop), prop));
+								definition.getGroupForProperty(prop).getProxiedGroup(), prop));
 				}
 			}
 		}
@@ -197,12 +203,12 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	}
 
 	@Override
-	public Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop) {
+	public GroupProxy getGroupForProperty(Property<?> prop) {
 		return runtimeDef.getGroupForProperty(prop);
 	}
 
 	@Override
-	public List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group) {
+	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
 		return runtimeDef.getPropertiesForGroup(group);
 	}
 
@@ -212,7 +218,7 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	}
 	
 	@Override
-	public List<Class<? extends BasePropertyGroup>> getPropertyGroups() {
+	public List<GroupProxy> getPropertyGroups() {
 		return runtimeDef.getPropertyGroups();
 	}
 

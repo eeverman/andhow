@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yarnandtail</groupId>
+		<artifactId>andhow-parent</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.yarnandtail</groupId>
+	<artifactId>andhow-default-behavior-dependency</artifactId>
+	
+	<!-- This really isn't meant to be packaged up at all - its sample code -->
+	<packaging>jar</packaging>
+	<name>andhow-default-behavior-dependency</name>
+	<description>Sample to be used as a compiled jar by the andhow-default-behavior-test to test property behavior in external compiled libraries.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-annotation-processor</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

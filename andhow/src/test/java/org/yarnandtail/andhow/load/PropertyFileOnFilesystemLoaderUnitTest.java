@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -18,6 +17,8 @@ import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -25,12 +26,25 @@ import org.yarnandtail.andhow.PropertyGroup;
  */
 public class PropertyFileOnFilesystemLoaderUnitTest {
 	
+	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropertyFileOnFilesystemLoaderUnitTest.properties";
+	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
 		StrProp FILEPATH = StrProp.builder().mustBeNonNull().build();
+	}
+	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
 	@Before
@@ -41,17 +55,19 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		
 		appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		appDef.addProperty(TestProps.class, TestProps.FILEPATH);
+		GroupProxy simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(AndHowUtil.buildGroupProxy(TestProps.class), TestProps.FILEPATH);
 
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_BOB);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 		
 		//copy a properties file to a temp location
-		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
+		URL inputUrl = getClass().getResource(CLASSPATH_OF_PROPS);
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);

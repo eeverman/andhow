@@ -26,7 +26,18 @@ public class AppFatalException extends RuntimeException {
 		if (problems != null) {
 			this.problems = problems;
 		} else {
+			this.problems = ProblemList.EMPTY_PROBLEM_LIST;
+		}
+	}
+	
+	public AppFatalException(String message, Problem problem) {
+		super(message);
+		
+		if (problem != null) {
 			this.problems = new ProblemList();
+			this.problems.add(problem);
+		} else {
+			this.problems = ProblemList.EMPTY_PROBLEM_LIST;
 		}
 	}
 	

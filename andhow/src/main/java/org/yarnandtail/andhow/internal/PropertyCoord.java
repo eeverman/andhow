@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.internal;
 
-import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.api.Problem;
-import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  * Logical location of a Property (Group and Property).
@@ -12,15 +10,15 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
 public class PropertyCoord {
 
 	Property<?> property;
-	Class<? extends BasePropertyGroup> group;
+	Class<?> group;
 	String name;
 
-	public PropertyCoord(Class<? extends BasePropertyGroup> group, Property<?> prop) {
+	public PropertyCoord(Class<?> group, Property<?> prop) {
 		this.property = prop;
 		this.group = group;
 		if (group != null && property != null) {
 			try {
-				name = AndHowUtil.getCanonicalName(group, property);
+				name = NameUtil.getAndHowName(group, prop);
 			} catch (Exception ex) {
 				name = "[[Security exception while trying to determine the property canonical name]]";
 			}
@@ -44,7 +42,7 @@ public class PropertyCoord {
 	 * The group containing the Property, if that can be determined.
 	 * @return May return null.
 	 */
-	public Class<? extends BasePropertyGroup> getGroup() {
+	public Class<?> getGroup() {
 		return group;
 	}
 

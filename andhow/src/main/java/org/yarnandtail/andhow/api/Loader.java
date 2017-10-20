@@ -43,7 +43,7 @@ public interface Loader {
 	 * registered groups.   Examples of such loaders would be as system wide 
 	 * naming services like JNDI or a JNDI derivative (like LDAP via JNDI).
 	 *
-	 * The BasePropertyGroup returned from this method will be registered and
+	 * The Group returned from this method will be registered and
 	 * included in generated sample config files.  Loader classes should 
 	 * provide default Property values so they work w/o configuration if possible.
 	 *
@@ -54,7 +54,7 @@ public interface Loader {
 	 * @return A PropertyGroup that defines configuration for this class, or null
 	 * if there is none.
 	 */
-	Class<? extends BasePropertyGroup> getClassConfig();
+	Class<?> getClassConfig();
 	
 	/**
 	 * A list of properties that the user has specified as being configuration

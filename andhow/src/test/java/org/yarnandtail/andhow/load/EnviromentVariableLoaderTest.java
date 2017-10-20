@@ -8,13 +8,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
-import org.yarnandtail.andhow.api.LoaderValues;
-import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -25,6 +26,17 @@ public class EnviromentVariableLoaderTest {
 	TestGlobalScopeConfiguration appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
+	}
+	
 	@Before
 	public void init() throws Exception {
 		
@@ -33,17 +45,19 @@ public class EnviromentVariableLoaderTest {
 		
 		appDef = new TestGlobalScopeConfiguration();
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(proxy, SimpleParams.STR_BOB);
+		appDef.addProperty(proxy, SimpleParams.STR_NULL);
+		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 		
 	}
 	
 	
 	protected String getPropName(Property p) throws Exception {
-		return AndHowUtil.getCanonicalName(SimpleParams.class, p);
+		return NameUtil.getAndHowName(SimpleParams.class, p);
 	}
 	
 	@Test

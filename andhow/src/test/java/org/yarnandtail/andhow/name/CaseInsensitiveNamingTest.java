@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.yarnandtail.andhow.api.PropertyNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
+import org.yarnandtail.andhow.api.GroupProxy;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -19,10 +21,16 @@ public class CaseInsensitiveNamingTest {
 	//Stateless, so ok to have a single instance
 	final CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 	
+	public interface SimpleParams {
+		StrProp Bob = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
+	}
+	
 	@Test
 	public void testDefaultNaming() throws Exception {
 
-		PropertyNaming naming = bns.buildNames(SimpleParams.Bob, SimpleParams.class);
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		PropertyNaming naming = bns.buildNames(SimpleParams.Bob, proxy);
 		
 		assertEquals(groupFullPath + ".Bob", naming.getCanonicalName().getActualName());
 		assertEquals(groupFullPath.toUpperCase() + ".BOB", naming.getCanonicalName().getEffectiveInName());
@@ -49,10 +57,6 @@ public class CaseInsensitiveNamingTest {
 		assertEquals("ENPOINT_URL", naming.getUriName("ENPOINT_URL"));
 		assertEquals("", naming.getUriName(""));	//shouldn't happen
 		assertNull(naming.getUriName(null));	//shouldn't happen, unless part of a chain of conversions
-	}
-	
-	public interface SimpleParams extends PropertyGroup {
-		StrProp Bob = StrProp.builder().aliasIn("Mark").aliasInAndOut("Kathy").build();
 	}
 
 }

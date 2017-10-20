@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yarnandtail</groupId>
+		<artifactId>andhow-parent</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.yarnandtail</groupId>
+	<artifactId>andhow-annotation-processor-tests</artifactId>
+	<packaging>jar</packaging>
+	<name>AndHow Annotation Processor Tests</name>
+	<description>
+		'Real world' compile-time testing of the annotation processor.
+		Its impossible/hard to fully replicate the compile time environment
+		including annotation processing, class generation, service loading, etc..
+		This module contains standard and edge case classes container AndHow
+		properties.  Unit tests then check to ensure that PropertyRegistrars
+		were generated and registered as services for each top level class
+		containing Properties.
+	</description>
+
+	<dependencies>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andhow</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andhow-annotation-processor</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!-- All dependencies are test dependencies only -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

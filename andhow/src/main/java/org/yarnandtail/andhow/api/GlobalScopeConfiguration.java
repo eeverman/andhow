@@ -39,13 +39,13 @@ public interface GlobalScopeConfiguration {
 	String getCanonicalName(Property<?> prop);
 
 	/**
-	 * Finds the BasePropertyGroup containing the specified Property.
+	 * Finds the Group containing the specified Property.
 	 *
 	 * @param prop The property to get the PropertyGroup for
 	 * @return May return null if the Property is not in any group, or during
 	 * construction, if the group has not finished registering all of its properties.
 	 */
-	Class<? extends BasePropertyGroup> getGroupForProperty(Property<?> prop);
+	GroupProxy getGroupForProperty(Property<?> prop);
 
 	/**
 	 * Returns a complete list of all registered properties.
@@ -62,14 +62,14 @@ public interface GlobalScopeConfiguration {
 	 * @param group The group to get Properties for
 	 * @return An unmodifiable list of Properties
 	 */
-	List<Property<?>> getPropertiesForGroup(Class<? extends BasePropertyGroup> group);
+	List<Property<?>> getPropertiesForGroup(GroupProxy group);
 	
 	/**
 	 * Returns a list of all registered groups.
 	 *
-	 * @return An unmodifiable list of BasePropertyGroups
+	 * @return An unmodifiable list of Groups
 	 */
-	List<Class<? extends BasePropertyGroup>> getPropertyGroups();
+	List<GroupProxy> getPropertyGroups();
 
 	/**
 	 * Finds a registered property by any recognized classpath style name,
@@ -92,7 +92,7 @@ public interface GlobalScopeConfiguration {
 	 * The list of ExportGroups, which handles exporting property values for use
 	 * outside the AndHow framework.
 	 * 
-	 * An ExportGroup bundles an Exporter implementation with a BasePropertyGroup
+	 * An ExportGroup bundles an Exporter implementation with a Group
 	 * to be exported.  After startup is complete, each Exporter will export its
 	 * group as configured.
 	 * 

@@ -7,11 +7,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
-import org.yarnandtail.andhow.api.LoaderValues;
-import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -21,6 +22,18 @@ public class SystemPropertyLoaderTest {
 	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
+	GroupProxy simpleProxy;
+	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
+	}
 	
 	@Before
 	public void init() throws Exception {
@@ -30,11 +43,13 @@ public class SystemPropertyLoaderTest {
 		
 		appDef = new GlobalScopeConfigurationMutable(bns);
 		
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
+		appDef.addProperty(simpleProxy, SimpleParams.STR_BOB);
+		appDef.addProperty(simpleProxy, SimpleParams.STR_NULL);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 
 		clearSysProps();
 		
@@ -50,7 +65,7 @@ public class SystemPropertyLoaderTest {
 		
 		//Clear all known system properties
 		for (NameAndProperty nap : AndHowUtil.getProperties(SimpleParams.class)) {
-			String canon = bns.buildNames(nap.property, SimpleParams.class).getCanonicalName().getActualName();
+			String canon = bns.buildNames(nap.property, simpleProxy).getCanonicalName().getActualName();
 			System.clearProperty(canon);
 		}
 		
@@ -58,7 +73,7 @@ public class SystemPropertyLoaderTest {
 	}
 	
 	protected String getPropName(Property p) throws Exception {
-		return AndHowUtil.getCanonicalName(SimpleParams.class, p);
+		return NameUtil.getAndHowName(SimpleParams.class, p);
 	}
 	
 	@Test

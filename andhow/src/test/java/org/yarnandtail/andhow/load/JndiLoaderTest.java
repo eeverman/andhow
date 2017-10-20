@@ -18,6 +18,7 @@ import org.yarnandtail.andhow.api.PropertyValue;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *
@@ -58,27 +59,27 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
 		jndi.bind("" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
 		jndi.bind("" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -104,17 +105,17 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
 
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test");
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
-		jndi.bind("" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
-		jndi.bind("" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "-999");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01), "2007-11-02T00:00");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
+		jndi.bind("" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
+		jndi.bind("" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), "-999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01), "2007-11-02T00:00");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -144,15 +145,15 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:/test/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
-		jndi.bind("java:/test/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
-		jndi.bind("java:test/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+		jndi.bind("java:/test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
+		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
 		jndi.bind("java:test/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
-		jndi.bind("java:test/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
-		jndi.bind("java:myapp/root/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
+		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
+		jndi.bind("java:myapp/root/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should still work
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -177,15 +178,15 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:zip/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
-		jndi.bind("java:xy/z/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+		jndi.bind("java:xy/z/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
 		jndi.bind("java:/test/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
-		jndi.bind("java:test/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
-		jndi.bind("java:test/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
-		jndi.bind("java:myapp/root/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
+		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
+		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
+		jndi.bind("java:myapp/root/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should NOT work
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), "999");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
 		AndHow.builder()
@@ -213,22 +214,22 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE), Boolean.TRUE);
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE), Boolean.TRUE);
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL), new Integer(999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), new Integer(999));
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
-		jndi.bind("java:comp/env/" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
 		
 		jndi.activate();
 		
@@ -256,16 +257,16 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null2");
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null2");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Integer(-9999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), new Integer(-9999));
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Integer(9999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), new Integer(9999));
 		
 		jndi.activate();
 		
@@ -297,9 +298,9 @@ public class JndiLoaderTest extends AndHowTestBase {
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
 
 		jndi.activate();
 		
@@ -328,10 +329,10 @@ public class JndiLoaderTest extends AndHowTestBase {
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), new Integer(-9999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), new Integer(-9999));
 		jndi.activate();
 		
 		try {
@@ -361,10 +362,10 @@ public class JndiLoaderTest extends AndHowTestBase {
 		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
 		jndi.bind("java:" + 
-				bns.getUriName(AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
-		jndi.bind("java:" + AndHowUtil.getCanonicalName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
 		jndi.activate();
 		
 		try {

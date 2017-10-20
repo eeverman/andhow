@@ -26,7 +26,6 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  * 
  * @author eeverman
  */
-@GlobalPropertyGroup
 public interface PropertyGroup extends BasePropertyGroup {
 
 }

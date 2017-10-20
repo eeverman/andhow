@@ -16,7 +16,8 @@ public interface PropertyValues {
 	 * 
 	 * If no non-null value was found by a loader for this property, null is returned.
 	 * 
-	 * @param <T> prop The property to get the value for
+	 * @param <T> The return type of the Property.
+	 * @param prop The property to get the value for
 	 * @return The value, if explicitly set, or null if not explicity set.
 	 */
 	<T> T getExplicitValue(Property<T> prop);
@@ -29,6 +30,7 @@ public interface PropertyValues {
 	 * the default value.  Explicitly setting a property to null is not possible
 	 * because it will just be ignored and the default used instead.
 	 * 
+	 * @param <T> The return type of the Property.
 	 * @param prop The property to get the value for.
 	 * @return The explicit value or, if no explicit, the default value.  Otherwise null.
 	 */

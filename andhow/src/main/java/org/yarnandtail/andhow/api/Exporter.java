@@ -9,7 +9,7 @@ package org.yarnandtail.andhow.api;
  use the direct Property access that AndHow provides.
  
  Exporting is considered 'safe', so overlapping export configuration, such
- as application level and BasePropertyGroup level are read permissively.
+ as application level and Group level are read permissively.
  * 
  * 
  * @author ericeverman
@@ -42,7 +42,7 @@ public interface Exporter {
 	void export(GlobalScopeConfiguration definition, PropertyValues values);
 	
 	/**
-	 * Exports a BasePropertyGroup.
+	 * Exports a Group.
 	 * 
 	 * Based on its configuration, an exporter can decide which
 	 * properties should be exported and what name or aliases should be used
@@ -52,7 +52,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(Class<? extends BasePropertyGroup> group, GlobalScopeConfiguration definition, PropertyValues values);
+	void export(GroupProxy group, GlobalScopeConfiguration definition, PropertyValues values);
 	
 	public static enum EXPORT_CANONICAL_NAME {
 		ALWAYS, ONLY_IF_NO_OUT_ALIAS, NEVER;

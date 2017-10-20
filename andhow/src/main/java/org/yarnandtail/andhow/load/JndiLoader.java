@@ -99,7 +99,7 @@ public class JndiLoader extends BaseLoader {
 	}
 
 	@Override
-	public Class<? extends BasePropertyGroup> getClassConfig() {
+	public Class<?> getClassConfig() {
 		return CONFIG.class;
 	}
 

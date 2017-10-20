@@ -2,8 +2,8 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.util.NameUtil;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
@@ -57,11 +57,11 @@ public abstract class ConstructionProblem implements Problem {
 		String conflictName;
 
 		public NonUniqueNames(
-				Class<? extends BasePropertyGroup> refGroup, Property<?> refProperty, 
-				Class<? extends BasePropertyGroup> badGroup, Property<?> badProperty, String conflictName) {
+				GroupProxy refGroup, Property<?> refProperty, 
+				GroupProxy badGroup, Property<?> badProperty, String conflictName) {
 			
-			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
-			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
+			this.refPropertyCoord = new PropertyCoord(refGroup.getProxiedGroup(), refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup.getProxiedGroup(), badProperty);
 			this.conflictName = conflictName;
 		}
 
@@ -81,11 +81,11 @@ public abstract class ConstructionProblem implements Problem {
 	public static class DuplicateProperty extends ConstructionProblem {
 
 		public DuplicateProperty(
-				Class<? extends BasePropertyGroup> refGroup, Property<?> refProperty, 
-				Class<? extends BasePropertyGroup> badGroup, Property<?> badProperty) {
+				GroupProxy refGroup, Property<?> refProperty, 
+				GroupProxy badGroup, Property<?> badProperty) {
 			
-			this.refPropertyCoord = new PropertyCoord(refGroup, refProperty);
-			this.badPropertyCoord = new PropertyCoord(badGroup, badProperty);
+			this.refPropertyCoord = new PropertyCoord(refGroup.getProxiedGroup(), refProperty);
+			this.badPropertyCoord = new PropertyCoord(badGroup.getProxiedGroup(), badProperty);
 		}
 		
 		@Override
@@ -185,8 +185,8 @@ public abstract class ConstructionProblem implements Problem {
 	
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
-
-		public SecurityException(Exception exception, Class<? extends BasePropertyGroup> group) {
+		
+		public SecurityException(Exception exception, Class<?> group) {
 			this.exception = exception;
 			badPropertyCoord = new PropertyCoord(group, null);
 		}
@@ -205,8 +205,8 @@ public abstract class ConstructionProblem implements Problem {
 			return TextUtil.format(
 				"A security exception was thrown while trying to read class members.  " +
 				"{} must read PropertyGroup class members via reflection to build Property names. " +
-				"To fix, ensure that all PropertyGroup members are public or turn off " +
-				"JVM security policies that might be preventing this.",
+				"To fix, Properties must either be public or the JVM security policies " +
+				"that are preventing reflection visibility must be disabled.",
 				AndHow.ANDHOW_INLINE_NAME);
 		}
 	}
@@ -214,8 +214,8 @@ public abstract class ConstructionProblem implements Problem {
 
 	public static class PropertyNotPartOfGroup extends ConstructionProblem {	
 
-		public PropertyNotPartOfGroup(Class<? extends BasePropertyGroup> group, Property<?> prop) {
-			this.badPropertyCoord = new PropertyCoord(group, prop);
+		public PropertyNotPartOfGroup(GroupProxy group, Property<?> prop) {
+			this.badPropertyCoord = new PropertyCoord(group.getProxiedGroup(), prop);
 		}
 		
 		@Override
@@ -229,10 +229,10 @@ public abstract class ConstructionProblem implements Problem {
 		Exception exception;
 		String message;
 
-		public ExportException(Exception exception, Class<? extends BasePropertyGroup> group, String message) {
+		public ExportException(Exception exception, GroupProxy group, String message) {
 			this.exception = exception;
 			this.message = message;
-			badPropertyCoord = new PropertyCoord(group, null);
+			badPropertyCoord = new PropertyCoord(group.getProxiedGroup(), null);
 		}
 
 		public Exception getException() {
@@ -255,8 +255,8 @@ public abstract class ConstructionProblem implements Problem {
 	public static class InvalidDefaultValue extends ConstructionProblem {
 		String invalidMessage;	
 
-		public InvalidDefaultValue(Class<? extends BasePropertyGroup> group, Property<?> prop, String invalidMessage) {
-			this.badPropertyCoord = new PropertyCoord(group, prop);
+		public InvalidDefaultValue(GroupProxy group, Property<?> prop, String invalidMessage) {
+			this.badPropertyCoord = new PropertyCoord(group.getProxiedGroup(), prop);
 			this.invalidMessage = invalidMessage;
 		}
 
@@ -276,9 +276,9 @@ public abstract class ConstructionProblem implements Problem {
 		Validator<?> valid;
 
 		public InvalidValidationConfiguration(
-				Class<? extends BasePropertyGroup> group, Property<?> property, Validator<?> valid) {
+				GroupProxy group, Property<?> property, Validator<?> valid) {
 			
-			this.badPropertyCoord = new PropertyCoord(group, property);
+			this.badPropertyCoord = new PropertyCoord(group.getProxiedGroup(), property);
 			this.valid = valid;
 		}
 

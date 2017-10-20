@@ -7,13 +7,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.SimpleParams;
-import org.yarnandtail.andhow.api.LoaderValues;
-import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -23,6 +24,17 @@ public class StringArgumentLoaderTest {
 	
 	GlobalScopeConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
+	
+	public interface SimpleParams {
+		//Strings
+		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
+		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+
+		//Flags
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
+		FlagProp FLAG_NULL = FlagProp.builder().build();
+	}
 
 	@Before
 	public void init() throws Exception {
@@ -30,12 +42,14 @@ public class StringArgumentLoaderTest {
 		
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
+		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
+		
 		appDef = new GlobalScopeConfigurationMutable(bns);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_BOB);
-		appDef.addProperty(SimpleParams.class, SimpleParams.STR_NULL);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(SimpleParams.class, SimpleParams.FLAG_NULL);
+		appDef.addProperty(proxy, SimpleParams.STR_BOB);
+		appDef.addProperty(proxy, SimpleParams.STR_NULL);
+		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
+		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
+		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 
 	}
 	

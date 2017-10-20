@@ -33,7 +33,6 @@ public class SimpleSample {
 	
 	//4) Normally PropertyGroups would be in separate files with the module they apply to
 	@GroupInfo(name="Example Property group", desc="One logical set of properties")
-	@GlobalPropertyGroup
 	public interface MySetOfProps extends PropertyGroup {
 		
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build(); // 5)

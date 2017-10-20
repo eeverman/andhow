@@ -3,7 +3,6 @@ package org.yarnandtail.andhow.export;
 import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * All implementations must have a zero argument constructor.
@@ -50,13 +49,13 @@ public abstract class BaseExporter implements Exporter {
 	
 	@Override
 	public void export(GlobalScopeConfiguration definition, PropertyValues values) {
-		for (Class<? extends BasePropertyGroup> pg : definition.getPropertyGroups()) {
+		for (GroupProxy pg : definition.getPropertyGroups()) {
 			export(pg, definition, values);
 		}
 	}
 
 	@Override
-	public void export(Class<? extends BasePropertyGroup> group, GlobalScopeConfiguration definition, PropertyValues values) {
+	public void export(GroupProxy group, GlobalScopeConfiguration definition, PropertyValues values) {
 		List<Property<?>> props = definition.getPropertiesForGroup(group);
 		
 		for (Property<?> prop : props) {
