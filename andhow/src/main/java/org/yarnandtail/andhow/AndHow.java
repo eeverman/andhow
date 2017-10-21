@@ -91,7 +91,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 */
 	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
 		List<Loader> loaders = new ArrayList();
-		loaders.add(new StringArgumentLoader(cmdLineArgs));
+		loaders.add(new CommandLineArgumentLoader(cmdLineArgs));
 		loaders.add(new SystemPropertyLoader());
 		loaders.add(new EnviromentVariableLoader());
 		loaders.add(new AndHowPropertyFileLoader());
@@ -133,8 +133,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			NamingStrategy naming, List<Loader> loaders,
 			List<Class<?>> registeredGroups)
 			throws AppFatalException, RuntimeException {
-		
-		if (registeredGroups != null && ! registeredGroups.isEmpty()) {
+
+		if (registeredGroups != null && !registeredGroups.isEmpty()) {
 			return buildFromProxies(naming, loaders, convertClassesToGroups(registeredGroups));
 		} else {
 			PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
@@ -310,7 +310,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 */
 		public AndHowBuilder loader(Loader loader) {
 
-			if (loader instanceof ComandLineArgLoader) {
+			if (loader instanceof CommandLineArgumentLoader) {
 				throw new RuntimeException("The ComandLineArgLoader cannot be "
 						+ "directly added to the list of loaders. "
 						+ "Use cmdLineArgs() to add arguments instead.");
@@ -461,9 +461,9 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * Destroying or reloading is strictly for testing - Support for
 		 * reloading, including dealing with the issue of inconsistent reads of
 		 * the data, is not in place.
-		 * 
-		 * If no loaders have been added, the default set of loaders is used.
-		 * If no groups have been added, groups will be automatically read from
+		 *
+		 * If no loaders have been added, the default set of loaders is used. If
+		 * no groups have been added, groups will be automatically read from
 		 * service metadata (this is the preferred config mechanism)
 		 *
 		 * Don't use this method in production, just use build(), which doesn't
@@ -478,7 +478,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			populateLoaderList();
 			return AndHow.build(_namingStrategy, _loaders, _groups);
 		}
-		
+
 		private void populateLoaderList() {
 			if (_loaders.isEmpty()) {
 				_loaders.addAll(AndHow.getDefaultLoaders(_cmdLineArgs.toArray(new String[_cmdLineArgs.size()])));
@@ -548,11 +548,12 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * groups.
 		 *
 		 * Values will be reread, including the command line arguments that are
-		 * passed. If the cmdLineArgs are nonNull, a new ComandLineArgLoader
-		 * will be constructed with those argument and it will replace the
-		 * previous ComandLineArgLoader. If there is no ComandLineArgLoader
-		 * configured, this will have no effect (ie. the loader will not be
-		 * added if it was not already existing in the list of loaders.
+		 * passed. If the cmdLineArgs are nonNull, a new
+		 * CommandLineArgumentLoader will be constructed with those argument and
+		 * it will replace the previous CommandLineArgumentLoader. If there is
+		 * no CommandLineArgumentLoader configured, this will have no effect
+		 * (ie. the loader will not be added if it was not already existing in
+		 * the list of loaders.
 		 *
 		 * @throws AppFatalException
 		 */
@@ -563,8 +564,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			//new command line arguments.
 			if (cmdLineArgs != null) {
 				for (int i = 0; i < loaders.size(); i++) {
-					if (loaders.get(i) instanceof ComandLineArgLoader) {
-						ComandLineArgLoader cmdLoader = new ComandLineArgLoader(cmdLineArgs);
+					if (loaders.get(i) instanceof CommandLineArgumentLoader) {
+						CommandLineArgumentLoader cmdLoader = new CommandLineArgumentLoader(cmdLineArgs);
 						loaders.set(i, cmdLoader);
 						break;
 					}
@@ -575,12 +576,12 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				instance.core = new AndHowCore(naming, loaders, registeredGroups);
 			}
 		}
-		
+
 		/**
 		 * Reloads AndHow using the default loading strategy.
-		 * 
+		 *
 		 * @param cmdLineArgs
-		 * @throws AppFatalException 
+		 * @throws AppFatalException
 		 */
 		public void reloadDefaultInstance(String[] cmdLineArgs)
 				throws AppFatalException {
@@ -589,7 +590,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				List<Loader> ldrs = getDefaultLoaders(cmdLineArgs);
 				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
 				List<GroupProxy> proxies = registrar.getGroups();
-				
+
 				instance.core = new AndHowCore(null, ldrs, proxies);
 			}
 		}
