@@ -30,7 +30,7 @@ public class SampleAppConfiguration {
 	public static void main(String[] args) {
 		AndHow.builder()
 				.loader(new SystemPropertyLoader())	//Look for props in System.properties
-				.loader(new JndiLoader())		//Look in container provided JNDI context
+				//.loader(new JndiLoader())		//Look in container provided JNDI context
 				.loader(new PropertyFileOnClasspathLoader(AppInfo.CLASSPATH_PROP_FILE))	//And in a prop file on classpath
 				.loader(new PropertyFileOnFilesystemLoader(AppInfo.FILESYSTEM_PROP_FILE))	//And in the file system
 				.group(AquariusConfig.class)

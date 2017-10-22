@@ -71,7 +71,7 @@ public class AndHowTest extends AndHowTestBase {
 		AndHow.builder()
 				.namingStrategy(basicNaming)
 				.groups(configPtGroups)
-				.cmdLineArgs(cmdLineArgsWFullClassName)
+				.addCmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -122,7 +122,7 @@ public class AndHowTest extends AndHowTestBase {
 					.namingStrategy(basicNaming)
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
-					.cmdLineArgs(cmdLineArgsWFullClassName)
+					.addCmdLineArgs(cmdLineArgsWFullClassName)
 					.reloadForNonPropduction(reloader);
 			
 			fail();	//The line above should throw an error

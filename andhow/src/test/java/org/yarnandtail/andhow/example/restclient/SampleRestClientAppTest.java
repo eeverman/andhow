@@ -44,7 +44,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.cmdLineArgs(cmdLineArgs)
+				.addCmdLineArgs(cmdLineArgs)
 				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.reloadForNonPropduction(reloader);
 		
@@ -72,7 +72,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		AndHow.builder()
 				.group(SampleRestClientGroup.class)
-				.cmdLineArgs(cmdLineArgs)
+				.addCmdLineArgs(cmdLineArgs)
 				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 				.reloadForNonPropduction(reloader);
 		
@@ -105,7 +105,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			//Error expected b/c some values are invalid
 			AndHow.builder()
 					.group(SampleRestClientGroup.class)
-					.cmdLineArgs(cmdLineArgs)
+					.addCmdLineArgs(cmdLineArgs)
 					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
 					.loader(new JndiLoader())
 					.reloadForNonPropduction(reloader);

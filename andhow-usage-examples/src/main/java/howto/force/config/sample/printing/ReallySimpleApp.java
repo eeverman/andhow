@@ -15,7 +15,7 @@ public class ReallySimpleApp {
 	
 	public static void main(String[] args) {
 		AndHow.builder()
-				.cmdLineArgs(args) /* Implicitly adds a loader for these cmd line args */
+				.addCmdLineArgs(args) /* Implicitly adds a loader for these cmd line args */
 				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))
 				.group(MySetOfProps.class) /* MySetOfProps defined below */
 				.build();

@@ -261,13 +261,13 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * Usage always starts with AndHow.builder() and ends with build():
 	 * <pre>
 	 * {@code
-	 * AndHow.builder()
-	 * .loader(new PropFileLoader)
-	 * .group(SomeGroup.class)
-	 * .group(SomeOtherGroup.class)
-	 * .cmdLineArgs([Array of cmd line arguments])
-	 * .build();
-	 * }
+ AndHow.builder()
+ .loader(new PropFileLoader)
+ .group(SomeGroup.class)
+ .group(SomeOtherGroup.class)
+ .addCmdLineArgs([Array of cmd line arguments])
+ .build();
+ }
 	 * </pre>
 	 *
 	 * There is no return value because there is no need to hold a reference to
@@ -374,7 +374,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @param commandLineArgs
 		 * @return
 		 */
-		public AndHowBuilder cmdLineArgs(String[] commandLineArgs) {
+		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
 			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 
 			//Record where the cmd line loader should go, if not already determined
@@ -548,12 +548,12 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * groups.
 		 *
 		 * Values will be reread, including the command line arguments that are
-		 * passed. If the cmdLineArgs are nonNull, a new
-		 * CommandLineArgumentLoader will be constructed with those argument and
-		 * it will replace the previous CommandLineArgumentLoader. If there is
-		 * no CommandLineArgumentLoader configured, this will have no effect
-		 * (ie. the loader will not be added if it was not already existing in
-		 * the list of loaders.
+ passed. If the addCmdLineArgs are nonNull, a new
+ CommandLineArgumentLoader will be constructed with those argument and
+ it will replace the previous CommandLineArgumentLoader. If there is
+ no CommandLineArgumentLoader configured, this will have no effect
+ (ie. the loader will not be added if it was not already existing in
+ the list of loaders.
 		 *
 		 * @throws AppFatalException
 		 */

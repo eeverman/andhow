@@ -40,7 +40,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		AndHow.builder()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-				.cmdLineArgs(cmdLineArgsWFullClassName)
+				.addCmdLineArgs(cmdLineArgsWFullClassName)
 				.reloadForNonPropduction(reloader);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
