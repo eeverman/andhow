@@ -2,11 +2,12 @@ package org.yarnandtail.andhow.internal;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.example.restclient.SampleRestClientGroup;
 import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 
@@ -22,7 +23,7 @@ public class ValueMapWithContextMutableTest {
 		PropertyValuesWithContextMutable builder = new PropertyValuesWithContextMutable();
 		
 		Loader cmdLineLoad = new StringArgumentLoader(new String[]{});
-		Loader propFileLoad = new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE);
+		Loader propFileLoad = new PropertyFileOnClasspathLoader(SimpleParams.STR_BOB);
 		
 		List<PropertyValue> firstSet = new ArrayList();
 		

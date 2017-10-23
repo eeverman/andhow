@@ -1,48 +1,20 @@
 package org.yarnandtail.andhow;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.load.CommandLineArgumentLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.load.*;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
- * @author eeverman
+ * @author ericeverman
  */
-public class AndHow implements GlobalScopeConfiguration, PropertyValues {
-
-	//
-	//A few app-wide constants
-	public static final String ANDHOW_INLINE_NAME = "AndHow";
-	public static final String ANDHOW_NAME = "AndHow!";
-	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
-	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
-
-	private static AndHow singleInstance;
-	private static final Object LOCK = new Object();
-
-	private final AndHowCore core;
-
-	/**
-	 * Private constructor - Use the AndHowBuilder to build instances.
-	 *
-	 * @param naming
-	 * @param loaders
-	 * @param registeredGroups
-	 * @param cmdLineArgs
-	 * @param forcedValues
-	 * @param defaultValues
-	 * @throws AppFatalException
-	 */
-	private AndHow(NamingStrategy naming, List<Loader> loaders,
-			List<GroupProxy> registeredGroups)
-			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups);
-	}
-
+public class AndHowNonProduction {
+	
 	/**
 	 * Returns a builder that can be used one time to build the AndHow instance.
 	 *
@@ -51,145 +23,34 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	public static AndHowBuilder builder() {
 		return new AndHowBuilder();
 	}
-
-	public static AndHow instance() {
-		if (singleInstance != null && singleInstance.core != null) {
-			return singleInstance;
-		} else {
-			synchronized (LOCK) {
-				if (singleInstance == null) {
-					singleInstance = build(null, null, null);
-				}
-				builder().build();
-				return singleInstance;
-			}
-
-		}
-	}
-
-	/**
-	 * Returns a list of new loaders that are used for default configuration.
-	 *
-	 * @param cmdLineArgs Optional command line arguments to be passed to the
-	 * StringArgumentLoader. These would be the Stringp[] args passed to the
-	 * main method at startup.
-	 * @return
-	 */
-	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
-		List<Loader> loaders = new ArrayList();
-		loaders.add(new CommandLineArgumentLoader(cmdLineArgs));
-		loaders.add(new SystemPropertyLoader());
-		loaders.add(new EnviromentVariableLoader());
-		loaders.add(new AndHowPropertyFileLoader());
-		return loaders;
-	}
-
-	/**
-	 * Private build method, invoked only by the inner AndHowBuilder class.
-	 *
-	 * It will throw a RunTimeException if the singleton instance has already
-	 * been constructed.
-	 *
-	 * It returns a reference to the reloader, which can be used for reloading
-	 * during unit test (not for production).
-	 *
-	 * @param naming
-	 * @param loaders
-	 * @param registeredGroups
-	 * @return
-	 * @throws AppFatalException
-	 */
-	private static AndHow build(
-			NamingStrategy naming, List<Loader> loaders,
-			List<GroupProxy> registeredGroups)
+	
+	private static List<GroupProxy> convertClassesToGroups(Collection<Class<?>> registeredGroups)
 			throws AppFatalException, RuntimeException {
 
-		synchronized (LOCK) {
-			if (singleInstance != null) {
-				throw new RuntimeException("Already constructed!");
-			} else {
-				
-				if (loaders == null || loaders.isEmpty()) {
-					loaders = getDefaultLoaders();
-				}
-				
-				if (registeredGroups == null || registeredGroups.isEmpty()) {
-					PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-					registeredGroups = registrar.getGroups();
-				}
-				
-				return singleInstance = new AndHow(naming, loaders, registeredGroups);
+		final ProblemList<Problem> problems = new ProblemList();
+		final List<GroupProxy> groupProxies = new ArrayList();
+
+		for (Class<?> clazz : registeredGroups) {
+
+			try {
+				GroupProxy gp = AndHowUtil.buildGroupProxy(clazz);
+				groupProxies.add(gp);
+			} catch (Exception ex) {
+				problems.add(new ConstructionProblem.SecurityException(ex, Options.class));
 			}
+
 		}
-	}
 
-	//
-	//PropertyValues Interface
-	@Override
-	public boolean isExplicitlySet(Property<?> prop) {
-		return core.isExplicitlySet(prop);
-	}
+		if (problems.isEmpty()) {
+			return groupProxies;
+		} else {
+			AppFatalException afe = new AppFatalException(
+					"There is a problem converting the AndHow Properties contained in the registered "
+					+ "groups - likely this is a security issue.",
+					problems);
+			throw afe;
+		}
 
-	@Override
-	public <T> T getExplicitValue(Property<T> prop) {
-		return core.getExplicitValue(prop);
-	}
-
-	@Override
-	public <T> T getValue(Property<T> prop) {
-		return core.getValue(prop);
-	}
-
-	//
-	//ConstructionDefinition Interface
-	@Override
-	public List<EffectiveName> getAliases(Property<?> property) {
-		return core.getAliases(property);
-	}
-
-	@Override
-	public String getCanonicalName(Property<?> prop) {
-		return core.getCanonicalName(prop);
-	}
-
-	@Override
-	public GroupProxy getGroupForProperty(Property<?> prop) {
-		return core.getGroupForProperty(prop);
-	}
-
-	@Override
-	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
-		return core.getPropertiesForGroup(group);
-	}
-
-	@Override
-	public Property<?> getProperty(String name) {
-		return core.getProperty(name);
-	}
-
-	@Override
-	public List<GroupProxy> getPropertyGroups() {
-		return core.getPropertyGroups();
-	}
-
-	@Override
-	public List<Property<?>> getProperties() {
-		return core.getProperties();
-	}
-
-	@Override
-	public List<ExportGroup> getExportGroups() {
-		return core.getExportGroups();
-	}
-
-	@Override
-	public NamingStrategy getNamingStrategy() {
-		return core.getNamingStrategy();
-	}
-
-	@Override
-	public Map<String, String> getSystemEnvironment() {
-		return core.getSystemEnvironment();
 	}
 
 	/**
@@ -216,7 +77,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * .loader(new PropFileLoader)
 	 * .group(SomeGroup.class)
 	 * .group(SomeOtherGroup.class)
-	 * .addCmdLineArgs([Array of cmd line arguments])
+	 * .cmdLineArgs([Array of cmd line arguments])
 	 * .build();
 	 * }
 	 * </pre>
@@ -242,8 +103,10 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = null;
 		private final List<String> _cmdLineArgs = new ArrayList();
+		private final List<Class<?>> _groups = new ArrayList();
 
 		//
+		//Internal state
 		//The position at which the cmd line loader should be added.
 		//May be null if not needed.
 		private Integer addCmdLineLoaderAtPosition = null;
@@ -284,6 +147,33 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			return this;
 		}
 
+		/**
+		 * Add a group to the list of groups being built.
+		 *
+		 * Group order makes no difference, but for error reports and sample
+		 * configuration files, the order is preserved.
+		 *
+		 * @param group
+		 * @return
+		 */
+		public AndHowBuilder group(Class<?> group) {
+			_groups.add(group);
+			return this;
+		}
+
+		/**
+		 * Add a list of groups to the list of groups being built.
+		 *
+		 * Group order makes no difference, but for error reports and sample
+		 * configuration files, the order is preserved.
+		 *
+		 * @param groups
+		 * @return
+		 */
+		public AndHowBuilder groups(Collection<Class<?>> groups) {
+			this._groups.addAll(groups);
+			return this;
+		}
 
 		/**
 		 * Adds the command line arguments, keeping any previously added.
@@ -298,11 +188,20 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 */
 		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
 			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
-
-			//Record where the cmd line loader should go, if not already determined
-			if (addCmdLineLoaderAtPosition == null) {
-				addCmdLineLoaderAtPosition = _loaders.size();
+			
+			if (getCmdLineLoaderIndex() < 0) {
+				//Record where the cmd line loader should go, if not already determined
+				if (addCmdLineLoaderAtPosition == null) {
+					addCmdLineLoaderAtPosition = _loaders.size();
+				}
 			}
+
+			return this;
+		}
+		
+		public AndHowBuilder clearCmdLineArgs() {
+			_cmdLineArgs.clear();
+			addCmdLineLoaderAtPosition = null;
 
 			return this;
 		}
@@ -324,11 +223,13 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				_cmdLineArgs.add(key);
 			}
 
-			//Record where the cmd line loader should go, if not already determined
-			if (addCmdLineLoaderAtPosition == null) {
-				addCmdLineLoaderAtPosition = _loaders.size();
+			if (getCmdLineLoaderIndex() < 0) {
+				//Record where the cmd line loader should go, if not already determined
+				if (addCmdLineLoaderAtPosition == null) {
+					addCmdLineLoaderAtPosition = _loaders.size();
+				}
 			}
-
+			
 			return this;
 		}
 
@@ -369,13 +270,116 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * Property values can be read directly. For instance, for a property
 		 * named 'MyInt': {@code Integer value = MyInt.getValue();}
 		 *
+		 * @return 
 		 * @throws AppFatalException If the startup fails.
 		 */
-		public void build() throws AppFatalException {
+		public AndHowBuilder build() {
+			
 			populateLoaderList();
-			AndHow.build(_namingStrategy, _loaders, null);
+			destroy();	//kill the 'core' of the existing AndHow instance if it is initialized
+			
+			try {
+				
+				Method build = AndHow.class.getMethod("build", NamingStrategy.class, List.class, List.class);
+				build.setAccessible(true);
+				build.invoke(null, _namingStrategy, _loaders, convertClassesToGroups(_groups));
+
+			} catch (Exception ex) {
+				throwFatal("Some type of permissions error happened while resetting AndHow."
+						+ "Is it possible there is a security manager enforcing security during testing? ", ex);
+			}
+			
+			return this;
+		}
+		
+
+		/**
+		 * Forces a reload using all the same naming, loaders and registered
+		 * groups.
+		 *
+		 * Values will be reread, including the command line arguments that are
+		 * passed. If the cmdLineArgs are nonNull, a new ComandLineArgLoader
+		 * will be constructed with those argument and it will replace the
+		 * previous ComandLineArgLoader. If there is no ComandLineArgLoader
+		 * configured, this will have no effect (ie. the loader will not be
+		 * added if it was not already existing in the list of loaders.
+		 *
+		 * @throws AppFatalException
+		 */
+		public AndHowBuilder reloadValues(String[] cmdLineArgs)
+				throws Exception {
+
+			_cmdLineArgs.clear();
+			this.addCmdLineArgs(cmdLineArgs);
+			
+			return build();
+		}
+		
+		/**
+		 * Reloads AndHow using the default loading strategy.
+		 * 
+		 * @param cmdLineArgs
+		 * @throws AppFatalException 
+		 */
+		public AndHowBuilder buildDefaultInstance(String[] cmdLineArgs)
+				throws Exception {
+			
+			//Clear out the builder config
+			_loaders.clear();
+			_namingStrategy = null;
+			_groups.clear();
+			
+			if (cmdLineArgs != null) {
+				_cmdLineArgs.addAll(Arrays.asList(cmdLineArgs));
+			} else {
+				_cmdLineArgs.clear();
+			}
+					
+			build();
+			
+			return this;
 		}
 
+		/**
+		 * For shutdown or testing.
+		 *
+		 * Flushes the internal state, making the AndHow appear unconfigured.
+		 */
+		public void destroy() {
+
+			try {
+				//kill the 'core' of the existing AndHow instance if it is initialized
+				Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
+				ahInstanceField.setAccessible(true);
+
+				AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
+
+				if (ahInstance != null) {
+					Field ahCoreField = AndHow.class.getDeclaredField("core");
+					ahCoreField.setAccessible(true);
+					ahCoreField.set(ahInstance, null);	//set the core to null
+				}
+			} catch (Exception ex) {
+				throwFatal("Some type of permissions error happened while destroying the AndHow instance."
+						+ "Is it possible there is a security manager enforcing security during testing? ", ex);
+			}
+		}
+		
+		/**
+		 * Returns the index of cmdLineLoader in the current list of loaders, if
+		 * it is in the list.  If it is not in the list, -1 is returned.
+		 * 
+		 * @return 
+		 */
+		private int getCmdLineLoaderIndex() {
+			for (int i = 0; i < _loaders.size(); i++) {
+				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+					return i;
+				}
+			}
+
+			return -1;
+		}
 		
 		private void populateLoaderList() {
 			if (_loaders.isEmpty()) {
@@ -397,6 +401,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
 			}
 		}
+
 	}
 
 }

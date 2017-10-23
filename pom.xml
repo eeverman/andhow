@@ -69,7 +69,8 @@
 	
 	<modules>
 		<module>andhow</module>
-		<module>andhow-system-test-harness</module>
+		<module>andhow-system-tests</module>
+		<module>andhow-test-harness</module>
 		<module>andhow-annotation-processor</module>
 		<module>andhow-annotation-processor-tests</module>
 		<module>andhow-annotation-processor-test-harness</module>

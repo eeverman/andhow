@@ -2,14 +2,9 @@ package org.yarnandtail.andhow.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.NameAndProperty;
@@ -208,6 +203,35 @@ public class AndHowUtil {
 		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group), NameUtil.getJavaName(group), naps);
 		
 		return groupProxy;
+	}
+	
+	public static List<GroupProxy> buildGroupProxies(Collection<Class<?>> registeredGroups)
+			throws AppFatalException {
+
+		final ProblemList<Problem> problems = new ProblemList();
+		final List<GroupProxy> groupProxies = new ArrayList();
+
+		for (Class<?> clazz : registeredGroups) {
+
+			try {
+				GroupProxy gp = AndHowUtil.buildGroupProxy(clazz);
+				groupProxies.add(gp);
+			} catch (Exception ex) {
+				problems.add(new ConstructionProblem.SecurityException(ex, clazz));
+			}
+
+		}
+
+		if (problems.isEmpty()) {
+			return groupProxies;
+		} else {
+			AppFatalException afe = new AppFatalException(
+					"There is a problem converting the AndHow Properties contained in the registered "
+					+ "groups - likely this is a security issue.",
+					problems);
+			throw afe;
+		}
+
 	}
 	
 
