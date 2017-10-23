@@ -6,7 +6,6 @@ import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -40,7 +39,10 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	private AndHow(NamingStrategy naming, List<Loader> loaders,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups);
+		
+		synchronized (LOCK) {
+			core = new AndHowCore(naming, loaders, registeredGroups);
+		}
 	}
 
 	/**
@@ -51,16 +53,30 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	public static AndHowBuilder builder() {
 		return new AndHowBuilder();
 	}
+	
+	private static final String PARTIAL_CONSTRUCT_MSG =
+			"AndHow is in an invalid state, partially initialized. "
+			+ "This most likely happens during multi-thread testing "
+			+ "using the AndHowNonProduction utility, which partially "
+			+ "destroys the AndHow framework so it can be re-initialized "
+			+ "for testing.  Alternately, AndHow could be partially "
+			+ "destructed via reflection.";
 
 	public static AndHow instance() {
-		if (singleInstance != null && singleInstance.core != null) {
-			return singleInstance;
+		if (singleInstance != null) {
+			if (singleInstance.core != null) {
+				return singleInstance;
+			} else {
+				throwFatal(PARTIAL_CONSTRUCT_MSG, null);
+				return null;
+			}
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null) {
-					singleInstance = build(null, null, null);
+					build(null, null, null);
+				} else if (singleInstance.core == null) {
+					throwFatal(PARTIAL_CONSTRUCT_MSG, null);
 				}
-				builder().build();
 				return singleInstance;
 			}
 
@@ -106,7 +122,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 
 		synchronized (LOCK) {
 			if (singleInstance != null) {
-				throw new RuntimeException("Already constructed!");
+				throwFatal("AndHow is already constructed!", null);
+				return null;
 			} else {
 				
 				if (loaders == null || loaders.isEmpty()) {
@@ -118,7 +135,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 					registeredGroups = registrar.getGroups();
 				}
 				
-				return singleInstance = new AndHow(naming, loaders, registeredGroups);
+				singleInstance = new AndHow(naming, loaders, registeredGroups);
+				return singleInstance;
 			}
 		}
 	}
@@ -190,6 +208,33 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	@Override
 	public Map<String, String> getSystemEnvironment() {
 		return core.getSystemEnvironment();
+	}
+	
+	/**
+	 * Builds and throws an AppFatalException. The stack trace is edited to
+	 * remove 2 method calls, which should put the stacktrace at the user
+	 * code of the build.
+	 *
+	 * @param message
+	 */
+	/**
+	 * Builds and throws an AppFatalException. The stack trace is edited to
+	 * remove 2 method calls, which should put the stacktrace at the user
+	 * code of the build.
+	 *
+	 * @param message
+	 */
+	private static void throwFatal(String message, Throwable throwable) {
+
+		if (throwable instanceof AppFatalException) {
+			throw (AppFatalException) throwable;
+		} else {
+			AppFatalException afe = new AppFatalException(message, throwable);
+			StackTraceElement[] stes = afe.getStackTrace();
+			stes = Arrays.copyOfRange(stes, 2, stes.length);
+			afe.setStackTrace(stes);
+			throw afe;
+		}
 	}
 
 	/**
@@ -344,21 +389,6 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		public AndHowBuilder namingStrategy(NamingStrategy namingStrategy) {
 			this._namingStrategy = namingStrategy;
 			return this;
-		}
-
-		/**
-		 * Builds and throws an AppFatalException. The stack trace is edited to
-		 * remove 2 method calls, which should put the stacktrace at the user
-		 * code of the build.
-		 *
-		 * @param message
-		 */
-		private void throwFatal(String message, Throwable throwable) {
-			AppFatalException afe = new AppFatalException(message, throwable);
-			StackTraceElement[] stes = afe.getStackTrace();
-			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			afe.setStackTrace(stes);
-			throw afe;
 		}
 
 		/**

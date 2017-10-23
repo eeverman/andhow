@@ -4,9 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.CommandLineArgumentLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
@@ -255,11 +258,16 @@ public class AndHowNonProduction {
 		 * @param message
 		 */
 		private void throwFatal(String message, Throwable throwable) {
-			AppFatalException afe = new AppFatalException(message, throwable);
-			StackTraceElement[] stes = afe.getStackTrace();
-			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			afe.setStackTrace(stes);
-			throw afe;
+			
+			if (throwable instanceof AppFatalException) {
+				throw (AppFatalException) throwable;
+			} else {
+				AppFatalException afe = new AppFatalException(message, throwable);
+				StackTraceElement[] stes = afe.getStackTrace();
+				stes = Arrays.copyOfRange(stes, 2, stes.length);
+				afe.setStackTrace(stes);
+				throw afe;
+			}
 		}
 
 		/**
@@ -276,14 +284,42 @@ public class AndHowNonProduction {
 		public AndHowBuilder build() {
 			
 			populateLoaderList();
-			destroy();	//kill the 'core' of the existing AndHow instance if it is initialized
+			//destroy();	//kill the 'core' of the existing AndHow instance if it is initialized
+			
+			List<GroupProxy> registeredGroups = null;
+			
+			if (_groups == null || _groups.isEmpty()) {
+				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+				registeredGroups = registrar.getGroups();
+			} else {
+				registeredGroups = AndHowUtil.buildGroupProxies(_groups);
+			}
+			
+			if (_namingStrategy == null) {
+				_namingStrategy = new CaseInsensitiveNaming();
+			}
 			
 			try {
 				
-				Method build = AndHow.class.getMethod("build", NamingStrategy.class, List.class, List.class);
-				build.setAccessible(true);
-				build.invoke(null, _namingStrategy, _loaders, convertClassesToGroups(_groups));
+				Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
+				ahInstanceField.setAccessible(true);
 
+				AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
+
+				if (ahInstance == null) {
+					//This is an uninitialized AndHow instance, initialize 'normally'
+					Method build = AndHow.class.getDeclaredMethod("build", NamingStrategy.class, List.class, List.class);
+					build.setAccessible(true);
+					build.invoke(null, _namingStrategy, _loaders, AndHowUtil.buildGroupProxies(_groups));
+				} else {
+					//AndHow is already initialized, so just reassign the core
+					Field ahCoreField = AndHow.class.getDeclaredField("core");
+					ahCoreField.setAccessible(true);
+					
+					AndHowCore core = new AndHowCore(_namingStrategy, _loaders, registeredGroups);
+					ahCoreField.set(ahInstance, core);	//set the core to null
+				}
+				
 			} catch (Exception ex) {
 				throwFatal("Some type of permissions error happened while resetting AndHow."
 						+ "Is it possible there is a security manager enforcing security during testing? ", ex);

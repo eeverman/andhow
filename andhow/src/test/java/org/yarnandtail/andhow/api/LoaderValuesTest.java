@@ -14,7 +14,7 @@ import org.yarnandtail.andhow.PropertyGroup;
  */
 public class LoaderValuesTest {
 	
-	private static final String CLASSPATH_TO_USE = "/org/yarnandtail/andhow/load/SimpleParams1.properties";
+	private static final String CLASSPATH_TO_USE = "/org/yarnandtail/andhow/load/LoaderValuesTest_SimpleParams.properties";
 
 	public static interface TestProps extends PropertyGroup {
 		StrProp CLAZZ_PATH = StrProp.builder().defaultValue(CLASSPATH_TO_USE).build();
