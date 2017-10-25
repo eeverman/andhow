@@ -3,34 +3,37 @@ package org.simple;
 /**
  * This example has almost no comments b/c it's a minimal example for the AndHow! homepage.
  */
-
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
 
+@GroupInfo(name="Basic example of properties embedded directly in a class",
+		desc="This description provides documentation for the properties contained w/in this class.")
 public class SimpleSample {
+	//AndHow property definitions tend to be self documenting, but descriptions can be added
+	public final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull().
+			mustBeGreaterThan(0).defaultValue(10).desc("Start value for countdown").build();
+	
+	public final static IntProp COUNT_DOWN_END = IntProp.builder().mustBeNonNull().
+			mustBeLessThanOrEqualTo(0).defaultValue(0).desc("End value for countdown").build();
+	
+	private final static StrProp LAUNCH_COMMAND = StrProp.builder().mustBeNonNull().
+			mustMatchRegex(".*Launch.*").aliasIn("cmd").desc("The actual launch command").build();
+	
 	
 	public static void main(String[] args) {
 		AndHow.builder().addCmdLineArgs(args).build();
 	
-		//3) After initialization, Properties can be used to directly access their values.
-		//Note the strongly typed return values.
-		String queryUrl =
-				MySetOfProps.SERVICE_URL.getValue() +
-				MySetOfProps.QUERY_ENDPOINT.getValue();
-		Integer timeout = MySetOfProps.TIMEOUT.getValue();
+		System.out.println("Initiate launch sequence...");
+		for (int i = COUNT_DOWN_START.getValue(); i >= COUNT_DOWN_END.getValue(); i--) {
+			System.out.println("..." + i);
+		}
 		
-		System.out.println("The query url is: " + queryUrl);
-		System.out.println("Timeout is : " + timeout);
+		System.out.println(LAUNCH_COMMAND.getValue());
 	}
 	
-	//4) Normally PropertyGroups would be in separate files with the module they apply to
-	@GroupInfo(name="Example Property group", desc="One logical set of properties")
-	public interface MySetOfProps {
-		
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build(); // 5)
-		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
-		StrProp QUERY_ENDPOINT = StrProp.builder().mustBeNonNull()
-				.desc("Service name added to end of url for the queries").build();
-
+	//Quick hack to access the private LAUNCH_COMMAND 
+	public String tellMeTheLaunchCommand() {
+		return LAUNCH_COMMAND.getValue();
 	}
+	
 }
