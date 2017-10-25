@@ -1,6 +1,7 @@
 package com.map;
 
 import org.junit.Test;
+import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.AndHowTestBase;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -17,7 +18,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 
 	@Test
 	public void testConfigFromPropertiesFileOnly() {
-		reloader.reloadDefaultInstance(null);
+		AndHowNonProduction.builder().build();
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -36,7 +37,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
 		
-		reloader.reloadDefaultInstance(null);
+		AndHowNonProduction.builder().build();
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -51,9 +52,11 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
 		
-		reloader.reloadDefaultInstance(new String[] {
-			"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
-			"com.map.EarthMapMaker.WEST_BOUND=-179"});
+		AndHowNonProduction.builder()
+				.addCmdLineArgs(new String[] {
+					"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
+					"com.map.EarthMapMaker.WEST_BOUND=-179"})
+				.build();
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -70,9 +73,11 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "East");
 		
 		try {
-			reloader.reloadDefaultInstance(new String[] {
-				"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
-				"com.map.EarthMapMaker.WEST_BOUND=-179"});
+			AndHowNonProduction.builder()
+					.addCmdLineArgs(new String[] {
+						"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
+						"com.map.EarthMapMaker.WEST_BOUND=-179"})
+					.build();
 		
 			fail("Expected an exception");
 		} catch (AppFatalException afe) {

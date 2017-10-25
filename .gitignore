@@ -36,3 +36,7 @@ nbproject/project.properties
 /andhow-test-harness copy/target/
 /andhow-system-tests/nbproject/
 /andhow-system-tests/target/
+/andhow-usage-examples/complex-example/target/
+/andhow-usage-examples/force-print-config-example/target/
+/andhow-usage-examples/simple-example/target/
+/andhow-usage-examples/complex-example/nbproject/

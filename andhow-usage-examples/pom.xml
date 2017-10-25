@@ -10,16 +10,14 @@
 	<artifactId>andhow-usage-examples</artifactId>
 	
 	<!-- This really isn't meant to be packaged up at all - its sample code -->
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<name>AndHow-Usage-Examples</name>
-	<description>Usage examples of the AndHow! configuration frameork.</description>
+	<description>A collection of usage examples, nested into separate projects.</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>complex-example</module>
+		<module>force-print-config-example</module>
+		<module>simple-example</module>
+	</modules>
 
 </project>

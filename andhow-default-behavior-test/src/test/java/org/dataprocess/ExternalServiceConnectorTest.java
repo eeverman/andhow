@@ -1,6 +1,7 @@
 package org.dataprocess;
 
 import org.junit.Test;
+import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.AndHowTestBase;
 
 import static org.junit.Assert.*;
@@ -20,7 +21,7 @@ public class ExternalServiceConnectorTest extends AndHowTestBase {
 	 */
 	@Test
 	public void testAllConfigValues() {
-		reloader.reloadDefaultInstance(null);
+		AndHowNonProduction.builder().build();
 		
 		ExternalServiceConnector esc = new ExternalServiceConnector();
 		assertEquals("http://forwardcorp.com/service/", esc.getConnectionUrl());

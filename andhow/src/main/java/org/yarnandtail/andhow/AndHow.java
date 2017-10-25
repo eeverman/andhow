@@ -342,11 +342,14 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @return
 		 */
 		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
-			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
+			
+			if (commandLineArgs != null && commandLineArgs.length > 0) {
+				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 
-			//Record where the cmd line loader should go, if not already determined
-			if (addCmdLineLoaderAtPosition == null) {
-				addCmdLineLoaderAtPosition = _loaders.size();
+				//Record where the cmd line loader should go, if not already determined
+				if (addCmdLineLoaderAtPosition == null) {
+					addCmdLineLoaderAtPosition = _loaders.size();
+				}
 			}
 
 			return this;

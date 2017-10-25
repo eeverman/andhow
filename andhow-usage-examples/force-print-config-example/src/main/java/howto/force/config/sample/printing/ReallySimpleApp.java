@@ -2,8 +2,6 @@ package howto.force.config.sample.printing;
 
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.load.*;
-import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * A simple app to demonstrate that sample configuration can be forced at startup.
@@ -14,11 +12,7 @@ import org.yarnandtail.andhow.PropertyGroup;
 public class ReallySimpleApp {
 	
 	public static void main(String[] args) {
-		AndHow.builder()
-				.addCmdLineArgs(args) /* Implicitly adds a loader for these cmd line args */
-				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))
-				.group(MySetOfProps.class) /* MySetOfProps defined below */
-				.build();
+		AndHow.builder().addCmdLineArgs(args).build();
 	
 		System.out.println("Examples of using the configured properties (they initially have default values)");
 		System.out.println("The query url is: " + MySetOfProps.SERVICE_URL.getValue());
@@ -38,10 +32,8 @@ public class ReallySimpleApp {
 	
 	//Normally PropertyGroups would be in separate file - combined here for simplicity
 	@GroupInfo(name="Example Property group", desc="One logical set of properties - all are optional")
-	public interface MySetOfProps extends PropertyGroup {
+	public interface MySetOfProps {
 		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").defaultValue("http://server.com/").build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
-		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file")
-				.aliasIn("propFile").build();
 	}
 }

@@ -299,31 +299,7 @@ public class AndHowNonProduction {
 				_namingStrategy = new CaseInsensitiveNaming();
 			}
 			
-			try {
-				
-				Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
-				ahInstanceField.setAccessible(true);
-
-				AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
-
-				if (ahInstance == null) {
-					//This is an uninitialized AndHow instance, initialize 'normally'
-					Method build = AndHow.class.getDeclaredMethod("build", NamingStrategy.class, List.class, List.class);
-					build.setAccessible(true);
-					build.invoke(null, _namingStrategy, _loaders, AndHowUtil.buildGroupProxies(_groups));
-				} else {
-					//AndHow is already initialized, so just reassign the core
-					Field ahCoreField = AndHow.class.getDeclaredField("core");
-					ahCoreField.setAccessible(true);
-					
-					AndHowCore core = new AndHowCore(_namingStrategy, _loaders, registeredGroups);
-					ahCoreField.set(ahInstance, core);	//set the core to null
-				}
-				
-			} catch (Exception ex) {
-				throwFatal("Some type of permissions error happened while resetting AndHow."
-						+ "Is it possible there is a security manager enforcing security during testing? ", ex);
-			}
+			AndHowNonProductionUtil.forceRebuild(_namingStrategy, _loaders, registeredGroups);
 			
 			return this;
 		}
@@ -340,10 +316,12 @@ public class AndHowNonProduction {
 		 * configured, this will have no effect (ie. the loader will not be
 		 * added if it was not already existing in the list of loaders.
 		 *
+		 * @param cmdLineArgs
+		 * @return 
+		 * @throws java.lang.Exception 
 		 * @throws AppFatalException
 		 */
-		public AndHowBuilder reloadValues(String[] cmdLineArgs)
-				throws Exception {
+		public AndHowBuilder reloadValues(String[] cmdLineArgs) throws Exception {
 
 			_cmdLineArgs.clear();
 			this.addCmdLineArgs(cmdLineArgs);
