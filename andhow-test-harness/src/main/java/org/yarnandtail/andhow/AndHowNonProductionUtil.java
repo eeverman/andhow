@@ -2,11 +2,8 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -108,6 +105,12 @@ public class AndHowNonProductionUtil {
 		Properties newProps = new Properties();
 		newProps.putAll(props);
 		return newProps;
+	}
+	
+	public static void destroyAndHow() {
+		if (getAndHowInstance() != null) {
+			setAndHowCore(null);
+		}
 	}
 
 }

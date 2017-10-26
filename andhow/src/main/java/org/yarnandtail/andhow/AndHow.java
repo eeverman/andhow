@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
@@ -55,27 +56,41 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	}
 	
 	private static final String PARTIAL_CONSTRUCT_MSG =
-			"AndHow is in an invalid state, partially initialized. "
+			"AndHow is in an invalid state, trying to recover from partially initialization. "
 			+ "This most likely happens during multi-thread testing "
 			+ "using the AndHowNonProduction utility, which partially "
 			+ "destroys the AndHow framework so it can be re-initialized "
-			+ "for testing.  Alternately, AndHow could be partially "
+			+ "for each test.  Alternately, AndHow could be partially "
 			+ "destructed via reflection.";
 
 	public static AndHow instance() {
-		if (singleInstance != null) {
-			if (singleInstance.core != null) {
-				return singleInstance;
-			} else {
-				throwFatal(PARTIAL_CONSTRUCT_MSG, null);
-				return null;
-			}
+		if (singleInstance != null && singleInstance.core != null) {
+			return singleInstance;
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null) {
 					build(null, null, null);
 				} else if (singleInstance.core == null) {
-					throwFatal(PARTIAL_CONSTRUCT_MSG, null);
+					
+				/*	This is a concession for testing.  During testing the
+					core is deleted to force AndHow to reload.  Its really an
+					invalid state (instance and core should be null/non-null
+					together, but its handled here to simplify testing.
+				*/
+					try {
+						AndHowCore newCore = new AndHowCore(null, getDefaultLoaders(),
+								new PropertyRegistrarLoader().getGroups());
+						Field coreField = AndHow.class.getDeclaredField("core");
+						coreField.setAccessible(true);
+						coreField.set(singleInstance, newCore);
+					} catch (Exception ex) {
+						if (ex instanceof AppFatalException) {
+							throw (AppFatalException)ex;
+						} else {
+							throwFatal(PARTIAL_CONSTRUCT_MSG, ex);
+						}
+					}
+
 				}
 				return singleInstance;
 			}

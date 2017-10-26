@@ -1,10 +1,7 @@
 package org.yarnandtail.andhow;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.CommandLineArgumentLoader;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
@@ -359,24 +356,8 @@ public class AndHowNonProduction {
 		 *
 		 * Flushes the internal state, making the AndHow appear unconfigured.
 		 */
-		public void destroy() {
-
-			try {
-				//kill the 'core' of the existing AndHow instance if it is initialized
-				Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
-				ahInstanceField.setAccessible(true);
-
-				AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
-
-				if (ahInstance != null) {
-					Field ahCoreField = AndHow.class.getDeclaredField("core");
-					ahCoreField.setAccessible(true);
-					ahCoreField.set(ahInstance, null);	//set the core to null
-				}
-			} catch (Exception ex) {
-				throwFatal("Some type of permissions error happened while destroying the AndHow instance."
-						+ "Is it possible there is a security manager enforcing security during testing? ", ex);
-			}
+		public void destroyAndHow() {
+			AndHowNonProductionUtil.destroyAndHow();
 		}
 		
 		/**
