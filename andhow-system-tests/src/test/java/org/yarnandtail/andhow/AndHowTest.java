@@ -131,12 +131,5 @@ public class AndHowTest extends AndHowTestBase {
 		}
 	}
 	
-	@Test(expected = RuntimeException.class)
-	public void testAttemptingToFetchAPropValueBeforeConfigurationShouldThrowARuntimeException() {
-		AndHowNonProduction.builder().destroy();
-		
-		String shouldFail = SimpleParams.STR_BOB.getValue();
-	}
-	
 
 }

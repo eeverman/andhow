@@ -61,7 +61,11 @@ public class AndHowNonProductionUtil {
 			AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
 
 			if (ahInstance == null) {
-				throw new RuntimeException("Cannot set a new core when AndHow is uninitialized");
+				if (core == null) {
+					//no problem - its all null anyway
+				} else {
+					throw new RuntimeException("Cannot set a new core when AndHow is uninitialized");
+				}
 			} else {
 				Field ahCoreField = AndHow.class.getDeclaredField("core");
 				ahCoreField.setAccessible(true);
@@ -91,7 +95,13 @@ public class AndHowNonProductionUtil {
 				AndHowNonProductionUtil.setAndHowCore(core);
 			}
 		} catch (IllegalAccessException | NoSuchMethodException | IllegalArgumentException | InvocationTargetException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
+			
+			if (ex.getCause() instanceof RuntimeException) {
+				throw (RuntimeException) ex.getCause();
+			} else {
+				throw new RuntimeException(PERMISSION_MSG, ex);
+			}
+				
 		}
 	}
 	
