@@ -28,3 +28,18 @@ nbproject/project.properties
 /andhow-default-behavior-test/nbproject/
 /andhow-default-behavior-test copy/nbproject/
 /andhow-default-behavior-dependency/nbproject/
+/andhow-test-harness/nbproject/
+/andhow-test-harness/target/
+/andhow-system-test-harness/nbproject/
+/andhow-system-test-harness/target/
+/andhow-test-harness copy/nbproject/
+/andhow-test-harness copy/target/
+/andhow-system-tests/nbproject/
+/andhow-system-tests/target/
+/andhow-usage-examples/complex-example/target/
+/andhow-usage-examples/force-print-config-example/target/
+/andhow-usage-examples/simple-example/target/
+/andhow-usage-examples/complex-example/nbproject/
+/andhow-usage-examples/simple-example/nbproject/
+/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dependency/nbproject/
+/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-test/nbproject/

@@ -1,13 +1,12 @@
 package org.yarnandtail.andhow;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  *
@@ -23,10 +22,9 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 
 	private static AndHow singleInstance;
-	private static final Object lock = new Object();
+	private static final Object LOCK = new Object();
 
-	AndHowCore core;
-	Reloader reloader;
+	private final AndHowCore core;
 
 	/**
 	 * Private constructor - Use the AndHowBuilder to build instances.
@@ -42,8 +40,10 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	private AndHow(NamingStrategy naming, List<Loader> loaders,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
-		core = new AndHowCore(naming, loaders, registeredGroups);
-		reloader = new Reloader(this, naming, loaders, registeredGroups);
+		
+		synchronized (LOCK) {
+			core = new AndHowCore(naming, loaders, registeredGroups);
+		}
 	}
 
 	/**
@@ -54,30 +54,47 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	public static AndHowBuilder builder() {
 		return new AndHowBuilder();
 	}
+	
+	private static final String PARTIAL_CONSTRUCT_MSG =
+			"AndHow is in an invalid state, trying to recover from partially initialization. "
+			+ "This most likely happens during multi-thread testing "
+			+ "using the AndHowNonProduction utility, which partially "
+			+ "destroys the AndHow framework so it can be re-initialized "
+			+ "for each test.  Alternately, AndHow could be partially "
+			+ "destructed via reflection.";
 
 	public static AndHow instance() {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
-			buildDefaultInstance();
-			return singleInstance;
-		}
-	}
+			synchronized (LOCK) {
+				if (singleInstance == null) {
+					build(null, null, null);
+				} else if (singleInstance.core == null) {
+					
+				/*	This is a concession for testing.  During testing the
+					core is deleted to force AndHow to reload.  Its really an
+					invalid state (instance and core should be null/non-null
+					together, but its handled here to simplify testing.
+				*/
+					try {
+						AndHowCore newCore = new AndHowCore(null, getDefaultLoaders(),
+								new PropertyRegistrarLoader().getGroups());
+						Field coreField = AndHow.class.getDeclaredField("core");
+						coreField.setAccessible(true);
+						coreField.set(singleInstance, newCore);
+					} catch (Exception ex) {
+						if (ex instanceof AppFatalException) {
+							throw (AppFatalException)ex;
+						} else {
+							throwFatal(PARTIAL_CONSTRUCT_MSG, ex);
+						}
+					}
 
-	public static Reloader buildDefaultInstance(String... cmdLineArgs) {
-		synchronized (lock) {
-			if (singleInstance != null) {
-				throw new RuntimeException("Already constructed!");
-			} else {
-				List<Loader> loaders = getDefaultLoaders(cmdLineArgs);
-
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-
-				List<GroupProxy> proxies = registrar.getGroups();
-
-				singleInstance = new AndHow(null, loaders, proxies);
-				return singleInstance.reloader;
+				}
+				return singleInstance;
 			}
+
 		}
 	}
 
@@ -110,66 +127,33 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * @param naming
 	 * @param loaders
 	 * @param registeredGroups
-	 * @param cmdLineArgs
 	 * @return
 	 * @throws AppFatalException
 	 */
-	private static Reloader buildFromProxies(
+	private static AndHow build(
 			NamingStrategy naming, List<Loader> loaders,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException, RuntimeException {
 
-		synchronized (lock) {
+		synchronized (LOCK) {
 			if (singleInstance != null) {
-				throw new RuntimeException("Already constructed!");
+				throwFatal("AndHow is already constructed!", null);
+				return null;
 			} else {
+				
+				if (loaders == null || loaders.isEmpty()) {
+					loaders = getDefaultLoaders();
+				}
+				
+				if (registeredGroups == null || registeredGroups.isEmpty()) {
+					PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+					registeredGroups = registrar.getGroups();
+				}
+				
 				singleInstance = new AndHow(naming, loaders, registeredGroups);
-				return singleInstance.reloader;
+				return singleInstance;
 			}
 		}
-	}
-
-	private static Reloader build(
-			NamingStrategy naming, List<Loader> loaders,
-			List<Class<?>> registeredGroups)
-			throws AppFatalException, RuntimeException {
-
-		if (registeredGroups != null && !registeredGroups.isEmpty()) {
-			return buildFromProxies(naming, loaders, convertClassesToGroups(registeredGroups));
-		} else {
-			PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-			List<GroupProxy> proxies = registrar.getGroups();
-			return buildFromProxies(naming, loaders, proxies);
-		}
-	}
-
-	private static List<GroupProxy> convertClassesToGroups(Collection<Class<?>> registeredGroups)
-			throws AppFatalException, RuntimeException {
-
-		final ProblemList<Problem> problems = new ProblemList();
-		final List<GroupProxy> groupProxies = new ArrayList();
-
-		for (Class<?> clazz : registeredGroups) {
-
-			try {
-				GroupProxy gp = AndHowUtil.buildGroupProxy(clazz);
-				groupProxies.add(gp);
-			} catch (Exception ex) {
-				problems.add(new ConstructionProblem.SecurityException(ex, Options.class));
-			}
-
-		}
-
-		if (problems.isEmpty()) {
-			return groupProxies;
-		} else {
-			AppFatalException afe = new AppFatalException(
-					"There is a problem converting the AndHow Properties contained in the registered "
-					+ "groups - likely this is a security issue.",
-					problems);
-			throw afe;
-		}
-
 	}
 
 	//
@@ -240,6 +224,33 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	public Map<String, String> getSystemEnvironment() {
 		return core.getSystemEnvironment();
 	}
+	
+	/**
+	 * Builds and throws an AppFatalException. The stack trace is edited to
+	 * remove 2 method calls, which should put the stacktrace at the user
+	 * code of the build.
+	 *
+	 * @param message
+	 */
+	/**
+	 * Builds and throws an AppFatalException. The stack trace is edited to
+	 * remove 2 method calls, which should put the stacktrace at the user
+	 * code of the build.
+	 *
+	 * @param message
+	 */
+	private static void throwFatal(String message, Throwable throwable) {
+
+		if (throwable instanceof AppFatalException) {
+			throw (AppFatalException) throwable;
+		} else {
+			AppFatalException afe = new AppFatalException(message, throwable);
+			StackTraceElement[] stes = afe.getStackTrace();
+			stes = Arrays.copyOfRange(stes, 2, stes.length);
+			afe.setStackTrace(stes);
+			throw afe;
+		}
+	}
 
 	/**
 	 * A builder class, which is the only supported way to construct an AndHow
@@ -265,7 +276,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 	 * .loader(new PropFileLoader)
 	 * .group(SomeGroup.class)
 	 * .group(SomeOtherGroup.class)
-	 * .cmdLineArgs([Array of cmd line arguments])
+	 * .addCmdLineArgs([Array of cmd line arguments])
 	 * .build();
 	 * }
 	 * </pre>
@@ -291,10 +302,8 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		private final List<Loader> _loaders = new ArrayList();
 		private NamingStrategy _namingStrategy = null;
 		private final List<String> _cmdLineArgs = new ArrayList();
-		private final List<Class<?>> _groups = new ArrayList();
 
 		//
-		//Internal state
 		//The position at which the cmd line loader should be added.
 		//May be null if not needed.
 		private Integer addCmdLineLoaderAtPosition = null;
@@ -335,33 +344,6 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			return this;
 		}
 
-		/**
-		 * Add a group to the list of groups being built.
-		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
-		 *
-		 * @param group
-		 * @return
-		 */
-		public AndHowBuilder group(Class<?> group) {
-			_groups.add(group);
-			return this;
-		}
-
-		/**
-		 * Add a list of groups to the list of groups being built.
-		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
-		 *
-		 * @param groups
-		 * @return
-		 */
-		public AndHowBuilder groups(Collection<Class<?>> groups) {
-			this._groups.addAll(groups);
-			return this;
-		}
 
 		/**
 		 * Adds the command line arguments, keeping any previously added.
@@ -374,12 +356,15 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @param commandLineArgs
 		 * @return
 		 */
-		public AndHowBuilder cmdLineArgs(String[] commandLineArgs) {
-			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
+		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
+			
+			if (commandLineArgs != null && commandLineArgs.length > 0) {
+				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 
-			//Record where the cmd line loader should go, if not already determined
-			if (addCmdLineLoaderAtPosition == null) {
-				addCmdLineLoaderAtPosition = _loaders.size();
+				//Record where the cmd line loader should go, if not already determined
+				if (addCmdLineLoaderAtPosition == null) {
+					addCmdLineLoaderAtPosition = _loaders.size();
+				}
 			}
 
 			return this;
@@ -394,7 +379,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * @param value
 		 * @return
 		 */
-		public AndHowBuilder cmdLineArg(String key, String value) {
+		public AndHowBuilder addCmdLineArg(String key, String value) {
 
 			if (value != null) {
 				_cmdLineArgs.add(key + StringArgumentLoader.KVP_DELIMITER + value);
@@ -425,21 +410,6 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		}
 
 		/**
-		 * Builds and throws an AppFatalException. The stack trace is edited to
-		 * remove 2 method calls, which should put the stacktrace at the user
-		 * code of the build.
-		 *
-		 * @param message
-		 */
-		private void throwFatal(String message) {
-			AppFatalException afe = new AppFatalException(message);
-			StackTraceElement[] stes = afe.getStackTrace();
-			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			afe.setStackTrace(stes);
-			throw afe;
-		}
-
-		/**
 		 * Executes the AndHow framework startup.
 		 *
 		 * There is no return value because there is no need to hold a reference
@@ -451,161 +421,28 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 */
 		public void build() throws AppFatalException {
 			populateLoaderList();
-			AndHow.build(_namingStrategy, _loaders, _groups);
+			AndHow.build(_namingStrategy, _loaders, null);
 		}
 
-		/**
-		 * Bootstraps the AndHow framework and returns a Reloader that can be
-		 * used to destroy or reload the AndHow framework.
-		 *
-		 * Destroying or reloading is strictly for testing - Support for
-		 * reloading, including dealing with the issue of inconsistent reads of
-		 * the data, is not in place.
-		 *
-		 * If no loaders have been added, the default set of loaders is used. If
-		 * no groups have been added, groups will be automatically read from
-		 * service metadata (this is the preferred config mechanism)
-		 *
-		 * Don't use this method in production, just use build(), which doesn't
-		 * return the reloader.
-		 *
-		 * This method may be removed in a future version. You have been warned.
-		 *
-		 * @return
-		 * @throws AppFatalException
-		 */
-		public AndHow.Reloader buildForNonPropduction() throws AppFatalException {
-			populateLoaderList();
-			return AndHow.build(_namingStrategy, _loaders, _groups);
-		}
-
+		
 		private void populateLoaderList() {
 			if (_loaders.isEmpty()) {
 				_loaders.addAll(AndHow.getDefaultLoaders(_cmdLineArgs.toArray(new String[_cmdLineArgs.size()])));
+			}
+			
+			//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
+			int existingCmdLoader = -1;
+			for (int i = 0; i < _loaders.size(); i++) {
+				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+					existingCmdLoader = i;
+					break;
+				}
+			}
+
+			if (existingCmdLoader > -1) {
+				_loaders.add(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
 			} else if (addCmdLineLoaderAtPosition != null) {
-				//If the user added cmd line args, add a loader for them at the correct
-				//position wrt other loaders.
-				_loaders.add(addCmdLineLoaderAtPosition, new StringArgumentLoader(_cmdLineArgs));
-			}
-		}
-
-		/**
-		 * After initial construction with buildForNonPropduction() this method
-		 * forces a reload using the reloader instance.
-		 *
-		 * Not for production, @See buildForNonPropduction
-		 *
-		 * @param reloader Must be the same instance given out by
-		 * buildForNonPropduction.
-		 * @throws AppFatalException
-		 */
-		public void reloadForNonPropduction(AndHow.Reloader reloader) throws AppFatalException {
-			populateLoaderList();
-			reloader.reload(_namingStrategy, _loaders, _groups);
-		}
-
-	}
-
-	public static class Reloader {
-
-		private final AndHow instance;
-		private NamingStrategy naming;
-		private List<Loader> loaders;
-		private List<GroupProxy> registeredGroups;
-
-		private Reloader(AndHow instance, NamingStrategy naming, List<Loader> loaders,
-				List<GroupProxy> registeredGroups) {
-			this.instance = instance;
-			this.naming = naming;
-			this.loaders = loaders;
-			this.registeredGroups = registeredGroups;
-		}
-
-		/**
-		 * Forces a reload of the AndHow state.
-		 *
-		 * This may someday support production reloading of values, but for now
-		 * it is really just a means for testing w/o having to deal with new
-		 * classloaders for the singleton instancing.
-		 *
-		 * @param naming
-		 * @param loaders
-		 * @param registeredGroups
-		 * @param cmdLineArgs
-		 * @throws AppFatalException
-		 */
-		public void reload(NamingStrategy naming, List<Loader> loaders,
-				List<Class<?>> registeredGroups)
-				throws AppFatalException {
-
-			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, AndHow.convertClassesToGroups(registeredGroups));
-			}
-		}
-
-		/**
-		 * Forces a reload using all the same naming, loaders and registered
-		 * groups.
-		 *
-		 * Values will be reread, including the command line arguments that are
-		 * passed. If the cmdLineArgs are nonNull, a new
-		 * CommandLineArgumentLoader will be constructed with those argument and
-		 * it will replace the previous CommandLineArgumentLoader. If there is
-		 * no CommandLineArgumentLoader configured, this will have no effect
-		 * (ie. the loader will not be added if it was not already existing in
-		 * the list of loaders.
-		 *
-		 * @throws AppFatalException
-		 */
-		public void reload(String[] cmdLineArgs)
-				throws AppFatalException {
-
-			//Find and replace the existing commandline loader w/ a new instance w/
-			//new command line arguments.
-			if (cmdLineArgs != null) {
-				for (int i = 0; i < loaders.size(); i++) {
-					if (loaders.get(i) instanceof CommandLineArgumentLoader) {
-						CommandLineArgumentLoader cmdLoader = new CommandLineArgumentLoader(cmdLineArgs);
-						loaders.set(i, cmdLoader);
-						break;
-					}
-				}
-			}
-
-			synchronized (AndHow.lock) {
-				instance.core = new AndHowCore(naming, loaders, registeredGroups);
-			}
-		}
-
-		/**
-		 * Reloads AndHow using the default loading strategy.
-		 *
-		 * @param cmdLineArgs
-		 * @throws AppFatalException
-		 */
-		public void reloadDefaultInstance(String[] cmdLineArgs)
-				throws AppFatalException {
-
-			synchronized (AndHow.lock) {
-				List<Loader> ldrs = getDefaultLoaders(cmdLineArgs);
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-				List<GroupProxy> proxies = registrar.getGroups();
-
-				instance.core = new AndHowCore(null, ldrs, proxies);
-			}
-		}
-
-		/**
-		 * For shutdown or testing.
-		 *
-		 * Flushes the internal state, making the AndHow appear unconfigured.
-		 */
-		public void destroy() {
-
-			synchronized (AndHow.lock) {
-				if (instance != null) {
-					instance.core = null;
-				}
+				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
 			}
 		}
 	}

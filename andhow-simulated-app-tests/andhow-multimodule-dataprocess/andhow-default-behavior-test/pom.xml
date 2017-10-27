@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yarnandtail</groupId>
+		<artifactId>andhow-parent</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.yarnandtail</groupId>
+	<artifactId>andhow-default-behavior-test</artifactId>
+	
+	<!-- This really isn't meant to be packaged up at all - its sample code -->
+	<packaging>jar</packaging>
+	<name>andhow-default-behavior-test</name>
+	<description>Usage examples of the AndHow! configuration frameork.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-annotation-processor</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andhow-test-harness</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-default-behavior-dependency</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

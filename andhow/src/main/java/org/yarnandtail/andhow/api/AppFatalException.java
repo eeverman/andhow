@@ -14,6 +14,17 @@ public class AppFatalException extends RuntimeException {
 	 * Used for errors while the AndHow builder is still in use - we don't have
 	 * full context b/c AndHow has not been constructed yet.
 	 * @param message 
+	 * @param throwable 
+	 */
+	public AppFatalException(String message, Throwable throwable) {
+		super(message, throwable);
+		this.problems = new ProblemList();
+	}
+	
+	/**
+	 * Used for errors while the AndHow builder is still in use - we don't have
+	 * full context b/c AndHow has not been constructed yet.
+	 * @param message 
 	 */
 	public AppFatalException(String message) {
 		super(message);

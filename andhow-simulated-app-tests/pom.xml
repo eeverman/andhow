@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -5,19 +6,10 @@
 		<artifactId>andhow-parent</artifactId>
 		<version>0.4.0-SNAPSHOT</version>
 	</parent>
-
-	<groupId>org.yarnandtail</groupId>
-	<artifactId>andhow-usage-examples</artifactId>
-	
-	<!-- This really isn't meant to be packaged up at all - its sample code -->
+	<artifactId>andhow-simulated-app-tests</artifactId>
 	<packaging>pom</packaging>
-	<name>AndHow-Usage-Examples</name>
-	<description>A collection of usage examples, nested into separate projects.</description>
-
 	<modules>
-		<module>complex-example</module>
-		<module>force-print-config-example</module>
-		<module>simple-example</module>
+		<module>andhow-multimodule-dataprocess</module>
 	</modules>
 	
 	<build>
