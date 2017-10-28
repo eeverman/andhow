@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
+import java.util.logging.Level;
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
 import org.yarnandtail.andhow.service.PropertyRegistration;
 import com.sun.source.util.Trees;
@@ -11,6 +12,7 @@ import javax.lang.model.element.*;
 
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.util.AndHowLog;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 
@@ -24,10 +26,8 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  */
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
-
-//	public static final String GENERATED_CLASS_PREFIX = "$GlobalPropGrpStub";
-//	public static final String GENERATED_CLASS_NESTED_SEP = "$";
-//
+	private static final AndHowLog LOG = new AndHowLog(AndHowCompileProcessor.class);
+	
 	private static final String SERVICES_PACKAGE = "";
 	
 	private static final String RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.service.PropertyRegistrar";
@@ -43,6 +43,25 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public AndHowCompileProcessor() {
 		//required by Processor API
 		runDate = new GregorianCalendar();
+		
+		//Update the logger settings.
+		//Only once instance will be created, so setting a static here is a non-issue
+		String pkg = AndHowCompileProcessor.class.getPackage().getName();
+		String propName = pkg + ".LogLevel";
+		String logLevelStr = System.getProperty(propName);
+		
+		if (logLevelStr != null) {
+			try {
+				Level level = Level.parse(logLevelStr.toUpperCase());
+				LOG.setLevel(level);
+				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
+						null, null, "Set log level to {} for package '{}'", level.getName(), pkg);
+			} catch (IllegalArgumentException ex) {
+				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
+						null, null, "Unrecognized level '{}' for {} must match a java.util.logging.Level", logLevelStr, propName);
+			}
+		}
+		
 	}
 	
 	protected void addRegistrar(String fullClassName, Element causeElement) {
@@ -70,14 +89,14 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		try {
 			
 			if (isLastRound) {
-				trace("(THIS IS THE LAST ROUND OF PROCESSING.  Root Element count: " + roundEnv.getRootElements().size());
+				LOG.debug("Final round of annotation processing.  Total root element count: {}", roundEnv.getRootElements().size());
 				
 				if (registrars != null && registrars.size() > 0) {
 					writeServiceRegistrarsFile(filer, registrars, registeredTLCs.toArray(new Element[registeredTLCs.size()]));
 				}
 				
 			} else {
-				trace("(Just another round of processing...  Root Element count: " + roundEnv.getRootElements().size());
+				LOG.trace("Another round of annotation processing.  Current root element count: {}", roundEnv.getRootElements().size());
 			}
 
 		} catch (Exception ex) {
@@ -98,28 +117,36 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 			if (ret.hasRegistrations()) {
 				
-				trace("Found " + ret.getRegistrations().size() + " registration");
+				LOG.debug("Found {} AndHow Properties in class {} ", + ret.getRegistrations().size(), ret.getRootCanonicalName());
 				PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
 				this.addRegistrar(gen.buildGeneratedClassFullName(), te);
 				PropertyRegistrationList regs = ret.getRegistrations();
 				
-				trace("Found " + ret.getRegistrations().size() + " registration");
-				for (PropertyRegistration p : ret.getRegistrations()) {
-					trace("Found Property '" + p.getCanonicalPropertyName() + 
-							"' in : " + p.getCanonicalRootName() + " parent class: " + p.getJavaCanonicalParentName());
+				if (LOG.isLoggable(Level.FINEST)) {
+					for (PropertyRegistration p : ret.getRegistrations()) {
+						LOG.trace("Found AndHow Property '{}' in root class '{}', immediate parent is '{}'",
+								p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
+					}
 				}
-				
-				
+
 				try {
-					trace("Will write new generated class file " + gen.buildGeneratedClassSimpleName());
 					writeClassFile(filer, gen, e);
+					LOG.trace("Wrote new generated class file " + gen.buildGeneratedClassSimpleName());
 				} catch (Exception ex) {
-					error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+					LOG.error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+					throw new RuntimeException(ex);
 				}
 			}
 
-			for (String err : ret.getErrors()) {
-				System.out.println("Found Error: " + err);
+			if (ret.getErrors().size() > 0) {
+				LOG.error(
+						"AndHow Property definition errors prevented compilation to complete. " +
+						"Each of the following errors must be fixed before compilation is possible.");
+				for (String err : ret.getErrors()) {
+					LOG.error("AndHow Property Error: {}", err);
+				}
+				
+				throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
 			}
 
 		}
@@ -130,8 +157,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	public void writeClassFile(Filer filer, PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
 
-		trace("Writing " + generator.buildGeneratedClassFullName() + " as a generated source file");
-		
 		String classContent = generator.generateSource();
 
 		FileObject classFile = filer.createSourceFile(generator.buildGeneratedClassFullName(), causingElement);
@@ -142,9 +167,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 	
 	public void writeServiceRegistrarsFile(Filer filer, List<String> registrars, Element... causingElements) throws Exception {
-
-		trace("Writing service registrars file");
-
 		//The CLASS_OUTPUT location is used instead of SOURCE_OUTPUT because it
 		//seems that non-Java files are not copied over from the SOURCE_OUTPUT
 		//location.
@@ -156,21 +178,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				writer.write(System.lineSeparator());
 			}
 		}
-	}
 		
-
-	public static void trace(String msg) {
-		System.out.println("AndHowCompileProcessor: " + msg);
-	}
-
-	public static void error(String msg) {
-		error(msg, null);
-	}
-
-	public static void error(String msg, Exception e) {
-		System.err.println("AndHowCompileProcessor: " + msg);
-		e.printStackTrace(System.err);
-		throw new RuntimeException(msg, e);
+		LOG.trace("Wrote service registry log '{}' to the location StandardLocation.CLASS_OUTPUT", RELATIVE_NAME);
 	}
 
 }
