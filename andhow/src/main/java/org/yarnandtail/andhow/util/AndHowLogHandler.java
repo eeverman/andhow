@@ -10,6 +10,9 @@ import java.util.logging.*;
  * @author ericeverman
  */
 public class AndHowLogHandler extends Handler {
+	public static final String ANSI_RESET = "\u001B[0m";
+	public static final String ANSI_RED = "\u001B[31m";
+	
 	private PrintStream errStream = null;
 	private PrintStream outStream = null;
 	
@@ -84,14 +87,6 @@ public class AndHowLogHandler extends Handler {
         setFormatter(getFormatterProperty(cname +".formatter", new SimpleFormatter()));
     }
 	
-	protected PrintStream getStreamForLevel(Level level) {
-		if (level.intValue() >= Level.SEVERE.intValue()) {
-			return getErrStream();
-		} else {
-			return getNonErrStream();
-		}
-	}
-	
 	@Override
 	public void publish(LogRecord record) {
         if (!isLoggable(record)) {
@@ -107,13 +102,28 @@ public class AndHowLogHandler extends Handler {
             return;
         }
 
-		//Print errors to System.err, others to System.out
-		PrintStream ps = getStreamForLevel(record.getLevel());
+		//Print errors to System.err, others to System.out	
 		
-		ps.println(msg);
-		if (record.getThrown() != null) {
-			record.getThrown().printStackTrace(ps);
+		
+		if (record.getLevel().equals(Level.SEVERE)) {
+			PrintStream ps = this.getErrStream();
+			ps.print(ANSI_RED);
+		
+			ps.println(msg);
+			if (record.getThrown() != null) {
+				record.getThrown().printStackTrace(ps);
+			}
+			
+			ps.print(ANSI_RESET);
+		} else {
+			PrintStream ps = this.getNonErrStream();
+
+			ps.println(msg);
+			if (record.getThrown() != null) {
+				record.getThrown().printStackTrace(ps);
+			}
 		}
+
 	}
 
 	@Override
