@@ -27,14 +27,14 @@ public class NonStaticInnerClassSample {
 			//visibility?  Would need to track visibility in that case.
 			private static final StrProp STRING = StrProp.builder().build();
 			public static final StrProp STRING_PUB = StrProp.builder().build();
-			public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
+			//public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build(); //would be illegal
 			
 			class PI_DC_DC {
 				
 				//JVM banned
 				//private static final StrProp STRING = StrProp.builder().build();
 				
-				private final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
+				//private final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();	//would be illegal
 			}
 		}
 
@@ -49,7 +49,7 @@ public class NonStaticInnerClassSample {
 		//private static final StrProp STRING = StrProp.builder().build();
 		
 		
-		public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();
+		//public final StrProp NON_STATIC_STRING_PUB = StrProp.builder().build();	//would be illegal
 
 //		private static final StrProp STRING = StrProp.builder().build();
 //		
