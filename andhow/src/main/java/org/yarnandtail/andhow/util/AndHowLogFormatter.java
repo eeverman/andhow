@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.logging.*;
-import sun.util.logging.PlatformLogger;
 
 /**
  *

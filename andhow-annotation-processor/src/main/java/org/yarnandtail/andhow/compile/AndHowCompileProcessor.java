@@ -55,10 +55,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				Level level = Level.parse(logLevelStr.toUpperCase());
 				LOG.setLevel(level);
 				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
-						null, null, "Set log level to {} for package '{}'", level.getName(), pkg);
+						null, null, "Set log level to {0} for package {1}", level.getName(), pkg);
 			} catch (IllegalArgumentException ex) {
 				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
-						null, null, "Unrecognized level '{}' for {} must match a java.util.logging.Level", logLevelStr, propName);
+						null, null, "Unrecognized level ''{0}'' for {1} must match a java.util.logging.Level", logLevelStr, propName);
 			}
 		}
 		
@@ -89,14 +89,14 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		try {
 			
 			if (isLastRound) {
-				LOG.debug("Final round of annotation processing.  Total root element count: {}", roundEnv.getRootElements().size());
+				LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
 				
 				if (registrars != null && registrars.size() > 0) {
 					writeServiceRegistrarsFile(filer, registrars, registeredTLCs.toArray(new Element[registeredTLCs.size()]));
 				}
 				
 			} else {
-				LOG.trace("Another round of annotation processing.  Current root element count: {}", roundEnv.getRootElements().size());
+				LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
 			}
 
 		} catch (Exception ex) {
@@ -117,14 +117,14 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 			if (ret.hasRegistrations()) {
 				
-				LOG.debug("Found {} AndHow Properties in class {} ", + ret.getRegistrations().size(), ret.getRootCanonicalName());
+				LOG.debug("Found {0} AndHow Properties in class {1} ", ret.getRegistrations().size(), ret.getRootCanonicalName());
 				PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
 				this.addRegistrar(gen.buildGeneratedClassFullName(), te);
 				PropertyRegistrationList regs = ret.getRegistrations();
 				
 				if (LOG.isLoggable(Level.FINEST)) {
 					for (PropertyRegistration p : ret.getRegistrations()) {
-						LOG.trace("Found AndHow Property '{}' in root class '{}', immediate parent is '{}'",
+						LOG.trace("Found AndHow Property ''{0}'' in root class ''{1}'', immediate parent is ''{2}''",
 								p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
 					}
 				}
@@ -143,7 +143,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 						"AndHow Property definition errors prevented compilation to complete. " +
 						"Each of the following errors must be fixed before compilation is possible.");
 				for (String err : ret.getErrors()) {
-					LOG.error("AndHow Property Error: {}", err);
+					LOG.error("AndHow Property Error: {0}", err);
 				}
 				
 				throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
@@ -179,7 +179,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			}
 		}
 		
-		LOG.trace("Wrote service registry log '{}' to the location StandardLocation.CLASS_OUTPUT", RELATIVE_NAME);
+		LOG.trace("Wrote service registry log ''{0}'' to the location StandardLocation.CLASS_OUTPUT", RELATIVE_NAME);
 	}
 
 }

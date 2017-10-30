@@ -151,7 +151,7 @@ public class AndHowLogTest {
 	 */
 	@Test
 	public void testInfo_String_ObjectArr() {
-		log.info("Some info on line {}, message '{}'", "42", "Bee Boo");
+		log.info("Some info on line {0}, message ''{1}''", "42", "Bee Boo");
 		assertTrue(testNonErrByteArray.toString().contains("Some info on line 42, message 'Bee Boo'"));
 		assertEquals("err stream should be empty", 0, testErrByteArray.toString().length());
 	}
@@ -205,7 +205,7 @@ public class AndHowLogTest {
 	 */
 	@Test
 	public void testError_String_ObjectArr() {
-		log.error("Big err on line {}, message '{}'", "42", "Bee Boo");
+		log.error("Big err on line {0}, message ''{1}''", "42", "Bee Boo");
 		assertTrue(testErrByteArray.toString().contains("Big err on line 42, message 'Bee Boo'"));
 		assertEquals("nonErr stream should be empty", 0, testNonErrByteArray.toString().length());
 	}

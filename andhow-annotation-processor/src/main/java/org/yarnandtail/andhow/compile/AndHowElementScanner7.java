@@ -65,13 +65,13 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 				);
 				
 				if (LOG.isLoggable(Level.FINE)) {
-					LOG.debug("Found creating of an AndHow Property in source code: {}",
+					LOG.debug("Found creating of an AndHow Property in source code: {0}",
 							NameUtil.getAndHowName(compileUnit.getRootCanonicalName(), e.getSimpleName().toString(), compileUnit.getInnerPathNames()));
 				}
 
 			} else {
 				if (LOG.isLoggable(Level.FINEST)) {
-					LOG.trace("Found an AndHow Property variable '{}' in '{}', but it is just a reference to an existing property.",
+					LOG.trace("Found an AndHow Property variable ''{0}'' in ''{1}'', but it is just a reference to an existing property.",
 							e.getSimpleName().toString(), compileUnit.getRootCanonicalName());
 				}
 			}
