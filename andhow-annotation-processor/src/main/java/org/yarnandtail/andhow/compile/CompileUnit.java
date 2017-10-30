@@ -119,7 +119,7 @@ public class CompileUnit {
 	 * recorded instead.
 	 */
 	public boolean addProperty(String name, boolean _static, boolean _final) {
-		return CompileUnit.this.addProperty(new SimpleVariable(name, _static, _final));
+		return addProperty(new SimpleVariable(name, _static, _final));
 	}
 
 	/**
