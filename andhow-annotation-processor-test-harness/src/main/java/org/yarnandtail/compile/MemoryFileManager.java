@@ -69,7 +69,7 @@ public class MemoryFileManager extends ForwardingJavaFileManager<JavaFileManager
 
 	@Override
 	public boolean isSameFile(FileObject a, FileObject b) {
-		System.out.println("isSameFile: " + a.toUri() + " to " + b.toUri() + " isSame: " + (a.toUri().compareTo(b.toUri()) == 0));
+		//System.out.println("isSameFile: " + a.toUri() + " to " + b.toUri() + " isSame: " + (a.toUri().compareTo(b.toUri()) == 0));
 		return a.toUri().compareTo(b.toUri()) == 0;
 	}
 
