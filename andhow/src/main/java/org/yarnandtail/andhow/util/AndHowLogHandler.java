@@ -10,8 +10,6 @@ import java.util.logging.*;
  * @author ericeverman
  */
 public class AndHowLogHandler extends Handler {
-	public static final String ANSI_RESET = "\u001B[0m";
-	public static final String ANSI_RED = "\u001B[31m";
 	
 	private PrintStream errStream = null;
 	private PrintStream outStream = null;
@@ -84,7 +82,7 @@ public class AndHowLogHandler extends Handler {
 
         setLevel(getLevelProperty(cname +".level", Level.ALL));	//ie allow the Logger to do the level filtering
         setFilter(getFilterProperty(cname +".filter", null));
-        setFormatter(getFormatterProperty(cname +".formatter", new SimpleFormatter()));
+        setFormatter(getFormatterProperty(cname +".formatter", new AndHowLogFormatter()));
     }
 	
 	@Override
@@ -104,24 +102,10 @@ public class AndHowLogHandler extends Handler {
 
 		//Print errors to System.err, others to System.out	
 		
-		
 		if (record.getLevel().equals(Level.SEVERE)) {
-			PrintStream ps = this.getErrStream();
-			ps.print(ANSI_RED);
-		
-			ps.println(msg);
-			if (record.getThrown() != null) {
-				record.getThrown().printStackTrace(ps);
-			}
-			
-			ps.print(ANSI_RESET);
+			getErrStream().print(msg);
 		} else {
-			PrintStream ps = this.getNonErrStream();
-
-			ps.println(msg);
-			if (record.getThrown() != null) {
-				record.getThrown().printStackTrace(ps);
-			}
+			getNonErrStream().print(msg);
 		}
 
 	}
@@ -136,8 +120,8 @@ public class AndHowLogHandler extends Handler {
 	public void close() throws SecurityException {
 		killStream(errStream);
 		killStream(outStream);
-		errStream = null;
-		outStream = null;
+		errStream = System.err;
+		outStream = System.out;
 	}
 	
 	/**

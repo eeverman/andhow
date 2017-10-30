@@ -1,0 +1,11 @@
+Copyright 2016 Eric Everman under the Apache License, Version 2.0</name>
+License url: http://www.apache.org/licenses/LICENSE-2.0
+				
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+__org.yarnandtail.andhow.util.StackLocator.java__
+Substantially copied from the log4j utility class:
+org.apache.logging.log4j.util.StackLocator.java
+Available at: https://git-wip-us.apache.org/repos/asf?p=logging-log4j2.git;a=blob;f=log4j-api/src/main/java/org/apache/logging/log4j/util/StackLocator.java
+
