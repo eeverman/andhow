@@ -50,7 +50,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
@@ -98,7 +98,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromStringsCompEnvAsClasspath() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
@@ -136,7 +136,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:/test/" + 
@@ -169,7 +169,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromStringsFromAddedAndReplacementNonStdPaths() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:zip/" + 
@@ -205,7 +205,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromObjectsCompEnv() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:comp/env/" + 
@@ -248,7 +248,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testHappyPathFromObjectsRoot() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
@@ -280,7 +280,6 @@ public class JndiLoaderTest extends AndHowTestBase {
 		assertEquals(new Integer(9999), SimpleParams.INT_NULL.getValue());
 	}
 	
-
 	//
 	//
 	// Non-HappyPath
@@ -289,7 +288,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testDuplicateValues() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		//switching values slightly to make sure we are reading the correct ones
@@ -321,7 +320,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testObjectConversionErrors() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
@@ -354,7 +353,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	@Test
 	public void testStringConversionErrors() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");

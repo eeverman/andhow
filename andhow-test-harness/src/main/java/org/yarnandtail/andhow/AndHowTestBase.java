@@ -39,6 +39,11 @@ public class AndHowTestBase {
 	 */
 	private Properties beforeTestSystemProps;
 	
+	/**
+	 * Builder for a temporary JNDI context
+	 */
+	private static SimpleNamingContextBuilder builder;
+	
 	
 	
 	/**
@@ -49,8 +54,10 @@ public class AndHowTestBase {
 	 * @return
 	 * @throws NamingException 
 	 */
-	public static SimpleNamingContextBuilder getJndi() throws NamingException {
-		SimpleNamingContextBuilder builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
+	public SimpleNamingContextBuilder getJndi() throws NamingException {
+		if (builder == null) {
+			builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
+		}
 		return builder;
 	}
 	
@@ -89,6 +96,11 @@ public class AndHowTestBase {
 	public void resetAndHowSnapshotAfterSingleTest() {
 		System.setProperties(beforeTestSystemProps);
 		AndHowNonProductionUtil.setAndHowCore(beforeTestCore);
+		
+		if (builder != null) {
+			builder.clear();
+		}
 	}
+	
 	
 }
