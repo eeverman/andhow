@@ -76,8 +76,11 @@ public abstract class BaseLoader implements Loader {
 					}
 				}
 				
-			} else if (this.isUnrecognizedPropertyNamesConsideredAProblem()) {
-				loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
+			} else if (this instanceof ReadLoader) {
+				ReadLoader rl = (ReadLoader)this;
+				if (rl.isUnrecognizedPropertyNamesConsideredAProblem()) {
+					loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
+				}
 			}
 
 		}
