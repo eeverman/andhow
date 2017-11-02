@@ -92,7 +92,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	@Test
 	public void testInvalidValues() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		jndi.activate();
 		
 		cmdLineArgs = new String[] {

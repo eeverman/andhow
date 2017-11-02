@@ -1,22 +1,16 @@
 package org.yarnandtail.andhow;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.AndHowNonProduction;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.PropertyGroup;
-
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.JndiLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -119,7 +113,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testInAliasesViaJndiCompEnvClassPath() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 
 		jndi.bind("java:comp/env/" + STR_PROP1_IN, STR1);
 		jndi.bind("java:comp/env/" + STR_PROP2_ALIAS, STR2);
@@ -141,7 +135,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testInAliasesViaJndiRootClassPath() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 
 		jndi.bind("java:" + STR_PROP1_IN_AND_OUT_ALIAS, STR1);
 		jndi.bind("java:" + STR_PROP2_IN_ALT1_ALIAS, STR2);
@@ -163,7 +157,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testInAliasesViaJndiCompEnvUrlNames() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 
 		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP1_IN), STR1);
@@ -186,7 +180,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	@Test
 	public void testInAliasesViaJndiRootUrlNames() throws Exception {
 		
-		SimpleNamingContextBuilder jndi = AndHowTestBase.getJndi();
+		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 
 		jndi.bind("java:" + bns.getUriName(STR_PROP1_IN), STR1);
