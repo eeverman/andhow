@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class AndHowLogTest {
 	
-	private static AndHowLog log = new AndHowLog(AndHowLogTest.class);
+	private static AndHowLog log = AndHowLog.getLogger(AndHowLogTest.class);
 	
 
 	ByteArrayOutputStream testErrByteArray;

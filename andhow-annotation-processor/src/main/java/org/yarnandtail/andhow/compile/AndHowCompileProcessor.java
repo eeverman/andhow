@@ -26,7 +26,7 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  */
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
-	private static final AndHowLog LOG = new AndHowLog(AndHowCompileProcessor.class);
+	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCompileProcessor.class);
 	
 	private static final String SERVICES_PACKAGE = "";
 	
@@ -43,25 +43,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public AndHowCompileProcessor() {
 		//required by Processor API
 		runDate = new GregorianCalendar();
-		
-		//Update the logger settings.
-		//Only once instance will be created, so setting a static here is a non-issue
-		String pkg = AndHowCompileProcessor.class.getPackage().getName();
-		String propName = pkg + ".LogLevel";
-		String logLevelStr = System.getProperty(propName);
-		
-		if (logLevelStr != null) {
-			try {
-				Level level = Level.parse(logLevelStr.toUpperCase());
-				LOG.setLevel(level);
-				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
-						null, null, "Set log level to {0} for package {1}", level.getName(), pkg);
-			} catch (IllegalArgumentException ex) {
-				LOG.logrb(Level.SEVERE, AndHowCompileProcessor.class.getCanonicalName(), 
-						null, null, "Unrecognized level ''{0}'' for {1} must match a java.util.logging.Level", logLevelStr, propName);
-			}
-		}
-		
 	}
 	
 	protected void addRegistrar(String fullClassName, Element causeElement) {
