@@ -110,6 +110,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		List<Loader> loaders = new ArrayList();
 		loaders.add(new CommandLineArgumentLoader(cmdLineArgs));
 		loaders.add(new SystemPropertyLoader());
+		loaders.add(new JndiLoader(false));
 		loaders.add(new EnviromentVariableLoader());
 		loaders.add(new AndHowPropertyFileLoader());
 		return loaders;
