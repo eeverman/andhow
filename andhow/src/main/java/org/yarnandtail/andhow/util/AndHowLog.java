@@ -52,14 +52,20 @@ public class AndHowLog {
 
 	private AndHowLog(Logger baseLog, Class<?> clazz, Handler handler) {
 		baseLogger = baseLog;
+		baseLogger.setUseParentHandlers(false);	//Don't double print messages
 		
 		if (handler == null) {
 			handler = DEFAULT_HANDLER;
 		}
-
-		if (! Arrays.asList(baseLogger.getHandlers()).contains(handler)) {
-			baseLogger.addHandler(handler);
+		
+		Handler[] orgHandlers = baseLogger.getHandlers();
+		
+		//Make sure only have our single handler in place
+		for (Handler h : orgHandlers) {
+			baseLogger.removeHandler(h);
 		}
+		
+		baseLogger.addHandler(handler);
 
 		this.clazz = clazz;
 		reloadLogLevel();

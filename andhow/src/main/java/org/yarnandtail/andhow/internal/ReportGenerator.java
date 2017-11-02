@@ -129,8 +129,8 @@ public class ReportGenerator {
 		File sampleDir = new File(sampleDirPath);
 		
 		if (isDueToErrors) {
-			log.error("Since there were startup errors, sample configuration "
-					+ "files will be created for each Loader that supports it.");
+			log.error("Drat! There were AndHow startup errors. "
+					+ "Sample configuration files will be generated as a configuration starting point.");
 		} else {
 			log.info("As requested, sample configuration files "
 					+ "will be created for each Loader that supports it.");
