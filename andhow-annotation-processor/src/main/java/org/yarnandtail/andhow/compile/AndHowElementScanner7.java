@@ -20,7 +20,7 @@ import static javax.lang.model.util.ElementFilter.*;
  * @author ericeverman
  */
 public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> {
-	private static final AndHowLog LOG = new AndHowLog(AndHowElementScanner7.class);
+	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowElementScanner7.class);
 
 	private final Types typeUtils;
 	private final TypeElement propertyTypeElem;

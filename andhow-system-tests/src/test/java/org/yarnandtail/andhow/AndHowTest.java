@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -110,6 +111,11 @@ public class AndHowTest extends AndHowTestBase {
 			
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
 			assertEquals(loaders.get(0), dl.getLoader());
+			assertTrue(ce.getSampleDirectory().length() > 0);
+			
+			File sampleDir = new File(ce.getSampleDirectory());
+			assertTrue(sampleDir.exists());
+			assertTrue(sampleDir.listFiles().length > 0);
 		}
 	}
 	
