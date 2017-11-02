@@ -83,5 +83,8 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 		return null;
 	}
 
-	
+	@Override
+	public String getSampleFileExtension() {
+		return "properties";
+	}
 }

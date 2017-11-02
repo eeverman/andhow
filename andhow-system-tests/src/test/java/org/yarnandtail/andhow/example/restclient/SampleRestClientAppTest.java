@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.example.restclient;
 
 import java.util.ArrayList;
 
@@ -7,12 +7,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.AndHowTestBase;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.example.restclient.SampleRestClientGroup;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.load.JndiLoader;
