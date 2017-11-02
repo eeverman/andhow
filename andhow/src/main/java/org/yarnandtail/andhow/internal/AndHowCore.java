@@ -102,21 +102,7 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		
 		//Print samples (if requested) to System.out
 		if (getValue(Options.CREATE_SAMPLES)) {
-			
-			ByteArrayOutputStream os = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(os);
-		
-			ReportGenerator.printConfigSamples(runtimeDef, ps, loaders, false);
-
-			try {
-				String message = os.toString("UTF8");
-				
-				//Add separator prefix to prevent log prefixes from indenting 1st line
-				System.out.println(System.lineSeparator() + message);
-			} catch (UnsupportedEncodingException ex) {
-				//This shouldn't happen, but don't want to have the message burried
-				ReportGenerator.printConfigSamples(runtimeDef, System.out, loaders, true);
-			}
+			ReportGenerator.printConfigSamples(runtimeDef, loaders, false);
 		}
 	}
 	
@@ -126,22 +112,23 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	 * @param afe 
 	 */
 	private void printFailedStartupDetails(AppFatalException afe) {
+		
+		File sampleDir = ReportGenerator.printConfigSamples(runtimeDef, loaders, true);
+		String sampleDirStr = (sampleDir != null)?sampleDir.getAbsolutePath():"";
+		afe.setSampleDirectory(sampleDirStr);
+		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(os);
-		
 		ReportGenerator.printProblems(ps, afe, runtimeDef);
-		ReportGenerator.printConfigSamples(runtimeDef, ps, loaders, true);
 		
 		try {
 			String message = os.toString("UTF8");
-			
 			//Add separator prefix to prevent log prefixes from indenting 1st line
 			System.err.println(System.lineSeparator() + message);
 		} catch (UnsupportedEncodingException ex) {
-			//This shouldn't happen, but don't want to have the message burried
-			ReportGenerator.printProblems(System.err, afe, runtimeDef);
-			ReportGenerator.printConfigSamples(runtimeDef, System.err, loaders, true);
+			ReportGenerator.printProblems(System.err, afe, runtimeDef);	//shouldn't happen	
 		}
+		
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.api;
 
+
 /**
  * An exception that causes configuration processing to stop b/c it cannot proceed.
  * 
@@ -9,6 +10,11 @@ public class AppFatalException extends RuntimeException {
 	
 	
 	private final ProblemList<Problem> problems;
+	
+	
+	/** If samples were written, the path of where they were written to will be here */
+	private String sampleDirectory;
+	
 	
 	/**
 	 * Used for errors while the AndHow builder is still in use - we don't have
@@ -55,5 +61,15 @@ public class AppFatalException extends RuntimeException {
 	public ProblemList<Problem> getProblems() {
 		return problems;
 	}
+
+	public String getSampleDirectory() {
+		return sampleDirectory;
+	}
+
+	public void setSampleDirectory(String sampleDirectory) {
+		this.sampleDirectory = sampleDirectory;
+	}
+	
+	
 	
 }

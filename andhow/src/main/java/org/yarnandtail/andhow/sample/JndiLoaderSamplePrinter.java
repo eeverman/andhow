@@ -89,4 +89,9 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 		tb.addLine("</Context>");
 		return tb;
 	}
+	
+	@Override
+	public String getSampleFileExtension() {
+		return "xml";
+	}
 }

@@ -114,6 +114,15 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		loaders.add(new AndHowPropertyFileLoader());
 		return loaders;
 	}
+	
+	/**
+	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
+	 * 
+	 * @return 
+	 */
+	public static boolean isInitialize() {
+		return singleInstance != null && singleInstance.core != null;
+	}
 
 	/**
 	 * Private build method, invoked only by the inner AndHowBuilder class.

@@ -1,13 +1,16 @@
 package org.yarnandtail.andhow.internal;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
+import org.yarnandtail.andhow.util.IOUtil;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.util.AndHowLog;
 
 /**
  *
@@ -100,25 +103,77 @@ public class ReportGenerator {
 	}
 	
 	/**
+	 * Writes sample configuration files for all Loaders that support it.
+	 * 
+	 * Sample files are written to the the directory specified by:
+	 * Options.SAMPLES_DIRECTORY, which defaults to something under the java.io.temp
+	 * directory.
+	 * 
+	 * @param appDef
+	 * @param loaders
+	 * @param isDueToErrors
+	 * @return The File directory the sample configuration files were written to.
+	 */
+	public static File printConfigSamples(GlobalScopeConfiguration appDef,
+		List<Loader> loaders, boolean isDueToErrors) {
+		
+		AndHowLog log = AndHowLog.getLogger(ReportGenerator.class);
+
+		String sampleDirPath = Options.SAMPLES_DIRECTORY.getDefaultValue();
+		
+		if (AndHow.isInitialize()) {
+			sampleDirPath = Options.SAMPLES_DIRECTORY.getValue();
+		}
+		
+		sampleDirPath = IOUtil.expandDirectoryPath(sampleDirPath);
+		File sampleDir = new File(sampleDirPath);
+		
+		if (isDueToErrors) {
+			log.error("Since there were startup errors, sample configuration "
+					+ "files will be created for each Loader that supports it.");
+		} else {
+			log.info("As requested, sample configuration files "
+					+ "will be created for each Loader that supports it.");
+		}
+		
+		//Must be error level so the path is visible
+		log.error("Configuration sample files will be written to: '" + sampleDirPath + "'");
+		
+		try {
+			
+			sampleDir.mkdirs();
+			
+			//Test creation and deletion of a sample file
+			File testFile = File.createTempFile("test", "tmp", sampleDir);
+			testFile.deleteOnExit();
+			testFile.delete();
+			
+			printConfigSamples(appDef, sampleDir, loaders, isDueToErrors);
+			
+			return sampleDir;
+
+		} catch (Exception e) {
+			log.error("Normally AndHow samples are written as files to a temp directory, "
+					+ "however, there was an error writing to the temp directory '"
+					+ sampleDirPath + "'.  Giving up writing samples.", e);
+			
+			return null;
+		}
+
+	}
+	
+	/**
 	 * Print configurations samples for Loaders that support it.
 	 * 
-	 * @param out
+	 * @param sampleDir The directory to write configuration samples to
 	 * @param appDef
 	 * @param loaders
 	 * @param isDueToErrors If true, the reason for these samples is b/c there was a startup error.
 	 */
-	public static void printConfigSamples(GlobalScopeConfiguration appDef, PrintStream out, 
+	public static void printConfigSamples(GlobalScopeConfiguration appDef, File sampleDir, 
 			List<Loader> loaders, boolean isDueToErrors) {
-		
-		out.println();
-		if (isDueToErrors) {
-			out.println("== Since there were startup errors, sample configuration "
-					+ "will be printed for each Loader that supports it ==");
-		} else {
-			out.println("== As requested, sample configuration "
-					+ "will be printed for each Loader that supports it ==");
-		}
-		out.println();
+
+		AndHowLog log = AndHowLog.getLogger(ReportGenerator.class);
 		
 		//Set of loader type-dialect's that have been printed.  Skip duplicates.
 		HashSet<String> printedLoaderTypes = new HashSet();
@@ -131,33 +186,26 @@ public class ReportGenerator {
 			
 			if (printer != null) {
 				
-				String fullType = TextUtil.trimToEmpty(loader.getLoaderType()) + 
-						"---" + TextUtil.trimToEmpty(loader.getLoaderDialect());
+				String fullType = TextUtil.trimToEmpty(loader.getLoaderType());
+				
+				if (TextUtil.trimToNull(loader.getLoaderDialect()) != null) {
+					fullType += "_" + TextUtil.trimToEmpty(loader.getLoaderDialect());
+				}
 				
 				if (! printedLoaderTypes.contains(fullType)) {
 					printedLoaderTypes.add(fullType);
 					
 					supportedLoaders++;
-					printer.printSampleStart(appDef, out);
+					
+					File singleSample = new File(sampleDir, fullType + "." + printer.getSampleFileExtension());
 
-					for (GroupProxy group : appDef.getPropertyGroups()) {
-
-						printer.printPropertyGroupStart(appDef, out, group);
-
-						try {
-							for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
-								printer.printProperty(appDef, out, group, prop);
-							}
-						} catch (Exception ex) {
-							TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
-									"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
-									"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
-						}
-
-						printer.printPropertyGroupEnd(appDef, out, group);
+					try (PrintStream printWriter = new PrintStream(new BufferedOutputStream(new FileOutputStream(singleSample, true)))) {
+						printSingleLoader(appDef, printWriter, printer);
+					} catch (IOException ex) {
+						log.error("Unable to create sample configuration file '" + 
+								singleSample.getAbsolutePath() + "'", ex);
 					}
 
-					printer.printSampleEnd(appDef, out);
 				}
 			}
 			
@@ -165,10 +213,31 @@ public class ReportGenerator {
 		}
 		
 		if (supportedLoaders == 0) {
-			out.println();
-			out.println("== None of the configured Loaders support creating configuration samples ==");
-			out.println();
+			log.error("== None of the configured Loaders support creating configuration samples ==");
 		}
+	}
+	
+	public static void printSingleLoader(GlobalScopeConfiguration appDef, PrintStream out, SamplePrinter printer) {
+		printer.printSampleStart(appDef, out);
+
+		for (GroupProxy group : appDef.getPropertyGroups()) {
+
+			printer.printPropertyGroupStart(appDef, out, group);
+
+			try {
+				for (Property<?> prop : appDef.getPropertiesForGroup(group)) {
+					printer.printProperty(appDef, out, group, prop);
+				}
+			} catch (Exception ex) {
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
+						"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
+						"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
+			}
+
+			printer.printPropertyGroupEnd(appDef, out, group);
+		}
+
+		printer.printSampleEnd(appDef, out);
 	}
 	
 }

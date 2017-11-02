@@ -39,4 +39,11 @@ public interface SamplePrinter {
 	void printPropertyGroupEnd(GlobalScopeConfiguration definition, PrintStream out, GroupProxy group);
 	
 	void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out);
+	
+	/**
+	 * The file extention to use for sample files, eg 'properties' or 'xml'.
+	 * @return 
+	 */
+	String getSampleFileExtension();
+	
 }
