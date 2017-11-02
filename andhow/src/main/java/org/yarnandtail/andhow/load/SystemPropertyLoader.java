@@ -28,7 +28,7 @@ import org.yarnandtail.andhow.api.*;
  *
  * @author eeverman
  */
-public class SystemPropertyLoader extends BaseLoader {
+public class SystemPropertyLoader extends BaseLoader implements ReadLoader {
 	
 	public SystemPropertyLoader() {
 	}

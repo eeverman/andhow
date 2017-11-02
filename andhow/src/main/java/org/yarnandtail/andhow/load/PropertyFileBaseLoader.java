@@ -12,7 +12,7 @@ import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
  * 
  * @author ericeverman
  */
-public abstract class PropertyFileBaseLoader extends BaseLoader {
+public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadLoader {
 
 	public PropertyFileBaseLoader() {
 	}

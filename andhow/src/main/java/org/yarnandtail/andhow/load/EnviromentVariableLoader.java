@@ -28,7 +28,7 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public class EnviromentVariableLoader extends BaseLoader {
+public class EnviromentVariableLoader extends BaseLoader implements ReadLoader {
 	
 	public EnviromentVariableLoader() {
 	}

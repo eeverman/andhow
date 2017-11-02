@@ -15,7 +15,7 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public class FixedValueLoader extends BaseLoader {
+public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	List<PropertyValue> values;
 			

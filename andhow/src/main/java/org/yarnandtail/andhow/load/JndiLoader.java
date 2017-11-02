@@ -1,19 +1,16 @@
 package org.yarnandtail.andhow.load;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
+import javax.naming.*;
 import org.yarnandtail.andhow.GroupInfo;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextLoaderProblem;
 import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
+import org.yarnandtail.andhow.util.AndHowLog;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Loads values from a JNDI context.
@@ -30,11 +27,23 @@ import org.yarnandtail.andhow.api.BasePropertyGroup;
  *
  * @author eeverman
  */
-public class JndiLoader extends BaseLoader {
+public class JndiLoader extends BaseLoader implements LookupLoader {
 
+	private final boolean failedEnvironmentAProblem;
+	
+	public JndiLoader() {
+		this.failedEnvironmentAProblem = false;
+	}
+
+	public JndiLoader(boolean failedEnvironmentAProblem) {
+		this.failedEnvironmentAProblem = failedEnvironmentAProblem;
+	}
+	
 	@Override
 	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 
+		AndHowLog log = AndHowLog.getLogger(JndiLoader.class);
+		
 		List<String> jndiRoots = buildJndiRoots(existingValues);
 
 		ArrayList<PropertyValue> values = new ArrayList();
@@ -76,8 +85,14 @@ public class JndiLoader extends BaseLoader {
 			}
 
 		} catch (NamingException ex) {
-			//This is fatal and means there likely is no JNDI context
-			problems.add(new JndiContextLoaderProblem(this));	//Not sure why this would happen
+			if (isFailedEnvironmentAProblem()) {
+				log.error(
+						"Unable to read from JNDI - Does JNDI exist in this environment? "
+								+ "If this is expected, initialize the JndiLoader ignore non-JNDI environments.", ex);
+				problems.add(new JndiContextLoaderProblem(this));
+			} else {
+				log.debug("No JNDI Environment found, or a naming error encountered.  The JndiLoader is configured to ignore this.");
+			}
 		}
 
 		return new LoaderValues(this, values, problems);
@@ -85,11 +100,6 @@ public class JndiLoader extends BaseLoader {
 
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
-		return false;
-	}
-
-	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
 		return false;
 	}
 
@@ -238,6 +248,11 @@ public class JndiLoader extends BaseLoader {
 	@Override
 	public String getLoaderDialect() {
 		return null;
+	}
+	
+	@Override
+	public boolean isFailedEnvironmentAProblem() {
+		return failedEnvironmentAProblem;
 	}
 
 }

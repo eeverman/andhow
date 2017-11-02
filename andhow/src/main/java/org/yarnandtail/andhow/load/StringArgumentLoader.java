@@ -26,7 +26,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  * 
  * @author eeverman
  */
-public class StringArgumentLoader extends BaseLoader {
+public class StringArgumentLoader extends BaseLoader implements ReadLoader {
 
 	/**
 	 * The default delimiter between a key and a value.
