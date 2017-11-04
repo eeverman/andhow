@@ -74,9 +74,10 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 			throw afe;
 		}
 		
-		//Continuing on to load values
+		//No Construction problems, so continue on...
+		
 		loadedValues = loadValues(runtimeDef, problems).getValueMapWithContextImmutable();
-
+		doPropertyValidations(runtimeDef, loadedValues, problems);
 		checkForValuesWhichMustBeNonNull(runtimeDef, problems);
 
 		if (problems.size() > 0) {
@@ -157,6 +158,53 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		}
 
 		return existingValues;
+	}
+	
+	/**
+	 * Validates all Property values.
+	 * 
+	 * @param appConfigDef Needed bc validation is done while construction is 
+	 *	not complete, thus the as-is definition is needed prior to it being complete.
+	 * @param loadedValues The values to be validated.
+	 * @param problems Add any new problems to this list
+	 */
+	private void doPropertyValidations(GlobalScopeConfiguration appConfigDef, 
+			PropertyValuesWithContext loadedValues, ProblemList<Problem> problems) {
+		
+		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
+			for (PropertyValue pv : lvs.getValues()) {
+				doPropertyValidation(appConfigDef, lvs.getLoader(), problems, pv);
+			}
+		}
+	}
+	
+	/**
+	 * Does validation on a single Property value as loaded by a single loader.
+	 * 
+	 * @param <T> The shared type of the Property and Value.
+	 * @param appConfigDef Needed bc validation is done while construction is 
+	 *	not complete, thus the as-is definition is needed prior to it being complete.
+	 * @param loader The loader used to load the value, for context when creating a Problem.
+	 * @param problems Add any new problems to this list
+	 * @param propValue<T> The Property and its value, both of type 'T'.
+	 */
+	private <T> void doPropertyValidation(GlobalScopeConfiguration appConfigDef,
+			Loader loader, ProblemList<Problem> problems, PropertyValue<T> propValue) {
+		
+		Property<T> prop = propValue.getProperty();
+		
+		for (Validator<T> v : prop.getValidators()) {
+			if (! v.isValid(propValue.getValue())) {
+				
+				ValueProblem.InvalidValueProblem problem = 
+						new ValueProblem.InvalidValueProblem(loader, 
+								appConfigDef.getGroupForProperty(prop).getProxiedGroup(),
+								prop, propValue.getValue(), v);
+				
+				propValue.addProblem(problem);
+				problems.add(problem);
+			}
+		}
 	}
 	
 

@@ -5,6 +5,9 @@ import java.util.List;
 /**
  * Each instance is responsible for loading values from a particular type of
  * source.
+ * 
+ * The central method is load(), which is responsible for loading property
+ * values and registering loader-level problems into a LoaderValues object.
  *
  * Implementations may define a set of Properties used to control the behavior
  * of all instances of a loader, which are returned from getClassConfig().
@@ -24,8 +27,15 @@ import java.util.List;
 public interface Loader {
 	
 	/**
-	 * Builds up a list of LoaderValues by loading property values from a configuration
-	 * source.
+	 * Builds up a list of LoaderValues by loading property values from a
+	 * configuration source.
+	 * 
+	 * Loaders find and load values and associate them with the correct Property.
+	 * If there is a problem while doing that, they register one or more
+	 * LoaderProblems in the returned LoaderValues.
+	 * 
+	 * Validation of Property values is not Loader's responsibility and will be
+	 * handled outside this method.
 	 * 
 	 * @param runtimeDef
 	 * @param existingValues

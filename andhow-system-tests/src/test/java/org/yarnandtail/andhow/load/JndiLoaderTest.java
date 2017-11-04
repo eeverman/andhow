@@ -9,10 +9,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.api.PropertyValue;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
+import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.util.NameUtil;
 
 /**
@@ -20,6 +21,13 @@ import org.yarnandtail.andhow.util.NameUtil;
  * @author ericeverman
  */
 public class JndiLoaderTest extends AndHowTestBase {
+	
+	public interface ValidParams {
+		//Strings
+		StrProp STR_XXX = StrProp.builder().mustEndWith("XXX").build();
+		IntProp INT_TEN = IntProp.builder().mustBeGreaterThan(10).build();
+
+	}
 	
 	@Test
 	public void testSplit() {
@@ -382,6 +390,59 @@ public class JndiLoaderTest extends AndHowTestBase {
 			assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
 		}
 	
+	}
+	
+
+	@Test
+	public void testValidationIsEnforcedWhenExactTypeUsed() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = getJndi();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		
+		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), Integer.parseInt("9"));
+		jndi.bind("java:" + 
+				bns.getUriName(NameUtil.getAndHowName(ValidParams.class, ValidParams.STR_XXX)), "YYY");
+		jndi.activate();
+		
+		try {
+			AndHowNonProduction.builder()
+					.loader(new JndiLoader())
+					.group(ValidParams.class)
+					.build();
+		
+			fail("Should not reach this point");
+			
+		} catch (AppFatalException e) {
+			List<Problem> vps = e.getProblems();
+			
+			assertEquals(2, vps.size());
+		}
+	}
+	
+	@Test
+	public void testValidationIsEnforcedWhenConvertsionUsed() throws Exception {
+		
+		SimpleNamingContextBuilder jndi = getJndi();
+		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		
+		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), "9");
+		jndi.activate();
+		
+		try {
+			AndHowNonProduction.builder()
+					.loader(new JndiLoader())
+					.group(ValidParams.class)
+					.build();
+		
+			fail("Should not reach this point");
+			
+		} catch (AppFatalException e) {
+			List<Problem> vps = e.getProblems();
+			
+			assertEquals(1, vps.size());
+			assertTrue(vps.get(0) instanceof ValueProblem);
+			assertEquals(ValidParams.INT_TEN, ((ValueProblem)(vps.get(0))).getBadValueCoord().getProperty());
+		}
 	}
 	
 	
