@@ -1,15 +1,19 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.internal.ValueProblem;
+
+import static org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
+
 /**
  * Simple class to bundle a Property, its value and any associated problems with the Property.
  * 
  * @author eeverman
  */
-public class PropertyValue {
+public class PropertyValue<T> {
 
-	private final Property<?> property;
-	private final Object value;
-	private final ProblemList<Problem> problems;
+	private final Property<T> property;
+	private final T value;
+	private ProblemList<ValueProblem> problems;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -25,12 +29,7 @@ public class PropertyValue {
 				}
 			} 
 			
-			if (basicPropsEq) {
-				//Don't do a deep dive into the problems - if there are no problems,
-				//great, but if there are problems its a complex state that we can't
-				//really compare.
-				return (! hasProblems() && ! other.hasProblems());
-			}
+			//Ignore the transient Problem state
 		}
 		
 		return false;
@@ -42,44 +41,73 @@ public class PropertyValue {
 		if (property != null) hash*=property.hashCode();
 		if (value != null) hash*=value.hashCode();
 		
-		for (Problem p : problems) {
-			hash*=p.hashCode();
-		}
+		//Ignore the transient Problem state
 		
 		return hash;
 	}
 
-	public PropertyValue(Property<?> prop, Object value) {
+	/**
+	 * New instance w/o Problems
+	 * Problems can be added later.
+	 * 
+	 * @param prop
+	 * @param value 
+	 */
+	public PropertyValue(Property<T> prop, T value) {
 		this.property = prop;
 		this.value = value;
-		this.problems = org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
 	}
 	
-	public PropertyValue(Property<?> prop, Object value, ProblemList<Problem> inIssues) {
+	/**
+	 * Construct w/ a known set of problems.
+	 * 
+	 * The problem list is taken by reference if it is non-empty.  Callers should
+	 * build up a fresh list of Problems and not reuse lists.
+	 * 
+	 * @param prop
+	 * @param value
+	 * @param inIssues 
+	 */
+	public PropertyValue(Property<T> prop, T value, ProblemList<ValueProblem> inIssues) {
 		this.property = prop;
 		this.value = value;
 		
 		if (inIssues != null && inIssues.size() > 0) {
-			problems = new org.yarnandtail.andhow.api.ProblemList.UnmodifiableProblemList(inIssues);
-		} else {
-			this.problems = org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
+			problems = inIssues;
 		}
 	}
 
-	public Property<?> getProperty() {
+	public Property<T> getProperty() {
 		return property;
 	}
 
-	public Object getValue() {
+	public T getValue() {
 		return value;
+	}
+	
+	public void addProblem(ValueProblem problem) {
+		if (problems == null) {
+			problems = new ProblemList();
+		}
+		problems.add(problem);
 	}
 
 	public boolean hasProblems() {
-		return problems.size() > 0;
+		return problems != null && problems.size() > 0;
 	}
 	
+	/**
+	 * Returns an unmodifiable list of Problems.
+	 * 
+	 * @return 
+	 */
 	public ProblemList<Problem> getProblems() {
-		return problems;	//Already unmodifiable
+		if (problems != null) {
+			return new ProblemList.UnmodifiableProblemList(problems);
+		} else {
+			return EMPTY_PROBLEM_LIST;
+		}
+		
 	}
 	
 }

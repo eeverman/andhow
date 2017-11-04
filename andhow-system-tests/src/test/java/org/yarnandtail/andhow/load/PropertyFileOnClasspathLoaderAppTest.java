@@ -5,17 +5,16 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyIsNull;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 import org.yarnandtail.andhow.util.NameUtil;
 
 /**
@@ -46,6 +45,26 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		assertEquals(Boolean.FALSE, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(Boolean.TRUE, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(Boolean.TRUE, SimpleParams.FLAG_NULL.getValue());
+	}
+	
+	@Test
+	public void testInvalid() throws Exception {
+		
+		try {
+			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
+							"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+					.group(SimpleParams.class)
+					.group(TestProps.class)
+					.build();
+		
+				fail("The property file contains several invalid props - should have errored");
+		} catch (AppFatalException afe) {
+			List<Problem> probs = afe.getProblems();
+			assertEquals(5, probs.size());
+		}
+
 	}
 	
 	@Test
@@ -88,7 +107,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	}
 	
 	/**
-	 * It is not an error to not specify the classpath param, it just means the laoder
+	 * It is not an error to not specify the classpath param, it just means the loader
 	 * will not find anything.
 	 * 
 	 * @throws Exception 

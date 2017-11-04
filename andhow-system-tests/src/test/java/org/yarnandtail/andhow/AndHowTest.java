@@ -9,8 +9,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.internal.RequirementProblem;
+import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.load.StringArgumentLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
@@ -30,7 +29,7 @@ public class AndHowTest extends AndHowTestBase {
 	
 	public static interface RequiredParams extends PropertyGroup {
 		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").mustBeNonNull().build();
-		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().build();
+		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().mustStartWith("XYZ").build();
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).mustBeNonNull().build();
 		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).mustBeNonNull().build();
 		FlagProp FLAG_NULL = FlagProp.builder().mustBeNonNull().build();
@@ -134,6 +133,25 @@ public class AndHowTest extends AndHowTestBase {
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(RequirementProblem.class).size());
 			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
+		}
+	}
+	
+	@Test
+	public void testInvalidValuesShouldCauseValidationException() {
+		String baseName = AndHowTest.class.getCanonicalName();
+		baseName += "." + RequiredParams.class.getSimpleName() + ".";
+		
+		try {
+				AndHowNonProduction.builder()
+					.group(RequiredParams.class)
+					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
+					.addCmdLineArg(baseName + "FLAG_NULL", "present")
+					.build();
+			
+			fail();	//The line above should throw an error
+		} catch (AppFatalException ce) {
+			assertEquals(1, ce.getProblems().filter(ValueProblem.class).size());
+			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty());
 		}
 	}
 	

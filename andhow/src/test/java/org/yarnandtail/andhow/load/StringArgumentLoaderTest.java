@@ -8,16 +8,17 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
-import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
+import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
- *
+ * Note:  This directly tests a single loader so it is not possible to
+ * test for missing required values.  Loaders can't know if a value is missing -
+ * that only can be figured out after all loaders are comlete.
+ * 
  * @author eeverman
  */
 public class StringArgumentLoaderTest {
@@ -29,6 +30,8 @@ public class StringArgumentLoaderTest {
 		//Strings
 		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
 		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
+		StrProp STR_ENDS_WITH_XXX = StrProp.builder().mustEndWith("XXX").build();
+
 
 		//Flags
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
@@ -47,6 +50,7 @@ public class StringArgumentLoaderTest {
 		appDef = new GlobalScopeConfigurationMutable(bns);
 		appDef.addProperty(proxy, SimpleParams.STR_BOB);
 		appDef.addProperty(proxy, SimpleParams.STR_NULL);
+		appDef.addProperty(proxy, SimpleParams.STR_ENDS_WITH_XXX);
 		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
@@ -61,6 +65,7 @@ public class StringArgumentLoaderTest {
 		List<String> args = new ArrayList();
 		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
 		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "XXX");
 		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
 		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
 		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
@@ -74,6 +79,7 @@ public class StringArgumentLoaderTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals("XXX", result.getExplicitValue(SimpleParams.STR_ENDS_WITH_XXX));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -87,6 +93,7 @@ public class StringArgumentLoaderTest {
 		List<String> args = new ArrayList();
 		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
 		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "something_XXX");
 		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
 		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
 		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
@@ -100,6 +107,7 @@ public class StringArgumentLoaderTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals("something_XXX", result.getExplicitValue(SimpleParams.STR_ENDS_WITH_XXX));
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -132,6 +140,22 @@ public class StringArgumentLoaderTest {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+	}
+	
+	@Test
+	public void testInvalidPropertyValuesAreNotCheckedByLoaders() {
+		
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		
+		List<String> args = new ArrayList();
+		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "something_YYY");
+		
+		
+		StringArgumentLoader cll = new StringArgumentLoader(args);
+		
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
+		
+		assertEquals(0, result.getProblems().size());
 	}
 	
 	@Test
@@ -180,9 +204,6 @@ public class StringArgumentLoaderTest {
 		}
 		
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
-		
 	}
-
-	
 
 }

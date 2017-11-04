@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.internal;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  * Problems with invalid values, values that cannot be converted to their destination type.

@@ -7,7 +7,6 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem.DuplicatePropertyLoaderProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem.ObjectConversionValueProblem;
 import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
-import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -152,7 +151,6 @@ public abstract class BaseLoader implements Loader {
 	protected <T> PropertyValue createValue(GlobalScopeConfiguration appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
-		ProblemList<Problem> problems = new ProblemList();
 		T value = null;
 		
 		String trimmed = untrimmedString;
@@ -168,17 +166,11 @@ public abstract class BaseLoader implements Loader {
 
 			value = prop.getValueType().parse(trimmed);
 
-			for (Validator<T> v : prop.getValidators()) {
-				if (! v.isValid(value)) {
-					problems.add(new ValueProblem.InvalidValueProblem(
-							this, appConfigDef.getGroupForProperty(prop).getProxiedGroup(), prop, value, v));
-				}
-			}
 		} else {
 			return null;	//No value to create
 		}
 		
-		return new PropertyValue(prop, value, problems);
+		return new PropertyValue(prop, value);
 	}
 	
 }

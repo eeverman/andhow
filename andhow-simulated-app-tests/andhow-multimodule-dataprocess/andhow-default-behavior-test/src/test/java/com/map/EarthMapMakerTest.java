@@ -80,7 +80,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		SimpleNamingContextBuilder jndi = getJndi();
 		jndi.bind("java:" + "com.map.EarthMapMaker.MAP_NAME", "JndiPropMapName");
 		jndi.bind("java:" + "com.map.EarthMapMaker.SOUTH_BOUND", "7");
-		jndi.bind("java:comp/env/" + "org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL", "test");
+		jndi.bind("java:comp/env/" + "org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL", "test/");
 		jndi.activate();
 		
 		//VALUES IN THE PROPS FILE
@@ -94,7 +94,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		
 		
 		ExternalServiceConnector esc = new ExternalServiceConnector();
-		assertEquals("http://forwardcorp.com/service/", esc.getConnectionUrl());
+		assertEquals("test/", esc.getConnectionUrl());
 		assertEquals(60, esc.getConnectionTimeout());
 		
 		EarthMapMaker emm = new EarthMapMaker();
