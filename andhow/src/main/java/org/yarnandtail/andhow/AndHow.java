@@ -358,10 +358,11 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		/**
 		 * Adds the command line arguments, keeping any previously added.
 		 *
-		 * Note that adding cmd line args implicitly add a StringArgumentLoader
-		 * at the point in code where the first cmd line argument is added, thus
-		 * determining the load order of cmd line arguments in relation to other
-		 * loaders.
+		 * If loaders are never explicitly added, the commandline loader will
+		 * be kept in its standard location in the default loader list.
+		 * If loader were explicitly added, the command line loader will be
+		 * implicitly added at the point at which addCmdLineArg is called in
+		 * relation to the addition of the other loaders.
 		 *
 		 * @param commandLineArgs
 		 * @return
@@ -384,6 +385,12 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 		 * Adds a command line argument in key=value form.
 		 *
 		 * If the value is null, only the key is added (ie its a flag).
+		 * 
+		 * If loaders are never explicitly added, the commandline loader will
+		 * be kept in its standard location in the default loader list.
+		 * If loader were explicitly added, the command line loader will be
+		 * implicitly added at the point at which addCmdLineArg is called in
+		 * relation to the addition of the other loaders.
 		 *
 		 * @param key
 		 * @param value
@@ -450,7 +457,7 @@ public class AndHow implements GlobalScopeConfiguration, PropertyValues {
 			}
 
 			if (existingCmdLoader > -1) {
-				_loaders.add(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
+				_loaders.set(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
 			} else if (addCmdLineLoaderAtPosition != null) {
 				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
 			}
