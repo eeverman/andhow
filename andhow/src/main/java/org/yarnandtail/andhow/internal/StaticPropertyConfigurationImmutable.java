@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public class GlobalScopeConfigurationImmutable implements GlobalScopeConfiguration {
+public class StaticPropertyConfigurationImmutable implements StaticPropertyConfiguration {
 
 	private final NamingStrategy namingStrategy;
 	private final List<GroupProxy> groupList;
@@ -20,7 +20,7 @@ public class GlobalScopeConfigurationImmutable implements GlobalScopeConfigurati
 	private final List<ExportGroup> exportGroups;
 	
 
-	public GlobalScopeConfigurationImmutable(
+	public StaticPropertyConfigurationImmutable(
 			NamingStrategy namingStrategy,
 			List<GroupProxy> groupList,
 			List<Property<?>> properties,

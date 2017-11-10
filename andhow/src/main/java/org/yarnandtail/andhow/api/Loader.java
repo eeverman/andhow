@@ -41,7 +41,7 @@ public interface Loader {
 	 * @param existingValues
 	 * @return 
 	 */
-	LoaderValues load(GlobalScopeConfiguration runtimeDef,
+	LoaderValues load(StaticPropertyConfiguration runtimeDef,
 			PropertyValuesWithContext existingValues);
 	
 	/**

@@ -18,7 +18,7 @@ public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadL
 	}
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
-			String fromPath, GlobalScopeConfiguration appConfigDef,
+			String fromPath, StaticPropertyConfiguration appConfigDef,
 			PropertyValuesWithContext existingValues) throws LoaderException {
 		
 		

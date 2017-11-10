@@ -54,7 +54,7 @@ public class AndHowPropertyFileLoader extends PropertyFileOnClasspathLoader {
 	 * @param path
 	 * @return
 	 */
-	public LoaderValues load(GlobalScopeConfiguration appConfigDef,
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef,
 			PropertyValuesWithContext existingValues, String path) {
 
 		try (InputStream inS = AndHowPropertyFileLoader.class.getResourceAsStream(path)) {

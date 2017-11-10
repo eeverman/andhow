@@ -12,7 +12,7 @@ import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
  *
  * @author eeverman
  */
-public class AndHow implements GlobalScopeConfiguration, PropertyValues {
+public class AndHow implements StaticPropertyConfiguration, PropertyValues {
 
 	//
 	//A few app-wide constants

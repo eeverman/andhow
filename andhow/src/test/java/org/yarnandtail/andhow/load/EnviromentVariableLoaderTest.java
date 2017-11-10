@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
@@ -232,7 +232,7 @@ public class EnviromentVariableLoaderTest {
 		assertFalse(result.getValue(SimpleParams.FLAG_NULL));
 	}
 	
-	public static class TestGlobalScopeConfiguration extends GlobalScopeConfigurationMutable {
+	public static class TestGlobalScopeConfiguration extends StaticPropertyConfigurationMutable {
 		
 		HashMap<String, String> envVars = new HashMap();
 

@@ -28,17 +28,17 @@ public interface SamplePrinter {
 	/** Lead-in for a default value */
 	static final String DEFAULT_VALUE_TEXT = "Default Value";
 	
-	void printSampleStart(GlobalScopeConfiguration definition, PrintStream out);
+	void printSampleStart(StaticPropertyConfiguration definition, PrintStream out);
 	
-	void printPropertyGroupStart(GlobalScopeConfiguration definition, PrintStream out, 
+	void printPropertyGroupStart(StaticPropertyConfiguration definition, PrintStream out, 
 			GroupProxy group);
 
-	void printProperty(GlobalScopeConfiguration definition, PrintStream out, 
+	void printProperty(StaticPropertyConfiguration definition, PrintStream out, 
 			GroupProxy group, Property<?> prop);
 	
-	void printPropertyGroupEnd(GlobalScopeConfiguration definition, PrintStream out, GroupProxy group);
+	void printPropertyGroupEnd(StaticPropertyConfiguration definition, PrintStream out, GroupProxy group);
 	
-	void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out);
+	void printSampleEnd(StaticPropertyConfiguration definition, PrintStream out);
 	
 	/**
 	 * The file extention to use for sample files, eg 'properties' or 'xml'.

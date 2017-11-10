@@ -25,11 +25,11 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	 * Must provide its own line comment prefix if the format has no block comment.
 	 * @return 
 	 */
-	public abstract TextBlock getSampleStartComment(GlobalScopeConfiguration definition);
+	public abstract TextBlock getSampleStartComment(StaticPropertyConfiguration definition);
 	
-	public abstract String getInAliaseString(GlobalScopeConfiguration definition, EffectiveName name);
+	public abstract String getInAliaseString(StaticPropertyConfiguration definition, EffectiveName name);
 	
-	public abstract TextBlock getActualProperty(GlobalScopeConfiguration definition, 
+	public abstract TextBlock getActualProperty(StaticPropertyConfiguration definition, 
 			GroupProxy group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
@@ -131,7 +131,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 
 	@Override
-	public void printSampleStart(GlobalScopeConfiguration definition, PrintStream out) {
+	public void printSampleStart(StaticPropertyConfiguration definition, PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
 		TextBlock tb = getSampleStartComment(definition);
 		
@@ -142,7 +142,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 	
 	@Override
-	public void printPropertyGroupStart(GlobalScopeConfiguration definition, 
+	public void printPropertyGroupStart(StaticPropertyConfiguration definition, 
 			PrintStream out, GroupProxy group) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -181,7 +181,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	
 	@Override
-	public void printProperty(GlobalScopeConfiguration definition, PrintStream out,
+	public void printProperty(StaticPropertyConfiguration definition, PrintStream out,
 			GroupProxy group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -249,12 +249,12 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 
 	@Override
-	public void printPropertyGroupEnd(GlobalScopeConfiguration definition, 
+	public void printPropertyGroupEnd(StaticPropertyConfiguration definition, 
 			PrintStream out, GroupProxy group) {
 	}
 	
 	@Override
-	public void printSampleEnd(GlobalScopeConfiguration definition, PrintStream out) {
+	public void printSampleEnd(StaticPropertyConfiguration definition, PrintStream out) {
 		TextBlock tb = getSampleFileEnd();
 		print(out, tb, getFormat());
 	}

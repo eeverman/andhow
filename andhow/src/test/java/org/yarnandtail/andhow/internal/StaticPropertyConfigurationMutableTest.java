@@ -19,7 +19,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
-public class ConstructionDefinitionMutableTest {
+public class StaticPropertyConfigurationMutableTest {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
@@ -38,7 +38,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		
-		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		
@@ -74,7 +74,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy sampleGroupProxy = AndHowUtil.buildGroupProxy(SampleGroup.class);
 		GroupProxy sampleGroupDupProxy = AndHowUtil.buildGroupProxy(SampleGroupDup.class);
@@ -103,7 +103,7 @@ public class ConstructionDefinitionMutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(BadDefaultAndValidationGroup.class);
 		
