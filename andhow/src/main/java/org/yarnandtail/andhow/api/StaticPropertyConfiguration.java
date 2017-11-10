@@ -3,8 +3,11 @@ package org.yarnandtail.andhow.api;
 import java.util.*;
 
 /**
- * The defined set and metadata related to the PropertyGroups, Properties and
- * associated names that are in scope for an initialized AndHow instance.
+ * Configuration and metadata for all known static Properties,
+ * 
+ * This is the entire domain of Properties defined as static properties
+ * (ie the property is defined as a static variable) and on the classpath
+ * (or explicitly configured) to be part of AndHow in the current classloader.
  * 
  * This definition does not include the actual values configured for the
  * Properties or Loaders.  This interface is analogous to the list of declared
@@ -13,7 +16,7 @@ import java.util.*;
  * 
  * @author eeverman
  */
-public interface GlobalScopeConfiguration {
+public interface StaticPropertyConfiguration {
 
 	public static final List<Property<?>> EMPTY_PROPERTY_LIST = Collections.unmodifiableList(new ArrayList());
 	

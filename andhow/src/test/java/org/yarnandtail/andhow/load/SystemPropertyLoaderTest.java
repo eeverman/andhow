@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  */
 public class SystemPropertyLoaderTest {
 	
-	GlobalScopeConfigurationMutable appDef;
+	StaticPropertyConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	GroupProxy simpleProxy;
 	
@@ -41,7 +41,7 @@ public class SystemPropertyLoaderTest {
 		appValuesBuilder = new PropertyValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new GlobalScopeConfigurationMutable(bns);
+		appDef = new StaticPropertyConfigurationMutable(bns);
 		
 		simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		

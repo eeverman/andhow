@@ -34,7 +34,7 @@ public class SystemPropertyLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 		
 		ArrayList<PropertyValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();

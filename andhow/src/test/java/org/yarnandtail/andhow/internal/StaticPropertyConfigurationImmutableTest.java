@@ -18,7 +18,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
-public class ConstructionDefinitionImmutableTest {
+public class StaticPropertyConfigurationImmutableTest {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	
@@ -51,12 +51,12 @@ public class ConstructionDefinitionImmutableTest {
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		
-		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable cdm = new StaticPropertyConfigurationMutable(bns);
 		cdm.addProperty(proxy, SimpleParams.STR_BOB);
 		cdm.addProperty(proxy, SimpleParams.FLAG_FALSE);
 		
 		
-		GlobalScopeConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfiguration appDef = cdm.toImmutable();
 		
 		//Canonical Names for Property
 		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
@@ -87,7 +87,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable cdm = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy sampleGroupProxy = AndHowUtil.buildGroupProxy(SampleGroup.class);
 		GroupProxy sampleGroupDupProxy = AndHowUtil.buildGroupProxy(SampleGroupDup.class);
@@ -96,7 +96,7 @@ public class ConstructionDefinitionImmutableTest {
 
 		problems.add(cdm.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
 		
-		GlobalScopeConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfiguration appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -119,7 +119,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		GlobalScopeConfigurationMutable cdm = new GlobalScopeConfigurationMutable(bns);
+		StaticPropertyConfigurationMutable cdm = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(BadDefaultAndValidationGroup.class);
 		
@@ -129,7 +129,7 @@ public class ConstructionDefinitionImmutableTest {
 		
 		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
-		GlobalScopeConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfiguration appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));

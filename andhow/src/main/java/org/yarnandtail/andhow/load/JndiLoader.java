@@ -40,7 +40,7 @@ public class JndiLoader extends BaseLoader implements LookupLoader {
 	}
 	
 	@Override
-	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 
 		AndHowLog log = AndHowLog.getLogger(JndiLoader.class);
 		
@@ -152,7 +152,7 @@ public class JndiLoader extends BaseLoader implements LookupLoader {
 	 * @param prop
 	 * @return An ordered list of jndi names, with (hopefully) the most likely names first.
 	 */
-	protected List<String> buildJndiNames(GlobalScopeConfiguration appConfigDef, List<String> roots, Property prop) {
+	protected List<String> buildJndiNames(StaticPropertyConfiguration appConfigDef, List<String> roots, Property prop) {
 		
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value

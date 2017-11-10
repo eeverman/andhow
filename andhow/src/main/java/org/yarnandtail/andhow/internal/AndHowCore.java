@@ -19,12 +19,12 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
  * 
  * @author eeverman
  */
-public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
+public class AndHowCore implements StaticPropertyConfiguration, PropertyValues {
 	//User config
 	private final List<Loader> loaders = new ArrayList();
 	
 	//Internal state
-	private final GlobalScopeConfiguration runtimeDef;
+	private final StaticPropertyConfiguration staticConfig;
 	private final PropertyValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
 	
@@ -58,8 +58,8 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		}
 
 
-		GlobalScopeConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
-		runtimeDef = startupDef.toImmutable();
+		StaticPropertyConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
+		staticConfig = startupDef.toImmutable();
 		
 		//
 		//If there are ConstructionProblems, we can't continue on to attempt to
@@ -76,9 +76,9 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		
 		//No Construction problems, so continue on...
 		
-		loadedValues = loadValues(runtimeDef, problems).getValueMapWithContextImmutable();
-		doPropertyValidations(runtimeDef, loadedValues, problems);
-		checkForValuesWhichMustBeNonNull(runtimeDef, problems);
+		loadedValues = loadValues(staticConfig, problems).getValueMapWithContextImmutable();
+		doPropertyValidations(staticConfig, loadedValues, problems);
+		checkForValuesWhichMustBeNonNull(staticConfig, problems);
 
 		if (problems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(problems);
@@ -87,23 +87,23 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 		}
 		
 		//Export Values if applicable
-		List<ExportGroup> exportGroups = runtimeDef.getExportGroups();
+		List<ExportGroup> exportGroups = staticConfig.getExportGroups();
 		for (ExportGroup eg : exportGroups) {
 			Exporter exporter = eg.getExporter();
 			GroupProxy group = eg.getGroup();
 			
 			if (group != null) {
-				exporter.export(group, runtimeDef, this);
+				exporter.export(group, staticConfig, this);
 			} else {
-				for (GroupProxy grp : runtimeDef.getPropertyGroups()) {
-					exporter.export(grp, runtimeDef, this);
+				for (GroupProxy grp : staticConfig.getPropertyGroups()) {
+					exporter.export(grp, staticConfig, this);
 				}
 			}
 		}
 		
 		//Print samples (if requested) to System.out
 		if (getValue(Options.CREATE_SAMPLES)) {
-			ReportGenerator.printConfigSamples(runtimeDef, loaders, false);
+			ReportGenerator.printConfigSamples(staticConfig, loaders, false);
 		}
 	}
 	
@@ -114,20 +114,20 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	 */
 	private void printFailedStartupDetails(AppFatalException afe) {
 		
-		File sampleDir = ReportGenerator.printConfigSamples(runtimeDef, loaders, true);
+		File sampleDir = ReportGenerator.printConfigSamples(staticConfig, loaders, true);
 		String sampleDirStr = (sampleDir != null)?sampleDir.getAbsolutePath():"";
 		afe.setSampleDirectory(sampleDirStr);
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(os);
-		ReportGenerator.printProblems(ps, afe, runtimeDef);
+		ReportGenerator.printProblems(ps, afe, staticConfig);
 		
 		try {
 			String message = os.toString("UTF8");
 			//Add separator prefix to prevent log prefixes from indenting 1st line
 			System.err.println(System.lineSeparator() + message);
 		} catch (UnsupportedEncodingException ex) {
-			ReportGenerator.printProblems(System.err, afe, runtimeDef);	//shouldn't happen	
+			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen	
 		}
 		
 	}
@@ -148,11 +148,11 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	}
 	
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private PropertyValuesWithContext loadValues(GlobalScopeConfiguration definition, ProblemList<Problem> problems) {
+	private PropertyValuesWithContext loadValues(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
 		PropertyValuesWithContextMutable existingValues = new PropertyValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(definition, existingValues);
+			LoaderValues result = loader.load(config, existingValues);
 			existingValues.addValues(result);
 			problems.addAll(result.getProblems());
 		}
@@ -163,17 +163,17 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	/**
 	 * Validates all Property values.
 	 * 
-	 * @param appConfigDef Needed bc validation is done while construction is 
+	 * @param config Needed bc validation is done while construction is 
 	 *	not complete, thus the as-is definition is needed prior to it being complete.
 	 * @param loadedValues The values to be validated.
 	 * @param problems Add any new problems to this list
 	 */
-	private void doPropertyValidations(GlobalScopeConfiguration appConfigDef, 
+	private void doPropertyValidations(StaticPropertyConfiguration config, 
 			PropertyValuesWithContext loadedValues, ProblemList<Problem> problems) {
 		
 		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
 			for (PropertyValue pv : lvs.getValues()) {
-				doPropertyValidation(appConfigDef, lvs.getLoader(), problems, pv);
+				doPropertyValidation(config, lvs.getLoader(), problems, pv);
 			}
 		}
 	}
@@ -182,13 +182,13 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	 * Does validation on a single Property value as loaded by a single loader.
 	 * 
 	 * @param <T> The shared type of the Property and Value.
-	 * @param appConfigDef Needed bc validation is done while construction is 
+	 * @param config Needed bc validation is done while construction is 
 	 *	not complete, thus the as-is definition is needed prior to it being complete.
 	 * @param loader The loader used to load the value, for context when creating a Problem.
 	 * @param problems Add any new problems to this list
 	 * @param propValue<T> The Property and its value, both of type 'T'.
 	 */
-	private <T> void doPropertyValidation(GlobalScopeConfiguration appConfigDef,
+	private <T> void doPropertyValidation(StaticPropertyConfiguration config,
 			Loader loader, ProblemList<Problem> problems, PropertyValue<T> propValue) {
 		
 		Property<T> prop = propValue.getProperty();
@@ -198,7 +198,7 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 				
 				ValueProblem.InvalidValueProblem problem = 
 						new ValueProblem.InvalidValueProblem(loader, 
-								appConfigDef.getGroupForProperty(prop).getProxiedGroup(),
+								config.getGroupForProperty(prop).getProxiedGroup(),
 								prop, propValue.getValue(), v);
 				
 				propValue.addProblem(problem);
@@ -208,15 +208,14 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	}
 	
 
-	private void checkForValuesWhichMustBeNonNull(GlobalScopeConfiguration definition, ProblemList<Problem> problems) {
+	private void checkForValuesWhichMustBeNonNull(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
 		
-		for (Property<?> prop : definition.getProperties()) {
+		for (Property<?> prop : config.getProperties()) {
 			if (prop.isNonNullRequired()) {
 				if (getValue(prop) == null) {
 					
-					problems.add(
-						new RequirementProblem.NonNullPropertyProblem(
-								definition.getGroupForProperty(prop).getProxiedGroup(), prop));
+					problems.add(new RequirementProblem.NonNullPropertyProblem(
+								config.getGroupForProperty(prop).getProxiedGroup(), prop));
 				}
 			}
 		}
@@ -229,52 +228,52 @@ public class AndHowCore implements GlobalScopeConfiguration, PropertyValues {
 	
 	@Override
 	public List<EffectiveName> getAliases(Property<?> property) {
-		return runtimeDef.getAliases(property);
+		return staticConfig.getAliases(property);
 	}
 
 	@Override
 	public String getCanonicalName(Property<?> prop) {
-		return runtimeDef.getCanonicalName(prop);
+		return staticConfig.getCanonicalName(prop);
 	}
 
 	@Override
 	public GroupProxy getGroupForProperty(Property<?> prop) {
-		return runtimeDef.getGroupForProperty(prop);
+		return staticConfig.getGroupForProperty(prop);
 	}
 
 	@Override
 	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
-		return runtimeDef.getPropertiesForGroup(group);
+		return staticConfig.getPropertiesForGroup(group);
 	}
 
 	@Override
 	public Property<?> getProperty(String name) {
-		return runtimeDef.getProperty(name);
+		return staticConfig.getProperty(name);
 	}
 	
 	@Override
 	public List<GroupProxy> getPropertyGroups() {
-		return runtimeDef.getPropertyGroups();
+		return staticConfig.getPropertyGroups();
 	}
 
 	@Override
 	public List<Property<?>> getProperties() {
-		return runtimeDef.getProperties();
+		return staticConfig.getProperties();
 	}
 
 	@Override
 	public List<ExportGroup> getExportGroups() {
-		return runtimeDef.getExportGroups();
+		return staticConfig.getExportGroups();
 	}
 
 	@Override
 	public NamingStrategy getNamingStrategy() {
-		return runtimeDef.getNamingStrategy();
+		return staticConfig.getNamingStrategy();
 	}
 	
 	@Override
 	public Map<String, String> getSystemEnvironment() {
-		return runtimeDef.getSystemEnvironment();
+		return staticConfig.getSystemEnvironment();
 	}
 	
 		

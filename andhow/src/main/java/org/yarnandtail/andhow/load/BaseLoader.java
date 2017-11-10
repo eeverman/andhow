@@ -42,7 +42,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param key The property name
 	 * @param strValue The property value 
 	 */
-	protected void attemptToAdd(GlobalScopeConfiguration appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<PropertyValue> values, 
 			ProblemList<Problem> loaderProblems, String key, String strValue) {
 		
 		key = TextUtil.trimToNull(key);
@@ -99,7 +99,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param prop The Property to load to
 	 * @param value The Object to be loaded to this property
 	 */
-	protected void attemptToAdd(GlobalScopeConfiguration appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<PropertyValue> values, 
 			ProblemList<Problem> loaderProblems, Property prop, Object value) {
 		
 		if (prop != null) {
@@ -148,7 +148,7 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected <T> PropertyValue createValue(GlobalScopeConfiguration appConfigDef, 
+	protected <T> PropertyValue createValue(StaticPropertyConfiguration appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
 		T value = null;

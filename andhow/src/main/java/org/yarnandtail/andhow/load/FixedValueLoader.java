@@ -28,7 +28,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(GlobalScopeConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
 		return new LoaderValues(this, values, ProblemList.EMPTY_PROBLEM_LIST);
 	}
 	

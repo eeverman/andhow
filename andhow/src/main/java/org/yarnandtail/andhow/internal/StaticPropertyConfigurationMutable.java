@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
  * 
  * @author eeverman
  */
-public class GlobalScopeConfigurationMutable implements GlobalScopeConfiguration {
+public class StaticPropertyConfigurationMutable implements StaticPropertyConfiguration {
 	
 	private final NamingStrategy namingStrategy;
 	private final Map<GroupProxy, List<Property<?>>> propertiesByGroup = new HashMap();
@@ -25,7 +25,7 @@ public class GlobalScopeConfigurationMutable implements GlobalScopeConfiguration
 	//It is not copied to the immutable version and has no access method.
 	private final HashMap<String, Property<?>> propertiesByExportName = new HashMap();
 
-	public GlobalScopeConfigurationMutable(NamingStrategy namingStrategy) {
+	public StaticPropertyConfigurationMutable(NamingStrategy namingStrategy) {
 		this.namingStrategy = namingStrategy;
 	}
 	
@@ -251,8 +251,8 @@ public class GlobalScopeConfigurationMutable implements GlobalScopeConfiguration
 	 * 
 	 * @return 
 	 */
-	public GlobalScopeConfiguration toImmutable() {
-		return new GlobalScopeConfigurationImmutable(namingStrategy, groupList, properties,
+	public StaticPropertyConfiguration toImmutable() {
+		return new StaticPropertyConfigurationImmutable(namingStrategy, groupList, properties,
 			propertiesByGroup, propertiesByAnyName, 
 			aliasesByProperty, canonicalNameByProperty, 
 			exportGroups);

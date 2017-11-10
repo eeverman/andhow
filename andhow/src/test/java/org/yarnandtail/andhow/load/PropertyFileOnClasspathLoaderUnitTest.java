@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -23,7 +23,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	
 	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropertyFileOnClasspathLoaderUnitTest_SimpleParams";
 	
-	GlobalScopeConfigurationMutable appDef;
+	StaticPropertyConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
 	public static interface TestProps {
@@ -47,7 +47,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		appValuesBuilder = new PropertyValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new GlobalScopeConfigurationMutable(bns);
+		appDef = new StaticPropertyConfigurationMutable(bns);
 		
 		GroupProxy simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		

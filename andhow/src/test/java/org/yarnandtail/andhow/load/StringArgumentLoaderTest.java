@@ -23,7 +23,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  */
 public class StringArgumentLoaderTest {
 	
-	GlobalScopeConfigurationMutable appDef;
+	StaticPropertyConfigurationMutable appDef;
 	PropertyValuesWithContextMutable appValuesBuilder;
 	
 	public interface SimpleParams {
@@ -47,7 +47,7 @@ public class StringArgumentLoaderTest {
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		
-		appDef = new GlobalScopeConfigurationMutable(bns);
+		appDef = new StaticPropertyConfigurationMutable(bns);
 		appDef.addProperty(proxy, SimpleParams.STR_BOB);
 		appDef.addProperty(proxy, SimpleParams.STR_NULL);
 		appDef.addProperty(proxy, SimpleParams.STR_ENDS_WITH_XXX);

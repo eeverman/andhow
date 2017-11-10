@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.GlobalScopeConfigurationMutable;
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 
@@ -29,11 +29,11 @@ public class AndHowUtil {
 	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
-	public static GlobalScopeConfigurationMutable buildDefinition(
+	public static StaticPropertyConfigurationMutable buildDefinition(
 			List<GroupProxy> groups, List<Loader> loaders,
 			NamingStrategy naming, ProblemList<Problem> problems) {
 
-		GlobalScopeConfigurationMutable appDef = new GlobalScopeConfigurationMutable(naming);
+		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(naming);
 
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
@@ -94,7 +94,7 @@ public class AndHowUtil {
 		return appDef;
 	}
 
-	protected static ProblemList<ConstructionProblem> registerGroup(GlobalScopeConfigurationMutable appDef,
+	protected static ProblemList<ConstructionProblem> registerGroup(StaticPropertyConfigurationMutable appDef,
 			GroupProxy group) {
 
 		ProblemList<ConstructionProblem> problems = new ProblemList();
