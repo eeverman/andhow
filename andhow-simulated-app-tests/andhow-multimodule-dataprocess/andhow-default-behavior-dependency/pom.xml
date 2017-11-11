@@ -6,7 +6,6 @@
 		<version>0.4.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-default-behavior-dependency</artifactId>
 	
 	<!-- This really isn't meant to be packaged up at all - its sample code -->
