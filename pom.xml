@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
@@ -9,7 +10,7 @@
 		Simple typed and validated configuration loading for web apps, command line or any environment application.
 	</description>
 	<url>https://github.com/eeverman/andhow</url>
-	
+
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
@@ -31,7 +32,7 @@
 			</comments>
 		</license>
 	</licenses>
-	
+
 	<developers>
 		<developer>
 			<name>Eric Everman</name>
@@ -41,14 +42,14 @@
 			<url>https://github.com/eeverman</url>
 		</developer>
 	</developers>
-	
+
 	<scm>
 		<connection>scm:git:git@github.com:eeverman/andhow.git</connection>
 		<developerConnection>scm:git:git@github.com:eeverman/andhow.git</developerConnection>
 		<url>https://github.com/eeverman/andhow/tree/master</url>
 		<tag>HEAD</tag>
 	</scm>
-	
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -59,14 +60,14 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-javadoc-plugin-version>2.10.4</maven-javadoc-plugin-version>
 		<maven-source-plugin-version>2.4</maven-source-plugin-version>
 	</properties>
-	
-	
+
+
 	<modules>
 		<module>andhow</module>
 		<module>andhow-system-tests</module>
@@ -85,7 +86,7 @@
 			<url>http://repo1.maven.org/maven/</url>
 		</repository>
 	</repositories>
-	
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -109,13 +110,13 @@
 			<dependency>
 				<groupId>com.google.testing.compile</groupId>
 				<artifactId>compile-testing</artifactId>
-				<version>0.11</version>
+				<version>0.12</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
-	
+
+
 
 	<profiles>
 		<profile>
@@ -132,6 +133,7 @@
 						<configuration>
 							<source>1.8</source>
 							<target>1.8</target>
+							<compilerVersion>1.8</compilerVersion> 
 						</configuration>
 					</plugin>
 
@@ -181,6 +183,25 @@
 						<configuration>
 							<updateReleaseInfo>true</updateReleaseInfo>
 						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>enforce-versions</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireJavaVersion>
+											<version>1.8</version>
+										</requireJavaVersion>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
 					</plugin>
 				</plugins>
 			</build>
@@ -249,7 +270,7 @@
 						<configuration>
 							<arguments>remoteDeploy=true</arguments>
 							<autoVersionSubmodules>true</autoVersionSubmodules>
-							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles>-->
+							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles> -->
 							<useReleaseProfile>false</useReleaseProfile>
 							<goals>verify deploy</goals>
 						</configuration>
@@ -266,5 +287,5 @@
 			</build>
 		</profile>
 	</profiles>
-	
+
 </project>
