@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
+import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.PropertyGroup;
@@ -29,7 +29,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropertyFileOnFilesystemLoaderUnitTest.properties";
 	
 	StaticPropertyConfigurationMutable appDef;
-	PropertyValuesWithContextMutable appValuesBuilder;
+	ValidatedValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 	
 	public static interface TestProps extends PropertyGroup {
@@ -50,7 +50,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new PropertyValuesWithContextMutable();
+		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		appDef = new StaticPropertyConfigurationMutable(bns);
@@ -85,8 +85,8 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	@Test
 	public void testHappyPath() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -107,8 +107,8 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	@Test
 	public void testPropFileLoaderWithMissingFile() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -132,8 +132,8 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 	@Test
 	public void testPropFileLoaderWithNoClasspathConfigured() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		//evl.add(new PropertyValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		//evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		

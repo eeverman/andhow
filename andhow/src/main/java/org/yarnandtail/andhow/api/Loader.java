@@ -42,7 +42,7 @@ public interface Loader {
 	 * @return 
 	 */
 	LoaderValues load(StaticPropertyConfiguration runtimeDef,
-			PropertyValuesWithContext existingValues);
+			ValidatedValuesWithContext existingValues);
 	
 	/**
 	 * Returns a PropertyGroup used to globally configure a class of Loader.

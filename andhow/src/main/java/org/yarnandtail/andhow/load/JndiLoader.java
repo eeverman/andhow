@@ -40,13 +40,13 @@ public class JndiLoader extends BaseLoader implements LookupLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		AndHowLog log = AndHowLog.getLogger(JndiLoader.class);
 		
 		List<String> jndiRoots = buildJndiRoots(existingValues);
 
-		ArrayList<PropertyValue> values = new ArrayList();
+		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
 
 		try {
@@ -126,7 +126,7 @@ public class JndiLoader extends BaseLoader implements LookupLoader {
 	 * @param values The configuration state.
 	 * @return Never null and never non-empty.
 	 */
-	protected List<String> buildJndiRoots(PropertyValues values) {
+	protected List<String> buildJndiRoots(ValidatedValues values) {
 		ArrayList<String> myJndiRoots = new ArrayList();
 
 		//Add the added roots to the search list first, since they are pretty

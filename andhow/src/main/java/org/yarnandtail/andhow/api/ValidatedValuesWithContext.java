@@ -18,7 +18,7 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public interface PropertyValuesWithContext extends PropertyValues {
+public interface ValidatedValuesWithContext extends ValidatedValues {
 	
 	/**
 	 * Returns true if any value or loader has any sort of issue (invalid value,
@@ -63,7 +63,7 @@ public interface PropertyValuesWithContext extends PropertyValues {
 	 * Unmodifiable minimum data for Properties to retrieve their data from.
 	 * @return 
 	 */
-	PropertyValues getValueMapImmutable();
+	ValidatedValues getValueMapImmutable();
 	
 	/**
 	 * Unmodifiable minimum data collection to store the structure of how data
@@ -74,6 +74,6 @@ public interface PropertyValuesWithContext extends PropertyValues {
 	 * 
 	 * @return 
 	 */
-	PropertyValuesWithContext getValueMapWithContextImmutable();
+	ValidatedValuesWithContext getValueMapWithContextImmutable();
 
 }

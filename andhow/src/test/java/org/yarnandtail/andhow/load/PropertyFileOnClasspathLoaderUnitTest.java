@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
+import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.property.FlagProp;
@@ -24,7 +24,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropertyFileOnClasspathLoaderUnitTest_SimpleParams";
 	
 	StaticPropertyConfigurationMutable appDef;
-	PropertyValuesWithContextMutable appValuesBuilder;
+	ValidatedValuesWithContextMutable appValuesBuilder;
 	
 	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().mustBeNonNull().build();
@@ -44,7 +44,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new PropertyValuesWithContextMutable();
+		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		appDef = new StaticPropertyConfigurationMutable(bns);
@@ -65,8 +65,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testHappyPath() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "1.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "1.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -88,8 +88,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testDuplicateEntries() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "2.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "2.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -110,8 +110,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testEmptyValues() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "3.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "3.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -133,8 +133,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testAllWhitespaceValues() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "4.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "4.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -156,8 +156,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testQuotedStringValues() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "5.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "5.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -177,8 +177,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testPropFileLoaderWithUnrecognizedPropNames() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "6.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, CLASSPATH_BASE + "6.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -209,8 +209,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testPropFileLoaderWithMissingFile() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
@@ -234,8 +234,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 	@Test
 	public void testPropFileLoaderWithNoClasspathConfigured() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		//evl.add(new PropertyValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		//evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
 		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		

@@ -8,9 +8,9 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public abstract class PropertyValuesWithContextBase implements PropertyValuesWithContext {
+public abstract class ValidatedValuesWithContextBase implements ValidatedValuesWithContext {
 	
-	public PropertyValuesWithContextBase() {
+	public ValidatedValuesWithContextBase() {
 	}
 
 	//
@@ -55,14 +55,14 @@ public abstract class PropertyValuesWithContextBase implements PropertyValuesWit
 	public LoaderValues getEffectiveValuesLoadedByLoader(List<LoaderValues> valuesList, Loader loader) {
 		LoaderValues allLoaderValues = getAllValuesLoadedByLoader(loader);
 		if (allLoaderValues != null) {
-			ArrayList<PropertyValue> effValues = new ArrayList(allLoaderValues.getValues());
+			ArrayList<ValidatedValue> effValues = new ArrayList(allLoaderValues.getValues());
 			for (LoaderValues lvs : valuesList) {
 				//only looking for loaders before the specified one
 				if (lvs.getLoader().equals(loader)) {
 					break;
 				}
 				//remove
-				effValues.removeIf((PropertyValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
+				effValues.removeIf((ValidatedValue pv) -> lvs.isExplicitlySet(pv.getProperty()));
 			}
 			return new LoaderValues(loader, effValues, ProblemList.EMPTY_PROBLEM_LIST);
 		} else {
@@ -70,19 +70,19 @@ public abstract class PropertyValuesWithContextBase implements PropertyValuesWit
 		}
 	}
 	
-	public PropertyValuesImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
+	public ValidatedValuesImmutable buildValueMapImmutable(List<LoaderValues> valuesList) {
 		
 		Map<Property<?>, Object> effValues = new HashMap();
 		
 		for (LoaderValues lvs : valuesList) {
-			for (PropertyValue pv : lvs.getValues()) {
+			for (ValidatedValue pv : lvs.getValues()) {
 				effValues.putIfAbsent(pv.getProperty(), pv.getValue());
 			}
 			
 		}
 		
 		
-		return new PropertyValuesImmutable(effValues); 
+		return new ValidatedValuesImmutable(effValues); 
 	}
 	
 }

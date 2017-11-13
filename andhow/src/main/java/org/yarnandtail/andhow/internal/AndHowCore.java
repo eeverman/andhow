@@ -19,13 +19,13 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
  * 
  * @author eeverman
  */
-public class AndHowCore implements StaticPropertyConfiguration, PropertyValues {
+public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues {
 	//User config
 	private final List<Loader> loaders = new ArrayList();
 	
 	//Internal state
 	private final StaticPropertyConfiguration staticConfig;
-	private final PropertyValuesWithContext loadedValues;
+	private final ValidatedValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
 	
 	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
@@ -148,8 +148,8 @@ public class AndHowCore implements StaticPropertyConfiguration, PropertyValues {
 	}
 	
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private PropertyValuesWithContext loadValues(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
-		PropertyValuesWithContextMutable existingValues = new PropertyValuesWithContextMutable();
+	private ValidatedValuesWithContext loadValues(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
+		ValidatedValuesWithContextMutable existingValues = new ValidatedValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
 			LoaderValues result = loader.load(config, existingValues);
@@ -169,10 +169,10 @@ public class AndHowCore implements StaticPropertyConfiguration, PropertyValues {
 	 * @param problems Add any new problems to this list
 	 */
 	private void doPropertyValidations(StaticPropertyConfiguration config, 
-			PropertyValuesWithContext loadedValues, ProblemList<Problem> problems) {
+			ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
 		
 		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
-			for (PropertyValue pv : lvs.getValues()) {
+			for (ValidatedValue pv : lvs.getValues()) {
 				doPropertyValidation(config, lvs.getLoader(), problems, pv);
 			}
 		}
@@ -189,7 +189,7 @@ public class AndHowCore implements StaticPropertyConfiguration, PropertyValues {
 	 * @param propValue<T> The Property and its value, both of type 'T'.
 	 */
 	private <T> void doPropertyValidation(StaticPropertyConfiguration config,
-			Loader loader, ProblemList<Problem> problems, PropertyValue<T> propValue) {
+			Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
 		
 		Property<T> prop = propValue.getProperty();
 		

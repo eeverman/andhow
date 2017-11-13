@@ -56,7 +56,7 @@ public class PropertyFileOnFilesystemLoader extends PropertyFileBaseLoader {
 	
 
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		String path = existingValues.getValue(filepath);
 		specificLoadDescription = TextUtil.format("file on the file system at path : {} ({})",
@@ -82,7 +82,7 @@ public class PropertyFileOnFilesystemLoader extends PropertyFileBaseLoader {
 	 * @return 
 	 */
 	public LoaderValues load(StaticPropertyConfiguration appConfigDef,
-			PropertyValuesWithContext existingValues, String path) {
+			ValidatedValuesWithContext existingValues, String path) {
 		
 		try {
 			File propFile = new File(path);

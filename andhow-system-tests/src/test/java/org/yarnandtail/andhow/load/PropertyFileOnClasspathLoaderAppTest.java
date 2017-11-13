@@ -14,7 +14,6 @@ import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegi
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyIsNull;
 import org.yarnandtail.andhow.util.NameUtil;
 
 /**
@@ -70,21 +69,13 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testNullReferencePropLoaderProperty() throws Exception {
 		
-		try {
-			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-					.loader(new PropertyFileOnClasspathLoader(null))
-					.group(SimpleParams.class)
-					.group(TestProps.class)	//This must be declared or the Prop loader can't work
-					.build();
+		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+				.loader(new PropertyFileOnClasspathLoader((String)null))
+				.group(SimpleParams.class)
+				.group(TestProps.class)	//This must be declared or the Prop loader can't work
+				.build();
 		
-			fail("The Property loader config parameter is not registered, so it should have failed");
-		} catch (AppFatalException afe) {
-			List<LoaderPropertyIsNull> probs = afe.getProblems().filter(LoaderPropertyIsNull.class);
-			assertEquals(1, probs.size());
-		}
-
+		//It is OK to have a null config for the PropFile loader - it just turns it off
 	}
 	
 	@Test

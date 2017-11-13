@@ -24,7 +24,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 public class StringArgumentLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
-	PropertyValuesWithContextMutable appValuesBuilder;
+	ValidatedValuesWithContextMutable appValuesBuilder;
 	
 	public interface SimpleParams {
 		//Strings
@@ -41,7 +41,7 @@ public class StringArgumentLoaderTest {
 
 	@Before
 	public void init() throws Exception {
-		appValuesBuilder = new PropertyValuesWithContextMutable();
+		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		

@@ -21,7 +21,7 @@ import org.yarnandtail.andhow.util.NameUtil;
 public class SystemPropertyLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
-	PropertyValuesWithContextMutable appValuesBuilder;
+	ValidatedValuesWithContextMutable appValuesBuilder;
 	GroupProxy simpleProxy;
 	
 	public interface SimpleParams {
@@ -38,7 +38,7 @@ public class SystemPropertyLoaderTest {
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new PropertyValuesWithContextMutable();
+		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		appDef = new StaticPropertyConfigurationMutable(bns);

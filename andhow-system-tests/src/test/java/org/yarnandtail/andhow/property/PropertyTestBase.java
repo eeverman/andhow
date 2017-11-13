@@ -1,12 +1,8 @@
 package org.yarnandtail.andhow.property;
 
 import java.util.*;
-import org.yarnandtail.andhow.AndHowNonProduction;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.load.*;
-import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**

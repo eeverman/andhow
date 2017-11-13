@@ -19,7 +19,7 @@ public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadL
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
 			String fromPath, StaticPropertyConfiguration appConfigDef,
-			PropertyValuesWithContext existingValues) throws LoaderException {
+			ValidatedValuesWithContext existingValues) throws LoaderException {
 		
 		
 		if (inputStream == null) {
@@ -31,7 +31,7 @@ public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadL
 			Properties props = new Properties();
 			props.load(inputStream);
 			
-			ArrayList<PropertyValue> values = new ArrayList();
+			ArrayList<ValidatedValue> values = new ArrayList();
 			ProblemList<Problem> problems = new ProblemList();
 
 			Set<Object> keys = props.keySet();

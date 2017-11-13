@@ -6,21 +6,21 @@ import java.util.List;
 import org.yarnandtail.andhow.api.*;
 
 /**
- * Immutable PropertyValues implementation that stores extra context info.
+ * Immutable ValidatedValues implementation that stores extra context info.
  * 
  * @author eeverman
  */
-public class PropertyValuesWithContextImmutable extends PropertyValuesWithContextBase {
+public class ValidatedValuesWithContextImmutable extends ValidatedValuesWithContextBase {
 	
 	/** Lists of values loaded by each loader */
 	private final ArrayList<LoaderValues> structuredValues = new ArrayList();
 	
 	/** Just the final effective values */
-	private final PropertyValues effectiveValues;
+	private final ValidatedValues effectiveValues;
 	
 	private final boolean problem;
 		
-	public PropertyValuesWithContextImmutable(List<LoaderValues> inLoadedValuesList) {
+	public ValidatedValuesWithContextImmutable(List<LoaderValues> inLoadedValuesList) {
 		structuredValues.addAll(inLoadedValuesList);
 		structuredValues.trimToSize();
 		effectiveValues = super.buildValueMapImmutable(structuredValues);
@@ -76,12 +76,12 @@ public class PropertyValuesWithContextImmutable extends PropertyValuesWithContex
 	//Build methods
 
 	@Override
-	public PropertyValues getValueMapImmutable() {
+	public ValidatedValues getValueMapImmutable() {
 		return effectiveValues;
 	}
 	
 	@Override
-	public PropertyValuesWithContext getValueMapWithContextImmutable() {
+	public ValidatedValuesWithContext getValueMapWithContextImmutable() {
 		return this;
 	}
 	

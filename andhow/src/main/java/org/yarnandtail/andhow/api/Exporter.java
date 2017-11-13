@@ -39,7 +39,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(StaticPropertyConfiguration definition, PropertyValues values);
+	void export(StaticPropertyConfiguration definition, ValidatedValues values);
 	
 	/**
 	 * Exports a Group.
@@ -52,7 +52,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(GroupProxy group, StaticPropertyConfiguration definition, PropertyValues values);
+	void export(GroupProxy group, StaticPropertyConfiguration definition, ValidatedValues values);
 	
 	public static enum EXPORT_CANONICAL_NAME {
 		ALWAYS, ONLY_IF_NO_OUT_ALIAS, NEVER;

@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
-import org.yarnandtail.andhow.internal.PropertyValuesWithContextMutable;
+import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -24,7 +24,7 @@ import org.yarnandtail.andhow.util.NameUtil;
 public class EnviromentVariableLoaderTest {
 	
 	TestGlobalScopeConfiguration appDef;
-	PropertyValuesWithContextMutable appValuesBuilder;
+	ValidatedValuesWithContextMutable appValuesBuilder;
 	
 	public interface SimpleParams {
 		//Strings
@@ -40,7 +40,7 @@ public class EnviromentVariableLoaderTest {
 	@Before
 	public void init() throws Exception {
 		
-		appValuesBuilder = new PropertyValuesWithContextMutable();
+		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
 		appDef = new TestGlobalScopeConfiguration();

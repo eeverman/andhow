@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
 
 /**
@@ -28,8 +28,22 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
-		return new LoaderValues(this, values, ProblemList.EMPTY_PROBLEM_LIST);
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+		
+		if (values != null && values.size() > 0) {
+			List<ValidatedValue> vvs = new ArrayList(values.size());
+			
+			for (int i = 0; i < values.size(); i++) {
+				ValidatedValue vv = new ValidatedValue(values.get(i).getProperty(), values.get(i).getValue());
+				vvs.add(vv);
+			}
+			
+			return new LoaderValues(this, vvs, ProblemList.EMPTY_PROBLEM_LIST);
+			
+		} else {
+			return new LoaderValues(this, Collections.emptyList(), ProblemList.EMPTY_PROBLEM_LIST);
+		}
+		
 	}
 	
 	@Override

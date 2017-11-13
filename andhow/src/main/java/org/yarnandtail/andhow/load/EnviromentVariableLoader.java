@@ -34,9 +34,9 @@ public class EnviromentVariableLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
 		
-		ArrayList<PropertyValue> values = new ArrayList();
+		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
 		
 		Map<String, String> props = appConfigDef.getSystemEnvironment();

@@ -9,7 +9,7 @@ import static org.yarnandtail.andhow.api.ProblemList.EMPTY_PROBLEM_LIST;
  * 
  * @author eeverman
  */
-public class PropertyValue<T> {
+public class ValidatedValue<T> {
 
 	private final Property<T> property;
 	private final T value;
@@ -19,8 +19,8 @@ public class PropertyValue<T> {
 	public boolean equals(Object obj) {
 		boolean basicPropsEq = false;
 		
-		if (obj instanceof PropertyValue) {
-			PropertyValue other = (PropertyValue)obj;
+		if (obj instanceof ValidatedValue) {
+			ValidatedValue other = (ValidatedValue)obj;
 			if (property == other.property) {
 				if (value != null && other.value != null) {
 					basicPropsEq = (value.equals(other.value));
@@ -53,7 +53,7 @@ public class PropertyValue<T> {
 	 * @param prop
 	 * @param value 
 	 */
-	public PropertyValue(Property<T> prop, T value) {
+	public ValidatedValue(Property<T> prop, T value) {
 		this.property = prop;
 		this.value = value;
 	}
@@ -68,7 +68,7 @@ public class PropertyValue<T> {
 	 * @param value
 	 * @param inIssues 
 	 */
-	public PropertyValue(Property<T> prop, T value, ProblemList<ValueProblem> inIssues) {
+	public ValidatedValue(Property<T> prop, T value, ProblemList<ValueProblem> inIssues) {
 		this.property = prop;
 		this.value = value;
 		
