@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.Loader;
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
@@ -11,11 +12,48 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author ericeverman
  */
 public class StdConfig implements AndHowConfiguration {
+	
+	//A list of hardcoded values used by the FixedValueLoader
+	private final List<PropertyValue> _fixedVals = new ArrayList();
+	
+	//A list of command line arguments
 	private final List<String> _cmdLineArgs = new ArrayList();
 	
-	//These two are mutually exclisive
+	//These two are mutually exclusive
 	private String propertyFileClassspathStr;
 	private StrProp propertyFileClassspathProp;
+	
+	/**
+	 * Sets a fixed, non-configurable value for a Property.
+	 * 
+	 * Property values set in this way use the FixedValueLoader to load values
+	 * prior to any other loader.  Since the first loaded value for a Property
+	 * 'wins', this effectively fixes the value and makes it non-configurable.
+	 *
+	 * @param <T> The type of Property and value
+	 * @param property The property to set a value for
+	 * @param value The value to set.
+	 * @return
+	 */
+	public <T> StdConfig addFixedValue(Property<T> property, T value) {
+
+		
+		if (property == null) {
+			throw new IllegalArgumentException("The property cannot be null");
+		}
+		
+		for (PropertyValue pv : _fixedVals) {
+			if (property.equals(pv.getProperty())) {
+				throw new IllegalArgumentException("A fixed value for this property has been assigned twice.");
+			}
+		}
+		
+		PropertyValue pv = new PropertyValue(property, value);
+		_fixedVals.add(pv);
+
+		return this;
+	}
+	
 
 	/**
 	 * Adds the command line arguments, keeping any previously added.
@@ -120,10 +158,13 @@ public class StdConfig implements AndHowConfiguration {
 	@Override
 	public List<Loader> buildLoaders() {
 		List<Loader> loaders = new ArrayList();
+		loaders.add(new FixedValueLoader(_fixedVals));
 		loaders.add(new CommandLineArgumentLoader(_cmdLineArgs));
 		loaders.add(new SystemPropertyLoader());
 		loaders.add(new JndiLoader(false));
 		loaders.add(new EnviromentVariableLoader());
+		
+		//Add Prop on Filesys loader here
 		
 		if (propertyFileClassspathStr != null) {
 			loaders.add(new AndHowPropertyFileLoader(propertyFileClassspathStr));
