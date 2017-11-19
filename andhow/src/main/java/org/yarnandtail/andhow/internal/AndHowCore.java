@@ -155,6 +155,8 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 			LoaderValues result = loader.load(config, existingValues);
 			existingValues.addValues(result);
 			problems.addAll(result.getProblems());
+			
+			loader.releaseResources();
 		}
 
 		return existingValues;

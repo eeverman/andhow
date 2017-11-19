@@ -17,14 +17,23 @@ import org.yarnandtail.andhow.api.*;
  */
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
-	List<PropertyValue> values;
+	protected boolean unknownPropertyAProblem = true;
+	
+	protected List<PropertyValue> values = new ArrayList();
 			
 	public FixedValueLoader(List<PropertyValue> values) {
-		this.values = values;
 	}
 	
-	public FixedValueLoader(PropertyValue... values) {
-		this.values = Arrays.asList(values);
+	public void setPropertyValues(List<PropertyValue> values) {
+		if (values != null) {
+			this.values.addAll(values);
+		}
+	}
+	
+	public void setPropertyValues(PropertyValue... values) {
+		if (values != null && values.length > 0) {
+			this.values.addAll(Arrays.asList(values));
+		}
 	}
 	
 	@Override
@@ -52,11 +61,6 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
-		return true;
-	}
-	
-	@Override
 	public String getSpecificLoadDescription() {
 		return "a list of fixed values passed in by the construction code (not dynamically loaded)";
 	}
@@ -69,6 +73,21 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	@Override
 	public String getLoaderDialect() {
 		return "FromJavaSourceCode";
+	}
+
+	@Override
+	public void setUnknownPropertyAProblem(boolean isAProblem) {
+		unknownPropertyAProblem = isAProblem;
+	}
+	
+	@Override
+	public boolean isUnknownPropertyAProblem() {
+		return unknownPropertyAProblem;
+	}
+
+	@Override
+	public void releaseResources() {
+		values = null;
 	}
 	
 }

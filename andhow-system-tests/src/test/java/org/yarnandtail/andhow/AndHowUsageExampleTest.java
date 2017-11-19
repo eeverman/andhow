@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.property.*;
 
 /**
@@ -25,13 +25,13 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void setup() {
 		
 		cmdLineArgsWFullClassName = new String[] {
-			uiFullPath + "DISPLAY_NAME" + StringArgumentLoader.KVP_DELIMITER + "My App",
-			uiFullPath + "BACKGROUP_COLOR" + StringArgumentLoader.KVP_DELIMITER + "ffffff",
-			svsFullPath + "REST_ENDPOINT_URL" + StringArgumentLoader.KVP_DELIMITER + "google.com",
-			svsFullPath + "RETRY_COUNT" + StringArgumentLoader.KVP_DELIMITER + "4",
-			svsFullPath + "TIMEOUT_SECONDS" + StringArgumentLoader.KVP_DELIMITER + "10",
-			svsFullPath + "GRAVITY" + StringArgumentLoader.KVP_DELIMITER + "9.8",
-			svsFullPath + "PIE" + StringArgumentLoader.KVP_DELIMITER + "3.14"
+			uiFullPath + "DISPLAY_NAME" + KeyValuePairLoader.KVP_DELIMITER + "My App",
+			uiFullPath + "BACKGROUP_COLOR" + KeyValuePairLoader.KVP_DELIMITER + "ffffff",
+			svsFullPath + "REST_ENDPOINT_URL" + KeyValuePairLoader.KVP_DELIMITER + "google.com",
+			svsFullPath + "RETRY_COUNT" + KeyValuePairLoader.KVP_DELIMITER + "4",
+			svsFullPath + "TIMEOUT_SECONDS" + KeyValuePairLoader.KVP_DELIMITER + "10",
+			svsFullPath + "GRAVITY" + KeyValuePairLoader.KVP_DELIMITER + "9.8",
+			svsFullPath + "PIE" + KeyValuePairLoader.KVP_DELIMITER + "3.14"
 		};
 		
 	}

@@ -14,6 +14,14 @@ package org.yarnandtail.andhow.api;
 public interface ReadLoader extends Loader {
 	
 	/**
+	 * If true, an unrecognized property name is considered a problem/error.
+	 * 
+	 * @param isAProblem 
+	 */
+	void setUnknownPropertyAProblem(boolean isAProblem);
+	
+	
+	/**
 	 * If true, an unrecognized name is considered a problem that will stop 
 	 * application startup.
 	 * 
@@ -24,5 +32,5 @@ public interface ReadLoader extends Loader {
 	 * 
 	 * @return 
 	 */
-	boolean isUnrecognizedPropertyNamesConsideredAProblem();
+	boolean isUnknownPropertyAProblem();
 }

@@ -32,7 +32,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -53,7 +53,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();
@@ -70,7 +70,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	public void testNullReferencePropLoaderProperty() throws Exception {
 		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnClasspathLoader((String)null))
+				.loader(new PropertyFileOnClasspathLoader((String)null, true))
 				.group(SimpleParams.class)
 				.group(TestProps.class)	//This must be declared or the Prop loader can't work
 				.build();
@@ -85,7 +85,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.build();
@@ -106,7 +106,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -123,7 +123,7 @@ public class PropertyFileOnClasspathLoaderAppTest {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH))
+					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();

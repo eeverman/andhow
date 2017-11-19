@@ -30,7 +30,7 @@ public class PropertyTestBase extends AndHowTestBase {
 				.group(TEST_CONFIG.class)
 				.groups(groups)
 				.loader(new FixedValueLoader(new PropertyValue(TEST_CONFIG.PROP_FILE, propFilePath)))
-				.loader(new PropertyFileOnClasspathLoader(TEST_CONFIG.PROP_FILE))
+				.loader(new PropertyFileOnClasspathLoader(TEST_CONFIG.PROP_FILE, true))
 				.build();
 
 	}

@@ -29,14 +29,9 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public class JndiLoader extends BaseLoader implements LookupLoader {
 
-	private final boolean failedEnvironmentAProblem;
+	private boolean failedEnvironmentAProblem = false;
 	
 	public JndiLoader() {
-		this.failedEnvironmentAProblem = false;
-	}
-
-	public JndiLoader(boolean failedEnvironmentAProblem) {
-		this.failedEnvironmentAProblem = failedEnvironmentAProblem;
 	}
 	
 	@Override
@@ -248,6 +243,11 @@ public class JndiLoader extends BaseLoader implements LookupLoader {
 	@Override
 	public String getLoaderDialect() {
 		return null;
+	}
+	
+	@Override
+	public void setFailedEnvironmentAProblem(boolean isAProblem) {
+		failedEnvironmentAProblem = isAProblem;
 	}
 	
 	@Override

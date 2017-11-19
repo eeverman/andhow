@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -49,11 +49,11 @@ public class AndHowTest extends AndHowTestBase {
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true"
+			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
+			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
+			paramFullPath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false",
+			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
+			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
 		};
 		
 	}
@@ -93,7 +93,7 @@ public class AndHowTest extends AndHowTestBase {
 	public void testBlowingUpWithDuplicateLoaders() {
 		
 		List<Loader> loaders = new ArrayList();
-		loaders.add(new StringArgumentLoader(cmdLineArgsWFullClassName));
+		loaders.add(new KeyValuePairLoader(cmdLineArgsWFullClassName));
 		
 		try {
 

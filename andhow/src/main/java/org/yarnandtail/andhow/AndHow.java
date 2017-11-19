@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 
@@ -102,8 +102,8 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * Returns a list of new loaders that are used for default configuration.
 	 *
 	 * @param cmdLineArgs Optional command line arguments to be passed to the
-	 * StringArgumentLoader. These would be the Stringp[] args passed to the
-	 * main method at startup.
+ KeyValuePairLoader. These would be the Stringp[] args passed to the
+ main method at startup.
 	 * @return
 	 */
 	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
@@ -112,7 +112,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		loaders.add(new SystemPropertyLoader());
 		loaders.add(new JndiLoader(false));
 		loaders.add(new EnviromentVariableLoader());
-		loaders.add(new AndHowPropertyFileLoader());
+		loaders.add(new StdPropertyFileOnClasspathLoader(false));
 		return loaders;
 	}
 	
@@ -399,7 +399,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		public AndHowBuilder addCmdLineArg(String key, String value) {
 
 			if (value != null) {
-				_cmdLineArgs.add(key + StringArgumentLoader.KVP_DELIMITER + value);
+				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
 			} else {
 				_cmdLineArgs.add(key);
 			}

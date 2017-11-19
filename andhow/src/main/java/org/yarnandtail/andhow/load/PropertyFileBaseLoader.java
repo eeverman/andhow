@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.load;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 
@@ -12,10 +10,24 @@ import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
  * 
  * @author ericeverman
  */
-public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadLoader {
+public abstract class PropertyFileBaseLoader extends BaseLoader 
+		implements ReadLoader, LocalFileLoader {
+	
+	/**
+	 * Property containing the path of a property file. XOR w/ classpathStr
+	 */
+	protected Property<String> pathProp;
 
-	public PropertyFileBaseLoader() {
-	}
+	/**
+	 * String containing path of a property file. XOR w/ classpathProp
+	 */
+	protected String pathStr;
+
+	protected boolean missingFileAProblem = true;
+	
+	protected boolean unknownPropertyAProblem = true;
+	
+	public PropertyFileBaseLoader() { /* empty for easy construction */ }
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
 			String fromPath, StaticPropertyConfiguration appConfigDef,
@@ -52,14 +64,40 @@ public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadL
 			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
 		}
 	}
-
+	
+	/**
+	 * Utility method to simplify finding the effective path.
+	 * 
+	 * @param existingValues
+	 * @return 
+	 */
+	protected String getEffectivePath(ValidatedValuesWithContext existingValues) {
+		if (pathStr != null) {
+			return pathStr;
+		} else if (pathProp != null) {
+			if (existingValues != null) {
+				return existingValues.getValue(pathProp);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
 	@Override
-	public boolean isTrimmingRequiredForStringValues() {
-		return true;
+	public List<Property> getInstanceConfig() {
+		if (pathProp != null) {
+			ArrayList<Property> list = new ArrayList();
+			list.add(pathProp);
+			return list;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
+	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
 
@@ -76,6 +114,44 @@ public abstract class PropertyFileBaseLoader extends BaseLoader implements ReadL
 	@Override
 	public String getLoaderDialect() {
 		return "KeyValuePair";
+	}
+	
+	@Override
+	public void setUnknownPropertyAProblem(boolean isAProblem) {
+		unknownPropertyAProblem = isAProblem;
+	}
+
+	@Override
+	public boolean isUnknownPropertyAProblem() {
+		return unknownPropertyAProblem;
+	}
+	
+	@Override
+	public void setMissingFileAProblem(boolean isAProblem) {
+		missingFileAProblem = isAProblem;
+	}
+	
+	@Override
+	public boolean isMissingFileAProblem() {
+		return missingFileAProblem;
+	}	
+	
+	@Override
+	public void setFilePath(String path) {
+		if (path != null && pathProp != null) {
+			throw new IllegalArgumentException("The FilePath cannot be specified "
+					+ "as both a String and StrProp");
+		}
+		pathStr = path;
+	}
+	
+	@Override
+	public void setFilePath(Property<String> path) {
+		if (path != null && pathStr != null) {
+			throw new IllegalArgumentException("The FilePath cannot be specified "
+					+ "as both a String and StrProp");
+		}
+		pathProp = path;
 	}
 
 }

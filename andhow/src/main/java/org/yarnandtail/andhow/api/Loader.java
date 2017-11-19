@@ -159,4 +159,14 @@ public interface Loader {
 	 * @return May return null if there is no meaningful dialect for this type.
 	 */
 	String getLoaderDialect();
+	
+	/**
+	 * Release any resources held by this loader.
+	 * 
+	 * Loaders have done their job after loading values to properties.  However,
+	 * they may be held in memory for auditing and reporting.  To prevent holding
+	 * additional resources in memory, this method is called after loading is
+	 * complete.
+	 */
+	void releaseResources();
 }

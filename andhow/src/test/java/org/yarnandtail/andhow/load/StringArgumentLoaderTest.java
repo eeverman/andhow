@@ -63,15 +63,15 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "XXX");
-		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "XXX");
+		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -91,15 +91,15 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "something_XXX");
-		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
+		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args.toArray(new String[5]));
+		KeyValuePairLoader cll = new KeyValuePairLoader(args.toArray(new String[5]));
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -120,13 +120,13 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "");
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "");
+		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "");
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -148,10 +148,10 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_ENDS_WITH_XXX" + StringArgumentLoader.KVP_DELIMITER + "something_YYY");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_YYY");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -164,14 +164,14 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "1");
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "2");
-		args.add(basePath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "3");
-		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "1");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "2");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "3");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "false");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -190,11 +190,11 @@ public class StringArgumentLoaderTest {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "XXX" + StringArgumentLoader.KVP_DELIMITER + "1");
-		args.add(basePath + "YYY" + StringArgumentLoader.KVP_DELIMITER + "2");
+		args.add(basePath + "XXX" + KeyValuePairLoader.KVP_DELIMITER + "1");
+		args.add(basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2");
 		
 		
-		StringArgumentLoader cll = new StringArgumentLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		

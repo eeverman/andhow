@@ -59,7 +59,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
-				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -80,7 +80,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
-					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.build();
@@ -102,7 +102,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -119,7 +119,7 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
-					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH))
+					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();

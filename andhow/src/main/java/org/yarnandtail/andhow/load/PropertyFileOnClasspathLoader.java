@@ -2,31 +2,28 @@ package org.yarnandtail.andhow.load;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.property.StrProp;
 
 /**
- * Reads from a Java .property file on the classpath, following standard
- * java conventions for the structure of those file.
+ * Reads from a Java .property file on the classpath, following standard java
+ * conventions for the structure of those file.
  *
  * This loader finds the properties file via either a String or StrProperty
- * specified in the constructor.  If the StrProperty is used, an earlier
- * an earlier loading loader must have found a value for that property if it
- * is to be used.
+ * specified in the constructor. If the StrProperty is used, an earlier an
+ * earlier loading loader must have found a value for that property if it is to
+ * be used.
  *
- * It is considered an error if its configured classpathProp does not point to a
- * valid properties file. It is not considered an error if the classpathProp
- * property has not been assigned a value or a null string or StrProp are assigned.
  * Assigning or configuring a null classpath effectively turns off this loader.
  *
  * This loader trims incoming values for String type properties using the
- * Trimmer of the associated Property. For strings, this is the QuotedStringTrimmer
- * by default, which will preserve whitespace if wrapped in double quotes.
- * 
- * This loader considers it a problem to find unrecognized properties in a
- * properties file and will throw a RuntimeException if that happens.
+ * Trimmer of the associated Property. For strings, this is the
+ * QuotedStringTrimmer by default, which will preserve whitespace if wrapped in
+ * double quotes.
+ *
+ * By default, this loader considers it a problem not find a configured file or
+ * to find unrecognized properties in a properties file and will throw a
+ * RuntimeException if that happens.
  *
  * The PropFileLoader is unable to detect duplicate properties (i.e., the same
  * key value appearing more than once in a prop file). Instead of aborting the
@@ -38,37 +35,15 @@ import org.yarnandtail.andhow.property.StrProp;
  */
 public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 
-	/**
-	 * Property containing classpath of a property file. XOR w/ classpathStr
-	 */
-	final StrProp classpathProp;
-
-	/**
-	 * String containing classpath of a property file. XOR w/ classpathProp
-	 */
-	final String classpathStr;
-
 	String specificLoadDescription = null;
 
-	public PropertyFileOnClasspathLoader(StrProp classpathOfPropertyFile) {
-		classpathProp = classpathOfPropertyFile;
-		classpathStr = null;
-	}
-
-	public PropertyFileOnClasspathLoader(String classpathOfPropertyFile) {
-		classpathProp = null;
-		classpathStr = classpathOfPropertyFile;
-	}
-
 	public PropertyFileOnClasspathLoader() {
-		classpathProp = null;
-		classpathStr = null;
-	}
+		/* empty for easy construction */ }
 
 	@Override
 	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
 
-		String path = getEffectiveClasspath(existingValues);
+		String path = getEffectivePath(existingValues);
 
 		if (path != null) {
 
@@ -82,16 +57,6 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 
 			specificLoadDescription = "unpsecified file on classpath";
 			return new LoaderValues(this);
-		}
-	}
-
-	protected String getEffectiveClasspath(ValidatedValuesWithContext existingValues) {
-		if (classpathStr != null) {
-			return classpathStr;
-		} else if (classpathProp != null) {
-			return existingValues.getValue(classpathProp);
-		} else {
-			return null;
 		}
 	}
 
@@ -109,15 +74,17 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 		try (InputStream inS = PropertyFileOnClasspathLoader.class.getResourceAsStream(path)) {
 
 			if (inS != null) {
-				
+
 				return loadInputStreamToProps(inS, path, appConfigDef, existingValues);
 
 			} else {
-				
+
 				//If the file is not there, the inS is null (no exception thrown)
-				//Handle by adding a loader error
-				return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file at classpath:" + path));
-			
+				if (isMissingFileAProblem()) {
+					return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file at classpath:" + path));
+				} else {
+					return new LoaderValues(this);
+				}
 			}
 
 		} catch (LoaderException e) {
@@ -128,25 +95,17 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 	}
 
 	@Override
-	public List<Property> getInstanceConfig() {
-
-		if (classpathProp != null) {
-			ArrayList<Property> list = new ArrayList();
-			list.add(classpathProp);
-			return list;
-		} else {
-			return Collections.emptyList();
-		}
-
-	}
-
-	@Override
 	public String getSpecificLoadDescription() {
 
 		if (specificLoadDescription != null) {
 			return specificLoadDescription;
 		} else {
-			return "file on classpath at: " + classpathProp.getValue();
+			String path = this.getEffectivePath(null);
+			if (path != null) {
+				return "file on classpath at: " + path;
+			} else {
+				return "unconfigured classpath";
+			}
 		}
 	}
 

@@ -4,7 +4,7 @@ import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.load.CommandLineArgumentLoader;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
@@ -218,7 +218,7 @@ public class AndHowNonProduction {
 		public AndHowBuilder addCmdLineArg(String key, String value) {
 
 			if (value != null) {
-				_cmdLineArgs.add(key + StringArgumentLoader.KVP_DELIMITER + value);
+				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
 			} else {
 				_cmdLineArgs.add(key);
 			}

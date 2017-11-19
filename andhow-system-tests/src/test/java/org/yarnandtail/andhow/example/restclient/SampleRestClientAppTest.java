@@ -15,7 +15,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.load.JndiLoader;
 import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  *
@@ -38,7 +38,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 				
@@ -46,7 +46,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		AndHowNonProduction.builder()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
 				.build();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
@@ -66,7 +66,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 	public void testMinimumPropsAreSet() {
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
 		};
 				
@@ -74,7 +74,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		AndHowNonProduction.builder()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
 				.build();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
@@ -96,7 +96,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		jndi.activate();
 		
 		cmdLineArgs = new String[] {
-			GROUP_PATH + ".CLASSPATH_PROP_FILE" + StringArgumentLoader.KVP_DELIMITER + 
+			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
 				
@@ -107,7 +107,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			AndHowNonProduction.builder()
 					.group(SampleRestClientGroup.class)
 					.addCmdLineArgs(cmdLineArgs)
-					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE))
+					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
 					.loader(new JndiLoader())
 					.build();
 		} catch (AppFatalException e) {

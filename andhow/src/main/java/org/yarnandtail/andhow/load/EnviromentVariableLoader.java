@@ -1,9 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import org.yarnandtail.andhow.api.*;
+import java.util.*;
 
 /**
  * Loads properties from java.lang.System.getenv().
@@ -28,30 +25,19 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public class EnviromentVariableLoader extends BaseLoader implements ReadLoader {
+public class EnviromentVariableLoader extends MapLoader {
 	
 	public EnviromentVariableLoader() {
+		unknownPropertyAProblem = false;
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
-		
-		ArrayList<ValidatedValue> values = new ArrayList();
-		ProblemList<Problem> problems = new ProblemList();
-		
-		Map<String, String> props = appConfigDef.getSystemEnvironment();
-		Set<String> keys = props.keySet();
-		for(String key : keys) {
-			if (key != null) {
-				String val = props.get(key);
-
-				attemptToAdd(appConfigDef, values, problems, key, val);
-			}
+	public Map<?, ?> getMap() {
+		if (map != null) {
+			return map;
+		} else {
+			return System.getenv();
 		}
-
-		values.trimToSize();
-		
-		return new LoaderValues(this, values, problems);
 	}
 	
 	@Override
@@ -65,17 +51,8 @@ public class EnviromentVariableLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
-		return false;
-	}
-	
-	@Override
 	public String getLoaderType() {
 		return "EnvironmentVariable";
 	}
-	
-	@Override
-	public String getLoaderDialect() {
-		return null;
-	}
+
 }

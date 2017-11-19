@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  *
@@ -22,8 +22,8 @@ public class ValueMapWithContextMutableTest {
 		
 		ValidatedValuesWithContextMutable builder = new ValidatedValuesWithContextMutable();
 		
-		Loader cmdLineLoad = new StringArgumentLoader(new String[]{});
-		Loader propFileLoad = new PropertyFileOnClasspathLoader(SimpleParams.STR_BOB);
+		Loader cmdLineLoad = new KeyValuePairLoader(new String[]{});
+		Loader propFileLoad = new PropertyFileOnClasspathLoader(SimpleParams.STR_BOB, true);
 		
 		List<ValidatedValue> firstSet = new ArrayList();
 		

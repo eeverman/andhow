@@ -1,9 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Set;
-import org.yarnandtail.andhow.api.*;
+import java.util.*;
 
 /**
  * Loads properties from java.lang.System.getProperties().
@@ -28,31 +25,19 @@ import org.yarnandtail.andhow.api.*;
  *
  * @author eeverman
  */
-public class SystemPropertyLoader extends BaseLoader implements ReadLoader {
+public class SystemPropertyLoader extends MapLoader {
 	
 	public SystemPropertyLoader() {
+		unknownPropertyAProblem = false;
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
-		
-		ArrayList<ValidatedValue> values = new ArrayList();
-		ProblemList<Problem> problems = new ProblemList();
-		
-		Properties props = System.getProperties();
-		Set<Object> keys = props.keySet();
-		for(Object key : keys) {
-			if (key != null) {
-				String k = key.toString();
-				String v = props.getProperty(k);
-
-				attemptToAdd(appConfigDef, values, problems, k, v);
-			}
+	public Map<?, ?> getMap() {
+		if (map != null) {
+			return map;
+		} else {
+			return System.getProperties();
 		}
-
-		values.trimToSize();
-		
-		return new LoaderValues(this, values, problems);
 	}
 	
 	@Override
@@ -66,18 +51,8 @@ public class SystemPropertyLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
-		return false;
-	}
-	
-	
-	@Override
 	public String getLoaderType() {
 		return "SystemProperty";
 	}
 	
-	@Override
-	public String getLoaderDialect() {
-		return null;
-	}
 }

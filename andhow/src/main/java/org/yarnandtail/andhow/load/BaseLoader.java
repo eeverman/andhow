@@ -77,7 +77,7 @@ public abstract class BaseLoader implements Loader {
 				
 			} else if (this instanceof ReadLoader) {
 				ReadLoader rl = (ReadLoader)this;
-				if (rl.isUnrecognizedPropertyNamesConsideredAProblem()) {
+				if (rl.isUnknownPropertyAProblem()) {
 					loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
 				}
 			}
@@ -171,6 +171,11 @@ public abstract class BaseLoader implements Loader {
 		}
 		
 		return new ValidatedValue(prop, value);
+	}
+	
+	@Override
+	public void releaseResources() {
+		//Nothing to do by default
 	}
 	
 }
