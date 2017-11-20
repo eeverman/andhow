@@ -107,12 +107,16 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @return
 	 */
 	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
+		
+		CommandLineArgumentLoader clal = new CommandLineArgumentLoader();
+		clal.setKeyValuePairs(cmdLineArgs);
+		
 		List<Loader> loaders = new ArrayList();
-		loaders.add(new CommandLineArgumentLoader(cmdLineArgs));
-		loaders.add(new SystemPropertyLoader());
-		loaders.add(new JndiLoader(false));
+		loaders.add(clal);
+		loaders.add(new SystemPropertyLoader());		//TODO:  This needs to be set w/ assigned values
+		loaders.add(new JndiLoader());
 		loaders.add(new EnviromentVariableLoader());
-		loaders.add(new StdPropertyFileOnClasspathLoader(false));
+		loaders.add(new StdPropertyFileOnClasspathLoader());
 		return loaders;
 	}
 	
@@ -228,11 +232,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	@Override
 	public NamingStrategy getNamingStrategy() {
 		return core.getNamingStrategy();
-	}
-
-	@Override
-	public Map<String, String> getSystemEnvironment() {
-		return core.getSystemEnvironment();
 	}
 	
 	/**
@@ -451,15 +450,16 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			int existingCmdLoader = -1;
 			for (int i = 0; i < _loaders.size(); i++) {
 				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+					((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
 					existingCmdLoader = i;
 					break;
 				}
 			}
 
-			if (existingCmdLoader > -1) {
-				_loaders.set(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
-			} else if (addCmdLineLoaderAtPosition != null) {
-				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
+			if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
+				CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
+				cl.setKeyValuePairs(_cmdLineArgs);
+				_loaders.add(addCmdLineLoaderAtPosition, cl);
 			}
 		}
 	}

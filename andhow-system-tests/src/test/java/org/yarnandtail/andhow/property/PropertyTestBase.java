@@ -26,11 +26,18 @@ public class PropertyTestBase extends AndHowTestBase {
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);
 				
+		FixedValueLoader fvl = new FixedValueLoader();
+		fvl.setPropertyValues(new PropertyValue(TEST_CONFIG.PROP_FILE, propFilePath));
+		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TEST_CONFIG.PROP_FILE);
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder()
 				.group(TEST_CONFIG.class)
 				.groups(groups)
-				.loader(new FixedValueLoader(new PropertyValue(TEST_CONFIG.PROP_FILE, propFilePath)))
-				.loader(new PropertyFileOnClasspathLoader(TEST_CONFIG.PROP_FILE, true))
+				.loader(fvl)
+				.loader(pfl)
 				.build();
 
 	}

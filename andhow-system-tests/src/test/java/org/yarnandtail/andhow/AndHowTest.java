@@ -93,7 +93,9 @@ public class AndHowTest extends AndHowTestBase {
 	public void testBlowingUpWithDuplicateLoaders() {
 		
 		List<Loader> loaders = new ArrayList();
-		loaders.add(new KeyValuePairLoader(cmdLineArgsWFullClassName));
+		KeyValuePairLoader kvpl = new KeyValuePairLoader();
+		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
+		loaders.add(kvpl);
 		
 		try {
 

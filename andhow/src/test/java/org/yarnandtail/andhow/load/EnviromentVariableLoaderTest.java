@@ -23,8 +23,9 @@ import org.yarnandtail.andhow.util.NameUtil;
  */
 public class EnviromentVariableLoaderTest {
 	
-	TestGlobalScopeConfiguration appDef;
+	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
+	HashMap<String, String> envVars = new HashMap();
 	
 	public interface SimpleParams {
 		//Strings
@@ -43,7 +44,7 @@ public class EnviromentVariableLoaderTest {
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		appDef = new TestGlobalScopeConfiguration();
+		appDef = new StaticPropertyConfigurationMutable(new CaseInsensitiveNaming());
 		
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 		
@@ -53,6 +54,8 @@ public class EnviromentVariableLoaderTest {
 		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 		
+		envVars.clear();
+		envVars.putAll(System.getenv());
 	}
 	
 	
@@ -64,13 +67,14 @@ public class EnviromentVariableLoaderTest {
 	public void testHappyPathUnix() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB), "aaa");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL), "bbb");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE), "t");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "f");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "y");
+		envVars.put(getPropName(SimpleParams.STR_BOB), "aaa");
+		envVars.put(getPropName(SimpleParams.STR_NULL), "bbb");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE), "t");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "f");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL), "y");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -88,13 +92,14 @@ public class EnviromentVariableLoaderTest {
 	public void testHappyPathWindows() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB).toUpperCase(), "aaa");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL).toUpperCase(), "bbb");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE).toUpperCase(), "t");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
+		envVars.put(getPropName(SimpleParams.STR_BOB).toUpperCase(), "aaa");
+		envVars.put(getPropName(SimpleParams.STR_NULL).toUpperCase(), "bbb");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE).toUpperCase(), "t");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -118,13 +123,14 @@ public class EnviromentVariableLoaderTest {
 	public void testEmptyValuesUnix() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB), "");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "");
+		envVars.put(getPropName(SimpleParams.STR_BOB), "");
+		envVars.put(getPropName(SimpleParams.STR_NULL), "");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE), "");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -142,13 +148,14 @@ public class EnviromentVariableLoaderTest {
 	public void testEmptyValuesWindows() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB).toUpperCase(), "");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL).toUpperCase(), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE).toUpperCase(), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
+		envVars.put(getPropName(SimpleParams.STR_BOB).toUpperCase(), "");
+		envVars.put(getPropName(SimpleParams.STR_NULL).toUpperCase(), "");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE).toUpperCase(), "");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -166,13 +173,14 @@ public class EnviromentVariableLoaderTest {
 	public void testAllWhitespaceValues() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
+		envVars.put(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
+		envVars.put(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -193,13 +201,14 @@ public class EnviromentVariableLoaderTest {
 	public void testQuotedStringValues() throws Exception {
 		
 		
-		appDef.addEnvVar(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
-		appDef.addEnvVar(getPropName(SimpleParams.STR_NULL), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_FALSE), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_TRUE), "");
-		appDef.addEnvVar(getPropName(SimpleParams.FLAG_NULL), "");
+		envVars.put(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
+		envVars.put(getPropName(SimpleParams.STR_NULL), "");
+		envVars.put(getPropName(SimpleParams.FLAG_FALSE), "");
+		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
+		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -215,9 +224,10 @@ public class EnviromentVariableLoaderTest {
 	@Test
 	public void testNoRecognizedValues() throws Exception {
 		
-		appDef.addEnvVar("XXX", "aaa");
+		envVars.put("XXX", "aaa");
 		
 		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -231,27 +241,5 @@ public class EnviromentVariableLoaderTest {
 		assertEquals(Boolean.FALSE, result.getValue(SimpleParams.FLAG_FALSE));
 		assertFalse(result.getValue(SimpleParams.FLAG_NULL));
 	}
-	
-	public static class TestGlobalScopeConfiguration extends StaticPropertyConfigurationMutable {
-		
-		HashMap<String, String> envVars = new HashMap();
-
-		public TestGlobalScopeConfiguration() {
-			super(new CaseInsensitiveNaming());
-		}
-		
-		public void addEnvVar(String name, String value) {
-			envVars.put(name, value);
-		}
-		
-		@Override
-		public Map<String, String> getSystemEnvironment() {
-			HashMap<String, String> props = new HashMap();
-			props.putAll(System.getenv());
-			props.putAll(envVars);
-			return Collections.unmodifiableMap(props);
-		}
-	}
-
 	
 }

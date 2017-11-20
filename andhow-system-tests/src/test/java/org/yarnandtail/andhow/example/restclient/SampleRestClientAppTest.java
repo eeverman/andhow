@@ -42,11 +42,14 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 				
-				
+		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
+		plocpl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
+				.loader(plocpl)
 				.build();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
@@ -69,12 +72,17 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
 		};
+		
+		
+		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
+		plocpl.setMissingFileAProblem(true);
 				
 				
 		AndHowNonProduction.builder()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
+				.loader(plocpl)
 				.build();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
@@ -99,6 +107,10 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
+		
+		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
+		plocpl.setMissingFileAProblem(true);
 				
 				
 		try {
@@ -107,7 +119,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			AndHowNonProduction.builder()
 					.group(SampleRestClientGroup.class)
 					.addCmdLineArgs(cmdLineArgs)
-					.loader(new PropertyFileOnClasspathLoader(SampleRestClientGroup.CLASSPATH_PROP_FILE, true))
+					.loader(plocpl)
 					.loader(new JndiLoader())
 					.build();
 		} catch (AppFatalException e) {

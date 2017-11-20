@@ -71,7 +71,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
 		
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -99,7 +100,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
 		
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args.toArray(new String[5]));
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args.toArray(new String[5]));
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -126,7 +128,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "");
 		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "");
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -151,7 +154,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_YYY");
 		
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -171,7 +175,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "false");
 		
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		
@@ -194,7 +199,8 @@ public class StringArgumentLoaderTest {
 		args.add(basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2");
 		
 		
-		KeyValuePairLoader cll = new KeyValuePairLoader(args);
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
 		
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 		

@@ -29,10 +29,15 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	
 	@Test
 	public void testHappyPath() throws Exception {
+		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TestProps.CLAZZ_PATH);
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
+				.loader(pfl)
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -49,11 +54,15 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testInvalid() throws Exception {
 		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TestProps.CLAZZ_PATH);
+		pfl.setMissingFileAProblem(true);
+		
 		try {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
+					.loader(pfl)
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();
@@ -69,8 +78,11 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testNullReferencePropLoaderProperty() throws Exception {
 		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnClasspathLoader((String)null, true))
+				.loader(pfl)
 				.group(SimpleParams.class)
 				.group(TestProps.class)	//This must be declared or the Prop loader can't work
 				.build();
@@ -81,11 +93,15 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TestProps.CLAZZ_PATH);
+		pfl.setMissingFileAProblem(true);
+		
 		try {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
+					.loader(pfl)
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.build();
@@ -105,8 +121,13 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	 */
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
+		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TestProps.CLAZZ_PATH);
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
+				.loader(pfl)
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -119,11 +140,15 @@ public class PropertyFileOnClasspathLoaderAppTest {
 	@Test
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
+		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		pfl.setFilePath(TestProps.CLAZZ_PATH);
+		pfl.setMissingFileAProblem(true);
+		
 		try {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
-					.loader(new PropertyFileOnClasspathLoader(TestProps.CLAZZ_PATH, true))
+					.loader(pfl)
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();

@@ -25,7 +25,7 @@ public class LoaderValuesTest {
 		
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, null));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(new String[]{}), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		
 		assertFalse(existing.isExplicitlySet(TestProps.CLAZZ_PATH));
 		assertNull(existing.getExplicitValue(TestProps.CLAZZ_PATH));

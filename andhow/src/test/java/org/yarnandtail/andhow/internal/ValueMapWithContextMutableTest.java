@@ -22,8 +22,10 @@ public class ValueMapWithContextMutableTest {
 		
 		ValidatedValuesWithContextMutable builder = new ValidatedValuesWithContextMutable();
 		
-		Loader cmdLineLoad = new KeyValuePairLoader(new String[]{});
-		Loader propFileLoad = new PropertyFileOnClasspathLoader(SimpleParams.STR_BOB, true);
+		Loader cmdLineLoad = new KeyValuePairLoader();
+		PropertyFileOnClasspathLoader propFileLoad = new PropertyFileOnClasspathLoader();
+		propFileLoad.setFilePath(SimpleParams.STR_BOB);
+		propFileLoad.setMissingFileAProblem(true);
 		
 		List<ValidatedValue> firstSet = new ArrayList();
 		

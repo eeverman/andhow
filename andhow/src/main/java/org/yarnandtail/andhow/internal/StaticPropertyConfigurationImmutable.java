@@ -123,10 +123,5 @@ public class StaticPropertyConfigurationImmutable implements StaticPropertyConfi
 	public NamingStrategy getNamingStrategy() {
 		return namingStrategy;
 	}
-	
-	@Override
-	public Map<String, String> getSystemEnvironment() {
-		return System.getenv();
-	}
 
 }

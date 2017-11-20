@@ -21,7 +21,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	
 	protected List<PropertyValue> values = new ArrayList();
 			
-	public FixedValueLoader(List<PropertyValue> values) {
+	public FixedValueLoader() {
 	}
 	
 	public void setPropertyValues(List<PropertyValue> values) {

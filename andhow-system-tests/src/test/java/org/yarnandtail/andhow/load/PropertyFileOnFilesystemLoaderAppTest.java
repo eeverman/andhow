@@ -10,14 +10,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
 import org.yarnandtail.andhow.internal.LoaderProblem.SourceNotFoundLoaderProblem;
-import org.yarnandtail.andhow.load.PropertyFileOnFilesystemLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.NameUtil;
@@ -56,10 +54,15 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	
 	@Test
 	public void testHappyPath() throws Exception {
+		
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		pfl.setFilePath(TestProps.FILEPATH);
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
-				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
+				.loader(pfl)
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -76,11 +79,15 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		pfl.setFilePath(TestProps.FILEPATH);
+		pfl.setMissingFileAProblem(true);
+		
 		try {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
-					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
+					.loader(pfl)
 					.group(SimpleParams.class)
 					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
 					.build();
@@ -101,8 +108,13 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	 */
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
+		
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		pfl.setFilePath(TestProps.FILEPATH);
+		pfl.setMissingFileAProblem(true);
+		
 		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
-				.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
+				.loader(pfl)
 				.group(SimpleParams.class)
 				.group(TestProps.class)
 				.build();
@@ -115,11 +127,15 @@ public class PropertyFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
+		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		pfl.setFilePath(TestProps.FILEPATH);
+		pfl.setMissingFileAProblem(true);
+		
 		try {
 			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
-					.loader(new PropertyFileOnFilesystemLoader(TestProps.FILEPATH, true))
+					.loader(pfl)
 					.group(SimpleParams.class)
 					.group(TestProps.class)
 					.build();

@@ -27,6 +27,12 @@ public class StdConfig implements AndHowConfiguration {
 	//Prop file on filesystem path
 	private StrProp filesystemPropFilePath;
 	private boolean _missingFilesystemPropFileAProblem = false;
+	
+	//System Properties
+	private Properties systemProperties;
+	
+	//System Environment
+	private Map<String, String> envProperties;
 
 	/**
 	 * Sets a fixed, non-configurable value for a Property.
@@ -258,25 +264,63 @@ public class StdConfig implements AndHowConfiguration {
 		_missingFilesystemPropFileAProblem = false;
 		return this;
 	}
+	
+	/**
+	 * Allows system properties to be overridden.
+	 * @param properties 
+	 */
+	public StdConfig setSystemProperties(Properties properties) {
+		systemProperties = properties;
+		return this;
+	}
+	
+	/**
+	 * Allows the System environment to be overridden.
+	 * @param envProperties
+	 * @return 
+	 */
+	public StdConfig setEnvironmentProperties(Map<String, String> envProperties) {
+		this.envProperties = envProperties;
+		return this;
+	}
 
 	@Override
 	public List<Loader> buildLoaders() {
 		List<Loader> loaders = new ArrayList();
-		loaders.add(new FixedValueLoader(_fixedVals));
-		loaders.add(new CommandLineArgumentLoader(_cmdLineArgs));
-		loaders.add(new SystemPropertyLoader());
-		loaders.add(new JndiLoader(false));
-		loaders.add(new EnviromentVariableLoader());
-
-		loaders.add(new StdPropertyFileOnFilesystemLoader(filesystemPropFilePath, _missingFilesystemPropFileAProblem));
 		
+		FixedValueLoader fvl = new FixedValueLoader();
+		fvl.setPropertyValues(_fixedVals);
+		loaders.add(fvl);
+		
+		CommandLineArgumentLoader clal = new CommandLineArgumentLoader();
+		clal.setKeyValuePairs(_cmdLineArgs);
+		loaders.add(clal);
+		
+		SystemPropertyLoader spl = new SystemPropertyLoader();
+		spl.setMap(systemProperties);
+		loaders.add(spl);
+		
+		loaders.add(new JndiLoader());
+		
+		EnviromentVariableLoader evl = new EnviromentVariableLoader();
+		evl.setMap(envProperties);
+		loaders.add(evl);
+
+		StdPropertyFileOnFilesystemLoader pfofsl = new StdPropertyFileOnFilesystemLoader();
+		pfofsl.setFilePath(filesystemPropFilePath);
+		pfofsl.setMissingFileAProblem(_missingFilesystemPropFileAProblem);
+		loaders.add(pfofsl);
+		
+		
+		StdPropertyFileOnClasspathLoader pfocpl = new StdPropertyFileOnClasspathLoader();
+		pfocpl.setMissingFileAProblem(_missingClasspathPropFileAProblem);
 		if (classpathPropFilePathStr != null) {
-			loaders.add(new StdPropertyFileOnClasspathLoader(classpathPropFilePathStr, _missingClasspathPropFileAProblem));
+			pfocpl.setFilePath(classpathPropFilePathStr);
 		} else if (classpathPropFilePathProp != null) {
-			loaders.add(new StdPropertyFileOnClasspathLoader(classpathPropFilePathProp, _missingClasspathPropFileAProblem));
-		} else {
-			loaders.add(new StdPropertyFileOnClasspathLoader(_missingClasspathPropFileAProblem));
+			pfocpl.setFilePath(classpathPropFilePathProp);
 		}
+		
+		loaders.add(pfocpl);
 
 		return loaders;
 	}

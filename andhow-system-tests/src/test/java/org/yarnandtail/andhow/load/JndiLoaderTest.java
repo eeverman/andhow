@@ -159,8 +159,11 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
+		FixedValueLoader fvl = new FixedValueLoader();
+		fvl.setPropertyValues(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/"));
+		
 		AndHowNonProduction.builder()
-				.loader(new FixedValueLoader(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")))
+				.loader(fvl)
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
 				.build();
@@ -192,11 +195,15 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
+		FixedValueLoader fvl = new FixedValueLoader();
+		fvl.setPropertyValues(
+				new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
+				new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
+		);
+		
+		
 		AndHowNonProduction.builder()
-				.loader(new FixedValueLoader(
-						new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
-						new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
-				))
+				.loader(fvl)
 				.loader(new JndiLoader())
 				.group(SimpleParams.class)
 				.build();

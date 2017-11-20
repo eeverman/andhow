@@ -385,15 +385,16 @@ public class AndHowNonProduction {
 			int existingCmdLoader = -1;
 			for (int i = 0; i < _loaders.size(); i++) {
 				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+					((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
 					existingCmdLoader = i;
 					break;
 				}
 			}
 
-			if (existingCmdLoader > -1) {
-				_loaders.set(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
-			} else if (addCmdLineLoaderAtPosition != null) {
-				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
+			if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
+				CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
+				cl.setKeyValuePairs(_cmdLineArgs);
+				_loaders.add(addCmdLineLoaderAtPosition, cl);
 			}
 		}
 

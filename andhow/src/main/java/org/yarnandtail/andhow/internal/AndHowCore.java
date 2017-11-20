@@ -272,11 +272,5 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	public NamingStrategy getNamingStrategy() {
 		return staticConfig.getNamingStrategy();
 	}
-	
-	@Override
-	public Map<String, String> getSystemEnvironment() {
-		return staticConfig.getSystemEnvironment();
-	}
-	
 		
 }
