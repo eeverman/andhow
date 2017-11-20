@@ -379,23 +379,26 @@ public class AndHowNonProduction {
 		private void populateLoaderList() {
 			if (_loaders.isEmpty()) {
 				_loaders.addAll(AndHow.getDefaultLoaders(_cmdLineArgs.toArray(new String[_cmdLineArgs.size()])));
+			} else {
+				
+				//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
+				int existingCmdLoader = -1;
+				for (int i = 0; i < _loaders.size(); i++) {
+					if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+						((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
+						existingCmdLoader = i;
+						break;
+					}
+				}
+
+				if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
+					CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
+					cl.setKeyValuePairs(_cmdLineArgs);
+					_loaders.add(addCmdLineLoaderAtPosition, cl);
+				}
+				
 			}
 			
-			//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
-			int existingCmdLoader = -1;
-			for (int i = 0; i < _loaders.size(); i++) {
-				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
-					((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
-					existingCmdLoader = i;
-					break;
-				}
-			}
-
-			if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
-				CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
-				cl.setKeyValuePairs(_cmdLineArgs);
-				_loaders.add(addCmdLineLoaderAtPosition, cl);
-			}
 		}
 
 	}

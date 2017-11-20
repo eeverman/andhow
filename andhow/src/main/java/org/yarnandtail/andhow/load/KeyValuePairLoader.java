@@ -54,6 +54,7 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 */
 	public void setKeyValuePairs(List<String> keyValuePairs) {
 		if (keyValuePairs != null && keyValuePairs.size() > 0) {
+			this.keyValuePairs.clear();
 			this.keyValuePairs.addAll(keyValuePairs);
 		}
 	}

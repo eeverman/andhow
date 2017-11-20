@@ -39,6 +39,7 @@ public class StdPropertyFileOnClasspathLoader extends PropertyFileOnClasspathLoa
 	public static final String DEFAULT_PROP_FILE = "/andhow.properties";
 	
 	public StdPropertyFileOnClasspathLoader() {
+		missingFileAProblem = false;
 	}
 
 	@Override
