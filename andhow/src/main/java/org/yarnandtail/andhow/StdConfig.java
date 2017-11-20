@@ -1,9 +1,16 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.load.std.JndiLoader;
+import org.yarnandtail.andhow.load.std.EnviromentVariableLoader;
+import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
+import org.yarnandtail.andhow.load.std.StdPropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.std.StdPropertyFileOnFilesystemLoader;
+import org.yarnandtail.andhow.load.std.SystemPropertyLoader;
 import java.util.*;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -13,7 +20,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public class StdConfig implements AndHowConfiguration {
 
-	//A list of hardcoded values used by the FixedValueLoader
+	//A list of hardcoded values used by the StdFixedValueLoader
 	private final List<PropertyValue> _fixedVals = new ArrayList();
 
 	//A list of command line arguments
@@ -288,7 +295,7 @@ public class StdConfig implements AndHowConfiguration {
 	public List<Loader> buildLoaders() {
 		List<Loader> loaders = new ArrayList();
 		
-		FixedValueLoader fvl = new FixedValueLoader();
+		StdFixedValueLoader fvl = new StdFixedValueLoader();
 		fvl.setPropertyValues(_fixedVals);
 		loaders.add(fvl);
 		

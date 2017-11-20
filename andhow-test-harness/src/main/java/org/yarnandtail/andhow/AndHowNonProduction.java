@@ -3,7 +3,7 @@ package org.yarnandtail.andhow;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.load.CommandLineArgumentLoader;
+import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;

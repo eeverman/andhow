@@ -1,5 +1,6 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.std;
 
+import org.yarnandtail.andhow.load.std.JndiLoader;
 import org.yarnandtail.andhow.SimpleParams;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.load.FixedValueLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.util.NameUtil;

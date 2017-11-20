@@ -1,6 +1,7 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.std;
 
 import org.yarnandtail.andhow.api.ValidatedValuesWithContext;
+import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
 
 /**
  * Same functionality as the PropertyFileOnClasspathLoader, but with a default

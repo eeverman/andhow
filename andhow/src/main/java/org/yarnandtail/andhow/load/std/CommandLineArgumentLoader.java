@@ -1,6 +1,7 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.std;
 
 import java.util.List;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * Identical to the KeyValuePairLoader, but provides a way to find

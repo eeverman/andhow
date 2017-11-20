@@ -1,4 +1,6 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.std;
+
+import org.yarnandtail.andhow.load.PropertyFileOnFilesystemLoader;
 
 /**
  * Same functionality as the PropertyFileOnFilesystemLoader, but uses a separate

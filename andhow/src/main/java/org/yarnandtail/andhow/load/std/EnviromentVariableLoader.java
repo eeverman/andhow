@@ -1,6 +1,7 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.std;
 
 import java.util.*;
+import org.yarnandtail.andhow.load.MapLoader;
 
 /**
  * Loads properties from java.lang.System.getenv().

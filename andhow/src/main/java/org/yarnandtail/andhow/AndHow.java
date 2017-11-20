@@ -1,5 +1,10 @@
 package org.yarnandtail.andhow;
 
+import org.yarnandtail.andhow.load.std.JndiLoader;
+import org.yarnandtail.andhow.load.std.EnviromentVariableLoader;
+import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
+import org.yarnandtail.andhow.load.std.StdPropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.std.SystemPropertyLoader;
 import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
