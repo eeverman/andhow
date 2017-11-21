@@ -19,9 +19,9 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  *
  * @author eeverman
  */
-public class PropertyFileOnClasspathLoaderUnitTest {
+public class PropFileOnClasspathLoaderUnitTest {
 	
-	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropertyFileOnClasspathLoaderUnitTest_SimpleParams";
+	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropFileOnClasspathLoaderUnitTest_SimpleParams";
 	
 	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
@@ -70,7 +70,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -95,7 +95,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -119,7 +119,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -144,7 +144,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -170,7 +170,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -193,7 +193,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -201,8 +201,8 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		
 		//These are the two bad property names in the file
 		List<String> badPropNames = Arrays.asList(new String[] {
-			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
-			"org.yarnandtail.andhow.load.PropertyFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
+			"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
+			"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
 		
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -227,7 +227,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -254,7 +254,7 @@ public class PropertyFileOnClasspathLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 		

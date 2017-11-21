@@ -24,9 +24,9 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  *
  * @author eeverman
  */
-public class PropertyFileOnFilesystemLoaderUnitTest {
+public class PropFileOnFilesystemLoaderUnitTest {
 	
-	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropertyFileOnFilesystemLoaderUnitTest.properties";
+	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropFileOnFilesystemLoaderUnitTest.properties";
 	
 	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
@@ -90,7 +90,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
@@ -114,7 +114,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 		
@@ -141,7 +141,7 @@ public class PropertyFileOnFilesystemLoaderUnitTest {
 		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 		
-		PropertyFileOnFilesystemLoader pfl = new PropertyFileOnFilesystemLoader();
+		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 		

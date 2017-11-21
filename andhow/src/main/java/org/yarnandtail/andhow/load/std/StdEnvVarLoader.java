@@ -26,9 +26,9 @@ import org.yarnandtail.andhow.load.MapLoader;
  * 
  * @author eeverman
  */
-public class EnviromentVariableLoader extends MapLoader {
+public class StdEnvVarLoader extends MapLoader {
 	
-	public EnviromentVariableLoader() {
+	public StdEnvVarLoader() {
 		unknownPropertyAProblem = false;
 	}
 	

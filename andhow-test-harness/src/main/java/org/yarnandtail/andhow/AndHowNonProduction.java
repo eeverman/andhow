@@ -3,7 +3,7 @@ package org.yarnandtail.andhow;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
+import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
@@ -122,7 +122,7 @@ public class AndHowNonProduction {
 		 */
 		public AndHowBuilder loader(Loader loader) {
 
-			if (loader instanceof CommandLineArgumentLoader) {
+			if (loader instanceof StdMainStringArgsLoader) {
 				throw new RuntimeException("The ComandLineArgLoader cannot be "
 						+ "directly added to the list of loaders. "
 						+ "Use cmdLineArgs() to add arguments instead.");
@@ -368,7 +368,7 @@ public class AndHowNonProduction {
 		 */
 		private int getCmdLineLoaderIndex() {
 			for (int i = 0; i < _loaders.size(); i++) {
-				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
+				if (_loaders.get(i) instanceof StdMainStringArgsLoader) {
 					return i;
 				}
 			}
@@ -384,15 +384,15 @@ public class AndHowNonProduction {
 				//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
 				int existingCmdLoader = -1;
 				for (int i = 0; i < _loaders.size(); i++) {
-					if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
-						((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
+					if (_loaders.get(i) instanceof StdMainStringArgsLoader) {
+						((StdMainStringArgsLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
 						existingCmdLoader = i;
 						break;
 					}
 				}
 
 				if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
-					CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
+					StdMainStringArgsLoader cl = new StdMainStringArgsLoader();
 					cl.setKeyValuePairs(_cmdLineArgs);
 					_loaders.add(addCmdLineLoaderAtPosition, cl);
 				}

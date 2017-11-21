@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.load.std.SystemPropertyLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.junit.After;
 
@@ -19,7 +18,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
-public class SystemPropertyLoaderTest {
+public class StdSysPropLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
@@ -87,7 +86,7 @@ public class SystemPropertyLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "f");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "y");
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -117,7 +116,7 @@ public class SystemPropertyLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -141,7 +140,7 @@ public class SystemPropertyLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -168,7 +167,7 @@ public class SystemPropertyLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		
@@ -186,7 +185,7 @@ public class SystemPropertyLoaderTest {
 		
 		System.setProperty("XXX", "aaa");
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
 		

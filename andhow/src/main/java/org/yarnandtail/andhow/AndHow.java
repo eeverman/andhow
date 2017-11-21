@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.load.std.JndiLoader;
-import org.yarnandtail.andhow.load.std.EnviromentVariableLoader;
-import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
-import org.yarnandtail.andhow.load.std.StdPropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.std.SystemPropertyLoader;
+import org.yarnandtail.andhow.load.std.StdJndiLoader;
+import org.yarnandtail.andhow.load.std.StdEnvVarLoader;
+import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
+import org.yarnandtail.andhow.load.std.StdPropFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.std.StdSysPropLoader;
 import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
@@ -113,15 +113,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 */
 	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
 		
-		CommandLineArgumentLoader clal = new CommandLineArgumentLoader();
+		StdMainStringArgsLoader clal = new StdMainStringArgsLoader();
 		clal.setKeyValuePairs(cmdLineArgs);
 		
 		List<Loader> loaders = new ArrayList();
 		loaders.add(clal);
-		loaders.add(new SystemPropertyLoader());		//TODO:  This needs to be set w/ assigned values
-		loaders.add(new JndiLoader());
-		loaders.add(new EnviromentVariableLoader());
-		loaders.add(new StdPropertyFileOnClasspathLoader());
+		loaders.add(new StdSysPropLoader());		//TODO:  This needs to be set w/ assigned values
+		loaders.add(new StdJndiLoader());
+		loaders.add(new StdEnvVarLoader());
+		loaders.add(new StdPropFileOnClasspathLoader());
 		return loaders;
 	}
 	
@@ -333,7 +333,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		 */
 		public AndHowBuilder loader(Loader loader) {
 
-			if (loader instanceof CommandLineArgumentLoader) {
+			if (loader instanceof StdMainStringArgsLoader) {
 				throw new RuntimeException("The ComandLineArgLoader cannot be "
 						+ "directly added to the list of loaders. "
 						+ "Use cmdLineArgs() to add arguments instead.");
@@ -454,15 +454,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
 				int existingCmdLoader = -1;
 				for (int i = 0; i < _loaders.size(); i++) {
-					if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
-						((CommandLineArgumentLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
+					if (_loaders.get(i) instanceof StdMainStringArgsLoader) {
+						((StdMainStringArgsLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
 						existingCmdLoader = i;
 						break;
 					}
 				}
 
 				if (existingCmdLoader == -1 && addCmdLineLoaderAtPosition != null) {
-					CommandLineArgumentLoader cl = new CommandLineArgumentLoader();
+					StdMainStringArgsLoader cl = new StdMainStringArgsLoader();
 					cl.setKeyValuePairs(_cmdLineArgs);
 					_loaders.add(addCmdLineLoaderAtPosition, cl);
 				}

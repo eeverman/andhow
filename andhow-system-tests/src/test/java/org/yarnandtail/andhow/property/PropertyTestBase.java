@@ -29,7 +29,7 @@ public class PropertyTestBase extends AndHowTestBase {
 		FixedValueLoader fvl = new FixedValueLoader();
 		fvl.setPropertyValues(new PropertyValue(TEST_CONFIG.PROP_FILE, propFilePath));
 		
-		PropertyFileOnClasspathLoader pfl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader pfl = new PropFileOnClasspathLoader();
 		pfl.setFilePath(TEST_CONFIG.PROP_FILE);
 		pfl.setMissingFileAProblem(true);
 		

@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.load.std.EnviromentVariableLoader;
+import org.yarnandtail.andhow.load.std.StdEnvVarLoader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
-public class EnviromentVariableLoaderTest {
+public class StdEnvVarLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
@@ -74,7 +74,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "y");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -99,7 +99,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -130,7 +130,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -155,7 +155,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -180,7 +180,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -208,7 +208,7 @@ public class EnviromentVariableLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);
@@ -227,7 +227,7 @@ public class EnviromentVariableLoaderTest {
 		
 		envVars.put("XXX", "aaa");
 		
-		EnviromentVariableLoader spl = new EnviromentVariableLoader();
+		StdEnvVarLoader spl = new StdEnvVarLoader();
 		spl.setMap(envVars);
 		
 		LoaderValues result = spl.load(appDef, appValuesBuilder);

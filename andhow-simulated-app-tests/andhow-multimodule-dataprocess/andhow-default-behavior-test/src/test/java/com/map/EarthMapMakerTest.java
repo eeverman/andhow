@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.AndHowTestBase;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.load.std.JndiLoader;
+import org.yarnandtail.andhow.load.std.StdJndiLoader;
 import org.yarnandtail.andhow.util.NameUtil;
 
 import static org.junit.Assert.assertEquals;

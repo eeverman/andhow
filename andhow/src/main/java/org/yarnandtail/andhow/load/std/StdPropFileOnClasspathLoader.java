@@ -1,11 +1,11 @@
 package org.yarnandtail.andhow.load.std;
 
 import org.yarnandtail.andhow.api.ValidatedValuesWithContext;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
 
 /**
- * Same functionality as the PropertyFileOnClasspathLoader, but with a default
- * path and a separate name to track it separately as a framework provided standard loader.
+ * Same functionality as the PropFileOnClasspathLoader, but with a default
+ path and a separate name to track it separately as a framework provided standard loader.
  * 
  * Reads from a Java .property file on the classpath, following standard
  * java conventions for the structure of those file.
@@ -35,11 +35,11 @@ import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
  *
  * @author eeverman
  */
-public class StdPropertyFileOnClasspathLoader extends PropertyFileOnClasspathLoader {
+public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader {
 
 	public static final String DEFAULT_PROP_FILE = "/andhow.properties";
 	
-	public StdPropertyFileOnClasspathLoader() {
+	public StdPropFileOnClasspathLoader() {
 		missingFileAProblem = false;
 	}
 

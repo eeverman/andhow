@@ -28,17 +28,17 @@ import org.yarnandtail.andhow.util.TextUtil;
  *
  * @author eeverman
  */
-public class JndiLoader extends BaseLoader implements LookupLoader {
+public class StdJndiLoader extends BaseLoader implements LookupLoader {
 
 	private boolean failedEnvironmentAProblem = false;
 	
-	public JndiLoader() {
+	public StdJndiLoader() {
 	}
 	
 	@Override
 	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
 
-		AndHowLog log = AndHowLog.getLogger(JndiLoader.class);
+		AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
 		
 		List<String> jndiRoots = buildJndiRoots(existingValues);
 

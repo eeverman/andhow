@@ -1,15 +1,9 @@
 package org.yarnandtail.andhow;
 
-import org.yarnandtail.andhow.load.std.JndiLoader;
-import org.yarnandtail.andhow.load.std.EnviromentVariableLoader;
-import org.yarnandtail.andhow.load.std.CommandLineArgumentLoader;
-import org.yarnandtail.andhow.load.std.StdPropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.std.StdPropertyFileOnFilesystemLoader;
-import org.yarnandtail.andhow.load.std.SystemPropertyLoader;
 import java.util.*;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
@@ -32,7 +26,7 @@ public class StdConfig implements AndHowConfiguration {
 	private boolean _missingClasspathPropFileAProblem = false;
 
 	//Prop file on filesystem path
-	private StrProp filesystemPropFilePath;
+	private StrProp filesystemPropFilePathProp;
 	private boolean _missingFilesystemPropFileAProblem = false;
 	
 	//System Properties
@@ -139,7 +133,7 @@ public class StdConfig implements AndHowConfiguration {
 
 	/**
 	 * Sets the classpath path to a properties file for the
-	 * StdPropertyFileOnClasspathLoader to load.
+ StdPropFileOnClasspathLoader to load.
 	 *
 	 * If no path is specified via either a String or StrProp, the path
 	 * '/andhow.properties' is used.<br/>
@@ -173,7 +167,7 @@ public class StdConfig implements AndHowConfiguration {
 
 	/**
 	 * Sets the classpath path via a StrProp (a Property of String type) to a
-	 * properties file for the StdPropertyFileOnClasspathLoader to load.
+ properties file for the StdPropFileOnClasspathLoader to load.
 	 *
 	 * If no path is specified via either a String or StrProp, the path
 	 * '/andhow.properties' is used.<br/>
@@ -200,8 +194,8 @@ public class StdConfig implements AndHowConfiguration {
 	}
 
 	/**
-	 * If set, the properties file loaded by StdPropertyFileOnClasspathLoader
-	 * must be found and a RuntimeException will be thrown if it is not found.
+	 * If set, the properties file loaded by StdPropFileOnClasspathLoader
+ must be found and a RuntimeException will be thrown if it is not found.
 	 *
 	 * This is not set by default, allowing the properties file to be optional.
 	 *
@@ -213,8 +207,8 @@ public class StdConfig implements AndHowConfiguration {
 	}
 
 	/**
-	 * If set, the properties file loaded by StdPropertyFileOnClasspathLoader is
-	 * optional and will not throw an error if it is not found.
+	 * If set, the properties file loaded by StdPropFileOnClasspathLoader is
+ optional and will not throw an error if it is not found.
 	 *
 	 * This is set by default, so there is no need to explicitly call it.
 	 *
@@ -228,7 +222,7 @@ public class StdConfig implements AndHowConfiguration {
 
 	/**
 	 * Sets the filesystem path via a StrProp (a Property of String type) to a
-	 * properties file for the StdPropertyFileOnFilesystemLoader to load.
+ properties file for the StdPropFileOnFilesystemLoader to load.
 	 *
 	 * If no property is set to specify a path, or a property is set by has no
 	 * value, this loader won't be used.  If the property is specified but the
@@ -242,13 +236,13 @@ public class StdConfig implements AndHowConfiguration {
 	 * @return
 	 */
 	public StdConfig setFilesystemPropFilePath(StrProp filesystemPropFilePath) {
-		this.filesystemPropFilePath = filesystemPropFilePath;
+		this.filesystemPropFilePathProp = filesystemPropFilePath;
 		return this;
 	}
 	
 	/**
-	 * If set, the properties file loaded by StdPropertyFileOnFilesystemLoader
-	 * must be found and a RuntimeException will be thrown if it is not found.
+	 * If set, the properties file loaded by StdPropFileOnFilesystemLoader
+ must be found and a RuntimeException will be thrown if it is not found.
 	 *
 	 * This is not set by default, allowing the properties file to be optional.
 	 *
@@ -260,8 +254,8 @@ public class StdConfig implements AndHowConfiguration {
 	}
 	
 	/**
-	 * If set, the properties file loaded by StdPropertyFileOnFilesystemLoader is
-	 * optional and will not throw an error if it is not found.
+	 * If set, the properties file loaded by StdPropFileOnFilesystemLoader is
+ optional and will not throw an error if it is not found.
 	 *
 	 * This is set by default, so there is no need to explicitly call it.
 	 *
@@ -299,27 +293,27 @@ public class StdConfig implements AndHowConfiguration {
 		fvl.setPropertyValues(_fixedVals);
 		loaders.add(fvl);
 		
-		CommandLineArgumentLoader clal = new CommandLineArgumentLoader();
+		StdMainStringArgsLoader clal = new StdMainStringArgsLoader();
 		clal.setKeyValuePairs(_cmdLineArgs);
 		loaders.add(clal);
 		
-		SystemPropertyLoader spl = new SystemPropertyLoader();
+		StdSysPropLoader spl = new StdSysPropLoader();
 		spl.setMap(systemProperties);
 		loaders.add(spl);
 		
-		loaders.add(new JndiLoader());
+		loaders.add(new StdJndiLoader());
 		
-		EnviromentVariableLoader evl = new EnviromentVariableLoader();
+		StdEnvVarLoader evl = new StdEnvVarLoader();
 		evl.setMap(envProperties);
 		loaders.add(evl);
 
-		StdPropertyFileOnFilesystemLoader pfofsl = new StdPropertyFileOnFilesystemLoader();
-		pfofsl.setFilePath(filesystemPropFilePath);
+		StdPropFileOnFilesystemLoader pfofsl = new StdPropFileOnFilesystemLoader();
+		pfofsl.setFilePath(filesystemPropFilePathProp);
 		pfofsl.setMissingFileAProblem(_missingFilesystemPropFileAProblem);
 		loaders.add(pfofsl);
 		
 		
-		StdPropertyFileOnClasspathLoader pfocpl = new StdPropertyFileOnClasspathLoader();
+		StdPropFileOnClasspathLoader pfocpl = new StdPropFileOnClasspathLoader();
 		pfocpl.setMissingFileAProblem(_missingClasspathPropFileAProblem);
 		if (classpathPropFilePathStr != null) {
 			pfocpl.setFilePath(classpathPropFilePathStr);

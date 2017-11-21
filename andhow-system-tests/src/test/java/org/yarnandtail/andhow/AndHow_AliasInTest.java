@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.load.std.JndiLoader;
+import org.yarnandtail.andhow.load.std.StdJndiLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -122,7 +122,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(AliasGroup1.class)
 				.build();
 		
@@ -144,7 +144,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(AliasGroup1.class)
 				.build();
 		
@@ -167,7 +167,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(AliasGroup1.class)
 				.build();
 		
@@ -190,7 +190,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(AliasGroup1.class)
 				.build();
 		

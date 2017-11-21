@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
@@ -23,7 +23,7 @@ public class ValueMapWithContextMutableTest {
 		ValidatedValuesWithContextMutable builder = new ValidatedValuesWithContextMutable();
 		
 		Loader cmdLineLoad = new KeyValuePairLoader();
-		PropertyFileOnClasspathLoader propFileLoad = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader propFileLoad = new PropFileOnClasspathLoader();
 		propFileLoad.setFilePath(SimpleParams.STR_BOB);
 		propFileLoad.setMissingFileAProblem(true);
 		

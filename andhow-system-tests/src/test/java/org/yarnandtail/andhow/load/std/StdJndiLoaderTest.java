@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.load.std.JndiLoader;
+import org.yarnandtail.andhow.load.std.StdJndiLoader;
 import org.yarnandtail.andhow.SimpleParams;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author ericeverman
  */
-public class JndiLoaderTest extends AndHowTestBase {
+public class StdJndiLoaderTest extends AndHowTestBase {
 	
 	public interface ValidParams {
 		//Strings
@@ -33,7 +33,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 	
 	@Test
 	public void testSplit() {
-		JndiLoader loader = new JndiLoader();
+		StdJndiLoader loader = new StdJndiLoader();
 		
 		//This is the default
 		List<String> result = loader.split("java:comp/env/, \"\",");
@@ -88,7 +88,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -124,7 +124,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -162,11 +162,11 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		FixedValueLoader fvl = new FixedValueLoader();
-		fvl.setPropertyValues(new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/"));
+		fvl.setPropertyValues(new PropertyValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/"));
 		
 		AndHowNonProduction.builder()
 				.loader(fvl)
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -198,15 +198,14 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		FixedValueLoader fvl = new FixedValueLoader();
-		fvl.setPropertyValues(
-				new PropertyValue(JndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
-				new PropertyValue(JndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
+		fvl.setPropertyValues(new PropertyValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
+				new PropertyValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 		);
 		
 		
 		AndHowNonProduction.builder()
 				.loader(fvl)
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -246,7 +245,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -283,7 +282,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		AndHowNonProduction.builder()
-				.loader(new JndiLoader())
+				.loader(new StdJndiLoader())
 				.group(SimpleParams.class)
 				.build();
 		
@@ -317,7 +316,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		try {
 			AndHowNonProduction.builder()
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.group(SimpleParams.class)
 					.build();
 		
@@ -348,7 +347,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		try {
 			AndHowNonProduction.builder()
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.group(SimpleParams.class)
 					.build();
 		
@@ -381,7 +380,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		try {
 			AndHowNonProduction.builder()
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.group(SimpleParams.class)
 					.build();
 		
@@ -415,7 +414,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		try {
 			AndHowNonProduction.builder()
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.group(ValidParams.class)
 					.build();
 		
@@ -439,7 +438,7 @@ public class JndiLoaderTest extends AndHowTestBase {
 		
 		try {
 			AndHowNonProduction.builder()
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.group(ValidParams.class)
 					.build();
 		

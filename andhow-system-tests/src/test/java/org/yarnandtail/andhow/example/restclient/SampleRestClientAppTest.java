@@ -13,8 +13,8 @@ import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.load.std.JndiLoader;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.std.StdJndiLoader;
+import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
@@ -42,7 +42,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 				
-		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
 		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		plocpl.setMissingFileAProblem(true);
 		
@@ -74,7 +74,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		};
 		
 		
-		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
 		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		plocpl.setMissingFileAProblem(true);
 				
@@ -108,7 +108,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				"/org/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
 		
-		PropertyFileOnClasspathLoader plocpl = new PropertyFileOnClasspathLoader();
+		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
 		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
 		plocpl.setMissingFileAProblem(true);
 				
@@ -120,7 +120,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 					.group(SampleRestClientGroup.class)
 					.addCmdLineArgs(cmdLineArgs)
 					.loader(plocpl)
-					.loader(new JndiLoader())
+					.loader(new StdJndiLoader())
 					.build();
 		} catch (AppFatalException e) {
 			

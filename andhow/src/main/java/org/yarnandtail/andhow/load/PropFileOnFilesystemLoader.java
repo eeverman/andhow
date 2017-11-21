@@ -33,11 +33,11 @@ import org.yarnandtail.andhow.util.TextUtil;
  *
  * @author eeverman
  */
-public class PropertyFileOnFilesystemLoader extends PropertyFileBaseLoader {
+public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 	
 	String specificLoadDescription = null;
 	
-	public PropertyFileOnFilesystemLoader() {
+	public PropFileOnFilesystemLoader() {
 		/* empty for easy construction */ }
 	
 

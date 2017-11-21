@@ -10,9 +10,9 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * 
  * @author ericeverman
  */
-public class CommandLineArgumentLoader extends KeyValuePairLoader {
+public class StdMainStringArgsLoader extends KeyValuePairLoader {
 
-	public CommandLineArgumentLoader() {
+	public StdMainStringArgsLoader() {
 		unknownPropertyAProblem = false;
 	}
 

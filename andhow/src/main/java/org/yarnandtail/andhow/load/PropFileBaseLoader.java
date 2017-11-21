@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
  * 
  * @author ericeverman
  */
-public abstract class PropertyFileBaseLoader extends BaseLoader 
+public abstract class PropFileBaseLoader extends BaseLoader 
 		implements ReadLoader, LocalFileLoader {
 	
 	/**
@@ -27,7 +27,7 @@ public abstract class PropertyFileBaseLoader extends BaseLoader
 	
 	protected boolean unknownPropertyAProblem = true;
 	
-	public PropertyFileBaseLoader() { /* empty for easy construction */ }
+	public PropFileBaseLoader() { /* empty for easy construction */ }
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
 			String fromPath, StaticPropertyConfiguration appConfigDef,

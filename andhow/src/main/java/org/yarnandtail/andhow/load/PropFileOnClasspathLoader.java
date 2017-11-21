@@ -33,11 +33,11 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  *
  * @author eeverman
  */
-public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
+public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 
 	String specificLoadDescription = null;
 
-	public PropertyFileOnClasspathLoader() {
+	public PropFileOnClasspathLoader() {
 		/* empty for easy construction */ }
 
 	@Override
@@ -71,7 +71,7 @@ public class PropertyFileOnClasspathLoader extends PropertyFileBaseLoader {
 	public LoaderValues load(StaticPropertyConfiguration appConfigDef,
 			ValidatedValuesWithContext existingValues, String path) {
 
-		try (InputStream inS = PropertyFileOnClasspathLoader.class.getResourceAsStream(path)) {
+		try (InputStream inS = PropFileOnClasspathLoader.class.getResourceAsStream(path)) {
 
 			if (inS != null) {
 

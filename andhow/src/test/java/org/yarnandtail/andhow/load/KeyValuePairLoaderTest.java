@@ -21,7 +21,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * 
  * @author eeverman
  */
-public class StringArgumentLoaderTest {
+public class KeyValuePairLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
