@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
-import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.load.std.*;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -34,6 +34,12 @@ public class StdConfig implements AndHowConfiguration {
 
 	//System Environment
 	private Map<String, String> envProperties;
+	
+	NamingStrategy naming = new CaseInsensitiveNaming();
+	
+	public static StdConfig instance() {
+		return new StdConfig();
+	}
 
 	/**
 	 * Sets a fixed, non-configurable value for a Property.
@@ -284,6 +290,11 @@ public class StdConfig implements AndHowConfiguration {
 	public StdConfig setEnvironmentProperties(Map<String, String> envProperties) {
 		this.envProperties = envProperties;
 		return this;
+	}
+	
+	@Override
+	public NamingStrategy getNamingStrategy() {
+		return naming;
 	}
 
 	@Override

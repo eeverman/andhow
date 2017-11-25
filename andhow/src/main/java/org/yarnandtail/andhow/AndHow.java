@@ -10,7 +10,7 @@ import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
-import org.yarnandtail.andhow.load.*;
+import org.yarnandtail.andhow.service.InitLoader;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 
 /**
@@ -74,7 +74,19 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null) {
-					build(null, null, null);
+					
+					InitLoader il = new InitLoader();
+					List<AndHowInit> inits = il.getInitiators();
+					
+					if (inits.size() == 1) {
+						build(inits.get(0).getConfiguration());
+					} else if (inits.size() == 0) {
+						build(null, null, null);
+					} else {
+						throw new RuntimeException("Unexpected multiple initi classes");
+					}
+					
+					
 				} else if (singleInstance.core == null) {
 					
 				/*	This is a concession for testing.  During testing the
@@ -132,6 +144,28 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 */
 	public static boolean isInitialize() {
 		return singleInstance != null && singleInstance.core != null;
+	}
+	
+	public static AndHow build(AndHowConfiguration config)
+			throws AppFatalException, RuntimeException {
+
+		synchronized (LOCK) {
+			if (singleInstance != null) {
+				throwFatal("AndHow is already constructed!", null);
+				return null;
+			} else {
+				
+				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+				List<GroupProxy> registeredGroups = registrar.getGroups();
+				
+				singleInstance = new AndHow(
+						config.getNamingStrategy(), 
+						config.buildLoaders(),
+						registeredGroups);
+				
+				return singleInstance;
+			}
+		}
 	}
 
 	/**

@@ -23,8 +23,9 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowElementScanner7.class);
 
 	private final Types typeUtils;
-	private final TypeElement propertyTypeElem;
+	//private final TypeElement propertyTypeElem;
 	private final TypeMirror propertyTypeMirror;
+	private final TypeMirror initTypeMirror;
 	private final Trees trees;
 	
 	CompileUnit compileUnit;		//Info on a single compileable file.  Late init.
@@ -36,14 +37,22 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	 * @param typeNameOfAndHowProperty The fully qualified name of the interface that
 	 * all AndHow Properties implement.
 	 */
-	public AndHowElementScanner7(ProcessingEnvironment processingEnv, String typeNameOfAndHowProperty) {
+	public AndHowElementScanner7(ProcessingEnvironment processingEnv,
+			String typeNameOfAndHowProperty,
+			String typeNameOfAndHowInit) {
 
 		super(null);
 
 		trees = Trees.instance(processingEnv);
 		typeUtils = processingEnv.getTypeUtils();
-		propertyTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowProperty);
+		
+		//Type for a property
+		TypeElement propertyTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowProperty);
 		propertyTypeMirror = propertyTypeElem.asType();
+		
+		//Type for an AndHowInit
+		TypeElement initTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowInit);
+		initTypeMirror = initTypeElem.asType();
 
 	}
 
@@ -92,6 +101,13 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			//Construct a new CompileUnit to record state and scan its contents
 			
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
+			
+			if (e.getKind().equals(ElementKind.CLASS) && ! e.getModifiers().contains(Modifier.ABSTRACT)) {
+				if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(initTypeMirror))) {
+					compileUnit.setInitClass(true);
+				}
+			}
+
 			
 			scan(fieldsIn(e.getEnclosedElements()), p);
 			scan(typesIn(e.getEnclosedElements()), p);

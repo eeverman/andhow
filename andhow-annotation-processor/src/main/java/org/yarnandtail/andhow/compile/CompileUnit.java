@@ -33,6 +33,7 @@ public class CompileUnit {
 	private final String classCanonName;
 	private PropertyRegistrationList registrations;	//late init
 	private List<String> errors;	//late init
+	private boolean initClass;	//True if this class is an AndHowInit instance
 
 	/**
 	 * This is being used as a stack. Always push into the tail of the queue and
@@ -52,6 +53,14 @@ public class CompileUnit {
 	 */
 	public CompileUnit(String classCanonName) {
 		this.classCanonName = classCanonName;
+	}
+	
+	public boolean isInitClass() {
+		return initClass;
+	}
+
+	public void setInitClass(boolean initClass) {
+		this.initClass = initClass;
 	}
 
 	public void pushType(SimpleType simpleName) {
