@@ -50,6 +50,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			core = new AndHowCore(naming, loaders, registeredGroups);
 		}
 	}
+	
+	private AndHow(AndHowConfiguration config) throws AppFatalException {
+		synchronized (LOCK) {
+			core = new AndHowCore(
+					config.getNamingStrategy(), 
+					config.buildLoaders(), 
+					config.getRegisteredGroups());
+		}
+	}
 
 	/**
 	 * Returns a builder that can be used one time to build the AndHow instance.
@@ -68,38 +77,72 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			+ "for each test.  Alternately, AndHow could be partially "
 			+ "destructed via reflection.";
 
-	public static AndHow instance() {
+	private static AndHowConfiguration findConfiguration() throws AppFatalException {
+		InitLoader il = new InitLoader();
+		List<AndHowInit> inits = il.getInitiators();
+
+		switch (inits.size()) {
+			case 0:
+				return StdConfig.instance();
+			case 1:
+				return inits.get(0).getConfiguration();
+			default:
+				throw new AppFatalException("Unexpected multiple init classes");
+				
+		}
+	}
+	
+	
+	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
 			synchronized (LOCK) {
+				if (singleInstance == null || singleInstance.core == null) {
+					return instance(findConfiguration());
+				} else {
+					return singleInstance;
+				}
+			}
+
+		}
+	}
+	
+	/**
+	 * Used internally only when it is known that the AndHow instance or its core is null.
+	 * @param config
+	 * @return
+	 * @throws AppFatalException 
+	 */
+	private static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+		synchronized (LOCK) {
+			
+			if (singleInstance != null && singleInstance.core != null) {
+				throw new AppFatalException("Cannot request construction of new "
+						+ "AndHow instance when there is an existing instance.");
+			} else {
+
 				if (singleInstance == null) {
-					
-					InitLoader il = new InitLoader();
-					List<AndHowInit> inits = il.getInitiators();
-					
-					if (inits.size() == 1) {
-						build(inits.get(0).getConfiguration());
-					} else if (inits.size() == 0) {
-						build(null, null, null);
-					} else {
-						throw new RuntimeException("Unexpected multiple initi classes");
-					}
-					
-					
+
+					singleInstance = new AndHow(config);
+
 				} else if (singleInstance.core == null) {
-					
+
 				/*	This is a concession for testing.  During testing the
 					core is deleted to force AndHow to reload.  Its really an
 					invalid state (instance and core should be null/non-null
-					together, but its handled here to simplify testing.
-				*/
+					together, but its handled here to simplify testing.  */
+
 					try {
-						AndHowCore newCore = new AndHowCore(null, getDefaultLoaders(),
-								new PropertyRegistrarLoader().getGroups());
+
+						AndHowCore newCore = new AndHowCore(
+								config.getNamingStrategy(),
+								config.buildLoaders(),
+								config.getRegisteredGroups());
 						Field coreField = AndHow.class.getDeclaredField("core");
 						coreField.setAccessible(true);
 						coreField.set(singleInstance, newCore);
+
 					} catch (Exception ex) {
 						if (ex instanceof AppFatalException) {
 							throw (AppFatalException)ex;
@@ -110,9 +153,11 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 				}
 				return singleInstance;
-			}
 
-		}
+
+			}
+		
+		}	//end sync
 	}
 
 	/**
@@ -146,28 +191,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		return singleInstance != null && singleInstance.core != null;
 	}
 	
-	public static AndHow build(AndHowConfiguration config)
-			throws AppFatalException, RuntimeException {
-
-		synchronized (LOCK) {
-			if (singleInstance != null) {
-				throwFatal("AndHow is already constructed!", null);
-				return null;
-			} else {
-				
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-				List<GroupProxy> registeredGroups = registrar.getGroups();
-				
-				singleInstance = new AndHow(
-						config.getNamingStrategy(), 
-						config.buildLoaders(),
-						registeredGroups);
-				
-				return singleInstance;
-			}
-		}
-	}
-
 	/**
 	 * Private build method, invoked only by the inner AndHowBuilder class.
 	 *

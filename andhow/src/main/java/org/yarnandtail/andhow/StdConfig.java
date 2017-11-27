@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -335,6 +336,13 @@ public class StdConfig implements AndHowConfiguration {
 		loaders.add(pfocpl);
 
 		return loaders;
+	}
+
+	@Override
+	public List<GroupProxy> getRegisteredGroups() {
+		PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+		List<GroupProxy> registeredGroups = registrar.getGroups();
+		return registeredGroups;
 	}
 
 }

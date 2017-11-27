@@ -1,8 +1,7 @@
 package org.yarnandtail.andhow;
 
 import java.util.List;
-import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.api.NamingStrategy;
+import org.yarnandtail.andhow.api.*;
 
 /**
  *
@@ -10,6 +9,8 @@ import org.yarnandtail.andhow.api.NamingStrategy;
  */
 public interface AndHowConfiguration {
 	List<Loader> buildLoaders();
+	
+	List<GroupProxy> getRegisteredGroups();
 
 	NamingStrategy getNamingStrategy();
 }
