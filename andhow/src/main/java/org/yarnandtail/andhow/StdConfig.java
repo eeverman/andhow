@@ -3,45 +3,23 @@ package org.yarnandtail.andhow;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
-import org.yarnandtail.andhow.load.std.*;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  *
  * @author ericeverman
  */
-public class StdConfig implements AndHowConfiguration {
-
-	//A list of hardcoded values used by the StdFixedValueLoader
-	private final List<PropertyValue> _fixedVals = new ArrayList();
-
-	//A list of command line arguments
-	private final List<String> _cmdLineArgs = new ArrayList();
-
-	//Prop file on classpath
-	private String classpathPropFilePathStr;	//mutually XOR
-	private StrProp classpathPropFilePathProp;	//mutually XOR
-	private boolean _missingClasspathPropFileAProblem = false;
-
-	//Prop file on filesystem path
-	private StrProp filesystemPropFilePathProp;
-	private boolean _missingFilesystemPropFileAProblem = false;
-
-	//System Properties
-	private Properties systemProperties;
-
-	//System Environment
-	private Map<String, String> envProperties;
-	
-	NamingStrategy naming = new CaseInsensitiveNaming();
+public class StdConfig extends BaseConfig<StdConfig> {
 	
 	public static StdConfig instance() {
-		return new StdConfig();
+		StdConfig config = new StdConfig();
+		
+		//non-static var used as static to supply proper type to self ref.
+		config.configInstance = config;	
+		
+		return config;
 	}
-
 	/**
 	 * Sets a fixed, non-configurable value for a Property.
 	 *
@@ -69,7 +47,7 @@ public class StdConfig implements AndHowConfiguration {
 		PropertyValue pv = new PropertyValue(property, value);
 		_fixedVals.add(pv);
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -96,7 +74,7 @@ public class StdConfig implements AndHowConfiguration {
 			}
 		}
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -111,7 +89,7 @@ public class StdConfig implements AndHowConfiguration {
 			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 		}
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -135,7 +113,7 @@ public class StdConfig implements AndHowConfiguration {
 			_cmdLineArgs.add(key);
 		}
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -169,7 +147,7 @@ public class StdConfig implements AndHowConfiguration {
 		}
 		this.classpathPropFilePathStr = classpathPropFilePathString;
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -197,7 +175,7 @@ public class StdConfig implements AndHowConfiguration {
 
 		this.classpathPropFilePathProp = classpathPropFilePathProperty;
 
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -210,7 +188,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig classpathPropertiesRequired() {
 		_missingClasspathPropFileAProblem = true;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -223,7 +201,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig classpathPropertiesNotRequired() {
 		_missingClasspathPropFileAProblem = false;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -243,7 +221,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig setFilesystemPropFilePath(StrProp filesystemPropFilePath) {
 		this.filesystemPropFilePathProp = filesystemPropFilePath;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -256,7 +234,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig filesystemPropFileRequired() {
 		_missingFilesystemPropFileAProblem = true;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -269,7 +247,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig filesystemPropFileNotRequired() {
 		_missingFilesystemPropFileAProblem = false;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -279,7 +257,7 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig setSystemProperties(Properties properties) {
 		systemProperties = properties;
-		return this;
+		return configInstance;
 	}
 
 	/**
@@ -290,59 +268,54 @@ public class StdConfig implements AndHowConfiguration {
 	 */
 	public StdConfig setEnvironmentProperties(Map<String, String> envProperties) {
 		this.envProperties = envProperties;
-		return this;
+		return configInstance;
 	}
 	
-	@Override
-	public NamingStrategy getNamingStrategy() {
-		return naming;
+	public StdConfig setStandardLoaders(List<Class<? extends StandardLoader>> newStandardLoaders) {
+		
+		standardLoaders.clear();
+		standardLoaders.addAll(newStandardLoaders);
+		
+		return configInstance;
 	}
-
-	@Override
-	public List<Loader> buildLoaders() {
-		List<Loader> loaders = new ArrayList();
-
-		StdFixedValueLoader fvl = new StdFixedValueLoader();
-		fvl.setPropertyValues(_fixedVals);
-		loaders.add(fvl);
-
-		StdMainStringArgsLoader clal = new StdMainStringArgsLoader();
-		clal.setKeyValuePairs(_cmdLineArgs);
-		loaders.add(clal);
-
-		StdSysPropLoader spl = new StdSysPropLoader();
-		spl.setMap(systemProperties);
-		loaders.add(spl);
-
-		loaders.add(new StdJndiLoader());
-
-		StdEnvVarLoader evl = new StdEnvVarLoader();
-		evl.setMap(envProperties);
-		loaders.add(evl);
-
-		StdPropFileOnFilesystemLoader pfofsl = new StdPropFileOnFilesystemLoader();
-		pfofsl.setFilePath(filesystemPropFilePathProp);
-		pfofsl.setMissingFileAProblem(_missingFilesystemPropFileAProblem);
-		loaders.add(pfofsl);
-
-		StdPropFileOnClasspathLoader pfocpl = new StdPropFileOnClasspathLoader();
-		pfocpl.setMissingFileAProblem(_missingClasspathPropFileAProblem);
-		if (classpathPropFilePathStr != null) {
-			pfocpl.setFilePath(classpathPropFilePathStr);
-		} else if (classpathPropFilePathProp != null) {
-			pfocpl.setFilePath(classpathPropFilePathProp);
+	
+	public StdConfig setStandardLoaders(Class<? extends StandardLoader>... newStandardLoaders) {
+		
+		standardLoaders.clear();
+		
+		for(Class<? extends StandardLoader> sl : newStandardLoaders) {
+			standardLoaders.add(sl);
 		}
-
-		loaders.add(pfocpl);
-
-		return loaders;
+		
+		return configInstance;
 	}
-
-	@Override
-	public List<GroupProxy> getRegisteredGroups() {
-		PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-		List<GroupProxy> registeredGroups = registrar.getGroups();
-		return registeredGroups;
+	
+	public StdConfig insertLoaderBefore(
+			Class<? extends StandardLoader> insertBeforeThisLoader, Loader loaderToInsert) {
+		
+		if (insertBefore.containsKey(insertBeforeThisLoader)) {
+			insertBefore.get(insertBeforeThisLoader).add(loaderToInsert);
+		} else {
+			List<Loader> list = new ArrayList(1);
+			list.add(loaderToInsert);
+			insertBefore.put(insertBeforeThisLoader, list);
+		}
+		
+		return configInstance;
 	}
-
+	
+	public StdConfig insertLoaderAfter(
+			Class<? extends StandardLoader> insertAfterThisLoader, Loader loaderToInsert) {
+		
+		if (insertAfter.containsKey(insertAfterThisLoader)) {
+			insertAfter.get(insertAfterThisLoader).add(loaderToInsert);
+		} else {
+			List<Loader> list = new ArrayList(1);
+			list.add(loaderToInsert);
+			insertAfter.put(insertAfterThisLoader, list);
+		}
+		
+		return configInstance;
+	}
+	
 }

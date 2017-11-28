@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.load.std;
 
 import java.util.List;
+import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
@@ -10,7 +11,8 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * 
  * @author ericeverman
  */
-public class StdMainStringArgsLoader extends KeyValuePairLoader {
+public class StdMainStringArgsLoader extends KeyValuePairLoader 
+		implements StandardLoader {
 
 	public StdMainStringArgsLoader() {
 		unknownPropertyAProblem = false;

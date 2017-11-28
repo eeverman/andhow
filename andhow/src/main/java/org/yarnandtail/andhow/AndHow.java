@@ -45,17 +45,17 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	private AndHow(NamingStrategy naming, List<Loader> loaders,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
-		
+
 		synchronized (LOCK) {
 			core = new AndHowCore(naming, loaders, registeredGroups);
 		}
 	}
-	
+
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
 			core = new AndHowCore(
-					config.getNamingStrategy(), 
-					config.buildLoaders(), 
+					config.getNamingStrategy(),
+					config.buildLoaders(),
 					config.getRegisteredGroups());
 		}
 	}
@@ -68,9 +68,9 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public static AndHowBuilder builder() {
 		return new AndHowBuilder();
 	}
-	
-	private static final String PARTIAL_CONSTRUCT_MSG =
-			"AndHow is in an invalid state, trying to recover from partially initialization. "
+
+	private static final String PARTIAL_CONSTRUCT_MSG
+			= "AndHow is in an invalid state, trying to recover from partially initialization. "
 			+ "This most likely happens during multi-thread testing "
 			+ "using the AndHowNonProduction utility, which partially "
 			+ "destroys the AndHow framework so it can be re-initialized "
@@ -88,11 +88,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				return inits.get(0).getConfiguration();
 			default:
 				throw new AppFatalException("Unexpected multiple init classes");
-				
+
 		}
 	}
-	
-	
+
 	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
@@ -107,16 +106,18 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 		}
 	}
-	
+
 	/**
-	 * Used internally only when it is known that the AndHow instance or its core is null.
+	 * Used internally only when it is known that the AndHow instance or its
+	 * core is null.
+	 *
 	 * @param config
 	 * @return
-	 * @throws AppFatalException 
+	 * @throws AppFatalException
 	 */
 	private static AndHow instance(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
-			
+
 			if (singleInstance != null && singleInstance.core != null) {
 				throw new AppFatalException("Cannot request construction of new "
 						+ "AndHow instance when there is an existing instance.");
@@ -128,11 +129,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 				} else if (singleInstance.core == null) {
 
-				/*	This is a concession for testing.  During testing the
+					/*	This is a concession for testing.  During testing the
 					core is deleted to force AndHow to reload.  Its really an
 					invalid state (instance and core should be null/non-null
 					together, but its handled here to simplify testing.  */
-
 					try {
 
 						AndHowCore newCore = new AndHowCore(
@@ -145,7 +145,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 					} catch (Exception ex) {
 						if (ex instanceof AppFatalException) {
-							throw (AppFatalException)ex;
+							throw (AppFatalException) ex;
 						} else {
 							throwFatal(PARTIAL_CONSTRUCT_MSG, ex);
 						}
@@ -154,9 +154,8 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				}
 				return singleInstance;
 
-
 			}
-		
+
 		}	//end sync
 	}
 
@@ -164,15 +163,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * Returns a list of new loaders that are used for default configuration.
 	 *
 	 * @param cmdLineArgs Optional command line arguments to be passed to the
- KeyValuePairLoader. These would be the Stringp[] args passed to the
- main method at startup.
+	 * KeyValuePairLoader. These would be the Stringp[] args passed to the main
+	 * method at startup.
 	 * @return
 	 */
 	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
-		
+
 		StdMainStringArgsLoader clal = new StdMainStringArgsLoader();
 		clal.setKeyValuePairs(cmdLineArgs);
-		
+
 		List<Loader> loaders = new ArrayList();
 		loaders.add(clal);
 		loaders.add(new StdSysPropLoader());		//TODO:  This needs to be set w/ assigned values
@@ -181,16 +180,16 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		loaders.add(new StdPropFileOnClasspathLoader());
 		return loaders;
 	}
-	
+
 	/**
 	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	public static boolean isInitialize() {
 		return singleInstance != null && singleInstance.core != null;
 	}
-	
+
 	/**
 	 * Private build method, invoked only by the inner AndHowBuilder class.
 	 *
@@ -216,16 +215,16 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				throwFatal("AndHow is already constructed!", null);
 				return null;
 			} else {
-				
+
 				if (loaders == null || loaders.isEmpty()) {
 					loaders = getDefaultLoaders();
 				}
-				
+
 				if (registeredGroups == null || registeredGroups.isEmpty()) {
 					PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
 					registeredGroups = registrar.getGroups();
 				}
-				
+
 				singleInstance = new AndHow(naming, loaders, registeredGroups);
 				return singleInstance;
 			}
@@ -295,18 +294,18 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public NamingStrategy getNamingStrategy() {
 		return core.getNamingStrategy();
 	}
-	
+
 	/**
 	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user
-	 * code of the build.
+	 * remove 2 method calls, which should put the stacktrace at the user code
+	 * of the build.
 	 *
 	 * @param message
 	 */
 	/**
 	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user
-	 * code of the build.
+	 * remove 2 method calls, which should put the stacktrace at the user code
+	 * of the build.
 	 *
 	 * @param message
 	 */
@@ -415,21 +414,20 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			return this;
 		}
 
-
 		/**
 		 * Adds the command line arguments, keeping any previously added.
 		 *
-		 * If loaders are never explicitly added, the commandline loader will
-		 * be kept in its standard location in the default loader list.
-		 * If loader were explicitly added, the command line loader will be
-		 * implicitly added at the point at which addCmdLineArg is called in
-		 * relation to the addition of the other loaders.
+		 * If loaders are never explicitly added, the commandline loader will be
+		 * kept in its standard location in the default loader list. If loader
+		 * were explicitly added, the command line loader will be implicitly
+		 * added at the point at which addCmdLineArg is called in relation to
+		 * the addition of the other loaders.
 		 *
 		 * @param commandLineArgs
 		 * @return
 		 */
 		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
-			
+
 			if (commandLineArgs != null && commandLineArgs.length > 0) {
 				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 
@@ -446,12 +444,12 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		 * Adds a command line argument in key=value form.
 		 *
 		 * If the value is null, only the key is added (ie its a flag).
-		 * 
-		 * If loaders are never explicitly added, the commandline loader will
-		 * be kept in its standard location in the default loader list.
-		 * If loader were explicitly added, the command line loader will be
-		 * implicitly added at the point at which addCmdLineArg is called in
-		 * relation to the addition of the other loaders.
+		 *
+		 * If loaders are never explicitly added, the commandline loader will be
+		 * kept in its standard location in the default loader list. If loader
+		 * were explicitly added, the command line loader will be implicitly
+		 * added at the point at which addCmdLineArg is called in relation to
+		 * the addition of the other loaders.
 		 *
 		 * @param key
 		 * @param value
@@ -502,17 +500,16 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			AndHow.build(_namingStrategy, _loaders, null);
 		}
 
-		
 		private void populateLoaderList() {
 			if (_loaders.isEmpty()) {
 				_loaders.addAll(AndHow.getDefaultLoaders(_cmdLineArgs.toArray(new String[_cmdLineArgs.size()])));
 			} else {
-				
+
 				//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
 				int existingCmdLoader = -1;
 				for (int i = 0; i < _loaders.size(); i++) {
 					if (_loaders.get(i) instanceof StdMainStringArgsLoader) {
-						((StdMainStringArgsLoader)_loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
+						((StdMainStringArgsLoader) _loaders.get(i)).setKeyValuePairs(_cmdLineArgs);
 						existingCmdLoader = i;
 						break;
 					}
@@ -523,7 +520,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					cl.setKeyValuePairs(_cmdLineArgs);
 					_loaders.add(addCmdLineLoaderAtPosition, cl);
 				}
-				
+
 			}
 		}
 	}

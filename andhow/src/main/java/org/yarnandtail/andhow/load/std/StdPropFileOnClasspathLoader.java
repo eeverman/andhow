@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
+import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.api.ValidatedValuesWithContext;
 import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
 
@@ -35,7 +36,8 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  *
  * @author eeverman
  */
-public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader {
+public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader 
+		implements StandardLoader {
 
 	public static final String DEFAULT_PROP_FILE = "/andhow.properties";
 	

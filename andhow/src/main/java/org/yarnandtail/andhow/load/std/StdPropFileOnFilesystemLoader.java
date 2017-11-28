@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
+import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.PropFileOnFilesystemLoader;
 
 /**
@@ -8,7 +9,8 @@ import org.yarnandtail.andhow.load.PropFileOnFilesystemLoader;
  * 
  * @author ericeverman
  */
-public class StdPropFileOnFilesystemLoader extends PropFileOnFilesystemLoader {
+public class StdPropFileOnFilesystemLoader extends PropFileOnFilesystemLoader
+		implements StandardLoader {
 
 	public StdPropFileOnFilesystemLoader() {
 	}

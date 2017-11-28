@@ -28,7 +28,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  *
  * @author eeverman
  */
-public class StdJndiLoader extends BaseLoader implements LookupLoader {
+public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardLoader {
 
 	private boolean failedEnvironmentAProblem = false;
 	

@@ -19,9 +19,8 @@ import org.yarnandtail.andhow.api.*;
  */
 public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P extends Property<T>, T> {
 	
-	//Weird tracking of its own instance is so we get the type correct when returning
-	//to the caller.  Returning 'this' is a PropertyBuilderBase.  Returing 'B' is
-	//a specific subclass.
+	//Self reference for implementing subclasses to use.
+	//Subclasses cannot return 'this' as type B, so store in local var for correct type.
 	protected B instance;
 	
 	protected ValueType<T> _valueType;

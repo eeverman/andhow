@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.load.std;
 
 import java.util.*;
+import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.MapLoader;
 
 /**
@@ -26,7 +27,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * 
  * @author eeverman
  */
-public class StdEnvVarLoader extends MapLoader {
+public class StdEnvVarLoader extends MapLoader implements StandardLoader {
 	
 	public StdEnvVarLoader() {
 		unknownPropertyAProblem = false;
