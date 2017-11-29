@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.load.std.StdJndiLoader;
 import org.yarnandtail.andhow.SimpleParams;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.load.FixedValueLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.util.NameUtil;
@@ -87,10 +85,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
-		AndHowNonProduction.builder()
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -123,10 +120,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
 		
-		AndHowNonProduction.builder()
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -161,14 +157,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
-		FixedValueLoader fvl = new FixedValueLoader();
-		fvl.setPropertyValues(new PropertyValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/"));
-		
-		AndHowNonProduction.builder()
-				.loader(fvl)
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
+				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -197,17 +189,12 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
-		FixedValueLoader fvl = new FixedValueLoader();
-		fvl.setPropertyValues(new PropertyValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/"),
-				new PropertyValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
-		);
 		
-		
-		AndHowNonProduction.builder()
-				.loader(fvl)
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
+				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
+				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -244,10 +231,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		
 		jndi.activate();
 		
-		AndHowNonProduction.builder()
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -281,10 +267,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		
 		jndi.activate();
 		
-		AndHowNonProduction.builder()
-				.loader(new StdJndiLoader())
+		NonProductionConfig.instance()
 				.group(SimpleParams.class)
-				.build();
+				.forceBuild();
 		
 		
 		assertEquals("test2", SimpleParams.STR_BOB.getValue());
@@ -315,10 +300,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowNonProduction.builder()
-					.loader(new StdJndiLoader())
+			NonProductionConfig.instance()
 					.group(SimpleParams.class)
-					.build();
+					.forceBuild();
 		
 			fail("Should not reach this point");
 			
@@ -346,10 +330,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowNonProduction.builder()
-					.loader(new StdJndiLoader())
+			NonProductionConfig.instance()
 					.group(SimpleParams.class)
-					.build();
+					.forceBuild();
 		
 			fail("Should not reach this point");
 			
@@ -379,10 +362,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowNonProduction.builder()
-					.loader(new StdJndiLoader())
+			NonProductionConfig.instance()
 					.group(SimpleParams.class)
-					.build();
+					.forceBuild();
 		
 			fail("Should not reach this point");
 			
@@ -413,10 +395,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowNonProduction.builder()
-					.loader(new StdJndiLoader())
+			NonProductionConfig.instance()
 					.group(ValidParams.class)
-					.build();
+					.forceBuild();
 		
 			fail("Should not reach this point");
 			
@@ -437,10 +418,9 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowNonProduction.builder()
-					.loader(new StdJndiLoader())
+			NonProductionConfig.instance()
 					.group(ValidParams.class)
-					.build();
+					.forceBuild();
 		
 			fail("Should not reach this point");
 			
