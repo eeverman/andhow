@@ -4,8 +4,7 @@ import org.dataprocess.ExternalServiceConnector;
 import org.dataprocess.ExternalServiceConnector.ConnectionConfig;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.AndHowNonProduction;
-import org.yarnandtail.andhow.AndHowTestBase;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.load.std.StdJndiLoader;
@@ -41,7 +40,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
 		
-		AndHowNonProduction.builder().build();
+		NonProductionConfig.instance().forceBuild();
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -56,11 +55,11 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
 		
-		AndHowNonProduction.builder()
-				.addCmdLineArgs(new String[] {
+
+		NonProductionConfig.instance().addCmdLineArgs(new String[] {
 					"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
 					"com.map.EarthMapMaker.WEST_BOUND=-179"})
-				.build();
+				.forceBuild();
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -112,11 +111,11 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "East");
 		
 		try {
-			AndHowNonProduction.builder()
+			NonProductionConfig.instance()
 					.addCmdLineArgs(new String[] {
 						"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
 						"com.map.EarthMapMaker.WEST_BOUND=-179"})
-					.build();
+					.forceBuild();
 		
 			fail("Expected an exception");
 		} catch (AppFatalException afe) {

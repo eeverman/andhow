@@ -15,7 +15,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @param <C> The class to return from each of the fluent builder methods, which
  * will be the implementation class in each case.  See StdConfig for an example.
  */
-public abstract class BaseConfig<C extends BaseConfig> implements AndHowConfiguration {
+public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfiguration {
 
 	protected static final Class<?>[] DEFAULT_LOADER_LIST = new Class<?>[] {
 		StdFixedValueLoader.class, StdMainStringArgsLoader.class,
@@ -31,10 +31,6 @@ public abstract class BaseConfig<C extends BaseConfig> implements AndHowConfigur
 	multiple custom instances to insert. */
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertBefore = new HashMap();
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertAfter = new HashMap();
-
-	//Self reference for implementing subclasses to use.
-	//Subclasses cannot return 'this' as type C, so store in local var for correct type.
-	protected C configInstance;
 	
 	//A list of hardcoded values used by the StdFixedValueLoader
 	protected final List<PropertyValue> _fixedVals = new ArrayList();

@@ -7,14 +7,12 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.AndHowNonProduction;
 import org.yarnandtail.andhow.AndHowTestBase;
+import org.yarnandtail.andhow.NonProductionConfig;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.load.std.StdJndiLoader;
-import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
@@ -41,16 +39,13 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
-				
-		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
-		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
-		plocpl.setMissingFileAProblem(true);
 		
-		AndHowNonProduction.builder()
+		NonProductionConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(plocpl)
-				.build();
+				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
+				.classpathPropertiesRequired()
+				.forceBuild();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -71,19 +66,14 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		cmdLineArgs = new String[] {
 			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
-		};
-		
-		
-		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
-		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
-		plocpl.setMissingFileAProblem(true);
+		};		
 				
-				
-		AndHowNonProduction.builder()
+		NonProductionConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addCmdLineArgs(cmdLineArgs)
-				.loader(plocpl)
-				.build();
+				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
+				.classpathPropertiesRequired()
+				.forceBuild();
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -107,21 +97,16 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			GROUP_PATH + ".CLASSPATH_PROP_FILE" + KeyValuePairLoader.KVP_DELIMITER + 
 				"/org/yarnandtail/andhow/example/restclient/invalid.properties"
 		};
-		
-		PropFileOnClasspathLoader plocpl = new PropFileOnClasspathLoader();
-		plocpl.setFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE);
-		plocpl.setMissingFileAProblem(true);
-				
 				
 		try {
 			
 			//Error expected b/c some values are invalid
-			AndHowNonProduction.builder()
+			NonProductionConfig.instance()
 					.group(SampleRestClientGroup.class)
 					.addCmdLineArgs(cmdLineArgs)
-					.loader(plocpl)
-					.loader(new StdJndiLoader())
-					.build();
+					.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
+					.classpathPropertiesRequired()
+					.forceBuild();
 		} catch (AppFatalException e) {
 			
 			//Value Problems (validation)

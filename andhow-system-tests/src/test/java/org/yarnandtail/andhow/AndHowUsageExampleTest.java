@@ -38,10 +38,10 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	@Test
 	public void testAllValuesAreSet() {
-		AndHowNonProduction.builder()
+		NonProductionConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.addCmdLineArgs(cmdLineArgsWFullClassName)
-				.build();
+				.forceBuild();
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -54,12 +54,12 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	@Test
 	public void testOptionalValuesAreUnset() {
-		AndHowNonProduction.builder()
+		NonProductionConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
 				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
-				.build();
+				.forceBuild();
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -72,9 +72,9 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testMissingValuesException() {
 		
 		try {
-			AndHowNonProduction.builder()
+			NonProductionConfig.instance()
 					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-					.build();
+					.forceBuild();
 			fail();
 		} catch (AppFatalException ce) {
 			assertEquals(3, ce.getProblems().filter(RequirementProblem.class).size());

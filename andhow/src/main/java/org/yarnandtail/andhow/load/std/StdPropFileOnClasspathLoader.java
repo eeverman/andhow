@@ -50,6 +50,8 @@ public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader
 		String path = super.getEffectivePath(existingValues);
 		if (path != null) {
 			return path;
+		} else if (pathProp != null) {
+			return null;	//There is a StrProp to specify the path, but the value is null
 		} else {
 			return DEFAULT_PROP_FILE;
 		}

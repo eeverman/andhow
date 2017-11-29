@@ -67,11 +67,10 @@ public class AndHowTest extends AndHowTestBase {
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
-		AndHowNonProduction.builder()
-				.namingStrategy(basicNaming)
+		NonProductionConfig.instance()
 				.groups(configPtGroups)
 				.addCmdLineArgs(cmdLineArgsWFullClassName)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -92,18 +91,15 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 		
-		List<Loader> loaders = new ArrayList();
 		KeyValuePairLoader kvpl = new KeyValuePairLoader();
 		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
-		loaders.add(kvpl);
 		
 		try {
 
-			AndHowNonProduction.builder()
-				.loaders(loaders)
-				.loader(loaders.get(0))
+			NonProductionConfig.instance()
+				.setLoaders(kvpl, kvpl)
 				.groups(configPtGroups)
-				.build();
+				.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -111,7 +107,7 @@ public class AndHowTest extends AndHowTestBase {
 			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
 			
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
-			assertEquals(loaders.get(0), dl.getLoader());
+			assertEquals(kvpl, dl.getLoader());
 			assertTrue(ce.getSampleDirectory().length() > 0);
 			
 			File sampleDir = new File(ce.getSampleDirectory());
@@ -124,12 +120,11 @@ public class AndHowTest extends AndHowTestBase {
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
 
 		try {
-				AndHowNonProduction.builder()
-					.namingStrategy(basicNaming)
+				NonProductionConfig.instance()
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
 					.addCmdLineArgs(cmdLineArgsWFullClassName)
-					.build();
+					.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -144,11 +139,11 @@ public class AndHowTest extends AndHowTestBase {
 		baseName += "." + RequiredParams.class.getSimpleName() + ".";
 		
 		try {
-				AndHowNonProduction.builder()
+				NonProductionConfig.instance()
 					.group(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present")
-					.build();
+					.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

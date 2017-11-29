@@ -26,10 +26,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 
-	private static AndHow singleInstance;
+	private static volatile AndHow singleInstance;
 	private static final Object LOCK = new Object();
 
-	private final AndHowCore core;
+	private volatile AndHowCore core;
 
 	/**
 	 * Private constructor - Use the AndHowBuilder to build instances.

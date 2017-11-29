@@ -5,6 +5,7 @@ package org.yarnandtail.andhow;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.*;
@@ -27,7 +28,7 @@ public class StdConfigTest {
 	 */
 	@Test
 	public void testGetNamingStrategy() {
-		StdConfig std = new StdConfig();
+		StdConfigImpl std = StdConfig.instance();
 		assertTrue(std.getNamingStrategy() instanceof CaseInsensitiveNaming);
 	}
 
@@ -36,7 +37,7 @@ public class StdConfigTest {
 	 */
 	@Test
 	public void testBuildLoadersWithoutAnyChanges() {
-		StdConfig std = new StdConfig();
+		StdConfigImpl std = StdConfig.instance();
 		List<Loader> loaders = std.buildLoaders();
 		assertEquals(7, loaders.size());
 		assertEquals(StdFixedValueLoader.class, loaders.get(0).getClass());
@@ -50,7 +51,7 @@ public class StdConfigTest {
 
 	@Test
 	public void testBuildLoadersWithCustomListOfStandardLoaders() {
-		StdConfig std = new StdConfig();
+		StdConfigImpl std = StdConfig.instance();
 		
 		List<Class<? extends StandardLoader>> newLoaders = new ArrayList();
 		newLoaders.add(StdFixedValueLoader.class);
@@ -77,7 +78,7 @@ public class StdConfigTest {
 	
 	@Test
 	public void testBuildLoadersWithInsertingLoadersBeforeAndAfter() {
-		StdConfig std = new StdConfig();
+		StdConfigImpl std = StdConfig.instance();
 		
 		Loader loader1 = new MapLoader();
 		Loader loader2 = new KeyValuePairLoader();

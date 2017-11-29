@@ -5,21 +5,12 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 import org.junit.*;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AndHowNonProduction;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.GroupExport;
-import org.yarnandtail.andhow.GroupExport;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.PropertyGroup;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.SysPropExporter;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.NameAndProperty;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.NameUtil;
@@ -101,12 +92,12 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	@Test
 	public void testOutAliasForGroup1() {
-		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+		NonProductionConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class)
-				.build();
+				.forceBuild();
 		
 		//This just tests the test...
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
@@ -142,12 +133,12 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+		NonProductionConfig.instance()
 				.addCmdLineArg(grp2Name + ".strProp1", STR1)
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
 				.group(AliasGroup2.class)
-				.build();
+				.forceBuild();
 	
 
 		//
@@ -164,7 +155,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+		NonProductionConfig.instance()
 				.group(AliasGroup1.class)
 				.group(AliasGroup2.class)
 				.addCmdLineArg(STR_PROP1_IN, STR1)
@@ -173,7 +164,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 				.addCmdLineArg(grp2Name + ".strProp1", STR1)
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
-				.build();
+				.forceBuild();
 		
 		//
 		// Group 1
@@ -211,13 +202,13 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testSingleOutDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+			NonProductionConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 					.group(AliasGroup1.class)
 					.group(AliasGroup4.class)
-					.build();
+					.forceBuild();
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -237,9 +228,9 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testSingleOutDuplicateWithinASingleGroup() {
 		
 		try {
-			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+			NonProductionConfig.instance()
 					.group(AliasGroup5.class)
-					.build();
+					.forceBuild();
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -259,10 +250,10 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testTwoOutOutDuplicatesBetweenTwoGroups() {
 		
 		try {
-			AndHowNonProduction.builder().namingStrategy(new CaseInsensitiveNaming())
+			NonProductionConfig.instance()
 					.group(AliasGroup6.class)
 					.group(AliasGroup7.class)
-					.build();
+					.forceBuild();
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
