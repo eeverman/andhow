@@ -26,6 +26,7 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	//private final TypeElement propertyTypeElem;
 	private final TypeMirror propertyTypeMirror;
 	private final TypeMirror initTypeMirror;
+	private final TypeMirror testInitTypeMirror;
 	private final Trees trees;
 	
 	CompileUnit compileUnit;		//Info on a single compileable file.  Late init.
@@ -39,7 +40,8 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 	 */
 	public AndHowElementScanner7(ProcessingEnvironment processingEnv,
 			String typeNameOfAndHowProperty,
-			String typeNameOfAndHowInit) {
+			String typeNameOfAndHowInit,
+			String typeNameOfAndHowTestInit) {
 
 		super(null);
 
@@ -53,6 +55,10 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		//Type for an AndHowInit
 		TypeElement initTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowInit);
 		initTypeMirror = initTypeElem.asType();
+		
+		//Type for an AndHowTestInit
+		TypeElement testInitTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowTestInit);
+		testInitTypeMirror = testInitTypeElem.asType();
 
 	}
 
@@ -103,7 +109,9 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
 			
 			if (e.getKind().equals(ElementKind.CLASS) && ! e.getModifiers().contains(Modifier.ABSTRACT)) {
-				if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(initTypeMirror))) {
+				if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(testInitTypeMirror))) {
+					compileUnit.setTestInitClass(true);
+				} else if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(initTypeMirror))) {
 					compileUnit.setInitClass(true);
 				}
 			}

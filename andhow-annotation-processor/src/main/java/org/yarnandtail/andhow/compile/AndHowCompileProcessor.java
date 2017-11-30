@@ -12,7 +12,9 @@ import javax.lang.model.element.*;
 
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.AndHowInit;
+import org.yarnandtail.andhow.AndHowTestInit;
 import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.service.*;
 import org.yarnandtail.andhow.util.AndHowLog;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
@@ -31,18 +33,17 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	
 	private static final String SERVICES_PACKAGE = "";
 	
-	private static final String PROP_REG_SVS_RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.service.PropertyRegistrar";
-
-	private static final String INIT_SVS_RELATIVE_NAME = "META-INF/services/org.yarnandtail.andhow.AndHowInit";
-
+	private static final String SERVICE_REGISTRY_META_DIR = "META-INF/services/";
+	
 	//Static to insure all generated classes have the same timestamp
 	private static Calendar runDate;
 
 	private Trees trees;
 	
-	private List<CauseEffect> registrars = new ArrayList();
+	private final List<CauseEffect> registrars = new ArrayList();
 	
-	private List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
+	private final List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
+	private final List<CauseEffect> testInitClasses = new ArrayList();	//List of test init classes (should only ever be 1)
 
 	public AndHowCompileProcessor() {
 		//required by Processor API
@@ -61,18 +62,39 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			if (isLastRound) {
 				LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
 				
+				
 				if (initClasses.size() == 1) {
-					writeServiceInitFile(filer, initClasses.get(0));
+					
+					LOG.info("Found exactly 1 AndHowInit class: {0}", initClasses.get(0).fullClassName);
+					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
+					
 				} else if (initClasses.size() > 1) {
+					
 					LOG.error("There were multiple AndHowInit implementation classes found - only one is allowed.  List follows:");
 					for (CauseEffect ce : initClasses) {
 						LOG.error("AndHowInit instance: {0}", ce.fullClassName);
 					}
 					throw new RuntimeException("Multiple AndHowInit implementations were found - only one is allowed. See list above.");
+				
+				}
+				
+				if (testInitClasses.size() == 1) {
+					
+					LOG.info("Found exactly 1 AndHowTestInit class: {0}", testInitClasses.get(0).fullClassName);
+					writeServiceFile(filer, AndHowTestInit.class.getCanonicalName(), testInitClasses);
+					
+				} else if (testInitClasses.size() > 1) {
+					
+					LOG.error("There were multiple AndHowTestInit implementation classes found - only one is allowed.  List follows:");
+					for (CauseEffect ce : testInitClasses) {
+						LOG.error("AndHowTestInit instance: {0}", ce.fullClassName);
+					}
+					throw new RuntimeException("Multiple AndHowTestInit implementations were found - only one is allowed. See list above.");
+				
 				}
 				
 				if (registrars != null && registrars.size() > 0) {
-					writeServiceRegistrarsFile(filer, registrars);
+					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
 				}
 				
 			} else {
@@ -93,11 +115,14 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			AndHowElementScanner7 st = new AndHowElementScanner7(
 					this.processingEnv, 
 					Property.class.getCanonicalName(),
-					AndHowInit.class.getCanonicalName());
+					AndHowInit.class.getCanonicalName(),
+					AndHowTestInit.class.getCanonicalName());
 			CompileUnit ret = st.scan(e);
 			
 			
-			if (ret.isInitClass()) {
+			if (ret.istestInitClass()) {
+				testInitClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
+			} else if (ret.isInitClass()) {
 				initClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
 			}
 
@@ -152,11 +177,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}	
 	}
 	
-	protected void writeServiceRegistrarsFile(Filer filer, List<CauseEffect> registrars) throws Exception {
+	protected void writeServiceFile(Filer filer, String fullyQualifiedServiceInterfaceName, List<CauseEffect> implementingClasses) throws Exception {
 		
 		//Get a unique causing elements
 		HashSet<Element> set = new HashSet();
-		for (CauseEffect ce : registrars) {
+		for (CauseEffect ce : implementingClasses) {
 			set.add(ce.causeElement);
 		}
 		
@@ -165,29 +190,16 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		//seems that non-Java files are not copied over from the SOURCE_OUTPUT
 		//location.
 		FileObject svsFile = filer.createResource(
-				CLASS_OUTPUT, SERVICES_PACKAGE, PROP_REG_SVS_RELATIVE_NAME, set.toArray(new Element[set.size()]));
+				CLASS_OUTPUT, SERVICES_PACKAGE, SERVICE_REGISTRY_META_DIR + fullyQualifiedServiceInterfaceName,
+				set.toArray(new Element[set.size()]));
 
 		try (Writer writer = svsFile.openWriter()) {
-			for (CauseEffect ce : registrars) {
+			for (CauseEffect ce : implementingClasses) {
 				writer.write(ce.fullClassName);
 				writer.write(System.lineSeparator());
 			}
 		}
 		
-		LOG.trace("Wrote service registry log ''{0}'' to the location StandardLocation.CLASS_OUTPUT", PROP_REG_SVS_RELATIVE_NAME);
-	}
-	
-	public void writeServiceInitFile(Filer filer, CauseEffect initClass) throws Exception {
-		//The CLASS_OUTPUT location is used instead of SOURCE_OUTPUT because it
-		//seems that non-Java files are not copied over from the SOURCE_OUTPUT
-		//location.
-		FileObject svsFile = filer.createResource(CLASS_OUTPUT, SERVICES_PACKAGE, INIT_SVS_RELATIVE_NAME, initClass.causeElement);
-
-		try (Writer writer = svsFile.openWriter()) {
-			writer.write(initClass.fullClassName);
-		}
-		
-		LOG.trace("Wrote init service registry ''{0}'' to the location StandardLocation.CLASS_OUTPUT", INIT_SVS_RELATIVE_NAME);
 	}
 	
 	/**
