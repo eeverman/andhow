@@ -6,9 +6,9 @@
 		<version>0.4.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>andhow</artifactId>
+	<artifactId>andhow-core</artifactId>
 	<packaging>jar</packaging>
-	<name>AndHow</name>
+	<name>AndHow Core</name>
 	<description>
 		Simple typed and validated configuration loading for web apps, command line or any environment application.
 	</description>
