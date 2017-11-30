@@ -56,6 +56,14 @@ public interface StaticPropertyConfiguration {
 	 * @return An unmodifiable list of registered properties.
 	 */
 	List<Property<?>> getProperties();
+	
+	/**
+	 * Returns true if any of the registered groups are user groups.
+	 * 
+	 * False would indicate that no user groups were found or explicitly registered.
+	 * @return 
+	 */
+	boolean containsUserGroups();
 
 	/**
 	 * Returns a list of Properties registered in the passed group.

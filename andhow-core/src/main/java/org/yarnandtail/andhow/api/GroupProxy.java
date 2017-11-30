@@ -80,4 +80,17 @@ public interface GroupProxy {
 	 * @return 
 	 */
 	String getCanonicalName(Property<?> memberProperty);
+	
+	/**
+	 * Returns true if this is a group created for user properties, which is
+	 * the typical case.
+	 * 
+	 * Returns false if this is an internally created group for loader properties
+	 * or groups used to configure AndHow itself.  In some reports it is useful
+	 * to differentiate the groups and properties the user actually created vs
+	 * the ones that are just part of the system.
+	 * 
+	 * @return 
+	 */
+	boolean isUserGroup();
 }

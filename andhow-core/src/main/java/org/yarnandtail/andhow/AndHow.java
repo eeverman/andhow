@@ -203,6 +203,11 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public List<GroupProxy> getPropertyGroups() {
 		return core.getPropertyGroups();
 	}
+	
+	@Override
+	public boolean containsUserGroups() {
+		return core.containsUserGroups();
+	}
 
 	@Override
 	public List<Property<?>> getProperties() {

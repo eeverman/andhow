@@ -9,6 +9,7 @@ import org.yarnandtail.andhow.internal.NameAndProperty;
  */
 public abstract class GroupProxyBase implements GroupProxy {
 
+	private final boolean userGroup;
 	private final String canonicalName;
 	private final String javaCanonicalName;
 	protected final List<NameAndProperty> props;
@@ -23,12 +24,29 @@ public abstract class GroupProxyBase implements GroupProxy {
 		this.canonicalName = canonicalName;
 		this.javaCanonicalName = javaCanonicalName;
 		props = new ArrayList();
+		userGroup = true;
+	}
+	
+	public GroupProxyBase(String canonicalName, String javaCanonicalName, boolean userGroup) {
+		this.canonicalName = canonicalName;
+		this.javaCanonicalName = javaCanonicalName;
+		props = new ArrayList();
+		this.userGroup = userGroup;
 	}
 	
 	public GroupProxyBase(String canonicalName, String javaCanonicalName, List<NameAndProperty> props) {
 		this.canonicalName = canonicalName;
 		this.javaCanonicalName = javaCanonicalName;
 		this.props = props;
+		userGroup = true;
+	}
+	
+	public GroupProxyBase(String canonicalName, String javaCanonicalName, 
+			List<NameAndProperty> props, boolean userGroup) {
+		this.canonicalName = canonicalName;
+		this.javaCanonicalName = javaCanonicalName;
+		this.props = props;
+		this.userGroup = userGroup;
 	}
 
 	@Override
@@ -74,6 +92,11 @@ public abstract class GroupProxyBase implements GroupProxy {
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean isUserGroup() {
+		return userGroup;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProblem;
 import org.yarnandtail.andhow.util.*;
 
 /**
@@ -22,6 +23,21 @@ public class ReportGenerator {
 			printProblemHR(out);
 			out.println(TextUtil.padRight("== Problem report from " + AndHow.ANDHOW_NAME + "  " + AndHow.ANDHOW_TAG_LINE + "  ", "=", DEFAULT_LINE_WIDTH));
 			out.println(TextUtil.padRight(TextUtil.repeat("=", 50) + "  " + AndHow.ANDHOW_URL + " ", "=", ReportGenerator.DEFAULT_LINE_WIDTH));
+			
+			if (! appDef.containsUserGroups()) {
+				if (! fatalException.getProblems().filter(UnknownPropertyLoaderProblem.class).isEmpty()) {
+					TextUtil.println(out, DEFAULT_LINE_WIDTH, "", 
+						"No AndHow Properties are registered and there were some "
+						+ "values for unrecognized property names. It may be that "
+						+ "org.yarnandtail:andhow-annotation-processor is not on the classpath "
+						+ "at compile time.  If it was not on the classpath, "
+						+ "AndHow Properties in source code were not discovered and registered. "
+						+ "To resolve, add org.yarnandtail:andhow-annotation-processor "
+						+ "as a dependency at least at compile time."
+					);
+				}	
+			}
+			
 			printConstructionProblems(out, fatalException.getProblems().filter(ConstructionProblem.class), appDef);
 			printLoaderProblems(out, fatalException.getProblems().filter(LoaderProblem.class), appDef);
 			printValueProblems(out, fatalException.getProblems().filter(ValueProblem.class), appDef);

@@ -19,6 +19,10 @@ public class GroupProxyMutable extends GroupProxyBase {
 		super(canonicalName, javaCanonicalName);
 	}
 	
+	public GroupProxyMutable(String canonicalName, String javaCanonicalName, boolean userGroup) {
+		super(canonicalName, javaCanonicalName, userGroup);
+	}
+	
 	public void addProperty(NameAndProperty prop) {
 		props.add(prop);
 	}

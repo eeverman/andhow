@@ -20,4 +20,9 @@ public class GroupProxyImmutable extends GroupProxyBase {
 		super(canonicalName, javaCanonicalName, props);
 	}
 	
+	public GroupProxyImmutable(String canonicalName, String javaCanonicalName, 
+			List<NameAndProperty> props, boolean userGroup) {
+		super(canonicalName, javaCanonicalName, props, userGroup);
+	}
+	
 }

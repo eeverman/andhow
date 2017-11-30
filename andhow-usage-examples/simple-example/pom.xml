@@ -16,14 +16,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-core</artifactId>
+			<artifactId>andhow</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-annotation-processor</artifactId>
-			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
