@@ -14,6 +14,14 @@ package org.yarnandtail.andhow.api;
 public interface LookupLoader {
 	
 	/**
+	 * If true, failing to initialize the environment needed to lookup values is
+	 * considered a problem/error.
+	 * 
+	 * @param isAProblem 
+	 */
+	void setFailedEnvironmentAProblem(boolean isAProblem);
+	
+	/**
 	 * If true, then a failure to initiate or connect to the needed environment
 	 * or external system will result in a failure and it will register a
 	 * 'Propblem' during load which will cause application initiation to stop.

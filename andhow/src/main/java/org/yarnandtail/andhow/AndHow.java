@@ -4,15 +4,24 @@ import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
-import org.yarnandtail.andhow.load.*;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
+import org.yarnandtail.andhow.service.InitLoader;
 
 /**
- *
+ * Central AndHow singleton class.
+ * 
+ * This class is not directly constructed.  The primary way to configure an
+ * instance is indirectly by simply creating a subclass of org.yarnandtail.andhow.AndHowInit.
+ * At startup, AndHow finds your AndHowInit implementation and uses it to configure
+ * a single instance.
+ * 
+ * Alternatively, you can directly create a AndHowConfiguration instance and
+ * pass it to AndHow.instance().  StdConfig can be used to do that like this:
+ * <code>
+ * AndHow.instance( StdConfig.instance().addCmdLineArgs(args) );
+ * </code>
  * @author eeverman
  */
-public class AndHow implements StaticPropertyConfiguration, PropertyValues {
+public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 	//
 	//A few app-wide constants
@@ -21,10 +30,10 @@ public class AndHow implements StaticPropertyConfiguration, PropertyValues {
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 
-	private static AndHow singleInstance;
+	private static volatile AndHow singleInstance;
 	private static final Object LOCK = new Object();
 
-	private final AndHowCore core;
+	private volatile AndHowCore core;
 
 	/**
 	 * Private constructor - Use the AndHowBuilder to build instances.
@@ -40,130 +49,110 @@ public class AndHow implements StaticPropertyConfiguration, PropertyValues {
 	private AndHow(NamingStrategy naming, List<Loader> loaders,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
-		
+
 		synchronized (LOCK) {
 			core = new AndHowCore(naming, loaders, registeredGroups);
 		}
 	}
 
-	/**
-	 * Returns a builder that can be used one time to build the AndHow instance.
-	 *
-	 * @return A builder instance
-	 */
-	public static AndHowBuilder builder() {
-		return new AndHowBuilder();
+	private AndHow(AndHowConfiguration config) throws AppFatalException {
+		synchronized (LOCK) {
+			core = new AndHowCore(
+					config.getNamingStrategy(),
+					config.buildLoaders(),
+					config.getRegisteredGroups());
+		}
 	}
-	
-	private static final String PARTIAL_CONSTRUCT_MSG =
-			"AndHow is in an invalid state, trying to recover from partially initialization. "
-			+ "This most likely happens during multi-thread testing "
-			+ "using the AndHowNonProduction utility, which partially "
-			+ "destroys the AndHow framework so it can be re-initialized "
-			+ "for each test.  Alternately, AndHow could be partially "
-			+ "destructed via reflection.";
 
-	public static AndHow instance() {
+	private static AndHowConfiguration findConfiguration() throws AppFatalException {
+		InitLoader il = new InitLoader();
+		List<AndHowInit> inits = il.getInitiators();
+
+		switch (inits.size()) {
+			case 0:
+				return StdConfig.instance();
+			case 1:
+				return inits.get(0).getConfiguration();
+			default:
+				throw new AppFatalException("Unexpected multiple init classes");
+
+		}
+	}
+
+	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
 			synchronized (LOCK) {
+				if (singleInstance == null || singleInstance.core == null) {
+					return instance(findConfiguration());
+				} else {
+					return singleInstance;
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Used internally only when it is known that the AndHow instance or its
+	 * core is null.
+	 *
+	 * @param config
+	 * @return
+	 * @throws AppFatalException
+	 */
+	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+		synchronized (LOCK) {
+
+			if (singleInstance != null && singleInstance.core != null) {
+				throw new AppFatalException("Cannot request construction of new "
+						+ "AndHow instance when there is an existing instance.");
+			} else {
+
 				if (singleInstance == null) {
-					build(null, null, null);
+
+					singleInstance = new AndHow(config);
+
 				} else if (singleInstance.core == null) {
-					
-				/*	This is a concession for testing.  During testing the
+
+					/*	This is a concession for testing.  During testing the
 					core is deleted to force AndHow to reload.  Its really an
 					invalid state (instance and core should be null/non-null
-					together, but its handled here to simplify testing.
-				*/
+					together, but its handled here to simplify testing.  */
 					try {
-						AndHowCore newCore = new AndHowCore(null, getDefaultLoaders(),
-								new PropertyRegistrarLoader().getGroups());
+
+						AndHowCore newCore = new AndHowCore(
+								config.getNamingStrategy(),
+								config.buildLoaders(),
+								config.getRegisteredGroups());
 						Field coreField = AndHow.class.getDeclaredField("core");
 						coreField.setAccessible(true);
 						coreField.set(singleInstance, newCore);
+
 					} catch (Exception ex) {
 						if (ex instanceof AppFatalException) {
-							throw (AppFatalException)ex;
+							throw (AppFatalException) ex;
 						} else {
-							throwFatal(PARTIAL_CONSTRUCT_MSG, ex);
+							throwFatal(ex);
 						}
 					}
 
 				}
 				return singleInstance;
+
 			}
 
-		}
+		}	//end sync
 	}
 
 	/**
-	 * Returns a list of new loaders that are used for default configuration.
-	 *
-	 * @param cmdLineArgs Optional command line arguments to be passed to the
-	 * StringArgumentLoader. These would be the Stringp[] args passed to the
-	 * main method at startup.
-	 * @return
-	 */
-	public static List<Loader> getDefaultLoaders(String... cmdLineArgs) {
-		List<Loader> loaders = new ArrayList();
-		loaders.add(new CommandLineArgumentLoader(cmdLineArgs));
-		loaders.add(new SystemPropertyLoader());
-		loaders.add(new JndiLoader(false));
-		loaders.add(new EnviromentVariableLoader());
-		loaders.add(new AndHowPropertyFileLoader());
-		return loaders;
-	}
-	
-	/**
 	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	public static boolean isInitialize() {
 		return singleInstance != null && singleInstance.core != null;
-	}
-
-	/**
-	 * Private build method, invoked only by the inner AndHowBuilder class.
-	 *
-	 * It will throw a RunTimeException if the singleton instance has already
-	 * been constructed.
-	 *
-	 * It returns a reference to the reloader, which can be used for reloading
-	 * during unit test (not for production).
-	 *
-	 * @param naming
-	 * @param loaders
-	 * @param registeredGroups
-	 * @return
-	 * @throws AppFatalException
-	 */
-	private static AndHow build(
-			NamingStrategy naming, List<Loader> loaders,
-			List<GroupProxy> registeredGroups)
-			throws AppFatalException, RuntimeException {
-
-		synchronized (LOCK) {
-			if (singleInstance != null) {
-				throwFatal("AndHow is already constructed!", null);
-				return null;
-			} else {
-				
-				if (loaders == null || loaders.isEmpty()) {
-					loaders = getDefaultLoaders();
-				}
-				
-				if (registeredGroups == null || registeredGroups.isEmpty()) {
-					PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-					registeredGroups = registrar.getGroups();
-				}
-				
-				singleInstance = new AndHow(naming, loaders, registeredGroups);
-				return singleInstance;
-			}
-		}
 	}
 
 	//
@@ -230,22 +219,14 @@ public class AndHow implements StaticPropertyConfiguration, PropertyValues {
 		return core.getNamingStrategy();
 	}
 
-	@Override
-	public Map<String, String> getSystemEnvironment() {
-		return core.getSystemEnvironment();
+	private static void throwFatal(Throwable throwable) {
+		throwFatal("", throwable);
 	}
 	
 	/**
 	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user
-	 * code of the build.
-	 *
-	 * @param message
-	 */
-	/**
-	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user
-	 * code of the build.
+	 * remove 2 method calls, which should put the stacktrace at the user code
+	 * of the build.
 	 *
 	 * @param message
 	 */
@@ -259,208 +240,6 @@ public class AndHow implements StaticPropertyConfiguration, PropertyValues {
 			stes = Arrays.copyOfRange(stes, 2, stes.length);
 			afe.setStackTrace(stes);
 			throw afe;
-		}
-	}
-
-	/**
-	 * A builder class, which is the only supported way to construct an AndHow
-	 * instance.
-	 *
-	 * Once an AndHow instance is built, it can never be rebuilt or
-	 * reconfigured**.,
-	 *
-	 * The builder code is intended to be concise and readable in use. Thus,
-	 * 'set' or 'add' is dropped from method name prefixes where possible.
-	 *
-	 * For single valued properties, like namingStrategy, calling
-	 * namingStrategy(new ANamingStrategy()) sets the value. For attributes that
-	 * takes lists of of values, there are methods that add single values or
-	 * multiple values, e.g. for PropertyGroups, calling
-	 * <code>builder.group(SomeGroup.class)</code> would add a single group,
-	 * <code>builder.groups(aListOfGroups)</code> would add an entire list.
-	 *
-	 * Usage always starts with AndHow.builder() and ends with build():
-	 * <pre>
-	 * {@code
-	 * AndHow.builder()
-	 * .loader(new PropFileLoader)
-	 * .group(SomeGroup.class)
-	 * .group(SomeOtherGroup.class)
-	 * .addCmdLineArgs([Array of cmd line arguments])
-	 * .build();
-	 * }
-	 * </pre>
-	 *
-	 * There is no return value because there is no need to hold a reference to
-	 * anything past framework startup. After a successful startup, Property
-	 * values can be read directly. For instance, for a Property named 'MyInt':
-	 * {@code Integer value = MyInt.getValue();}
-	 *
-	 * Attempting to call build() a 2nd time will throw a RuntimeException, so
-	 * it is important that a single entry and configuration loading point to
-	 * your application is well defined.
-	 *
-	 **See buildForNonPropduction() for a small backdoor for unit testing,
-	 * which provides a non-production, unsupported way to force the AndHow
-	 * framework to reload its state.
-	 *
-	 * @author eeverman
-	 */
-	public static class AndHowBuilder {
-
-		//User config
-		private final List<Loader> _loaders = new ArrayList();
-		private NamingStrategy _namingStrategy = null;
-		private final List<String> _cmdLineArgs = new ArrayList();
-
-		//
-		//The position at which the cmd line loader should be added.
-		//May be null if not needed.
-		private Integer addCmdLineLoaderAtPosition = null;
-
-		/**
-		 * Add a loader to the list of loaders. Loaders are used in the order
-		 * added with the first found value 'winning'.
-		 *
-		 * Adding a loader in the way wipes out the list of default loaders.
-		 *
-		 * @param loader
-		 * @return
-		 */
-		public AndHowBuilder loader(Loader loader) {
-
-			if (loader instanceof CommandLineArgumentLoader) {
-				throw new RuntimeException("The ComandLineArgLoader cannot be "
-						+ "directly added to the list of loaders. "
-						+ "Use cmdLineArgs() to add arguments instead.");
-			}
-			_loaders.add(loader);
-			return this;
-		}
-
-		/**
-		 * Add a list of loaders to the list being built. Loaders are used in
-		 * the order added.
-		 *
-		 * @param loaders
-		 * @return
-		 */
-		public AndHowBuilder loaders(Collection<Loader> loaders) {
-
-			for (Loader ldr : loaders) {
-				loader(ldr);
-			}
-
-			return this;
-		}
-
-
-		/**
-		 * Adds the command line arguments, keeping any previously added.
-		 *
-		 * If loaders are never explicitly added, the commandline loader will
-		 * be kept in its standard location in the default loader list.
-		 * If loader were explicitly added, the command line loader will be
-		 * implicitly added at the point at which addCmdLineArg is called in
-		 * relation to the addition of the other loaders.
-		 *
-		 * @param commandLineArgs
-		 * @return
-		 */
-		public AndHowBuilder addCmdLineArgs(String[] commandLineArgs) {
-			
-			if (commandLineArgs != null && commandLineArgs.length > 0) {
-				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
-
-				//Record where the cmd line loader should go, if not already determined
-				if (addCmdLineLoaderAtPosition == null) {
-					addCmdLineLoaderAtPosition = _loaders.size();
-				}
-			}
-
-			return this;
-		}
-
-		/**
-		 * Adds a command line argument in key=value form.
-		 *
-		 * If the value is null, only the key is added (ie its a flag).
-		 * 
-		 * If loaders are never explicitly added, the commandline loader will
-		 * be kept in its standard location in the default loader list.
-		 * If loader were explicitly added, the command line loader will be
-		 * implicitly added at the point at which addCmdLineArg is called in
-		 * relation to the addition of the other loaders.
-		 *
-		 * @param key
-		 * @param value
-		 * @return
-		 */
-		public AndHowBuilder addCmdLineArg(String key, String value) {
-
-			if (value != null) {
-				_cmdLineArgs.add(key + StringArgumentLoader.KVP_DELIMITER + value);
-			} else {
-				_cmdLineArgs.add(key);
-			}
-
-			//Record where the cmd line loader should go, if not already determined
-			if (addCmdLineLoaderAtPosition == null) {
-				addCmdLineLoaderAtPosition = _loaders.size();
-			}
-
-			return this;
-		}
-
-		/**
-		 * Sets the naming strategy, which determines how the property names are
-		 * realized when used in config files, JNDI and cmd line arguments.
-		 *
-		 * If unspecified, CaseInsensitiveNaming is used.
-		 *
-		 * @param namingStrategy
-		 * @return
-		 */
-		public AndHowBuilder namingStrategy(NamingStrategy namingStrategy) {
-			this._namingStrategy = namingStrategy;
-			return this;
-		}
-
-		/**
-		 * Executes the AndHow framework startup.
-		 *
-		 * There is no return value because there is no need to hold a reference
-		 * to anything past framework startup. After a successful startup,
-		 * Property values can be read directly. For instance, for a property
-		 * named 'MyInt': {@code Integer value = MyInt.getValue();}
-		 *
-		 * @throws AppFatalException If the startup fails.
-		 */
-		public void build() throws AppFatalException {
-			populateLoaderList();
-			AndHow.build(_namingStrategy, _loaders, null);
-		}
-
-		
-		private void populateLoaderList() {
-			if (_loaders.isEmpty()) {
-				_loaders.addAll(AndHow.getDefaultLoaders(_cmdLineArgs.toArray(new String[_cmdLineArgs.size()])));
-			}
-			
-			//Find or add a cmdLineArgLoader, populate it w/ the cmdLineArgs
-			int existingCmdLoader = -1;
-			for (int i = 0; i < _loaders.size(); i++) {
-				if (_loaders.get(i) instanceof CommandLineArgumentLoader) {
-					existingCmdLoader = i;
-					break;
-				}
-			}
-
-			if (existingCmdLoader > -1) {
-				_loaders.set(existingCmdLoader, new CommandLineArgumentLoader(_cmdLineArgs));
-			} else if (addCmdLineLoaderAtPosition != null) {
-				_loaders.add(addCmdLineLoaderAtPosition, new CommandLineArgumentLoader(_cmdLineArgs));
-			}
 		}
 	}
 

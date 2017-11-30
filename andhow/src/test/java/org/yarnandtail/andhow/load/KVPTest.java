@@ -12,11 +12,11 @@ public class KVPTest {
 	
 	@Test
 	public void splitKVPGoodEmptyArgs() throws Exception {
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("", StringArgumentLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("    ", StringArgumentLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t ", StringArgumentLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t\n\r\f ", StringArgumentLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \b ", StringArgumentLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("", KeyValuePairLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("    ", KeyValuePairLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t ", KeyValuePairLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t\n\r\f ", KeyValuePairLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \b ", KeyValuePairLoader.KVP_DELIMITER));
 	}
 	
 	@Test
@@ -24,35 +24,35 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("1", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("1", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("1a1", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("1a1", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("1a1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  1a1   ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  1a1   ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("1a1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("\"1\"", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("\"1\"", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("\"1\"", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("\'1\'", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("\'1\'", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("\'1\'", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP(" \t!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|  \t\n\r\f ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP(" \t!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|  \t\n\r\f ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  1\t1   ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  1\t1   ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("1\t1", kvp.getName());
 		assertNull(kvp.getValue());
 	}
@@ -62,19 +62,19 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag=value", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=value", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertEquals("value", kvp.getValue());
 		
-		kvp = KVP.splitKVP("  \t flag \t  =  \t value \t  ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  \t flag \t  =  \t value \t  ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertEquals("value", kvp.getValue());
 		
-		kvp = KVP.splitKVP("   flag   =    ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("   flag   =    ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  fl \t ag \r = \n val \t ue  ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  fl \t ag \r = \n val \t ue  ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("fl \t ag", kvp.getName());
 		assertEquals("val \t ue", kvp.getValue());
 	}
@@ -84,15 +84,15 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag=val=ue", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=val=ue", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertEquals("val=ue", kvp.getValue());
 		
-		kvp = KVP.splitKVP("flag=v=a=l=u=e", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=v=a=l=u=e", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertEquals("v=a=l=u=e", kvp.getValue());
 		
-		kvp = KVP.splitKVP("flag = v = a = l = u = e ", StringArgumentLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag = v = a = l = u = e ", KeyValuePairLoader.KVP_DELIMITER);
 		assertEquals("flag", kvp.getName());
 		assertEquals("v = a = l = u = e", kvp.getValue());
 		
@@ -100,32 +100,32 @@ public class KVPTest {
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadEmptyFlagName() throws Exception {
-		KVP.splitKVP("=value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("=value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadSpaceOnlyFlagName() throws Exception {
-		KVP.splitKVP("  =value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("  =value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadAllSpaceAndTabFlagName() throws Exception {
-		KVP.splitKVP("   \t =value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("   \t =value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadAllWhitespaceAndNewLinesFlagName() throws Exception {
-		KVP.splitKVP("   \t\n\r\f = value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("   \t\n\r\f = value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadAllBackspaceFlagName() throws Exception {
-		KVP.splitKVP("\b =value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("\b =value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test(expected=ParsingException.class)
 	public void splitKVPBadAllWhitespaceAndBackspaceFlagName() throws Exception {
-		KVP.splitKVP("   \b  =value", StringArgumentLoader.KVP_DELIMITER);
+		KVP.splitKVP("   \b  =value", KeyValuePairLoader.KVP_DELIMITER);
 	}
 	
 	@Test

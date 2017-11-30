@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -49,11 +49,11 @@ public class AndHowTest extends AndHowTestBase {
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 		
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + StringArgumentLoader.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + StringArgumentLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + StringArgumentLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + StringArgumentLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + StringArgumentLoader.KVP_DELIMITER + "true"
+			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
+			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
+			paramFullPath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false",
+			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
+			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
 		};
 		
 	}
@@ -67,11 +67,10 @@ public class AndHowTest extends AndHowTestBase {
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
-		AndHowNonProduction.builder()
-				.namingStrategy(basicNaming)
+		NonProductionConfig.instance()
 				.groups(configPtGroups)
 				.addCmdLineArgs(cmdLineArgsWFullClassName)
-				.build();
+				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -92,16 +91,15 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 		
-		List<Loader> loaders = new ArrayList();
-		loaders.add(new StringArgumentLoader(cmdLineArgsWFullClassName));
+		KeyValuePairLoader kvpl = new KeyValuePairLoader();
+		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
 		
 		try {
 
-			AndHowNonProduction.builder()
-				.loaders(loaders)
-				.loader(loaders.get(0))
+			NonProductionConfig.instance()
+				.setLoaders(kvpl, kvpl)
 				.groups(configPtGroups)
-				.build();
+				.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -109,7 +107,7 @@ public class AndHowTest extends AndHowTestBase {
 			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
 			
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
-			assertEquals(loaders.get(0), dl.getLoader());
+			assertEquals(kvpl, dl.getLoader());
 			assertTrue(ce.getSampleDirectory().length() > 0);
 			
 			File sampleDir = new File(ce.getSampleDirectory());
@@ -122,12 +120,11 @@ public class AndHowTest extends AndHowTestBase {
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
 
 		try {
-				AndHowNonProduction.builder()
-					.namingStrategy(basicNaming)
+				NonProductionConfig.instance()
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
 					.addCmdLineArgs(cmdLineArgsWFullClassName)
-					.build();
+					.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -142,11 +139,11 @@ public class AndHowTest extends AndHowTestBase {
 		baseName += "." + RequiredParams.class.getSimpleName() + ".";
 		
 		try {
-				AndHowNonProduction.builder()
+				NonProductionConfig.instance()
 					.group(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present")
-					.build();
+					.forceBuild();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

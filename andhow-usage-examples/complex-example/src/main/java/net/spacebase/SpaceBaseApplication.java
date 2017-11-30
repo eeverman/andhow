@@ -25,7 +25,7 @@ public class SpaceBaseApplication {
 	 * @param args 
 	 */
 	public static void main(String[] args) {
-		AndHow.builder().addCmdLineArgs(args).build();
+		AndHow.instance( StdConfig.instance().addCmdLineArgs(args) );
 		
 		System.out.println("Spacebase App is started!");
 		singleton = new SpaceBaseApplication();

@@ -109,17 +109,5 @@ public interface StaticPropertyConfiguration {
 	 * @return The NamingStrategy in use.
 	 */
 	NamingStrategy getNamingStrategy();
-	
-	/**
-	 * Handles access to System.getEnv().
-	 * 
-	 * Nominally this is the same as calling System.getEnv(), but allows for
-	 * testing by making it possible to inject values into System.getEnv().
-	 * Implementations may also augment or trim down environment variables if
-	 * needed.
-	 * 
-	 * @return A map containing the system env at the time of startup.
-	 */
-	Map<String, String> getSystemEnvironment();
 
 }

@@ -42,7 +42,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param key The property name
 	 * @param strValue The property value 
 	 */
-	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<ValidatedValue> values, 
 			ProblemList<Problem> loaderProblems, String key, String strValue) {
 		
 		key = TextUtil.trimToNull(key);
@@ -55,7 +55,7 @@ public abstract class BaseLoader implements Loader {
 
 			if (prop != null) {
 				
-				PropertyValue pv = null;
+				ValidatedValue pv = null;
 				
 				try {
 					pv = createValue(appConfigDef, prop, strValue);
@@ -65,7 +65,7 @@ public abstract class BaseLoader implements Loader {
 				}
 								
 				if (pv != null) {
-					PropertyValue dup = findDuplicateProperty(pv, values);
+					ValidatedValue dup = findDuplicateProperty(pv, values);
 
 					if (dup == null) {
 						values.add(pv);
@@ -77,7 +77,7 @@ public abstract class BaseLoader implements Loader {
 				
 			} else if (this instanceof ReadLoader) {
 				ReadLoader rl = (ReadLoader)this;
-				if (rl.isUnrecognizedPropertyNamesConsideredAProblem()) {
+				if (rl.isUnknownPropertyAProblem()) {
 					loaderProblems.add(new UnknownPropertyLoaderProblem(this, key));
 				}
 			}
@@ -99,16 +99,16 @@ public abstract class BaseLoader implements Loader {
 	 * @param prop The Property to load to
 	 * @param value The Object to be loaded to this property
 	 */
-	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<PropertyValue> values, 
+	protected void attemptToAdd(StaticPropertyConfiguration appConfigDef, List<ValidatedValue> values, 
 			ProblemList<Problem> loaderProblems, Property prop, Object value) {
 		
 		if (prop != null) {
 			
-			PropertyValue pv = null;
+			ValidatedValue pv = null;
 			
 			if (value.getClass().equals(prop.getValueType().getDestinationType())) {
 
-				pv = new PropertyValue(prop, value);
+				pv = new ValidatedValue(prop, value);
 
 			} else if (value instanceof String) {
 
@@ -126,7 +126,7 @@ public abstract class BaseLoader implements Loader {
 			
 			if (pv != null) {
 				
-				PropertyValue dup = findDuplicateProperty(pv, values);
+				ValidatedValue dup = findDuplicateProperty(pv, values);
 				
 				if (dup == null) {
 					values.add(pv);
@@ -139,8 +139,8 @@ public abstract class BaseLoader implements Loader {
 		}
 	}
 	
-	protected PropertyValue findDuplicateProperty(PropertyValue current, List<PropertyValue> values) {
-		for (PropertyValue ref : values) {
+	protected ValidatedValue findDuplicateProperty(ValidatedValue current, List<ValidatedValue> values) {
+		for (ValidatedValue ref : values) {
 			if (current.getProperty().equals(ref.getProperty())) {
 				return ref;
 			}
@@ -148,7 +148,7 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
-	protected <T> PropertyValue createValue(StaticPropertyConfiguration appConfigDef, 
+	protected <T> ValidatedValue createValue(StaticPropertyConfiguration appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
 		T value = null;
@@ -170,7 +170,12 @@ public abstract class BaseLoader implements Loader {
 			return null;	//No value to create
 		}
 		
-		return new PropertyValue(prop, value);
+		return new ValidatedValue(prop, value);
+	}
+	
+	@Override
+	public void releaseResources() {
+		//Nothing to do by default
 	}
 	
 }

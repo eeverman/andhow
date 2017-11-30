@@ -1,12 +1,7 @@
 package org.yarnandtail.andhow.property;
 
 import java.util.*;
-import org.yarnandtail.andhow.AndHowNonProduction;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.*;
-import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -29,14 +24,14 @@ public class PropertyTestBase extends AndHowTestBase {
 		
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);
-				
-		AndHowNonProduction.builder()
+		
+		NonProductionConfig.instance()
 				.group(TEST_CONFIG.class)
 				.groups(groups)
-				.loader(new FixedValueLoader(new PropertyValue(TEST_CONFIG.PROP_FILE, propFilePath)))
-				.loader(new PropertyFileOnClasspathLoader(TEST_CONFIG.PROP_FILE))
-				.build();
-
+				.addFixedValue(TEST_CONFIG.PROP_FILE, propFilePath)
+				.setClasspathPropFilePath(TEST_CONFIG.PROP_FILE)
+				.classpathPropertiesRequired()
+				.forceBuild();
 	}
 	
 	public static interface TEST_CONFIG extends PropertyGroup {

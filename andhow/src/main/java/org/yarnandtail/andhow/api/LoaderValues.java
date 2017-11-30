@@ -11,11 +11,11 @@ import java.util.List;
  * 
  * @author eeverman
  */
-public class LoaderValues implements PropertyValues {
-	public static final List<PropertyValue> EMPTY_PROP_VALUE_LIST = Collections.emptyList();
+public class LoaderValues implements ValidatedValues {
+	public static final List<ValidatedValue> EMPTY_PROP_VALUE_LIST = Collections.emptyList();
 	
 	private final Loader loader;
-	private final List<PropertyValue> values;
+	private final List<ValidatedValue> values;
 	private final ProblemList<Problem> problems;
 	
 	
@@ -45,7 +45,7 @@ public class LoaderValues implements PropertyValues {
 		values = EMPTY_PROP_VALUE_LIST;
 	}
 	
-	public LoaderValues(Loader loader, List<PropertyValue> inValues, ProblemList<Problem> problems) {
+	public LoaderValues(Loader loader, List<ValidatedValue> inValues, ProblemList<Problem> problems) {
 		
 		ProblemList<Problem> myProblems = new ProblemList();
 		myProblems.addAll(problems);
@@ -65,7 +65,7 @@ public class LoaderValues implements PropertyValues {
 			
 			
 			//check for value problems
-			for (PropertyValue pv : values) {
+			for (ValidatedValue pv : values) {
 				myProblems.addAll(pv.getProblems());
 			}
 			
@@ -80,7 +80,7 @@ public class LoaderValues implements PropertyValues {
 		return loader;
 	}
 
-	public List<PropertyValue> getValues() {
+	public List<ValidatedValue> getValues() {
 		return values;
 	}
 	

@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
@@ -273,6 +274,38 @@ public class AndHowUtil {
 
 		}
 
+		return null;
+	}
+	
+	/**
+	 * Hunts up the inheritance tree to find the specified method.
+	 * 
+	 * setAccessible(true) is called on the method if found.
+	 * 
+	 * If the method cannot be found, null is returned.  If a security restriction
+	 * prevents accessing the method, that SecurityException is thrown.
+	 * 
+	 * @param target The class to start searching from
+	 * @param name
+	 * @param parameterTypes
+	 * @return
+	 * @throws SecurityException 
+	 */
+	public static Method findMethod(Class<?> target, String name, Class<?>... parameterTypes) 
+			throws SecurityException {
+		
+		while (target != null) {
+			try {
+				Method m = target.getDeclaredMethod(name, parameterTypes);
+				m.setAccessible(true);
+				return m;
+			} catch (NoSuchMethodException ex) {
+				//expected
+			}
+			
+			target = target.getSuperclass();
+		}
+		
 		return null;
 	}
 

@@ -2,6 +2,7 @@ AndHow!  strong.valid.simple.AppConfiguration
 ======
 Strongly typed configuration with detailed validation that is simple to use
 for web apps, command line or any application environment.
+Configuration by convention.
 
 Key Features
 --------------

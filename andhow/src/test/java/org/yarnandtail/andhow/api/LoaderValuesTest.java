@@ -23,9 +23,9 @@ public class LoaderValuesTest {
 	@Test
 	public void testNullHandlingOfValues() {
 		
-		ArrayList<PropertyValue> evl = new ArrayList();
-		evl.add(new PropertyValue(TestProps.CLAZZ_PATH, null));
-		LoaderValues existing = new LoaderValues(new StringArgumentLoader(new String[]{}), evl, new ProblemList<Problem>());
+		ArrayList<ValidatedValue> evl = new ArrayList();
+		evl.add(new ValidatedValue(TestProps.CLAZZ_PATH, null));
+		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
 		
 		assertFalse(existing.isExplicitlySet(TestProps.CLAZZ_PATH));
 		assertNull(existing.getExplicitValue(TestProps.CLAZZ_PATH));

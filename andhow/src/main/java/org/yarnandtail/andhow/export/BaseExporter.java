@@ -44,18 +44,18 @@ public abstract class BaseExporter implements Exporter {
 	 * @param values 
 	 */
 	public abstract <T> void doExport(String name, Property<T> property, 
-			StaticPropertyConfiguration definition, PropertyValues values);
+			StaticPropertyConfiguration definition, ValidatedValues values);
 		
 	
 	@Override
-	public void export(StaticPropertyConfiguration definition, PropertyValues values) {
+	public void export(StaticPropertyConfiguration definition, ValidatedValues values) {
 		for (GroupProxy pg : definition.getPropertyGroups()) {
 			export(pg, definition, values);
 		}
 	}
 
 	@Override
-	public void export(GroupProxy group, StaticPropertyConfiguration definition, PropertyValues values) {
+	public void export(GroupProxy group, StaticPropertyConfiguration definition, ValidatedValues values) {
 		List<Property<?>> props = definition.getPropertiesForGroup(group);
 		
 		for (Property<?> prop : props) {
@@ -63,7 +63,7 @@ public abstract class BaseExporter implements Exporter {
 		}
 	}
 	
-	public void export(Property<?> property, StaticPropertyConfiguration definition, PropertyValues values) {
+	public void export(Property<?> property, StaticPropertyConfiguration definition, ValidatedValues values) {
 		
 		List<String> names = new ArrayList();
 		

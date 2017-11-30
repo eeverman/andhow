@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.load;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
 
 /**
@@ -17,29 +17,47 @@ import org.yarnandtail.andhow.api.*;
  */
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
-	List<PropertyValue> values;
+	protected boolean unknownPropertyAProblem = true;
+	
+	protected List<PropertyValue> values = new ArrayList();
 			
-	public FixedValueLoader(List<PropertyValue> values) {
-		this.values = values;
+	public FixedValueLoader() {
 	}
 	
-	public FixedValueLoader(PropertyValue... values) {
-		this.values = Arrays.asList(values);
+	public void setPropertyValues(List<PropertyValue> values) {
+		if (values != null) {
+			this.values.addAll(values);
+		}
+	}
+	
+	public void setPropertyValues(PropertyValue... values) {
+		if (values != null && values.length > 0) {
+			this.values.addAll(Arrays.asList(values));
+		}
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, PropertyValuesWithContext existingValues) {
-		return new LoaderValues(this, values, ProblemList.EMPTY_PROBLEM_LIST);
+	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+		
+		if (values != null && values.size() > 0) {
+			List<ValidatedValue> vvs = new ArrayList(values.size());
+			
+			for (int i = 0; i < values.size(); i++) {
+				ValidatedValue vv = new ValidatedValue(values.get(i).getProperty(), values.get(i).getValue());
+				vvs.add(vv);
+			}
+			
+			return new LoaderValues(this, vvs, ProblemList.EMPTY_PROBLEM_LIST);
+			
+		} else {
+			return new LoaderValues(this, Collections.emptyList(), ProblemList.EMPTY_PROBLEM_LIST);
+		}
+		
 	}
 	
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return false;
-	}
-	
-	@Override
-	public boolean isUnrecognizedPropertyNamesConsideredAProblem() {
-		return true;
 	}
 	
 	@Override
@@ -55,6 +73,21 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	@Override
 	public String getLoaderDialect() {
 		return "FromJavaSourceCode";
+	}
+
+	@Override
+	public void setUnknownPropertyAProblem(boolean isAProblem) {
+		unknownPropertyAProblem = isAProblem;
+	}
+	
+	@Override
+	public boolean isUnknownPropertyAProblem() {
+		return unknownPropertyAProblem;
+	}
+
+	@Override
+	public void releaseResources() {
+		values = null;
 	}
 	
 }

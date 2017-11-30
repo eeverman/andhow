@@ -17,6 +17,7 @@
 		<module>complex-example</module>
 		<module>force-print-config-example</module>
 		<module>simple-example</module>
+		<module>simple-custom-config</module>
 	</modules>
 	
 	<build>

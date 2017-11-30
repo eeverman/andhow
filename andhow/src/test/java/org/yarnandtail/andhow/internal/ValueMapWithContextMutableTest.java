@@ -8,8 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.PropertyFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.StringArgumentLoader;
+import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
+import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  *
@@ -20,26 +20,28 @@ public class ValueMapWithContextMutableTest {
 	@Test
 	public void testBuilder() {
 		
-		PropertyValuesWithContextMutable builder = new PropertyValuesWithContextMutable();
+		ValidatedValuesWithContextMutable builder = new ValidatedValuesWithContextMutable();
 		
-		Loader cmdLineLoad = new StringArgumentLoader(new String[]{});
-		Loader propFileLoad = new PropertyFileOnClasspathLoader(SimpleParams.STR_BOB);
+		Loader cmdLineLoad = new KeyValuePairLoader();
+		PropFileOnClasspathLoader propFileLoad = new PropFileOnClasspathLoader();
+		propFileLoad.setFilePath(SimpleParams.STR_BOB);
+		propFileLoad.setMissingFileAProblem(true);
 		
-		List<PropertyValue> firstSet = new ArrayList();
+		List<ValidatedValue> firstSet = new ArrayList();
 		
-		firstSet.add(new PropertyValue(SimpleParams.STR_BOB, "test"));
+		firstSet.add(new ValidatedValue(SimpleParams.STR_BOB, "test"));
 		//firstSet.put(SimpleParams.KVP_NULL, "not_null");
-		firstSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.FALSE));
-		firstSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.TRUE));
-		firstSet.add(new PropertyValue(SimpleParams.FLAG_NULL, Boolean.TRUE));
+		firstSet.add(new ValidatedValue(SimpleParams.FLAG_TRUE, Boolean.FALSE));
+		firstSet.add(new ValidatedValue(SimpleParams.FLAG_FALSE, Boolean.TRUE));
+		firstSet.add(new ValidatedValue(SimpleParams.FLAG_NULL, Boolean.TRUE));
 		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet, new ProblemList<Problem>());
 		
-		List<PropertyValue> secondSet = new ArrayList();
-		secondSet.add(new PropertyValue(SimpleParams.STR_BOB, "blah"));
-		secondSet.add(new PropertyValue(SimpleParams.STR_NULL, "blah"));
-		secondSet.add(new PropertyValue(SimpleParams.FLAG_TRUE, Boolean.TRUE));
-		secondSet.add(new PropertyValue(SimpleParams.FLAG_FALSE, Boolean.FALSE));
-		secondSet.add(new PropertyValue(SimpleParams.FLAG_NULL, Boolean.FALSE));
+		List<ValidatedValue> secondSet = new ArrayList();
+		secondSet.add(new ValidatedValue(SimpleParams.STR_BOB, "blah"));
+		secondSet.add(new ValidatedValue(SimpleParams.STR_NULL, "blah"));
+		secondSet.add(new ValidatedValue(SimpleParams.FLAG_TRUE, Boolean.TRUE));
+		secondSet.add(new ValidatedValue(SimpleParams.FLAG_FALSE, Boolean.FALSE));
+		secondSet.add(new ValidatedValue(SimpleParams.FLAG_NULL, Boolean.FALSE));
 		LoaderValues secondLoaderValues = new LoaderValues(propFileLoad, secondSet, new ProblemList<Problem>());
 		
 		builder.addValues(firstLoaderValues);
@@ -49,19 +51,19 @@ public class ValueMapWithContextMutableTest {
 		//Lists of stuff to test b/c lots of the tests deal w/ ensuring that the
 		//data is the same regardless of where we read it from
 		ArrayList<LoaderValues> lvsToTest = new ArrayList();
-		ArrayList<PropertyValues> acvsToTest = new ArrayList();
+		ArrayList<ValidatedValues> acvsToTest = new ArrayList();
 		
 		//
 		//Test basic class types
-		assertTrue(builder.getValueMapWithContextImmutable() instanceof PropertyValuesWithContextImmutable);
-		assertTrue(builder.getValueMapImmutable() instanceof PropertyValuesImmutable);
+		assertTrue(builder.getValueMapWithContextImmutable() instanceof ValidatedValuesWithContextImmutable);
+		assertTrue(builder.getValueMapImmutable() instanceof ValidatedValuesImmutable);
 		
 		//These should all be the values from the firstSet except KVP_NULL
 		acvsToTest.clear();
 		acvsToTest.add(builder);
 		acvsToTest.add(builder.getValueMapWithContextImmutable());
 		acvsToTest.add(builder.getValueMapImmutable());
-		for (PropertyValues acv : acvsToTest) {
+		for (ValidatedValues acv : acvsToTest) {
 			assertEquals("test", acv.getExplicitValue(SimpleParams.STR_BOB));
 			assertEquals("blah", acv.getExplicitValue(SimpleParams.STR_NULL));
 			assertEquals(false, acv.getExplicitValue(SimpleParams.FLAG_TRUE));
