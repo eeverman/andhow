@@ -12,7 +12,7 @@ import org.yarnandtail.andhow.*;
 public class ReallySimpleApp {
 	
 	public static void main(String[] args) {
-		AndHow.builder().addCmdLineArgs(args).build();
+		AndHow.instance( StdConfig.instance().addCmdLineArgs(args) );
 	
 		System.out.println("Examples of using the configured properties (they initially have default values)");
 		System.out.println("The query url is: " + MySetOfProps.SERVICE_URL.getValue());

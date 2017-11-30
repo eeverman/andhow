@@ -92,14 +92,9 @@ public class NonProductionConfig {
 				return _loaders;
 			}
 		}
-		
-		
 
 		public void forceBuild() {
-			AndHowNonProductionUtil.forceRebuild(
-					this.getNamingStrategy(),
-					this.buildLoaders(),
-					getRegisteredGroups());
+			AndHowNonProductionUtil.forceRebuild(this);
 		}
 	}
 }

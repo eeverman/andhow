@@ -77,31 +77,21 @@ public class AndHowNonProductionUtil {
 		}
 	}
 	
-	public static void forceRebuild(NamingStrategy namingStrategy,
-			List<Loader> loaders, List<GroupProxy> registeredGroups) {
+	public static void forceRebuild(AndHowConfiguration config) {
 
-		try {
-			AndHow ahInstance = getAndHowInstance();
+		AndHow ahInstance = getAndHowInstance();
 
-			if (ahInstance == null) {
-				//This is an uninitialized AndHow instance, initialize 'normally'
-				Method build = AndHow.class.getDeclaredMethod("build", NamingStrategy.class, List.class, List.class);
-				build.setAccessible(true);
-				build.invoke(null, namingStrategy, loaders, registeredGroups);
-			} else {
-				//AndHow is already initialized, so just reassign the core
+		if (ahInstance == null) {
 
-				AndHowCore core = new AndHowCore(namingStrategy, loaders, registeredGroups);
-				AndHowNonProductionUtil.setAndHowCore(core);
-			}
-		} catch (IllegalAccessException | NoSuchMethodException | IllegalArgumentException | InvocationTargetException ex) {
-			
-			if (ex.getCause() instanceof RuntimeException) {
-				throw (RuntimeException) ex.getCause();
-			} else {
-				throw new RuntimeException(PERMISSION_MSG, ex);
-			}
-				
+			//This is an uninitialized AndHow instance, initialize 'normally'
+			AndHow.instance(config);
+
+		} else {
+			//AndHow is already initialized, so just reassign the core
+
+			AndHowCore core = new AndHowCore(config.getNamingStrategy(), config.buildLoaders(), config.getRegisteredGroups());
+			AndHowNonProductionUtil.setAndHowCore(core);
+
 		}
 	}
 	
