@@ -58,7 +58,11 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 		
 		//Type for an AndHowTestInit
 		TypeElement testInitTypeElem = processingEnv.getElementUtils().getTypeElement(typeNameOfAndHowTestInit);
-		testInitTypeMirror = testInitTypeElem.asType();
+		if (testInitTypeElem != null) {
+			testInitTypeMirror = testInitTypeElem.asType();
+		} else {
+			testInitTypeMirror = null;
+		}
 
 	}
 
@@ -109,8 +113,11 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			compileUnit = new CompileUnit(e.getQualifiedName().toString());
 			
 			if (e.getKind().equals(ElementKind.CLASS) && ! e.getModifiers().contains(Modifier.ABSTRACT)) {
-				if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(testInitTypeMirror))) {
+				if (testInitTypeMirror != null &&
+						typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(testInitTypeMirror))) {
+					
 					compileUnit.setTestInitClass(true);
+					
 				} else if (typeUtils.isAssignable(typeUtils.erasure(e.asType()), typeUtils.erasure(initTypeMirror))) {
 					compileUnit.setInitClass(true);
 				}

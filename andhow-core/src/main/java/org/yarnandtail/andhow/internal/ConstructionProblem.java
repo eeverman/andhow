@@ -1,8 +1,10 @@
 package org.yarnandtail.andhow.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.AndHowInit;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.util.NameUtil;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -291,6 +293,30 @@ public abstract class ConstructionProblem implements Problem {
 			return TextUtil.format(
 					"Has a Validator of type {} that is not configured correctly: {}",
 				valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
+		}
+	}
+	
+	public static class TooManyAndHowInitInstances extends ConstructionProblem {
+		List<String> names = new ArrayList();
+
+		public TooManyAndHowInitInstances(List<? extends AndHowInit> instances) {
+			for (AndHowInit init : instances) {
+				names.add(init.getClass().getCanonicalName());
+			}
+		}
+
+		public List<String> getInstanceNames() {
+			return names;
+		}
+		
+		@Override
+		public String getProblemDescription() {
+			String joined = String.join(", ", names);
+			
+			return TextUtil.format(
+					"There can be only be one instance each of {} and AndHowTestInit on "
+						+ "the classpath, but multiple were found: {}",
+					AndHowInit.class.getCanonicalName(), joined);
 		}
 	}
 }

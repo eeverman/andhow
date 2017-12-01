@@ -4,11 +4,13 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.yarnandtail.andhow.GroupExport;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.internal.ConstructionProblem.TooManyAndHowInitInstances;
 import org.yarnandtail.andhow.internal.NameAndProperty;
+import org.yarnandtail.andhow.service.InitLoader;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -349,12 +351,72 @@ public class AndHowUtil {
 	 * @return 
 	 */
 	public static boolean classExists(String className) {
+		return getClassForName(className) != null;
+	}
+	
+	/**
+	 * Loads a class by name with no errors, returning null if the class cannot be found.
+	 * 
+	 * @param className
+	 * @return 
+	 */
+	public static Class<?> getClassForName(String className) {
 		try {
-			Class.forName(className);
-			return true;
+			return Class.forName(className);
 		} catch (Throwable ex) {
-			return false;
+			return null;
 		}
+	}
+	
+	/**
+	 * Creates a new Object instance from the named class using the default
+	 * no-arg constructor.
+	 * 
+	 * No errors are thrown, null if just returned if the class does not exist,
+	 * there is no no-arg constructor, so some other exception occurs.
+	 * 
+	 * @param className
+	 * @return 
+	 */
+	public static Object getClassInstanceForName(String className) {
+		Class<?> c = getClassForName(className);
+		
+		if (c != null) {
+			try {
+				return c.newInstance();
+			} catch (Throwable ex) {
+				//ignore
+			}
+		}
+		
+		return null;
+	}
+	
+	public static AndHowConfiguration findConfiguration(AndHowConfiguration defaultConfig) 
+			throws AppFatalException {
+		
+		InitLoader prodLoader = new InitLoader();
+		InitLoader testLoader = (InitLoader) getClassInstanceForName(
+				"org.yarnandtail.andhow.service.TestInitLoader");
+
+		if (! prodLoader.isValidState()) {
+			throw new AppFatalException(
+					"Unexpected multiple AndHowInit classes on the classpath", 
+					new TooManyAndHowInitInstances(prodLoader.getInitInstances()));
+		}
+		
+		if (testLoader != null && ! testLoader.isValidState()) {
+			throw new AppFatalException(
+					"Unexpected multiple AndHowTestInit classes on the classpath", 
+					new TooManyAndHowInitInstances(testLoader.getInitInstances()));
+		}
+		
+		if (testLoader != null && testLoader.hasConfig()) {
+			return testLoader.getAndHowConfiguration(defaultConfig);
+		} else {
+			return prodLoader.getAndHowConfiguration(defaultConfig);
+		}
+
 	}
 
 

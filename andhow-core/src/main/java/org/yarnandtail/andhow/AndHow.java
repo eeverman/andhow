@@ -5,6 +5,7 @@ import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.service.InitLoader;
+import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  * Central AndHow singleton class.
@@ -64,28 +65,13 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		}
 	}
 
-	private static AndHowConfiguration findConfiguration() throws AppFatalException {
-		InitLoader il = new InitLoader();
-		List<AndHowInit> inits = il.getInitiators();
-
-		switch (inits.size()) {
-			case 0:
-				return StdConfig.instance();
-			case 1:
-				return inits.get(0).getConfiguration();
-			default:
-				throw new AppFatalException("Unexpected multiple init classes");
-
-		}
-	}
-
 	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null || singleInstance.core == null) {
-					return instance(findConfiguration());
+					return instance(AndHowUtil.findConfiguration(StdConfig.instance()));
 				} else {
 					return singleInstance;
 				}

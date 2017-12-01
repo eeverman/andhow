@@ -12,7 +12,6 @@ import javax.lang.model.element.*;
 
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.AndHowInit;
-import org.yarnandtail.andhow.AndHowTestInit;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.service.*;
 import org.yarnandtail.andhow.util.AndHowLog;
@@ -30,6 +29,9 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCompileProcessor.class);
+	
+	private static final String INIT_CLASS_NAME = AndHowInit.class.getCanonicalName();
+	private static final String TEST_INIT_CLASS_NAME = "org.yarnandtail.andhow.AndHowTestInit";
 	
 	private static final String SERVICES_PACKAGE = "";
 	
@@ -65,31 +67,31 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				
 				if (initClasses.size() == 1) {
 					
-					LOG.info("Found exactly 1 AndHowInit class: {0}", initClasses.get(0).fullClassName);
+					LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
 					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
 					
 				} else if (initClasses.size() > 1) {
 					
-					LOG.error("There were multiple AndHowInit implementation classes found - only one is allowed.  List follows:");
+					LOG.error("There were multiple {0} implementation classes found - only one is allowed.  List follows:", INIT_CLASS_NAME);
 					for (CauseEffect ce : initClasses) {
-						LOG.error("AndHowInit instance: {0}", ce.fullClassName);
+						LOG.error("{0} instance: {1}", INIT_CLASS_NAME, ce.fullClassName);
 					}
-					throw new RuntimeException("Multiple AndHowInit implementations were found - only one is allowed. See list above.");
+					throw new RuntimeException("Multiple " + INIT_CLASS_NAME + " implementations were found - only one is allowed. See list above.");
 				
 				}
 				
 				if (testInitClasses.size() == 1) {
 					
-					LOG.info("Found exactly 1 AndHowTestInit class: {0}", testInitClasses.get(0).fullClassName);
-					writeServiceFile(filer, AndHowTestInit.class.getCanonicalName(), testInitClasses);
+					LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
+					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
 					
 				} else if (testInitClasses.size() > 1) {
 					
-					LOG.error("There were multiple AndHowTestInit implementation classes found - only one is allowed.  List follows:");
+					LOG.error("There were multiple {0} implementation classes found - only one is allowed.  List follows:", TEST_INIT_CLASS_NAME);
 					for (CauseEffect ce : testInitClasses) {
-						LOG.error("AndHowTestInit instance: {0}", ce.fullClassName);
+						LOG.error("{0} instance: {1}", TEST_INIT_CLASS_NAME, ce.fullClassName);
 					}
-					throw new RuntimeException("Multiple AndHowTestInit implementations were found - only one is allowed. See list above.");
+					throw new RuntimeException("Multiple " + TEST_INIT_CLASS_NAME + " implementations were found - only one is allowed. See list above.");
 				
 				}
 				
@@ -115,8 +117,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			AndHowElementScanner7 st = new AndHowElementScanner7(
 					this.processingEnv, 
 					Property.class.getCanonicalName(),
-					AndHowInit.class.getCanonicalName(),
-					AndHowTestInit.class.getCanonicalName());
+					INIT_CLASS_NAME,
+					TEST_INIT_CLASS_NAME);
 			CompileUnit ret = st.scan(e);
 			
 			
