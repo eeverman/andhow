@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.service.PropertyRegistration;
 import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
 
@@ -59,109 +60,105 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		
 		Filer filer = this.processingEnv.getFiler();
 
-		try {
-			
-			if (isLastRound) {
-				LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
-				
-				
+
+
+		if (isLastRound) {
+			LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
+
+			try {
 				if (initClasses.size() == 1) {
-					
+
 					LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
 					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
-					
+
 				} else if (initClasses.size() > 1) {
-					
-					LOG.error("There were multiple {0} implementation classes found - only one is allowed.  List follows:", INIT_CLASS_NAME);
-					for (CauseEffect ce : initClasses) {
-						LOG.error("{0} instance: {1}", INIT_CLASS_NAME, ce.fullClassName);
-					}
-					throw new RuntimeException("Multiple " + INIT_CLASS_NAME + " implementations were found - only one is allowed. See list above.");
-				
+					TooManyInitClassesException err = 
+							new TooManyInitClassesException(INIT_CLASS_NAME, initClasses);
+
+					err.writeDetails(LOG);
+					throw err;
 				}
-				
+
 				if (testInitClasses.size() == 1) {
-					
+
 					LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
 					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-					
+
 				} else if (testInitClasses.size() > 1) {
-					
-					LOG.error("There were multiple {0} implementation classes found - only one is allowed.  List follows:", TEST_INIT_CLASS_NAME);
-					for (CauseEffect ce : testInitClasses) {
-						LOG.error("{0} instance: {1}", TEST_INIT_CLASS_NAME, ce.fullClassName);
-					}
-					throw new RuntimeException("Multiple " + TEST_INIT_CLASS_NAME + " implementations were found - only one is allowed. See list above.");
-				
+					TooManyInitClassesException err = 
+							new TooManyInitClassesException(TEST_INIT_CLASS_NAME, testInitClasses);
+
+					err.writeDetails(LOG);
+					throw err;
 				}
-				
+
 				if (registrars != null && registrars.size() > 0) {
 					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
 				}
-				
-			} else {
-				LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
+			} catch (IOException e) {
+				throw new RuntimeException("Exception while trying to write generated files", e);
 			}
-
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-
-		//
-		//Scan all the Compilation units (i.e. class files) for AndHow Properties
-		Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
-		for (Element e : roundEnv.getRootElements()) {
-
-
-			TypeElement te = (TypeElement) e;
-			AndHowElementScanner7 st = new AndHowElementScanner7(
-					this.processingEnv, 
-					Property.class.getCanonicalName(),
-					INIT_CLASS_NAME,
-					TEST_INIT_CLASS_NAME);
-			CompileUnit ret = st.scan(e);
 			
-			
-			if (ret.istestInitClass()) {
-				testInitClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
-			} else if (ret.isInitClass()) {
-				initClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
-			}
+		} else {
+			LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
 
-			if (ret.hasRegistrations()) {
-				
-				LOG.debug("Found {0} AndHow Properties in class {1} ", ret.getRegistrations().size(), ret.getRootCanonicalName());
-				PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
-				registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
-				PropertyRegistrationList regs = ret.getRegistrations();
-				
-				if (LOG.isLoggable(Level.FINEST)) {
-					for (PropertyRegistration p : ret.getRegistrations()) {
-						LOG.trace("Found AndHow Property ''{0}'' in root class ''{1}'', immediate parent is ''{2}''",
-								p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
+
+			//
+			//Scan all the Compilation units (i.e. class files) for AndHow Properties
+			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
+			for (Element e : roundEnv.getRootElements()) {
+
+
+				TypeElement te = (TypeElement) e;
+				AndHowElementScanner7 st = new AndHowElementScanner7(
+						this.processingEnv, 
+						Property.class.getCanonicalName(),
+						INIT_CLASS_NAME,
+						TEST_INIT_CLASS_NAME);
+				CompileUnit ret = st.scan(e);
+
+
+				if (ret.istestInitClass()) {
+					testInitClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
+				} else if (ret.isInitClass()) {
+					initClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
+				}
+
+				if (ret.hasRegistrations()) {
+
+					LOG.debug("Found {0} AndHow Properties in class {1} ", ret.getRegistrations().size(), ret.getRootCanonicalName());
+					PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
+					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
+					PropertyRegistrationList regs = ret.getRegistrations();
+
+					if (LOG.isLoggable(Level.FINEST)) {
+						for (PropertyRegistration p : ret.getRegistrations()) {
+							LOG.trace("Found AndHow Property ''{0}'' in root class ''{1}'', immediate parent is ''{2}''",
+									p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
+						}
+					}
+
+					try {
+						writeClassFile(filer, gen, e);
+						LOG.trace("Wrote new generated class file " + gen.buildGeneratedClassSimpleName());
+					} catch (Exception ex) {
+						LOG.error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+						throw new RuntimeException(ex);
 					}
 				}
 
-				try {
-					writeClassFile(filer, gen, e);
-					LOG.trace("Wrote new generated class file " + gen.buildGeneratedClassSimpleName());
-				} catch (Exception ex) {
-					LOG.error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
-					throw new RuntimeException(ex);
-				}
-			}
+				if (ret.getErrors().size() > 0) {
+					LOG.error(
+							"AndHow Property definition errors prevented compilation to complete. " +
+							"Each of the following errors must be fixed before compilation is possible.");
+					for (String err : ret.getErrors()) {
+						LOG.error("AndHow Property Error: {0}", err);
+					}
 
-			if (ret.getErrors().size() > 0) {
-				LOG.error(
-						"AndHow Property definition errors prevented compilation to complete. " +
-						"Each of the following errors must be fixed before compilation is possible.");
-				for (String err : ret.getErrors()) {
-					LOG.error("AndHow Property Error: {0}", err);
+					throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
 				}
-				
-				throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
-			}
 
+			}
 		}
 
 		return false;
@@ -179,7 +176,9 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}	
 	}
 	
-	protected void writeServiceFile(Filer filer, String fullyQualifiedServiceInterfaceName, List<CauseEffect> implementingClasses) throws Exception {
+	protected void writeServiceFile(Filer filer, 
+			String fullyQualifiedServiceInterfaceName, 
+			List<CauseEffect> implementingClasses) throws IOException {
 		
 		//Get a unique causing elements
 		HashSet<Element> set = new HashSet();

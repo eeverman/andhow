@@ -30,6 +30,13 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andhow-test-harness</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<!-- All dependencies are test dependencies only -->
 		<dependency>
 			<groupId>junit</groupId>
