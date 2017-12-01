@@ -175,6 +175,15 @@ public class StaticPropertyConfigurationMutable implements StaticPropertyConfigu
 	}
 	
 	@Override
+	public boolean containsUserGroups() {
+		for (GroupProxy g : getPropertyGroups()) {
+			if (g.isUserGroup()) return true;
+		}
+		
+		return false;
+	}
+	
+	@Override
 	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
 		List<Property<?>> pts = propertiesByGroup.get(group);
 		

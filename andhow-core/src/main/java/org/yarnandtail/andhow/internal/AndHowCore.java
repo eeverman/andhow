@@ -9,6 +9,7 @@ import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.util.AndHowLog;
 
 /**
  * Actual central instance of the AndHow state after a successful startup.
@@ -20,6 +21,8 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
  * @author eeverman
  */
 public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues {
+	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCore.class);
+	
 	//User config
 	private final List<Loader> loaders = new ArrayList();
 	
@@ -46,12 +49,18 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 		
 		//The global options are always added to the list of registered groups
 		ArrayList<GroupProxy> effRegGroups = new ArrayList();
-		if (registeredGroups != null) {
+		if (registeredGroups != null && ! registeredGroups.isEmpty()) {
 			effRegGroups.addAll(registeredGroups);
+		} else if (! AndHowUtil.classExists("org.yarnandtail.andhow.compile.AndHowCompileProcessor")) {
+			LOG.warn("org.yarnandtail:andhow-annotation-processor is not currently "
+					+ "on the classpath.  If it was not present at compile time, "
+					+ "AndHow Properties in source code are not discovered and registered. "
+					+ "To resolve, add org.yarnandtail:andhow-annotation-processor "
+					+ "as a dependency at least at compile time.");
 		}
 		
 		try {
-			GroupProxy options = AndHowUtil.buildGroupProxy(Options.class);
+			GroupProxy options = AndHowUtil.buildGroupProxy(Options.class, false);
 			effRegGroups.add(options);
 		} catch (Exception ex) {
 			problems.add(new ConstructionProblem.SecurityException(ex, Options.class));
@@ -256,6 +265,11 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	@Override
 	public List<GroupProxy> getPropertyGroups() {
 		return staticConfig.getPropertyGroups();
+	}
+	
+	@Override
+	public boolean containsUserGroups() {
+		return staticConfig.containsUserGroups();
 	}
 
 	@Override

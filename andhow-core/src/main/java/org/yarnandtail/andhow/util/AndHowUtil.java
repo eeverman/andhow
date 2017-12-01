@@ -73,7 +73,7 @@ public class AndHowUtil {
 				//Add any implicit properties used to configure this loader
 				if (loader.getClassConfig() != null) {
 					try {
-						problems.addAll(registerGroup(appDef, AndHowUtil.buildGroupProxy(loader.getClassConfig())));
+						problems.addAll(registerGroup(appDef, AndHowUtil.buildGroupProxy(loader.getClassConfig(), false)));
 					} catch (Exception ex) {
 						ConstructionProblem.SecurityException ee
 								= new ConstructionProblem.SecurityException(ex, loader.getClassConfig());
@@ -197,11 +197,42 @@ public class AndHowUtil {
 		return props;
 	}
 	
+	/**
+	 * Invokes buildGroupProxy(group, true).
+	 * 
+	 * @param group
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws SecurityException 
+	 */
 	public static GroupProxy buildGroupProxy(Class<?> group)
+			throws IllegalArgumentException, IllegalAccessException, SecurityException {
+
+		return buildGroupProxy(group, true);
+	}
+	
+	/**
+	 * Wraps a class that contains AndHow Properties in Proxy class for use within AndHow.
+	 * 
+	 * A user specified group is the 'standard' type of group where are user
+	 * creates a property and that class containing that property is then registered
+	 * as a group.  A non-userGroup one which is added automatically by AndHow
+	 * to configure AndHow itself or one of the loaders.
+	 * 
+	 * @param group
+	 * @param userGroup If true, this group is a user specified group
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws SecurityException 
+	 */
+	public static GroupProxy buildGroupProxy(Class<?> group, boolean userGroup)
 			throws IllegalArgumentException, IllegalAccessException, SecurityException {
 		
 		List<NameAndProperty> naps = getProperties(group);
-		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group), NameUtil.getJavaName(group), naps);
+		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group), 
+				NameUtil.getJavaName(group), naps, userGroup);
 		
 		return groupProxy;
 	}
@@ -307,6 +338,23 @@ public class AndHowUtil {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Returns true if the specified class name is on the classpath.
+	 * 
+	 * This never throws an exception - all exception conditions just return false.
+	 * 
+	 * @param className
+	 * @return 
+	 */
+	public static boolean classExists(String className) {
+		try {
+			Class.forName(className);
+			return true;
+		} catch (Throwable ex) {
+			return false;
+		}
 	}
 
 
