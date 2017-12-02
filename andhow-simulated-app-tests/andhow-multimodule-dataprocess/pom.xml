@@ -8,8 +8,15 @@
     </parent>
     <artifactId>andhow-multimodule-dataprocess</artifactId>
     <packaging>pom</packaging>
+	
+	<properties>
+		<!-- Use a property to fully simulate how it would be used (instead of using project.version) -->
+		<andhow-version-to-use>${project.version}</andhow-version-to-use>
+	</properties>
+	
     <modules>
-        <module>andhow-default-behavior-dependency</module>
         <module>andhow-default-behavior-test</module>
+        <module>andhow-default-behavior-dep1</module>
+        <module>andhow-default-behavior-dep2</module>
     </modules>
 </project>

@@ -1,4 +1,4 @@
-package com.map;
+package com.dep1;
 
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.property.*;

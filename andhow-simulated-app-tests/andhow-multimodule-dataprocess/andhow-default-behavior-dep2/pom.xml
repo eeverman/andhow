@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.yarnandtail</groupId>
+        <artifactId>andhow-multimodule-dataprocess</artifactId>
+        <version>0.4.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>andhow-default-behavior-dep2</artifactId>
+    <packaging>jar</packaging>
+	<description>Sample to be used as a compiled jar by the 
+		andhow-default-behavior-test to test property behavior
+		in external compiled libraries.</description>
+
+	<dependencies>
+		<dependency>
+			<!-- Using the combined, single jar dependency -->
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow</artifactId>
+			<version>${andhow-version-to-use}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
