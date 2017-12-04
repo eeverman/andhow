@@ -33,8 +33,9 @@ public class CompileUnit {
 	private final String classCanonName;
 	private PropertyRegistrationList registrations;	//late init
 	private List<String> errors;	//late init
-	private boolean initClass;	//True if this class is an AndHowInit instance
-
+	private boolean initClass;	//True if an AndHowInit instance (and not AndHowTestInit)
+	private boolean testInitClass;	//True if an AndHowTestInit instance
+	
 	/**
 	 * This is being used as a stack. Always push into the tail of the queue and
 	 * always 'pop' from the tail. The nested inner class order from outer to
@@ -58,9 +59,17 @@ public class CompileUnit {
 	public boolean isInitClass() {
 		return initClass;
 	}
-
+	
 	public void setInitClass(boolean initClass) {
 		this.initClass = initClass;
+	}
+	
+	public boolean istestInitClass() {
+		return testInitClass;
+	}
+	
+	public void setTestInitClass(boolean testInitClass) {
+		this.testInitClass = testInitClass;
 	}
 
 	public void pushType(SimpleType simpleName) {

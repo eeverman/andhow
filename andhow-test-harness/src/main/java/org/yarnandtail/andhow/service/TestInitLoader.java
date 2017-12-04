@@ -1,35 +1,40 @@
 package org.yarnandtail.andhow.service;
 
 import java.util.*;
-import org.yarnandtail.andhow.AndHowInit;
-import org.yarnandtail.andhow.AndHowConfiguration;
+import org.yarnandtail.andhow.*;
 
 /**
- * Dedicated wrapper for a java.util.ServiceLoader that loads InitLoader instances.
+ * Dedicated wrapper for a java.util.ServiceLoader that loads TestInitLoader instances.
  * 
- * InitLoader instances are discovered automatically at compile time.  If a
+ * TestInitLoader instances are discovered automatically at compile time.  If a
  * TestInitLoader is found, it takes precedence over an InitLoader instance.
+ * 
+ * The TestInitLoader subclasses and completely overrides the InitLoader.  This
+ * allows this class to be loaded via <code>Class.forName</code> and cast to
+ * an InitLoader instance.  During production this class (and the test
+ * harness module) are not expected to be on the classpath.
  * 
  * @author ericeverman
  */
-public class InitLoader {
-	private final ServiceLoader<AndHowInit> loader;
+public class TestInitLoader extends InitLoader {
+	private final ServiceLoader<AndHowTestInit> loader;
 	private final Object lock = new Object();	//Sync lock for instances
 	
 	
-	public InitLoader() {
-		this(InitLoader.class.getClassLoader());
+	public TestInitLoader() {
+		this(TestInitLoader.class.getClassLoader());
 	}
 	
-	public InitLoader(ClassLoader classLoader) {
-		ClassLoader cl = (classLoader != null)?classLoader:InitLoader.class.getClassLoader();
-		loader = ServiceLoader.load(AndHowInit.class, cl);
+	public TestInitLoader(ClassLoader classLoader) {
+		ClassLoader cl = (classLoader != null)?classLoader:TestInitLoader.class.getClassLoader();
+		loader = ServiceLoader.load(AndHowTestInit.class, cl);
 	}
 	
 	/**
 	 * Returns true if there are no more than 1 production init and 1 test init.
 	 * @return 
 	 */
+	@Override
 	public boolean isValidState() {
 		return (getInitInstances().size() <= 1);
 	}
@@ -39,6 +44,7 @@ public class InitLoader {
 	 * from the loader, even if more than one.
 	 * @return 
 	 */
+	@Override
 	public boolean hasConfig() {
 		return (getInitInstances().size() > 0);
 	}
@@ -54,6 +60,7 @@ public class InitLoader {
 	 * @param defaultConfig Config to use if no AndHowInit is found to provide one.
 	 * @return 
 	 */
+	@Override
 	public AndHowConfiguration getAndHowConfiguration(AndHowConfiguration defaultConfig) {
 		if (getInitInstances().size() == 1) {
 			return getInitInstances().get(0).getConfiguration();
@@ -67,11 +74,12 @@ public class InitLoader {
 	 * 
 	 * @return 
 	 */
+	@Override
 	public List<AndHowInit> getInitInstances() {
 		
 		synchronized (lock) {
 			List<AndHowInit> list = new ArrayList();
-			Iterator<AndHowInit> it = loader.iterator();
+			Iterator<AndHowTestInit> it = loader.iterator();
 			while (it.hasNext()) {
 				list.add(it.next());
 			}
@@ -83,6 +91,7 @@ public class InitLoader {
 	/**
 	 * Forces a reload of the service loader, which normally caches instances.
 	 */
+	@Override
 	public void reload() {
 		synchronized (lock) {
 			loader.reload();

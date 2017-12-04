@@ -1,16 +1,14 @@
-package com.map;
+package com.dep1;
 
 import org.dataprocess.ExternalServiceConnector;
-import org.dataprocess.ExternalServiceConnector.ConnectionConfig;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.load.std.StdJndiLoader;
-import org.yarnandtail.andhow.util.NameUtil;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -32,13 +30,16 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		assertEquals(-65, emm.getEastBound());
 		assertEquals(23, emm.getSouthBound());
 		
+		assertTrue(emm.isLogBroadcastEnabled());
+		assertEquals("http://prod.mybiz.com.logger/EarthMapMaker/", emm.getLogServerUrl());
+		
 	}
 	
 	@Test
 	public void testConfigFromSysProps() {
 		
-		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
-		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
+		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
+		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
 		NonProductionConfig.instance().forceBuild();
 		
@@ -52,13 +53,13 @@ public class EarthMapMakerTest extends AndHowTestBase {
 	@Test
 	public void testConfigFromCmdLineThenSysProps() {
 		
-		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
-		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
+		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
+		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
 
 		NonProductionConfig.instance().addCmdLineArgs(new String[] {
-					"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
-					"com.map.EarthMapMaker.WEST_BOUND=-179"})
+					"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
+					"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
 				.forceBuild();
 		
 		EarthMapMaker emm = new EarthMapMaker();
@@ -72,24 +73,24 @@ public class EarthMapMakerTest extends AndHowTestBase {
 	@Test
 	public void testOrderOfLoading() throws Exception {
 		
-		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
-		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "-99");
+		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
+		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
 		
 		SimpleNamingContextBuilder jndi = getJndi();
-		jndi.bind("java:" + "com.map.EarthMapMaker.MAP_NAME", "JndiPropMapName");
-		jndi.bind("java:" + "com.map.EarthMapMaker.SOUTH_BOUND", "7");
+		jndi.bind("java:" + "com.dep1.EarthMapMaker.MAP_NAME", "JndiPropMapName");
+		jndi.bind("java:" + "com.dep1.EarthMapMaker.SOUTH_BOUND", "7");
 		jndi.bind("java:comp/env/" + "org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL", "test/");
 		jndi.activate();
 		
 		//VALUES IN THE PROPS FILE
 		//org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL = http://forwardcorp.com/service/
 		//org.dataprocess.ExternalServiceConnector.ConnectionConfig.TIMEOUT = 60
-		//com.map.EarthMapMaker.EAST_BOUND = -65
-		//com.map.EarthMapMaker.MAP_NAME = My Map
-		//com.map.EarthMapMaker.NORTH_BOUND = 51
-		//com.map.EarthMapMaker.SOUTH_BOUND = 23
-		//com.map.EarthMapMaker.WEST_BOUND = -125
+		//com.dep1.EarthMapMaker.EAST_BOUND = -65
+		//com.dep1.EarthMapMaker.MAP_NAME = My Map
+		//com.dep1.EarthMapMaker.NORTH_BOUND = 51
+		//com.dep1.EarthMapMaker.SOUTH_BOUND = 23
+		//com.dep1.EarthMapMaker.WEST_BOUND = -125
 		
 		
 		ExternalServiceConnector esc = new ExternalServiceConnector();
@@ -107,14 +108,14 @@ public class EarthMapMakerTest extends AndHowTestBase {
 	@Test
 	public void testBadInt() {
 		
-		System.setProperty("com.map.EarthMapMaker.MAP_NAME", "SysPropMapName");
-		System.setProperty("com.map.EarthMapMaker.EAST_BOUND", "East");
+		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
+		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "East");
 		
 		try {
 			NonProductionConfig.instance()
 					.addCmdLineArgs(new String[] {
-						"com.map.EarthMapMaker.MAP_NAME=CmdLineMapName",
-						"com.map.EarthMapMaker.WEST_BOUND=-179"})
+						"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
+						"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
 					.forceBuild();
 		
 			fail("Expected an exception");
