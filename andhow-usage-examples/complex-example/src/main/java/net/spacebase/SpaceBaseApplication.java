@@ -14,10 +14,10 @@ public class SpaceBaseApplication {
 	//To similate how a larger application would run, this is a singleton.
 	//In a web application, this might be a main 'run on startup' servlet,
 	//In a desktop app, this would probably something similar to this.
-	private static SpaceBaseApplication singleton;
+	public static SpaceBaseApplication singleton;
 	
-	private SpaceBaseApplication() {
-		//private constructor
+	public SpaceBaseApplication() {
+
 	}
 	
 	/**
@@ -25,8 +25,12 @@ public class SpaceBaseApplication {
 	 * @param args 
 	 */
 	public static void main(String[] args) {
-		AndHow.instance( StdConfig.instance().setCmdLineArgs(args) );
 		
+		//findConfig() will find the active AndHowConfiguration that would be used.
+		//If an AndHowTestInit class is on the classpath, it will be used to
+		//provide that configuration, which would be the case during testing.
+		AndHow.findConfig().setCmdLineArgs(args).build();
+
 		System.out.println("Spacebase App is started!");
 		singleton = new SpaceBaseApplication();
 	}

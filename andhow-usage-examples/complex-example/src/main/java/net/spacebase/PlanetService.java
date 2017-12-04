@@ -1,8 +1,7 @@
 package net.spacebase;
 
 import org.yarnandtail.andhow.GroupInfo;
-import org.yarnandtail.andhow.property.IntProp;
-import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.property.*;
 
 /**
  *
@@ -17,7 +16,19 @@ public class PlanetService {
 	private static final IntProp TIMEOUT = IntProp.builder().defaultValue(50).mustBeNonNull().build();
 	private static final StrProp QUERY_ENDPOINT = StrProp.builder().mustBeNonNull().build();
 	private static final StrProp ITEM_ENDPOINT = StrProp.builder().mustBeNonNull().build();
-
+	
+	//
+	//System logging and cache configuration for this class
+	public static final BolProp ENABLE_CACHE = BolProp.builder()
+			.defaultValue(true).mustBeNonNull().build();
+	
+	public static final BolProp BROADCAST_LOG_EVENTS = BolProp.builder()
+			.aliasIn("PS.Broadcast").defaultValue(true).mustBeNonNull()
+			.desc("If true, logs events are sent to the central logging server").build();
+	
+	public static final StrProp LOG_SERVER = StrProp.builder().aliasIn("PS.LogServer")
+			.mustStartWith("http://").mustEndWith("/").mustBeNonNull()
+			.desc("The logging server to send events to").build();	
 	
 	public String getQueryUrl() {
 		return SERVICE_URL.getValue() + QUERY_ENDPOINT.getValue();
@@ -29,6 +40,18 @@ public class PlanetService {
 	
 	public int getTimeout() {
 		return TIMEOUT.getValue(); //-- Note the strong typing of the return value
+	}
+	
+	public boolean isCacheEnabled() {
+		return ENABLE_CACHE.getValue();
+	}
+	
+	public String getLogServer() {
+		return LOG_SERVER.getValue();
+	}
+	
+	public boolean isBroadcastLogEvents() {
+		return BROADCAST_LOG_EVENTS.getValue();
 	}
 	
 	
