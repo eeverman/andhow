@@ -51,16 +51,36 @@ public class EarthMapMakerTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testConfigFromCmdLineThenSysProps() {
+	public void testConfigFromCmdLineThenSysPropsViaNonProdConfigForceBuild() {
 		
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
 
-		NonProductionConfig.instance().addCmdLineArgs(new String[] {
+		NonProductionConfig.instance().setCmdLineArgs(new String[] {
 					"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
 					"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
 				.forceBuild();
+		
+		EarthMapMaker emm = new EarthMapMaker();
+		
+		//Actual values
+		assertEquals("CmdLineMapName", emm.getMapName());
+		assertEquals(-99, emm.getEastBound());
+		assertEquals(-179, emm.getWestBound());
+	}
+	
+	@Test
+	public void testConfigFromCmdLineThenSysPropsViaProdConfigUtilForceBuild() {
+		
+		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
+		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
+		
+		AndHowNonProductionUtil.forceRebuild(
+		AndHow.findConfig().setCmdLineArgs(new String[] {
+					"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
+					"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
+		);
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -113,7 +133,7 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		
 		try {
 			NonProductionConfig.instance()
-					.addCmdLineArgs(new String[] {
+					.setCmdLineArgs(new String[] {
 						"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
 						"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
 					.forceBuild();

@@ -63,7 +63,7 @@ public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowTestBase {
 		System.setProperty("com.dep2.MarsMapMaker.EAST_BOUND", "-99");
 		
 
-		NonProductionConfig.instance().addCmdLineArgs(new String[] {
+		NonProductionConfig.instance().setCmdLineArgs(new String[] {
 					"com.dep2.MarsMapMaker.MAP_NAME=CmdLineMapName",
 					"com.dep2.MarsMapMaker.WEST_BOUND=-179"})
 				.forceBuild();

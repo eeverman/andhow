@@ -15,7 +15,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @param <C> The class to return from each of the fluent builder methods, which
  * will be the implementation class in each case.  See StdConfig for an example.
  */
-public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfiguration {
+public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfiguration<C> {
 
 	protected static final Class<?>[] DEFAULT_LOADER_LIST = new Class<?>[] {
 		StdFixedValueLoader.class, StdMainStringArgsLoader.class,
@@ -156,6 +156,11 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 		PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
 		List<GroupProxy> registeredGroups = registrar.getGroups();
 		return registeredGroups;
+	}
+	
+	@Override
+	public void build() {
+		AndHow.instance(this);
 	}
 	
 	/**

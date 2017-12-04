@@ -40,7 +40,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testAllValuesAreSet() {
 		NonProductionConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-				.addCmdLineArgs(cmdLineArgsWFullClassName)
+				.setCmdLineArgs(cmdLineArgsWFullClassName)
 				.forceBuild();
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());

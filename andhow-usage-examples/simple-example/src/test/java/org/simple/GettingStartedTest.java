@@ -47,7 +47,7 @@ public class GettingStartedTest extends AndHowTestBase {
 	
 	@Test
 	public void testLaunch3_UsingCommandLineArguments() throws Exception {
-		NonProductionConfig.instance().addCmdLineArgs(new String[] {
+		NonProductionConfig.instance().setCmdLineArgs(new String[] {
 			"org.simple.GettingStarted.COUNT_DOWN_START=3",
 			"org.simple.GettingStarted.LAUNCH_COMMAND=GoManGo!"
 		}).forceBuild();
