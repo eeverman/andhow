@@ -29,18 +29,6 @@ public class StdConfig {
 	 */
 	public static abstract class StdConfigAbstract<S extends StdConfigAbstract<S>> extends BaseConfig<S> {
 
-		/**
-		 * Sets a fixed, non-configurable value for a Property.
-		 *
-		 * Property values set in this way use the FixedValueLoader to load values
-		 * prior to any other loader. Since the first loaded value for a Property
-		 * 'wins', this effectively fixes the value and makes it non-configurable.
-		 *
-		 * @param <T> The type of Property and value
-		 * @param property The property to set a value for
-		 * @param value The value to set.
-		 * @return
-		 */
 		@Override
 		public <T> S addFixedValue(Property<T> property, T value) {
 
@@ -60,15 +48,6 @@ public class StdConfig {
 			return (S) this;
 		}
 
-		/**
-		 * Removes a PropertyValue from the list of fixed values.
-		 *
-		 * It is not an error to attempt to remove a property that is not in the
-		 * current fixed value list.
-		 *
-		 * @param property A non-null property.
-		 * @return
-		 */
 		@Override
 		public S removeFixedValue(Property<?> property) {
 
@@ -88,12 +67,6 @@ public class StdConfig {
 			return (S) this;
 		}
 
-		/**
-		 * Adds the command line arguments, keeping any previously added.
-		 *
-		 * @param commandLineArgs
-		 * @return
-		 */
 		@Override
 		public S setCmdLineArgs(String[] commandLineArgs) {
 
