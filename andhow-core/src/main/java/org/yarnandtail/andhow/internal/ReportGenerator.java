@@ -211,7 +211,7 @@ public class ReportGenerator {
 					
 					File singleSample = new File(sampleDir, fullType + "." + printer.getSampleFileExtension());
 
-					try (PrintStream printWriter = new PrintStream(new BufferedOutputStream(new FileOutputStream(singleSample, true)))) {
+					try (PrintStream printWriter = new PrintStream(new BufferedOutputStream(new FileOutputStream(singleSample, false)))) {
 						printSingleLoader(appDef, printWriter, printer);
 					} catch (IOException ex) {
 						log.error("Unable to create sample configuration file '" + 
