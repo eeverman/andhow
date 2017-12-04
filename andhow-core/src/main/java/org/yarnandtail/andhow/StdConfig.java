@@ -41,6 +41,7 @@ public class StdConfig {
 		 * @param value The value to set.
 		 * @return
 		 */
+		@Override
 		public <T> S addFixedValue(Property<T> property, T value) {
 
 			if (property == null) {
@@ -68,6 +69,7 @@ public class StdConfig {
 		 * @param property A non-null property.
 		 * @return
 		 */
+		@Override
 		public S removeFixedValue(Property<?> property) {
 
 			if (property == null) {
@@ -92,34 +94,11 @@ public class StdConfig {
 		 * @param commandLineArgs
 		 * @return
 		 */
-		public S addCmdLineArgs(String[] commandLineArgs) {
+		@Override
+		public S setCmdLineArgs(String[] commandLineArgs) {
 
 			if (commandLineArgs != null && commandLineArgs.length > 0) {
 				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
-			}
-
-			return (S) this;
-		}
-
-		/**
-		 * Adds a command line argument in key=value form.
-		 *
-		 * If the value is null, only the key is added (ie its a flag).
-		 *
-		 * @param key
-		 * @param value
-		 * @return
-		 */
-		public S addCmdLineArg(String key, String value) {
-
-			if (key == null) {
-				throw new RuntimeException("The key cannot be null");
-			}
-
-			if (value != null) {
-				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
-			} else {
-				_cmdLineArgs.add(key);
 			}
 
 			return (S) this;

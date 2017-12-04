@@ -23,8 +23,8 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowTestBase {
 	
 	@Test
 	public void testA_ConfigFromSysProps() {
-		System.out.println("testConfigFromSysProps");
-		
+
+		System.setProperty("EMM.LogServer", "http://localhost.logger/EMM/");
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
@@ -33,14 +33,21 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowTestBase {
 		EarthMapMaker emm = new EarthMapMaker();
 		
 		//Actual values
+		assertEquals("http://localhost.logger/EMM/", emm.getLogServerUrl());
 		assertEquals("SysPropMapName", emm.getMapName());
 		assertEquals(-99, emm.getEastBound());
 	}
 	
+	/**
+	 * This test should be ordered between the other two tests (see @FixMethodOrder on class)
+	 * 
+	 * The outer two tests force a custom construction.  This test doesn't not
+	 * force configuration to see if the configuration specified by the auto-discovered
+	 * TestInitiation class is used.
+	 */
 	@Test
 	public void testB_ZeroConfig() {
-		System.out.println("testZeroConfig");
-		
+
 		EarthMapMaker emm = new EarthMapMaker();
 		
 		//These values set in the TestInitiation (discovered automatically)
@@ -57,13 +64,12 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowTestBase {
 	
 	@Test
 	public void testC_ConfigFromCmdLineThenSysProps() {
-		System.out.println("testConfigFromCmdLineThenSysProps");
-		
+
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 		
 
-		NonProductionConfig.instance().addCmdLineArgs(new String[] {
+		NonProductionConfig.instance().setCmdLineArgs(new String[] {
 					"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
 					"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
 				.forceBuild();

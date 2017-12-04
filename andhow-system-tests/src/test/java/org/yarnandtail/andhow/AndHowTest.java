@@ -69,7 +69,7 @@ public class AndHowTest extends AndHowTestBase {
 	public void testCmdLineLoaderUsingClassBaseName() {
 		NonProductionConfig.instance()
 				.groups(configPtGroups)
-				.addCmdLineArgs(cmdLineArgsWFullClassName)
+				.setCmdLineArgs(cmdLineArgsWFullClassName)
 				.forceBuild();
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -123,7 +123,7 @@ public class AndHowTest extends AndHowTestBase {
 				NonProductionConfig.instance()
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
-					.addCmdLineArgs(cmdLineArgsWFullClassName)
+					.setCmdLineArgs(cmdLineArgsWFullClassName)
 					.forceBuild();
 			
 			fail();	//The line above should throw an error

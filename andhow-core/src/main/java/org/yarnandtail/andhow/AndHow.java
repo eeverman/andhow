@@ -10,15 +10,22 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * Central AndHow singleton class.
  * 
  * This class is not directly constructed.  The primary way to configure an
- * instance is indirectly by simply creating a subclass of org.yarnandtail.andhow.AndHowInit.
- * At startup, AndHow finds your AndHowInit implementation and uses it to configure
+ * instance is indirectly by creating a subclass of org.yarnandtail.andhow.AndHowInit.
+ * At startup, AndHow discovers your AndHowInit implementation and uses it to configure
  * a single instance.
  * 
- * Alternatively, you can directly create a AndHowConfiguration instance and
- * pass it to AndHow.instance().  StdConfig can be used to do that like this:
- * <code>
- * AndHow.instance( StdConfig.instance().addCmdLineArgs(args) );
- * </code>
+ * For cases where the application needs to accept command line arguments or
+ * augment the configuration with fixed values, the configuration can have those
+ * parameters added like this:
+ * <pre>{@code
+ * AndHow.findConfig().setCmdLineArgs(myCmdLineArgs).build();
+ * }</pre>
+ * <code>findConfig()</code> finds the <code>AndHowConfiguration</code> that
+ * would be used if <code>AndHow.instance()</code> was called.  <code>build()</code>
+ * then causes the AndHow instance to be built with that modified configuration.
+ * The code above (or any method of AndHow initiation) can only be executed once
+ * during the life of the application.
+ * 
  * @author eeverman
  */
 public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
@@ -35,26 +42,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 	private volatile AndHowCore core;
 
-	/**
-	 * Private constructor - Use the AndHowBuilder to build instances.
-	 *
-	 * @param naming
-	 * @param loaders
-	 * @param registeredGroups
-	 * @param cmdLineArgs
-	 * @param forcedValues
-	 * @param defaultValues
-	 * @throws AppFatalException
-	 */
-	private AndHow(NamingStrategy naming, List<Loader> loaders,
-			List<GroupProxy> registeredGroups)
-			throws AppFatalException {
-
-		synchronized (LOCK) {
-			core = new AndHowCore(naming, loaders, registeredGroups);
-		}
-	}
-
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
 			core = new AndHowCore(
@@ -63,7 +50,37 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					config.getRegisteredGroups());
 		}
 	}
+	
+	/**
+	 * Finds and creates a new instance of the <code>AndHowConfiguration</code>
+	 * that would be used if <code>AndHow.instance()</code> was called.
+	 * 
+	 * <strong>Note:</strong> If <code>AndHow.instance()</code> is later called, a new
+	 * <code>AndHowConfiguration</code> will be returned, not this same instance.
+	 * <p>
+	 * This method provides a way to add command line parameters or fixed values
+	 * to the existing configuration and then immediately initiate <code>AndHow</code>.
+	 * <p>
+	 * Example usage:
+	 * <pre>{@code
+	 * AndHow.findConfig().setCmdLineArgs(myCmdLineArgs).build();
+	 * }</pre>
+	 * The call to <code>build()</code> at the end of that command string is
+	 * just a convenience method to call <code>AndHow.instance(thisConfiguration);</code>
+	 * 
+	 * @return 
+	 */
+	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig() {
+		return AndHowUtil.findConfiguration(StdConfig.instance());
+	}
 
+	/**
+	 * Returns the current AndHow instance.  If there is no instance, one is created
+	 * using auto-discovered configuration.
+	 * 
+	 * @return
+	 * @throws AppFatalException 
+	 */
 	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
@@ -80,8 +97,12 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	/**
-	 * Used internally only when it is known that the AndHow instance or its
-	 * core is null.
+	 * Builds a new AndHow instance using the specified configuration ONLY IF
+	 * there is no existing AndHow instance.
+	 * 
+	 * A fatal RuntimeException will be thrown if there is an existing AndHow
+	 * instance.  This method does not normally need to be used to initiate AndHow.
+	 * See the AndHow class docs for typical configuration examples.
 	 *
 	 * @param config
 	 * @return

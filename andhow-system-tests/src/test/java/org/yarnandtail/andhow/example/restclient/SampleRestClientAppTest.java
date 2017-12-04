@@ -42,7 +42,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		
 		NonProductionConfig.instance()
 				.group(SampleRestClientGroup.class)
-				.addCmdLineArgs(cmdLineArgs)
+				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired()
 				.forceBuild();
@@ -70,7 +70,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				
 		NonProductionConfig.instance()
 				.group(SampleRestClientGroup.class)
-				.addCmdLineArgs(cmdLineArgs)
+				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired()
 				.forceBuild();
@@ -103,7 +103,7 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 			//Error expected b/c some values are invalid
 			NonProductionConfig.instance()
 					.group(SampleRestClientGroup.class)
-					.addCmdLineArgs(cmdLineArgs)
+					.setCmdLineArgs(cmdLineArgs)
 					.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 					.classpathPropertiesRequired()
 					.forceBuild();
