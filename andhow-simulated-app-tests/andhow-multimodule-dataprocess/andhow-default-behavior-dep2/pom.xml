@@ -20,6 +20,13 @@
 			<version>${andhow-version-to-use}</version>
 		</dependency>
 		<dependency>
+			<!-- Using the combined, single jar dependency -->
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-test-harness</artifactId>
+			<version>${andhow-version-to-use}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>

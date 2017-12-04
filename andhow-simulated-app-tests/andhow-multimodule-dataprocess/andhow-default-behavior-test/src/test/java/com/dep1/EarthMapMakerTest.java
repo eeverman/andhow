@@ -8,6 +8,7 @@ import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -28,6 +29,9 @@ public class EarthMapMakerTest extends AndHowTestBase {
 		assertEquals(51, emm.getNorthBound());
 		assertEquals(-65, emm.getEastBound());
 		assertEquals(23, emm.getSouthBound());
+		
+		assertTrue(emm.isLogBroadcastEnabled());
+		assertEquals("http://prod.mybiz.com.logger/EarthMapMaker/", emm.getLogServerUrl());
 		
 	}
 	
