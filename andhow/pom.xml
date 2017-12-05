@@ -10,17 +10,21 @@
 	<packaging>jar</packaging>
 	
 	<dependencies>
+		<!--
+		Note that added dependencies will cause them to be included in the bundled
+		binary jar, source jar and javadoc jar.
+		-->
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow-core</artifactId>
 			<version>${project.version}</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow-annotation-processor</artifactId>
 			<version>${project.version}</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	
@@ -45,6 +49,23 @@
 							</artifactSet>
 							<createSourcesJar>true</createSourcesJar>
 							<keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>javadoc-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+
+						<configuration>
+							<includeDependencySources>true</includeDependencySources>
 						</configuration>
 					</execution>
 				</executions>
