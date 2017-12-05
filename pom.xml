@@ -7,7 +7,8 @@
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
-		Simple typed and validated configuration loading for web apps, command line or any environment application.
+		Simple typed and validated configuration loading for web apps,
+		command line or any environment application.
 	</description>
 	<url>https://github.com/eeverman/andhow</url>
 
