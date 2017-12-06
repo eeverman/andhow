@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
-		<version>0.4.0-RC4-SNAPSHOT</version>
+		<version>0.4.0-RC4</version>
 	</parent>
 
 	<artifactId>andhow-test-harness</artifactId>
