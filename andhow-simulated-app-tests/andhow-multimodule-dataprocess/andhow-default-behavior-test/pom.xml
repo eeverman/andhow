@@ -28,7 +28,7 @@
 			<!-- Using the combined, single jar dependency -->
 			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow</artifactId>
-			<version>${andhow-version-to-use}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
