@@ -239,26 +239,12 @@
 						</executions>
 					</plugin>
 					<plugin>
-						<inherited>true</inherited>
 						<artifactId>maven-deploy-plugin</artifactId>
 						<configuration>
 							<updateReleaseInfo>false</updateReleaseInfo>
 							<deployAtEnd>true</deployAtEnd>
 						</configuration>
 					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>releaseDeployProfile</id>
-			<activation>
-				<property>
-					<name>releaseDeploy</name>
-					<value>true</value>
-				</property>
-			</activation>
-			<build>
-				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-release-plugin</artifactId>
@@ -268,7 +254,8 @@
 							<autoVersionSubmodules>true</autoVersionSubmodules>
 							<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles> -->
 							<useReleaseProfile>false</useReleaseProfile>
-							<goals>verify deploy</goals>
+							<preparationGoals>clean verify</preparationGoals>
+							<goals>deploy site-deploy</goals>
 						</configuration>
 					</plugin>
 				</plugins>
