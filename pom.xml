@@ -221,7 +221,7 @@
 					<!--<releaseProfiles>IncludeInAllProfiles, remoteDeployProfile</releaseProfiles> -->
 					<useReleaseProfile>false</useReleaseProfile>
 					<preparationGoals>clean verify</preparationGoals>
-					<goals>deploy site-deploy</goals>
+					<goals>deploy</goals>
 				</configuration>
 			</plugin>
 		</plugins>
