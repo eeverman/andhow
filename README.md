@@ -1,18 +1,17 @@
 AndHow!  strong.valid.simple.AppConfiguration
 ======
-Strongly typed configuration with detailed validation that is simple to use
-for web apps, command line or any application environment.
-Configuration by convention.
+AndHow is an easy to use configuration framework with strong typing and detailed 
+validation for web apps, command line or any application environment.
 
 Key Features
 --------------
-**&?! Strong Typing**  
-**&?! Simple to use**  
-**&?! Detailed validation**  
-**&?! Load values from any source**  
-**&?! Fails Fast**  
-**&?! Self Documenting & Sample Generating**  
-[more details & features...](https://github.com/eeverman/andhow/wiki)  
+** Strong Typing **
+** Detailed validation **
+** Simple to use **
+** Configuration by convention **
+** Load values from any source **
+** Fails Fast **
+** Self Documenting & Sample Generating **
 
 Use it via Maven (available on Maven Central)
 --------------
@@ -20,113 +19,113 @@ Use it via Maven (available on Maven Central)
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.3.3</version>
+    <version>0.4.0-RC5</version>
 </dependency>
 ```
 Complete Usage Example
 --------------
 ```java
-import org.yarnandtail.andhow.property.*;
-import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.load.*;
+package org.simple;
 
-public class SimpleSample {
-	
-	public static void main(String[] args) {
-		AndHow.builder() /* 1) Simple builder initializes framework */
-				.loader(new SystemPropertyLoader())
-				.loader(new JndiLoader())
-				.loader(new PropertyFileOnClasspathLoader(MySetOfProps.CLASSPATH_PROP))
-				.group(MySetOfProps.class) /* 2) MySetOfProps defined below */
-				.build();
-	
-		//3) After initialization, Properties can be used to directly access their values.
-		//Note the strongly typed return values.
-		String queryUrl =
-				MySetOfProps.SERVICE_URL.getValue() +
-				MySetOfProps.QUERY_ENDPOINT.getValue();
-		Integer timeout = MySetOfProps.TIMEOUT.getValue();
-		
-		System.out.println("The query url is: " + queryUrl);
-		System.out.println("Timeout is : " + timeout);
+import org.yarnandtail.andhow.property.*;
+
+public class GettingStarted {
+  
+	//1
+	final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
+		.desc("Start the countdown from this number")
+		.mustBeGreaterThanOrEqualTo(1).defaultValue(2).build();
+ 
+	private final static StrProp LAUNCH_CMD = StrProp.builder().mustBeNonNull()
+		.desc("What to say when its time to launch")
+		.mustMatchRegex(".*Go.*").defaultValue("GoGoGo!").build();
+ 
+	public String launch() {
+		String launch = "";
+  
+		//2
+		for (int i = COUNT_DOWN_START.getValue(); i >= 1; i--) {
+			launch = launch += i + "...";
+		}
+  
+		return launch + LAUNCH_CMD.getValue();
 	}
-	
-	//4) Normally PropertyGroups would be in separate files with the module they apply to
-	@GroupInfo(name="Example Property group", desc="One logical set of properties")
-	public interface MySetOfProps extends PropertyGroup {
-		
-		StrProp SERVICE_URL = StrProp.builder().mustEndWith("/").aliasIn("url").build(); // 5)
-		IntProp TIMEOUT = IntProp.builder().defaultValue(50).build();
-		StrProp QUERY_ENDPOINT = StrProp.builder().required()
-				.desc("Service name added to end of url for the queries").build();
-		// 6)		
-		StrProp CLASSPATH_PROP = StrProp.builder().desc("Classpath location of properties file").build();
+
+	public static void main(String[] args) {
+		GettingStarted gs = new GettingStarted();
+		System.out.println(gs.launch());
 	}
 }
 ```
-### Walking through the example:
-1.	`AndHow` initializes with a simple builder().  _Loaders_ read properties from
-	various sources.  You can determine the order of the loaders - in this example,
-	properties found in System.properties take precedence over values found in
-	the JNDI context, and so on.
-	The 3rd loader, the property file loader, will load from a Java properties file
-	on the classpath.  Naturally, the location of the property file is itself a property.
-	Loaders are available for most common scenarios, including reading from command line.
-2.	Configuration properties are explicitly declared in groups to keep
-	related properties together, then groups are added to the AndHow instance.
-3.	`Property` values can be accessed directly from the Property itself - there is
-	no _magic name string_ to fetch properties from a HashMap.
-	Return values of `getValue()` are _**strongly typed**_.
-4.	Properties are declared just like Java constants - In fact, they _are_ Java
-	constants.  AndHow takes advantage of the fact that fields declared in
-	interfaces are implicitly `public static final` and the `PropertyGroup` interface
-	is the base for all sets of `Properties`.
-	PropertyGroups are self-describing just by the name you choose for them, but
-	you can also include descriptive annotations.
-	Properties describe themselves in their builders, 
-	including the value type (String, Integer, etc), required vs. optional,
-	validation rules and description.
-5.	Each property automatically generates a canonical property name that is
-	used in configuration sources (like system environmental variables) to set
-	that property.  Canonical names are what you would expect for standard Java
-	dot notation.  For instance, the canonical name for SERVICE_URL would be:
-	`SimpleSample.MySetOfProps.SERVICE_URL`
-	However, aliases can be used to work with legacy systems that already have
-	established property keys/names.  For instance, SERVICE_URL can also be
-	set via the name "url".
-6.  The CLASSPATH_PROP Property and its usage by the property loader shows how
-	AndHow can be used to configure itself.  If you want to load from a properties
-	file and specify the location on command line or as an environment variable,
-	this is how you would do it.
+#### Walking through the example:
+### Section 1 : How to declare AndHow Properties
+Properties must be declared as `final static`, but they may be `private` or any other scope.
+Property definitions are constructed with builders that make it easy to define validation,
+description, default values and other metadata all in one place.
+Properties are strongly typed, so default values and validation are specific to the type,
+for instance, the `StrProp` (a `String` type) has regex validation rules available while the
+`IntProp` has greater-than and less-than rules available.
 
-This example will probably fail to start up because none of the Properties marked
-as required will be configured.  This is a good thing - you don't want a miss-
-configured application to appear to start.  Even better, it doesn't just fail,
-it prints a sample configuration for each of the loaders in use.  For the Property
-file loader, it would print something this:
+### Section 2 : How to use AndHow Properties
+AndHow Properties are used just like static final constants, 
+you just need to call `getValue()` to fetch the value.  
+As you would expect, the strong typing means that calling `COUNT_DOWN_START.getValue()`
+returns an `Integer` while calling `LAUNCH_CMD.getValue()` returns a `String`.
 
-```properties
-##########################################################################################
-# Sample properties file generated by AndHow!  strong.simple.valid.App_Configuration  ####
-##################################################  https://github.com/eeverman/andhow ###
-# Property Group 'Example Property group' - One logical set of properties
-# Defined in interface org.simple.SimpleSample.MySetOfProps
+## How do I actually configure some values?
+We're getting there.
+The example has default values for each property so with no other configuration available, 
+invoking the main method uses the default values and prints:  `3...2...1...GoGoGo!`    
+Things are more interesting if the default values are removed from the code above.
+Both properties must be non-null so removing the defaults causes the validation 
+rules to be violated at startup.  Here is an excerpt of the console output when that happens:
+```
+========================================================================
+Drat! There were AndHow startup errors.  Sample configuration files will be written to: '/some_local_tmp_directory/andhow-samples/'
+========================================================================
+REQUIRMENT PROBLEMS - When a required property is not provided
+Detailed list of Requirements Problems:
+Property org.simple.GettingStarted.COUNT_DOWN_START: This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value
+Property org.simple.GettingStarted.LAUNCH_CMD: This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value
+========================================================================
+```
 
-# SERVICE_URL (String) 
-# The configured value must end with '/'
-org.simple.SimpleSample.MySetOfProps.SERVICE_URL = [String]
+**Validation happens at startup and happens for all properties in the entire application.**
+Properties, even those defined in 3rd party jars, are discovered and values for 
+them are loaded and validated.  
+If that fails (as it did above), AndHow throws a RuntimeException to stop 
+application startup and uses property metadata to generate specific error 
+messages and (helpfully) sample configuration files. 
+Here is an excerpt of the Java Properties file created when the example code failed validation:
+```
+# ######################################################################
+# Property Group org.simple.GettingStarted
 
-# TIMEOUT (Integer) 
-# Default Value: 50
-org.simple.SimpleSample.MySetOfProps.TIMEOUT = 50
+# COUNT_DOWN_START (Integer) NON-NULL - Start the countdown from this number
+# The property value must be greater than or equal to 1
+org.simple.GettingStarted.COUNT_DOWN_START = [Integer]
 
-# QUERY_ENDPOINT (String) REQUIRED - Service name added to end of url for the queries
-org.simple.SimpleSample.MySetOfProps.QUERY_ENDPOINT = [String]
-##########################################################################################
-```	
+# LAUNCH_CMD (String) NON-NULL - What to say when its time to launch
+# The property value must match the regex expression '.*Go.*'
+org.simple.GettingStarted.LAUNCH_CMD = [String]
+```
+AndHow uses all of the provided metadata to create a detailed and well commented 
+configuration file for your project.  
+Insert some real values into that file and place it on your classpath at 
+/andhow.properties and it will automatically be discovered and loaded at startup.
+By default, AndHow automatically discovers and loads configuration from seven common sources.  
+The default list of configuration loading, in order, is:
+1. Fixed values (explicitly set in code for AndHow to use)
+2. String[] arguments from the static void main() method
+3. System Properties
+4. Environmental Variables
+5. JNDI
+6. Java properties file on the filesystem (path specified as an AndHow property)
+7. Java properties file on the classpath (defaults to /andhow.properties)
 
-Ready to try it?  Copy some code from the [usage examples](https://github.com/eeverman/andhow/tree/master/andhow-usage-examples).
-Read more in depth about [AndHow!s features](https://github.com/eeverman/andhow/wiki).
-[Contact me](https://github.com/eeverman) if you have questions or would like to help.
-	
+Property values are set on a first-win basis, so if a property is set as fixed value,
+that will take precedence over values passed in to the main method.  
+Values passed to the main method take precedence over system properties as so on.
+
+
 _**&?!**_

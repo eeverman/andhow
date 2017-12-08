@@ -1,32 +1,31 @@
 package org.simple;
 
-/**
- * This example has almost no comments b/c it's a minimal example for the AndHow! homepage.
- */
 import org.yarnandtail.andhow.property.*;
-import org.yarnandtail.andhow.*;
 
-//1
-@GroupInfo(name="Simple AndHow usage example", desc="@GroupInfo documents the contained Properties")
 public class GettingStarted {
-	//2
-	final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull().
-			mustBeGreaterThanOrEqualTo(1).defaultValue(2).build();
 	
-	//3
-	private final static StrProp LAUNCH_COMMAND = StrProp.builder().mustBeNonNull().
-			mustMatchRegex(".*Go.*").build();
+	//1
+	final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
+			.desc("Start the countdown from this number")
+			.mustBeGreaterThanOrEqualTo(1).defaultValue(3).build();
 	
-	//4
+	private final static StrProp LAUNCH_CMD = StrProp.builder().mustBeNonNull()
+			.desc("What to say when its time to launch")
+			.mustMatchRegex(".*Go.*").defaultValue("GoGoGo!").build();
+	
 	public String launch() {
 		String launch = "";
 		
-		//5 - Note the strong typing of COUNT_DOWN_START as an Integer
+		//2
 		for (int i = COUNT_DOWN_START.getValue(); i >= 1; i--) {
 			launch = launch += i + "...";
 		}
 		
-		return launch + LAUNCH_COMMAND.getValue();
+		return launch + LAUNCH_CMD.getValue();
 	}
 	
+	public static void main(String[] args) {
+		GettingStarted gs = new GettingStarted();
+		System.out.println(gs.launch());
+	}
 }

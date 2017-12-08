@@ -21,9 +21,9 @@ public class GettingStartedTest extends AndHowTestBase {
 	@Test
 	public void testLaunch1_SetPropertiesWithSystemProps() {
 
-		//Set the LAUNCH_COMMAND via a system property
+		//Set the LAUNCH_CMD via a system property
 		System.setProperty("org.simple.GettingStarted.COUNT_DOWN_START", "1");
-		System.setProperty("org.simple.GettingStarted.LAUNCH_COMMAND", "Go!Go!Go!");
+		System.setProperty("org.simple.GettingStarted.LAUNCH_CMD", "Go!Go!Go!");
 
 		GettingStarted gs = new GettingStarted();
 		
@@ -37,12 +37,12 @@ public class GettingStartedTest extends AndHowTestBase {
 	public void testLaunch2_SetPropertyWithSystemPropsAndDefault() {
 
 		//2 is the default for COUNT_DOWN_START, so let it be used
-		System.setProperty("org.simple.GettingStarted.LAUNCH_COMMAND", "Gone!");
+		System.setProperty("org.simple.GettingStarted.LAUNCH_CMD", "Gone!");
 
 		GettingStarted gs = new GettingStarted();
 		
-		assertEquals(Integer.valueOf(2), GettingStarted.COUNT_DOWN_START.getValue());
-		assertEquals("2...1...Gone!", gs.launch());
+		assertEquals(Integer.valueOf(3), GettingStarted.COUNT_DOWN_START.getValue());
+		assertEquals("3...2...1...Gone!", gs.launch());
 	}
 	
 
@@ -55,8 +55,8 @@ public class GettingStartedTest extends AndHowTestBase {
 		//For this test there are no AndHowInit classes, so a StdConfig instance
 		//is returned from findConfig().
 		AndHow.findConfig().setCmdLineArgs(new String[] {
-			"org.simple.GettingStarted.COUNT_DOWN_START=3",
-			"org.simple.GettingStarted.LAUNCH_COMMAND=GoManGo!"
+			"org.simple.GettingStarted.COUNT_DOWN_START=4",
+			"org.simple.GettingStarted.LAUNCH_CMD=GoManGo!"
 		}).build();
 		
 		//Note that if the AndHowTestBase class is not used, calling build()
@@ -65,8 +65,8 @@ public class GettingStartedTest extends AndHowTestBase {
 		
 		GettingStarted gs = new GettingStarted();
 		
-		assertEquals(Integer.valueOf(3), GettingStarted.COUNT_DOWN_START.getValue());
-		assertEquals("3...2...1...GoManGo!", gs.launch());
+		assertEquals(Integer.valueOf(4), GettingStarted.COUNT_DOWN_START.getValue());
+		assertEquals("4...3...2...1...GoManGo!", gs.launch());
 	}
 	
 	@Test
@@ -76,14 +76,14 @@ public class GettingStartedTest extends AndHowTestBase {
 		//like this to for a rebuild of AndHow with a new configuration.  Note
 		//the use of NonProductionConfig and the forceBuild() method.
 		NonProductionConfig.instance().setCmdLineArgs(new String[] {
-			"org.simple.GettingStarted.COUNT_DOWN_START=4",
-			"org.simple.GettingStarted.LAUNCH_COMMAND=GoManGo!"
+			"org.simple.GettingStarted.COUNT_DOWN_START=5",
+			"org.simple.GettingStarted.LAUNCH_CMD=GoManGo!"
 		}).forceBuild();
 		
 		GettingStarted gs = new GettingStarted();
 		
-		assertEquals(Integer.valueOf(4), GettingStarted.COUNT_DOWN_START.getValue());
-		assertEquals("4...3...2...1...GoManGo!", gs.launch());
+		assertEquals(Integer.valueOf(5), GettingStarted.COUNT_DOWN_START.getValue());
+		assertEquals("5...4...3...2...1...GoManGo!", gs.launch());
 	}
 	
 }
