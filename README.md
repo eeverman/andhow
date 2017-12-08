@@ -5,13 +5,13 @@ validation for web apps, command line or any application environment.
 
 Key Features
 --------------
-** Strong Typing **
-** Detailed validation **
-** Simple to use **
-** Configuration by convention **
-** Load values from any source **
-** Fails Fast **
-** Self Documenting & Sample Generating **
+* **Strong Typing**
+* **Detailed validation**
+* **Simple to use**
+* **Configuration by convention**
+* **Load values from any source**
+* **Fails Fast**
+* **Self Documenting & Sample Generating**
 
 Use it via Maven (available on Maven Central)
 --------------
