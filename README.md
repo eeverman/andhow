@@ -3,6 +3,8 @@ AndHow!  strong.valid.simple.AppConfiguration
 AndHow is an easy to use configuration framework with strong typing and detailed 
 validation for web apps, command line or any application environment.
 
+_**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
+
 Key Features
 --------------
 * **Strong Typing**
@@ -22,6 +24,10 @@ Use it via Maven (available on Maven Central)
     <version>0.4.0-RC5</version>
 </dependency>
 ```
+
+_**Below is a quick introduction, but complete usage examples and documentation
+are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
+
 Complete Usage Example
 --------------
 ```java
@@ -127,5 +133,6 @@ Property values are set on a first-win basis, so if a property is set as fixed v
 that will take precedence over values passed in to the main method.  
 Values passed to the main method take precedence over system properties as so on.
 
+_**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 _**&?!**_
