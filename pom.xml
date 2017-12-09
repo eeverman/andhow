@@ -150,6 +150,30 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<!-- 3.2.2 req'ed for this bug fix: https://issues.apache.org/jira/browse/MNG-4565 -->
+									<version>3.2.2</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[1.8.0,1.9)</version>
+								</requireJavaVersion>
+							</rules>    
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.8</source>
@@ -226,5 +250,49 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>windows-java.home</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+				<file>
+					<exists>${java.home}/../lib/tools.jar</exists>
+					<missing>${JAVA_HOME}/lib/tools.jar</missing>
+				</file>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>jdk.tools</groupId>
+					<artifactId>jdk.tools</artifactId>
+					<version>jdk1.8.0</version>
+					<scope>system</scope>
+					<systemPath>${java.home}/../lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+		<profile>
+			<id>windows-JAVA_HOME</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+				<file>
+					<exists>${JAVA_HOME}/lib/tools.jar</exists>
+				</file>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>jdk.tools</groupId>
+					<artifactId>jdk.tools</artifactId>
+					<version>jdk1.8.0</version>
+					<scope>system</scope>
+					<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
