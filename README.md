@@ -25,10 +25,10 @@ Use it via Maven (available on Maven Central)
 </dependency>
 ```
 
+:warning: **AndHow currently supports only JDK8. [Help would be appreciated to support JDK9](https://github.com/eeverman/andhow/issues/259).**
+
 _**Below is a quick introduction, but complete usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
-
-:warning: **AndHow is currently supports only JDK8. [Help would be appreciated to support JDK9](https://github.com/eeverman/andhow/issues/259)**
 
 Complete Usage Example
 --------------
