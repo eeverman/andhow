@@ -1,15 +1,11 @@
 package org.yarnandtail.andhow.property;
 
-import org.yarnandtail.andhow.property.PropertyTestBase;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import org.yarnandtail.andhow.PropertyGroup;
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.property.StrProp;
 
 /**
  * Tests StrProp instances as they would be used in an app.
@@ -60,7 +56,7 @@ public class StrPropTest extends PropertyTestBase {
 
 	}
 	
-	public interface ValidationGroup extends PropertyGroup {
+	public interface ValidationGroup {
 		StrProp USER_NAME = StrProp.builder().aliasInAndOut("name").mustMatchRegex("[a-z]+")
 				.mustBeNonNull().desc("Lowercase Only").build();
 		

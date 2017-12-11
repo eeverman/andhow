@@ -2,9 +2,7 @@ package org.yarnandtail.andhow.sample;
 
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.util.TextUtil;
-import org.yarnandtail.andhow.api.BasePropertyGroup;
 
 /**
  *

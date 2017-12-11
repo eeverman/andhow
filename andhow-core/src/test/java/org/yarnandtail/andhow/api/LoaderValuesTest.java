@@ -7,7 +7,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  * @author eeverman
@@ -16,7 +15,7 @@ public class LoaderValuesTest {
 	
 	private static final String CLASSPATH_TO_USE = "/org/yarnandtail/andhow/load/LoaderValuesTest_SimpleParams.properties";
 
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().defaultValue(CLASSPATH_TO_USE).build();
 	}
 	

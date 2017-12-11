@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  */
 public class PropFileOnClasspathLoaderAppTest {
 	
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().build();
 	}
 	

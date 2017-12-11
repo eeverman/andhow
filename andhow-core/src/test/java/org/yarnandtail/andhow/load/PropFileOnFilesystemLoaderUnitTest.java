@@ -16,7 +16,6 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
@@ -32,7 +31,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 	
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp FILEPATH = StrProp.builder().mustBeNonNull().build();
 	}
 	

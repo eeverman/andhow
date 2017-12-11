@@ -37,7 +37,7 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	private static final Integer INT1 = 23572374;
 	private static final Integer INT2 = 9237347;
 	
-	interface AliasGroup1 extends PropertyGroup {
+	interface AliasGroup1 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull()
 				.aliasIn(STR_PROP1_IN).aliasOut(STR_PROP1_OUT_ALIAS).aliasInAndOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 		
@@ -49,17 +49,17 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	}
 	
 	//Has dup alias for strProp1
-	interface AliasGroup2 extends PropertyGroup {
+	interface AliasGroup2 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().aliasIn(STR_PROP1_IN).build();
 	}
 	
 	//Has dup alias for strProp1
-	interface AliasGroup3 extends PropertyGroup {
+	interface AliasGroup3 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().aliasIn(STR_PROP1_IN_AND_OUT_ALIAS).build();
 	}
 	
 	//Has dup alias for strProp1, but is all lower case
-	interface AliasGroup4 extends PropertyGroup {
+	interface AliasGroup4 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().aliasIn(STR_PROP1_IN.toLowerCase()).build();
 	}
 
