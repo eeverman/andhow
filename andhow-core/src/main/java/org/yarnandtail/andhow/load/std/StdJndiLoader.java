@@ -220,7 +220,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 			+ "Typically there are multiple roots to search and multiple forms of "
 			+ "property names, leading to the possibility of duplicate/conflicting JNDI entries. "
 			+ "If multiple entries are found in JNDI for a property, a runtime error is thrown at startup.")
-	public static interface CONFIG extends BasePropertyGroup {
+	public static interface CONFIG {
 
 		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
 				.defaultValue("java:comp/env/,java:,\"\"").mustBeNonNull()

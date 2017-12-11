@@ -34,7 +34,7 @@ public class PropertyTestBase extends AndHowTestBase {
 				.forceBuild();
 	}
 	
-	public static interface TEST_CONFIG extends PropertyGroup {
+	public static interface TEST_CONFIG {
 		StrProp PROP_FILE = StrProp.builder().mustBeNonNull().build();
 	}
 	

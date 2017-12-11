@@ -3,13 +3,12 @@ package org.yarnandtail.andhow.example.restclient;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
 
 /**
  *
  * @author eeverman
  */
-public interface SampleRestClientGroup extends PropertyGroup {
+public interface SampleRestClientGroup {
 	
 	StrProp CLASSPATH_PROP_FILE = StrProp.builder().desc("Classpath location of a properties file w/ props").build();
 	StrProp APP_NAME = StrProp.builder().aliasIn("app.name").aliasIn("app_name").build();

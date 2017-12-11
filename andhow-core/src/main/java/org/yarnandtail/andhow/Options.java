@@ -19,7 +19,7 @@ import org.yarnandtail.andhow.property.StrProp;
  * @author ericeverman
  */
 @GroupInfo(name = "AndHow! Configuration Framework Configuration", desc = "Configures how AndHow itself operates")
-public interface Options extends PropertyGroup {
+public interface Options {
 
 	FlagProp CREATE_SAMPLES = FlagProp.builder().aliasIn("AHForceCreateSamples")
 			.desc("Forces configuration samples to be sent to the console for each loader that supports it.")

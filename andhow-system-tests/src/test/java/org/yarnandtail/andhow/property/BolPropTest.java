@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 
@@ -55,7 +54,7 @@ public class BolPropTest extends PropertyTestBase {
 		}
 	}
 	
-	public interface BolGroup extends PropertyGroup {
+	public interface BolGroup {
 		BolProp ENABLE = BolProp.builder().mustBeNonNull().desc("enable desc").build();
 		BolProp ALIAS_ME = BolProp.builder().aliasInAndOut("iAmAliased").build();
 		BolProp BIG_SWITCH_TRUE = BolProp.builder().defaultValue(true).build();

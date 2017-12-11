@@ -84,12 +84,12 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		}
 	}
 	
-	public static interface UI_CONFIG extends PropertyGroup {
+	public static interface UI_CONFIG {
 		StrProp DISPLAY_NAME = StrProp.builder().mustBeNonNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 	
-	public static interface SERVICE_CONFIG extends PropertyGroup {
+	public static interface SERVICE_CONFIG {
 		StrProp REST_ENDPOINT_URL = StrProp.builder().mustBeNonNull().build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).build();
 		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().build();

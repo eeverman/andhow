@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.property.*;
  * 
  * @author eeverman
  */
-public interface SimpleParams extends PropertyGroup {
+public interface SimpleParams {
 	
 	//Strings
 	StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();

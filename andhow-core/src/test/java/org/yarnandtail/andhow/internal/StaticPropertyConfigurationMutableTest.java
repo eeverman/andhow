@@ -10,7 +10,6 @@ import org.yarnandtail.andhow.api.NamingStrategy;
 import org.yarnandtail.andhow.api.ProblemList;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.PropertyGroup;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.util.NameUtil;
@@ -28,10 +27,10 @@ public class StaticPropertyConfigurationMutableTest {
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
 	}
 	
-	public interface SampleGroup extends PropertyGroup { StrProp STR_1 = StrProp.builder().build(); }
-	public interface SampleGroupDup extends PropertyGroup { StrProp STR_1_DUP = SampleGroup.STR_1; }
+	public interface SampleGroup { StrProp STR_1 = StrProp.builder().build(); }
+	public interface SampleGroupDup { StrProp STR_1_DUP = SampleGroup.STR_1; }
 	
-	public interface RandomUnregisteredGroup extends PropertyGroup { StrProp STR_RND = StrProp.builder().build(); }
+	public interface RandomUnregisteredGroup { StrProp STR_RND = StrProp.builder().build(); }
 	
 	@Test
 	public void testHappyPath() throws Exception {
@@ -134,7 +133,7 @@ public class StaticPropertyConfigurationMutableTest {
 	/**
 	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
 	 */
-	public static interface BadDefaultAndValidationGroup extends PropertyGroup {
+	public static interface BadDefaultAndValidationGroup {
 		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().mustMatchRegex("The[broekn.*").defaultValue("The Big Chill").build();
 		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("Red").build();
 		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().mustMatchRegex("[A-F,0-9]*").defaultValue("FFF000").build();

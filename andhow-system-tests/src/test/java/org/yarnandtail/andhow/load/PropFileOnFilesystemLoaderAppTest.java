@@ -26,7 +26,7 @@ public class PropFileOnFilesystemLoaderAppTest {
 
 	File tempPropertiesFile = null;
 	
-	public static interface TestProps extends PropertyGroup {
+	public static interface TestProps {
 		StrProp FILEPATH = StrProp.builder().build();
 	}
 	

@@ -27,7 +27,7 @@ public class AndHowTest extends AndHowTestBase {
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
 	
-	public static interface RequiredParams extends PropertyGroup {
+	public static interface RequiredParams {
 		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").mustBeNonNull().build();
 		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().mustStartWith("XYZ").build();
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).mustBeNonNull().build();
