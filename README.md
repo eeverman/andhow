@@ -25,7 +25,10 @@ Use it via Maven (available on Maven Central)
 </dependency>
 ```
 
-:warning: **AndHow currently supports only JDK8. [Help would be appreciated to support JDK9](https://github.com/eeverman/andhow/issues/259).**
+**AndHow can be used in projects with JDK8 & 9, however, JDK8 is required to
+build the AndHow project itself.
+[Help would be appreciated to build on JDK9](https://github.com/eeverman/andhow/issues/259)
+and [support Java7](https://github.com/eeverman/andhow/issues/299).**
 
 _**Below is a quick introduction, but complete usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_

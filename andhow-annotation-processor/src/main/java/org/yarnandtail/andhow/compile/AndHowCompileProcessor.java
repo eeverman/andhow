@@ -6,7 +6,6 @@ import org.yarnandtail.andhow.service.PropertyRegistration;
 import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
 
