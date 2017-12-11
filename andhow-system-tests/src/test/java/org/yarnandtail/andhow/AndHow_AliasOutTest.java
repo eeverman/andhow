@@ -44,7 +44,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
 	)
-	interface AliasGroup1 extends PropertyGroup {
+	interface AliasGroup1 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull()
 				.aliasIn(STR_PROP1_IN).aliasOut(STR_PROP1_OUT_ALIAS).aliasInAndOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 		StrProp strProp2 = StrProp.builder()
@@ -56,21 +56,21 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 
 	//Has dup alias for strProp1
-	interface AliasGroup4 extends PropertyGroup {
+	interface AliasGroup4 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().aliasOut(STR_PROP1_IN_AND_OUT_ALIAS).build();
 	}
 	
-	interface AliasGroup5 extends PropertyGroup {
+	interface AliasGroup5 {
 		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
 		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();	//dup right here in the same group
 	}
 	
-	interface AliasGroup6 extends PropertyGroup {
+	interface AliasGroup6 {
 		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
 		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP2_OUT_ALIAS).build();
 	}
 	
-	interface AliasGroup7 extends PropertyGroup {
+	interface AliasGroup7 {
 		StrProp strProp1 = StrProp.builder().aliasOut(STR_PROP1_OUT_ALIAS).build();
 		StrProp strProp2 = StrProp.builder().aliasOut(STR_PROP2_OUT_ALIAS).build();
 	}
@@ -81,14 +81,12 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
 	)
-	interface AliasGroup2 extends BasePropertyGroup {
+	interface AliasGroup2 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().build();
 		StrProp strProp2 = StrProp.builder().build();
 		IntProp intProp1 = IntProp.builder().build();
 		IntProp intProp2 = IntProp.builder().mustBeNonNull().defaultValue(INT2).build();
 	}
-	
-
 	
 	@Test
 	public void testOutAliasForGroup1() {
