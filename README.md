@@ -21,7 +21,7 @@ Use it via Maven (available on Maven Central)
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.4.0-RC5</version>
+    <version>0.4.0-RC6</version>
 </dependency>
 ```
 
