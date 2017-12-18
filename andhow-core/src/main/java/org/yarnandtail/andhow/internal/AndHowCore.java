@@ -19,14 +19,14 @@ import org.yarnandtail.andhow.util.AndHowLog;
  * 
  * @author eeverman
  */
-public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues {
+public class AndHowCore implements StaticPropertyConfigurationInternal, ValidatedValues {
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCore.class);
 	
 	//User config
 	private final List<Loader> loaders = new ArrayList();
 	
 	//Internal state
-	private final StaticPropertyConfiguration staticConfig;
+	private final StaticPropertyConfigurationInternal staticConfig;
 	private final ValidatedValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
 	
@@ -156,7 +156,7 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	}
 	
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private ValidatedValuesWithContext loadValues(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
+	private ValidatedValuesWithContext loadValues(StaticPropertyConfigurationInternal config, ProblemList<Problem> problems) {
 		ValidatedValuesWithContextMutable existingValues = new ValidatedValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
@@ -178,7 +178,7 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	 * @param loadedValues The values to be validated.
 	 * @param problems Add any new problems to this list
 	 */
-	private void doPropertyValidations(StaticPropertyConfiguration config, 
+	private void doPropertyValidations(StaticPropertyConfigurationInternal config, 
 			ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
 		
 		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
@@ -198,7 +198,7 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	 * @param problems Add any new problems to this list
 	 * @param propValue<T> The Property and its value, both of type 'T'.
 	 */
-	private <T> void doPropertyValidation(StaticPropertyConfiguration config,
+	private <T> void doPropertyValidation(StaticPropertyConfigurationInternal config,
 			Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
 		
 		Property<T> prop = propValue.getProperty();
@@ -218,7 +218,7 @@ public class AndHowCore implements StaticPropertyConfiguration, ValidatedValues 
 	}
 	
 
-	private void checkForValuesWhichMustBeNonNull(StaticPropertyConfiguration config, ProblemList<Problem> problems) {
+	private void checkForValuesWhichMustBeNonNull(StaticPropertyConfigurationInternal config, ProblemList<Problem> problems) {
 		
 		for (Property<?> prop : config.getProperties()) {
 			if (prop.isNonNullRequired()) {

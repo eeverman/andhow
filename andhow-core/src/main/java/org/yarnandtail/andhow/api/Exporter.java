@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+
 /**
  * The Exporter provides support for legacy applications that expect
  * to find key/value pairs in a specific source, such as system properties.
@@ -39,7 +41,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(StaticPropertyConfiguration definition, ValidatedValues values);
+	void export(StaticPropertyConfigurationInternal definition, ValidatedValues values);
 	
 	/**
 	 * Exports a Group.
@@ -52,7 +54,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	void export(GroupProxy group, StaticPropertyConfiguration definition, ValidatedValues values);
+	void export(GroupProxy group, StaticPropertyConfigurationInternal definition, ValidatedValues values);
 	
 	public static enum EXPORT_CANONICAL_NAME {
 		ALWAYS, ONLY_IF_NO_OUT_ALIAS, NEVER;

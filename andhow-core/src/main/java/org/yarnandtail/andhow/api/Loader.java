@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public interface Loader {
 	 * @param existingValues
 	 * @return 
 	 */
-	LoaderValues load(StaticPropertyConfiguration runtimeDef,
+	LoaderValues load(StaticPropertyConfigurationInternal runtimeDef,
 			ValidatedValuesWithContext existingValues);
 	
 	/**

@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.export;
 		
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
@@ -44,18 +45,18 @@ public abstract class BaseExporter implements Exporter {
 	 * @param values 
 	 */
 	public abstract <T> void doExport(String name, Property<T> property, 
-			StaticPropertyConfiguration definition, ValidatedValues values);
+			StaticPropertyConfigurationInternal definition, ValidatedValues values);
 		
 	
 	@Override
-	public void export(StaticPropertyConfiguration definition, ValidatedValues values) {
+	public void export(StaticPropertyConfigurationInternal definition, ValidatedValues values) {
 		for (GroupProxy pg : definition.getPropertyGroups()) {
 			export(pg, definition, values);
 		}
 	}
 
 	@Override
-	public void export(GroupProxy group, StaticPropertyConfiguration definition, ValidatedValues values) {
+	public void export(GroupProxy group, StaticPropertyConfigurationInternal definition, ValidatedValues values) {
 		List<Property<?>> props = definition.getPropertiesForGroup(group);
 		
 		for (Property<?> prop : props) {
@@ -63,7 +64,7 @@ public abstract class BaseExporter implements Exporter {
 		}
 	}
 	
-	public void export(Property<?> property, StaticPropertyConfiguration definition, ValidatedValues values) {
+	public void export(Property<?> property, StaticPropertyConfigurationInternal definition, ValidatedValues values) {
 		
 		List<String> names = new ArrayList();
 		
@@ -99,7 +100,7 @@ public abstract class BaseExporter implements Exporter {
 		
 	}
 	
-	protected boolean hasOutAlias(Property<?> property, StaticPropertyConfiguration definition) {
+	protected boolean hasOutAlias(Property<?> property, StaticPropertyConfigurationInternal definition) {
 		List<EffectiveName> aliases = definition.getAliases(property);
 		
 		for (EffectiveName a : aliases) {

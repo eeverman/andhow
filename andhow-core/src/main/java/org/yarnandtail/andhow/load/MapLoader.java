@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 
@@ -26,7 +27,7 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, 
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, 
 			ValidatedValuesWithContext existingValues) {
 		
 		Map<?, ?> props = getMap();

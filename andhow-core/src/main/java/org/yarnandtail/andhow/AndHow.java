@@ -140,7 +140,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 						if (ex instanceof AppFatalException) {
 							throw (AppFatalException) ex;
 						} else {
-							throwFatal(ex);
+							throwFatal("", ex);
 						}
 					}
 
@@ -179,7 +179,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	//
-	//ConstructionDefinition Interface
+	//StaticPropertyConfiguration Interface
 	@Override
 	public List<EffectiveName> getAliases(Property<?> property) {
 		return core.getAliases(property);
@@ -196,42 +196,8 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	@Override
-	public List<Property<?>> getPropertiesForGroup(GroupProxy group) {
-		return core.getPropertiesForGroup(group);
-	}
-
-	@Override
-	public Property<?> getProperty(String name) {
-		return core.getProperty(name);
-	}
-
-	@Override
-	public List<GroupProxy> getPropertyGroups() {
-		return core.getPropertyGroups();
-	}
-	
-	@Override
-	public boolean containsUserGroups() {
-		return core.containsUserGroups();
-	}
-
-	@Override
-	public List<Property<?>> getProperties() {
-		return core.getProperties();
-	}
-
-	@Override
-	public List<ExportGroup> getExportGroups() {
-		return core.getExportGroups();
-	}
-
-	@Override
 	public NamingStrategy getNamingStrategy() {
 		return core.getNamingStrategy();
-	}
-
-	private static void throwFatal(Throwable throwable) {
-		throwFatal("", throwable);
 	}
 	
 	/**

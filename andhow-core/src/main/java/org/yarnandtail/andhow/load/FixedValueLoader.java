@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.*;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
@@ -37,7 +38,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 		
 		if (values != null && values.size() > 0) {
 			List<ValidatedValue> vvs = new ArrayList(values.size());

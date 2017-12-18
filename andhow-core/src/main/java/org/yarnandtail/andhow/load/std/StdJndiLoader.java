@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.*;
@@ -36,7 +37,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
 		
@@ -148,7 +149,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	 * @param prop
 	 * @return An ordered list of jndi names, with (hopefully) the most likely names first.
 	 */
-	protected List<String> buildJndiNames(StaticPropertyConfiguration appConfigDef, List<String> roots, Property prop) {
+	protected List<String> buildJndiNames(StaticPropertyConfigurationInternal appConfigDef, List<String> roots, Property prop) {
 		
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value

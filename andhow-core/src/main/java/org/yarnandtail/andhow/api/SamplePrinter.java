@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.PrintStream;
 
 /**
@@ -28,17 +29,17 @@ public interface SamplePrinter {
 	/** Lead-in for a default value */
 	static final String DEFAULT_VALUE_TEXT = "Default Value";
 	
-	void printSampleStart(StaticPropertyConfiguration definition, PrintStream out);
+	void printSampleStart(StaticPropertyConfigurationInternal definition, PrintStream out);
 	
-	void printPropertyGroupStart(StaticPropertyConfiguration definition, PrintStream out, 
+	void printPropertyGroupStart(StaticPropertyConfigurationInternal definition, PrintStream out, 
 			GroupProxy group);
 
-	void printProperty(StaticPropertyConfiguration definition, PrintStream out, 
+	void printProperty(StaticPropertyConfigurationInternal definition, PrintStream out, 
 			GroupProxy group, Property<?> prop);
 	
-	void printPropertyGroupEnd(StaticPropertyConfiguration definition, PrintStream out, GroupProxy group);
+	void printPropertyGroupEnd(StaticPropertyConfigurationInternal definition, PrintStream out, GroupProxy group);
 	
-	void printSampleEnd(StaticPropertyConfiguration definition, PrintStream out);
+	void printSampleEnd(StaticPropertyConfigurationInternal definition, PrintStream out);
 	
 	/**
 	 * The file extention to use for sample files, eg 'properties' or 'xml'.

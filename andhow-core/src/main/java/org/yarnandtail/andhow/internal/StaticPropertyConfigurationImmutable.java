@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.api.*;
  * 
  * @author eeverman
  */
-public class StaticPropertyConfigurationImmutable implements StaticPropertyConfiguration {
+public class StaticPropertyConfigurationImmutable implements StaticPropertyConfigurationInternal {
 
 	private final NamingStrategy namingStrategy;
 	private final List<GroupProxy> groupList;

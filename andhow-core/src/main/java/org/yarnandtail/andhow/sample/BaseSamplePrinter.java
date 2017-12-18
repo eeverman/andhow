@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.sample;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,11 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	 * Must provide its own line comment prefix if the format has no block comment.
 	 * @return 
 	 */
-	public abstract TextBlock getSampleStartComment(StaticPropertyConfiguration definition);
+	public abstract TextBlock getSampleStartComment(StaticPropertyConfigurationInternal definition);
 	
-	public abstract String getInAliaseString(StaticPropertyConfiguration definition, EffectiveName name);
+	public abstract String getInAliaseString(StaticPropertyConfigurationInternal definition, EffectiveName name);
 	
-	public abstract TextBlock getActualProperty(StaticPropertyConfiguration definition, 
+	public abstract TextBlock getActualProperty(StaticPropertyConfigurationInternal definition, 
 			GroupProxy group, Property prop) throws Exception;
 	
 	public abstract TextBlock getSampleFileEnd();
@@ -129,7 +130,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 
 	@Override
-	public void printSampleStart(StaticPropertyConfiguration definition, PrintStream out) {
+	public void printSampleStart(StaticPropertyConfigurationInternal definition, PrintStream out) {
 		print(out, getSampleFileStart(), getFormat());
 		TextBlock tb = getSampleStartComment(definition);
 		
@@ -140,7 +141,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	}
 	
 	@Override
-	public void printPropertyGroupStart(StaticPropertyConfiguration definition, 
+	public void printPropertyGroupStart(StaticPropertyConfigurationInternal definition, 
 			PrintStream out, GroupProxy group) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -179,7 +180,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 	
 	@Override
-	public void printProperty(StaticPropertyConfiguration definition, PrintStream out,
+	public void printProperty(StaticPropertyConfigurationInternal definition, PrintStream out,
 			GroupProxy group, Property<?> prop) {
 		
 		TextBlock tb = new TextBlock(true, true);
@@ -247,12 +248,12 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 	
 
 	@Override
-	public void printPropertyGroupEnd(StaticPropertyConfiguration definition, 
+	public void printPropertyGroupEnd(StaticPropertyConfigurationInternal definition, 
 			PrintStream out, GroupProxy group) {
 	}
 	
 	@Override
-	public void printSampleEnd(StaticPropertyConfiguration definition, PrintStream out) {
+	public void printSampleEnd(StaticPropertyConfigurationInternal definition, PrintStream out) {
 		TextBlock tb = getSampleFileEnd();
 		print(out, tb, getFormat());
 	}
