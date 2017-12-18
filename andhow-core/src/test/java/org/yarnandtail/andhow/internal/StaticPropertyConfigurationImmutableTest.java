@@ -55,7 +55,7 @@ public class StaticPropertyConfigurationImmutableTest {
 		cdm.addProperty(proxy, SimpleParams.FLAG_FALSE);
 		
 		
-		StaticPropertyConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfigurationInternal appDef = cdm.toImmutable();
 		
 		//Canonical Names for Property
 		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
@@ -95,7 +95,7 @@ public class StaticPropertyConfigurationImmutableTest {
 
 		problems.add(cdm.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
 		
-		StaticPropertyConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfigurationInternal appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -128,7 +128,7 @@ public class StaticPropertyConfigurationImmutableTest {
 		
 		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
 		
-		StaticPropertyConfiguration appDef = cdm.toImmutable();
+		StaticPropertyConfigurationInternal appDef = cdm.toImmutable();
 		
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));

@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
  * 
  * @author eeverman
  */
-public class StaticPropertyConfigurationMutable implements StaticPropertyConfiguration {
+public class StaticPropertyConfigurationMutable implements StaticPropertyConfigurationInternal {
 	
 	private final NamingStrategy namingStrategy;
 	private final Map<GroupProxy, List<Property<?>>> propertiesByGroup = new HashMap();
@@ -255,7 +255,7 @@ public class StaticPropertyConfigurationMutable implements StaticPropertyConfigu
 	 * 
 	 * @return 
 	 */
-	public StaticPropertyConfiguration toImmutable() {
+	public StaticPropertyConfigurationInternal toImmutable() {
 		return new StaticPropertyConfigurationImmutable(namingStrategy, groupList, properties,
 			propertiesByGroup, propertiesByAnyName, 
 			aliasesByProperty, canonicalNameByProperty, 

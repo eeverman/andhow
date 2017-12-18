@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.InputStream;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
@@ -30,7 +31,7 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	public PropFileBaseLoader() { /* empty for easy construction */ }
 	
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
-			String fromPath, StaticPropertyConfiguration appConfigDef,
+			String fromPath, StaticPropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues) throws LoaderException {
 		
 		

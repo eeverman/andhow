@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -42,7 +43,7 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 	
 
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -62,7 +63,7 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 		}
 	}
 	
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef,
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues, String path) {
 		
 		if (path != null) {

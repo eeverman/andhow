@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -77,7 +78,7 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfiguration appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 		
 		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();

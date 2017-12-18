@@ -1,25 +1,32 @@
 package org.yarnandtail.andhow.api;
 
-import java.util.*;
+import java.util.List;
 
 /**
- * Configuration and metadata for all known static Properties,
+ * Public view of configuration and metadata for all known static Properties.
  * 
  * This is the entire domain of Properties defined as static properties
  * (ie the property is defined as a static variable) and on the classpath
  * (or explicitly configured) to be part of AndHow in the current classloader.
- * 
+ * <br>
  * This definition does not include the actual values configured for the
- * Properties or Loaders.  This interface is analogous to the list of declared
- * fields.  The values assigned to those fields is analogous to the ValueMap
- * interface.
+ * Properties - That is in the ValidatedValues interface.
+ * <br>
+ * Note that it is not possible to list all known Properties or look them up
+ * by name or group.  This is intentional to enforce security.  Property
+ * declarations follow Java visibility rules, so you must have the reference to
+ * the actual property to look up information or values for that property.  For
+ * instance, this property:
+ * <br>
+ * <code>private static final StrProp FOO = StrProp.builder().build();</code>
+ * <br>
+ * Is declared as private.  If any part of the public AndHow API provides an
+ * alternate path to access the property and read its value, it would bypass
+ * the intended visibility of the property.
  * 
- * @author eeverman
  */
 public interface StaticPropertyConfiguration {
 
-	public static final List<Property<?>> EMPTY_PROPERTY_LIST = Collections.unmodifiableList(new ArrayList());
-	
 	/**
 	 * Returns all aliases (in and out) for a property.
 	 *
@@ -51,69 +58,8 @@ public interface StaticPropertyConfiguration {
 	GroupProxy getGroupForProperty(Property<?> prop);
 
 	/**
-	 * Returns a complete list of all registered properties.
-	 *
-	 * @return An unmodifiable list of registered properties.
-	 */
-	List<Property<?>> getProperties();
-	
-	/**
-	 * Returns true if any of the registered groups are user groups.
-	 * 
-	 * False would indicate that no user groups were found or explicitly registered.
-	 * @return 
-	 */
-	boolean containsUserGroups();
-
-	/**
-	 * Returns a list of Properties registered in the passed group.
-	 * 
-	 * If the group is unregistered or has no properties, an empty list is returned.
-	 * 
-	 * @param group The group to get Properties for
-	 * @return An unmodifiable list of Properties
-	 */
-	List<Property<?>> getPropertiesForGroup(GroupProxy group);
-	
-	/**
-	 * Returns a list of all registered groups.
-	 *
-	 * @return An unmodifiable list of Groups
-	 */
-	List<GroupProxy> getPropertyGroups();
-
-	/**
-	 * Finds a registered property by any recognized classpath style name,
-	 * including the canonical name or 'in' aliases.
-	 * 
-	 * Note that this recognizes only classpath style names, not URI style names
-	 * such as would be used in JNDI.
-	 * 
-	 * Some loaders, like the JndiLoader will read both the classpath name, like
-	 * <code>my.property</code> and the URI style name, like <code>my/property</code>.
-	 * The URI style name is just a means of reading properties in another system - 
-	 * for AndHow the URI style name is not considered an actual name.
-	 *
-	 * @param classpathStyleName A path to a property in the classpath style.
-	 * @return The Property or null if it is not found.
-	 */
-	Property<?> getProperty(String classpathStyleName);
-	
-	/**
-	 * The list of ExportGroups, which handles exporting property values for use
-	 * outside the AndHow framework.
-	 * 
-	 * An ExportGroup bundles an Exporter implementation with a Group
-	 * to be exported.  After startup is complete, each Exporter will export its
-	 * group as configured.
-	 * 
-	 * @return An unmodifiable list of export groups.
-	 */
-	List<ExportGroup> getExportGroups();
-	
-	/**
 	 * Defines how names are created for Properties.
-	 * 
+	 *
 	 * @return The NamingStrategy in use.
 	 */
 	NamingStrategy getNamingStrategy();

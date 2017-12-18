@@ -1,8 +1,8 @@
 package org.yarnandtail.andhow.export;
 
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.StaticPropertyConfiguration;
 import org.yarnandtail.andhow.api.ValidatedValues;
+import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 
 /**
  * Exports Properties to System.Properties.
@@ -20,7 +20,7 @@ public class SysPropExporter extends BaseExporter {
 	
 	@Override
 	public <T> void doExport(String name, Property<T> property, 
-			StaticPropertyConfiguration definition, ValidatedValues values) {
+			StaticPropertyConfigurationInternal definition, ValidatedValues values) {
 		T value = values.getValue(property);
 		
 		if (value != null) {
