@@ -161,8 +161,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 				
 				if (! desc.endsWith(".")) desc = desc + ".";
 				
-				tb.addLine(TextUtil.format("Property Group '{}' - {}  Defined in interface {}", 
-						name, desc, group.getCanonicalName()));
+				tb.addLine(TextUtil.format("Property Group '{}' - {}", name, desc));
+				tb.addLine(TextUtil.format("Defined in {}", group.getCanonicalName()));
 
 			} else {
 				tb.addLine(TextUtil.format("Property Group {}", group.getCanonicalName()));

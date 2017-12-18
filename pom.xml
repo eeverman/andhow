@@ -143,6 +143,7 @@
 					<version>2.10.4</version>
 					<configuration>
 						<additionalparam>-Xdoclint:none</additionalparam>
+						<quiet>true</quiet>
 					</configuration>
 				</plugin>
 				<plugin>
