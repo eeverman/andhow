@@ -201,7 +201,7 @@
 				<configuration>
 					<arguments>remoteDeploy=true</arguments>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<releaseProfiles>source-and-javadoc-jar, gpg-sign</releaseProfiles>
+					<releaseProfiles>source-and-javadoc-jar,gpg-sign</releaseProfiles>
 					<useReleaseProfile>true</useReleaseProfile>
 					<preparationGoals>clean verify</preparationGoals>
 					<goals>deploy</goals>
