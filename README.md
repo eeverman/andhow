@@ -26,9 +26,7 @@ Use it via Maven (available on Maven Central)
 ```
 
 **AndHow can be used in projects with JDK8 & 9**
-JDK8 is required to build the AndHow project itself,
-[are you interested in helping build on JDK9](https://github.com/eeverman/andhow/issues/259)
-or [supporting Java7?](https://github.com/eeverman/andhow/issues/299).**
+[JDK8 is required to build the AndHow project](https://github.com/eeverman/andhow/issues/259) itself.
 
 _**Below is a quick introduction, but complete usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
@@ -71,7 +69,7 @@ public class GettingStarted {
 Walking through the example:
 ### Section 1 : Declaring AndHow Properties
 Properties must be `final static`, but may be `private` or any other scope.
-'builder' methods simplify adding validation, description, defaults and
+`builder` methods simplify adding validation, description, defaults and
 other metadata.
 Properties are strongly typed, so default values and validation are specific to
 the type, for instance, `StrProp` has regex validation rules for `String`s
