@@ -10,10 +10,10 @@ Key Features
 * **Strong Typing**
 * **Detailed validation**
 * **Simple to use**
-* **Configuration by convention**
-* **Load values from any source**
-* **Fails Fast**
-* **Self Documenting & Sample Generating**
+* **Use Java _public_ & _private_ to control configuration visibility**
+* **Validate _all_ property values at startup to _Fail Fast_**
+* **Load values from multiple sources (JNDI, env vars, prop files, etc)**
+* **Auto-generate configuration sample for application properties**
 
 Use it via Maven (available on Maven Central)
 --------------
@@ -21,14 +21,14 @@ Use it via Maven (available on Maven Central)
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.4.0-RC6</version>
+    <version>0.4.0-RC7</version>
 </dependency>
 ```
 
-**AndHow can be used in projects with JDK8 & 9, however, JDK8 is required to
-build the AndHow project itself.
-[Help would be appreciated to build on JDK9](https://github.com/eeverman/andhow/issues/259)
-and [support Java7](https://github.com/eeverman/andhow/issues/299).**
+**AndHow can be used in projects with JDK8 & 9**
+JDK8 is required to build the AndHow project itself,
+[are you interested in helping build on JDK9](https://github.com/eeverman/andhow/issues/259)
+or [supporting Java7?](https://github.com/eeverman/andhow/issues/299).**
 
 _**Below is a quick introduction, but complete usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
@@ -68,31 +68,32 @@ public class GettingStarted {
 	}
 }
 ```
-#### Walking through the example:
-### Section 1 : How to declare AndHow Properties
-Properties must be declared as `final static`, but they may be `private` or any other scope.
-Property definitions are constructed with builders that make it easy to define validation,
-description, default values and other metadata all in one place.
-Properties are strongly typed, so default values and validation are specific to the type,
-for instance, the `StrProp` (a `String` type) has regex validation rules available while the
-`IntProp` has greater-than and less-than rules available.
+Walking through the example:
+### Section 1 : Declaring AndHow Properties
+Properties must be `final static`, but may be `private` or any other scope.
+'builder' methods simplify adding validation, description, defaults and
+other metadata.
+Properties are strongly typed, so default values and validation are specific to
+the type, for instance, `StrProp` has regex validation rules for `String`s
+while the `IntProp` has greater-than and less-than rules available.
 
-### Section 2 : How to use AndHow Properties
-AndHow Properties are used just like static final constants, 
-you just need to call `getValue()` to fetch the value.  
-As you would expect, the strong typing means that calling `COUNT_DOWN_START.getValue()`
+### Section 2 : Using AndHow Properties
+AndHow Properties are used just like static final constants with an added
+`.getValue()` on the end to fetch the value.  
+Strong typing means that calling `COUNT_DOWN_START.getValue()`
 returns an `Integer` while calling `LAUNCH_CMD.getValue()` returns a `String`.
 
-## How do I actually configure some values?
+### How do I actually configure some values?
 We're getting there.
-The example has default values for each property so with no other configuration available, 
-invoking the main method uses the default values and prints:  `3...2...1...GoGoGo!`    
+The example has defaults for each property so with no other configuration available, 
+the main method uses the defaults and prints:  `3...2...1...GoGoGo!`    
 Things are more interesting if the default values are removed from the code above.
-Both properties must be non-null so removing the defaults causes the validation 
+Both properties must be non-null, so removing the defaults causes the validation 
 rules to be violated at startup.  Here is an excerpt of the console output when that happens:
 ```
 ========================================================================
-Drat! There were AndHow startup errors.  Sample configuration files will be written to: '/some_local_tmp_directory/andhow-samples/'
+Drat! There were AndHow startup errors.
+Sample configuration files will be written to: '/some_local_tmp_directory/andhow-samples/'
 ========================================================================
 REQUIRMENT PROBLEMS - When a required property is not provided
 Detailed list of Requirements Problems:
