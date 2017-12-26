@@ -3,6 +3,8 @@ AndHow!  strong.valid.simple.AppConfiguration
 AndHow is an easy to use configuration framework with strong typing and detailed 
 validation for web apps, command line or any application environment.
 
+![Andhow Visual](andhow.gif)
+
 _**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 Key Features
