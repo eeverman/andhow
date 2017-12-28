@@ -1,3 +1,4 @@
+![Andhow Visual](andhow.gif)
 AndHow!  strong.valid.simple.AppConfiguration
 ======
 AndHow is an easy to use configuration framework with strong typing and detailed 
