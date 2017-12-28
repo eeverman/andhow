@@ -66,15 +66,14 @@
 	</properties>
 
 	<modules>
-		<module>andhow-system-tests</module>
-		<module>andhow-test-harness</module>
-		<module>andhow-annotation-processor</module>
-		<module>andhow-annotation-processor-tests</module>
-		<module>andhow-annotation-processor-test-harness</module>
-		<module>andhow-usage-examples</module>
-		<module>andhow-simulated-app-tests</module>
 		<module>andhow-core</module>
+		<module>andhow-annotation-processor</module>
 		<module>andhow</module>
+		<module>andhow-testing/andhow-system-tests</module>
+		<module>andhow-testing/andhow-annotation-processor-tests</module>
+		<module>andhow-testing/andhow-simulated-app-tests</module>
+		<module>andhow-testing/andhow-test-harness</module>
+		<module>andhow-testing/andhow-annotation-processor-test-harness</module>
 	</modules>
 
 	<repositories>
