@@ -5,3 +5,5 @@
 **/dependency-reduced-pom.xml
 **/nbproject/
 **/nbproject/project.properties
+*.releaseBackup
+release.properties
