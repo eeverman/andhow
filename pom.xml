@@ -74,7 +74,6 @@
 		<module>andhow-testing/andhow-simulated-app-tests</module>
 		<module>andhow-testing/andhow-test-harness</module>
 		<module>andhow-testing/andhow-annotation-processor-test-harness</module>
-		<module>andhow-usage-examples</module>
 	</modules>
 
 	<repositories>
