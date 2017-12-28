@@ -16,6 +16,10 @@ Key Features
 * **Load values from multiple sources (JNDI, env vars, prop files, etc)**
 * **Auto-generate configuration sample for application properties**
 
+Contact / Questions / Feedback
+--------------
+Contact me on [Twitter](https://twitter.com/eeverman).
+
 Use it via Maven (available on Maven Central)
 --------------
 ```xml
