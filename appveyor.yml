@@ -1,0 +1,21 @@
+version: '{build}'
+skip_tags: true
+clone_depth: 10
+environment:
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+    # Append additional lines defining new values of JAVA_HOME to test multiple versions
+install:
+  # Prepend Java entry, remove Ruby entry (C:\Ruby193\bin;) from PATH
+  - cmd: choco upgrade maven
+  - cmd: SET PATH=%JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%;
+  - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=1g -Xmx2g
+  - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
+  # Print debug info
+  - cmd: C:\ProgramData\chocolatey\bin\mvn.exe --version
+  - cmd: java -version
+build_script:
+  - C:\ProgramData\chocolatey\bin\mvn.exe clean install
+cache:
+  - C:\maven\ -> appveyor.yml
+  - C:\Users\appveyor\.m2\ -> pom.xml
