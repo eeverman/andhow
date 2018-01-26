@@ -11,10 +11,10 @@ install:
   - cmd: SET PATH=JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%;
   - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=1g -Xmx2g
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
-  - cmd: C:\ProgramData\chocolatey\bin\mvn --version
+  - cmd: C:\ProgramData\chocolatey\bin\mvn.exe --version
   - cmd: java -version
 build_script:
-  - C:\ProgramData\chocolatey\bin\mvn clean install
+  - C:\ProgramData\chocolatey\bin\mvn.exe clean install
 cache:
   - C:\maven\ -> appveyor.yml
   - C:\Users\appveyor\.m2\ -> pom.xml
