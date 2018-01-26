@@ -7,7 +7,8 @@ environment:
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
 install:
   # Prepend Java entry, remove Ruby entry (C:\Ruby193\bin;) from PATH
-  - cmd: dir C:\maven\
+  - cmd: choco upgrade maven
+  - cmd: C:\ProgramData\chocolatey\bin\RefreshEnv
   - cmd: SET PATH=JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%;
   - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=1g -Xmx2g
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
