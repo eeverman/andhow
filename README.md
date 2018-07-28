@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow) [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 ![Andhow Visual](andhow.gif)
 AndHow!  strong.valid.simple.AppConfiguration
 ======
