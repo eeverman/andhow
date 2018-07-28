@@ -5,6 +5,7 @@
 		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
 		<version>0.4.1-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>andhow-simulated-app-tests</artifactId>
 	<packaging>pom</packaging>
