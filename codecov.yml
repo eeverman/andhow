@@ -1,0 +1,6 @@
+## YAML Template.
+---
+coverage:
+  range: 0..60
+  round: down
+  precision: 2
