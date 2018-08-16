@@ -7,11 +7,18 @@ import org.yarnandtail.andhow.api.Property;
  * 
  * @author eeverman
  */
-public class PropertyValue<T> {
+ public class PropertyValue<T> {
 
 	private final Property<T> property;
 	private final T value;
 
+	/**
+	 * Overrides standard equals to return true if the Property is the same
+	 * class instance and the values are equal.
+	 * 
+	 * @param obj
+	 * @return true or false based on same Property instance and equal value.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		boolean basicPropsEq = false;
@@ -28,7 +35,7 @@ public class PropertyValue<T> {
 			
 		}
 		
-		return false;
+		return basicPropsEq;
 	}
 
 	@Override
