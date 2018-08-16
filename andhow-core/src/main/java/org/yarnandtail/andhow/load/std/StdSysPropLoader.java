@@ -5,30 +5,68 @@ import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.MapLoader;
 
 /**
- * Loads properties from java.lang.System.getProperties().
- *
- * While the values of System.properties can change, this loader loads a
- snapshot of the property values it finds at the time of the load. Changes to
- System.properties will not affect the values after they are loaded.
-
- This loader does not trim incoming values for String type properties - they
- are assumed to already be in final form. This loader does not consider it a
- problem to find unrecognized properties in System.properties (this would
- nearly always be the case).
-
- The HashMap backing System.Properties does not accept null values, so this
- loader has no concept of any incoming null value.
-
- For FlgProp properties (flags), the StdSysPropLoader will interpret the
- presence of the property name as setting the property true, even if the value
- of the property is empty. System properties can be cleared via
- java.lang.System.clearProperty(name), which is how a flag value could be
- unset prior to AndHow loading.
+ * Reads the Java system properties and loads the value for any system property
+ * who's name matches a Property.
+ * <h4>Position in Standard Loading Order, first to last</h4>
+ * <ul>
+ * <li>StdFixedValueLoader
+ * <li>StdMainStringArgsLoader
+ * <li><b>StdSysPropLoader &lt;-- This loader</b>
+ * <li>StdEnvVarLoader
+ * <li>StdJndiLoader
+ * <li>StdPropFileOnFilesystemLoader
+ * <li>StdPropFileOnClasspathLoader
+ * </ul>
+ * <em>Property value loading is based on a 'first win' strategy, so the first
+ * loader to find a value for a property sets the value.</em>
+ * 
+ * <h4>Typical Use Case</h4>
+ * An application might receive all or some of its configuration from Java
+ * system properties that are set when the JVM starts.  Java system properties
+ * can be set in a startup script, which could be customized for each environment.
+ * This provides a relatively easy way for deployment automation or system
+ * administrators to control application configuration values across many servers.
+ * <h4>Basic Behaviors</h4>
+ * <ul>
+ * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
+ * <li><b>Complains about unrecognized properties: No</b>
+ * <li><b>Default behavior:  AndHow always attempts to read Java system
+ * properties and will assign property values if any of the system properties
+ * match known property names.</b>
+ * </ul>
+ * 
+ * <h4>Loader Details and Configuration</h4>
+ * This loader loads properties from {@code java.lang.System.getProperties()}.
+ * Over the lifecycle of the JVM, values of system properties can change
+ * so this loader is working from a snapshot of the system properties it finds
+ * at the time of AndHow initialization.
+ * <em>Once loaded, AndHow property values never change.</em>
+ * <br>
+ * For {@code FlgProp} properties (true/false flags), the {@code StdSysPropLoader}
+ * will set the Property's value to true if a matching environment variable is found,
+ * even if the value of the property is empty.  System properties can be cleared via
+ * {@code java.lang.System.clearProperty(name)}, which is how a flag value could
+ * be unset prior to AndHow loading.
+ * <br>
+ * Passing system properties on command line looks like this:
+ * <pre>java -Dfull.name.of.MY_PROPERTY=someValue -jar MyJarName.jar</pre>
+ * 
+ * <h4>This is a Standard Loader</h4>
+ * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
+ * by AndHow.  The set of standard loaders and their order can bet set
+ * via the {@code AndHowConfiguration.setStandardLoaders()} methods.
+ * Other loaders which don't implement the {@code StandardLoader} interface can
+ * be inserted into the load order via the
+ * {@code AndHowConfiguration.insertLoaderBefore/After()}.
  *
  * @author eeverman
  */
 public class StdSysPropLoader extends MapLoader implements StandardLoader {
 	
+	/**
+	 * There is no reason to use the constructor in production application code
+	 * because AndHow creates a single instance on demand at runtime.
+	 */
 	public StdSysPropLoader() {
 		unknownPropertyAProblem = false;
 	}

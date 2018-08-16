@@ -34,7 +34,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * <li><b>Complains if the .properties file is missing: No</b>
  * <li><b>Default behavior:  Attempts to read {@code andhow.properties} from the root of the classpath</b>
  * </ul>
- * <h4>Other Loader Details</h4>
+ * <h4>Loader Details and Configuration</h4>
  * This loader reads properties files using the {@code java.util.Properties},
  * which silently ignores duplicate property entries
  * (i.e., the same key appearing multiple times).  When there are duplicate 
@@ -47,6 +47,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * For instance, a system property could specify that {@code /test.properties}
  * be used on a test server and {@code /production.properties} on a production
  * server.  An example of configuring the property file path:
+ * <br>
  * <pre>
  * import org.yarnandtail.andhow.*;
  * import org.yarnandtail.andhow.property.StrProp;
@@ -63,7 +64,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  *   }
  * }
  * </pre>
- *  The code above adds the property {@code MY_CLASSPATH}
+ * The code above adds the property {@code MY_CLASSPATH}
  * (the name is arbitrary) which is used to configure the 
  * {@code StdPropFileOnClasspathLoader} with a custom property file location.
  * When AndHow initializes, the {@code StdPropFileOnClasspathLoader} checks to
@@ -74,10 +75,9 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * <h4>This is a Standard Loader</h4>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
- * via the {@code AndHowConfiguration.setStandardLoaders()}
- * methods, which take a list of {@code Class<StandardLoader>}'s.
+ * via the {@code AndHowConfiguration.setStandardLoaders()} methods.
  * Other loaders which don't implement the {@code StandardLoader} interface can
- * be added to the load order via the
+ * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
  *
  * @author eeverman
@@ -87,6 +87,10 @@ public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader
 
 	public static final String DEFAULT_PROP_FILE = "/andhow.properties";
 	
+	/**
+	 * There is no reason to use the constructor in production application code
+	 * because AndHow creates a single instance on demand at runtime.
+	 */
 	public StdPropFileOnClasspathLoader() {
 		missingFileAProblem = false;
 	}

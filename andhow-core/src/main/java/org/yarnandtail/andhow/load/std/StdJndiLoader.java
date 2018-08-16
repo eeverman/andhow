@@ -15,17 +15,93 @@ import org.yarnandtail.andhow.util.AndHowLog;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * Loads values from a JNDI context.
- *
- * This loader can handle two types of objects coming from JNDI: Either the
- * incoming object must already be of the correct destination type (such as a
- * DateTime object), or it my be a string that is parsable by the associated
- * ValueType to the destination type.
- *
- * If the incoming value is a String and the destination type is a string, this
- * loader does not trim the value - the value is assumed to already be in final
- * form. This loader does not consider it a problem to find unrecognized
- * properties in the JNDI context (this would nearly always be the case).
+ * Attempts to look up the name of each known {@code Property} in the JNDI
+ * environment and loads the value for any that are found.
+ * <h4>Position in Standard Loading Order, first to last</h4>
+ * <ul>
+ * <li>StdFixedValueLoader
+ * <li>StdMainStringArgsLoader
+ * <li>StdSysPropLoader
+ * <li>StdEnvVarLoader
+ * <li><b>StdJndiLoader &lt;-- This loader</b>
+ * <li>StdPropFileOnFilesystemLoader
+ * <li>StdPropFileOnClasspathLoader
+ * </ul>
+ * <h4>Typical Use Case</h4>
+ * A web or service application runs in an application container such as Tomcat.
+ * Application containers provide a JNDI environment which can be used to
+ * configure applications running in their environment.
+ * <h4>Basic Behaviors</h4>
+ * <ul>
+ * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
+ * <li><b>Complains about unrecognized properties: No</b>
+ * <li><b>Complains about missing JNDI environment:  No</b> (by default)
+ * <li><b>Default behavior:  Always attempts to look up each Property in the JNDI environment</b>
+ * <li><b>Is case sensitive: Yes</b> (This is one of the only loaders that is case sensitive)
+ * </ul>
+ * <h4>Loader Details and Configuration</h4>
+ * While most other loaders are case insensitive, the JNDI loader is case
+ * sensitive because the JNDI API is case sensitive.
+ * Also, while most other loaders consume a configuration resource
+ * (e.g. a properties file) and read all the names and values, the JNDI loader
+ * works the other way:  It goes through the list of known Properties looks up
+ * each property name in the JNDI context.  This because its not possible to
+ * somehow read the entire JNDI environment.
+ * <br>
+ * JNDI implementations vary in how they name properties, so the loader will
+ * try several common name forms, for example, the JNDI loader will attempt to
+ * look up the following JNDI names for a property named {@code org.foo.My_Prop}:
+ * <ul>
+ * <li>{@code java:comp/env/org/foo/My_Prop}
+ * <li>{@code java:comp/env/org.foo.My_Prop}
+ * <li>{@code java:org/foo/My_Prop}
+ * <li>{@code java:org.foo.My_Prop}
+ * <li>{@code org/foo/My_Prop}
+ * <li>{@code org.foo.My_Prop}
+ * </ul>
+ * This list has two different styles of property names:  dot separated
+ * 'AndHow style' and slash separated JNDI style.  Additionally, AndHow looks
+ * for three different roots (the part that comes before the variable name):
+ * {@code java:comp/env/} is used by Tomcat and several other application servers,
+ * {@code java:} is used by some non-container environments and at least one
+ * application server (Glassfish) uses no root at all.  In all, AndHow will
+ * search for each property under six different names (2 X 3).
+ * AndHow will throw an error at startup if it finds multiple names in the
+ * JNDI context that refer to the same property.
+ * <br>
+ * Specifying JNDI environment variables varies by environment, but here is an
+ * example of specifying some properties in a Tomcat context.xml file:
+ * <pre>{@code
+ * <Context>
+ * . . .
+ *   <Environment name="org/simple/GettingStarted/COUNT_DOWN_START" value="3" type="java.lang.Integer" override="false"/>
+ *   <Environment name="org/simple/GettingStarted/LAUNCH_CMD" value="GoGoGo!" type="java.lang.String" override="false"/>
+ * . . .
+ * </Context>
+ * }</pre>
+ * <br>
+ * In the example above, Tomcat will automatically prepend {@code java:comp/env/}
+ * to the name it associates with each value.  As the example shows, JNDI values
+ * can be typed.  If AndHow finds the value to already be the type it expects
+ * (e.g. an {@code Integer}), great!  If AndHow finds a String and needs a
+ * different type, AndHow will do the conversion.  Any other type of conversion
+ * (e.g. from a {@code Short} to an {@code Integer}) will result in an exception.
+ * <br>
+ * If your JNDI environment uses a non-default different root, it can be added
+ * using one of the built-in Properties for the JNDI loader.  Those property
+ * values would need to be loaded prior to the JNDI loader,
+ * so using system properties, for example, would work.  Here is an example of
+ * adding the custom JNDI root {@code java:xyz/} as a system property on command line:
+ * <pre>
+ * java -Dorg.yarnandtail.andhow.load.std.StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS=java:xyz/ -jar MyJarName.jar
+ * </pre>
+ * <h4>This is a Standard Loader</h4>
+ * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
+ * by AndHow.  The set of standard loaders and their order can bet set
+ * via the {@code AndHowConfiguration.setStandardLoaders()} methods.
+ * Other loaders which don't implement the {@code StandardLoader} interface can
+ * be inserted into the load order via the
+ * {@code AndHowConfiguration.insertLoaderBefore/After()}.
  *
  * @author eeverman
  */
@@ -33,6 +109,10 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 
 	private boolean failedEnvironmentAProblem = false;
 	
+	/**
+	 * There is no reason to use the constructor in production application code
+	 * because AndHow creates a single instance on demand at runtime.
+	 */
 	public StdJndiLoader() {
 	}
 	
