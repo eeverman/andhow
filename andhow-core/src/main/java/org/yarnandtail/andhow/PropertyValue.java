@@ -65,10 +65,21 @@ import org.yarnandtail.andhow.api.Property;
 		return hash;
 	}
 
+	/**
+	 * Fetch the Property of this Property/Value pair.
+	 * 
+	 * @return The Property, which is never null.
+	 */
 	public Property<T> getProperty() {
 		return property;
 	}
 
+	/**
+	 * Fetch the Value of this Property/Value pair.
+	 * 
+	 * @return  The Value, which may be null, but is always the same type as the
+	 * Property's Value type.
+	 */
 	public T getValue() {
 		return value;
 	}
