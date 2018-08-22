@@ -9,9 +9,21 @@ import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
- *
+ * This class is an AndHowConfiguration implementation that lets you do things
+ * you shouldn't be able to do, such as provide your own list of parameters rather
+ * than letting AndHow self-discover them.
+ * <p>
+ * This class is intentionally placed in the test directory because it is
+ * never intended to be distributed, not even for use by others in their testing.
+ * <p>
+ * <em>THIS CLASS DOES DANGEROUS THINGS THAT SHOULD NEVER BE DONE NEAR APPLICATION CODE</em>
+ * <p>
+ * For utilities to test your application code with AndHow, see the AndHow
+ * Test Harness module.  For examples using the test harness, see the AndHow
+ * Sample Usages module and its many sub-modules, which are stand-alone simulated
+ * projects complete with testing.
+ * 
  * @author ericeverman
- * @param <N>
  */
 public class AndHowCoreTestConfig {
 	

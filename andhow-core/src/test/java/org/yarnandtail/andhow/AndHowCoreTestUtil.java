@@ -2,10 +2,11 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.*;
 import java.util.*;
-import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 
 /**
+ * A testing utility class that breaks major rules of AndHow.
+ * <p>
  * This util class is intentionally placed in the test directory because it is
  * never intended to be distributed, not even for use by others in their testing.
  * <p>
