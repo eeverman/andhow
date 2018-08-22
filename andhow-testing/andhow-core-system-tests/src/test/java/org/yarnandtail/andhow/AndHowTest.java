@@ -19,7 +19,7 @@ import org.yarnandtail.andhow.property.StrProp;
  *
  * @author eeverman
  */
-public class SmokeTest extends AndHowTestBase {
+public class AndHowTest extends AndHowTestBase {
 	
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
@@ -68,6 +68,8 @@ public class SmokeTest extends AndHowTestBase {
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
 		
+		AndHowNonProductionUtil.destroyAndHow();
+		
 		AndHowConfiguration config = NonProductionConfig.instance()
 				.groups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
@@ -97,15 +99,18 @@ public class SmokeTest extends AndHowTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 		
+		AndHowNonProductionUtil.destroyAndHow();
+		
 		KeyValuePairLoader kvpl = new KeyValuePairLoader();
 		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
 		
 		try {
 
-			NonProductionConfig.instance()
+			AndHowConfiguration config = NonProductionConfig.instance()
 				.setLoaders(kvpl, kvpl)
-				.groups(configPtGroups)
-				.forceBuild();
+				.groups(configPtGroups);
+			
+			AndHow.instance(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -125,12 +130,15 @@ public class SmokeTest extends AndHowTestBase {
 	@Test
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
 
+		AndHowNonProductionUtil.destroyAndHow();
+		
 		try {
-				NonProductionConfig.instance()
+				AndHowConfiguration config = NonProductionConfig.instance()
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
-					.setCmdLineArgs(cmdLineArgsWFullClassName)
-					.forceBuild();
+					.setCmdLineArgs(cmdLineArgsWFullClassName);
+				
+				AndHow.instance(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -141,15 +149,19 @@ public class SmokeTest extends AndHowTestBase {
 	
 	@Test
 	public void testInvalidValuesShouldCauseValidationException() {
-		String baseName = SmokeTest.class.getCanonicalName();
+		
+		AndHowNonProductionUtil.destroyAndHow();
+		
+		String baseName = AndHowTest.class.getCanonicalName();
 		baseName += "." + RequiredParams.class.getSimpleName() + ".";
 		
 		try {
-				NonProductionConfig.instance()
+				AndHowConfiguration config = NonProductionConfig.instance()
 					.group(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
-					.addCmdLineArg(baseName + "FLAG_NULL", "present")
-					.forceBuild();
+					.addCmdLineArg(baseName + "FLAG_NULL", "present");
+				
+				AndHow.instance(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
