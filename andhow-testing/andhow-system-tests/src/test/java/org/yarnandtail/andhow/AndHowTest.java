@@ -1,156 +1,111 @@
 package org.yarnandtail.andhow;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.lang.reflect.Field;
+import org.junit.*;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.StrProp;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.FlagProp;
-import org.yarnandtail.andhow.property.StrProp;
-
 /**
- *
- * @author eeverman
+ * 
+ * @author ericeverman
  */
-public class AndHowTest extends AndHowTestBase {
+public class AndHowTest {
 	
-	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
-	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
-	ArrayList<Class<?>> configPtGroups = new ArrayList();
-	Map<Property<?>, Object> startVals = new HashMap();
-	String[] cmdLineArgsWFullClassName = new String[0];
+	public static final StrProp MY_STR_PROP1 = StrProp.builder().aliasIn("msp1") .build();
+	public static final StrProp MY_STR_PROP2 = StrProp.builder().aliasOut("msp2_out").defaultValue("val2").build();
 	
-	public static interface RequiredParams {
-		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").mustBeNonNull().build();
-		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().mustStartWith("XYZ").build();
-		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).mustBeNonNull().build();
-		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).mustBeNonNull().build();
-		FlagProp FLAG_NULL = FlagProp.builder().mustBeNonNull().build();
-	}
+	public static final String PERMISSION_MSG = 
+			"There is some type of permissions/access error while trying to access and modify"
+			+ "private fields during testing. "
+			+ "Is there a security manager enforcing security during testing?";
+	
+
+	private AndHow originalAndHowInstance;
 	
 	@Before
-	public void setup() throws Exception {
-		
-		configPtGroups.clear();
-		configPtGroups.add(SimpleParams.class);
-		
-		startVals.clear();
-		startVals.put(SimpleParams.STR_BOB, "test");
-		startVals.put(SimpleParams.STR_NULL, "not_null");
-		startVals.put(SimpleParams.FLAG_TRUE, Boolean.FALSE);
-		startVals.put(SimpleParams.FLAG_FALSE, Boolean.TRUE);
-		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
-		
-		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
-		};
-		
+	public void clearAndHow() {
+		originalAndHowInstance = setAndHowInstance(null);
 	}
 	
-	@Test
-	public void testTheTest() {
-		//This could be generalized to use the class.getCanonicalName(),
-		//but this one place we make it explicit
-		assertEquals("org.yarnandtail.andhow.SimpleParams.", paramFullPath);
+	@After
+	public void restoreAndHow() {
+		setAndHowInstance(originalAndHowInstance);
 	}
 	
+	/**
+	 * Test of findConfig method, of class AndHow.
+	 * This method is mostly pass-thru to a util method, so just a smoke test here.
+	 */
 	@Test
-	public void testCmdLineLoaderUsingClassBaseName() {
-		NonProductionConfig.instance()
-				.groups(configPtGroups)
-				.setCmdLineArgs(cmdLineArgsWFullClassName)
-				.forceBuild();
+	public void testFindConfig() {
 		
-		assertEquals("test", SimpleParams.STR_BOB.getValue());
-		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
-		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
-		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
-		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(10), SimpleParams.INT_TEN.getValue());
-		assertNull(SimpleParams.INT_NULL.getValue());
-		assertEquals(new Long(10), SimpleParams.LNG_TEN.getValue());
-		assertNull(SimpleParams.LNG_NULL.getValue());
-		assertEquals(new Double(10), SimpleParams.DBL_TEN.getValue());
-		assertNull(SimpleParams.DBL_NULL.getValue());
-		assertEquals(LocalDateTime.parse("2007-10-01T00:00"), SimpleParams.LDT_2007_10_01.getValue());
-		assertNull(SimpleParams.LDT_NULL.getValue());
+		
+		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
+		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
+		
+		assertNotEquals("Should return a new instance each time", config1, config2);
+		assertFalse("findConfig should not force initialization", AndHow.isInitialize());
+	}
 
-	}
-	
+	/**
+	 * Test of instance method, of class AndHow.
+	 */
 	@Test
-	public void testBlowingUpWithDuplicateLoaders() {
-		
-		KeyValuePairLoader kvpl = new KeyValuePairLoader();
-		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
-		
-		try {
+	public void testInstance_0args() {
+		assertFalse(AndHow.isInitialize());
+		assertNotNull(AndHow.instance());
+		assertTrue(AndHow.isInitialize());
+	}
 
-			NonProductionConfig.instance()
-				.setLoaders(kvpl, kvpl)
-				.groups(configPtGroups)
-				.forceBuild();
-			
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
-			assertEquals(1, ce.getProblems().filter(ConstructionProblem.class).size());
-			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
-			
-			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
-			assertEquals(kvpl, dl.getLoader());
-			assertTrue(ce.getSampleDirectory().length() > 0);
-			
-			File sampleDir = new File(ce.getSampleDirectory());
-			assertTrue(sampleDir.exists());
-			assertTrue(sampleDir.listFiles().length > 0);
-		}
-	}
-	
+	/**
+	 * Test of instance method, of class AndHow.
+	 */
 	@Test
-	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
+	public void testInstance_AndHowConfiguration() {
+		AndHowConfiguration<? extends AndHowConfiguration> config = AndHow.findConfig();
+		config.addFixedValue(MY_STR_PROP1, "val");
+		AndHow inst = AndHow.instance(config);
+		
+		assertEquals("val", MY_STR_PROP1.getValue());
+		assertEquals("val", inst.getValue(MY_STR_PROP1));
+		assertTrue(inst.isExplicitlySet(MY_STR_PROP1));
+		assertEquals("val", inst.getExplicitValue(MY_STR_PROP1));
+		assertEquals(1, inst.getAliases(MY_STR_PROP1).size());
+		assertEquals("MSP1", inst.getAliases(MY_STR_PROP1).get(0).getEffectiveInName());
+		assertEquals("org.yarnandtail.andhow.AndHowTest.MY_STR_PROP1", inst.getCanonicalName(MY_STR_PROP1));
+		assertEquals(this.getClass(), inst.getGroupForProperty(MY_STR_PROP1).getProxiedGroup());
+		
+		assertEquals("val2", MY_STR_PROP2.getValue());
+		assertEquals("val2", inst.getValue(MY_STR_PROP2));
+		assertFalse(inst.isExplicitlySet(MY_STR_PROP2));
+		assertNull(inst.getExplicitValue(MY_STR_PROP2));
+		assertEquals(1, inst.getAliases(MY_STR_PROP2).size());
+		assertEquals("msp2_out", inst.getAliases(MY_STR_PROP2).get(0).getEffectiveOutName());
+		assertEquals("org.yarnandtail.andhow.AndHowTest.MY_STR_PROP2", inst.getCanonicalName(MY_STR_PROP2));
+		assertEquals(this.getClass(), inst.getGroupForProperty(MY_STR_PROP2).getProxiedGroup());
+
+		assertTrue(inst.getNamingStrategy() instanceof CaseInsensitiveNaming);
+	}
+
+	
+	public static AndHow setAndHowInstance(AndHow newInstance) {
 
 		try {
-				NonProductionConfig.instance()
-					.groups(configPtGroups)
-					.group(RequiredParams.class)
-					.setCmdLineArgs(cmdLineArgsWFullClassName)
-					.forceBuild();
-			
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
-			assertEquals(1, ce.getProblems().filter(RequirementProblem.class).size());
-			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
-		}
-	}
-	
-	@Test
-	public void testInvalidValuesShouldCauseValidationException() {
-		String baseName = AndHowTest.class.getCanonicalName();
-		baseName += "." + RequiredParams.class.getSimpleName() + ".";
-		
-		try {
-				NonProductionConfig.instance()
-					.group(RequiredParams.class)
-					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
-					.addCmdLineArg(baseName + "FLAG_NULL", "present")
-					.forceBuild();
-			
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
-			assertEquals(1, ce.getProblems().filter(ValueProblem.class).size());
-			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty());
-		}
-	}
-	
 
+			Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
+			ahInstanceField.setAccessible(true);
+
+			AndHow oldInstance = (AndHow)(ahInstanceField.get(null));
+			ahInstanceField.set(null, newInstance);
+			
+			return oldInstance;
+
+		} catch (IllegalAccessException | NoSuchFieldException ex) {
+			throw new RuntimeException(PERMISSION_MSG, ex);
+		}
+		
+	}
+	
 }

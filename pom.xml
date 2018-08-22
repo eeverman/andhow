@@ -70,6 +70,7 @@
 		<module>andhow-annotation-processor</module>
 		<module>andhow</module>
 		<module>andhow-testing/andhow-system-tests</module>
+		<module>andhow-testing/andhow-core-system-tests</module>
 		<module>andhow-testing/andhow-annotation-processor-tests</module>
 		<module>andhow-testing/andhow-simulated-app-tests</module>
 		<module>andhow-testing/andhow-test-harness</module>
