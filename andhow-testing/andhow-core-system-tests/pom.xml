@@ -7,18 +7,17 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>andhow-system-tests</artifactId>
+	<artifactId>andhow-core-system-tests</artifactId>
 	<packaging>jar</packaging>
-	<name>AndHow System Tests</name>
+	<name>AndHow Core System Tests</name>
 	<description>
-		System tests that require running the entire AndHow framework, including the annotation compiler
-		and Property and configuration self-discovery.
+		System tests that require the andhow-core project to run, in particular the Configuration self discovery.
 	</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>andhow</artifactId>
+			<artifactId>andhow-core</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
