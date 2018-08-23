@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author ericeverman
  */
-public class StdJndiLoaderTest extends AndHowTestBase {
+public class StdJndiLoaderTest extends AndHowCoreTestBase {
 	
 	public interface ValidParams {
 		//Strings
@@ -85,9 +85,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
-		NonProductionConfig.instance()
-				.group(SimpleParams.class)
-				.forceBuild();
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -120,9 +121,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
 		
-		NonProductionConfig.instance()
-				.group(SimpleParams.class)
-				.forceBuild();
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -157,10 +159,11 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
-				.group(SimpleParams.class)
-				.forceBuild();
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -190,11 +193,12 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
-				.group(SimpleParams.class)
-				.forceBuild();
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -231,9 +235,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		
 		jndi.activate();
 		
-		NonProductionConfig.instance()
-				.group(SimpleParams.class)
-				.forceBuild();
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -267,9 +272,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		
 		jndi.activate();
 		
-		NonProductionConfig.instance()
-				.group(SimpleParams.class)
-				.forceBuild();
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				.group(SimpleParams.class);
+		
+		AndHow.instance(config);
 		
 		
 		assertEquals("test2", SimpleParams.STR_BOB.getValue());
@@ -300,9 +306,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			NonProductionConfig.instance()
-					.group(SimpleParams.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(SimpleParams.class);
+			
+			AndHow.instance(config);
 		
 			fail("Should not reach this point");
 			
@@ -330,9 +337,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			NonProductionConfig.instance()
-					.group(SimpleParams.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(SimpleParams.class);
+			
+			AndHow.instance(config);
 		
 			fail("Should not reach this point");
 			
@@ -362,9 +370,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			NonProductionConfig.instance()
-					.group(SimpleParams.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(SimpleParams.class);
+			
+			AndHow.instance(config);
 		
 			fail("Should not reach this point");
 			
@@ -395,9 +404,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			NonProductionConfig.instance()
-					.group(ValidParams.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(ValidParams.class);
+			
+			AndHow.instance(config);
 		
 			fail("Should not reach this point");
 			
@@ -418,9 +428,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.activate();
 		
 		try {
-			NonProductionConfig.instance()
-					.group(ValidParams.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(ValidParams.class);
+			
+			AndHow.instance(config);
 		
 			fail("Should not reach this point");
 			
