@@ -8,10 +8,10 @@ import org.yarnandtail.andhow.util.TextUtil;
  *
  * @author eeverman
  */
-public class PropertyTestBase extends AndHowTestBase {
+public class PropertyTestBase extends AndHowCoreTestBase {
 	
 	
-	public <T extends AndHowTestBase> String buildPropFilePath(T testClass, String propFileSuffix) {
+	public <T extends AndHowCoreTestBase> String buildPropFilePath(T testClass, String propFileSuffix) {
 		String testPkgName = testClass.getClass().getPackage().getName();
 		String testClsName = testClass.getClass().getSimpleName();
 		
@@ -19,19 +19,20 @@ public class PropertyTestBase extends AndHowTestBase {
 				TextUtil.trimToEmpty(propFileSuffix) + ".properties";
 	}
 	
-	public <T extends AndHowTestBase> void  buildConfig(T testClass, String propFileSuffix,
+	public <T extends AndHowCoreTestBase> void  buildConfig(T testClass, String propFileSuffix,
 			Class<?>... group) {
 		
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(TEST_CONFIG.class)
 				.groups(groups)
 				.addFixedValue(TEST_CONFIG.PROP_FILE, propFilePath)
 				.setClasspathPropFilePath(TEST_CONFIG.PROP_FILE)
-				.classpathPropertiesRequired()
-				.forceBuild();
+				.classpathPropertiesRequired();
+		
+		AndHow.instance(config);
 	}
 	
 	public static interface TEST_CONFIG {
