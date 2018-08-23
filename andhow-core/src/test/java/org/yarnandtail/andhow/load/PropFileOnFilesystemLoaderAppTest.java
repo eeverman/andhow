@@ -22,7 +22,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropFileOnFilesystemLoaderAppTest {
+public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 
 	File tempPropertiesFile = null;
 	
@@ -52,14 +52,15 @@ public class PropFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testHappyPath() throws Exception {
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
 				.group(SimpleParams.class)
-				.group(TestProps.class)
-				.forceBuild();
+				.group(TestProps.class);
+		
+		AndHow.instance(config);
 		
 
 		assertEquals(tempPropertiesFile.getAbsolutePath(), TestProps.FILEPATH.getValue());
@@ -74,14 +75,15 @@ public class PropFileOnFilesystemLoaderAppTest {
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
 					.setFilesystemPropFilePath(TestProps.FILEPATH)
 					.filesystemPropFileRequired()
-					.group(SimpleParams.class)
-					//.group(TestProps.class)	//This must be declared or the Prop loader can't work
-					.forceBuild();
+					.group(SimpleParams.class);
+					//.group(TestProps.class)	//Missing - should fail
+
+			AndHow.instance(config);
 		
 			fail("The Property loader config parameter is not registered, so it should have failed");
 		} catch (AppFatalException afe) {
@@ -100,12 +102,13 @@ public class PropFileOnFilesystemLoaderAppTest {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
 				.group(SimpleParams.class)
-				.group(TestProps.class)
-				.forceBuild();
+				.group(TestProps.class);
+		
+		AndHow.instance(config);
 		
 		//These are just default values
 		assertEquals("bob", SimpleParams.STR_BOB.getValue());
@@ -116,14 +119,15 @@ public class PropFileOnFilesystemLoaderAppTest {
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.setFilesystemPropFilePath(TestProps.FILEPATH)
 					.filesystemPropFileRequired()
 					.group(SimpleParams.class)
-					.group(TestProps.class)
-					.forceBuild();
+					.group(TestProps.class);
+		
+			AndHow.instance(config);
 			
 			fail("The Property loader config property is not pointing to a real file location");
 			
