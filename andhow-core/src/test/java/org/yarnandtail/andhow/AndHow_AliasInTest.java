@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  *
  * @author ericeverman
  */
-public class AndHow_AliasInTest extends AndHowTestBase {
+public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	
 	//
 	//Alias names
@@ -67,12 +67,13 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testFirstSetOfInAliasesViaCmdLine() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -82,12 +83,13 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testSecondSetOfInAliasesViaCmdLine() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -96,12 +98,13 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	@Test
 	public void testThirdSetOfInAliasesViaCmdLine() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -121,10 +124,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 		jndi.activate();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -143,10 +147,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 		jndi.activate();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -166,10 +171,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 		jndi.activate();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -189,10 +195,11 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 		jndi.activate();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -207,13 +214,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InAlias() {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 					.group(AliasGroup1.class)
-					.group(AliasGroup2.class)
-					.forceBuild();
+					.group(AliasGroup2.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -233,13 +241,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InAliasInLowerCase() {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 					.group(AliasGroup1.class)
-					.group(AliasGroup4.class)
-					.forceBuild();
+					.group(AliasGroup4.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -258,13 +267,14 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	public void testSingleInDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 					.group(AliasGroup1.class)
-					.group(AliasGroup3.class)
-					.forceBuild();
+					.group(AliasGroup3.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
