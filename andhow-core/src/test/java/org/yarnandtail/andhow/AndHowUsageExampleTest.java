@@ -14,7 +14,7 @@ import org.yarnandtail.andhow.property.*;
  *
  * @author eeverman
  */
-public class AndHowUsageExampleTest extends AndHowTestBase {
+public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 	
 	String uiFullPath = UI_CONFIG.class.getCanonicalName() + ".";
 	String svsFullPath = SERVICE_CONFIG.class.getCanonicalName() + ".";
@@ -38,10 +38,11 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	@Test
 	public void testAllValuesAreSet() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-				.setCmdLineArgs(cmdLineArgsWFullClassName)
-				.forceBuild();
+				.setCmdLineArgs(cmdLineArgsWFullClassName);
+		
+		AndHow.instance(config);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -54,12 +55,13 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	@Test
 	public void testOptionalValuesAreUnset() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
-				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99")
-				.forceBuild();
+				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99");
+		
+		AndHow.instance(config);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
@@ -72,9 +74,11 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	public void testMissingValuesException() {
 		
 		try {
-			NonProductionConfig.instance()
-					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class);
+			
+			AndHow.instance(config);
+			
 			fail();
 		} catch (AppFatalException ce) {
 			assertEquals(3, ce.getProblems().filter(RequirementProblem.class).size());

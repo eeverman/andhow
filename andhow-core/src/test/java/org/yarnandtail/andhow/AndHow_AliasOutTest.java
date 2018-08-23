@@ -19,7 +19,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author ericeverman
  */
-public class AndHow_AliasOutTest extends AndHowTestBase {
+public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 	
 	//
 	//Alias names
@@ -90,12 +90,13 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	@Test
 	public void testOutAliasForGroup1() {
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.forceBuild();
+				.group(AliasGroup1.class);
+		
+		AndHow.instance(config);
 		
 		//This just tests the test...
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
@@ -131,12 +132,13 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.addCmdLineArg(grp2Name + ".strProp1", STR1)
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
-				.group(AliasGroup2.class)
-				.forceBuild();
+				.group(AliasGroup2.class);
+		
+		AndHow.instance(config);
 	
 
 		//
@@ -153,7 +155,7 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(AliasGroup1.class)
 				.group(AliasGroup2.class)
 				.addCmdLineArg(STR_PROP1_IN, STR1)
@@ -161,8 +163,9 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 				.addCmdLineArg(grp2Name + ".strProp1", STR1)
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
-				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
-				.forceBuild();
+				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString());
+		
+		AndHow.instance(config);
 		
 		//
 		// Group 1
@@ -200,13 +203,14 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testSingleOutDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 					.group(AliasGroup1.class)
-					.group(AliasGroup4.class)
-					.forceBuild();
+					.group(AliasGroup4.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -226,9 +230,10 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testSingleOutDuplicateWithinASingleGroup() {
 		
 		try {
-			NonProductionConfig.instance()
-					.group(AliasGroup5.class)
-					.forceBuild();
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+					.group(AliasGroup5.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -248,10 +253,11 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	public void testTwoOutOutDuplicatesBetweenTwoGroups() {
 		
 		try {
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(AliasGroup6.class)
-					.group(AliasGroup7.class)
-					.forceBuild();
+					.group(AliasGroup7.class);
+			
+			AndHow.instance(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -267,35 +273,4 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 		}
 	}
 	
-	
-
-	@Before
-	public void beforeEachTest() throws Exception {
-		deleteTestSysProps(AliasGroup1.class);
-	}
-	
-	@After
-	public void afterEachTest() throws Exception {
-		deleteTestSysProps(AliasGroup1.class);
-	}
-	
-	@AfterClass
-	public static void afterClass() throws Exception {
-		deleteTestSysProps(AliasGroup1.class);
-	}
-	
-	public static void deleteTestSysProps(Class<?> group) throws Exception {
-		List<NameAndProperty> properties = AndHowUtil.getProperties(group);
-		
-		for (NameAndProperty nap : properties) {
-			
-			System.getProperties().remove(NameUtil.getAndHowName(group, nap.property));
-			
-			for (Name a : nap.property.getRequestedAliases()) {
-				System.getProperties().remove(a.getActualName());
-			}
-	
-			
-		}
-	}
 }
