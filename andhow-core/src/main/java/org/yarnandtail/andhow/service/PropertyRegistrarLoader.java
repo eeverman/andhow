@@ -21,11 +21,19 @@ public class PropertyRegistrarLoader {
 	private final ServiceLoader<PropertyRegistrar> loader;
 	private final Object lock = new Object();	//Sync lock for instances
 	
-	
+	/**
+	 * New instance with default class loader (class.getClassLoader())
+	 */
 	public PropertyRegistrarLoader() {
 		this(PropertyRegistrarLoader.class.getClassLoader());
 	}
 	
+	/**
+	 * New instance w/ specific classloader
+	 * 
+	 * @param classLoader Classloader to use to locate PropertyRegistration
+	 * instances.
+	 */
 	public PropertyRegistrarLoader(ClassLoader classLoader) {
 		this.classLoader = (classLoader != null)?classLoader:PropertyRegistrarLoader.class.getClassLoader();
 		loader = ServiceLoader.load(PropertyRegistrar.class, this.classLoader);
@@ -41,12 +49,6 @@ public class PropertyRegistrarLoader {
 			}
 			
 			return list;
-		}
-	}
-	
-	public void reload() {
-		synchronized (lock) {
-			loader.reload();
 		}
 	}
 	

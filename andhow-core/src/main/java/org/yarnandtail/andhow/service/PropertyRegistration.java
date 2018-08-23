@@ -4,7 +4,23 @@ import org.yarnandtail.andhow.util.NameUtil;
 import java.util.*;
 
 /**
- *
+ * Registration for a single Property, which registers a single {@code Property}
+ * with AndHow during startup at run time.
+ * 
+ * <h4>Property registration background</h4>
+ * At compile time, the AndHowCompileProcessor (an annotation Processor), reads
+ * user classes and generates a PropertyRegistrar instance for each root class
+ * (non-inner class) that contains an AndHow {@code Property}.
+ * Matching service files are also generated in the "META-INF/services/"
+ * directory so the {@code PropertyRegistrar} instances can be discovered
+ * through the {@code java.util.ServiceLoader} mechanism.
+ * <p>
+ * At run time, the {@code PropertyRegistrarLoader} discovers all
+ * {@code PropertyRegistrar} instances.
+ * Each {@code PropertyRegistrar} creates a {@code PropertyRegistrationList}
+ * instance with a {@code PropertyRegistration} for each {@code Property}
+ * present in the jar.
+ * 
  * @author ericeverman
  */
 public class PropertyRegistration implements Comparable<PropertyRegistration> {
@@ -118,7 +134,12 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * the path goes 'internal' and that syntax is required if constructing
 	 * the class via <code>Class.forName</code>
 	 * <p>
-	 * Example path: <code>com.fastco.ClassName$InnerClass</code>
+	 * For the inner class {@code InnerClass} of class
+	 * {@code com.fastco.ClassName}, the canonical names would be:
+	 * <ul>
+	 * <li>Java canonical name: {@code com.fastco.ClassName$InnerClass}
+	 * <li>AndHow canonical name: {@code com.fastco.ClassName.InnerClass}
+	 * </ul>
 	 * @return
 	 */
 	public String getJavaCanonicalParentName() {
@@ -126,15 +147,21 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	}
 	
 	/**
-	 * The Java canonical name of the direct parent of the AndHow Property.
+	 * The AndHow canonical name of the direct parent of the AndHow Property.
 	 *
 	 * This may be the canonical name of the root class if there is no
-	 * inner path, or it may include an inner path.  Java canonical names
-	 * which include inner classes use the dollar sign as a delimiter once
-	 * the path goes 'internal' and that syntax is required if constructing
-	 * the class via <code>Class.forName</code>
+	 * inner path, or it may include an inner path.  The AndHow canonical name
+	 * differs from the Java canonical name:  AndHow uses dots to separate all
+	 * 'steps' in the classpath while Java uses the dollar sign as a delimiter once
+	 * the path goes 'internal'.  The Java canonical name syntax is required if
+	 * constructing the class via <code>Class.forName</code>
 	 * <p>
-	 * Example path: <code>com.fastco.ClassName$InnerClass</code>
+	 * For the inner class {@code InnerClass} of class
+	 * {@code com.fastco.ClassName}, the canonical names would be:
+	 * <ul>
+	 * <li>Java canonical name: {@code com.fastco.ClassName$InnerClass}
+	 * <li>AndHow canonical name: {@code com.fastco.ClassName.InnerClass}
+	 * </ul>
 	 * @return
 	 */
 	public String getCanonicalParentName() {

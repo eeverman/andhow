@@ -5,18 +5,32 @@ import java.util.*;
 /**
  * A List of Registrations with simplified add methods that make it
  * efficient (source code wise) to add Registrations.
- *
+ * <p>
  * Registrations that share the same inner path (that is, the same nested
  * inner class parents) can just be added with no inner path specified and
  * they will be assumed to use the same path as the previous entry.
- *
+ * <p>
  * Since the source code that calls these add methods is generated and
  * potentially verbose, its nice to have an efficient way to do it.
- *
+ * <p>
  * This class is modifiable and it is assumed that a new list is generated
  * each time it is requested, ie, an instance is constructed directly in
  * a 'get' method.  The get method will likely only be called once during its
  * lifecycle.
+ * 
+ * <h4>Property registration background</h4>
+ * At compile time, the AndHowCompileProcessor (an annotation Processor), reads
+ * user classes and generates a PropertyRegistrar instance for each root class
+ * (non-inner class) that contains an AndHow {@code Property}.
+ * Matching service files are also generated in the "META-INF/services/"
+ * directory so the {@code PropertyRegistrar} instances can be discovered
+ * through the {@code java.util.ServiceLoader} mechanism.
+ * <p>
+ * At run time, the {@code PropertyRegistrarLoader} discovers all
+ * {@code PropertyRegistrar} instances.
+ * Each {@code PropertyRegistrar} creates a {@code PropertyRegistrationList}
+ * instance with a {@code PropertyRegistration} for each {@code Property}
+ * present in the jar.
  */
 public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 
