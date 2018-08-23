@@ -7,8 +7,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.NonProductionConfig;
+import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -19,7 +18,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  *
  * @author eeverman
  */
-public class SampleRestClientAppTest extends AndHowTestBase {
+public class SampleRestClientAppTest extends AndHowCoreTestBase {
 	
 	String[] cmdLineArgs = new String[0];
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.example.restclient.SampleRestClientGroup";
@@ -40,12 +39,13 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				"/org/yarnandtail/andhow/example/restclient/all.points.speced.properties"
 		};
 		
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
-				.classpathPropertiesRequired()
-				.forceBuild();
+				.classpathPropertiesRequired();
+		
+		AndHow.instance(config);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -68,12 +68,13 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 				"/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties"
 		};		
 				
-		NonProductionConfig.instance()
+		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
-				.classpathPropertiesRequired()
-				.forceBuild();
+				.classpathPropertiesRequired();
+		
+		AndHow.instance(config);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -101,12 +102,14 @@ public class SampleRestClientAppTest extends AndHowTestBase {
 		try {
 			
 			//Error expected b/c some values are invalid
-			NonProductionConfig.instance()
+			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(SampleRestClientGroup.class)
 					.setCmdLineArgs(cmdLineArgs)
 					.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
-					.classpathPropertiesRequired()
-					.forceBuild();
+					.classpathPropertiesRequired();
+		
+			AndHow.instance(config);
+		
 		} catch (AppFatalException e) {
 			
 			//Value Problems (validation)
