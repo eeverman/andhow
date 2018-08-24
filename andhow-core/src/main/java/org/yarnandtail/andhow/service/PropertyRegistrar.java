@@ -38,6 +38,12 @@ public interface PropertyRegistrar {
 	 */
 	String getRootCanonicalName();
 
+	/**
+	 * Get the list if individual {@code Property} registrations.
+	 * 
+	 * @return A list of registrations.  The list may be unmodifiable
+	 * or detached.
+	 */
 	List<PropertyRegistration> getRegistrationList();
 
 }

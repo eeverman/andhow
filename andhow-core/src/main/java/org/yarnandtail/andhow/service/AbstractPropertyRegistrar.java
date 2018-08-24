@@ -33,6 +33,16 @@ public abstract class AbstractPropertyRegistrar implements PropertyRegistrar {
 		return Collections.unmodifiableList(list);
 	}
 	
+	/**
+	 * Can be used by subclasses to build the property registration list.
+	 * <p>
+	 * This method will be called by {@code getRegistrationList} with an empty
+	 * list.  Implementers can then add each registration to the list.
+	 * 
+	 * @param list The list to add {@code PropertyRegistrations} to.  For
+	 * consistency, registrations should be added in the order they were encoded
+	 * in the {@code PropertyRegistrar} instance.
+	 */
 	public abstract void addPropertyRegistrations(PropertyRegistrationList list);
 	
 }

@@ -29,12 +29,35 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	private final String[] innerPath;
 	private final String propName;
 
+	/**
+	 * Create an instance representing a {@code Property} declared directly in
+	 * a root class, not in an inner class.
+	 * 
+	 * @param classCanonName The canonical name of the root class the {@code Property}
+	 * is declared in.
+	 * @param propName The declared name of the variable referencing the
+	 * {@code Property} declaration.
+	 */
 	PropertyRegistration(String classCanonName, String propName) {
 		this.classCanonName = classCanonName;
 		this.propName = propName;
 		innerPath = null;
 	}
-
+	
+	/**
+	 * Create an instance representing a {@code Property} declared in an inner
+	 * class (or nested inner class or interface) as opposed to an instance
+	 * declared directly in a root class.
+	 * 
+	 * @param classCanonName The canonical name of the root class containing the
+	 * inner class or nested inner class.
+	 * @param propName The declared name of the variable referencing the
+	 * {@code Property} declaration.
+	 * @param innerPathNesting The name or names of the nested inner classes
+	 * and/or interfaces that contain the {@code Property} declaration.  The
+	 * path order is in order from the inner class that is declared directly in
+	 * the root class to the inner class that contains the {@code Property} declaration.
+	 */
 	PropertyRegistration(String classCanonName, String propName, String... innerPathNesting) {
 		this.classCanonName = classCanonName;
 		this.propName = propName;
@@ -46,6 +69,20 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 		}
 	}
 	
+	/**
+	 * Create an instance representing a {@code Property} declared in an inner
+	 * class (or nested inner class or interface) as opposed to an instance
+	 * declared directly in a root class.
+	 * 
+	 * @param classCanonName The canonical name of the root class containing the
+	 * inner class or nested inner class.
+	 * @param propName The declared name of the variable referencing the
+	 * {@code Property} declaration.
+	 * @param innerPathNesting A list of names of the nested inner classes
+	 * and/or interfaces that contain the {@code Property} declaration.  The
+	 * path order is in order from the inner class that is declared directly in
+	 * the root class to the inner class that contains the {@code Property} declaration.
+	 */
 	PropertyRegistration(String classCanonName, String propName, List<String> innerPathNesting) {
 		this.classCanonName = classCanonName;
 		this.propName = propName;
@@ -65,7 +102,9 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * An inner class or inner interface would be represented by the inner
 	 * path, not by the root canonical propName.
 	 *
-	 * @return
+	 * @return The Java canonical name of the root class containing the
+	 * {@code Property} declaration, or in the case of a {@code Property}
+	 * declared in an inner class, the name of the class containing the inner class.
 	 */
 	public String getCanonicalRootName() {
 		return classCanonName;
@@ -75,7 +114,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * The name of the AndHow property, which is the name of the variable it
 	 * is assigned to where it is constructed.
 	 *
-	 * @return
+	 * @return The declared name of the variable referencing the
+	 * {@code Property} declaration.
 	 */
 	public String getPropertyName() {
 		return propName;
@@ -94,7 +134,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * <li><code>getPropertyName</code> would return <code>"Boo"</code></li>
 	 * </ul>
 	 *
-	 * @return The inner path array, in order from top level to leaf level.  Populated or null.
+	 * @return The inner path array, in order from top level to leaf level.  It
+	 * may be null if the {@code Property} is declared directly in a root class.
 	 */
 	public String[] getInnerPath() {
 		return innerPath;
@@ -104,7 +145,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * The number of nested inner classes / interfaces from the root class to
 	 * the inner class containing the AndHow Property.
 	 * 
-	 * @return 
+	 * @return The number of steps in the inner path.  A {@code Property} declared
+	 * directly in a root class with have a length of zero.
 	 */
 	public int getInnerPathLength() {
 		if (innerPath == null) {
@@ -119,7 +161,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * name plus the elements of the inner path and the property name, all
 	 * separated by dots.
 	 *
-	 * @return
+	 * @return The full complete canonical name for the {@code Property}, which
+	 * uses dots to separate each step.
 	 */
 	public String getCanonicalPropertyName() {
 		return NameUtil.getAndHowName(classCanonName, propName, innerPath);
@@ -140,7 +183,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * <li>Java canonical name: {@code com.fastco.ClassName$InnerClass}
 	 * <li>AndHow canonical name: {@code com.fastco.ClassName.InnerClass}
 	 * </ul>
-	 * @return
+	 * @return The Java canonical name of the class or inner class containing the
+	 * {@code Property}.
 	 */
 	public String getJavaCanonicalParentName() {
 		return NameUtil.getJavaName(classCanonName, innerPath);
@@ -162,7 +206,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * <li>Java canonical name: {@code com.fastco.ClassName$InnerClass}
 	 * <li>AndHow canonical name: {@code com.fastco.ClassName.InnerClass}
 	 * </ul>
-	 * @return
+	 * @return The AndHow canonical name of the class or inner class containing the
+	 * {@code Property}.
 	 */
 	public String getCanonicalParentName() {
 		return NameUtil.getAndHowName(classCanonName, innerPath);
@@ -171,8 +216,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	/**
 	 * Equivalent to compareTo for just the root class and its fully qualified path.
 	 * 
-	 * @param o Comp the classCanonName name of this PropertyRegistration
-	 * @return 
+	 * @param o The {@code PropertyRegistration} to compare to.
+	 * @return An int used for sorting that is based only on the root class.
 	 */
 	public int compareRootTo(PropertyRegistration o) {
 
@@ -221,8 +266,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	/**
 	 * Equivalent to compareTo for just the inner path class and its fully qualified path.
 	 * 
-	 * @param o Comp the classCanonName name of this PropertyRegistration
-	 * @return 
+	 * @param o The {@code PropertyRegistration} to compare to.
+	 * @return int for sorting based only on the inner path.
 	 */
 	public int compareInnerPathTo(PropertyRegistration o) {
 
@@ -284,8 +329,8 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	 * Comparison that results in sorting from root properties to the most
 	 * nested, incrementally by each inner path step.
 	 * 
-	 * @param o
-	 * @return 
+	 * @param o The {@code PropertyRegistration} to compare to.
+	 * @return An int used for sorting that provides 'correct' sorting.
 	 */
 	@Override
 	public int compareTo(PropertyRegistration o) {

@@ -39,6 +39,20 @@ public class PropertyRegistrarLoader {
 		loader = ServiceLoader.load(PropertyRegistrar.class, this.classLoader);
 	}
 	
+	/**
+	 * Returns a newly created list of {@code PropertyRegistrar}s.
+	 * <p>
+	 * The {@code PropertyRegistrar} instances are created from the complete set
+	 * of {@code PropertyRegistrar} implementations on the classpath.  This is a
+	 * complete list as provided by the {@code java.util.ServiceLoader}.
+	 * <p>
+	 * Even though the list is newly created each time this method is called,
+	 * the instances of {@code PropertyRegistrar}s are the same across all lists.
+	 * During a typical application lifecycle, this method would only be called
+	 * once, though there is no impact to calling it multiple times.
+	 * 
+	 * @return A disconnected list of {@code PropertyRegistrar}s.
+	 */
 	public List<PropertyRegistrar> getPropertyRegistrars() {
 		
 		synchronized (lock) {
@@ -53,9 +67,19 @@ public class PropertyRegistrarLoader {
 	}
 	
 	/**
-	 * Returns the list of groups that are registered via the ServiceLoader.
+	 * Returns a newly created list of {@code GroupProxy}s.
+	 * <p>
+	 * The {@code GroupProxy} instances are created from the complete set of
+	 * {@code PropertyRegistrar} implementations on the classpath.  This is a
+	 * complete list as provided by the {@code java.util.ServiceLoader}.
+	 * <p>
+	 * The list and the {@code GroupProxy} instances are freshly created for
+	 * each call to this method.  During a typical application lifecycle, this
+	 * method would only be called once, though there is no impact to calling it
+	 * multiple times.  The contained {@code Property}s are static instances
+	 * for which there will ever only be a single instance.
 	 * 
-	 * @return 
+	 * @return A disconnected list of new {@code GroupProxy}s.
 	 */
 	public List<GroupProxy> getGroups() {
 		
