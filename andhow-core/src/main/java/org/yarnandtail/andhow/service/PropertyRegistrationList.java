@@ -51,7 +51,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * The root / top level class which contains (either directly or indirectly)
 	 * the properties listed within it.
 	 * 
-	 * @return 
+	 * @return The Java canonical name of the root class.
 	 */
 	public String getRootCanonicalName() {
 		return rootCanonName;
@@ -64,8 +64,8 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * Even if the passed registration has a null or empty inner path, it
 	 * will be assumed to be correct, meaning a root property.
 	 *
-	 * @param reg
-	 * @return
+	 * @param reg The {@code PropertyRegistration} to add to the end of the list.
+	 * @return True if it was added (it is always added).
 	 */
 	@Override
 	public boolean add(PropertyRegistration reg) {
@@ -82,7 +82,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 *
 	 * @param name Name of the AndHow property, which is the name of the variable it
 	 *		is assigned to at construction.
-	 * @return
+	 * @return True if it was added (it is always added).
 	 */
 	public boolean add(String name) {
 		PropertyRegistration reg;
@@ -105,7 +105,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @param name Name of the AndHow property, which is the name of the variable it
 	 *		is assigned to at construction.
 	 * @param innerPath
-	 * @return
+	 * @return True if it was added (it is always added).
 	 */
 	public boolean add(String name, String... innerPath) {
 		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
@@ -122,7 +122,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @param name Name of the AndHow property, which is the name of the variable it
 	 *		is assigned to at construction.
 	 * @param innerPath The 'path' of nested inner class/interfaces from outer to inner
-	 * @return
+	 * @return True if it was added (it is always added).
 	 */
 	public boolean add(String name, List<String> innerPath) {
 		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
