@@ -10,13 +10,6 @@ import static org.junit.Assert.*;
  */
 public class StackLocatorTest {
 
-	/**
-	 * Test of getCallerClass method, of class StackLocator.
-	 */
-	@Test
-	public void testGetCallerClass_int() {
-		assertEquals("org.yarnandtail.andhow.util.StackLocatorTest", StackLocator.getInstance().getCallerClass(1).getCanonicalName());
-	}
 
 
 	/**
@@ -29,7 +22,7 @@ public class StackLocatorTest {
 	
 	public static class TestCalcLocation {
 		static void callMe() {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation("org.yarnandtail.andhow.util.StackLocatorTest$TestCalcLocation");
+			StackTraceElement ste = StackLocator.calcLocation("org.yarnandtail.andhow.util.StackLocatorTest$TestCalcLocation");
 			assertEquals("org.yarnandtail.andhow.util.StackLocatorTest", ste.getClassName());
 			assertEquals("testCalcLocation", ste.getMethodName());
 		}

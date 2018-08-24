@@ -130,21 +130,21 @@ public class AndHowLog {
 	//Trace
 	public void trace(String msg) {
 		if (baseLogger.isLoggable(Level.FINEST)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINEST, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg);
 		}
 	}
 
 	public void trace(String format, Object... arguments) {
 		if (baseLogger.isLoggable(Level.FINEST)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINEST, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), format, arguments);
 		}
 	}
 
 	public void trace(String msg, Throwable t) {
 		if (baseLogger.isLoggable(Level.FINEST)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINEST, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg, t);
 		}
 	}
@@ -153,21 +153,21 @@ public class AndHowLog {
 	//Debug
 	public void debug(String msg) {
 		if (baseLogger.isLoggable(Level.FINE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg);
 		}
 	}
 
 	public void debug(String format, Object... arguments) {
 		if (baseLogger.isLoggable(Level.FINE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), format, arguments);
 		}
 	}
 
 	public void debug(String msg, Throwable t) {
 		if (baseLogger.isLoggable(Level.FINE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.FINE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg, t);
 		}
 	}
@@ -176,21 +176,21 @@ public class AndHowLog {
 	//Info
 	public void info(String msg) {
 		if (baseLogger.isLoggable(Level.INFO)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.INFO, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg);
 		}
 	}
 
 	public void info(String format, Object... arguments) {
 		if (baseLogger.isLoggable(Level.INFO)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.INFO, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), format, arguments);
 		}
 	}
 
 	public void info(String msg, Throwable t) {
 		if (baseLogger.isLoggable(Level.INFO)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.INFO, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg, t);
 		}
 	}
@@ -199,21 +199,21 @@ public class AndHowLog {
 	//Warn
 	public void warn(String msg) {
 		if (baseLogger.isLoggable(Level.WARNING)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.WARNING, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg);
 		}
 	}
 
 	public void warn(String format, Object... arguments) {
 		if (baseLogger.isLoggable(Level.WARNING)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.WARNING, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), format, arguments);
 		}
 	}
 
 	public void warn(String msg, Throwable t) {
 		if (baseLogger.isLoggable(Level.WARNING)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.WARNING, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg, t);
 		}
 	}
@@ -222,21 +222,21 @@ public class AndHowLog {
 	//Error
 	public void error(String msg) {
 		if (baseLogger.isLoggable(Level.SEVERE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.SEVERE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg);
 		}
 	}
 
 	public void error(String format, Object... arguments) {
 		if (baseLogger.isLoggable(Level.SEVERE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.SEVERE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), format, arguments);
 		}
 	}
 
 	public void error(String msg, Throwable t) {
 		if (baseLogger.isLoggable(Level.SEVERE)) {
-			StackTraceElement ste = StackLocator.getInstance().calcLocation(CN);
+			StackTraceElement ste = StackLocator.calcLocation(CN);
 			baseLogger.logp(Level.SEVERE, ste.getClassName(), ste.getMethodName() + ":" + ste.getLineNumber(), msg, t);
 		}
 	}
