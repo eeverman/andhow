@@ -9,12 +9,27 @@ import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
- *
+ * An {@code AndHowConfiguration} implementation that allows 'breaking the rules'
+ * to make unit testing of applications possible.
+ * <p>
+ * In particular, this configuration implementation allows the caller to supply
+ * the list of {@code Groups} and by extension the list of {@code Property}s that
+ * are known to AndHow.  It also provides a simple method to force AndHow to
+ * reload based on a specific configuration, which is a common need during testing.
+ * <p>
+ * Typical usage is {@code NonProductionConfig.instance()...}
+ * 
  * @author ericeverman
  * @param <N>
  */
 public class NonProductionConfig {
 	
+	/**
+	 * Returns a new instance of a {@code NonProductionConfig} implemented by
+	 * an implementing inner class.
+	 * 
+	 * @return 
+	 */
 	public static NonProductionConfigImpl instance() {
 		return new NonProductionConfigImpl();
 	}
@@ -40,9 +55,9 @@ public class NonProductionConfig {
 		 * because during testing command line arguments are often simulated
 		 * rather than passed in as a set.
 		 *
-		 * @param key
-		 * @param value
-		 * @return
+		 * @param key The property canonical name or alias.
+		 * @param value The value.
+		 * @return The same NonProductionConfig instance to continue configuring.
 		 */
 		public N addCmdLineArg(String key, String value) {
 
@@ -66,8 +81,9 @@ public class NonProductionConfig {
 		 * Group order makes no difference, but for error reports and sample
 		 * configuration files, the order is preserved.
 		 *
-		 * @param group
-		 * @return
+		 * @param group A group (a class) to add to the known
+		 * classes containing AndHow {@code Property} declarations.
+		 * @return The same NonProductionConfig instance to continue configuring.
 		 */
 		public N group(Class<?> group) {
 			_groups.add(group);
@@ -80,8 +96,9 @@ public class NonProductionConfig {
 		 * Group order makes no difference, but for error reports and sample
 		 * configuration files, the order is preserved.
 		 *
-		 * @param groups
-		 * @return
+		 * @param groups A collection of groups (classes) to add to the known
+		 * classes containing AndHow {@code Property} declarations.
+		 * @return The same NonProductionConfig instance to continue configuring.
 		 */
 		public N groups(Collection<Class<?>> groups) {
 			this._groups.addAll(groups);
@@ -105,7 +122,7 @@ public class NonProductionConfig {
 		 * ignoring any loaders added via insertBefore or insertAfter loaders.
 		 * 
 		 * @param loaders
-		 * @return 
+		 * @return The same NonProductionConfig instance to continue configuring.
 		 */
 		public N setLoaders(Loader... loaders) {
 			_loaders.addAll(Arrays.asList(loaders));
@@ -121,6 +138,13 @@ public class NonProductionConfig {
 			}
 		}
 
+		/**
+		 * Forces a rebuild, dumping the previous configuration and creating a
+		 * new AndHowCore, which contains all AndHow state, and using that.
+		 * <p>
+		 * This method is not safe for production, but that is obvious from the
+		 * name of this class.
+		 */
 		public void forceBuild() {
 			AndHowNonProductionUtil.forceRebuild(this);
 		}
