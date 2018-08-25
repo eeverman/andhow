@@ -2,11 +2,11 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.*;
 import java.util.*;
-import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 
 /**
- *
+ * A collection of utilities for breaking the 'AndHow rules' during testing.
+ * 
  * @author ericeverman
  */
 public class AndHowNonProductionUtil {
@@ -16,6 +16,11 @@ public class AndHowNonProductionUtil {
 			+ "private fields during testing. "
 			+ "Is there a security manager enforcing security during testing?";
 	
+	/**
+	 * Gets the current AndHow instance without forcing its creation.
+	 * 
+	 * @return The AndHow instance or null if it is not initialized.
+	 */
 	public static AndHow getAndHowInstance() {
 		try {
 			Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
@@ -51,6 +56,20 @@ public class AndHowNonProductionUtil {
 		}
 	}
 	
+	/**
+	 * Sets a new {@code AndHowCore}
+	 * 
+	 * This inserts an entire new state into AndHow.  Inserting a {@null} core
+	 * puts AndHow into a reset state that is invalid during production, but
+	 * can be useful during testing.  In this state, AndHow will allow itself
+	 * to be reinitialized, which is not the intended operation during
+	 * normal usage, but is useful during testing to test the application's
+	 * behaviour with a variety of  configurations.
+	 * 
+	 * @param core A core instance to replace the current core with.  If AndHow
+	 * is uninitialized, this will throw an error because it is assumed to be
+	 * replacing a core.
+	 */
 	public static void setAndHowCore(AndHowCore core) {
 
 		try {
@@ -77,6 +96,18 @@ public class AndHowNonProductionUtil {
 		}
 	}
 	
+	/**
+	 * Force AndHow to reload using the specified configuration.
+	 * <p>
+	 * If AndHow has not already initialized, it initialized normally using the
+	 * passed configuration.  If AndHow has already initialized, a new
+	 * {@code AndHowCore} is created using the passed configuration and it will
+	 * replace the current core held by the singleton AndHow instance.
+	 * 
+	 * @param config The configuration to use, which must be non-null.  If you
+	 * don't have specific needs for the configuration, you can use
+	 * {@code AndHow.findConfiguration()}.
+	 */
 	public static void forceRebuild(AndHowConfiguration config) {
 
 		AndHow ahInstance = getAndHowInstance();
@@ -107,7 +138,18 @@ public class AndHowNonProductionUtil {
 		return newProps;
 	}
 	
-	public static void destroyAndHow() {
+	/**
+	 * Forces the {@code AndHowCore} to be null.
+	 * <p>
+	 * If AndHow has not been initialized, it will just remain in the uninitialized
+	 * state.  If AndHow has been initialized, the core state will be set to null,
+	 * causing AndHow to be in a reset state that is invalid during production, but
+	 * can be useful during testing.  In this state, AndHow will allow itself
+	 * to be reinitialized, which is not the intended operation during
+	 * normal usage, but is useful during testing to test the application's
+	 * behaviour with a variety of  configurations.
+	 */
+	public static void destroyAndHowCore() {
 		if (getAndHowInstance() != null) {
 			setAndHowCore(null);
 		}
