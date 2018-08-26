@@ -28,8 +28,8 @@ public class PropertyNaming {
 	}
 
 	/**
-	 * The canonical name of the property.
-	 * @return 
+	 * The canonical in and out names of the {@code  Property}.
+	 * @return The {@code  Property}'s canonical {@code EffectiveName}.
 	 */
 	public EffectiveName getCanonicalName() {
 		return canonicalName;
@@ -41,7 +41,7 @@ public class PropertyNaming {
 	 * The naming strategy may be directed to add or remove aliases from the ones
 	 * requested for a property to resolve conflicts, but nominally this is the
 	 * list of aliases (both in and out aliases) requested by the Property.
-	 * @return 
+	 * @return A non-null list, though the list may be empty.
 	 */
 	public List<EffectiveName> getAliases() {
 		return aliases;
@@ -50,7 +50,7 @@ public class PropertyNaming {
 	/**
 	 * A list of the in-type aliases.
 	 * 
-	 * @return 
+	 * @return A non-null list, though the list may be empty.
 	 */
 	public List<EffectiveName> getInAliases() {
 		
@@ -62,7 +62,7 @@ public class PropertyNaming {
 	/**
 	 * A list of the out-type aliases.
 	 * 
-	 * @return 
+	 * @return A non-null list, though the list may be empty.
 	 */
 	public List<EffectiveName> getOutAliases() {
 		

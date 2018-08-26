@@ -236,9 +236,9 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		
 		} catch (Exception ex) {
 			
-			tb.addLine(TextUtil.format("SECURITY EXCEPTION TRYING TO ACCESS FIELDS IN {}. " +
-					"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
-					"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.", group.getCanonicalName()));
+			tb.addLine(TextUtil.format("EXCEPTION WHILE INSPECTING A PROPERTY "
+					+ "IN '{}'. IS THERE A SECURITY MANAGER BLOCKING REFLECTION? "
+					+ "EXCEPTION TYPE: {}", group.getCanonicalName(), ex.getClass().getName()));
 			print(out, tb, getFormat());
 		}
 		

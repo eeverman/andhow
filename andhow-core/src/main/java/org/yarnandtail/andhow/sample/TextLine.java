@@ -24,7 +24,9 @@ public abstract class TextLine {
 
 	abstract List<String> getWrappedBlockComment(PrintFormat format, boolean startComment, boolean endComment);
 	
-	
+	/**
+	 * A line of text.
+	 */
 	public static class StringLine extends TextLine {
 		String line;
 		public StringLine(String line, boolean wrap) {
@@ -98,6 +100,9 @@ public abstract class TextLine {
 
 	}
 	
+	/**
+	 * A horizontal rule / separator line.
+	 */
 	public static class HRLine extends TextLine {
 		public HRLine() {
 			wrap = false;
