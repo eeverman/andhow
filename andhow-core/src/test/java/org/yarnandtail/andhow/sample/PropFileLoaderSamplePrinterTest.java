@@ -25,7 +25,9 @@ public class PropFileLoaderSamplePrinterTest {
 	
 	public static interface Config {
 		StrProp MY_PROP1 = StrProp.builder().build();
-		StrProp MY_PROP2 = StrProp.builder().defaultValue("La la la").desc("mp description").build();
+		StrProp MY_PROP2 = StrProp.builder().defaultValue("La la la").desc("mp description")
+				.helpText("Long text on how to use the property").mustStartWith("La").mustEndWith("la")
+				.mustBeNonNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
 	}
 	
 	@Before
@@ -70,14 +72,19 @@ public class PropFileLoaderSamplePrinterTest {
 		
 		System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
-		assertEquals(4, lines.length);
+		assertEquals(9, lines.length);
 		assertEquals("# ", lines[0]);
-		assertEquals("# MY_PROP2 (String)  - mp description", lines[1]);
-		assertEquals("# Default Value: La la la", lines[2]);
+		assertEquals("# MY_PROP2 (String) NON-NULL - mp description", lines[1]);
+		assertEquals("# Recognized aliases: mp2, mp2_alias2", lines[2]);
+		assertEquals("# Default Value: La la la", lines[3]);
+		assertEquals("# Long text on how to use the property", lines[4]);
+		assertEquals("# The property value must:", lines[5]);
+		assertEquals("# - start with 'La'", lines[6]);
+		assertEquals("# - end with 'la'", lines[7]);
 		assertEquals(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
 						".MY_PROP2 = La la la",
-				lines[3]);
+				lines[8]);
 	}
 
 	/**
