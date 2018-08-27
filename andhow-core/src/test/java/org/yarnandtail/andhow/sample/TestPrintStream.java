@@ -2,8 +2,6 @@ package org.yarnandtail.andhow.sample;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  *
@@ -30,5 +28,9 @@ public class TestPrintStream extends PrintStream {
 	public String[] getTextAsLines() {
 		String all = new String(baos.toByteArray(), StandardCharsets.UTF_8);
 		return all.split("\\R");
+	}
+	
+	public void reset() {
+		baos.reset();
 	}
 }
