@@ -10,18 +10,9 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author ericeverman
  */
 public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
-	protected PrintFormat format;
+	protected PrintFormat format = new PropFileFormat();
 	
 	public PropFileLoaderSamplePrinter() {
-		format = new PrintFormat();
-		format.blockCommentStart = null;
-		format.blockCommentEnd = null;
-		format.blockCommentSeparator = null;
-		format.lineCommentPrefix = "#";
-		format.lineCommentPrefixSeparator = " ";	//Separate the opening line comment from the text
-		format.secondLineIndent = "\t";
-		format.hr = TextUtil.repeat("##", 45);
-		format.lineWidth = 90;
 	}
 	
 	@Override

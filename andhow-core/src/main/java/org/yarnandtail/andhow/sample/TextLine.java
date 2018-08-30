@@ -10,6 +10,11 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public abstract class TextLine {
 	
+	/**
+	 * Indicates if this line should be wrapped if too long.
+	 * The caller must then decide to actually do the wrapping by calling the
+	 * 'wrapped' methods.
+	 */
 	protected Boolean wrap;
 
 	abstract String getLine(PrintFormat format);
@@ -24,7 +29,9 @@ public abstract class TextLine {
 
 	abstract List<String> getWrappedBlockComment(PrintFormat format, boolean startComment, boolean endComment);
 	
-	
+	/**
+	 * A line of text.
+	 */
 	public static class StringLine extends TextLine {
 		String line;
 		public StringLine(String line, boolean wrap) {
@@ -52,13 +59,12 @@ public abstract class TextLine {
 			
 			String out = line;
 
-				
-			if (startComment) {
-				out = format.blockCommentStart + format.blockCommentSeparator + out;
+			if (startComment && format.blockCommentStart != null) {
+				out = format.blockCommentStart + TextUtil.nullToEmpty(format.blockCommentSeparator) + out;
 			}
 
-			if (endComment) {
-				out = out + format.blockCommentSeparator + format.blockCommentEnd;
+			if (endComment && format.blockCommentEnd != null) {
+				out = out + TextUtil.nullToEmpty(format.blockCommentSeparator) + format.blockCommentEnd;
 			}
 			
 			return out;
@@ -72,7 +78,9 @@ public abstract class TextLine {
 		@Override
 		public List<String> getWrappedLineComment(PrintFormat format) {
 			return TextUtil.wrap(line, format.lineWidth, 
-					format.lineCommentPrefix + format.lineCommentPrefixSeparator, format.secondLineIndent);
+					TextUtil.nullToEmpty(format.lineCommentPrefix)
+					+ TextUtil.nullToEmpty(format.lineCommentPrefixSeparator),
+					format.secondLineIndent);
 		}
 		
 		@Override
@@ -81,15 +89,19 @@ public abstract class TextLine {
 			List<String> lines = TextUtil.wrap(line, format.lineWidth, "", format.secondLineIndent);
 
 			if (startComment && endComment && lines.size() == 1) {
-				lines.set(0, format.blockCommentStart + format.blockCommentSeparator + 
-						lines.get(0) + format.blockCommentSeparator + format.blockCommentEnd);
+				lines.set(0, 
+						TextUtil.nullToEmpty(format.blockCommentStart) 
+								+ TextUtil.nullToEmpty(format.blockCommentSeparator)
+								+ lines.get(0) 
+								+ TextUtil.nullToEmpty(format.blockCommentSeparator)
+								+ TextUtil.nullToEmpty(format.blockCommentEnd));
 			} else {
-				if (startComment) {
+				if (startComment && format.blockCommentStart != null) {
 					lines.add(0, format.blockCommentStart);
 				}
 				
-				if (endComment) {
-					lines.set(lines.size() - 1, lines.get(lines.size() - 1) + format.blockCommentSeparator + format.blockCommentEnd);
+				if (endComment && format.blockCommentEnd != null) {
+					lines.set(lines.size() - 1, lines.get(lines.size() - 1) + TextUtil.nullToEmpty(format.blockCommentSeparator) + format.blockCommentEnd);
 				}
 			}
 			
@@ -98,6 +110,9 @@ public abstract class TextLine {
 
 	}
 	
+	/**
+	 * A horizontal rule / separator line.
+	 */
 	public static class HRLine extends TextLine {
 		public HRLine() {
 			wrap = false;
@@ -110,7 +125,8 @@ public abstract class TextLine {
 		
 		@Override
 		public String getLineComment(PrintFormat format) {
-			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + format.hr;
+			return TextUtil.nullToEmpty(format.lineCommentPrefix)
+					+ TextUtil.nullToEmpty(format.lineCommentPrefixSeparator) + format.hr;
 		}
 		
 		@Override
@@ -118,13 +134,12 @@ public abstract class TextLine {
 			
 			String out = format.hr;
 
-				
-			if (startComment) {
-				out = format.blockCommentStart + format.blockCommentSeparator + out;
+			if (startComment && format.blockCommentStart != null) {
+				out = format.blockCommentStart + TextUtil.nullToEmpty(format.blockCommentSeparator) + out;
 			}
 
-			if (endComment) {
-				out = out + format.blockCommentSeparator + format.blockCommentEnd;
+			if (endComment && format.blockCommentEnd != null) {
+				out = out + TextUtil.nullToEmpty(format.blockCommentSeparator) + format.blockCommentEnd;
 			}
 			
 			return out;
@@ -140,7 +155,11 @@ public abstract class TextLine {
 		@Override
 		public List<String> getWrappedLineComment(PrintFormat format) {
 			ArrayList<String> lines = new ArrayList();
-			lines.add(format.lineCommentPrefix + format.lineCommentPrefixSeparator + format.hr);
+			lines.add(
+					TextUtil.nullToEmpty(format.lineCommentPrefix) 
+					+ TextUtil.nullToEmpty(format.lineCommentPrefixSeparator)
+					+ format.hr
+			);
 			return lines;
 		}
 		
@@ -148,18 +167,7 @@ public abstract class TextLine {
 		public List<String> getWrappedBlockComment(PrintFormat format, boolean startComment, boolean endComment) {
 			ArrayList<String> lines = new ArrayList();
 
-			if (startComment && endComment) {
-				lines.add(format.blockCommentStart + format.blockCommentSeparator + 
-						format.hr + format.blockCommentSeparator + format.blockCommentEnd);
-			} else {
-				if (startComment) {
-					lines.add(format.blockCommentStart + format.blockCommentSeparator + format.hr);
-				}
-				
-				if (endComment) {
-					lines.add(format.hr + format.blockCommentSeparator + format.blockCommentEnd);
-				}
-			}
+			lines.add(getBlockComment(format, startComment, endComment));
 			
 			return lines;
 		}
@@ -192,12 +200,12 @@ public abstract class TextLine {
 			String out = "";
 
 				
-			if (startComment) {
-				out = format.blockCommentStart + format.blockCommentSeparator + out;
+			if (startComment && format.blockCommentStart != null) {
+				out = format.blockCommentStart + TextUtil.nullToEmpty(format.blockCommentSeparator) + out;
 			}
 
-			if (endComment) {
-				out = out + format.blockCommentSeparator + format.blockCommentEnd;
+			if (endComment && format.blockCommentEnd != null) {
+				out = out + TextUtil.nullToEmpty(format.blockCommentSeparator) + format.blockCommentEnd;
 			}
 			
 			return out;
@@ -221,18 +229,17 @@ public abstract class TextLine {
 		public List<String> getWrappedBlockComment(PrintFormat format, boolean startComment, boolean endComment) {
 			ArrayList<String> lines = new ArrayList();
 
-			if (startComment && endComment) {
-				lines.add(format.blockCommentStart + format.blockCommentSeparator + 
-						"" + format.blockCommentSeparator + format.blockCommentEnd);
-			} else {
-				if (startComment) {
-					lines.add(format.blockCommentStart + format.blockCommentSeparator + "");
-				}
-				
-				if (endComment) {
-					lines.add("" + format.blockCommentSeparator + format.blockCommentEnd);
-				}
+			String out = "";
+			
+			if (startComment && format.blockCommentStart != null) {
+				out = out + format.blockCommentStart + TextUtil.nullToEmpty(format.blockCommentSeparator);
 			}
+
+			if (endComment && format.blockCommentSeparator != null) {
+				out = out + format.blockCommentSeparator + TextUtil.nullToEmpty(format.blockCommentEnd);
+			}
+
+			lines.add(out);
 			
 			return lines;
 		}

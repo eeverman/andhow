@@ -223,4 +223,14 @@ public class TextUtilTest {
 		assertEquals("&lt;some&amp;text&quot;", TextUtil.escapeXml("<some&text\""));
 		assertEquals("&apos;tis the s&apos;son", TextUtil.escapeXml("'tis the s'son"));
 	}
+
+	/**
+	 * Test of nullToEmpty method, of class TextUtil.
+	 */
+	@Test
+	public void testNullToEmpty() {
+		assertEquals("", TextUtil.nullToEmpty(null));
+		assertEquals("", TextUtil.nullToEmpty(""));		//no change
+		assertEquals("a", TextUtil.nullToEmpty("a"));	//no change
+	}
 }

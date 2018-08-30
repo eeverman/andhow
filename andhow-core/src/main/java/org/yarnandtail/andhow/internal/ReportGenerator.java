@@ -241,9 +241,12 @@ public class ReportGenerator {
 					printer.printProperty(appDef, out, group, prop);
 				}
 			} catch (Exception ex) {
-				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", "SECURITY EXCEPTION TRYING TO ACCESS THIS GROUP. " +
-						"ENSURE ALL Property FIELDS ARE PUBLIC IN THE PropertyGroup " +
-						"AND THAT THERE IS NOT A SECURITY MANAGER BLOCKING ACCESS TO REFLECTION.");
+				
+				TextUtil.println(out, DEFAULT_LINE_WIDTH, "", 
+						"EXCEPTION WHILE INSPECTING A PROPERTY " +
+						"IN '" + group.getCanonicalName() + "'. " +
+						"IS THERE A SECURITY MANAGER BLOCKING REFLECTION? " +
+						"EXCEPTION TYPE: " + ex.getClass().getName());
 			}
 
 			printer.printPropertyGroupEnd(appDef, out, group);

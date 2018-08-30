@@ -179,6 +179,19 @@ public class TextUtil {
 		}
 	}
 	
+	/**
+	 * Converts a null string to empty.  Non null strings are unmodified.
+	 * @param source The string to convert
+	 * @return A non-null string.
+	 */
+	public static String nullToEmpty(String source) {
+		if (source != null) {
+			return source;
+		} else {
+			return "";
+		}
+	}
+	
 	public static String trimToEmpty(String source) {
 		if (source == null) {
 			return "";

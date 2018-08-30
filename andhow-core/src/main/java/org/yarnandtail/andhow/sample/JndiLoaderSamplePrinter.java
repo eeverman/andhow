@@ -13,15 +13,7 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 	protected PrintFormat format;
 	
 	public JndiLoaderSamplePrinter() {
-		format = new PrintFormat();
-		format.blockCommentStart = "<!--";
-		format.blockCommentEnd = "-->";
-		format.blockCommentSeparator = " "; //Use between the last text and the comment end if on same line
-		format.lineCommentPrefix = null;
-		format.lineCommentPrefixSeparator = " ";	//Separate the opening line comment from the text
-		format.secondLineIndent = "\t";
-		format.hr = TextUtil.repeat("- ", 45);
-		format.lineWidth = 90;
+		format = new JndiFileFormat();
 	}
 	
 	@Override
