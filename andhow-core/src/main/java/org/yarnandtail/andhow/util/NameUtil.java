@@ -158,8 +158,8 @@ public class NameUtil {
 	/**
 	 * Gets the true canonical name for a Property in the group.
 	 *
-	 * The canonical name is of the form:<br/>
-	 * [group canonical name].[field name of the Property within the group]<br/>
+	 * The canonical name is of the form:<br>
+	 * [group canonical name].[field name of the Property within the group]<br>
 	 * thus, it is require that the Property be a field within the group,
 	 * otherwise null is returned.
 	 *

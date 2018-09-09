@@ -14,7 +14,7 @@ import static javax.lang.model.util.ElementFilter.*;
 /**
  * This Scanner is only intended to work on a single compileable unit at a time.
  *
- * Do not use the scan(Iterable<? extends Element>) method defined in the super
+ * Do not use the {@code scan(Iterable<? extends Element>)} method defined in the super
  * class.
  *
  * @author ericeverman

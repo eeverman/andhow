@@ -10,7 +10,7 @@ public interface LocalFileLoader {
 	/**
 	 * Sets the path to the file to be loaded.
 	 * 
-	 * Setting this non-null is mutually exclusive with setting the Property<String>
+	 * Setting this non-null is mutually exclusive with setting the Property{@code <String>}
 	 * based method of the same name.
 	 * 
 	 * @param path 

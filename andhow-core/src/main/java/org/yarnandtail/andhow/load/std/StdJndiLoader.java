@@ -17,7 +17,7 @@ import org.yarnandtail.andhow.util.TextUtil;
 /**
  * Attempts to look up the name of each known {@code Property} in the JNDI
  * environment and loads the value for any that are found.
- * <h4>Position in Standard Loading Order, first to last</h4>
+ * <h3>Position in Standard Loading Order, first to last</h3>
  * <ul>
  * <li>StdFixedValueLoader
  * <li>StdMainStringArgsLoader
@@ -27,11 +27,11 @@ import org.yarnandtail.andhow.util.TextUtil;
  * <li>StdPropFileOnFilesystemLoader
  * <li>StdPropFileOnClasspathLoader
  * </ul>
- * <h4>Typical Use Case</h4>
+ * <h3>Typical Use Case</h3>
  * A web or service application runs in an application container such as Tomcat.
  * Application containers provide a JNDI environment which can be used to
  * configure applications running in their environment.
- * <h4>Basic Behaviors</h4>
+ * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
  * <li><b>Complains about unrecognized properties: No</b>
@@ -39,7 +39,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * <li><b>Default behavior:  Always attempts to look up each Property in the JNDI environment</b>
  * <li><b>Is case sensitive: Yes</b> (This is one of the only loaders that is case sensitive)
  * </ul>
- * <h4>Loader Details and Configuration</h4>
+ * <h3>Loader Details and Configuration</h3>
  * While most other loaders are case insensitive, the JNDI loader is case
  * sensitive because the JNDI API is case sensitive.
  * Also, while most other loaders consume a configuration resource
@@ -95,7 +95,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * <pre>
  * java -Dorg.yarnandtail.andhow.load.std.StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS=java:xyz/ -jar MyJarName.jar
  * </pre>
- * <h4>This is a Standard Loader</h4>
+ * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
  * via the {@code AndHowConfiguration.setStandardLoaders()} methods.

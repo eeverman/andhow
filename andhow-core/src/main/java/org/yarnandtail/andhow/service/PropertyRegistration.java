@@ -7,7 +7,7 @@ import java.util.*;
  * Registration for a single Property, which registers a single {@code Property}
  * with AndHow during startup at run time.
  * 
- * <h4>Property registration background</h4>
+ * <h3>Property registration background</h3>
  * At compile time, the AndHowCompileProcessor (an annotation Processor), reads
  * user classes and generates a PropertyRegistrar instance for each root class
  * (non-inner class) that contains an AndHow {@code Property}.
