@@ -7,7 +7,7 @@ import org.yarnandtail.andhow.load.MapLoader;
 /**
  * Reads the Java system properties and loads the value for any system property
  * who's name matches a Property.
- * <h4>Position in Standard Loading Order, first to last</h4>
+ * <h3>Position in Standard Loading Order, first to last</h3>
  * <ul>
  * <li>StdFixedValueLoader
  * <li>StdMainStringArgsLoader
@@ -20,13 +20,13 @@ import org.yarnandtail.andhow.load.MapLoader;
  * <em>Property value loading is based on a 'first win' strategy, so the first
  * loader to find a value for a property sets the value.</em>
  * 
- * <h4>Typical Use Case</h4>
+ * <h3>Typical Use Case</h3>
  * An application might receive all or some of its configuration from Java
  * system properties that are set when the JVM starts.  Java system properties
  * can be set in a startup script, which could be customized for each environment.
  * This provides a relatively easy way for deployment automation or system
  * administrators to control application configuration values across many servers.
- * <h4>Basic Behaviors</h4>
+ * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
  * <li><b>Complains about unrecognized properties: No</b>
@@ -35,7 +35,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * match known property names.</b>
  * </ul>
  * 
- * <h4>Loader Details and Configuration</h4>
+ * <h3>Loader Details and Configuration</h3>
  * This loader loads properties from {@code java.lang.System.getProperties()}.
  * Over the lifecycle of the JVM, values of system properties can change
  * so this loader is working from a snapshot of the system properties it finds
@@ -51,7 +51,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * Passing system properties on command line looks like this:
  * <pre>java -Dfull.name.of.MY_PROPERTY=someValue -jar MyJarName.jar</pre>
  * 
- * <h4>This is a Standard Loader</h4>
+ * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
  * via the {@code AndHowConfiguration.setStandardLoaders()} methods.

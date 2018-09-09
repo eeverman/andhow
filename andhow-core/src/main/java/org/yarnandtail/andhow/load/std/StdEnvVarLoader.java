@@ -7,7 +7,7 @@ import org.yarnandtail.andhow.load.MapLoader;
 /**
  * Reads the operating system defined environment variables and loads the value
  * for any environmental variable who's name matches a Property.
- * <h4>Position in Standard Loading Order, first to last</h4>
+ * <h3>Position in Standard Loading Order, first to last</h3>
  * <ul>
  * <li>StdFixedValueLoader
  * <li>StdMainStringArgsLoader
@@ -17,7 +17,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * <li>StdPropFileOnFilesystemLoader
  * <li>StdPropFileOnClasspathLoader
  * </ul>
- * <h4>Typical Use Case</h4>
+ * <h3>Typical Use Case</h3>
  * An application might receive all or some of its configuration from OS defined
  * environmental variables that are passed to the JVM when the JVM starts.
  * Environment variables can be set in the OS and augmented in a startup script,
@@ -25,14 +25,14 @@ import org.yarnandtail.andhow.load.MapLoader;
  * Similar to Java system properties, this provides a relatively easy way for
  * deployment automation or system administrators to control application
  * configuration values across many servers.
- * <h4>Basic Behaviors</h4>
+ * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
  * <li><b>Complains about unrecognized properties: No</b>
  * <li><b>Default behavior:  AndHow always attempts to read environment
  * variables and will assign property values if any of them match known property names.</b>
  * </ul>
- * <h4>Loader Details and Configuration</h4>
+ * <h3>Loader Details and Configuration</h3>
  * This loader loads values from {@code System.getenv()}.
  * Those environmental values are provided by the host environment (the OS)
  * as a static snapshot to the JVM at startup as a String-to-String map.
@@ -47,7 +47,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * are case sensitive - This is the primary reason AndHow is case insensitive
  * by default.  Each OS <a href="https://www.schrodinger.com/kb/1842">
  * has a different way to set an environmental variables</a>
- * <h4>This is a Standard Loader</h4>
+ * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
  * via the {@code AndHowConfiguration.setStandardLoaders()} methods.

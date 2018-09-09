@@ -13,7 +13,7 @@ public class Name {
 	 * with characters allowed in various formats, in particular, uri style JNDI
 	 * names or property files conventions.
 	 *
-	 * URLs require encoding for these characters: [whitespace];/?:@=&"<>#%{}|\^~[]`
+	 * URLs require encoding for these characters: {@code [whitespace];/?:@=&"<>#%{}|\^~[]`}
 	 */
 	public static String ILLEGAL_PROPERTY_NAME_CHARS = " \t\n\r;/?:@=&\"<>#%{}|\\^~[]`";
 

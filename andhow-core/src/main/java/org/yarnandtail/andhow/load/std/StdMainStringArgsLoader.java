@@ -7,7 +7,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Reads an array of Strings containing key value pairs in the form <em>key=value</em>,
  * and loads the value for any key that matches a Property.  This is normally
  * used to read in command line arguments.
- * <h4>Position in Standard Loading Order, first to last</h4>
+ * <h3>Position in Standard Loading Order, first to last</h3>
  * <ul>
  * <li>StdFixedValueLoader
  * <li><b>StdMainStringArgsLoader &lt;-- This loader</b>
@@ -19,20 +19,20 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * </ul>
  * <em>Property value loading is based on a 'first win' strategy, so the first
  * loader to find a value for a property sets the value.</em>
- * <h4>Typical Use Case</h4>
+ * <h3>Typical Use Case</h3>
  * An executable jar or desktop application accepts command line arguments at
  * startup to configure the application.  This loader loads the
  * {@code String[] args} passed to the {@code main(String[] args)}, which Java
  * passes from the command line.  This is the most common usage, however, your
  * application may retrieve an array of {@code String}'s from anywhere to pass
  * to AndHow at startup.
- * <h4>Basic Behaviors</h4>
+ * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: Yes</b>
  * <li><b>Complains about unrecognized properties: No</b>
  * <li><b>Default behavior:  None</b> - This loader is only active if command line arguments are passed in as shown below
  * </ul>
- * <h4>Loader Details and Configuration</h4>
+ * <h3>Loader Details and Configuration</h3>
  * AndHow is not 'there' to somehow intercept command line arguments -
  * Your application code will need to do that and pass those arguments to
  * AndHow, like this:
@@ -53,7 +53,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * <a href="https://sites.google.com/view/andhow/usage-examples/main-startup-example">
  * Here is a complete example of using command line arguments</a>.
  * 
- * <h4>This is a Standard Loader</h4>
+ * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
  * via the {@code AndHowConfiguration.setStandardLoaders()} methods.

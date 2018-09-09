@@ -6,7 +6,6 @@ import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * <S extends StdConfig<S>>
  * @author ericeverman
  */
 public class StdConfig {
@@ -81,7 +80,7 @@ public class StdConfig {
 		 * StdPropFileOnClasspathLoader to load.
 		 *
 		 * If no path is specified via either a String or StrProp, the path
-		 * '/andhow.properties' is used.<br/>
+		 * '/andhow.properties' is used.<br>
 		 *
 		 * Paths should start with a forward slash and have packages delimited by
 		 * forward slashes. If the file name contains a dot, the path <em>must</em>
@@ -115,7 +114,7 @@ public class StdConfig {
 		 * properties file for the StdPropFileOnClasspathLoader to load.
 		 *
 		 * If no path is specified via either a String or StrProp, the path
-		 * '/andhow.properties' is used.<br/>
+		 * '/andhow.properties' is used.<br>
 		 *
 		 * Paths should start with a forward slash and have packages delimited by
 		 * forward slashes. If the file name contains a dot, the path <em>must</em>

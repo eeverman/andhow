@@ -95,34 +95,19 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
-				<version>4.3.5.RELEASE</version>
+				<version>4.3.18.RELEASE</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.5</version>
+				<version>2.6</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.google.testing.compile</groupId>
 				<artifactId>compile-testing</artifactId>
-				<version>0.12</version>
-				
-				<!-- comp-test has conflicting versions of guava -->
-				<exclusions>
-					<exclusion>
-						<groupId>com.google.guava</groupId>
-						<artifactId>guava</artifactId>
-					</exclusion>
-				</exclusions>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<!-- fixed for compile-testing -->
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>21.0</version>
+				<version>0.15</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -134,12 +119,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.6.2</version>
+					<version>3.8.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
+					<version>3.0.1</version>
 					<configuration>
 						<additionalparam>-Xdoclint:none</additionalparam>
 						<quiet>true</quiet>
@@ -178,15 +163,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-					<compilerVersion>1.8</compilerVersion> 
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.7</version>
@@ -197,6 +173,14 @@
 					</formats>
 					<check />
 					<aggregate>true</aggregate>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -231,7 +215,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.4</version>
+						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -285,22 +269,71 @@
 			</build>
 		</profile>
 		<profile>
-			<id>default-tools.jar</id>
+			<id>AllJDK8</id>
 			<activation>
-				<property>
-					<name>java.vendor</name>
-					<value>Sun Microsystems Inc.</value>
-				</property>
+				<jdk>[1.8,1.9)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>1.8</source>
+							<target>1.8</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>SomeJDK8s</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<file>
+					<exists>${java.home}/../lib/tools.jar</exists>
+				</file>
 			</activation>
 			<dependencies>
 				<dependency>
 					<groupId>com.sun</groupId>
 					<artifactId>tools</artifactId>
-					<version>1.4.2</version>
+					<version>1.8</version>
 					<scope>system</scope>
 					<systemPath>${java.home}/../lib/tools.jar</systemPath>
 				</dependency>
 			</dependencies>
+		</profile>
+		<profile>
+			<id>java9AndBeyond</id>
+			<!--
+			Its not possible to build a JRE 1.8 compatable jar file using JDK9
+			because of the need to use the '-add-modules' feature of JDK9.
+			Currently the use of jdk9 is blocked by the enforcer plugin, above.
+			For the 0.5.0 release, the JRE8 will be left behind and only this
+			profile will be active.
+			-->
+			<activation>
+				<jdk>[1.9,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<compilerArgs>
+								<arg>--add-modules=jdk.compiler</arg>
+							</compilerArgs>
+							<!-- without forking compilation happens in the
+							same process, so no arguments are applied -->
+							<fork>true</fork>
+							<source>1.9</source>
+							<target>1.9</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 </project>

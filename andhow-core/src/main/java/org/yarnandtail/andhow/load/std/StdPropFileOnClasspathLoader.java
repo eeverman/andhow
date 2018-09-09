@@ -9,7 +9,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * <em>classpath</em>. By default, this loader will look for a file named
  * {@code andhow.properties} at the root of the classpath.
  * 
- * <h4>Position in Standard Loading Order, first to last</h4>
+ * <h3>Position in Standard Loading Order, first to last</h3>
  * <ul>
  * <li>StdFixedValueLoader
  * <li>StdMainStringArgsLoader
@@ -21,20 +21,20 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * </ul>
  * <em>Property value loading is based on a 'first win' strategy, so the first
  * loader to find a value for a property sets the value.</em>
- * <h4>Typical Use Case</h4>
+ * <h3>Typical Use Case</h3>
  * A service application might load the majority of its configuration from
  * system properties or environmental variables, however, some sane default
  * configuration values can be bundled with the application.
  * By default, AndHow will discover and load a file named {@code andhow.properties}
  * at the root of the classpath via the {@code StdPropFileOnClasspathLoader}.
- * <h4>Basic Behaviors</h4>
+ * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
  * <li><b>Complains about unrecognized properties: Yes</b>
  * <li><b>Complains if the .properties file is missing: No</b>
  * <li><b>Default behavior:  Attempts to read {@code andhow.properties} from the root of the classpath</b>
  * </ul>
- * <h4>Loader Details and Configuration</h4>
+ * <h3>Loader Details and Configuration</h3>
  * This loader reads properties files using the {@code java.util.Properties},
  * which silently ignores duplicate property entries
  * (i.e., the same key appearing multiple times).  When there are duplicate 
@@ -72,7 +72,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * If a value is present, the loader tries to load from the configured classpath.
  * If no value is configured, the default classpath is assumed.
  * 
- * <h4>This is a Standard Loader</h4>
+ * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
  * by AndHow.  The set of standard loaders and their order can bet set
  * via the {@code AndHowConfiguration.setStandardLoaders()} methods.

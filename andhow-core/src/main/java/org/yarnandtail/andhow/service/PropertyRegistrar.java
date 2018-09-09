@@ -10,7 +10,7 @@ import java.util.List;
  * final artifact (typically a jar, war or ear file), which can be discovered
  * automatically via the {@code java.util.ServiceLoader} mechanism.
  * 
- * <h4>Property registration background</h4>
+ * <h3>Property registration background</h3>
  * At compile time, the AndHowCompileProcessor (an annotation Processor), reads
  * user classes and generates a PropertyRegistrar instance for each root class
  * (non-inner class) that contains an AndHow {@code Property}.

@@ -141,7 +141,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * 
 	 * If the alias name already exists, it will add 'in-ness' to it.
 	 * Alias names cannot be null, contain whitespace, or these characters:
-	 * <code>;/?:@=&"&lt;&gt;>#%{}|\^~[]`</code>
+	 * <code>{@code ;/?:@=&"&lt;&gt;>#%{}|\^~[]`}</code>
 	 * @param name
 	 * @return A builder for chaining build calls
 	 */
@@ -156,7 +156,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * 
 	 * If the alias name already exists, it will add 'out-ness' to it.
 	 * Alias names cannot be null, contain whitespace, or these characters:
-	 * <code>;/?:@=&"<>#%{}|\^~[]`</code>
+	 * <code>{@code ;/?:@=&"<>#%{}|\^~[]`}</code>
 	 * 
 	 * @param name
 	 * @return A builder for chaining build calls
@@ -172,7 +172,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * 
 	 * If the alias name already exists, it will add 'in' and 'out' to it.
 	 * Alias names cannot be null, contain whitespace, or these characters:
-	 * <code>;/?:@=&"<>#%{}|\^~[]`</code>
+	 * <code>{@code ;/?:@=&"<>#%{}|\^~[]`}</code>
 	 * 
 	 * @param name
 	 * @return A builder for chaining build calls
