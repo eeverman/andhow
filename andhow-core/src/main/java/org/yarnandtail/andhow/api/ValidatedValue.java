@@ -15,36 +15,6 @@ public class ValidatedValue<T> {
 	private final T value;
 	private ProblemList<ValueProblem> problems;
 
-	@Override
-	public boolean equals(Object obj) {
-		boolean basicPropsEq = false;
-		
-		if (obj instanceof ValidatedValue) {
-			ValidatedValue other = (ValidatedValue)obj;
-			if (property == other.property) {
-				if (value != null && other.value != null) {
-					basicPropsEq = (value.equals(other.value));
-				} else if (value == null && other.value == null) {
-					basicPropsEq = true;
-				}
-			} 
-			
-			//Ignore the transient Problem state
-		}
-		
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		if (property != null) hash*=property.hashCode();
-		if (value != null) hash*=value.hashCode();
-		
-		//Ignore the transient Problem state
-		
-		return hash;
-	}
 
 	/**
 	 * New instance w/o Problems
@@ -58,25 +28,6 @@ public class ValidatedValue<T> {
 		this.value = value;
 	}
 	
-	/**
-	 * Construct w/ a known set of problems.
-	 * 
-	 * The problem list is taken by reference if it is non-empty.  Callers should
-	 * build up a fresh list of Problems and not reuse lists.
-	 * 
-	 * @param prop
-	 * @param value
-	 * @param inIssues 
-	 */
-	public ValidatedValue(Property<T> prop, T value, ProblemList<ValueProblem> inIssues) {
-		this.property = prop;
-		this.value = value;
-		
-		if (inIssues != null && inIssues.size() > 0) {
-			problems = inIssues;
-		}
-	}
-
 	public Property<T> getProperty() {
 		return property;
 	}
