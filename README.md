@@ -13,13 +13,16 @@ Key Features
 * **Detailed validation**
 * **Simple to use**
 * **Use Java _public_ & _private_ to control configuration visibility**
-* **Validate _all_ property values at startup to _Fail Fast_**
-* **Load values from multiple sources (JNDI, env vars, prop files, etc)**
-* **Auto-generate configuration sample for application properties**
+* **Validates _all_ property values at startup to _[Fail Fast](http://www.practical-programming.org/ppl/docs/articles/fail_fast_principle/fail_fast_principle.html)_**
+* **Loads values from multiple sources (JNDI, env vars, prop files, etc)**
+* **Generates configuration sample file based on  application properties**
 
-Contact / Questions / Feedback
+Questions / Discussion / Contact
 --------------
-Contact me on [Twitter](https://twitter.com/eeverman).
+[Join the discussion](https://sites.google.com/view/andhow/join-the-discussion)
+on the [user forum](https://groups.google.com/d/forum/andhowuser)
+or the *Slack* group (See details on the
+[Join](https://sites.google.com/view/andhow/join-the-discussion) page).
 
 Use it via Maven (available on Maven Central)
 --------------
@@ -30,9 +33,7 @@ Use it via Maven (available on Maven Central)
     <version>0.4.0</version>
 </dependency>
 ```
-
-**AndHow can be used in projects with JDK8 & 9**
-[JDK8 is required to build the AndHow project](https://github.com/eeverman/andhow/issues/259) itself.
+**AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/projects-using-java-9)**
 
 _**Below is a quick introduction, but complete usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
