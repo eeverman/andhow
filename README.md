@@ -35,11 +35,10 @@ Use it via Maven (available on Maven Central)
 ```
 **AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/projects-using-java-9)**
 
-_**Below is a quick introduction, but complete usage examples and documentation
-are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
-
 Complete Usage Example
 --------------
+_**More usage examples and documentation
+are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
 ```java
 package org.simple;
 
