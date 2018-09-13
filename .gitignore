@@ -7,3 +7,6 @@
 **/nbproject/project.properties
 *.releaseBackup
 release.properties
+
+#IntelliJ Project directory
+.idea/
