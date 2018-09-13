@@ -72,8 +72,7 @@ public class GettingStarted {
 	}
 }
 ```
-Walking through the example:
-### Section 1 : Declaring AndHow Properties
+### Section //1 : Declaring AndHow Properties
 Properties must be `final static`, but may be `private` or any other scope.
 `builder` methods simplify adding validation, description, defaults and
 other metadata.
@@ -81,7 +80,7 @@ Properties are strongly typed, so default values and validation are specific to
 the type, for instance, `StrProp` has regex validation rules for `String`s
 while the `IntProp` has greater-than and less-than rules available.
 
-### Section 2 : Using AndHow Properties
+### Section //2 : Using AndHow Properties
 AndHow Properties are used just like static final constants with an added
 `.getValue()` on the end to fetch the value.  
 Strong typing means that calling `COUNT_DOWN_START.getValue()`
