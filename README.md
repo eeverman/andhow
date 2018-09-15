@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow) [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
+[![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
+[![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
+[![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
 ![Andhow Visual](andhow.gif)
 AndHow!  strong.valid.simple.AppConfiguration
 ======
@@ -19,10 +21,10 @@ Key Features
 
 Questions / Discussion / Contact
 --------------
-[Join the discussion](https://sites.google.com/view/andhow/join-the-discussion)
+[Join the discussion](https://sites.google.com/view/andhow/join-discussion)
 on the [user forum](https://groups.google.com/d/forum/andhowuser)
 or the *Slack* group (See details on the
-[Join](https://sites.google.com/view/andhow/join-the-discussion) page).
+[Join](https://sites.google.com/view/andhow/join-discussion) page).
 
 Use it via Maven (available on Maven Central)
 --------------
@@ -33,7 +35,7 @@ Use it via Maven (available on Maven Central)
     <version>0.4.0</version>
 </dependency>
 ```
-**AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/projects-using-java-9)**
+**AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/user-guide/java9)**
 
 Complete Usage Example
 --------------
