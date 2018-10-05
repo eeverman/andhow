@@ -66,11 +66,11 @@ public class AndHowUtilTest {
 	 */
 	@Test
 	public void testGetClassForName() {
-		assertThat(String.class, is(equalTo(AndHowUtil.getClassForName("java.lang.String"))));
+		assertEquals(String.class, AndHowUtil.getClassForName("java.lang.String"));
 
-		assertThat(null, is(equalTo(AndHowUtil.getClassForName(""))));
-		assertThat(null, is(equalTo(AndHowUtil.getClassForName(null))));
-		assertThat(null, is(equalTo(AndHowUtil.getClassForName("testClassName"))));
+		assertEquals(null, AndHowUtil.getClassForName(""));
+		assertEquals(null, AndHowUtil.getClassForName(null));
+		assertEquals(null, AndHowUtil.getClassForName("testClassName"));
 	}
 
 	/**
@@ -78,11 +78,11 @@ public class AndHowUtilTest {
 	 */
 	@Test
 	public void testGetClassInstanceForName() throws IllegalAccessException, InstantiationException {
-		assertThat(String.class.newInstance(), is(equalTo(AndHowUtil.getClassInstanceForName("java.lang.String"))));
+		assertEquals(String.class.newInstance(), AndHowUtil.getClassInstanceForName("java.lang.String"));
 
-		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName(""))));
-		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName(null))));
-		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName("testClassName"))));
+		assertEquals(null, AndHowUtil.getClassInstanceForName(""));
+		assertEquals(null, AndHowUtil.getClassInstanceForName(null));
+		assertEquals(null, AndHowUtil.getClassInstanceForName("testClassName"));
 
 	}
 
