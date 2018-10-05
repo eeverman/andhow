@@ -2,8 +2,9 @@
  */
 package org.yarnandtail.andhow.util;
 
-import java.lang.reflect.Method;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -53,11 +54,11 @@ public class AndHowUtilTest {
 	 */
 	@Test
 	public void testClassExists() {
-		assertThat(true, is(equalTo(AndHowUtil.classExists("java.lang.String"))));
+		assertTrue(AndHowUtil.classExists("java.lang.String"));
 
-		assertThat(false, is(equalTo(AndHowUtil.classExists(""))));
-		assertThat(false, is(equalTo(AndHowUtil.classExists(null))));
-		assertThat(false, is(equalTo(AndHowUtil.classExists("testClassName"))));
+		assertFalse(AndHowUtil.classExists(""));
+		assertFalse(AndHowUtil.classExists(null));
+		assertFalse(AndHowUtil.classExists("testClassName"));
 	}
 
 	/**
@@ -82,7 +83,6 @@ public class AndHowUtilTest {
 		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName(""))));
 		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName(null))));
 		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName("testClassName"))));
-		assertThat(null, is(equalTo(AndHowUtil.getClassInstanceForName("java.lang.Runnable"))));
 
 	}
 
