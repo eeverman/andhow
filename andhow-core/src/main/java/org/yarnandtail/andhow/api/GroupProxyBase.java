@@ -27,20 +27,6 @@ public abstract class GroupProxyBase implements GroupProxy {
 		userGroup = true;
 	}
 	
-	public GroupProxyBase(String canonicalName, String javaCanonicalName, boolean userGroup) {
-		this.canonicalName = canonicalName;
-		this.javaCanonicalName = javaCanonicalName;
-		props = new ArrayList();
-		this.userGroup = userGroup;
-	}
-	
-	public GroupProxyBase(String canonicalName, String javaCanonicalName, List<NameAndProperty> props) {
-		this.canonicalName = canonicalName;
-		this.javaCanonicalName = javaCanonicalName;
-		this.props = props;
-		userGroup = true;
-	}
-	
 	public GroupProxyBase(String canonicalName, String javaCanonicalName, 
 			List<NameAndProperty> props, boolean userGroup) {
 		this.canonicalName = canonicalName;
