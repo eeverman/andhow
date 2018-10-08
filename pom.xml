@@ -6,10 +6,19 @@
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
-		Simple typed and validated configuration loading for web apps,
-		command line or any environment application.
+		AndHow is an easy to use configuration framework with strong typing and
+		detailed validation for web apps, command line or any application environment.
 	</description>
-	<url>https://github.com/eeverman/andhow</url>
+	
+	<mailingLists>
+		<mailingList>
+			<name>AndHowUser</name>
+			<subscribe>https://groups.google.com/forum/#!forum/andhowuser</subscribe>
+		</mailingList>
+	</mailingLists>
+
+	<!-- Main page list.  Source code at: https://github.com/eeverman/andhow -->
+	<url>https://sites.google.com/view/andhow/home</url>
 
 	<licenses>
 		<license>
