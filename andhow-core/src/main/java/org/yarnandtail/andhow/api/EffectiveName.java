@@ -43,37 +43,6 @@ public class EffectiveName extends Name {
 	}
 	
 	/**
-	 * A new instance explicitly providing the effective out name.
-	 * 
-	 * @param actual
-	 * @param effectiveIn
-	 * @param effectiveOut
-	 * @param in
-	 * @param out 
-	 */
-	public EffectiveName(String actual, String effectiveIn, String effectiveOut, boolean in, boolean out) {
-		
-		super(actual, in, out);
-		
-		if (effectiveIn == null || effectiveIn.length() == 0) {
-			throw new AppFatalException("The effective 'in' name cannot be empty or null");
-		} else if (! Name.isValidPropertyName(effectiveIn)) {
-			throw new AppFatalException("The effective 'in' name cannot contain whitespace or special characters from this list: "
-					+ Name.ILLEGAL_PROPERTY_NAME_CHARS);
-		} else if (effectiveOut == null || effectiveOut.length() == 0) {
-			throw new AppFatalException("The effective 'out' name cannot be empty or null");
-		} else if (! Name.isValidPropertyName(effectiveOut)) {
-			throw new AppFatalException("The effective 'out' name cannot contain whitespace or special characters from this list: "
-					+ Name.ILLEGAL_PROPERTY_NAME_CHARS);
-		}
-
-		this.effectiveIn = effectiveIn;
-		this.effectiveOut = effectiveOut;
-	}
-	
-
-	
-	/**
 	 * The name as transformed by the NamingStrategy.
 	 * 
 	 * @return 
