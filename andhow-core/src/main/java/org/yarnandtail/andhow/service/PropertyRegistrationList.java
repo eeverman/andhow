@@ -125,7 +125,7 @@ public class PropertyRegistrationList extends ArrayList<PropertyRegistration> {
 	 * @return True if it was added (it is always added).
 	 */
 	public boolean add(String name, List<String> innerPath) {
-		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath);
+		PropertyRegistration reg = new PropertyRegistration(rootCanonName, name, innerPath.toArray(new String[innerPath.size()]));
 		lastReg = reg;
 		return super.add(reg);
 	}

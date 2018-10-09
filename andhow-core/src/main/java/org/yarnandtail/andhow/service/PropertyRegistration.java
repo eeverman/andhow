@@ -70,31 +70,6 @@ public class PropertyRegistration implements Comparable<PropertyRegistration> {
 	}
 	
 	/**
-	 * Create an instance representing a {@code Property} declared in an inner
-	 * class (or nested inner class or interface) as opposed to an instance
-	 * declared directly in a root class.
-	 * 
-	 * @param classCanonName The canonical name of the root class containing the
-	 * inner class or nested inner class.
-	 * @param propName The declared name of the variable referencing the
-	 * {@code Property} declaration.
-	 * @param innerPathNesting A list of names of the nested inner classes
-	 * and/or interfaces that contain the {@code Property} declaration.  The
-	 * path order is in order from the inner class that is declared directly in
-	 * the root class to the inner class that contains the {@code Property} declaration.
-	 */
-	PropertyRegistration(String classCanonName, String propName, List<String> innerPathNesting) {
-		this.classCanonName = classCanonName;
-		this.propName = propName;
-		
-		if (innerPathNesting != null && innerPathNesting.size() > 0) {
-			innerPath = innerPathNesting.toArray(new String[innerPathNesting.size()]);
-		} else {
-			innerPath = null;
-		}
-	}
-
-	/**
 	 * The canonical propName of the root class, which is the top level class,
 	 * typically one per Java source file (unless someone has stuffed multiple
 	 * top level classes into a single file, which is technically allowed).
