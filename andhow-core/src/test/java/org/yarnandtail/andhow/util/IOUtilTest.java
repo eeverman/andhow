@@ -57,7 +57,7 @@ public class IOUtilTest {
 	@Test
 	public void testGetUTF8ResourceAsString() {
 		try {
-			String result = IOUtil.getUTF8ResourceAsString("/org/yarnandtail/andhow/example/ioutils/example-file-utf8.txt");
+			String result = IOUtil.getUTF8ResourceAsString("/org/yarnandtail/andhow/util/IOUtilTest_ExampleFile.txt");
 			assertEquals(EXAMPLE_FILE_CONTENT, result);
 		} catch (IOException e) {
 			fail("Should not fail");
@@ -68,7 +68,7 @@ public class IOUtilTest {
 	@Test
 	public void testGetResourceAsString() {
 		try {
-			String result = IOUtil.getResourceAsString("/org/yarnandtail/andhow/example/ioutils/example-file-utf8.txt", StandardCharsets.UTF_8);
+			String result = IOUtil.getResourceAsString("/org/yarnandtail/andhow/util/IOUtilTest_ExampleFile.txt", StandardCharsets.UTF_8);
 			assertEquals(EXAMPLE_FILE_CONTENT, result);
 		} catch (IOException e) {
 			fail("Should not fail");

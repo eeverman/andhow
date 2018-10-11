@@ -46,8 +46,9 @@ public class IOUtil {
 			}
 		}
 		
-		if (builder.length() > 0)
-			builder.setLength(builder.length() - System.lineSeparator().length());
+		int lineSeparatorLength = System.lineSeparator().length();
+		if (builder.length() > lineSeparatorLength - 1)
+			builder.setLength(builder.length() - lineSeparatorLength);
 		
 		return builder.toString();
 	}
