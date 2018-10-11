@@ -2,17 +2,22 @@
  */
 package org.yarnandtail.andhow.util;
 
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
  * @author ericeverman
  */
 public class IOUtilTest {
-	
+	private static final String LINE_SEPARATOR = System.lineSeparator();
+	private static final String EXAMPLE_FILE_CONTENT = "This file contains text in UTF-8 encoding." + LINE_SEPARATOR + "Line after empty line.";
 
+	
 	/**
 	 * Test of expandFilePath method, of class IOUtil.
 	 */
@@ -46,6 +51,44 @@ public class IOUtilTest {
 		
 		
 		
+	}
+	
+	
+	@Test
+	public void testGetUTF8ResourceAsString() {
+		try {
+			String result = IOUtil.getUTF8ResourceAsString("/org/yarnandtail/andhow/util/IOUtilTest_ExampleFile.txt");
+			assertEquals(EXAMPLE_FILE_CONTENT, result);
+		} catch (IOException e) {
+			fail("Should not fail");
+		}
+	}
+	
+	
+	@Test
+	public void testGetResourceAsString() {
+		try {
+			String result = IOUtil.getResourceAsString("/org/yarnandtail/andhow/util/IOUtilTest_ExampleFile.txt", StandardCharsets.UTF_8);
+			assertEquals(EXAMPLE_FILE_CONTENT, result);
+		} catch (IOException e) {
+			fail("Should not fail");
+		}
+	}
+	
+	
+	@Test
+	public void testToString() {
+		try {
+			String inputWithNewLines = "test" + LINE_SEPARATOR + "test2" + LINE_SEPARATOR + "test3";
+			String result = IOUtil.toString(new ByteArrayInputStream(inputWithNewLines.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+			assertEquals(inputWithNewLines, result);
+			
+			String singleLineInput = "This is a test";
+			result = IOUtil.toString(new ByteArrayInputStream(singleLineInput.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+			assertEquals(singleLineInput, result);
+		} catch (IOException e) {
+			fail("Should not fail");
+		}
 	}
 	
 }
