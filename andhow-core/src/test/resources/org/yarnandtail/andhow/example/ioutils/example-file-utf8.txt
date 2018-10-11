@@ -1,3 +1,2 @@
 This file contains text in UTF-8 encoding.
-
 Line after empty line.

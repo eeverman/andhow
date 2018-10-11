@@ -14,7 +14,8 @@ import java.nio.charset.StandardCharsets;
  * @author ericeverman
  */
 public class IOUtilTest {
-	private static final String EXAMPLE_FILE_CONTENT = "This file contains text in UTF-8 encoding.\n\nLine after empty line.";
+	private static final String LINE_SEPARATOR = System.lineSeparator();
+	private static final String EXAMPLE_FILE_CONTENT = "This file contains text in UTF-8 encoding." + LINE_SEPARATOR + "Line after empty line.";
 
 	
 	/**
@@ -78,7 +79,7 @@ public class IOUtilTest {
 	@Test
 	public void testToString() {
 		try {
-			String inputWithNewLines = "test\ntest2\ntest3";
+			String inputWithNewLines = "test" + LINE_SEPARATOR + "test2" + LINE_SEPARATOR + "test3";
 			String result = IOUtil.toString(new ByteArrayInputStream(inputWithNewLines.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
 			assertEquals(inputWithNewLines, result);
 			
