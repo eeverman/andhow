@@ -45,10 +45,9 @@ public class IOUtil {
 				line = reader.readLine();
 			}
 		}
-		
-		int lineSeparatorLength = System.lineSeparator().length();
-		if (builder.length() > lineSeparatorLength - 1)
-			builder.setLength(builder.length() - lineSeparatorLength);
+
+		if (builder.length() > 0)
+			builder.setLength(builder.length() - System.lineSeparator().length());
 		
 		return builder.toString();
 	}
