@@ -24,7 +24,7 @@ public class AppFatalException extends RuntimeException {
 	 */
 	public AppFatalException(String message, Throwable throwable) {
 		super(message, throwable);
-		this.problems = new ProblemList();
+		this.problems = ProblemList.EMPTY_PROBLEM_LIST;
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class AppFatalException extends RuntimeException {
 	 */
 	public AppFatalException(String message) {
 		super(message);
-		this.problems = new ProblemList();
+		this.problems = ProblemList.EMPTY_PROBLEM_LIST;
 	}
 	
 	public AppFatalException(String message, ProblemList<Problem> problems) {
@@ -49,6 +49,17 @@ public class AppFatalException extends RuntimeException {
 	
 	public AppFatalException(String message, Problem problem) {
 		super(message);
+		
+		if (problem != null) {
+			this.problems = new ProblemList();
+			this.problems.add(problem);
+		} else {
+			this.problems = ProblemList.EMPTY_PROBLEM_LIST;
+		}
+	}
+	
+	public AppFatalException(Problem problem) {
+		super(problem != null?problem.getFullMessage():"Unknown AndHow fatal exception");
 		
 		if (problem != null) {
 			this.problems = new ProblemList();

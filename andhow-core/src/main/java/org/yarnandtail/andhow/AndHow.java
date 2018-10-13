@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
@@ -43,14 +44,11 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	private volatile AndHowCore core;
 	
 	/** Stack trace and time of startup */
-	private volatile Initialization initialization;
+	private static volatile Initialization initialization;
 	
 
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
-			
-			//to late here - needs to be in the instance methods
-			//initialization = new Initialization();
 			
 			core = new AndHowCore(
 					config.getNamingStrategy(),
@@ -125,8 +123,19 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			} else {
 
 				if (singleInstance == null) {
-
-					singleInstance = new AndHow(config);
+					
+					Initialization newInit = new Initialization();	//record when & where of init
+					
+					if (initialization == null) {
+						
+						initialization = newInit;
+						singleInstance = new AndHow(config);
+						
+					} else {
+						throw new AppFatalException(
+								new ConstructionProblem.InitiationLoopException(initialization, newInit));
+					}
+					
 
 				} else if (singleInstance.core == null) {
 
@@ -134,8 +143,11 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					core is deleted to force AndHow to reload.  Its really an
 					invalid state (instance and core should be null/non-null
 					together, but its handled here to simplify testing.  */
+					
+					initialization = new Initialization();
+					
 					try {
-
+						
 						AndHowCore newCore = new AndHowCore(
 								config.getNamingStrategy(),
 								config.buildLoaders(),
