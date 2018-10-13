@@ -3,6 +3,7 @@ package org.yarnandtail.compile;
 import java.io.IOException;
 import java.net.URI;
 import javax.tools.JavaFileObject;
+import org.yarnandtail.andhow.util.IOUtil;
 
 /**
  *
