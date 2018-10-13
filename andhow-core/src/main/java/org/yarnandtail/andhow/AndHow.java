@@ -41,9 +41,17 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	private static final Object LOCK = new Object();
 
 	private volatile AndHowCore core;
+	
+	/** Stack trace and time of startup */
+	private volatile Initialization initialization;
+	
 
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
+			
+			//to late here - needs to be in the instance methods
+			//initialization = new Initialization();
+			
 			core = new AndHowCore(
 					config.getNamingStrategy(),
 					config.buildLoaders(),
@@ -218,6 +226,32 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			afe.setStackTrace(stes);
 			throw afe;
 		}
+	}
+	
+
+	/**
+	 * Encapsilate when and where AndHow was initialized.
+	 * 
+	 * Useful for debugging re-entrant startups or uncontrolled startup conditions.
+	 */
+	public static class Initialization {
+		private StackTraceElement[] stackTrace;
+		private long timeStamp;
+		
+		public Initialization() {
+			timeStamp = System.currentTimeMillis();
+			StackTraceElement[] ste = new Exception().getStackTrace();
+			stackTrace = Arrays.copyOfRange(ste, 1, ste.length - 1);
+		}
+
+		public StackTraceElement[] getStackTrace() {
+			return stackTrace;
+		}
+
+		public long getTimeStamp() {
+			return timeStamp;
+		}
+		
 	}
 
 }
