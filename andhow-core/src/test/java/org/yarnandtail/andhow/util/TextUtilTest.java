@@ -70,6 +70,12 @@ public class TextUtilTest {
 		TextUtil.println(ps, "abc\\{}xyz", "XXX");
 		assertEquals("abc\\{}xyz", getStreamContent());
 	}
+
+	@Test
+	public void testPatternWithBreak() {
+		TextUtil.println(ps, 5, "//", "abc{}def {}xyz", "XXX", "YYY");
+		assertEquals("//abcXXXdef//  YYYxyz", getStreamContent());
+	}
 	
 	@Test
 	public void testRepeat() {
@@ -189,7 +195,28 @@ public class TextUtilTest {
 		assertEquals("i", result.get(1));
 		
 	}
-	
+
+	@Test
+	public void testWrapWithEmptyString() {
+		List<String> result;
+
+		result = TextUtil.wrap("", 10);
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void testWrapWithNewlineChar() {
+		List<String> result;
+
+		result = TextUtil.wrap("\nabc", 10);
+		assertEquals(1, result.size());
+		assertEquals("abc", result.get(0));
+
+		result = TextUtil.wrap("abc \ndefg hijklmnopqrstuvwxyzabcdefgh", 10);
+		assertEquals(2, result.size());
+		assertEquals("abc", result.get(0));
+		assertEquals("defg hijklmnopqrstuvwxyzabcdefgh", result.get(1));
+	}
 
 	@Test
 	public void testWrapWithPrefix() {
@@ -216,12 +243,35 @@ public class TextUtilTest {
 		assertEquals("# xxxqrs tuv", result.get(2));
 		
 	}
+
+	@Test
+	public void testWrapNullPrefix() {
+		List<String> result;
+
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10, null, "xxx");
+		assertEquals(2, result.size());
+		assertEquals("abcdefghij", result.get(0));
+		assertEquals("xxxklmnopqrstuvwxyz", result.get(1));
+	}
+
+	@Test
+	public void testWrapNullLineIndent() {
+		List<String> result;
+
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10, "# ", null);
+		assertEquals(2, result.size());
+		assertEquals("# abcdefghij", result.get(0));
+		assertEquals("# klmnopqrstuvwxyz", result.get(1));
+	}
 	
 	@Test
 	public void testEscapeXml() {
 		assertEquals("&lt;some text&gt;", TextUtil.escapeXml("<some text>"));
 		assertEquals("&lt;some&amp;text&quot;", TextUtil.escapeXml("<some&text\""));
 		assertEquals("&apos;tis the s&apos;son", TextUtil.escapeXml("'tis the s'son"));
+
+		assertNull(TextUtil.escapeXml(null));
+		assertEquals("copyrighted&#169;", TextUtil.escapeXml("copyrighted©"));
 	}
 
 	/**
@@ -232,5 +282,25 @@ public class TextUtilTest {
 		assertEquals("", TextUtil.nullToEmpty(null));
 		assertEquals("", TextUtil.nullToEmpty(""));		//no change
 		assertEquals("a", TextUtil.nullToEmpty("a"));	//no change
+	}
+
+	@Test
+	public void testFindFirstInstanceOfNullToBeSearched() {
+		assertEquals(-1, TextUtil.findFirstInstanceOf(null, 10, " ", "\t", "-"));
+	}
+
+	@Test
+	public void testFindLastInstanceOfNullToBeSearched() {
+		assertEquals(-1, TextUtil.findLastInstanceOf(null, 10, " ", "\t", "-"));
+	}
+
+	@Test
+	public void testFindFirstInstanceOfWithEmptyToBeFound() {
+		assertEquals(-1, TextUtil.findFirstInstanceOf("abcd", 10));
+	}
+
+	@Test
+	public void testFindLastInstanceOfWithEmptyToBeFound() {
+		assertEquals(-1, TextUtil.findLastInstanceOf("abcd", 10));
 	}
 }
