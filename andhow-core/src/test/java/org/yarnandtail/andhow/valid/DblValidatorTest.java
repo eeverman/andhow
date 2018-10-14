@@ -112,6 +112,7 @@ public class DblValidatorTest {
 		assertTrue(instance.isValid(4d));
 		assertTrue(instance.isValid(5d));
 		assertFalse(instance.isValid(6d));
+		assertFalse(instance.isValid(null));
 		
 		instance = new DblValidator.LessThanOrEqualTo(0d);
 		assertTrue(instance.isValid(-1d));
