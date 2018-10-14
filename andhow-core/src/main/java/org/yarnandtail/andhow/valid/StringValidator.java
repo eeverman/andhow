@@ -33,7 +33,7 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
+		public Boolean isValid(String value) {
 			if (value != null) {
 				if (ignoreCase) {
 					return value.toUpperCase().startsWith(prefix.toUpperCase());
@@ -75,7 +75,7 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
+		public Boolean isValid(String value) {
 			if (value != null) {
 				if (ignoreCase) {
 					return value.toUpperCase().endsWith(sufix.toUpperCase());
@@ -121,7 +121,7 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
+		public Boolean isValid(String value) {
 			if (value != null && value.matches(regex)) {
 				return true;
 			} else {

@@ -31,7 +31,7 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
+		public Boolean isValid(Double value) {
 			if (value != null) {
 				return (value > ref);
 			}
@@ -57,7 +57,7 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
+		public Boolean isValid(Double value) {
 			if (value != null) {
 				return (value >= ref);
 			}
@@ -83,7 +83,7 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
+		public Boolean isValid(Double value) {
 			if (value != null) {
 				return (value < ref);
 			}
@@ -109,7 +109,7 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 		
 		@Override
-		public boolean isValid(Double value) {
+		public Boolean isValid(Double value) {
 			if (value != null) {
 				return (value <= ref);
 			}

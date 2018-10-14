@@ -31,7 +31,7 @@ public abstract class IntValidator implements Validator<Integer> {
 		}
 
 		@Override
-		public boolean isValid(Integer value) {
+		public Boolean isValid(Integer value) {
 			if (value != null) {
 				return (value > ref);
 			}
@@ -57,7 +57,7 @@ public abstract class IntValidator implements Validator<Integer> {
 		}
 
 		@Override
-		public boolean isValid(Integer value) {
+		public Boolean isValid(Integer value) {
 			if (value != null) {
 				return (value >= ref);
 			}
@@ -83,7 +83,7 @@ public abstract class IntValidator implements Validator<Integer> {
 		}
 
 		@Override
-		public boolean isValid(Integer value) {
+		public Boolean isValid(Integer value) {
 			if (value != null) {
 				return (value < ref);
 			}
@@ -109,7 +109,7 @@ public abstract class IntValidator implements Validator<Integer> {
 		}
 
 		@Override
-		public boolean isValid(Integer value) {
+		public Boolean isValid(Integer value) {
 			if (value != null) {
 				return (value <= ref);
 			}
