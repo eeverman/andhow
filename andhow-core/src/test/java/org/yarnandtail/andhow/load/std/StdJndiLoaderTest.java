@@ -88,7 +88,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -124,7 +124,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -163,7 +163,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -198,7 +198,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -238,7 +238,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -275,7 +275,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowCoreTestConfig.instance()
 				.group(SimpleParams.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		
 		assertEquals("test2", SimpleParams.STR_BOB.getValue());
@@ -309,7 +309,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(SimpleParams.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("Should not reach this point");
 			
@@ -340,7 +340,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(SimpleParams.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("Should not reach this point");
 			
@@ -373,7 +373,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(SimpleParams.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("Should not reach this point");
 			
@@ -407,7 +407,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(ValidParams.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("Should not reach this point");
 			
@@ -431,7 +431,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(ValidParams.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("Should not reach this point");
 			

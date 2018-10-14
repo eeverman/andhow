@@ -160,7 +160,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	
 	@Override
 	public void build() {
-		AndHow.instance(this);
+		AndHow.build(this);
 	}
 	
 	/**

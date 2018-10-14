@@ -81,13 +81,13 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @return
 	 * @throws AppFatalException 
 	 */
-	public static AndHow instance() throws AppFatalException {
+	public static AndHow build() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null || singleInstance.core == null) {
-					return instance(AndHowUtil.findConfiguration(StdConfig.instance()));
+					return build(AndHowUtil.findConfiguration(StdConfig.instance()));
 				} else {
 					return singleInstance;
 				}
@@ -108,7 +108,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @return
 	 * @throws AppFatalException
 	 */
-	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+	public static AndHow build(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
 
 			if (singleInstance != null && singleInstance.core != null) {

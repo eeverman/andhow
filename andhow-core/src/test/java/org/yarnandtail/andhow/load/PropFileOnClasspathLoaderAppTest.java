@@ -35,7 +35,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 
 		assertEquals("/org/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
@@ -58,7 +58,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 					.group(SimpleParams.class)
 					.group(TestProps.class);
 		
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 				fail("The property file contains several invalid props - should have errored");
 		} catch (AppFatalException afe) {
@@ -75,7 +75,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);	//This must be declared or the Prop loader can't work
 		
-		AndHow.instance(config);	
+		AndHow.build(config);	
 
 		
 		//It is OK to have a null config for the PropFile loader - it just turns it off
@@ -91,7 +91,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 					.group(SimpleParams.class);
 					//.group(TestProps.class) //Missing - should cause failure
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("The Property loader config parameter is not registered, so it should have failed");
 		} catch (AppFatalException afe) {
@@ -115,7 +115,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		//These are just default values
 		assertEquals("bob", SimpleParams.STR_BOB.getValue());
@@ -134,7 +134,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 					.group(SimpleParams.class)
 					.group(TestProps.class);
 		
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("The Property loader config property is not pointing to a real file location");
 			

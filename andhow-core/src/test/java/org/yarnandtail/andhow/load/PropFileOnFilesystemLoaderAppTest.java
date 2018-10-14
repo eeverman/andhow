@@ -60,7 +60,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 
 		assertEquals(tempPropertiesFile.getAbsolutePath(), TestProps.FILEPATH.getValue());
@@ -83,7 +83,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 					.group(SimpleParams.class);
 					//.group(TestProps.class)	//Missing - should fail
 
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 			fail("The Property loader config parameter is not registered, so it should have failed");
 		} catch (AppFatalException afe) {
@@ -108,7 +108,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		//These are just default values
 		assertEquals("bob", SimpleParams.STR_BOB.getValue());
@@ -127,7 +127,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 					.group(SimpleParams.class)
 					.group(TestProps.class);
 		
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("The Property loader config property is not pointing to a real file location");
 			

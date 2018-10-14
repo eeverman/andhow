@@ -32,7 +32,7 @@ public class PropertyTestBase extends AndHowCoreTestBase {
 				.setClasspathPropFilePath(TEST_CONFIG.PROP_FILE)
 				.classpathPropertiesRequired();
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 	}
 	
 	public static interface TEST_CONFIG {
