@@ -31,7 +31,7 @@ public abstract class LngValidator implements Validator<Long> {
 		}
 
 		@Override
-		public boolean isValid(Long value) {
+		public Boolean isValid(Long value) {
 			if (value != null) {
 				return (value > ref);
 			}
@@ -57,7 +57,7 @@ public abstract class LngValidator implements Validator<Long> {
 		}
 
 		@Override
-		public boolean isValid(Long value) {
+		public Boolean isValid(Long value) {
 			if (value != null) {
 				return (value >= ref);
 			}
@@ -83,7 +83,7 @@ public abstract class LngValidator implements Validator<Long> {
 		}
 
 		@Override
-		public boolean isValid(Long value) {
+		public Boolean isValid(Long value) {
 			if (value != null) {
 				return (value < ref);
 			}
@@ -109,7 +109,7 @@ public abstract class LngValidator implements Validator<Long> {
 		}
 		
 		@Override
-		public boolean isValid(Long value) {
+		public Boolean isValid(Long value) {
 			if (value != null) {
 				return (value <= ref);
 			}
