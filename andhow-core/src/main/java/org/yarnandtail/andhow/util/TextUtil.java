@@ -334,7 +334,7 @@ public class TextUtil {
 	public static int findFirstInstanceOf(String toBeSearched, int searchFrom, String... toBeFound) {
 		int result = -1;
 		
-		if (toBeSearched != null || toBeFound.length > 0) {
+		if (toBeSearched != null && toBeFound.length > 0) {
 			for (String s : toBeFound) {
 				int i = toBeSearched.indexOf(s, searchFrom);
 				if (i > -1 && (i < result || result == -1)) {
@@ -356,7 +356,7 @@ public class TextUtil {
 	public static int findLastInstanceOf(String toBeSearched, int searchFrom, String... toBeFound) {
 		int result = -1;
 		
-		if (toBeSearched != null || toBeFound.length > 0) {
+		if (toBeSearched != null && toBeFound.length > 0) {
 			for (String s : toBeFound) {
 				int i = toBeSearched.lastIndexOf(s, searchFrom);
 				if (i > result) {
