@@ -119,7 +119,41 @@ public class IntValidatorTest {
 		assertFalse(instance.isValid(-98));
 		
 	}
-	
 
-	
+    @Test
+    public void testNullValidation() {
+        IntValidator.GreaterThan greaterThan = new IntValidator.GreaterThan(4);
+        assertFalse(greaterThan.isValid(null));
+
+        IntValidator.GreaterThanOrEqualTo greaterThanOrEqualTo = new IntValidator.GreaterThanOrEqualTo(4);
+        assertFalse(greaterThanOrEqualTo.isValid(null));
+
+        IntValidator.LessThan lessThan = new IntValidator.LessThan(4);
+        assertFalse(lessThan.isValid(null));
+
+        IntValidator.LessThanOrEqualTo lessThanOrEqualTo = new IntValidator.LessThanOrEqualTo(4);
+        assertFalse(lessThanOrEqualTo.isValid(null));
+    }
+
+
+    @Test
+    public void testInvalidMessage() {
+        IntValidator.GreaterThan greaterThan = new IntValidator.GreaterThan(4);
+        assertEquals("be greater than 4", greaterThan.getTheValueMustDescription());
+
+        IntValidator.GreaterThanOrEqualTo greaterThanOrEqualTo = new IntValidator.GreaterThanOrEqualTo(4);
+        assertEquals("be greater than or equal to 4", greaterThanOrEqualTo.getTheValueMustDescription());
+
+        IntValidator.LessThan lessThan = new IntValidator.LessThan(4);
+        assertEquals("be less than 4", lessThan.getTheValueMustDescription());
+
+        IntValidator.LessThanOrEqualTo lessThanOrEqualTo = new IntValidator.LessThanOrEqualTo(4);
+        assertEquals("be less than or equal to 4", lessThanOrEqualTo.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testInvalidSpecificationMessage(){
+        IntValidator.GreaterThan greaterThan = new IntValidator.GreaterThan(4);
+        assertEquals("THIS VALIDATION IS ALWAYS VALID", greaterThan.getInvalidSpecificationMessage());
+    }
 }
