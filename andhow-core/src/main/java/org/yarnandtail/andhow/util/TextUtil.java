@@ -324,7 +324,9 @@ public class TextUtil {
 	
 	/**
 	 * Find the first occurrence of one of an array of possible strings in another string,
-	 * starting at the specified position.
+	 * starting at the specified position, looking to the right. If there are more than one
+	 * string arguments to be searched from, it returns the index of the argument which is
+	 * of the lower index
 	 * 
 	 * @param toBeSearched
 	 * @param searchFrom Same symantics as String.indexOf(String, int)
@@ -347,7 +349,11 @@ public class TextUtil {
 	}
 	
 	/**
-	 * 
+	 * Find the first occurrence of one of an array of possible strings in another string,
+	 * starting at the specified position and seeking to the left. If there are more than
+	 * one string arguments to be searched from, it returns the index of the argument which is
+	 * of the higher index
+	 *
 	 * @param toBeSearched
 	 * @param searchFrom Start looking from this position and to the left
 	 * @param toBeFound
