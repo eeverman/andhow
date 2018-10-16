@@ -98,6 +98,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 		AndHow.instance(config);
 		
+		assertTrue(AndHow.getInitializationTrace().length > 0);
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
