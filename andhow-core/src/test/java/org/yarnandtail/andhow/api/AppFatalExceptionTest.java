@@ -43,6 +43,7 @@ public class AppFatalExceptionTest {
     public void testSampleDirectory() {
         AppFatalException instance = new AppFatalException("test");
         instance.setSampleDirectory("test/path");
+        assertEquals(instance.getSampleDirectory(), "test/path");
     }
 
     class TestProblem implements Problem {
