@@ -37,16 +37,19 @@ public class IOUtil {
 	
 	public static String toString(InputStream input, Charset encoding) throws IOException {
 
-		StringBuilder buf = new StringBuilder();
+		StringBuilder builder = new StringBuilder();
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(input, encoding))) {
 			String line = reader.readLine();
 			while (line != null) {
-				buf.append(line).append(System.lineSeparator());
+				builder.append(line).append(System.lineSeparator());
 				line = reader.readLine();
 			}
 		}
+
+		if (builder.length() > 0)
+			builder.setLength(builder.length() - System.lineSeparator().length());
 		
-		return buf.toString();
+		return builder.toString();
 	}
 	
 	public static String expandDirectoryPath(String path) {

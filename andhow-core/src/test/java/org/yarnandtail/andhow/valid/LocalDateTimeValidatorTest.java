@@ -10,7 +10,9 @@ import org.junit.Test;
  * @author ericeverman
  */
 public class LocalDateTimeValidatorTest {
-	
+
+	private static final String INVALID_SPECIFICATION_MESSAGE = "The reference LocalDateTime cannot be null";
+
 	LocalDateTime DEC_03_2007_AT_5PM =  LocalDateTime.parse("2007-12-03T17:00");
 
 	@Test
@@ -24,6 +26,10 @@ public class LocalDateTimeValidatorTest {
 		assertFalse("Same date should not be valid", instance.isValid(DEC_03_2007_AT_5PM));
 		assertFalse("One nano after should not be valid", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
 		assertFalse("Null should not be valid", instance.isValid(null));
+
+		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
+
+		assertEquals("be before 2007-12-03T17:00", instance.getTheValueMustDescription());
 	}
 
 	@Test
@@ -37,6 +43,10 @@ public class LocalDateTimeValidatorTest {
 		
 		assertFalse("One nano after should not be valid", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
 		assertFalse("Null should not be valid", instance.isValid(null));
+
+		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
+
+		assertEquals("be the same date and time or before 2007-12-03T17:00", instance.getTheValueMustDescription());
 	}
 	
 	@Test
@@ -50,6 +60,10 @@ public class LocalDateTimeValidatorTest {
 		assertFalse("Same date should not be valid", instance.isValid(DEC_03_2007_AT_5PM));
 		assertFalse("One nano before should not be valid", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
 		assertFalse("Null should not be valid", instance.isValid(null));
+
+		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
+
+		assertEquals("be after 2007-12-03T17:00", instance.getTheValueMustDescription());
 	}
 	
 	@Test
@@ -63,6 +77,10 @@ public class LocalDateTimeValidatorTest {
 		
 		assertFalse("One nano before should not be valid", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
 		assertFalse("Null should not be valid", instance.isValid(null));
+
+		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
+
+		assertEquals("be the same date and time or after 2007-12-03T17:00", instance.getTheValueMustDescription());
 	}
 	
 	//
