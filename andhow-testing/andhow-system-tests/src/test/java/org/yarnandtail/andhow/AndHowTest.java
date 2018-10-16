@@ -46,7 +46,7 @@ public class AndHowTest {
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		
 		assertNotEquals("Should return a new instance each time", config1, config2);
-		assertFalse("findConfig should not force initialization", AndHow.isInitialize());
+		assertFalse("findConfig should not force initialization", AndHow.isInitialized());
 	}
 
 	/**
@@ -54,9 +54,9 @@ public class AndHowTest {
 	 */
 	@Test
 	public void testInstance_0args() {
-		assertFalse(AndHow.isInitialize());
+		assertFalse(AndHow.isInitialized());
 		assertNotNull(AndHow.instance());
-		assertTrue(AndHow.isInitialize());
+		assertTrue(AndHow.isInitialized());
 	}
 
 	/**
