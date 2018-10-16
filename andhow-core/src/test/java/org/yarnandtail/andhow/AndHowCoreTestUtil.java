@@ -105,7 +105,6 @@ public class AndHowCoreTestUtil {
 		
 	}
 	
-	
 	public static void forceRebuild(AndHowConfiguration config) {
 
 		AndHow ahInstance = getAndHowInstance();

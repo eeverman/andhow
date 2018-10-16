@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
@@ -46,6 +47,11 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	/** Stack trace and time of startup */
 	private static volatile Initialization initialization;
 	
+	/**
+	 * True only during the instance(AndHowConfiguration) method to detect
+	 * re-entrant initialization
+	 */
+	private static AtomicBoolean initializing = new AtomicBoolean(false);
 
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
@@ -124,19 +130,24 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 				if (singleInstance == null) {
 					
-					Initialization newInit = new Initialization();	//record when & where of init
-					
-					if (initialization == null) {
+					if (! initializing.get()) {
 						
-						initialization = newInit;
-						singleInstance = new AndHow(config);
+						try {
+							
+							initializing.getAndSet(true);	//Block re-entrant initialization
+							initialization = new Initialization();	//Record initialization time & place
+							singleInstance = new AndHow(config);	//Build new instance
+							
+						} finally {
+							initializing.getAndSet(false);	//Done w/ init regardless of possible error
+						}
 						
 					} else {
+						
 						throw new AppFatalException(
-								new ConstructionProblem.InitiationLoopException(initialization, newInit));
+								new ConstructionProblem.InitiationLoopException(initialization, new Initialization()));
 					}
 					
-
 				} else if (singleInstance.core == null) {
 
 					/*	This is a concession for testing.  During testing the
@@ -144,27 +155,41 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					invalid state (instance and core should be null/non-null
 					together, but its handled here to simplify testing.  */
 					
-					initialization = new Initialization();
-					
-					try {
+					if (! initializing.get()) {
 						
-						AndHowCore newCore = new AndHowCore(
-								config.getNamingStrategy(),
-								config.buildLoaders(),
-								config.getRegisteredGroups());
-						Field coreField = AndHow.class.getDeclaredField("core");
-						coreField.setAccessible(true);
-						coreField.set(singleInstance, newCore);
+						try {
+							
+							initializing.getAndSet(true);	//Block re-entrant initialization
+							initialization = new Initialization();	//Record initialization time & place
 
-					} catch (Exception ex) {
-						if (ex instanceof AppFatalException) {
-							throw (AppFatalException) ex;
-						} else {
-							throwFatal("", ex);
+							AndHowCore newCore = new AndHowCore(
+									config.getNamingStrategy(),
+									config.buildLoaders(),
+									config.getRegisteredGroups());
+							Field coreField = AndHow.class.getDeclaredField("core");
+							coreField.setAccessible(true);
+							coreField.set(singleInstance, newCore);
+
+						} catch (Exception ex) {
+							
+							if (ex instanceof AppFatalException) {
+								throw (AppFatalException) ex;
+							} else {
+								throwFatal("", ex);
+							}
+						} finally {
+							initializing.getAndSet(false);	//Done w/ init regardless of possible error
 						}
+						
+					} else {
+						
+						throw new AppFatalException(
+								new ConstructionProblem.InitiationLoopException(initialization, new Initialization()));
+						
 					}
 
 				}
+				
 				return singleInstance;
 
 			}
@@ -179,6 +204,28 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 */
 	public static boolean isInitialized() {
 		return singleInstance != null && singleInstance.core != null;
+	}
+	
+	/**
+	 * Get the stacktrace of where AndHow was initialized.
+	 * 
+	 * This can be useful for debugging InitiationLoopException errors or
+	 * errors caused by trying to initialize AndHow when it is already initialized.
+	 * This stacktrace identifies the point in code that caused the initial
+	 * AndHow initialization, prior to the error.  The reported exception will
+	 * point to the place where AndHow entered a loop during its construction
+	 * or application code attempted to re-initialize AndHow.
+	 * 
+	 * @return A stacktrace if it is available (some JVMs may not provide one)
+	 * or an empty stacktrace array if it is not available or AndHow is not
+	 * yet initialized.
+	 */
+	public static StackTraceElement[] getInitializationTrace() {
+		if (initialization != null) {
+			return initialization.getStackTrace();
+		} else {
+			return new StackTraceElement[0];
+		}
 	}
 
 	//
