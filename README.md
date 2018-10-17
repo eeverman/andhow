@@ -47,30 +47,31 @@ package org.simple;
 import org.yarnandtail.andhow.property.*;
 
 public class GettingStarted {
-  
+	
 	//1
-	final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
-		.desc("Start the countdown from this number")
-		.mustBeGreaterThanOrEqualTo(1).defaultValue(2).build();
- 
+	public final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
+			.mustBeGreaterThanOrEqualTo(1).defaultValue(3).build();
+	
 	private final static StrProp LAUNCH_CMD = StrProp.builder().mustBeNonNull()
-		.desc("What to say when its time to launch")
-		.mustMatchRegex(".*Go.*").defaultValue("GoGoGo!").build();
- 
+			.desc("What to say when its time to launch")
+			.mustMatchRegex(".*Go.*").defaultValue("Go-Go-Go!").build();
+	
 	public String launch() {
 		String launch = "";
-  
+		
 		//2
 		for (int i = COUNT_DOWN_START.getValue(); i >= 1; i--) {
 			launch = launch += i + "...";
 		}
-  
+		
 		return launch + LAUNCH_CMD.getValue();
 	}
-
+	
 	public static void main(String[] args) {
-		GettingStarted gs = new GettingStarted();
-		System.out.println(gs.launch());
+		AndHow.findConfig().setCmdLineArgs(args);	//3 Optional
+		
+		System.out.println( new GettingStarted().launch() );
+		System.out.println( LAUNCH_CMD.getValue().replace("Go", "Gone") );
 	}
 }
 ```
@@ -78,42 +79,65 @@ public class GettingStarted {
 Properties must be `final static`, but may be `private` or any other scope.
 `builder` methods simplify adding validation, description, defaults and
 other metadata.
-Properties are strongly typed, so default values and validation are specific to
-the type, for instance, `StrProp` has regex validation rules for `String`s
-while the `IntProp` has greater-than and less-than rules available.
+Properties are strongly typed, so default values and validation are type specific, e.g.,
+`StrProp` has Regex validation while the `IntProp` has GreaterThan / LessThan rules available.
 
 ### Section //2 : Using AndHow Properties
 AndHow Properties are used just like static final constants with an added
-`.getValue()` on the end to fetch the value.  
-Strong typing means that calling `COUNT_DOWN_START.getValue()`
+`.getValue()` tacked on. Strong typing means that calling `COUNT_DOWN_START.getValue()`
 returns an `Integer` while calling `LAUNCH_CMD.getValue()` returns a `String`.
+
+An AndHow Property (and its value) can be accessed anywhere it is visible.
+`COUNT_DOWN_START` is public in a public class, so it could be used anywhere, while
+`LAUNCH_CMD` is private.
+AndHow Properties are always `static`, so they can be accessed in both static
+and instance methods, just like this example shows.
+
+### Section //3 : Accepting Command Line Arguments
+If an application needs command line arguments (CLAs), just pass them to AndHow
+at startup as this example shows.   Properties are referred to using 'dot notation', e.g.:
+```
+java -jar GettingStarted.jar org.simple.GettingStarted.LAUNCH_CMD=GoManGo
+```
+If you don't need to accept CLA's, you can leave line `//3` out -
+AndHow will initialize and startup without any explicit _init_ method when
+the first Property is accessed.
 
 ### How do I actually configure some values?
 We're getting there.
 The example has defaults for each property so with no other configuration available, 
-the main method uses the defaults and prints:  `3...2...1...GoGoGo!`    
-Things are more interesting if the default values are removed from the code above.
+the main method uses the defaults and prints:
+```
+3...2...1...Go-Go-Go!
+Gone-Gone-Gone!
+```
+Things are more interesting if the default values are removed from the code above:
+```java
+public final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
+		.mustBeGreaterThanOrEqualTo(1).build();  //default removed
+	
+private final static StrProp LAUNCH_CMD = StrProp.builder().mustBeNonNull()
+		.mustMatchRegex(".*Go.*").build();  //default removed
+```
 Both properties must be non-null, so removing the defaults causes the validation 
-rules to be violated at startup.  Here is an excerpt of the console output when that happens:
+rules to be violated at startup.  Here is an excerpt from the console when that happens:
 ```
 ========================================================================
 Drat! There were AndHow startup errors.
 Sample configuration files will be written to: '/some_local_tmp_directory/andhow-samples/'
 ========================================================================
-REQUIRMENT PROBLEMS - When a required property is not provided
-Detailed list of Requirements Problems:
-Property org.simple.GettingStarted.COUNT_DOWN_START: This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value
-Property org.simple.GettingStarted.LAUNCH_CMD: This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value
+Property org.simple.GettingStarted.COUNT_DOWN_START: This Property must be non-null
+Property org.simple.GettingStarted.LAUNCH_CMD: This Property must be non-null
 ========================================================================
 ```
 
-**Validation happens at startup and happens for all properties in the entire application.**
-Properties, even those defined in 3rd party jars, are discovered and values for 
+**AndHow does validation at startup for all properties in the entire application.**
+Properties, _even those defined in 3rd party jars_, are discovered and values for 
 them are loaded and validated.  
-If that fails (as it did above), AndHow throws a RuntimeException to stop 
+If validation fails (as it did above), AndHow throws a RuntimeException to stop 
 application startup and uses property metadata to generate specific error 
 messages and (helpfully) sample configuration files. 
-Here is an excerpt of the Java Properties file created when the example code failed validation:
+Here is an excerpt of the Java Properties file created when the code above failed validation:
 ```
 # ######################################################################
 # Property Group org.simple.GettingStarted
@@ -129,15 +153,15 @@ org.simple.GettingStarted.LAUNCH_CMD = [String]
 AndHow uses all of the provided metadata to create a detailed and well commented 
 configuration file for your project.  
 Insert some real values into that file and place it on your classpath at 
-/andhow.properties and it will automatically be discovered and loaded at startup.
-By default, AndHow automatically discovers and loads configuration from seven common sources.  
+`/andhow.properties` and it will automatically be discovered and loaded at startup.
+By default, AndHow discovers and loads configuration from seven common sources.  
 The default list of configuration loading, in order, is:
 1. Fixed values (explicitly set in code for AndHow to use)
 2. String[] arguments from the static void main() method
-3. System Properties
+3. System Properties _(Like the one auto-generated above)_
 4. Environmental Variables
 5. JNDI
-6. Java properties file on the filesystem (path specified as an AndHow property)
+6. Java properties file on the filesystem (path must be specified)
 7. Java properties file on the classpath (defaults to /andhow.properties)
 
 Property values are set on a first-win basis, so if a property is set as fixed value,
