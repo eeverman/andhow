@@ -38,8 +38,6 @@ public class AppFatalExceptionTest {
         assertEquals(instance.getMessage(), "test");
         assertNotNull(instance.getProblems());
     }
-<<<<<<< HEAD
-=======
 	
     @Test
     public void testConstructorFromProblem() {
@@ -55,7 +53,6 @@ public class AppFatalExceptionTest {
 		assertNotNull(instance.getProblems());
 		assertEquals(0, instance.getProblems().size());
     }
->>>>>>> 50dbdceb7259e6c7bb3d01921c8c5479bb399357
 
     @Test
     public void testSampleDirectory() {
