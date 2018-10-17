@@ -44,6 +44,7 @@ are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
 ```java
 package org.simple;
 
+import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.property.*;
 
 public class GettingStarted {
