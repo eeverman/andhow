@@ -1,6 +1,6 @@
 /*
  */
-package org.yarnandtail.andhow.sample;
+package org.yarnandtail.andhow.report;
 
 import org.junit.Test;
 import org.yarnandtail.andhow.util.TextUtil;

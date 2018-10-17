@@ -4,7 +4,7 @@ import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.InputStream;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
+import org.yarnandtail.andhow.report.PropFileLoaderSamplePrinter;
 
 /**
  * Shared functionality for all Property file loaders.

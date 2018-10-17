@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.sample;
+package org.yarnandtail.andhow.report;
 
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -7,19 +7,19 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 
  * @author ericeverman
  */
-public class PropFileFormat extends PrintFormat {
+public class JndiFileFormat extends PrintFormat {
 
 	/**
 	 * Constructor that initializes all needed values to be a properties file.
 	 */
-	public PropFileFormat() {
-		blockCommentStart = null;
-		blockCommentEnd = null;
-		blockCommentSeparator = null;
-		lineCommentPrefix = "#";
+	public JndiFileFormat() {
+		blockCommentStart = "<!--";
+		blockCommentEnd = "-->";
+		blockCommentSeparator = " "; //Use between the last text and the comment end if on same line
+		lineCommentPrefix = null;
 		lineCommentPrefixSeparator = " ";	//Separate the opening line comment from the text
 		secondLineIndent = "\t";
-		hr = TextUtil.repeat("##", 45);
+		hr = TextUtil.repeat("- ", 45);
 		lineWidth = 90;
 	}
 }

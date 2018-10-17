@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.sample;
+package org.yarnandtail.andhow.report;
 
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
 import java.io.PrintStream;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.GroupInfo;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.sample.TextLine.HRLine;
+import org.yarnandtail.andhow.report.TextLine.HRLine;
 import org.yarnandtail.andhow.util.TextUtil;
 
 
