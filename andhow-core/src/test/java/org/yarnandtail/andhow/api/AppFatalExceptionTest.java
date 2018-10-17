@@ -38,6 +38,24 @@ public class AppFatalExceptionTest {
         assertEquals(instance.getMessage(), "test");
         assertNotNull(instance.getProblems());
     }
+<<<<<<< HEAD
+=======
+	
+    @Test
+    public void testConstructorFromProblem() {
+        Problem problem = new TestProblem();
+        AppFatalException instance = new AppFatalException(problem);
+        assertEquals(instance.getMessage(), problem.getFullMessage());
+        assertNotNull(instance.getProblems());
+        assertEquals(instance.getProblems().get(0), problem);
+
+        problem = null;
+        instance = new AppFatalException(problem);
+        assertEquals(instance.getMessage(), "Unknown AndHow fatal exception");
+		assertNotNull(instance.getProblems());
+		assertEquals(0, instance.getProblems().size());
+    }
+>>>>>>> 50dbdceb7259e6c7bb3d01921c8c5479bb399357
 
     @Test
     public void testSampleDirectory() {

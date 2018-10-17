@@ -15,7 +15,8 @@ import org.junit.Test;
 public class TextUtilTest {
 	ByteArrayOutputStream baos;
 	PrintStream ps;
-	
+	private static String FIND_INSTANCE_STRING_BROWNFOX = "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog";
+
 	@Before
 	public void setup() {
 		baos = new ByteArrayOutputStream();
@@ -50,6 +51,7 @@ public class TextUtilTest {
 		//Some more edge cases
 		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", (String)null));
 		assertEquals("abc[[NULL]]xyz", TextUtil.format("abc{}xyz", null, null, null));
+		assertEquals("abcXXXdef[[NULL]]xyz", TextUtil.format("abc{}def{}xyz", "XXX", null, null));
 	}
 	
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
@@ -69,6 +71,12 @@ public class TextUtilTest {
 	public void testPatternsWithCurlyBraceLiteralsPrintln() {
 		TextUtil.println(ps, "abc\\{}xyz", "XXX");
 		assertEquals("abc\\{}xyz", getStreamContent());
+	}
+
+	@Test
+	public void testPatternWithBreak() {
+		TextUtil.println(ps, 5, "//", "abc{}def {}xyz", "XXX", "YYY");
+		assertEquals("//abcXXXdef//  YYYxyz", getStreamContent());
 	}
 	
 	@Test
@@ -189,7 +197,28 @@ public class TextUtilTest {
 		assertEquals("i", result.get(1));
 		
 	}
-	
+
+	@Test
+	public void testWrapWithEmptyString() {
+		List<String> result;
+
+		result = TextUtil.wrap("", 10);
+		assertEquals(0, result.size());
+	}
+
+	@Test
+	public void testWrapWithNewlineChar() {
+		List<String> result;
+
+		result = TextUtil.wrap("\nabc", 10);
+		assertEquals(1, result.size());
+		assertEquals("abc", result.get(0));
+
+		result = TextUtil.wrap("abc \ndefg hijklmnopqrstuvwxyzabcdefgh", 10);
+		assertEquals(2, result.size());
+		assertEquals("abc", result.get(0));
+		assertEquals("defg hijklmnopqrstuvwxyzabcdefgh", result.get(1));
+	}
 
 	@Test
 	public void testWrapWithPrefix() {
@@ -216,12 +245,35 @@ public class TextUtilTest {
 		assertEquals("# xxxqrs tuv", result.get(2));
 		
 	}
+
+	@Test
+	public void testWrapNullPrefix() {
+		List<String> result;
+
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10, null, "xxx");
+		assertEquals(2, result.size());
+		assertEquals("abcdefghij", result.get(0));
+		assertEquals("xxxklmnopqrstuvwxyz", result.get(1));
+	}
+
+	@Test
+	public void testWrapNullLineIndent() {
+		List<String> result;
+
+		result = TextUtil.wrap("abcdefghij klmnopqrstuvwxyz", 10, "# ", null);
+		assertEquals(2, result.size());
+		assertEquals("# abcdefghij", result.get(0));
+		assertEquals("# klmnopqrstuvwxyz", result.get(1));
+	}
 	
 	@Test
 	public void testEscapeXml() {
 		assertEquals("&lt;some text&gt;", TextUtil.escapeXml("<some text>"));
 		assertEquals("&lt;some&amp;text&quot;", TextUtil.escapeXml("<some&text\""));
 		assertEquals("&apos;tis the s&apos;son", TextUtil.escapeXml("'tis the s'son"));
+
+		assertNull(TextUtil.escapeXml(null));
+		assertEquals("copyrighted&#169;", TextUtil.escapeXml("copyrighted©"));
 	}
 
 	/**
@@ -232,5 +284,60 @@ public class TextUtilTest {
 		assertEquals("", TextUtil.nullToEmpty(null));
 		assertEquals("", TextUtil.nullToEmpty(""));		//no change
 		assertEquals("a", TextUtil.nullToEmpty("a"));	//no change
+	}
+
+	@Test
+	public void testFindFirstInstanceOf() {
+		assertEquals(31, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 3, "the", "lazy"));
+		assertEquals(40, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 6, "dog"));
+		assertEquals(20, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, -1, "jumps", "over"));
+		assertEquals(0, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 0, "The", "fox"));
+		assertEquals(65, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 30, "jumps", "over"));
+		assertEquals(49, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 30, "brown", "quick"));
+	}
+
+	@Test
+	public void testFindFirstInstanceOfNotFound() {
+		assertEquals(-1, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 80, "jumps", "over"));
+		assertEquals(-1, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 44, "dog."));
+		assertEquals(-1, TextUtil.findFirstInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 0, "excuse"));
+	}
+
+	@Test
+	public void testFindFirstInstanceOfNullToBeSearched() {
+		assertEquals(-1, TextUtil.findFirstInstanceOf(null, 10, " ", "\t", "-"));
+	}
+
+	@Test
+	public void testFindFirstInstanceOfWithEmptyToBeFound() {
+		assertEquals(-1, TextUtil.findFirstInstanceOf("abcd", 10));
+	}
+
+	@Test
+	public void testFindLastInstanceOf() {
+		assertEquals(35, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 50, "the", "lazy"));
+		assertEquals(85, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, FIND_INSTANCE_STRING_BROWNFOX.length(), "dog"));
+		assertEquals(16, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 43, "The", "fox"));
+		assertEquals(26, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 40, "jumps", "over"));
+		assertEquals(10, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 40, "brown", "quick"));
+	}
+
+	@Test
+	public void testFindLastInstanceOfNotFound() {
+		assertEquals(-1, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, -1, "jumps", "over"));
+		assertEquals(-1, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 15, "lazy"));
+		assertEquals(-1, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, 0, "quick"));
+		assertEquals(-1, TextUtil.findLastInstanceOf(FIND_INSTANCE_STRING_BROWNFOX, FIND_INSTANCE_STRING_BROWNFOX.length(), "notfound"));
+	}
+
+
+	@Test
+	public void testFindLastInstanceOfNullToBeSearched() {
+		assertEquals(-1, TextUtil.findLastInstanceOf(null, 10, " ", "\t", "-"));
+	}
+
+	@Test
+	public void testFindLastInstanceOfWithEmptyToBeFound() {
+		assertEquals(-1, TextUtil.findLastInstanceOf("abcd", 10));
 	}
 }

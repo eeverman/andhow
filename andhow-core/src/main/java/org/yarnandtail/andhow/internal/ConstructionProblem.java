@@ -319,4 +319,39 @@ public abstract class ConstructionProblem implements Problem {
 					AndHowInit.class.getCanonicalName(), joined);
 		}
 	}
+	
+	public static class InitiationLoopException extends ConstructionProblem {
+		AndHow.Initialization originalInit;
+		AndHow.Initialization secondInit;
+
+		public InitiationLoopException(AndHow.Initialization originalInit, AndHow.Initialization secondInit) {
+			this.originalInit = originalInit;
+			this.secondInit = secondInit;
+		}
+
+		public AndHow.Initialization getOriginalInit() {
+			return originalInit;
+		}
+
+		public AndHow.Initialization getSecondInit() {
+			return secondInit;
+		}
+
+		
+		@Override
+		public String getProblemDescription() {
+			
+			return "AndHow detected a loop during initiation.  "
+					+ "Likely causes are: " + System.lineSeparator()
+					+ "- Multiple places in application code where AndHow.instance(AndHowConfiguration) is called" + System.lineSeparator()
+					+ "- static initiation blocks or static variables that are initiated refering to the value of an AndHow Property" + System.lineSeparator()
+					+ "- AndHow Properties that refer to the value of other AndHow properties in their construction" + System.lineSeparator()
+					+ "::The first line in the stack trace following this error referring to your application code is likely causing the initiation loop::";
+		}
+		
+		@Override
+		public String getFullMessage() {
+			return getProblemDescription();
+		}
+	}
 }
