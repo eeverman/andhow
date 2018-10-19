@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.element.*;
+import javax.tools.Diagnostic;
 
 
 import javax.tools.FileObject;
@@ -147,14 +148,20 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				}
 
 				if (ret.getErrors().size() > 0) {
-					LOG.error(
+					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
 							"AndHow Property definition errors prevented compilation to complete. " +
 							"Each of the following errors must be fixed before compilation is possible.");
+					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+							"AndHow Property definition errors discovered: " + ret.getErrors().size());
 					for (String err : ret.getErrors()) {
-						LOG.error("AndHow Property Error: {0}", err);
+						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+								"AndHow Property Error: " + err);
 					}
 
-					throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
+					//The docs for printMessage(Kind.Error) say that an error
+					//message should actually throw an error, but that does not
+					//seem to happen, so the runtime exception is needed
+					throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See the error details above.");
 				}
 
 			}
