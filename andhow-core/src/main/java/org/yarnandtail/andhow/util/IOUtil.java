@@ -19,9 +19,9 @@ public class IOUtil {
 	}
 
 	/**
-	 * Retrieve a String from an UTF-8 resource using the path of that resource.
-	 * @param path Path of the UTF-8 resource.
-	 * @return the String saved into the stream.
+	 * Retrieve a String from an UTF-8 encoded classpath resource.
+	 * @param path location on the classpath.
+	 * @return a string reprensenting the entire content of the resource.
 	 * @throws IOException when the resource cannot be loaded.
 	 */
 	public static String getUTF8ResourceAsString(String path) throws IOException {
@@ -35,10 +35,9 @@ public class IOUtil {
 	}
 
 	/**
-	 * Retrieve a String from a resource using the path of that resource.
-	 * @param path Path of the resource.
-	 * @param encoding Charset used to store the data of the resource.
-	 * @return the String saved into the stream.
+	 * Retrieve a String from a classpath resource.
+	 * @param path location on the classpath.
+	 * @return a string reprensenting the entire content of the resource.
 	 * @throws IOException when the resource cannot be loaded.
 	 */
 	public static String getResourceAsString(String path, Charset encoding) throws IOException {
@@ -67,6 +66,7 @@ public class IOUtil {
 				builder.append(line).append(System.lineSeparator());
 				line = reader.readLine();
 			}
+			* @param encoding Charset used to store the data of the resource.
 		}
 
 		if (builder.length() > 0)
