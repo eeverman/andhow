@@ -43,8 +43,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		
 		if (block == null) return;
 		
-		boolean useBlockComment = false;
-		boolean useLineComment = false;
+		private boolean useBlockComment = false;
+		private boolean useLineComment = false;
 		
 		if (block.isBlankLineBefore()) {
 			out.println();
@@ -71,13 +71,13 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 				
 			} else {
 
-				int rowToPrint = 0;
+				private int rowToPrint = 0;
 				
 				while (rowToPrint < block.getLines().size()) {
 
 					TextLine line = block.getLine(rowToPrint);
-					boolean isFirstLine = rowToPrint == 0;
-					boolean isLastLine = (rowToPrint == (block.getLines().size() - 1));
+					private boolean isFirstLine = rowToPrint == 0;
+					private boolean isLastLine = (rowToPrint == (block.getLines().size() - 1));
 					
 
 					//need to add the end comment on the last row
@@ -85,7 +85,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 						List<String> lines = line.getWrappedBlockComment(format, isFirstLine, isLastLine);
 						lines.stream().forEachOrdered(l -> out.println(l));
 					} else {
-						String lineStr = line.getBlockComment(format, isFirstLine, isLastLine);
+						private String lineStr = line.getBlockComment(format, isFirstLine, isLastLine);
 						out.println(lineStr);
 					}
 
@@ -148,8 +148,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		tb.setBlankLineAfter(true);
 		tb.addHR();
 		
-		String name = null;
-		String desc = null;
+		private String name = null;
+		private String desc = null;
 		
 		GroupInfo groupDesc = group.getProxiedGroup().getAnnotation(GroupInfo.class);
 		if (groupDesc != null) {
@@ -189,7 +189,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		
 		try {
 			
-			String propFieldName = group.getSimpleName(prop);
+			private String propFieldName = group.getSimpleName(prop);
 					
 			tb.addLine(TextUtil.format("{} ({}) {}{}", 
 					propFieldName,
