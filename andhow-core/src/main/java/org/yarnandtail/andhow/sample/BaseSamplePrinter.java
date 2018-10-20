@@ -16,7 +16,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public abstract class BaseSamplePrinter implements SamplePrinter {
 	
-	abstract PrintFormat getFormat();
+	public abstract PrintFormat getFormat();
 	
 	public abstract TextBlock getSampleFileStart();
 	
@@ -51,8 +51,8 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 		}
 		
 		if (block.isComment()) {
-			useLineComment = format.usesLineComments();
-			useBlockComment = format.usesBlockComments();
+			this.useLineComment = format.usesLineComments();
+			this.useBlockComment = format.usesBlockComments();
 		}
 		
 		if (useBlockComment) {
@@ -71,13 +71,13 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 				
 			} else {
 
-				private int rowToPrint = 0;
+				int rowToPrint = 0;
 				
 				while (rowToPrint < block.getLines().size()) {
 
 					TextLine line = block.getLine(rowToPrint);
-					private boolean isFirstLine = rowToPrint == 0;
-					private boolean isLastLine = (rowToPrint == (block.getLines().size() - 1));
+					boolean isFirstLine = rowToPrint == 0;
+					boolean isLastLine = (rowToPrint == (block.getLines().size() - 1));
 					
 
 					//need to add the end comment on the last row
@@ -85,7 +85,7 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 						List<String> lines = line.getWrappedBlockComment(format, isFirstLine, isLastLine);
 						lines.stream().forEachOrdered(l -> out.println(l));
 					} else {
-						private String lineStr = line.getBlockComment(format, isFirstLine, isLastLine);
+						String lineStr = line.getBlockComment(format, isFirstLine, isLastLine);
 						out.println(lineStr);
 					}
 
