@@ -14,8 +14,8 @@ public class StringValidator {
 	 */
 	public static class StartsWith implements Validator<String> {
 
-		String prefix;
-		boolean ignoreCase;
+		private String prefix;
+		private boolean ignoreCase;
 
 		public StartsWith(String prefix, boolean ignoreCase) {
 			this.prefix = prefix;
@@ -56,8 +56,8 @@ public class StringValidator {
 	 */
 	public static class EndsWith implements Validator<String> {
 
-		String sufix;
-		boolean ignoreCase;
+		private String sufix;
+		private boolean ignoreCase;
 
 		public EndsWith(String sufix, boolean ignoreCase) {
 			this.sufix = sufix;
@@ -97,7 +97,7 @@ public class StringValidator {
 	 */
 	public static class Regex implements Validator<String> {
 
-		String regex;
+		private String regex;
 
 		public Regex(String regex) {
 			this.regex = regex;
