@@ -9,8 +9,10 @@ Logo submissions should:
 * Have a larger version that is a [combination or emblem logo](https://logojoy.com/blog/different-types-of-logos/), incorporating the project name, **AndHow** or **AndHow!**.
 * The smaller version and the larger version should be clearly identifiable as related.
 * Be your own work\*\*
-* Please submit Pull Requests to the [logo_submission branch of AndHow](https://github.com/eeverman/andhow/tree/logo_submission)
+* Please submit Pull Requests to the [logo_submission branch of AndHow](https://github.com/eeverman/andhow/tree/logo_submission).  Each submission should be in a separate folder to keep submissions separate.
 
+## What Can I win??
+All the fame, notoriety and bragging rights a small, mostly unheard of Java utility library can bestow.  The winning logo will be credited on the home page of the project while the logo is used.  The winning logo will be chosen by the AndHow project owner and that decision will be final.
 
 ## AndHow central ideas, themes and memes that could be represented in the logo
 AndHow is a software library, written in Java, used to configure software applications.  If you think of a software application like a smart phone, AndHow is like the settings page - a set of control knobs, buttons and switches to make it behave the way you want.  In reality, most software applications have no user interface - they might be scientific applications that crunch numbers or faceless services running somewhere in the cloud.  With no user interface, there is no configuration page with knobs and buttons.  Instead, settings are typically stored in a file or loaded from some type of service.  AndHow can read the application's configuration from lots of types of files and talk to lots of types of services to find the configuration.  Once it finds all the configuration, it validates all the configured values to ensure they are acceptable values.  Compared to most configuration libraries, AndHow is very easy to use.
