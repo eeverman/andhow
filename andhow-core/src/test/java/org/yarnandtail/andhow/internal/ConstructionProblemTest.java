@@ -16,23 +16,32 @@ public class ConstructionProblemTest {
     @Test    
     public void testNoUniqueNames() {
         GroupProxy refGroup = mock(GroupProxy.class);
-        
+        Class someUserClass = Object.class;
+        when(refGroup.getProxiedGroup()).thenReturn(someUserClass);
         Property refProperty = mock(Property.class);
         GroupProxy badGroup = mock(GroupProxy.class);
+        when(badGroup.getProxiedGroup()).thenReturn(someUserClass);
         Property badProperty = mock(Property.class);
         String conflictName = "conflict name test";
         ConstructionProblem.NonUniqueNames instance = new ConstructionProblem.
         NonUniqueNames(refGroup, refProperty, badGroup, badProperty, conflictName);
         
-        assertEquals(instance.getConflictName(), conflictName);
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getConflictName(), conflictName);
+        assertEquals(instance.getRefPropertyCoord().getGroup(), someUserClass);
+        assertEquals(instance.getBadPropertyCoord().getGroup(), someUserClass);
+        assertEquals(instance.getRefPropertyCoord().getProperty(), refProperty);
+        assertEquals(instance.getBadPropertyCoord().getProperty(), badProperty);
     }
 
     @Test
     public void testDuplicateProperty() {
+        Class someUserClass = Object.class;
         GroupProxy refGroup = mock(GroupProxy.class);
+        when(refGroup.getProxiedGroup()).thenReturn(someUserClass);
         Property refProperty = mock(Property.class);
         GroupProxy badGroup = mock(GroupProxy.class);
+        when(badGroup.getProxiedGroup()).thenReturn(someUserClass);
         Property badProperty = mock(Property.class);
         ConstructionProblem.DuplicateProperty instance = new ConstructionProblem.
             DuplicateProperty(refGroup, refProperty, badGroup, badProperty);
@@ -40,6 +49,10 @@ public class ConstructionProblemTest {
         assertNotNull(instance.getBadPropertyCoord());
         assertNotNull(instance.getRefPropertyCoord());
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getRefPropertyCoord().getGroup(), someUserClass);
+        assertEquals(instance.getBadPropertyCoord().getGroup(), someUserClass);
+        assertEquals(instance.getRefPropertyCoord().getProperty(), refProperty);
+        assertEquals(instance.getBadPropertyCoord().getProperty(), badProperty);
     }
 
     @Test
@@ -71,8 +84,8 @@ public class ConstructionProblemTest {
 
         assertNotNull(instance.getLoader());
         assertNotNull(instance.getProperty());
-        //assertNotNull(instance.getProblemContext());
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getProperty(), property);
     }
 
     @Test
@@ -90,29 +103,38 @@ public class ConstructionProblemTest {
     @Test
     public void testPropertyNotPartOfGroup() {
         GroupProxy group = mock(GroupProxy.class);
+        Class testClass = Object.class;
+        when(group.getProxiedGroup()).thenReturn(testClass);
         Property prop = mock(Property.class);
 
         ConstructionProblem.PropertyNotPartOfGroup instance = new ConstructionProblem.
             PropertyNotPartOfGroup(group, prop);
 
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getBadPropertyCoord().getGroup(), testClass);
+        assertEquals(instance.getBadPropertyCoord().getProperty(), prop);
     }
 
     @Test
     public void testExportException() {
         Exception exception = new Exception("test");
         GroupProxy group = mock(GroupProxy.class);
+        Class testClass = Object.class;
+        when(group.getProxiedGroup()).thenReturn(testClass);
         String message = "test message";
         ConstructionProblem.ExportException instance = new ConstructionProblem.
             ExportException(exception, group, message);
 
         assertEquals(instance.getException().getMessage(), "test");
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getBadPropertyCoord().getGroup(), testClass);
     }
 
     @Test
     public void testInvalidDefaultValue() {
         GroupProxy group = mock(GroupProxy.class);
+        Class testClass = Object.class;
+        when(group.getProxiedGroup()).thenReturn(testClass);
         Property prop = mock(Property.class);
         String invalidMessage = "test invalid message";
         ConstructionProblem.InvalidDefaultValue instance = new ConstructionProblem.
@@ -120,11 +142,15 @@ public class ConstructionProblemTest {
 
         assertEquals(instance.getInvalidMessage(), invalidMessage);
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getBadPropertyCoord().getGroup(), testClass);
+        assertEquals(instance.getBadPropertyCoord().getProperty(), prop);
     }
 
     @Test
     public void testInvalidValidationConfiguration() {
         GroupProxy group = mock(GroupProxy.class);
+        Class testClass = Object.class;
+        when(group.getProxiedGroup()).thenReturn(testClass);
         Property property = mock(Property.class);
         Validator valid = mock(Validator.class);
 
@@ -133,6 +159,8 @@ public class ConstructionProblemTest {
 
         assertEquals(instance.getValidator(), valid);
         assertNotNull(instance.getProblemDescription());
+        assertEquals(instance.getBadPropertyCoord().getGroup(), testClass);
+        assertEquals(instance.getBadPropertyCoord().getProperty(), property);
     }
 
     @Test
