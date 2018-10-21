@@ -66,7 +66,6 @@ public class IOUtil {
 				builder.append(line).append(System.lineSeparator());
 				line = reader.readLine();
 			}
-			* @param encoding Charset used to store the data of the resource.
 		}
 
 		if (builder.length() > 0)
