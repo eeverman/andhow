@@ -15,7 +15,7 @@ The Logo should:
 Questions and comments can be posted on [this task](https://github.com/eeverman/andhow/issues/427) or on twitter as [\#andhowconfig_logo](https://twitter.com/hashtag/andhowconfig_logo).
 
 ## AndHow central ideas, themes and memes that could be represented in the logo
-![Andhow Visual](andhow.gif)
+![Andhow Visual](https://github.com/eeverman/andhow/blob/master/andhow.gif)
 **_Note:  This section is long and wordy.  Don't feel you have to read and understand all of it - just look for the part that resonates and might be the basis of the logo._**
 
 AndHow is a software library, written in Java, used to configure software applications.  If you think of a software application like a smart phone, AndHow is like the settings page - a set of control knobs, buttons and switches to make it behave the way you want.  In reality, most software applications have no user interface - they might be scientific applications that crunch numbers or faceless services running somewhere in the cloud.  With no user interface, there is no configuration page with knobs and buttons.  Instead, settings are typically stored in a file or loaded from some type of service.  AndHow can read the application's configuration from lots of types of files and talk to lots of types of services to find the configuration.  Once it finds all the configuration, it validates all the configured values to ensure they are acceptable values.  Compared to most configuration libraries, AndHow is very easy to use.
