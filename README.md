@@ -1,18 +1,29 @@
-# AndHow Logo Submissions
+# You could be the designer of the AndHow! Project's logo
 
-The AndHow project is looking for a logo!  You can submit a logo as a merge request with the instructions at the bottom of this page.
+The AndHow project is looking for a logo!  You can enter your logo submission by following the instructions at the bottom of the page.
 
 ## Logo Requirements
 Logo submissions should:
 * Be submitted as `.png` files for easy browser display, as well as the source file(s) used to create them\*
-* Have a small version that is a [monogram or brandmark logo](https://logojoy.com/blog/different-types-of-logos/).  The small version should be square or look appropriate in a square format.
-* Have a larger version that is a [combination or emblem logo](https://logojoy.com/blog/different-types-of-logos/), incorporating the project name, **AndHow** or **AndHow!**.
-* The smaller version and the larger version should be clearly identifiable as related.
+* Have a small version that is an [abstract mark, monogram or pictorial mark](https://99designs.com/blog/tips/types-of-logos/).  The small version should be recognizable in a small format and be square or look appropriate in a square format.
+* Have a larger version that is a [combination or emblem logo](https://99designs.com/blog/tips/types-of-logos/), incorporating the project name, **AndHow** or **AndHow!** with the smaller logo.
 * Be your own work\*\*
 * Please submit Pull Requests to the [logo_submission branch of AndHow](https://github.com/eeverman/andhow/tree/logo_submission).  Each submission should be in a separate folder to keep submissions separate.
 
 ## What Can I win??
-All the fame, notoriety and bragging rights a small, mostly unheard of Java utility library can bestow.  The winning logo will be credited on the home page of the project while the logo is used.  The winning logo will be chosen by the AndHow project owner and that decision will be final.
+All the fame, notoriety and bragging rights a small, mostly unheard of Java utility library can bestow.  The winning logo will be credited on the home page of the project while the logo is used.  The winning logo will be chosen by the AndHow project owner and collaborators and that decision will be final.
+
+## Some example logos of various types
+### Abstract Marks
+![Abstract Mark Logos](https://cdn2.f-cdn.com/files/download/36646775/6ba52d.jpg)
+### Monograms
+![Monogram Logos](https://www.moirae.co.uk/media/4320/lettermarks.jpg)
+### Pictorial Logos
+![Pictorial Logos](https://www.brandsnack.co/wp-content/uploads/2018/04/pictorial-brandmark-logo-examples.jpg)
+### Combination Logos
+![Combination Logos](https://www.odanieldesignsblog.com/wp-content/uploads/2017/07/CombinationLogo.png)
+### Emblem Logos
+![Emblem Logos](https://www.digitalflare.co.uk/media/1477958400/1479686400/1479763310-989a73f58a50f17406f1af3480cf3e09.jpg)
 
 ## AndHow central ideas, themes and memes that could be represented in the logo
 AndHow is a software library, written in Java, used to configure software applications.  If you think of a software application like a smart phone, AndHow is like the settings page - a set of control knobs, buttons and switches to make it behave the way you want.  In reality, most software applications have no user interface - they might be scientific applications that crunch numbers or faceless services running somewhere in the cloud.  With no user interface, there is no configuration page with knobs and buttons.  Instead, settings are typically stored in a file or loaded from some type of service.  AndHow can read the application's configuration from lots of types of files and talk to lots of types of services to find the configuration.  Once it finds all the configuration, it validates all the configured values to ensure they are acceptable values.  Compared to most configuration libraries, AndHow is very easy to use.
@@ -39,7 +50,3 @@ Thats the gist of the AndHow project.  Feel free to submit multiple pull request
 \* It would be nice to have vector version for easy resizing
 
 \*\* Know that submitting a merge request with a logo implies that you accept that the logo will become part of this project, which uses the [Apache 2.0 license](https://github.com/eeverman/andhow/blob/master/LICENSE).
-
-## AndHow central ideas, themes and memes that could be represented in the logo
-
-
