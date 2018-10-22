@@ -18,10 +18,6 @@ public class DblType extends BaseValueType<Double> {
 		super(Double.class);
 	}
 	
-	public static DblType get() {
-		return instance;
-	}
-	
 	public static DblType instance() {
 		return instance;
 	}

@@ -18,10 +18,6 @@ public class FlagType extends BaseValueType<Boolean> {
 		super(Boolean.class);
 	}
 	
-	public static FlagType get() {
-		return instance;
-	}
-	
 	public static FlagType instance() {
 		return instance;
 	}

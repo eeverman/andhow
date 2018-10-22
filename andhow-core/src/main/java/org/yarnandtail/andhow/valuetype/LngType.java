@@ -18,10 +18,6 @@ public class LngType extends BaseValueType<Long> {
 		super(Long.class);
 	}
 	
-	public static LngType get() {
-		return instance;
-	}
-	
 	public static LngType instance() {
 		return instance;
 	}
