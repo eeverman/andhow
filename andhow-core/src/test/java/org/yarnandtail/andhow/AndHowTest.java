@@ -65,7 +65,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testIsInitialize() {
-		assertFalse(AndHow.isInitialize());
+		assertFalse(AndHow.isInitialized());
 	}
 	
 	@Test

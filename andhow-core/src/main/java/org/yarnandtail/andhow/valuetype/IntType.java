@@ -18,10 +18,6 @@ public class IntType extends BaseValueType<Integer> {
 		super(Integer.class);
 	}
 	
-	public static IntType get() {
-		return instance;
-	}
-	
 	public static IntType instance() {
 		return instance;
 	}

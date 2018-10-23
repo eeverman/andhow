@@ -29,7 +29,7 @@ public abstract class LocalDateTimeValidator implements Validator<LocalDateTime>
 		}
 
 		@Override
-		public boolean isValid(LocalDateTime value) {
+		public Boolean isValid(LocalDateTime value) {
 			if (value != null) {
 				return value.isBefore(ref);
 			}
@@ -49,7 +49,7 @@ public abstract class LocalDateTimeValidator implements Validator<LocalDateTime>
 		}
 
 		@Override
-		public boolean isValid(LocalDateTime value) {
+		public Boolean isValid(LocalDateTime value) {
 			if (value != null) {
 				return value.isBefore(ref) || value.isEqual(ref);
 			}
@@ -69,7 +69,7 @@ public abstract class LocalDateTimeValidator implements Validator<LocalDateTime>
 		}
 
 		@Override
-		public boolean isValid(LocalDateTime value) {
+		public Boolean isValid(LocalDateTime value) {
 			if (value != null) {
 				return value.isAfter(ref);
 			}
@@ -89,7 +89,7 @@ public abstract class LocalDateTimeValidator implements Validator<LocalDateTime>
 		}
 		
 		@Override
-		public boolean isValid(LocalDateTime value) {
+		public Boolean isValid(LocalDateTime value) {
 			if (value != null) {
 				return value.isAfter(ref) || value.isEqual(ref);
 			}

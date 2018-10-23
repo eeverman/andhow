@@ -18,10 +18,6 @@ public class BolType extends BaseValueType<Boolean> {
 		super(Boolean.class);
 	}
 	
-	public static BolType get() {
-		return instance;
-	}
-	
 	public static BolType instance() {
 		return instance;
 	}

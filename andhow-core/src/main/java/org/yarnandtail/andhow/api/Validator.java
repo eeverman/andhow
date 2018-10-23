@@ -6,7 +6,7 @@ package org.yarnandtail.andhow.api;
  */
 public interface Validator<T> {
 	
-	boolean isValid(T value);
+	Boolean isValid(T value);
 	
 	/**
 	 * If the value is not valid, this will create a user message explaining

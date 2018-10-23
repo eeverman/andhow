@@ -10,7 +10,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextLoaderProblem;
 import org.yarnandtail.andhow.load.BaseLoader;
 import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
+import org.yarnandtail.andhow.report.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.AndHowLog;
 import org.yarnandtail.andhow.util.TextUtil;
 

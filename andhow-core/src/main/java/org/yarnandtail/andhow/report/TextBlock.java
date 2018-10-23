@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.sample;
+package org.yarnandtail.andhow.report;
 
 import java.util.ArrayList;
 

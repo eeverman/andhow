@@ -157,7 +157,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 *
 	 * @return
 	 */
-	public static boolean isInitialize() {
+	public static boolean isInitialized() {
 		return singleInstance != null && singleInstance.core != null;
 	}
 
