@@ -32,7 +32,7 @@ public class CompileUnit {
 
 	private final String classCanonName;
 	private PropertyRegistrationList registrations;	//late init
-	private List<String> errors;	//late init
+	private List<CompileProblem> errors;	//late init
 	private boolean initClass;	//True if an AndHowInit instance (and not AndHowTestInit)
 	private boolean testInitClass;	//True if an AndHowTestInit instance
 	
@@ -117,7 +117,21 @@ public class CompileUnit {
 
 			return true;
 		} else {
-			addPropertyError(variableElement.getName(), "New AndHow Properties must be assigned to a static final field.");
+			
+			if (errors == null) {
+				errors = new ArrayList();
+			}
+		
+			String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
+		
+			if (variableElement.isStatic()) {
+				errors.add(new CompileProblem.PropMissingFinal(parentName, variableElement.getName()));
+			} else if (variableElement.isFinal()) {
+				errors.add(new CompileProblem.PropMissingStatic(parentName, variableElement.getName()));
+			} else {
+				errors.add(new CompileProblem.PropMissingStaticFinal(parentName, variableElement.getName()));
+			}
+			
 			return false;
 		}
 	}
@@ -193,17 +207,6 @@ public class CompileUnit {
 		return pathNames;
 	}
 
-	public void addPropertyError(String propName, String msg) {
-
-		if (errors == null) {
-			errors = new ArrayList();
-		}
-
-		String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
-		
-		errors.add("The AndHow Property '" + propName + "' in " + parentName + " is invalid: " + msg);
-	}
-
 	/**
 	 * The fully qualified name of the top level class this CompileUnit is for.
 	 *
@@ -263,16 +266,16 @@ public class CompileUnit {
 	 *
 	 * @return
 	 */
-	public List<String> getErrors() {
+	public List<CompileProblem> getProblems() {
 		if (errors != null) {
 			return errors;
 		} else {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 
 	/**
-	 * Returns true if the getErrors() list would be non-empty.
+	 * Returns true if the getProblems() list would be non-empty.
 	 *
 	 * @return
 	 */

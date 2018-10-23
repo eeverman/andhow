@@ -48,6 +48,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	private final List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
 	private final List<CauseEffect> testInitClasses = new ArrayList();	//List of test init classes (should only ever be 1)
 
+	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
+	
 	public AndHowCompileProcessor() {
 		//required by Processor API
 		runDate = new GregorianCalendar();
@@ -99,6 +101,24 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				throw new RuntimeException("Exception while trying to write generated files", e);
 			}
 			
+			if (problems.size() > 0) {
+				
+				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+						"AndHow Property definition errors prevented compilation to complete. " +
+						"Each of the following errors must be fixed before compilation is possible.");
+				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+						"AndHow Property definition errors discovered: " + problems.size());
+				for (CompileProblem err : problems) {
+					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+							err.getFullMessage());
+				}
+
+				//The docs for printMessage(Kind.Error) say that an error
+				//message should actually throw an error, but that does not
+				//seem to happen, so the runtime exception is needed
+				throw new AndHowCompileException(problems);
+			}
+			
 		} else {
 			LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
 
@@ -146,23 +166,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 						throw new RuntimeException(ex);
 					}
 				}
-
-				if (ret.getErrors().size() > 0) {
-					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-							"AndHow Property definition errors prevented compilation to complete. " +
-							"Each of the following errors must be fixed before compilation is possible.");
-					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-							"AndHow Property definition errors discovered: " + ret.getErrors().size());
-					for (String err : ret.getErrors()) {
-						processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-								"AndHow Property Error: " + err);
-					}
-
-					//The docs for printMessage(Kind.Error) say that an error
-					//message should actually throw an error, but that does not
-					//seem to happen, so the runtime exception is needed
-					throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See the error details above.");
-				}
+				
+				problems.addAll(ret.getProblems());
 
 			}
 		}
