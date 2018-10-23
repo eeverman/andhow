@@ -1,5 +1,8 @@
 package org.yarnandtail.andhow.compile;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Exception thrown by the AndHowCompileProcessor for any type of problem
  * during compile.
@@ -12,13 +15,25 @@ package org.yarnandtail.andhow.compile;
  */
 public class AndHowCompileException extends RuntimeException {
 
-	public AndHowCompileException() {
+	final List<CompileProblem> problems;
+			
+	public AndHowCompileException(List<CompileProblem> problems) {
+		if (problems != null) {
+			this.problems = problems;
+		} else {
+			this.problems = Collections.emptyList();
+		}
 	}
 
 
 	@Override
 	public String getMessage() {
-		return super.getMessage(); //To change body of generated methods, choose Tools | Templates.
+		return "The AndHowCompileProcessor found a problem during compilation " +
+				"and threw a fatal exception - See the error details listed above";
+	}
+	
+	public List<CompileProblem> getProblems() {
+		return problems;
 	}
 	
 }

@@ -9,6 +9,7 @@ import java.util.*;
 import javax.tools.*;
 import org.junit.Test;
 import org.yarnandtail.andhow.util.IOUtil;
+import static org.yarnandtail.andhow.compile.CompileProblem.*;
 
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -174,14 +175,13 @@ public class AndHowCompileProcessor_PropertyTest {
     @Test
     public void testMissingStaticAndFinalModifiersOnProperties() throws Exception {
 		
-		String classSimpleName = "BadProps_1";
-
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
   
   
         Set<TestSource> input = new HashSet();
-        input.add(buidTestSource(pkg, classSimpleName));
+        input.add(buidTestSource(pkg, "BadProps_1"));
+		input.add(buidTestSource(pkg, "BadProps_2"));
 
         JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
@@ -190,8 +190,38 @@ public class AndHowCompileProcessor_PropertyTest {
 			task.call();
 			fail("This should have thrown an exception");
 		} catch (RuntimeException e) {
-			//add some testing here - would be good to have a custom exceptoin
-			//so we can get details from it.
+			
+			assertTrue(e.getCause() instanceof AndHowCompileException);
+			
+			AndHowCompileException ace = (AndHowCompileException) e.getCause();
+			
+			String CLASSNAME = "org.yarnandtail.andhow.compile.BadProps_1";
+			String INNER_CLASSNAME = CLASSNAME + "$INNER_CLASS";
+			
+			//Expected CompileProblems
+			//All problems for both classes should be reported in one exception
+			CompileProblem prob1 = new PropMissingFinal(CLASSNAME, "STR_1");
+			CompileProblem prob2 = new PropMissingStatic(CLASSNAME, "STR_2");
+			CompileProblem prob3 = new PropMissingStaticFinal(CLASSNAME, "STR_3");
+			CompileProblem prob4 = new PropMissingFinal(INNER_CLASSNAME, "STR_1");
+			CompileProblem prob5 = new PropMissingStatic(INNER_CLASSNAME, "STR_2");
+			CompileProblem prob6 = new PropMissingStaticFinal(INNER_CLASSNAME, "STR_3");
+			
+			//In 2nd class
+			CompileProblem prob7 = new PropMissingFinal(
+					"org.yarnandtail.andhow.compile.BadProps_2", "STR_1");
+			
+			assertEquals(7, ace.getProblems().size());
+			assertTrue(ace.getProblems().contains(prob1));
+			assertTrue(ace.getProblems().contains(prob2));
+			assertTrue(ace.getProblems().contains(prob3));
+			assertTrue(ace.getProblems().contains(prob4));
+			assertTrue(ace.getProblems().contains(prob5));
+			assertTrue(ace.getProblems().contains(prob6));
+			assertTrue(ace.getProblems().contains(prob7));
+			
+		} catch (Throwable t) {
+			fail("This should have thrown an AndHowCompileException");
 		}
         
     }
