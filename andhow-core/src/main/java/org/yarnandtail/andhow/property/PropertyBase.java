@@ -94,7 +94,7 @@ public abstract class PropertyBase<T> implements Property<T> {
 	
 	@Override
 	public final T getExplicitValue() {
-		Object v = AndHow.build().getExplicitValue(this);
+		Object v = AndHow.instance().getExplicitValue(this);
 		return valueType.cast(v);
 	}
 	

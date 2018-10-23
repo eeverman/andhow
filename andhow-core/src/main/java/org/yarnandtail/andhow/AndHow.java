@@ -81,7 +81,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @return
 	 * @throws AppFatalException 
 	 */
-	public static AndHow build() throws AppFatalException {
+	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
 			return singleInstance;
 		} else {
