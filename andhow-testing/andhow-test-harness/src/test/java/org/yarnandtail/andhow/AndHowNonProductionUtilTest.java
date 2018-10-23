@@ -28,7 +28,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 		assertNull(AndHowNonProductionUtil.getAndHowInstance());
 		assertNull(AndHowNonProductionUtil.getAndHowCore());
 		
-		AndHow normalAhInstance = AndHow.build();	//force creation
+		AndHow normalAhInstance = AndHow.instance();	//force creation
 		
 		AndHow ahInst = AndHowNonProductionUtil.getAndHowInstance();
 		AndHowCore ahCore = AndHowNonProductionUtil.getAndHowCore();
@@ -46,7 +46,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 	public void testSetAndHowCore() {
 		assertNull(AndHowNonProductionUtil.getAndHowInstance());	//just checking
 		
-		AndHow.build();	//force creation
+		AndHow.instance();	//force creation
 		
 		AndHowCore ahCore1 = AndHowNonProductionUtil.getAndHowCore();
 		
@@ -54,7 +54,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 		
 		assertNull(AndHowNonProductionUtil.getAndHowInstance());	//just checking
 		
-		AndHow.build();	//force creation
+		AndHow.instance();	//force creation
 		
 		assertFalse(ahCore1 == AndHowNonProductionUtil.getAndHowCore());
 		
@@ -69,7 +69,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 	 * Test of forceRebuild method, of class AndHowNonProductionUtil.
 	 */
 	@Test
-	public void testForceRebuild() {
+	public void testForceReinstance() {
 		assertNull(AndHowNonProductionUtil.getAndHowInstance());	//just checking
 		
 		AndHowConfiguration config = AndHow.findConfig();
@@ -107,7 +107,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 	public void testDestroyAndHowCore() {
 
 		assertNull("AndHow should be null at test start", AndHowNonProductionUtil.getAndHowInstance());
-		AndHow.build();	//force creation
+		AndHow.instance();	//force creation
 		AndHowNonProductionUtil.destroyAndHowCore();
 		assertNotNull(AndHowNonProductionUtil.getAndHowInstance());
 		assertNull(AndHowNonProductionUtil.getAndHowCore());
