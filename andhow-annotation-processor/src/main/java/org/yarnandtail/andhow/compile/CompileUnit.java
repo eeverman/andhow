@@ -101,19 +101,20 @@ public class CompileUnit {
 	 * If modifiers are invalid, an error will be recorded rather than a
 	 * Property.
 	 *
-	 * @param variableElement A SimpleType representing a variable to which an
-	 * AndHow property is constructed and assigned to.
+	 * @param name The name of the variable the Property is assigned to.
+	 * @param _static Does the variable has the static modifier?
+	 * @param _final Is the variable declared as static?
 	 * @return True if the property could be added, false if an error was
 	 * recorded instead.
 	 */
-	public boolean addProperty(SimpleVariable variableElement) {
+	public boolean addProperty(String name, boolean _static, boolean _final) {
 
-		if (variableElement.isStatic() && variableElement.isFinal()) {
+		if (_static && _final) {
 			if (registrations == null) {
 				registrations = new PropertyRegistrationList(classCanonName);
 			}
 
-			registrations.add(variableElement.getName(), getInnerPathNames());
+			registrations.add(name, getInnerPathNames());
 
 			return true;
 		} else {
@@ -124,34 +125,16 @@ public class CompileUnit {
 		
 			String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
 		
-			if (variableElement.isStatic()) {
-				errors.add(new CompileProblem.PropMissingFinal(parentName, variableElement.getName()));
-			} else if (variableElement.isFinal()) {
-				errors.add(new CompileProblem.PropMissingStatic(parentName, variableElement.getName()));
+			if (_static) {
+				errors.add(new CompileProblem.PropMissingFinal(parentName, name));
+			} else if (_final) {
+				errors.add(new CompileProblem.PropMissingStatic(parentName, name));
 			} else {
-				errors.add(new CompileProblem.PropMissingStaticFinal(parentName, variableElement.getName()));
+				errors.add(new CompileProblem.PropMissingStaticFinal(parentName, name));
 			}
 			
 			return false;
 		}
-	}
-
-	/**
-	 * Register an AndHow Property declaration in the current scope - either
-	 * directly in the the top level class or the recorded path to an inner
-	 * class.
-	 *
-	 * If modifiers are invalid, an error will be recorded rather than a
-	 * Property.
-	 *
-	 * @param name The name of the variable the Property is assigned to.
-	 * @param _static Does the variable has the static modifier?
-	 * @param _final Is the variable declared as static?
-	 * @return True if the property could be added, false if an error was
-	 * recorded instead.
-	 */
-	public boolean addProperty(String name, boolean _static, boolean _final) {
-		return addProperty(new SimpleVariable(name, _static, _final));
 	}
 
 	/**

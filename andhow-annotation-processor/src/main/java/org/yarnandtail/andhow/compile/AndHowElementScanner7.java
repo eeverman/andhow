@@ -78,9 +78,9 @@ public class AndHowElementScanner7 extends ElementScanner7<CompileUnit, String> 
 			ts.scan(trees.getPath(e), marker);
 			if (marker.isNewProperty()) {
 				compileUnit.addProperty(
-						new SimpleVariable(e.getSimpleName().toString(),
+						e.getSimpleName().toString(),
 						e.getModifiers().contains(Modifier.STATIC),
-						e.getModifiers().contains(Modifier.FINAL))
+						e.getModifiers().contains(Modifier.FINAL)
 				);
 				
 				if (LOG.isLoggable(Level.FINE)) {

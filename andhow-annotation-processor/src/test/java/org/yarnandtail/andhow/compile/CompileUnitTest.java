@@ -32,12 +32,12 @@ public class CompileUnitTest {
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
 		//root prop
-		cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//0
+		cu.addProperty(PROP1_NAME, true, true);	//0
 		
 		{
 			//1st inner class
 			cu.pushType(INNER1_SIMP_NAME, true);
-			cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//1
+			cu.addProperty(PROP1_NAME, true, true);	//1
 
 			{
 				//2nd inner class
@@ -51,8 +51,8 @@ public class CompileUnitTest {
 				assertEquals(INNER2_SIMP_NAME, cu.getInnerPathNames().get(1));
 				//
 				
-				cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));	//2
-				cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//3
+				cu.addProperty(PROP1_NAME, true, true);	//2
+				cu.addProperty(PROP2_NAME, true, true);	//3
 				cu.popType();
 				
 				//Check we have the right inner path remaining
@@ -61,12 +61,12 @@ public class CompileUnitTest {
 			}
 
 			//one more at 1st inner level
-			cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//4
+			cu.addProperty(PROP2_NAME, true, true);	//4
 			cu.popType();
 		}
 		
 		//one more at root level
-		cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));	//5
+		cu.addProperty(PROP2_NAME, true, true);	//5
 		
 		PropertyRegistrationList list = cu.getRegistrations();
 		
