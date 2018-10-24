@@ -96,7 +96,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		//This just tests the test...
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
@@ -138,7 +138,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
 				.group(AliasGroup2.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 	
 
 		//
@@ -165,7 +165,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString());
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		//
 		// Group 1
@@ -210,7 +210,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 					.group(AliasGroup1.class)
 					.group(AliasGroup4.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -233,7 +233,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowCoreTestConfig.instance()
 					.group(AliasGroup5.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -257,7 +257,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 					.group(AliasGroup6.class)
 					.group(AliasGroup7.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {

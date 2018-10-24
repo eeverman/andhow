@@ -69,7 +69,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 	 * Test of forceRebuild method, of class AndHowNonProductionUtil.
 	 */
 	@Test
-	public void testForceRebuild() {
+	public void testForceReinstance() {
 		assertNull(AndHowNonProductionUtil.getAndHowInstance());	//just checking
 		
 		AndHowConfiguration config = AndHow.findConfig();

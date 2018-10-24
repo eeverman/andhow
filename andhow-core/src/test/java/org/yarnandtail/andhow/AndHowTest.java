@@ -82,7 +82,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 				.groups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
@@ -116,7 +116,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 				.setLoaders(kvpl, kvpl)
 				.groups(configPtGroups);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -142,7 +142,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 					.group(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
 				
-				AndHow.instance(config);
+				AndHow.build(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -163,7 +163,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
 				
-				AndHow.instance(config);
+				AndHow.build(config);
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

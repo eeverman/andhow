@@ -45,7 +45,7 @@ public class SampleRestClientAppTest extends AndHowCoreTestBase {
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/all.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -74,7 +74,7 @@ public class SampleRestClientAppTest extends AndHowCoreTestBase {
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals("/org/yarnandtail/andhow/example/restclient/minimum.points.speced.properties", 
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
@@ -108,7 +108,7 @@ public class SampleRestClientAppTest extends AndHowCoreTestBase {
 					.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 					.classpathPropertiesRequired();
 		
-			AndHow.instance(config);
+			AndHow.build(config);
 		
 		} catch (AppFatalException e) {
 			

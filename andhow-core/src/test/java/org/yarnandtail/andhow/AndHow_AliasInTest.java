@@ -73,7 +73,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -89,7 +89,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -104,7 +104,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -128,7 +128,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -151,7 +151,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -175,7 +175,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -199,7 +199,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
-		AndHow.instance(config);
+		AndHow.build(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -221,7 +221,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 					.group(AliasGroup1.class)
 					.group(AliasGroup2.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -248,7 +248,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 					.group(AliasGroup1.class)
 					.group(AliasGroup4.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
@@ -274,7 +274,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 					.group(AliasGroup1.class)
 					.group(AliasGroup3.class);
 			
-			AndHow.instance(config);
+			AndHow.build(config);
 			
 			fail("Should have thrown an exception");
 		} catch (AppFatalException e) {
