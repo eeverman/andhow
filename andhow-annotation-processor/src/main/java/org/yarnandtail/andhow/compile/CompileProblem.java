@@ -98,8 +98,8 @@ public abstract class CompileProblem {
 	}
 	
 	static class TooManyInitClasses extends CompileProblem {
-		final List<AndHowCompileProcessor.CauseEffect> _instances = new ArrayList();
-		final String _fullInitClassName;
+		private final List<AndHowCompileProcessor.CauseEffect> _instances = new ArrayList();
+		private final String _fullInitClassName;
 		
 		public TooManyInitClasses(
 				String fullInitClassName,
@@ -118,6 +118,10 @@ public abstract class CompileProblem {
 			}
 
 			return names;
+		}
+		
+		public String getInitClassName() {
+			return _fullInitClassName;
 		}
 
 		@Override
