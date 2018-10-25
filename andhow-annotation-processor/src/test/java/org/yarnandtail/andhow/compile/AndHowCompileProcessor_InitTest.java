@@ -4,6 +4,7 @@ import org.yarnandtail.compile.*;
 import org.yarnandtail.andhow.service.PropertyRegistrar;
 import org.yarnandtail.andhow.service.PropertyRegistration;
 import java.io.*;
+import static org.yarnandtail.andhow.compile.CompileProblem.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
@@ -142,21 +143,20 @@ public class AndHowCompileProcessor_InitTest {
 			task.call();
 
 		} catch (RuntimeException e) {
-			TooManyInitClassesException tmi = null;
 			
-			if (e instanceof TooManyInitClassesException) {
-				tmi = (TooManyInitClassesException)e;
-			} else if (e.getCause() != null && e.getCause() instanceof TooManyInitClassesException) {
-				tmi = (TooManyInitClassesException) e.getCause();
-			}
+			assertNotNull(e.getCause());
+			assertTrue(e.getCause() instanceof AndHowCompileException);
 			
-			if (tmi != null) {
-				assertEquals(2, tmi.getInstanceNames().size());
-				assertTrue(tmi.getInstanceNames().contains(AndHowInitA_NAME));
-				assertTrue(tmi.getInstanceNames().contains(AndHowInitB_NAME));
-			} else {
-				fail("Expecting the exception to be TooManyInitClassesException or caused by it.");
-			}
+			AndHowCompileException ce = (AndHowCompileException) e.getCause();
+			
+			assertEquals(1, ce.getProblems().size());
+			assertTrue(ce.getProblems().get(0) instanceof TooManyInitClasses);
+			
+			TooManyInitClasses tmi = (TooManyInitClasses) ce.getProblems().get(0);
+			
+			assertEquals(2, tmi.getInstanceNames().size());
+			assertTrue(tmi.getInstanceNames().contains(AndHowInitA_NAME));
+			assertTrue(tmi.getInstanceNames().contains(AndHowInitB_NAME));
 		}	
     }
 	
@@ -183,21 +183,21 @@ public class AndHowCompileProcessor_InitTest {
 			task.call();
 
 		} catch (RuntimeException e) {
-			TooManyInitClassesException tmi = null;
 			
-			if (e instanceof TooManyInitClassesException) {
-				tmi = (TooManyInitClassesException)e;
-			} else if (e.getCause() != null && e.getCause() instanceof TooManyInitClassesException) {
-				tmi = (TooManyInitClassesException) e.getCause();
-			}
+			assertNotNull(e.getCause());
+			assertTrue(e.getCause() instanceof AndHowCompileException);
 			
-			if (tmi != null) {
-				assertEquals(2, tmi.getInstanceNames().size());
-				assertTrue(tmi.getInstanceNames().contains(AndHowTestInitA_NAME));
-				assertTrue(tmi.getInstanceNames().contains(AndHowTestInitB_NAME));
-			} else {
-				fail("Expecting the exception to be TooManyInitClassesException or caused by it.");
-			}
+			AndHowCompileException ce = (AndHowCompileException) e.getCause();
+			
+			assertEquals(1, ce.getProblems().size());
+			assertTrue(ce.getProblems().get(0) instanceof TooManyInitClasses);
+			
+			TooManyInitClasses tmi = (TooManyInitClasses) ce.getProblems().get(0);
+			
+			assertEquals(2, tmi.getInstanceNames().size());
+			assertTrue(tmi.getInstanceNames().contains(AndHowTestInitA_NAME));
+			assertTrue(tmi.getInstanceNames().contains(AndHowTestInitB_NAME));
+
 		}	
     }
 	
