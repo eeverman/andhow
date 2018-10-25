@@ -109,8 +109,8 @@ We're getting there.
 The example has defaults for each property so with no other configuration available, 
 the main method uses the defaults and prints:
 ```
-3...2...1...Go-Go-Go!
-Gone-Gone-Gone!
+3...2...1...Go-Go-Go!!!
+Gone-Gone-Gone!!!
 ```
 Things are more interesting if the default values are removed from the code above:
 ```java
