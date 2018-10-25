@@ -67,42 +67,41 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		if (isLastRound) {
 			LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
 
-			try {
-				if (initClasses.size() == 1) {
-
-					LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
-					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
-
-				} else if (initClasses.size() > 1) {
-					TooManyInitClassesException err = 
-							new TooManyInitClassesException(INIT_CLASS_NAME, initClasses);
-
-					err.writeDetails(LOG);
-					throw err;
-				}
-
-				if (testInitClasses.size() == 1) {
-
-					LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
-					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-
-				} else if (testInitClasses.size() > 1) {
-					TooManyInitClassesException err = 
-							new TooManyInitClassesException(TEST_INIT_CLASS_NAME, testInitClasses);
-
-					err.writeDetails(LOG);
-					throw err;
-				}
-
-				if (registrars != null && registrars.size() > 0) {
-					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-				}
-			} catch (IOException e) {
-				throw new RuntimeException("Exception while trying to write generated files", e);
+			
+			if (initClasses.size() > 1) {
+				problems.add(new CompileProblem.TooManyInitClasses(
+						INIT_CLASS_NAME, initClasses));
 			}
 			
-			if (problems.size() > 0) {
-				
+			if (testInitClasses.size() > 1) {
+				problems.add(new CompileProblem.TooManyInitClasses(
+						TEST_INIT_CLASS_NAME, testInitClasses));
+			}
+			
+			if (problems.size() == 0) {
+				try {
+					if (initClasses.size() == 1) {
+
+						LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
+						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
+
+					}
+
+					if (testInitClasses.size() == 1) {
+
+						LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
+						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
+
+					}
+
+					if (registrars.size() > 0) {
+						writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
+					}
+					
+				} catch (IOException e) {
+					throw new AndHowCompileException("Exception while trying to write generated files", e);
+				}
+			} else {
 				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
 						"AndHow Property definition errors prevented compilation to complete. " +
 						"Each of the following errors must be fixed before compilation is possible.");
@@ -117,6 +116,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				//message should actually throw an error, but that does not
 				//seem to happen, so the runtime exception is needed
 				throw new AndHowCompileException(problems);
+			}
+			
+			
+			
+			if (problems.size() > 0) {
+				
+
 			}
 			
 		} else {
@@ -215,8 +221,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 	
 	/**
-	 * Match up a causal Element w/ the Class name that will be registered in
+	 * Match up a causal Element (Basically the compiler representation of a
+	 * class to be compiled) w/ the Class name that will be registered in
 	 * a service registry.
+	 * 
+	 * When the AnnotationProcessor writes a new file to the Filer, it wants
+	 * a causal Element to associate with it, apparently this info could be
+	 * used for reporting or something.
 	 */
 	protected static class CauseEffect {
 		String fullClassName;
