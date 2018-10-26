@@ -1,9 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
 import org.yarnandtail.compile.*;
-import org.yarnandtail.andhow.service.PropertyRegistrar;
-import org.yarnandtail.andhow.service.PropertyRegistration;
-import java.io.*;
 import static org.yarnandtail.andhow.compile.CompileProblem.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -18,106 +15,89 @@ import static org.junit.Assert.*;
  * https://gist.github.com/johncarl81/46306590cbdde5a3003f
  * @author ericeverman
  */
-public class AndHowCompileProcessor_InitTest {
+public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestBase {
 
+	static final String pkg = AndHowCompileProcessor_PropertyTest.class.getPackage().getName();
+	
 	//
 	//Names of classes in the resources directory, used for compile testing of
 	//initiation self discovery.  The 'A' class extends the 'Abstract' one for each.
-	protected static final String AndHowInitAbstract_NAME = "org.yarnandtail.andhow.compile.AndHowInitAbstract";
-	protected static final String AndHowInitA_NAME = "org.yarnandtail.andhow.compile.AndHowInitA";
-	protected static final String AndHowInitB_NAME = "org.yarnandtail.andhow.compile.AndHowInitB";
-	protected static final String AndHowTestInitAbstract_NAME = "org.yarnandtail.andhow.compile.AndHowTestInitAbstract";
-	protected static final String AndHowTestInitA_NAME = "org.yarnandtail.andhow.compile.AndHowTestInitA";
-	protected static final String AndHowTestInitB_NAME = "org.yarnandtail.andhow.compile.AndHowTestInitB";
-	
+	protected static final String AndHowInitAbstract_NAME = "AndHowInitAbstract";
+	protected static final String AndHowInitA_NAME = "AndHowInitA";
+	protected static final String AndHowInitB_NAME = "AndHowInitB";
+	protected static final String AndHowTestInitAbstract_NAME = "AndHowTestInitAbstract";
+	protected static final String AndHowTestInitA_NAME = "AndHowTestInitA";
+	protected static final String AndHowTestInitB_NAME = "AndHowTestInitB";
 
     @Test
     public void testServiceRegistrationOfOneProdAndOneTestInit() throws Exception {
-		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
   
-  
-        Set<TestSource> input = new HashSet();
-		input.add(new TestSource(AndHowInitAbstract_NAME));	//abstract should be ignored
-        input.add(new TestSource(AndHowInitA_NAME));
-		input.add(new TestSource(AndHowTestInitAbstract_NAME));
-		input.add(new TestSource(AndHowTestInitA_NAME));
+		sources.add(buildTestSource(pkg, AndHowInitAbstract_NAME)); //Abstract should be igored
+		sources.add(buildTestSource(pkg, AndHowInitA_NAME));
+		sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
+		sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
-		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowInit"), Charset.forName("UTF-8"));
-   		String testInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowTestInit"), Charset.forName("UTF-8"));
+		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));
+   		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
 
 		//
 		//Test the initiation files
 		assertNotNull(prodInitSvs);
-		assertEquals(AndHowInitA_NAME, prodInitSvs.trim());
+		assertEquals(fullName(pkg, AndHowInitA_NAME), prodInitSvs.trim());
 		assertNotNull(testInitSvs);
-		assertEquals(AndHowTestInitA_NAME, testInitSvs.trim());
+		assertEquals(fullName(pkg, AndHowTestInitA_NAME), testInitSvs.trim());
     }
 	
 
     @Test
     public void testServiceRegistrationOfOneProdInit() throws Exception {
-		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
   
-  
-        Set<TestSource> input = new HashSet();
-		input.add(new TestSource(AndHowInitAbstract_NAME));
-        input.add(new TestSource(AndHowInitA_NAME));
+		sources.add(buildTestSource(pkg, AndHowInitAbstract_NAME));
+		sources.add(buildTestSource(pkg, AndHowInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
-		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowInit"), Charset.forName("UTF-8"));     
+		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));     
 
 		//
 		//Test the initiation files
 		assertNotNull(prodInitSvs);
-		assertEquals(AndHowInitA_NAME, prodInitSvs.trim());
+		assertEquals(fullName(pkg, AndHowInitA_NAME), prodInitSvs.trim());
     }
 	
     @Test
     public void testServiceRegistrationOfOneTestInit() throws Exception {
-		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
   
-  
-        Set<TestSource> input = new HashSet();
-		input.add(new TestSource(AndHowTestInitAbstract_NAME));
-		input.add(new TestSource(AndHowTestInitA_NAME));
+		sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
+		sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
-   		String testInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowTestInit"), Charset.forName("UTF-8"));
+   		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
 
 		//
 		//Test the initiation files
 		assertNotNull(testInitSvs);
-		assertEquals(AndHowTestInitA_NAME, testInitSvs.trim());
+		assertEquals(fullName(pkg, AndHowTestInitA_NAME), testInitSvs.trim());
     }
 	
 
@@ -125,20 +105,15 @@ public class AndHowCompileProcessor_InitTest {
     public void testServiceRegistrationOfAndHowInitWithTooManyProdInstances() throws Exception {
 		
 		try {
-			JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-			final MemoryFileManager manager = new MemoryFileManager(compiler);
-			TestClassLoader loader = new TestClassLoader(manager);
 
 			List<String> options=new ArrayList();
 			//options.add("-verbose");
 
+			sources.add(buildTestSource(pkg, AndHowInitAbstract_NAME));
+			sources.add(buildTestSource(pkg, AndHowInitA_NAME));
+			sources.add(buildTestSource(pkg, AndHowInitB_NAME));
 
-			Set<TestSource> input = new HashSet();
-			input.add(new TestSource(AndHowInitAbstract_NAME));
-			input.add(new TestSource(AndHowInitA_NAME));
-			input.add(new TestSource(AndHowInitB_NAME));
-
-			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
 			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 			task.call();
 
@@ -155,8 +130,8 @@ public class AndHowCompileProcessor_InitTest {
 			TooManyInitClasses tmi = (TooManyInitClasses) ce.getProblems().get(0);
 			
 			assertEquals(2, tmi.getInstanceNames().size());
-			assertTrue(tmi.getInstanceNames().contains(AndHowInitA_NAME));
-			assertTrue(tmi.getInstanceNames().contains(AndHowInitB_NAME));
+			assertTrue(tmi.getInstanceNames().contains(fullName(pkg, AndHowInitA_NAME)));
+			assertTrue(tmi.getInstanceNames().contains(fullName(pkg, AndHowInitB_NAME)));
 		}	
     }
 	
@@ -172,13 +147,11 @@ public class AndHowCompileProcessor_InitTest {
 			List<String> options=new ArrayList();
 			//options.add("-verbose");
 
+			sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
+			sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
+			sources.add(buildTestSource(pkg, AndHowTestInitB_NAME));
 
-			Set<TestSource> input = new HashSet();
-			input.add(new TestSource(AndHowTestInitAbstract_NAME));
-			input.add(new TestSource(AndHowTestInitA_NAME));
-			input.add(new TestSource(AndHowTestInitB_NAME));
-
-			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
 			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 			task.call();
 
@@ -195,9 +168,69 @@ public class AndHowCompileProcessor_InitTest {
 			TooManyInitClasses tmi = (TooManyInitClasses) ce.getProblems().get(0);
 			
 			assertEquals(2, tmi.getInstanceNames().size());
-			assertTrue(tmi.getInstanceNames().contains(AndHowTestInitA_NAME));
-			assertTrue(tmi.getInstanceNames().contains(AndHowTestInitB_NAME));
+			assertTrue(tmi.getInstanceNames().contains(fullName(pkg, AndHowTestInitA_NAME)));
+			assertTrue(tmi.getInstanceNames().contains(fullName(pkg, AndHowTestInitB_NAME)));
 
+		}	
+    }
+	
+
+    @Test
+    public void testServiceRegistrationOfAndHowInitWithTooManyInstAndBadProperties() throws Exception {
+		
+		try {
+
+			List<String> options=new ArrayList();
+			//options.add("-verbose");
+
+			sources.add(buildTestSource(pkg, AndHowInitAbstract_NAME));
+			sources.add(buildTestSource(pkg, AndHowInitA_NAME));
+			sources.add(buildTestSource(pkg, AndHowInitB_NAME));
+			sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
+			sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
+			sources.add(buildTestSource(pkg, AndHowTestInitB_NAME));
+			sources.add(buildTestSource(pkg, "BadProps_1"));
+			sources.add(buildTestSource(pkg, "BadProps_2"));
+		
+			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
+			task.call();
+
+		} catch (RuntimeException e) {
+			
+			assertNotNull(e.getCause());
+			assertTrue(e.getCause() instanceof AndHowCompileException);
+			
+			AndHowCompileException ace = (AndHowCompileException) e.getCause();
+			
+			String CLASSNAME = "org.yarnandtail.andhow.compile.BadProps_1";
+			String INNER_CLASSNAME = CLASSNAME + "$INNER_CLASS";
+			
+						//Expected CompileProblems
+			//All problems for both classes should be reported in one exception
+			CompileProblem prob1 = new PropMissingFinal(CLASSNAME, "STR_1");
+			CompileProblem prob2 = new PropMissingStatic(CLASSNAME, "STR_2");
+			CompileProblem prob3 = new PropMissingStaticFinal(CLASSNAME, "STR_3");
+			CompileProblem prob4 = new PropMissingFinal(INNER_CLASSNAME, "STR_1");
+			CompileProblem prob5 = new PropMissingStatic(INNER_CLASSNAME, "STR_2");
+			CompileProblem prob6 = new PropMissingStaticFinal(INNER_CLASSNAME, "STR_3");
+			
+			//In 2nd class
+			CompileProblem prob7 = new PropMissingFinal(
+					"org.yarnandtail.andhow.compile.BadProps_2", "STR_1");
+			
+
+			assertEquals(9, ace.getProblems().size());
+			assertEquals(2,
+					ace.getProblems().stream().filter(i -> i instanceof TooManyInitClasses).count()
+			);
+			assertTrue(ace.getProblems().contains(prob1));
+			assertTrue(ace.getProblems().contains(prob2));
+			assertTrue(ace.getProblems().contains(prob3));
+			assertTrue(ace.getProblems().contains(prob4));
+			assertTrue(ace.getProblems().contains(prob5));
+			assertTrue(ace.getProblems().contains(prob6));
+			assertTrue(ace.getProblems().contains(prob7));
 		}	
     }
 	
