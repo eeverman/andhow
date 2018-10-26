@@ -12,20 +12,18 @@ import org.junit.Before;
  */
 public class AndHowCompileExceptionTest {
 
-	List<CompileProblem> problems = new ArrayList();
-	
-	@Before
-	public void setup() {
+	@Test
+	public void testAllForProblemConstructor() {
+		
+		//Setup
+		List<CompileProblem> problems = new ArrayList();
 		CompileProblem.PropMissingStaticFinal prob1 = new CompileProblem.PropMissingStaticFinal("g1", "p1");
 		CompileProblem.PropMissingStaticFinal prob2 = new CompileProblem.PropMissingStaticFinal("g1", "p1");
 		problems.clear();
 		problems.add(prob1);
 		problems.add(prob2);
-	}
-
-	@Test
-	public void testAllForProblemConstructor() {
-
+		
+		
 		AndHowCompileException ahce = new AndHowCompileException(problems);
 		assertNull(ahce.getCause());
 		assertEquals(AndHowCompileException.DEFAULT_MSG, ahce.getMessage());
