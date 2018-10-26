@@ -1,8 +1,6 @@
 package org.yarnandtail.andhow.compile;
 
-import java.util.logging.Level;
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
-import org.yarnandtail.andhow.service.PropertyRegistration;
 import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
@@ -15,9 +13,9 @@ import javax.tools.FileObject;
 import org.yarnandtail.andhow.AndHowInit;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.service.*;
-import org.yarnandtail.andhow.util.AndHowLog;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  *
@@ -29,7 +27,6 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  */
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
-	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCompileProcessor.class);
 	
 	private static final String INIT_CLASS_NAME = AndHowInit.class.getCanonicalName();
 	private static final String TEST_INIT_CLASS_NAME = "org.yarnandtail.andhow.AndHowTestInit";
@@ -40,8 +37,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	
 	//Static to insure all generated classes have the same timestamp
 	private static Calendar runDate;
-
-	private Trees trees;
 	
 	private final List<CauseEffect> registrars = new ArrayList();
 	
@@ -58,14 +53,15 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
+		Filer filer = processingEnv.getFiler();
+		Messager log = this.processingEnv.getMessager();
+		
 		boolean isLastRound = roundEnv.processingOver();
 		
-		Filer filer = this.processingEnv.getFiler();
-
-
 
 		if (isLastRound) {
-			LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
+			debug(log, "Final round of annotation processing. Total root element count: {}",
+					roundEnv.getRootElements().size());
 
 			
 			if (initClasses.size() > 1) {
@@ -78,18 +74,21 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 						TEST_INIT_CLASS_NAME, testInitClasses));
 			}
 			
-			if (problems.size() == 0) {
+			if (problems.isEmpty()) {
 				try {
 					if (initClasses.size() == 1) {
 
-						LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
+						debug(log, "Found exactly 1 {} class: {}",
+								INIT_CLASS_NAME, initClasses.get(0).fullClassName);
+						
 						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
 
 					}
 
 					if (testInitClasses.size() == 1) {
-
-						LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
+						debug(log, "Found exactly 1 {} class: {}",
+								TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
+						
 						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
 
 					}
@@ -102,31 +101,21 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					throw new AndHowCompileException("Exception while trying to write generated files", e);
 				}
 			} else {
-				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-						"AndHow Property definition errors prevented compilation to complete. " +
-						"Each of the following errors must be fixed before compilation is possible.");
-				processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-						"AndHow Property definition errors discovered: " + problems.size());
+				error(log, "AndHow Property definition or Init class errors "
+						+ "prevented compilation. Each of the following errors "
+						+ "must be fixed before compilation is possible.");
+				error(log, "AndHow errors discovered: {}", problems.size());
+				
 				for (CompileProblem err : problems) {
-					processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
-							err.getFullMessage());
+					error(log, err.getFullMessage());
 				}
 
-				//The docs for printMessage(Kind.Error) say that an error
-				//message should actually throw an error, but that does not
-				//seem to happen, so the runtime exception is needed
 				throw new AndHowCompileException(problems);
 			}
 			
-			
-			
-			if (problems.size() > 0) {
-				
-
-			}
-			
 		} else {
-			LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
+			debug(log, "Another round of annotation processing. "
+					+ "Current root element count: {}", roundEnv.getRootElements().size());
 
 
 			//
@@ -152,23 +141,18 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 				if (ret.hasRegistrations()) {
 
-					LOG.debug("Found {0} AndHow Properties in class {1} ", ret.getRegistrations().size(), ret.getRootCanonicalName());
+					debug(log, "Found {} AndHow Properties in class {} ", 
+							ret.getRegistrations().size(), ret.getRootCanonicalName());
+					
 					PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
 					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
 					PropertyRegistrationList regs = ret.getRegistrations();
 
-					if (LOG.isLoggable(Level.FINEST)) {
-						for (PropertyRegistration p : ret.getRegistrations()) {
-							LOG.trace("Found AndHow Property ''{0}'' in root class ''{1}'', immediate parent is ''{2}''",
-									p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
-						}
-					}
-
 					try {
 						writeClassFile(filer, gen, e);
-						LOG.trace("Wrote new generated class file " + gen.buildGeneratedClassSimpleName());
+						debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
 					} catch (Exception ex) {
-						LOG.error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+						error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
 						throw new RuntimeException(ex);
 					}
 				}
@@ -218,6 +202,28 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			}
 		}
 		
+	}
+	
+	/**
+	 * Logs a debug message using the javac standard Messager system.
+	 * 
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void debug(Messager log, String pattern, Object... args) {
+		log.printMessage(Diagnostic.Kind.NOTE, TextUtil.format(pattern, args));
+	}
+	
+	/**
+	 * Logs an error message using the javac standard Messager system.
+	 * 
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void error(Messager log, String pattern, Object... args) {
+		log.printMessage(Diagnostic.Kind.ERROR, TextUtil.format(pattern, args));
 	}
 	
 	/**
