@@ -1,4 +1,5 @@
 # The [AndHow project](https://github.com/eeverman/andhow) is looking for a logo and you could be the designer!
+## [>>See the latest logo submissions <<](https://twitter.com/hashtag/andhowconfig_logo)
 
 ## Is this a contest?  What can I win??
 This is not intended to be a contest, instead it is a chance for people to flex their creative muscles during [Hacktoberfest](https://hacktoberfest.digitalocean.com/) with something other than code.
