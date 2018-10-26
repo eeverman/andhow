@@ -15,10 +15,13 @@ import java.util.List;
  */
 public class AndHowCompileException extends RuntimeException {
 
-	String msg = "The AndHowCompileProcessor found a problem during compilation " +
-				"and threw a fatal exception - See the error details listed nearby.";
-	final List<CompileProblem> problems;
-	final Throwable cause;
+	public static final String DEFAULT_MSG = "The AndHowCompileProcessor found a problem"
+			+ " during compilation and threw a fatal exception - "
+			+ "See the error details listed nearby.";
+	
+	private final String msg;
+	private final List<CompileProblem> problems;
+	private final Throwable cause;
 		
 
 	/**
@@ -33,6 +36,7 @@ public class AndHowCompileException extends RuntimeException {
 	public AndHowCompileException(List<CompileProblem> problems) {
 		
 		cause = null;
+		msg = DEFAULT_MSG;
 		
 		if (problems != null) {
 			this.problems = problems;
@@ -67,11 +71,7 @@ public class AndHowCompileException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		if (msg != null) {
-			return msg;
-		} else {
-			return super.getMessage();
-		}
+		return msg;
 	}
 	
 	public List<CompileProblem> getProblems() {
