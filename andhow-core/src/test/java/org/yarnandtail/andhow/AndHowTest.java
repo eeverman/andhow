@@ -62,6 +62,20 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 	}
 	
+	@Test
+	public void testInitialization() {
+		Long startTime = System.currentTimeMillis();
+		
+		AndHow.Initialization init = new AndHow.Initialization();
+		
+		Long endTime = System.currentTimeMillis();
+		
+		assertEquals(this.getClass().getName(), init.getStackTrace()[0].getClassName());
+		assertEquals("testInitialization", init.getStackTrace()[0].getMethodName());
+		assertTrue(startTime <= init.getTimeStamp());
+		assertTrue(endTime >= init.getTimeStamp());
+	}
+	
 	
 	@Test
 	public void testIsInitialize() {
@@ -84,6 +98,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 		AndHow.build(config);
 		
+		assertTrue(AndHow.getInitializationTrace().length > 0);
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
