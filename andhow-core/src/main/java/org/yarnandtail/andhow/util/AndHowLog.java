@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.util;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.logging.*;
 import java.util.logging.Logger;
@@ -124,6 +125,40 @@ public class AndHowLog {
 		} else {
 			baseLogger.setLevel(null);
 		}
+	}
+	
+	/**
+	 * Returns the PrintStream used for error level logging (java.util.logging SEVERE level).
+	 * 
+	 * This is a 'best effort' method.  It assumes that this log has an
+	 * AndHowLogHandler and returns the err stream associated with it.  If some
+	 * one has done something weird, its possible to delete the handler, in
+	 * which case you will get the default System.err.
+	 * 
+	 * @return 
+	 */
+	public PrintStream getErrStream() {
+		AndHowLogHandler handler = (AndHowLogHandler) 
+				Arrays.asList(baseLogger.getHandlers()).stream().filter(h -> h instanceof AndHowLogHandler)
+						.findAny().orElse(DEFAULT_HANDLER);
+		return handler.getErrStream();
+	}
+	
+	/**
+	 * Returns the PrintStream used for non-error level logging (java.util.logging WARNING and lower).
+	 * 
+	 * This is a 'best effort' method.  It assumes that this log has an
+	 * AndHowLogHandler and returns the non-err stream associated with it.  If some
+	 * one has done something weird, its possible to delete the handler, in
+	 * which case you will get the default System.out.
+	 * 
+	 * @return 
+	 */
+	public PrintStream getNonErrStream() {
+		AndHowLogHandler handler = (AndHowLogHandler) 
+				Arrays.asList(baseLogger.getHandlers()).stream().filter(h -> h instanceof AndHowLogHandler)
+						.findAny().orElse(DEFAULT_HANDLER);
+		return handler.getNonErrStream();
 	}
 
 	//

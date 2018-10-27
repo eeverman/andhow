@@ -78,7 +78,7 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 				"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +
 				"See System.err, out or the log files for more details.",
 					problems);
-			printFailedStartupDetails(afe);
+			InternalUtil.printFailedStartupDetails(staticConfig, loaders, afe, LOG.getErrStream());
 			throw afe;
 		}
 		
@@ -90,7 +90,7 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 
 		if (problems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(problems);
-			printFailedStartupDetails(afe);
+			InternalUtil.printFailedStartupDetails(staticConfig, loaders, afe, LOG.getErrStream());
 			throw afe;
 		}
 		
@@ -113,31 +113,6 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		if (getValue(Options.CREATE_SAMPLES)) {
 			ReportGenerator.printConfigSamples(staticConfig, loaders, false);
 		}
-	}
-	
-	/**
-	 * Prints failed startup details to System.err
-	 * 
-	 * @param afe 
-	 */
-	private void printFailedStartupDetails(AppFatalException afe) {
-		
-		File sampleDir = ReportGenerator.printConfigSamples(staticConfig, loaders, true);
-		String sampleDirStr = (sampleDir != null)?sampleDir.getAbsolutePath():"";
-		afe.setSampleDirectory(sampleDirStr);
-		
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(os);
-		ReportGenerator.printProblems(ps, afe, staticConfig);
-		
-		try {
-			String message = os.toString("UTF8");
-			//Add separator prefix to prevent log prefixes from indenting 1st line
-			System.err.println(System.lineSeparator() + message);
-		} catch (UnsupportedEncodingException ex) {
-			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen	
-		}
-		
 	}
 	
 	@Override
