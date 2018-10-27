@@ -140,10 +140,24 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.0.1</version>
-					<configuration>
-						<additionalparam>-Xdoclint:none</additionalparam>
-						<quiet>true</quiet>
-					</configuration>
+					<inherited>true</inherited>
+					<executions>
+						<execution>
+							<id>javadoc-jar</id>
+							<phase>package</phase>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<inherited>true</inherited>
+							<configuration>
+								<includeDependencySources>true</includeDependencySources>
+								<additionalJOption>-Xdoclint:none</additionalJOption>
+								<additionalJOption>-Xdoclint:-missing</additionalJOption>
+								<doclint>none,-missing</doclint>
+								<quiet>true</quiet>
+							</configuration>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<inherited>true</inherited>
@@ -239,21 +253,6 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
