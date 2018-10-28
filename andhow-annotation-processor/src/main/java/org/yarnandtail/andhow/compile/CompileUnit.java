@@ -147,7 +147,7 @@ public class CompileUnit {
 	 * If the current state is at the root of the top level class, an empty list
 	 * is returned.
 	 *
-	 * @see getInnerPathNames() for just the names of the nested inner classes.
+	 * @see #getInnerPathNames() for just the names of the nested inner classes.
 	 * @return
 	 */
 	public List<SimpleType> getInnerPath() {
