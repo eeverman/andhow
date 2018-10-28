@@ -153,6 +153,7 @@
 								<includeDependencySources>true</includeDependencySources>
 								<additionalJOption>-Xdoclint:none</additionalJOption>
 								<additionalJOption>-Xdoclint:-missing</additionalJOption>
+								<additionalOptions>-html5</additionalOptions>
 								<doclint>none,-missing</doclint>
 								<quiet>true</quiet>
 							</configuration>
@@ -184,7 +185,7 @@
 									<version>3.2.2</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>[1.8.0,1.9)</version>
+									<version>[1.8.0,11)</version>
 								</requireJavaVersion>
 							</rules>    
 						</configuration>
