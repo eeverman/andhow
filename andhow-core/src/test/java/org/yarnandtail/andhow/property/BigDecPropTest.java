@@ -91,10 +91,10 @@ public class BigDecPropTest extends PropertyTestBase {
     public interface BigDecGroup {
         BigDecProp NOT_NULL = BigDecProp.builder().mustBeNonNull().desc(DESCRIPTION).build();
         BigDecProp NULL = BigDecProp.builder().build();
-        BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(new BigDecimal("100.123456")).aliasInAndOut("alias").build();
-        BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(new BigDecimal("100.123456")).build();
-        BigDecProp LESS_THAN = BigDecProp.builder().mustBeLessThan(new BigDecimal("100.123456")).build();
-        BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().mustBeLessThanOrEqualTo(new BigDecimal("100.123456")).build();
+        BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(VALUE_3).aliasInAndOut("alias").build();
+        BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(VALUE_3).build();
+        BigDecProp LESS_THAN = BigDecProp.builder().mustBeLessThan(VALUE_3).build();
+        BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().mustBeLessThanOrEqualTo(VALUE_3).build();
         BigDecProp DEFAULT = BigDecProp.builder().defaultValue(new BigDecimal("456.456")).build();
     }
 }
