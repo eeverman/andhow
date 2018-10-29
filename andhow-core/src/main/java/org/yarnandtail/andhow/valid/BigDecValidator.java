@@ -17,11 +17,11 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
     }
 
     /**
-     * Validate that a BigDecimal is greather than a specified reference.
+     * Validate that a BigDecimal is greater than a specified reference.
      */
     public static class GreaterThan extends BigDecValidator {
 
-        BigDecimal ref;
+        private final BigDecimal ref;
 
         public GreaterThan(BigDecimal ref) {
             this.ref = ref;
@@ -43,7 +43,7 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      */
     public static class GreaterThanOrEqualTo extends BigDecValidator {
 
-        BigDecimal ref;
+        private final BigDecimal ref;
 
         public GreaterThanOrEqualTo(BigDecimal ref) {
             this.ref = ref;
@@ -65,7 +65,7 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      */
     public static class LessThan extends BigDecValidator {
 
-        BigDecimal ref;
+        private final BigDecimal ref;
 
         public LessThan(BigDecimal ref) {
             this.ref = ref;
@@ -87,7 +87,7 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      */
     public static class LessThanOrEqualTo extends BigDecValidator {
 
-        BigDecimal ref;
+        private final BigDecimal ref;
 
         public LessThanOrEqualTo(BigDecimal ref) {
             this.ref = ref;
