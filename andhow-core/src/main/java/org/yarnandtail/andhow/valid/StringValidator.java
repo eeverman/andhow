@@ -1,5 +1,7 @@
 package org.yarnandtail.andhow.valid;
 
+import java.util.Arrays;
+
 import org.yarnandtail.andhow.api.Validator;
 
 /**
@@ -8,7 +10,42 @@ import org.yarnandtail.andhow.api.Validator;
  * @author ericeverman
  */
 public class StringValidator {
-	
+
+	/**
+	 * Validate that a string is one from the specified set.
+	 */
+	public static class MatchesFrom implements Validator<String> {
+
+		String[] values;
+
+		public MatchesFrom(String... values) {
+			this.values = values;
+		}
+
+		@Override
+		public boolean isSpecificationValid() {
+			return values != null && values.length != 0;
+		}
+
+		@Override
+		public String getInvalidSpecificationMessage() {
+			return "The MatchesFrom expression cannot be null and should have atleast 1 value";
+		}
+
+		@Override
+		public boolean isValid(String value) {
+			if (value != null) {
+				return Arrays.stream(values).anyMatch(value::equals);
+			}
+			return false;
+		}
+
+		@Override
+		public String getTheValueMustDescription() {
+			return "is one of'" + Arrays.deepToString(values) + "'";
+		}
+	}
+
 	/**
 	 * Validate that a string starts with a specific string.
 	 */
@@ -43,13 +80,12 @@ public class StringValidator {
 			}
 			return false;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "start with '" + prefix + "'";
 		}
 	}
-	
 
 	/**
 	 * Validate that a string ends with a specific string.
@@ -85,13 +121,13 @@ public class StringValidator {
 			}
 			return false;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "end with '" + sufix + "'";
 		}
 	}
-	
+
 	/**
 	 * Validate based on a regex string.
 	 */
@@ -128,11 +164,11 @@ public class StringValidator {
 				return false;
 			}
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "match the regex expression '" + regex + "'";
 		}
 
-	}	
+	}
 }
