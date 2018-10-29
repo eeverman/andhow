@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
@@ -9,7 +11,7 @@
 		AndHow is an easy to use configuration framework with strong typing and
 		detailed validation for web apps, command line or any application environment.
 	</description>
-	
+
 	<mailingLists>
 		<mailingList>
 			<name>AndHowUser</name>
@@ -17,7 +19,7 @@
 		</mailingList>
 	</mailingLists>
 
-	<!-- Main page list.  Source code at: https://github.com/eeverman/andhow -->
+	<!-- Main page list. Source code at: https://github.com/eeverman/andhow -->
 	<url>https://sites.google.com/view/andhow/home</url>
 
 	<licenses>
@@ -121,7 +123,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -166,7 +168,7 @@
 								<requireJavaVersion>
 									<version>[1.8.0,1.9)</version>
 								</requireJavaVersion>
-							</rules>    
+							</rules>
 						</configuration>
 					</execution>
 				</executions>
@@ -213,9 +215,21 @@
 					<goals>deploy</goals>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>source-and-javadoc-jar</id>
@@ -315,13 +329,10 @@
 		</profile>
 		<profile>
 			<id>java9AndBeyond</id>
-			<!--
-			Its not possible to build a JRE 1.8 compatable jar file using JDK9
-			because of the need to use the '-add-modules' feature of JDK9.
-			Currently the use of jdk9 is blocked by the enforcer plugin, above.
-			For the 0.5.0 release, the JRE8 will be left behind and only this
-			profile will be active.
-			-->
+			<!-- Its not possible to build a JRE 1.8 compatable jar file using JDK9 
+				because of the need to use the '-add-modules' feature of JDK9. Currently 
+				the use of jdk9 is blocked by the enforcer plugin, above. For the 0.5.0 release, 
+				the JRE8 will be left behind and only this profile will be active. -->
 			<activation>
 				<jdk>[1.9,)</jdk>
 			</activation>
@@ -334,8 +345,8 @@
 							<compilerArgs>
 								<arg>--add-modules=jdk.compiler</arg>
 							</compilerArgs>
-							<!-- without forking compilation happens in the
-							same process, so no arguments are applied -->
+							<!-- without forking compilation happens in the same process, so no 
+								arguments are applied -->
 							<fork>true</fork>
 							<source>1.9</source>
 							<target>1.9</target>

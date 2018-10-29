@@ -20,7 +20,6 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Typical usage is {@code NonProductionConfig.instance()...}
  * 
  * @author ericeverman
- * @param <N>
  */
 public class NonProductionConfig {
 	
