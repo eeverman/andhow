@@ -43,21 +43,37 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
                     _aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
         }
 
+        /**
+         * The property must be greater than the reference
+         * @param reference value the property must be greater than
+         */
         public BigDecBuilder mustBeGreaterThan(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThan(reference));
             return instance;
         }
 
+        /**
+         * The property must be greater than or equal to the reference
+         * @param reference value the property must be greater than or equal to
+         */
         public BigDecBuilder mustBeGreaterThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThanOrEqualTo(reference));
             return instance;
         }
 
+        /**
+         * The property must be less than the reference
+         * @param reference value the property must be less than
+         */
         public BigDecBuilder mustBeLessThan(BigDecimal reference) {
             validation(new BigDecValidator.LessThan(reference));
             return instance;
         }
 
+        /**
+         * The property must be less than or equal to the reference
+         * @param reference value the property must be less than or equal to
+         */
         public BigDecBuilder mustBeLessThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.LessThanOrEqualTo(reference));
             return instance;
