@@ -24,7 +24,7 @@ public abstract class IntValidator implements Validator<Integer> {
 	 */
 	public static class GreaterThan extends IntValidator {
 
-		int ref;
+		private int ref;
 
 		public GreaterThan(int ref) {
 			this.ref = ref;
@@ -50,7 +50,7 @@ public abstract class IntValidator implements Validator<Integer> {
 	 */
 	public static class GreaterThanOrEqualTo extends IntValidator {
 
-		int ref;
+		private int ref;
 
 		public GreaterThanOrEqualTo(int ref) {
 			this.ref = ref;
@@ -76,7 +76,7 @@ public abstract class IntValidator implements Validator<Integer> {
 	 */
 	public static class LessThan extends IntValidator {
 
-		int ref;
+		private int ref;
 
 		public LessThan(int ref) {
 			this.ref = ref;
@@ -102,7 +102,7 @@ public abstract class IntValidator implements Validator<Integer> {
 	 */
 	public static class LessThanOrEqualTo extends IntValidator {
 
-		int ref;
+		private int ref;
 
 		public LessThanOrEqualTo(int ref) {
 			this.ref = ref;

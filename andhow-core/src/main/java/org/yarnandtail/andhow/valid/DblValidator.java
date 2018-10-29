@@ -24,7 +24,7 @@ public abstract class DblValidator implements Validator<Double> {
 	 */
 	public static class GreaterThan extends DblValidator {
 
-		double ref;
+		private double ref;
 
 		public GreaterThan(double ref) {
 			this.ref = ref;
@@ -50,7 +50,7 @@ public abstract class DblValidator implements Validator<Double> {
 	 */
 	public static class GreaterThanOrEqualTo extends DblValidator {
 
-		double ref;
+		private double ref;
 
 		public GreaterThanOrEqualTo(double ref) {
 			this.ref = ref;
@@ -76,7 +76,7 @@ public abstract class DblValidator implements Validator<Double> {
 	 */
 	public static class LessThan extends DblValidator {
 
-		double ref;
+		private double ref;
 
 		public LessThan(double ref) {
 			this.ref = ref;
@@ -102,7 +102,7 @@ public abstract class DblValidator implements Validator<Double> {
 	 */
 	public static class LessThanOrEqualTo extends DblValidator {
 
-		double ref;
+		private double ref;
 
 		public LessThanOrEqualTo(double ref) {
 			this.ref = ref;

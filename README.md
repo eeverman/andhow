@@ -1,3 +1,5 @@
+# AndHow is looking for a new Logo - [Enter your design before the end of October!](https://github.com/eeverman/andhow/issues/427)
+## [>>See the latest logo submissions <<](https://twitter.com/hashtag/andhowconfig_logo)
 [![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
