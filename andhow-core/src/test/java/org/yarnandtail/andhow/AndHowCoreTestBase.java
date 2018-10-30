@@ -66,13 +66,6 @@ public class AndHowCoreTestBase {
 	}
 	
 	@After
-	public void clearJNDIBeforeTest() {
-		if (builder != null) {
-			builder.clear();
-		}
-	}
-	
-	@After
 	public void killAndHowStateAfterTest() {
 		AndHowCoreTestUtil.destroyAndHow();
 	}
