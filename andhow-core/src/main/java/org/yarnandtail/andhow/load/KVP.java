@@ -10,11 +10,21 @@ import org.yarnandtail.andhow.util.TextUtil;
 public class KVP {
 	public static final KVP NULL_KVP = new KVP();
 	
+	/** The name. */
 	private String name;
 	private String value;
 	
+	/**
+	 * Instantiates a new kvp.
+	 */
 	private KVP() {}
 
+	/**
+	 * Instantiates a new kvp.
+	 *
+	 * @param name the name
+	 * @throws ParsingException the parsing exception
+	 */
 	public KVP(String name) throws ParsingException {
 		this.name = TextUtil.trimToNull(name);
 		
@@ -23,6 +33,13 @@ public class KVP {
 		}
 	}
 
+	/**
+	 * Instantiates a new kvp.
+	 *
+	 * @param name the name
+	 * @param value the value
+	 * @throws ParsingException the parsing exception
+	 */
 	public KVP(String name, String value) throws ParsingException {
 		this.name = TextUtil.trimToNull(name);
 		this.value = TextUtil.trimToNull(value);
@@ -32,10 +49,20 @@ public class KVP {
 		}
 	}
 
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public String getValue() {
 		return value;
 	}

@@ -36,8 +36,12 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 */
 	public static final String KVP_DELIMITER = "=";
 	
+	/** The key value pairs. */
 	private List<String> keyValuePairs = new ArrayList();
 	
+	/**
+	 * Instantiates a new key value pair loader.
+	 */
 	public KeyValuePairLoader() {
 		
 	}
@@ -77,6 +81,9 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#load(org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal, org.yarnandtail.andhow.api.ValidatedValuesWithContext)
+	 */
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 		
@@ -103,26 +110,41 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 		return new LoaderValues(this, values, problems);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getSpecificLoadDescription()
+	 */
 	@Override
 	public String getSpecificLoadDescription() {
 		return "string key value pairs";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#isTrimmingRequiredForStringValues()
+	 */
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getLoaderType()
+	 */
 	@Override
 	public String getLoaderType() {
 		return "KeyValuePair";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getLoaderDialect()
+	 */
 	@Override
 	public String getLoaderDialect() {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.ReadLoader#setUnknownPropertyAProblem(boolean)
+	 */
 	@Override
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;

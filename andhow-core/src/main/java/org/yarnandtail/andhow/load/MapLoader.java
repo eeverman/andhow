@@ -11,21 +11,39 @@ import org.yarnandtail.andhow.api.*;
  */
 public class MapLoader extends BaseLoader implements ReadLoader {
 	
+	/** The map. */
 	protected Map<?, ?> map;
 	
+	/** The unknown property A problem. */
 	protected boolean unknownPropertyAProblem = true;
 	
+	/**
+	 * Instantiates a new map loader.
+	 */
 	public MapLoader() {
 	}
 	
+	/**
+	 * Sets the map.
+	 *
+	 * @param map the map
+	 */
 	public void setMap(Map<?, ?> map) {
 		this.map = map;
 	}
 	
+	/**
+	 * Gets the map.
+	 *
+	 * @return the map
+	 */
 	public Map<?, ?> getMap() {
 		return map;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#load(org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal, org.yarnandtail.andhow.api.ValidatedValuesWithContext)
+	 */
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, 
 			ValidatedValuesWithContext existingValues) {
@@ -55,21 +73,33 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getSpecificLoadDescription()
+	 */
 	@Override
 	public String getSpecificLoadDescription() {
 		return "Map";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#isTrimmingRequiredForStringValues()
+	 */
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.ReadLoader#setUnknownPropertyAProblem(boolean)
+	 */
 	@Override
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.ReadLoader#isUnknownPropertyAProblem()
+	 */
 	@Override
 	public boolean isUnknownPropertyAProblem() {
 		return unknownPropertyAProblem;

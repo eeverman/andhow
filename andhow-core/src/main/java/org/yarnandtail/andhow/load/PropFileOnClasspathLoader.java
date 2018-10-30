@@ -36,13 +36,25 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  */
 public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 
+	/** The specific load description. */
 	String specificLoadDescription = null;
 
+	/**
+	 * Instantiates a new prop file on classpath loader.
+	 */
 	public PropFileOnClasspathLoader() {
 		/* empty for easy construction */ }
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.yarnandtail.andhow.api.Loader#load(org.yarnandtail.andhow.internal.
+	 * StaticPropertyConfigurationInternal,
+	 * org.yarnandtail.andhow.api.ValidatedValuesWithContext)
+	 */
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
+			ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -54,7 +66,7 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 			return vals;
 
 		} else {
-			//The classpathProp is not specified, so just ignore
+			// The classpathProp is not specified, so just ignore
 
 			specificLoadDescription = "unpsecified file on classpath";
 			return new LoaderValues(this);
@@ -80,9 +92,10 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 
 			} else {
 
-				//If the file is not there, the inS is null (no exception thrown)
+				// If the file is not there, the inS is null (no exception thrown)
 				if (isMissingFileAProblem()) {
-					return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file at classpath:" + path));
+					return new LoaderValues(this,
+							new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file at classpath:" + path));
 				} else {
 					return new LoaderValues(this);
 				}
@@ -95,6 +108,11 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.yarnandtail.andhow.api.Loader#getSpecificLoadDescription()
+	 */
 	@Override
 	public String getSpecificLoadDescription() {
 

@@ -10,11 +10,10 @@ import org.yarnandtail.andhow.util.TextUtil;
  * Reads from a Java .property file from the filesystem, following standard java
  * conventions for the structure of those file.
  *
- * This loader finds the properties file to load properties from
- * based on a file path property passed in its constructor. If this loader is
- * to read that property, an earlier loader must have loaded a value for it.
- * It is not considered an error if the file path property has not been assigned
- * a value.
+ * This loader finds the properties file to load properties from based on a file
+ * path property passed in its constructor. If this loader is to read that
+ * property, an earlier loader must have loaded a value for it. It is not
+ * considered an error if the file path property has not been assigned a value.
  *
  * This loader trims incoming values for String type properties using the
  * Trimmer of the associated Property.
@@ -26,46 +25,69 @@ import org.yarnandtail.andhow.util.TextUtil;
  * to find unrecognized properties in a properties file and will throw a
  * RuntimeException if that happens.
  *
- * Property File Loaders are unable to detect duplicate properties (i.e., the same
- * key value appearing more than once in a prop file). Instead of aborting the
- * application startup with an error, only the last of the property values in
- * the file is assigned. This is a basic limitation of the JVM Properties class,
- * which silently ignores multiple entries, each value overwriting the last.
+ * Property File Loaders are unable to detect duplicate properties (i.e., the
+ * same key value appearing more than once in a prop file). Instead of aborting
+ * the application startup with an error, only the last of the property values
+ * in the file is assigned. This is a basic limitation of the JVM Properties
+ * class, which silently ignores multiple entries, each value overwriting the
+ * last.
  *
  * @author eeverman
  */
 public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
-	
+
+	/** The specific load description. */
 	String specificLoadDescription = null;
-	
+
+	/**
+	 * Instantiates a new prop file on filesystem loader.
+	 */
 	public PropFileOnFilesystemLoader() {
 		/* empty for easy construction */ }
-	
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.yarnandtail.andhow.api.Loader#load(org.yarnandtail.andhow.internal.
+	 * StaticPropertyConfigurationInternal,
+	 * org.yarnandtail.andhow.api.ValidatedValuesWithContext)
+	 */
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
+			ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
 		if (path != null) {
 
-			specificLoadDescription = TextUtil.format("file on the file system at path : {} ({})",
-			path, getAbsPath(path));
+			specificLoadDescription = TextUtil.format("file on the file system at path : {} ({})", path,
+					getAbsPath(path));
 
 			LoaderValues vals = load(appConfigDef, existingValues, path);
 			return vals;
 
 		} else {
-			//The path is not specified, so just ignore
+			// The path is not specified, so just ignore
 
 			specificLoadDescription = "unpsecified file in the filesystem";
 			return new LoaderValues(this);
 		}
 	}
-	
+
+	/**
+	 * Load.
+	 *
+	 * @param appConfigDef
+	 *            the app config def
+	 * @param existingValues
+	 *            the existing values
+	 * @param path
+	 *            the path
+	 * @return the loader values
+	 */
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues, String path) {
-		
+
 		if (path != null) {
 
 			try {
@@ -78,56 +100,65 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 				} catch (FileNotFoundException e) {
 
 					if (isMissingFileAProblem()) {
-						return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this, "Expected file on filesystem:" + path));
+						return new LoaderValues(this, new LoaderProblem.SourceNotFoundLoaderProblem(this,
+								"Expected file on filesystem:" + path));
 					} else {
 						return new LoaderValues(this);
 					}
 				}
 
 			} catch (LoaderException e) {
-				return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, e.getCause(), "filesystem:" + path));
+				return new LoaderValues(this,
+						new LoaderProblem.IOLoaderProblem(this, e.getCause(), "filesystem:" + path));
 			} catch (IOException ioe) {
 				return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, ioe, "filesystem:" + path));
 			}
-			
+
 		} else {
-			//The filepath to loadJavaPropsToAndhowProps from is not specified, so just ignore it
+			// The filepath to loadJavaPropsToAndhowProps from is not specified, so just
+			// ignore it
 			return new LoaderValues(this);
 		}
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.yarnandtail.andhow.api.Loader#getSpecificLoadDescription()
+	 */
 	@Override
 	public String getSpecificLoadDescription() {
-		
+
 		if (specificLoadDescription != null) {
 			return specificLoadDescription;
 		} else {
-			
+
 			String path = this.getEffectivePath(null);
 			if (path != null) {
-				return TextUtil.format("file on the file system at path : {} ({})",
-					path, getAbsPath(path)) ;
+				return TextUtil.format("file on the file system at path : {} ({})", path, getAbsPath(path));
 			} else {
 				return "unconfigured classpath";
 			}
 		}
 	}
-	
+
 	/**
-	 * Completely safe way to convert a file system path to an absolute path.
-	 * never errors or returns null.
+	 * Completely safe way to convert a file system path to an absolute path. never
+	 * errors or returns null.
+	 *
 	 * @param anything
-	 * @return 
+	 *            the anything
+	 * @return the abs path
 	 */
 	private String getAbsPath(String anything) {
-		
+
 		try {
 			File f = new File(anything);
 			return f.getAbsolutePath();
 		} catch (Exception e) {
 			return "[Unknown absolute path]";
 		}
-		
+
 	}
-	
+
 }

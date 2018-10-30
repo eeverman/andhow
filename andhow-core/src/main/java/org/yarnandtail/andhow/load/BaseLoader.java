@@ -17,16 +17,25 @@ import org.yarnandtail.andhow.util.TextUtil;
 public abstract class BaseLoader implements Loader {
 	
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getClassConfig()
+	 */
 	@Override
 	public Class<?> getClassConfig() {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getInstanceConfig()
+	 */
 	@Override
 	public List<Property> getInstanceConfig() {
 		return Collections.emptyList();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getConfigSamplePrinter()
+	 */
 	@Override
 	public SamplePrinter getConfigSamplePrinter() {
 		return null;	//Each implementation needs to provide its own.
@@ -140,6 +149,13 @@ public abstract class BaseLoader implements Loader {
 		}
 	}
 	
+	/**
+	 * Find duplicate property.
+	 *
+	 * @param current the current
+	 * @param values the values
+	 * @return the validated value
+	 */
 	protected ValidatedValue findDuplicateProperty(ValidatedValue current, List<ValidatedValue> values) {
 		for (ValidatedValue ref : values) {
 			if (current.getProperty().equals(ref.getProperty())) {
@@ -149,6 +165,16 @@ public abstract class BaseLoader implements Loader {
 		return null;
 	}
 	
+	/**
+	 * Creates the value.
+	 *
+	 * @param <T> the generic type
+	 * @param appConfigDef the app config def
+	 * @param prop the prop
+	 * @param untrimmedString the untrimmed string
+	 * @return the validated value
+	 * @throws ParsingException the parsing exception
+	 */
 	protected <T> ValidatedValue createValue(StaticPropertyConfigurationInternal appConfigDef, 
 			Property<T> prop, String untrimmedString) throws ParsingException {
 		
@@ -174,6 +200,9 @@ public abstract class BaseLoader implements Loader {
 		return new ValidatedValue(prop, value);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#releaseResources()
+	 */
 	@Override
 	public void releaseResources() {
 		//Nothing to do by default

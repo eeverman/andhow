@@ -24,12 +24,27 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	 */
 	protected String pathStr;
 
+	/** The missing file A problem. */
 	protected boolean missingFileAProblem = true;
 	
+	/** The unknown property A problem. */
 	protected boolean unknownPropertyAProblem = true;
 	
+	/**
+	 * Instantiates a new prop file base loader.
+	 */
 	public PropFileBaseLoader() { /* empty for easy construction */ }
 	
+	/**
+	 * Load input stream to props.
+	 *
+	 * @param inputStream the input stream
+	 * @param fromPath the from path
+	 * @param appConfigDef the app config def
+	 * @param existingValues the existing values
+	 * @return the loader values
+	 * @throws LoaderException the loader exception
+	 */
 	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
 			String fromPath, StaticPropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues) throws LoaderException {
@@ -86,6 +101,9 @@ public abstract class PropFileBaseLoader extends BaseLoader
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.load.BaseLoader#getInstanceConfig()
+	 */
 	@Override
 	public List<Property> getInstanceConfig() {
 		if (pathProp != null) {
@@ -97,46 +115,73 @@ public abstract class PropFileBaseLoader extends BaseLoader
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#isTrimmingRequiredForStringValues()
+	 */
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.load.BaseLoader#getConfigSamplePrinter()
+	 */
 	@Override
 	public SamplePrinter getConfigSamplePrinter() {
 		return new PropFileLoaderSamplePrinter();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getLoaderType()
+	 */
 	@Override
 	public String getLoaderType() {
 		return "PropertyFile";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.Loader#getLoaderDialect()
+	 */
 	@Override
 	public String getLoaderDialect() {
 		return "KeyValuePair";
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.ReadLoader#setUnknownPropertyAProblem(boolean)
+	 */
 	@Override
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.ReadLoader#isUnknownPropertyAProblem()
+	 */
 	@Override
 	public boolean isUnknownPropertyAProblem() {
 		return unknownPropertyAProblem;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.LocalFileLoader#setMissingFileAProblem(boolean)
+	 */
 	@Override
 	public void setMissingFileAProblem(boolean isAProblem) {
 		missingFileAProblem = isAProblem;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.LocalFileLoader#isMissingFileAProblem()
+	 */
 	@Override
 	public boolean isMissingFileAProblem() {
 		return missingFileAProblem;
 	}	
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.LocalFileLoader#setFilePath(java.lang.String)
+	 */
 	@Override
 	public void setFilePath(String path) {
 		if (path != null && pathProp != null) {
@@ -146,6 +191,9 @@ public abstract class PropFileBaseLoader extends BaseLoader
 		pathStr = path;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.yarnandtail.andhow.api.LocalFileLoader#setFilePath(org.yarnandtail.andhow.api.Property)
+	 */
 	@Override
 	public void setFilePath(Property<String> path) {
 		if (path != null && pathStr != null) {
