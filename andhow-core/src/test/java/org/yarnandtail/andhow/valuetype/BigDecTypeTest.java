@@ -48,7 +48,7 @@ public class BigDecTypeTest {
     public void testCast() {
         Object o = new BigDecimal("123.456");
         assertEquals(new BigDecimal("123.456"), o);
-        assertTrue(type.cast(o) instanceof BigDecimal);
+        assertNotNull(type.cast(o));
     }
 
     private void expectParsingException() {
