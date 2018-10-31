@@ -20,6 +20,9 @@ public class BigDecType extends BaseValueType<BigDecimal> {
         super(BigDecimal.class);
     }
 
+    /**
+     * Get an instance of BigDecType
+     */
     public static BigDecType instance() {
         return INSTANCE;
     }

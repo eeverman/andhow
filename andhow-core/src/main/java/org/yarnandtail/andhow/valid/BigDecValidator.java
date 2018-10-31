@@ -4,6 +4,11 @@ import org.yarnandtail.andhow.api.Validator;
 
 import java.math.BigDecimal;
 
+/**
+ * Abstract class implementing Validator interface for BigDec.
+ * Extended by nested static classes. The nested classes implement
+ * constraints that may be used when building the property.
+ */
 public abstract class BigDecValidator  implements Validator<BigDecimal> {
 
     @Override

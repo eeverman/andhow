@@ -18,6 +18,18 @@ import java.util.List;
  */
 public class BigDecProp extends PropertyBase<BigDecimal> {
 
+    /**
+     * Constructor for creating a BigDecProp
+     * @param defaultValue default value
+     * @param required make the property required or not
+     * @param shortDesc short description of the property
+     * @param validators list of validators for the property
+     * @param aliases aliases of the property
+     * @param paramType property type
+     * @param valueType property value type
+     * @param trimmer trimmer associated with the property
+     * @param helpText help text of the property
+     */
     public BigDecProp(BigDecimal defaultValue, boolean required, String shortDesc, List<Validator<BigDecimal>> validators,
                       List<Name> aliases, PropertyType paramType, ValueType<BigDecimal> valueType, Trimmer trimmer,
                       String helpText) {
@@ -25,10 +37,16 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
     }
 
+    /**
+     * Return an instance of BigDecBuilder
+     */
     public static BigDecBuilder builder() {
         return new BigDecBuilder();
     }
 
+    /**
+     * Build a BigDecProp
+     */
     public static class BigDecBuilder extends PropertyBuilderBase<BigDecBuilder, BigDecProp, BigDecimal> {
 
         public BigDecBuilder() {
