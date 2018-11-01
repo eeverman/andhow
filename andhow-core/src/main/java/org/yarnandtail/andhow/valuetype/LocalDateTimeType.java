@@ -24,10 +24,6 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 		super(LocalDateTime.class);
 	}
 	
-	public static LocalDateTimeType get() {
-		return instance;
-	}
-	
 	public static LocalDateTimeType instance() {
 		return instance;
 	}
