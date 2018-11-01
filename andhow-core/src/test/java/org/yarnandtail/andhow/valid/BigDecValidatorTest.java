@@ -14,12 +14,10 @@ public class BigDecValidatorTest {
     private static final BigDecimal FOUR = new BigDecimal("4.5678");
     private static final BigDecimal FIVE = new BigDecimal("5.12345");
     private static final BigDecimal SIX = new BigDecimal("6.452134563456");
-    private static final BigDecimal NEGATIVE_ONE_HUNDRED = new BigDecimal("100.34532").negate();
     private static final BigDecimal NEGATIVE_NINETY_NINE = new BigDecimal("99.45623").negate();
-    private static final BigDecimal NEGATIVE_NINETY_EIGHT = new BigDecimal("98.1234").negate();
 
     @Test
-    public void testGreaterThanIsSpecificationValid() {
+    public void testGreaterThan_IsSpecificationValid() {
         BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
         assertTrue(instance.isSpecificationValid());
 
@@ -31,26 +29,22 @@ public class BigDecValidatorTest {
     }
 
     @Test
-    public void testGreaterThanIsValid() {
+    public void testGreaterThan_GetTheValueMustDescription() {
+        BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
+        assertEquals("be greater than " + FIVE, instance.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testGreaterThan_IsValid() {
         BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
         assertFalse(instance.isValid(FOUR));
         assertFalse(instance.isValid(FIVE));
         assertTrue(instance.isValid(SIX));
         assertFalse(instance.isValid(null));
-
-        instance = new BigDecValidator.GreaterThan(BigDecimal.ZERO);
-        assertFalse(instance.isValid(BigDecimal.ONE.negate()));
-        assertFalse(instance.isValid(BigDecimal.ZERO));
-        assertTrue(instance.isValid(BigDecimal.ONE));
-
-        instance = new BigDecValidator.GreaterThan(NEGATIVE_NINETY_NINE);
-        assertFalse(instance.isValid(NEGATIVE_ONE_HUNDRED));
-        assertFalse(instance.isValid(NEGATIVE_NINETY_NINE));
-        assertTrue(instance.isValid(NEGATIVE_NINETY_EIGHT));
     }
 
     @Test
-    public void testGreaterThanOrEqualToIsSpecificationValid() {
+    public void testGreaterThanOrEqualTo_IsSpecificationValid() {
         BigDecValidator.GreaterThanOrEqualTo instance = new BigDecValidator.GreaterThanOrEqualTo(FIVE);
         assertTrue(instance.isSpecificationValid());
 
@@ -62,28 +56,23 @@ public class BigDecValidatorTest {
     }
 
     @Test
-    public void testGreaterThanOrEqualToIsValid() {
+    public void testGreaterThanOrEqualTo_GetTheValueMustDescription() {
+        BigDecValidator.GreaterThanOrEqualTo instance = new BigDecValidator.GreaterThanOrEqualTo(FIVE);
+        assertEquals("be greater than or equal to " + FIVE, instance.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testGreaterThanOrEqualTo_IsValid() {
         BigDecValidator.GreaterThanOrEqualTo instance = new BigDecValidator.GreaterThanOrEqualTo(FIVE);
         assertFalse(instance.isValid(FOUR));
         assertTrue(instance.isValid(FIVE));
         assertTrue(instance.isValid(SIX));
         assertFalse(instance.isValid(null));
-
-        instance = new BigDecValidator.GreaterThanOrEqualTo(BigDecimal.ZERO);
-        assertFalse(instance.isValid(BigDecimal.ONE.negate()));
-        assertTrue(instance.isValid(BigDecimal.ZERO));
-        assertTrue(instance.isValid(BigDecimal.ONE));
-
-
-        instance = new BigDecValidator.GreaterThanOrEqualTo(NEGATIVE_NINETY_NINE);
-        assertFalse(instance.isValid(NEGATIVE_ONE_HUNDRED));
-        assertTrue(instance.isValid(NEGATIVE_NINETY_NINE));
-        assertTrue(instance.isValid(NEGATIVE_NINETY_EIGHT));
     }
 
 
     @Test
-    public void testLessThanIsSpecificationValid() {
+    public void testLessThan_IsSpecificationValid() {
         BigDecValidator.LessThan instance = new BigDecValidator.LessThan(FIVE);
         assertTrue(instance.isSpecificationValid());
 
@@ -95,26 +84,22 @@ public class BigDecValidatorTest {
     }
 
     @Test
-    public void testLessThanIsValid() {
+    public void testLessThan_GetTheValueMustDescription() {
+        BigDecValidator.LessThan instance = new BigDecValidator.LessThan(FIVE);
+        assertEquals("be less than " + FIVE, instance.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testLessThan_IsValid() {
         BigDecValidator.LessThan instance = new BigDecValidator.LessThan(FIVE);
         assertTrue(instance.isValid(FOUR));
         assertFalse(instance.isValid(FIVE));
         assertFalse(instance.isValid(SIX));
         assertFalse(instance.isValid(null));
-
-        instance = new BigDecValidator.LessThan(BigDecimal.ZERO);
-        assertTrue(instance.isValid(BigDecimal.ONE.negate()));
-        assertFalse(instance.isValid(BigDecimal.ZERO));
-        assertFalse(instance.isValid(BigDecimal.ONE));
-
-        instance = new BigDecValidator.LessThan(NEGATIVE_NINETY_NINE);
-        assertTrue(instance.isValid(NEGATIVE_ONE_HUNDRED));
-        assertFalse(instance.isValid(NEGATIVE_NINETY_NINE));
-        assertFalse(instance.isValid(NEGATIVE_NINETY_EIGHT));
     }
 
     @Test
-    public void testLessThanOrEqualsToIsSpecificationValid() {
+    public void testLessThanOrEqualsTo_IsSpecificationValid() {
         BigDecValidator.LessThanOrEqualTo instance = new BigDecValidator.LessThanOrEqualTo(FIVE);
         assertTrue(instance.isSpecificationValid());
 
@@ -126,45 +111,40 @@ public class BigDecValidatorTest {
     }
 
     @Test
-    public void testLessThanOrEqualToIsValid() {
+    public void testLessThanOrEqualTo_GetTheValueMustDescription() {
+        BigDecValidator.LessThanOrEqualTo instance = new BigDecValidator.LessThanOrEqualTo(FIVE);
+        assertEquals("be less than or equal to " + FIVE, instance.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testLessThanOrEqualTo_IsValid() {
         BigDecValidator.LessThanOrEqualTo instance = new BigDecValidator.LessThanOrEqualTo(FIVE);
         assertTrue(instance.isValid(FOUR));
         assertTrue(instance.isValid(FIVE));
         assertFalse(instance.isValid(SIX));
         assertFalse(instance.isValid(null));
-
-        instance = new BigDecValidator.LessThanOrEqualTo(BigDecimal.ZERO);
-        assertTrue(instance.isValid(BigDecimal.ONE.negate()));
-        assertTrue(instance.isValid(BigDecimal.ZERO));
-        assertFalse(instance.isValid(BigDecimal.ONE));
-
-        instance = new BigDecValidator.LessThanOrEqualTo(NEGATIVE_NINETY_NINE);
-        assertTrue(instance.isValid(NEGATIVE_ONE_HUNDRED));
-        assertTrue(instance.isValid(NEGATIVE_NINETY_NINE));
-        assertFalse(instance.isValid(NEGATIVE_NINETY_EIGHT));
-
     }
 
     @Test
-    public void testGreaterThanInvalidSpecificationMessage() {
+    public void testGreaterThan_InvalidSpecificationMessage() {
         BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
         assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
-    public void testGreaterThanOrEqualToInvalidSpecificationMessage() {
+    public void testGreaterThanOrEqualTo_InvalidSpecificationMessage() {
         BigDecValidator.GreaterThanOrEqualTo instance = new BigDecValidator.GreaterThanOrEqualTo(FIVE);
         assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
-    public void testLessThanInvalidSpecificationMessage() {
+    public void testLessThan_InvalidSpecificationMessage() {
         BigDecValidator.LessThan instance = new BigDecValidator.LessThan(FIVE);
         assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
-    public void testLessThanOrEqualToInvalidSpecificationMessage() {
+    public void testLessThanOrEqualTo_InvalidSpecificationMessage() {
         BigDecValidator.LessThanOrEqualTo instance = new BigDecValidator.LessThanOrEqualTo(FIVE);
         assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
