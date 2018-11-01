@@ -19,7 +19,7 @@ import java.util.List;
 public class BigDecProp extends PropertyBase<BigDecimal> {
 
     /**
-     * Constructor for creating a BigDecProp
+     * Construct an instance of BigDecProp
      * @param defaultValue default value
      * @param required make the property required or not
      * @param shortDesc short description of the property
@@ -49,6 +49,9 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
      */
     public static class BigDecBuilder extends PropertyBuilderBase<BigDecBuilder, BigDecProp, BigDecimal> {
 
+        /**
+         * Construct an instance of BigDecBuilder
+         */
         public BigDecBuilder() {
             instance = this;
             valueType(BigDecType.instance());
@@ -64,6 +67,7 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         /**
          * The property must be greater than the reference
          * @param reference value the property must be greater than
+         * @return the builder instance
          */
         public BigDecBuilder mustBeGreaterThan(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThan(reference));
@@ -73,6 +77,7 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         /**
          * The property must be greater than or equal to the reference
          * @param reference value the property must be greater than or equal to
+         * @return the builder instance
          */
         public BigDecBuilder mustBeGreaterThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThanOrEqualTo(reference));
@@ -82,6 +87,7 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         /**
          * The property must be less than the reference
          * @param reference value the property must be less than
+         * @return the builder instance
          */
         public BigDecBuilder mustBeLessThan(BigDecimal reference) {
             validation(new BigDecValidator.LessThan(reference));
@@ -91,6 +97,7 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         /**
          * The property must be less than or equal to the reference
          * @param reference value the property must be less than or equal to
+         * @return the builder instance
          */
         public BigDecBuilder mustBeLessThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.LessThanOrEqualTo(reference));
