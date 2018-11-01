@@ -21,12 +21,18 @@ public class BigDecType extends BaseValueType<BigDecimal> {
     }
 
     /**
-     * Get an instance of BigDecType
+     * Construct an instance of BigDecType
      */
     public static BigDecType instance() {
         return INSTANCE;
     }
 
+
+    /**
+     * {@inheritDoc}
+     * For more information on how the sourceValue is parsed, see
+     * <a href="https://docs.oracle.com/javase/8/docs/api/java/math/BigDecimal.html#BigDecimal-java.lang.String-">BigDecimal String constructor</a>.
+     */
     @Override
     public BigDecimal parse(String sourceValue) throws ParsingException {
         if (sourceValue == null) {
