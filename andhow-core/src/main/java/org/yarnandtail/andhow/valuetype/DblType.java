@@ -17,11 +17,20 @@ public class DblType extends BaseValueType<Double> {
 	private DblType() {
 		super(Double.class);
 	}
-	
+
+    /**
+     * @deprecated since 0.4.1. Use {@link #instance()} instead
+     *
+     * @return An instance of the {@link #DblType()}
+     */
+	@Deprecated()
 	public static DblType get() {
-		return instance;
+		return instance();
 	}
-	
+
+    /**
+     * @return An instance of the {@link #DblType()}
+     */
 	public static DblType instance() {
 		return instance;
 	}

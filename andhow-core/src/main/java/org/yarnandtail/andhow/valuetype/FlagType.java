@@ -17,11 +17,20 @@ public class FlagType extends BaseValueType<Boolean> {
 	private FlagType() {
 		super(Boolean.class);
 	}
-	
+
+    /**
+     * @deprecated since 0.4.1. Use {@link #instance()} instead
+     *
+     * @return An instance of the {@link #FlagType()}
+     */
+	@Deprecated()
 	public static FlagType get() {
-		return instance;
+		return instance();
 	}
-	
+
+    /**
+     * @return An instance of the {@link #FlagType()}
+     */
 	public static FlagType instance() {
 		return instance;
 	}
