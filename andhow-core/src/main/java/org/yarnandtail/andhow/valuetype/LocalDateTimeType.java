@@ -23,11 +23,20 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 	private LocalDateTimeType() {
 		super(LocalDateTime.class);
 	}
-	
+
+	/**
+	 * @deprecated since 0.4.1. Use {@link #instance()} instead
+	 *
+	 * @return An instance of the {@link #LocalDateTimeType()}
+	 */
+	@Deprecated
 	public static LocalDateTimeType get() {
-		return instance;
+		return instance();
 	}
-	
+
+	/**
+	 * @return An instance of the {@link #LocalDateTimeType()}
+	 */
 	public static LocalDateTimeType instance() {
 		return instance;
 	}
@@ -45,9 +54,9 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 	 * <li><code>2011-12-03T00:15:30</code> - The first hour is hour zero
 	 * <li><code>2011-12-03T23:00:00</code> - The last hour is hour 23
 	 * </ul>
-	 * @param sourceValue
-	 * @return
-	 * @throws ParsingException 
+	 * @param sourceValue The @{@link String} value to be parsed into a @{@link LocalDateTime}
+	 * @return A valid @{@link LocalDateTime}
+	 * @throws ParsingException If the @{@link String} can't be parsed into a @{@link LocalDateTime}
 	 */
 	@Override
 	public LocalDateTime parse(String sourceValue) throws ParsingException {

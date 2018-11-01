@@ -17,7 +17,10 @@ public class StrType extends BaseValueType<String> {
 	private StrType() {
 		super(String.class);
 	}
-	
+
+	/**
+	 * @return An instance of the {@link #StrType()}
+	 */
 	public static StrType instance() {
 		return instance;
 	}
