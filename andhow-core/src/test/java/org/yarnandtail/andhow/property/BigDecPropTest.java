@@ -13,8 +13,6 @@ import javax.naming.NamingException;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Tests BigDecProp instances as they would be used in an app.
@@ -25,8 +23,10 @@ import java.util.List;
  */
 public class BigDecPropTest extends PropertyTestBase {
     private static final BigDecimal VALUE_1 = new BigDecimal("10.789");
-    private static final BigDecimal VALUE_2 = new BigDecimal("101.123");
-    private static final BigDecimal VALUE_3 = new BigDecimal("100.123456");
+    private static final BigDecimal GREATER_THAN_VALUE = new BigDecimal("101.123E+5");
+    private static final BigDecimal GREATER_THAN_OR_EQUAL_VALUE = new BigDecimal("100.123456");
+    private static final BigDecimal LESS_THAN_VALUE = GREATER_THAN_VALUE.negate();
+    private static final BigDecimal LESS_THAN_VALUE_OR_EQUAL_VALUE = GREATER_THAN_OR_EQUAL_VALUE;
     private static final BigDecimal DEFAULT_VALUE = new BigDecimal("456.456");
     private static final BigDecimal JNDI_VALUE = new BigDecimal("777.777");
     private static final BigDecimal SYS_PROP_VALUE = new BigDecimal("-523.789");
@@ -39,10 +39,10 @@ public class BigDecPropTest extends PropertyTestBase {
         this.buildConfig(this, "_happyPath", BigDecGroup.class);
         assertEquals(VALUE_1, BigDecGroup.NOT_NULL.getValue());
         assertEquals(DESCRIPTION, BigDecGroup.NOT_NULL.getDescription());
-        assertEquals(VALUE_2, BigDecGroup.GREATER_THAN.getValue());
-        assertEquals(VALUE_3, BigDecGroup.GREATER_THAN_OR_EQUAL.getValue());
-        assertEquals(VALUE_2.negate(), BigDecGroup.LESS_THAN.getValue());
-        assertEquals(VALUE_3, BigDecGroup.LESS_THAN_OR_EQUAL.getValue());
+        assertEquals(GREATER_THAN_VALUE, BigDecGroup.GREATER_THAN.getValue());
+        assertEquals(GREATER_THAN_OR_EQUAL_VALUE, BigDecGroup.GREATER_THAN_OR_EQUAL.getValue());
+        assertEquals(LESS_THAN_VALUE, BigDecGroup.LESS_THAN.getValue());
+        assertEquals(LESS_THAN_VALUE_OR_EQUAL_VALUE, BigDecGroup.LESS_THAN_OR_EQUAL.getValue());
         assertEquals(new BigDecimal("789.789"), BigDecGroup.DEFAULT.getValue());
         assertNull(BigDecGroup.NULL.getValue());
     }
@@ -56,7 +56,7 @@ public class BigDecPropTest extends PropertyTestBase {
     @Test
     public void happyPathTest_Alias() {
         this.buildConfig(this, "_default", BigDecGroup.class);
-        assertEquals(VALUE_2, BigDecGroup.GREATER_THAN.getValue());
+        assertEquals(GREATER_THAN_VALUE, BigDecGroup.GREATER_THAN.getValue());
         assertEquals("alias", BigDecGroup.GREATER_THAN.getRequestedAliases().get(0).getActualName());
     }
 
@@ -83,16 +83,10 @@ public class BigDecPropTest extends PropertyTestBase {
             fail("Should throw exception!");
         } catch(AppFatalException e) {
             ProblemList<Problem> problems = e.getProblems();
-            List<String> descriptions = new ArrayList<>();
             for (Problem problem : problems) {
                 assertTrue(problem instanceof InvalidValueProblem);
-                descriptions.add(problem.getProblemDescription());
             }
             assertEquals(4, problems.size());
-            assertEquals("The value '" + VALUE_2.negate() + "' must be greater than " + VALUE_3, descriptions.get(0));
-            assertEquals("The value '" + VALUE_3.negate() + "' must be greater than or equal to " + VALUE_3, descriptions.get(1));
-            assertEquals("The value '" + VALUE_2 + "' must be less than " + VALUE_3, descriptions.get(2));
-            assertEquals("The value '" + VALUE_3.add(BigDecimal.ONE) + "' must be less than or equal to " + VALUE_3, descriptions.get(3));
         }
     }
 
@@ -106,17 +100,16 @@ public class BigDecPropTest extends PropertyTestBase {
             assertEquals(1, problems.size());
             Problem problem = problems.get(0);
             assertTrue(problem instanceof NonNullPropertyProblem);
-            assertEquals("This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value", problem.getProblemDescription());
         }
     }
 
     public interface BigDecGroup {
         BigDecProp NOT_NULL = BigDecProp.builder().mustBeNonNull().desc(DESCRIPTION).build();
         BigDecProp NULL = BigDecProp.builder().build();
-        BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(VALUE_3).aliasInAndOut("alias").build();
-        BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(VALUE_3).build();
-        BigDecProp LESS_THAN = BigDecProp.builder().mustBeLessThan(VALUE_3).build();
-        BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().mustBeLessThanOrEqualTo(VALUE_3).build();
+        BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(GREATER_THAN_OR_EQUAL_VALUE).aliasInAndOut("alias").build();
+        BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(GREATER_THAN_OR_EQUAL_VALUE).build();
+        BigDecProp LESS_THAN = BigDecProp.builder().mustBeLessThan(GREATER_THAN_OR_EQUAL_VALUE).build();
+        BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().mustBeLessThanOrEqualTo(LESS_THAN_VALUE_OR_EQUAL_VALUE).build();
         BigDecProp DEFAULT = BigDecProp.builder().defaultValue(DEFAULT_VALUE).build();
     }
 }
