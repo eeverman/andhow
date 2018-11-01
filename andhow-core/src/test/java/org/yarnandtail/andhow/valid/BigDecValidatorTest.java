@@ -25,6 +25,9 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.GreaterThan(new BigDecimal("-12.8765"));
         assertTrue(instance.isSpecificationValid());
+
+        instance = new BigDecValidator.GreaterThan(null);
+        assertFalse(instance.isSpecificationValid());
     }
 
     @Test
@@ -53,6 +56,9 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.GreaterThanOrEqualTo(new BigDecimal("-999999999"));
         assertTrue(instance.isSpecificationValid());
+
+        instance = new BigDecValidator.GreaterThanOrEqualTo(null);
+        assertFalse(instance.isSpecificationValid());
     }
 
     @Test
@@ -83,6 +89,9 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.LessThan(NEGATIVE_NINETY_NINE);
         assertTrue(instance.isSpecificationValid());
+
+        instance = new BigDecValidator.LessThan(null);
+        assertFalse(instance.isSpecificationValid());
     }
 
     @Test
@@ -111,6 +120,9 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.LessThanOrEqualTo(NEGATIVE_NINETY_NINE);
         assertTrue(instance.isSpecificationValid());
+
+        instance = new BigDecValidator.LessThanOrEqualTo(null);
+        assertFalse(instance.isSpecificationValid());
     }
 
     @Test
