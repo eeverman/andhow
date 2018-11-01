@@ -9,11 +9,21 @@ import java.math.BigDecimal;
  * Extended by nested static classes. The nested classes implement
  * constraints that may be used when building the property.
  */
-public abstract class BigDecValidator  implements Validator<BigDecimal> {
+public abstract class BigDecValidator implements Validator<BigDecimal> {
+
+    final BigDecimal ref;
+
+    /**
+     * Base constructor of BigDecValidator constraints
+     * @param ref to be compared to property value
+     */
+    BigDecValidator(BigDecimal ref) {
+        this.ref = ref;
+    }
 
     @Override
     public boolean isSpecificationValid() {
-        return true;
+        return ref != null;
     }
 
     @Override
@@ -25,11 +35,12 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      * Validate that a BigDecimal is greater than a specified reference.
      */
     public static class GreaterThan extends BigDecValidator {
-
-        private final BigDecimal ref;
-
+        /**
+         * Construct a GreaterThan property constraint
+         * @param ref to be compared to property value
+         */
         public GreaterThan(BigDecimal ref) {
-            this.ref = ref;
+            super(ref);
         }
 
         @Override
@@ -47,11 +58,12 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      * Validate that a BigDecimal is greater than or equal to a specified reference.
      */
     public static class GreaterThanOrEqualTo extends BigDecValidator {
-
-        private final BigDecimal ref;
-
+        /**
+         * Construct a GreaterThanOrEqualTo property constraint
+         * @param ref to be compared to property value
+         */
         public GreaterThanOrEqualTo(BigDecimal ref) {
-            this.ref = ref;
+            super(ref);
         }
 
         @Override
@@ -69,11 +81,12 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      * Validate that a BigDecimal is less than a specified reference.
      */
     public static class LessThan extends BigDecValidator {
-
-        private final BigDecimal ref;
-
+        /**
+         * Construct a LessThan property constraint
+         * @param ref to be compared to property value
+         */
         public LessThan(BigDecimal ref) {
-            this.ref = ref;
+            super(ref);
         }
 
         @Override
@@ -91,11 +104,12 @@ public abstract class BigDecValidator  implements Validator<BigDecimal> {
      * Validate that a BigDecimal is less than or equal to a specified reference.
      */
     public static class LessThanOrEqualTo extends BigDecValidator {
-
-        private final BigDecimal ref;
-
+        /**
+         * Construct a LessThanOrEqualTo property constraint
+         * @param ref to be compared to property value
+         */
         public LessThanOrEqualTo(BigDecimal ref) {
-            this.ref = ref;
+            super(ref);
         }
 
         @Override
