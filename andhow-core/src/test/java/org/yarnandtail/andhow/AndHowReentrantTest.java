@@ -26,7 +26,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 				.group(AndHowReentrantTest_BadSample_1.class);
 		
 		try {
-			AndHow.instance(config);
+			AndHow.build(config);
 			fail("This should have blown up");
 		} catch (Throwable t) {
 			assertTrue(t.getCause() instanceof AppFatalException);
@@ -42,7 +42,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 				.group(AndHowReentrantTest_OkSample_1.class);
 		
 
-			AndHow.instance(config);
+			AndHow.build(config);
 
 			assertEquals("onetwo", AndHowReentrantTest_OkSample_1.getSomeString());
 			assertEquals("one", AndHowReentrantTest_OkSample_1.STR_1.getValue());
@@ -56,7 +56,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 				.group(AndHowReentrantTest_BadSample_2.class);
 		
 		try {
-			AndHow.instance(config);
+			AndHow.build(config);
 			fail("This should have blown up");
 		} catch (Throwable t) {
 			assertTrue(t.getCause() instanceof AppFatalException);
