@@ -18,12 +18,22 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- *
- * Note: check to ensure that Props are not referenced in static init blocks b/c
- * we may need to load the class (and run its init) before andHow init can
- * complete, causing a circular init loop.
- *
- * @author ericeverman
+ * This is the central AndHow compilation class, an Annotation Processor.
+ * 
+ * An annotation processor nominally reads annotations as classes are compiled.
+ * This class is annotated {@code SupportedAnnotationTypes("*")}, allowing it to
+ * 'see' all classes as they are compiled.  This class then delegates to a
+ * 'scanner' class that does deep inspection on compiled code, looking for
+ * AndHow Properties.
+ * <br>
+ * When an AndHow Property is found in a class, a new {@code PropertyRegistrar}
+ * class is created, which contains the list of Properties in that class.
+ * There is a one-to-one correspondence between user classes that contain
+ * AndHow Properties and auto-created {@code PropertyRegistrar} classes.
+ * <br>
+ * At runtime, AndHow will use the {@code ServiceLoader} to discover all instances
+ * of {@code PropertyRegistrar} on the classpath, thus finding all AndHow
+ * Property containing classes.
  */
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
@@ -45,8 +55,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
 	
+	/**
+	 * A no-arg constructor is required.
+	 */
 	public AndHowCompileProcessor() {
-		//required by Processor API
+		//used to ensure all metadata files have the same date
 		runDate = new GregorianCalendar();
 	}
 
@@ -166,11 +179,31 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	}
 
-	public void writeClassFile(Filer filer, PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
+	/**
+	 * Writes a new class implementing the {@code PropertyRegistrar} interface.
+	 * 
+	 * The new class directly corresponds to a user classes containing AndHow
+	 * Properties and will contain meta data about the properties.
+	 * 
+	 * @param filer The javac file system representation for writing files.
+	 * @param generator AndHow class capable of generating source code for this
+	 * {@code PropertyRegistrar} class.
+	 * @param causingElement A javac Element, which generically refers to any
+	 * piece of source code such as a keyword, class name, etc..  When a file
+	 * is written to the filer, a {@code causingElement} is recorded as metadata
+	 * so there is an association between the file and the reason it was written.
+	 * Likely this is normally used to associate source code line numbers with
+	 * generated code.
+	 * 
+	 * @throws Exception If unable to write (out of disc space?)
+	 */
+	public void writeClassFile(Filer filer, 
+			PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
 
 		String classContent = generator.generateSource();
 
-		FileObject classFile = filer.createSourceFile(generator.buildGeneratedClassFullName(), causingElement);
+		FileObject classFile = filer.createSourceFile(
+				generator.buildGeneratedClassFullName(), causingElement);
 
 		try (Writer writer = classFile.openWriter()) {
 			writer.write(classContent);

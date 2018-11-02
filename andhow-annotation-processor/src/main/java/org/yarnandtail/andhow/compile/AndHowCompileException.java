@@ -31,18 +31,16 @@ public class AndHowCompileException extends RuntimeException {
 	 * Examples would include Properties that are not <code>static final</code>
 	 * or too many init classes on the classpath.
 	 * 
-	 * @param problems A list of problems found during compilation.
+	 * @param problems A list of problems found during compilation.  This list
+	 * instance is kept, so no modifications to the list should be made by the
+	 * caller.
 	 */
 	public AndHowCompileException(List<CompileProblem> problems) {
 		
 		cause = null;
 		msg = DEFAULT_MSG;
 		
-		if (problems != null) {
-			this.problems = problems;
-		} else {
-			this.problems = Collections.emptyList();
-		}
+		this.problems = (problems != null) ? problems : Collections.emptyList();
 	}
 	
 	/**
@@ -61,11 +59,7 @@ public class AndHowCompileException extends RuntimeException {
 
 	@Override
 	public synchronized Throwable getCause() {
-		if (cause != null) {
-			return cause;
-		} else {
-			return super.getCause();
-		}
+		return (cause != null) ? cause : super.getCause();
 	}
 
 
@@ -74,6 +68,11 @@ public class AndHowCompileException extends RuntimeException {
 		return msg;
 	}
 	
+	/**
+	 * The list of AndHow CompileProblems discovered, if any.
+	 * 
+	 * @return A non-null, by possibly empty list. Do not modify the returned list. 
+	 */
 	public List<CompileProblem> getProblems() {
 		return problems;
 	}
