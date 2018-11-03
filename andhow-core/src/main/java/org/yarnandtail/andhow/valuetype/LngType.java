@@ -17,11 +17,20 @@ public class LngType extends BaseValueType<Long> {
 	private LngType() {
 		super(Long.class);
 	}
-	
+
+    /**
+     * @deprecated since 0.4.1. Use {@link #instance()} instead
+     *
+     * @return An instance of the {@link #LngType()}
+     */
+	@Deprecated()
 	public static LngType get() {
-		return instance;
+		return instance();
 	}
-	
+
+    /**
+     * @return An instance of the {@link #LngType()}
+     */
 	public static LngType instance() {
 		return instance;
 	}

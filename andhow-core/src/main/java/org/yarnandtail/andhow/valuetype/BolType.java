@@ -17,11 +17,20 @@ public class BolType extends BaseValueType<Boolean> {
 	private BolType() {
 		super(Boolean.class);
 	}
-	
+
+    /**
+     * @deprecated since 0.4.1. Use {@link #instance()} instead
+     *
+     * @return An instance of the {@link #BolType()}
+     */
+	@Deprecated()
 	public static BolType get() {
-		return instance;
+		return instance();
 	}
-	
+
+    /**
+     * @return An instance of the {@link #BolType()}
+     */
 	public static BolType instance() {
 		return instance;
 	}
