@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BigDecValidatorTest {
 
-    private static String EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE = "THIS VALIDATION IS ALWAYS VALID";
+    private static String EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE = "The constraint may not be null";
     private static final BigDecimal FOUR = new BigDecimal("4.5678");
     private static final BigDecimal FIVE = new BigDecimal("5.12345");
     private static final BigDecimal SIX = new BigDecimal("6.452134563456");
@@ -26,6 +26,7 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.GreaterThan(null);
         assertFalse(instance.isSpecificationValid());
+        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
@@ -53,6 +54,7 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.GreaterThanOrEqualTo(null);
         assertFalse(instance.isSpecificationValid());
+        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
@@ -81,6 +83,7 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.LessThan(null);
         assertFalse(instance.isSpecificationValid());
+        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
@@ -108,6 +111,7 @@ public class BigDecValidatorTest {
 
         instance = new BigDecValidator.LessThanOrEqualTo(null);
         assertFalse(instance.isSpecificationValid());
+        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 
     @Test
@@ -123,29 +127,5 @@ public class BigDecValidatorTest {
         assertTrue(instance.isValid(FIVE));
         assertFalse(instance.isValid(SIX));
         assertFalse(instance.isValid(null));
-    }
-
-    @Test
-    public void testGreaterThan_InvalidSpecificationMessage() {
-        BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
-        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
-    }
-
-    @Test
-    public void testGreaterThanOrEqualTo_InvalidSpecificationMessage() {
-        BigDecValidator.GreaterThanOrEqualTo instance = new BigDecValidator.GreaterThanOrEqualTo(FIVE);
-        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
-    }
-
-    @Test
-    public void testLessThan_InvalidSpecificationMessage() {
-        BigDecValidator.LessThan instance = new BigDecValidator.LessThan(FIVE);
-        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
-    }
-
-    @Test
-    public void testLessThanOrEqualTo_InvalidSpecificationMessage() {
-        BigDecValidator.LessThanOrEqualTo instance = new BigDecValidator.LessThanOrEqualTo(FIVE);
-        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
     }
 }

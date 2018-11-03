@@ -28,7 +28,7 @@ public abstract class BigDecValidator implements Validator<BigDecimal> {
 
     @Override
     public String getInvalidSpecificationMessage() {
-        return "THIS VALIDATION IS ALWAYS VALID";
+        return "The constraint may not be null";
     }
 
     /**
