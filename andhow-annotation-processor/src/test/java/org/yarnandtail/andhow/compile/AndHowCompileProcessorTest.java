@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
+import javax.tools.Diagnostic.Kind;
 import org.junit.Test;
 import org.yarnandtail.andhow.util.IOUtil;
 
@@ -38,9 +39,10 @@ public class AndHowCompileProcessorTest {
 		final String CLASS_SOURCE_PATH = "/" + CLASS_NAME.replace(".", "/") + ".java";
 		final String GEN_CLASS_NAME = CLASS_PACKAGE + ".$PropertySample_AndHowProps";
 		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
+		final DiagnosticCollector<JavaFileObject> dc = new DiagnosticCollector();
+		final TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
@@ -50,10 +52,10 @@ public class AndHowCompileProcessorTest {
 		String classContent = IOUtil.getUTF8ResourceAsString(CLASS_SOURCE_PATH);
         input.add(new TestSource(CLASS_NAME, JavaFileObject.Kind.SOURCE, classContent));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, dc, options, null, input);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
-        
+
         Object genClass = loader.loadClass(GEN_CLASS_NAME).newInstance();
 		String genSvsFile = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.service.PropertyRegistrar"), Charset.forName("UTF-8"));
         
@@ -65,6 +67,8 @@ public class AndHowCompileProcessorTest {
 		
 		assertEquals(CLASS_NAME, registrar.getRootCanonicalName());
 		List<PropertyRegistration> propRegs = registrar.getRegistrationList();
+		
+		assertEquals("There should be no warn/errs from the compiler", 0, dc.getDiagnostics().size());
 		
 		assertEquals(CLASS_NAME + ".STRING", propRegs.get(0).getCanonicalPropertyName());
 		assertEquals(CLASS_NAME + ".STRING_PUB", propRegs.get(1).getCanonicalPropertyName());
@@ -89,9 +93,10 @@ public class AndHowCompileProcessorTest {
     @Test
     public void testServiceRegistrationOfOneProdAndOneTestInit() throws Exception {
 		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
+		final DiagnosticCollector<JavaFileObject> dc = new DiagnosticCollector();
+		final TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
@@ -103,14 +108,15 @@ public class AndHowCompileProcessorTest {
 		input.add(new TestSource(AndHowTestInitAbstract_NAME));
 		input.add(new TestSource(AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, dc, options, null, input);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowInit"), Charset.forName("UTF-8"));
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowTestInit"), Charset.forName("UTF-8"));
      
-
+		assertEquals("There should be no warn/errs from the compiler", 0, dc.getDiagnostics().size());
+		
 		//
 		//Test the initiation files
 		assertNotNull(prodInitSvs);
@@ -123,9 +129,10 @@ public class AndHowCompileProcessorTest {
     @Test
     public void testServiceRegistrationOfOneProdInit() throws Exception {
 		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
+		final DiagnosticCollector<JavaFileObject> dc = new DiagnosticCollector();
+		final TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
@@ -135,12 +142,14 @@ public class AndHowCompileProcessorTest {
 		input.add(new TestSource(AndHowInitAbstract_NAME));
         input.add(new TestSource(AndHowInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, dc, options, null, input);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowInit"), Charset.forName("UTF-8"));     
 
+		assertEquals("There should be no warn/errs from the compiler", 0, dc.getDiagnostics().size());
+		
 		//
 		//Test the initiation files
 		assertNotNull(prodInitSvs);
@@ -150,9 +159,10 @@ public class AndHowCompileProcessorTest {
     @Test
     public void testServiceRegistrationOfOneTestInit() throws Exception {
 		
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         final MemoryFileManager manager = new MemoryFileManager(compiler);
-		TestClassLoader loader = new TestClassLoader(manager);
+		final DiagnosticCollector<JavaFileObject> dc = new DiagnosticCollector();
+		final TestClassLoader loader = new TestClassLoader(manager);
 
 		List<String> options=new ArrayList();
 		//options.add("-verbose");
@@ -162,13 +172,15 @@ public class AndHowCompileProcessorTest {
 		input.add(new TestSource(AndHowTestInitAbstract_NAME));
 		input.add(new TestSource(AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, input);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, dc, options, null, input);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream("/META-INF/services/org.yarnandtail.andhow.AndHowTestInit"), Charset.forName("UTF-8"));
      
 
+		assertEquals("There should be no warn/errs from the compiler", 0, dc.getDiagnostics().size());
+		
 		//
 		//Test the initiation files
 		assertNotNull(testInitSvs);
