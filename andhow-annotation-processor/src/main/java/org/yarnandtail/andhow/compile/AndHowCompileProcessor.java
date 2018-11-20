@@ -7,6 +7,7 @@ import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
 import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 
 
@@ -19,10 +20,17 @@ import org.yarnandtail.andhow.util.AndHowLog;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 
 /**
- *
- * Note: check to ensure that Props are not referenced in static init blocks b/c
- * we may need to load the class (and run its init) before andHow init can
- * complete, causing a circular init loop.
+ * An annotation processor that 'sees' all user classes as they are compiled,
+ * looking for AndHow Properties.
+ * 
+ * As each top level user class (i.e. non-inner class) is found, it is handed
+ * off to an AndHowElementScanner for deep inspection, looking for AndHow Properties.
+ * 
+ * For each user class that contains a Property, a {@code PropertyRegistrar}
+ * class is created with metadata about the class.  Also a matching service file
+ * is generated in the "META-INF/services/" directory so the
+ * {@code PropertyRegistrar} instances can be discovered
+ * through the {@code java.util.ServiceLoader} mechanism.
  *
  * @author ericeverman
  */
@@ -50,6 +58,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public AndHowCompileProcessor() {
 		//required by Processor API
 		runDate = new GregorianCalendar();
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		//Only scanning for declaration of AndHow Properties, so should
+		//be immune to most new language constructs.
+		return SourceVersion.latestSupported();
 	}
 
 	@Override
