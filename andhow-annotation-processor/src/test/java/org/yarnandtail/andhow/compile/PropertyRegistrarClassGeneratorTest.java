@@ -204,7 +204,7 @@ public class PropertyRegistrarClassGeneratorTest {
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
 		//root prop
-		cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));
+		cu.addProperty(PROP1_NAME, true, true);
 		cu.addProperty(PROP2_NAME, true, true);
 		
 		return cu;
@@ -215,7 +215,7 @@ public class PropertyRegistrarClassGeneratorTest {
 		CompileUnit cu = new CompileUnit(ROOT_SIMPLE_NAME);
 		
 		//root prop
-		cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));
+		cu.addProperty(PROP1_NAME, true, true);
 		cu.addProperty(PROP2_NAME, true, true);
 		
 		return cu;
@@ -229,18 +229,18 @@ public class PropertyRegistrarClassGeneratorTest {
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
 		//root prop
-		cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));
+		cu.addProperty(PROP1_NAME, true, true);
 		
 		{
 			//1st inner class
 			cu.pushType(INNER1_SIMP_NAME, true);
-			cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));
+			cu.addProperty(PROP1_NAME, true, true);
 
 			{
 				//2nd inner class
 				cu.pushType(INNER2_SIMP_NAME, true);
-				cu.addProperty(new SimpleVariable(PROP1_NAME, true, true));
-				cu.addProperty(new SimpleVariable(PROP2_NAME, true, true));
+				cu.addProperty(PROP1_NAME, true, true);
+				cu.addProperty(PROP2_NAME, true, true);
 				cu.popType();
 
 			}

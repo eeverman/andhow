@@ -1,42 +1,43 @@
 package org.yarnandtail.andhow.compile;
 
-import java.util.logging.Level;
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
-import org.yarnandtail.andhow.service.PropertyRegistration;
 import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.tools.Diagnostic;
 
 
 import javax.tools.FileObject;
 import org.yarnandtail.andhow.AndHowInit;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.service.*;
-import org.yarnandtail.andhow.util.AndHowLog;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
+import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * An annotation processor that 'sees' all user classes as they are compiled,
- * looking for AndHow Properties.
+ * This is the central AndHow compilation class, an Annotation Processor.
  * 
- * As each top level user class (i.e. non-inner class) is found, it is handed
- * off to an AndHowElementScanner for deep inspection, looking for AndHow Properties.
- * 
- * For each user class that contains a Property, a {@code PropertyRegistrar}
- * class is created with metadata about the class.  Also a matching service file
- * is generated in the "META-INF/services/" directory so the
- * {@code PropertyRegistrar} instances can be discovered
- * through the {@code java.util.ServiceLoader} mechanism.
- *
- * @author ericeverman
+ * An annotation processor nominally reads annotations as classes are compiled.
+ * This class is annotated {@code SupportedAnnotationTypes("*")}, allowing it to
+ * 'see' all classes as they are compiled.  This class then delegates to a
+ * 'scanner' class that does deep inspection on compiled code, looking for
+ * AndHow Properties.
+ * <br>
+ * When an AndHow Property is found in a class, a new {@code PropertyRegistrar}
+ * class is created, which contains the list of Properties in that class.
+ * There is a one-to-one correspondence between user classes that contain
+ * AndHow Properties and auto-created {@code PropertyRegistrar} classes.
+ * <br>
+ * At runtime, AndHow will use the {@code ServiceLoader} to discover all instances
+ * of {@code PropertyRegistrar} on the classpath, thus finding all AndHow
+ * Property containing classes.
  */
 @SupportedAnnotationTypes("*")
 public class AndHowCompileProcessor extends AbstractProcessor {
-	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCompileProcessor.class);
 	
 	private static final String INIT_CLASS_NAME = AndHowInit.class.getCanonicalName();
 	private static final String TEST_INIT_CLASS_NAME = "org.yarnandtail.andhow.AndHowTestInit";
@@ -47,16 +48,19 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	
 	//Static to insure all generated classes have the same timestamp
 	private static Calendar runDate;
-
-	private Trees trees;
 	
 	private final List<CauseEffect> registrars = new ArrayList();
 	
 	private final List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
 	private final List<CauseEffect> testInitClasses = new ArrayList();	//List of test init classes (should only ever be 1)
 
+	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
+	
+	/**
+	 * A no-arg constructor is required.
+	 */
 	public AndHowCompileProcessor() {
-		//required by Processor API
+		//used to ensure all metadata files have the same date
 		runDate = new GregorianCalendar();
 	}
 
@@ -70,51 +74,69 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
+		Filer filer = processingEnv.getFiler();
+		Messager log = this.processingEnv.getMessager();
+		
 		boolean isLastRound = roundEnv.processingOver();
 		
-		Filer filer = this.processingEnv.getFiler();
-
-
 
 		if (isLastRound) {
-			LOG.debug("Final round of annotation processing.  Total root element count: {0}", roundEnv.getRootElements().size());
+			debug(log, "Final round of annotation processing. Total root element count: {}",
+					roundEnv.getRootElements().size());
 
-			try {
-				if (initClasses.size() == 1) {
+			
+			if (initClasses.size() > 1) {
+				problems.add(new CompileProblem.TooManyInitClasses(
+						INIT_CLASS_NAME, initClasses));
+			}
+			
+			if (testInitClasses.size() > 1) {
+				problems.add(new CompileProblem.TooManyInitClasses(
+						TEST_INIT_CLASS_NAME, testInitClasses));
+			}
+			
+			if (problems.isEmpty()) {
+				try {
+					if (initClasses.size() == 1) {
 
-					LOG.info("Found exactly 1 {0} class: {1}", INIT_CLASS_NAME, initClasses.get(0).fullClassName);
-					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
+						debug(log, "Found exactly 1 {} class: {}",
+								INIT_CLASS_NAME, initClasses.get(0).fullClassName);
+						
+						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
 
-				} else if (initClasses.size() > 1) {
-					TooManyInitClassesException err = 
-							new TooManyInitClassesException(INIT_CLASS_NAME, initClasses);
+					}
 
-					err.writeDetails(LOG);
-					throw err;
+					if (testInitClasses.size() == 1) {
+						debug(log, "Found exactly 1 {} class: {}",
+								TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
+						
+						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
+
+					}
+
+					if (registrars.size() > 0) {
+						writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
+					}
+					
+				} catch (IOException e) {
+					throw new AndHowCompileException("Exception while trying to write generated files", e);
+				}
+			} else {
+				error(log, "AndHow Property definition or Init class errors "
+						+ "prevented compilation. Each of the following errors "
+						+ "must be fixed before compilation is possible.");
+				error(log, "AndHow errors discovered: {}", problems.size());
+				
+				for (CompileProblem err : problems) {
+					error(log, err.getFullMessage());
 				}
 
-				if (testInitClasses.size() == 1) {
-
-					LOG.info("Found exactly 1 {0} class: {1}", TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
-					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-
-				} else if (testInitClasses.size() > 1) {
-					TooManyInitClassesException err = 
-							new TooManyInitClassesException(TEST_INIT_CLASS_NAME, testInitClasses);
-
-					err.writeDetails(LOG);
-					throw err;
-				}
-
-				if (registrars != null && registrars.size() > 0) {
-					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-				}
-			} catch (IOException e) {
-				throw new RuntimeException("Exception while trying to write generated files", e);
+				throw new AndHowCompileException(problems);
 			}
 			
 		} else {
-			LOG.trace("Another round of annotation processing.  Current root element count: {0}", roundEnv.getRootElements().size());
+			debug(log, "Another round of annotation processing. "
+					+ "Current root element count: {}", roundEnv.getRootElements().size());
 
 
 			//
@@ -140,37 +162,23 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 				if (ret.hasRegistrations()) {
 
-					LOG.debug("Found {0} AndHow Properties in class {1} ", ret.getRegistrations().size(), ret.getRootCanonicalName());
+					debug(log, "Found {} AndHow Properties in class {} ", 
+							ret.getRegistrations().size(), ret.getRootCanonicalName());
+					
 					PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
 					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
 					PropertyRegistrationList regs = ret.getRegistrations();
 
-					if (LOG.isLoggable(Level.FINEST)) {
-						for (PropertyRegistration p : ret.getRegistrations()) {
-							LOG.trace("Found AndHow Property ''{0}'' in root class ''{1}'', immediate parent is ''{2}''",
-									p.getCanonicalPropertyName(), p.getCanonicalRootName(), p.getJavaCanonicalParentName());
-						}
-					}
-
 					try {
 						writeClassFile(filer, gen, e);
-						LOG.trace("Wrote new generated class file " + gen.buildGeneratedClassSimpleName());
+						debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
 					} catch (Exception ex) {
-						LOG.error("Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+						error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
 						throw new RuntimeException(ex);
 					}
 				}
-
-				if (ret.getErrors().size() > 0) {
-					LOG.error(
-							"AndHow Property definition errors prevented compilation to complete. " +
-							"Each of the following errors must be fixed before compilation is possible.");
-					for (String err : ret.getErrors()) {
-						LOG.error("AndHow Property Error: {0}", err);
-					}
-
-					throw new RuntimeException("AndHowCompileProcessor threw a fatal exception - See error log for details.");
-				}
+				
+				problems.addAll(ret.getProblems());
 
 			}
 		}
@@ -179,11 +187,31 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	}
 
-	public void writeClassFile(Filer filer, PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
+	/**
+	 * Writes a new class implementing the {@code PropertyRegistrar} interface.
+	 * 
+	 * The new class directly corresponds to a user classes containing AndHow
+	 * Properties and will contain meta data about the properties.
+	 * 
+	 * @param filer The javac file system representation for writing files.
+	 * @param generator AndHow class capable of generating source code for this
+	 * {@code PropertyRegistrar} class.
+	 * @param causingElement A javac Element, which generically refers to any
+	 * piece of source code such as a keyword, class name, etc..  When a file
+	 * is written to the filer, a {@code causingElement} is recorded as metadata
+	 * so there is an association between the file and the reason it was written.
+	 * Likely this is normally used to associate source code line numbers with
+	 * generated code.
+	 * 
+	 * @throws Exception If unable to write (out of disc space?)
+	 */
+	public void writeClassFile(Filer filer, 
+			PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
 
 		String classContent = generator.generateSource();
 
-		FileObject classFile = filer.createSourceFile(generator.buildGeneratedClassFullName(), causingElement);
+		FileObject classFile = filer.createSourceFile(
+				generator.buildGeneratedClassFullName(), causingElement);
 
 		try (Writer writer = classFile.openWriter()) {
 			writer.write(classContent);
@@ -218,8 +246,35 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 	
 	/**
-	 * Match up a causal Element w/ the Class name that will be registered in
+	 * Logs a debug message using the javac standard Messager system.
+	 * 
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void debug(Messager log, String pattern, Object... args) {
+		log.printMessage(Diagnostic.Kind.NOTE, TextUtil.format(pattern, args));
+	}
+	
+	/**
+	 * Logs an error message using the javac standard Messager system.
+	 * 
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void error(Messager log, String pattern, Object... args) {
+		log.printMessage(Diagnostic.Kind.ERROR, TextUtil.format(pattern, args));
+	}
+	
+	/**
+	 * Match up a causal Element (Basically the compiler representation of a
+	 * class to be compiled) w/ the Class name that will be registered in
 	 * a service registry.
+	 * 
+	 * When the AnnotationProcessor writes a new file to the Filer, it wants
+	 * a causal Element to associate with it, apparently this info could be
+	 * used for reporting or something.
 	 */
 	protected static class CauseEffect {
 		String fullClassName;

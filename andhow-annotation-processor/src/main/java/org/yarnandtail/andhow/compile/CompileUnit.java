@@ -32,7 +32,7 @@ public class CompileUnit {
 
 	private final String classCanonName;
 	private PropertyRegistrationList registrations;	//late init
-	private List<String> errors;	//late init
+	private List<CompileProblem> errors;	//late init
 	private boolean initClass;	//True if an AndHowInit instance (and not AndHowTestInit)
 	private boolean testInitClass;	//True if an AndHowTestInit instance
 	
@@ -101,35 +101,6 @@ public class CompileUnit {
 	 * If modifiers are invalid, an error will be recorded rather than a
 	 * Property.
 	 *
-	 * @param variableElement A SimpleType representing a variable to which an
-	 * AndHow property is constructed and assigned to.
-	 * @return True if the property could be added, false if an error was
-	 * recorded instead.
-	 */
-	public boolean addProperty(SimpleVariable variableElement) {
-
-		if (variableElement.isStatic() && variableElement.isFinal()) {
-			if (registrations == null) {
-				registrations = new PropertyRegistrationList(classCanonName);
-			}
-
-			registrations.add(variableElement.getName(), getInnerPathNames());
-
-			return true;
-		} else {
-			addPropertyError(variableElement.getName(), "New AndHow Properties must be assigned to a static final field.");
-			return false;
-		}
-	}
-
-	/**
-	 * Register an AndHow Property declaration in the current scope - either
-	 * directly in the the top level class or the recorded path to an inner
-	 * class.
-	 *
-	 * If modifiers are invalid, an error will be recorded rather than a
-	 * Property.
-	 *
 	 * @param name The name of the variable the Property is assigned to.
 	 * @param _static Does the variable has the static modifier?
 	 * @param _final Is the variable declared as static?
@@ -137,7 +108,33 @@ public class CompileUnit {
 	 * recorded instead.
 	 */
 	public boolean addProperty(String name, boolean _static, boolean _final) {
-		return addProperty(new SimpleVariable(name, _static, _final));
+
+		if (_static && _final) {
+			if (registrations == null) {
+				registrations = new PropertyRegistrationList(classCanonName);
+			}
+
+			registrations.add(name, getInnerPathNames());
+
+			return true;
+		} else {
+			
+			if (errors == null) {
+				errors = new ArrayList();
+			}
+		
+			String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
+		
+			if (_static) {
+				errors.add(new CompileProblem.PropMissingFinal(parentName, name));
+			} else if (_final) {
+				errors.add(new CompileProblem.PropMissingStatic(parentName, name));
+			} else {
+				errors.add(new CompileProblem.PropMissingStaticFinal(parentName, name));
+			}
+			
+			return false;
+		}
 	}
 
 	/**
@@ -191,17 +188,6 @@ public class CompileUnit {
 		}
 
 		return pathNames;
-	}
-
-	public void addPropertyError(String propName, String msg) {
-
-		if (errors == null) {
-			errors = new ArrayList();
-		}
-
-		String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
-		
-		errors.add("The AndHow Property '" + propName + "' in " + parentName + " is invalid: " + msg);
 	}
 
 	/**
@@ -263,16 +249,16 @@ public class CompileUnit {
 	 *
 	 * @return
 	 */
-	public List<String> getErrors() {
+	public List<CompileProblem> getProblems() {
 		if (errors != null) {
 			return errors;
 		} else {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 
 	/**
-	 * Returns true if the getErrors() list would be non-empty.
+	 * Returns true if the getProblems() list would be non-empty.
 	 *
 	 * @return
 	 */
