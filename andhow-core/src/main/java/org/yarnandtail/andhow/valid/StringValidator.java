@@ -29,7 +29,7 @@ public class StringValidator {
 
 		@Override
 		public String getInvalidSpecificationMessage() {
-			return "The MatchesFrom expression cannot be null and should have atleast 1 value";
+			return "The Equals list must contain at least one value";
 		}
 
 		@Override
@@ -66,7 +66,7 @@ public class StringValidator {
 
 		@Override
 		public String getInvalidSpecificationMessage() {
-			return "The StartWith expression cannot be null";
+			return "The StartsWith expression cannot be null";
 		}
 
 		@Override
