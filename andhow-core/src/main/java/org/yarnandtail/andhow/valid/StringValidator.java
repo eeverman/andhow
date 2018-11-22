@@ -14,7 +14,7 @@ public class StringValidator {
 	/**
 	 * Validate that a string is one from the specified set.
 	 */
-	public static class MatchesFrom implements Validator<String> {
+	public static class Equals implements Validator<String> {
 
 		String[] values;
 
@@ -42,7 +42,7 @@ public class StringValidator {
 
 		@Override
 		public String getTheValueMustDescription() {
-			return "is one of'" + Arrays.deepToString(values) + "'";
+			return "be equal to one of '" + Arrays.deepToString(values) + "'";
 		}
 	}
 
