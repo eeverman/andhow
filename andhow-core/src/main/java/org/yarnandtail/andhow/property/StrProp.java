@@ -68,8 +68,8 @@ public class StrProp extends PropertyBase<String> {
 			return this;
 		}
 
-		public StrBuilder mustMatch(String... values) {
-			this.validation(new StringValidator.MatchesFrom(values));
+		public StrBuilder mustEqual(String... values) {
+			this.validation(new StringValidator.Equals(values));
 			return this;
 		}
 
