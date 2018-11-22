@@ -18,7 +18,7 @@ public class StringValidator {
 
 		String[] values;
 
-		public MatchesFrom(String... values) {
+		public Equals(String... values) {
 			this.values = values;
 		}
 
