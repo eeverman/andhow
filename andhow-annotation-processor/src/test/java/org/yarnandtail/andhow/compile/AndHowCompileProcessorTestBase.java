@@ -1,17 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.yarnandtail.andhow.compile;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import org.junit.Before;
-import static org.yarnandtail.andhow.compile.AndHowCompileProcessor_PropertyTest.pkg;
 import org.yarnandtail.andhow.util.IOUtil;
 import org.yarnandtail.compile.MemoryFileManager;
 import org.yarnandtail.compile.TestClassLoader;
@@ -31,6 +26,7 @@ public class AndHowCompileProcessorTestBase {
      
 	JavaCompiler compiler;
 	MemoryFileManager manager;
+	DiagnosticCollector<JavaFileObject> diagnostics;
 	TestClassLoader loader;
 	
 	Set<TestSource> sources;	//New set of source files to compile
@@ -39,6 +35,7 @@ public class AndHowCompileProcessorTestBase {
 	public void setupTest() {
 		compiler = ToolProvider.getSystemJavaCompiler();
 		manager = new MemoryFileManager(compiler);
+		diagnostics = new DiagnosticCollector();
 		loader = new TestClassLoader(manager);
 		sources = new HashSet();
 	}

@@ -5,6 +5,7 @@ import static org.yarnandtail.andhow.compile.CompileProblem.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
+import javax.tools.Diagnostic.Kind;
 import org.junit.Test;
 import org.yarnandtail.andhow.util.IOUtil;
 
@@ -40,13 +41,15 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 		sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
 		sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
+		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
+				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
 
 		//
 		//Test the initiation files
@@ -66,11 +69,14 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 		sources.add(buildTestSource(pkg, AndHowInitAbstract_NAME));
 		sources.add(buildTestSource(pkg, AndHowInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));     
+
+		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
+				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
 
 		//
 		//Test the initiation files
@@ -87,12 +93,15 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 		sources.add(buildTestSource(pkg, AndHowTestInitAbstract_NAME));
 		sources.add(buildTestSource(pkg, AndHowTestInitA_NAME));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
+		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
+				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
+		
 
 		//
 		//Test the initiation files
@@ -116,6 +125,8 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
 			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 			task.call();
+			
+			fail("Should have thrown an exception");
 
 		} catch (RuntimeException e) {
 			
@@ -155,6 +166,8 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 			task.call();
 
+			fail("Should have thrown an exception");
+			
 		} catch (RuntimeException e) {
 			
 			assertNotNull(e.getCause());
@@ -195,6 +208,8 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 			JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
 			task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 			task.call();
+			
+			fail("Should have thrown an exception");
 
 		} catch (RuntimeException e) {
 			

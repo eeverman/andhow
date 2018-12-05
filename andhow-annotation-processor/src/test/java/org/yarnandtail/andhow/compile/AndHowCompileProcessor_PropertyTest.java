@@ -1,16 +1,15 @@
 package org.yarnandtail.andhow.compile;
 
-import org.yarnandtail.compile.*;
-import org.yarnandtail.andhow.service.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
-import org.junit.Test;
-import org.yarnandtail.andhow.util.IOUtil;
-import static org.yarnandtail.andhow.compile.CompileProblem.*;
-
 import static org.junit.Assert.*;
-import org.junit.Before;
+import org.junit.Test;
+import org.yarnandtail.andhow.compile.CompileProblem.PropMissingFinal;
+import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStatic;
+import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStaticFinal;
+import org.yarnandtail.andhow.service.*;
+import org.yarnandtail.andhow.util.IOUtil;
 
 /**
  * A lot of this code was borrowed from here:
@@ -34,7 +33,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
   
         sources.add(buildTestSource(pkg, classSimpleName));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
@@ -42,6 +41,9 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
         
+		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
+				d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)).count());
+			
         assertNotNull(genClass);
 		
 		PropertyRegistrar registrar = (PropertyRegistrar)genClass;
@@ -81,7 +83,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
   
         sources.add(buildTestSource(pkg, classSimpleName));
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, null, options, null, sources);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, options, null, sources);
         task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
         task.call();
         
@@ -89,6 +91,9 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
         
+		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
+				d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)).count());
+
         assertNotNull(genClass);
 		
 		PropertyRegistrar registrar = (PropertyRegistrar)genClass;

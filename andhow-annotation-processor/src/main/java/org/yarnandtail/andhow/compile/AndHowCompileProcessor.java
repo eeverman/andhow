@@ -5,6 +5,7 @@ import com.sun.source.util.Trees;
 import java.io.*;
 import java.util.*;
 import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 
@@ -61,6 +62,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public AndHowCompileProcessor() {
 		//used to ensure all metadata files have the same date
 		runDate = new GregorianCalendar();
+	}
+
+	@Override
+	public SourceVersion getSupportedSourceVersion() {
+		//Only scanning for declaration of AndHow Properties, so should
+		//be immune to most new language constructs.
+		return SourceVersion.latestSupported();
 	}
 
 	@Override
