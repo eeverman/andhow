@@ -1,5 +1,5 @@
 # Introducing AndHow's new Logo
-![AndHow's new logo](https://github.com/eeverman/andhow/blob/logo_submission/carlschroedl_logo_1/AndHow-empty-circle-combination.png)
+![AndHow's new logo](https://github.com/eeverman/andhow/blob/logo_submission/carlschroedl_logo_1/AndHow-empty-circle-combination.png  | width=200)
 Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
 
 [![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
