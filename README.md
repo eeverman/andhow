@@ -1,5 +1,7 @@
-# AndHow is looking for a new Logo - [Enter your design before the end of October!](https://github.com/eeverman/andhow/issues/427)
-## [>>See the latest logo submissions <<](https://twitter.com/hashtag/andhowconfig_logo)
+# Introducing AndHow's new Logo
+![AndHow's new logo](https://github.com/eeverman/andhow/blob/logo_submission/carlschroedl_logo_1/AndHow-empty-circle-combination.png)
+Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
+
 [![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
@@ -174,3 +176,4 @@ Values passed to the main method take precedence over system properties as so on
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 _**&?!**_
+
