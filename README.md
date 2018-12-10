@@ -1,18 +1,20 @@
-# AndHow is looking for a new Logo - [Enter your design before the end of October!](https://github.com/eeverman/andhow/issues/427)
-## [>>See the latest logo submissions <<](https://twitter.com/hashtag/andhowconfig_logo)
 [![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
-![Andhow Visual](andhow.gif)
+# Introducing AndHow's new Logo
+<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="166" height="215" alt="AndHow's new logo"  style="float: left">
+
+Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
+
+<img src="https://github.com/eeverman/andhow/raw/master/andhow.gif" alt="AndHow animation" style="clear: both">
 AndHow!  strong.valid.simple.AppConfiguration
-======
+=============================
 AndHow is an easy to use configuration framework with strong typing and detailed 
 validation for web apps, command line or any application environment.
 
 _**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
 
-Key Features
---------------
+## Key Features
 * **Strong Typing**
 * **Detailed validation**
 * **Simple to use**
@@ -21,15 +23,13 @@ Key Features
 * **Loads values from multiple sources (JNDI, env vars, prop files, etc)**
 * **Generates configuration sample file based on  application properties**
 
-Questions / Discussion / Contact
---------------
+## Questions / Discussion / Contact
 [Join the discussion](https://sites.google.com/view/andhow/join-discussion)
 on the [user forum](https://groups.google.com/d/forum/andhowuser)
 or the *Slack* group (See details on the
 [Join](https://sites.google.com/view/andhow/join-discussion) page).
 
-Use it via Maven (available on Maven Central)
---------------
+## Use it via Maven (available on Maven Central)
 ```xml
 <dependency>
     <groupId>org.yarnandtail</groupId>
@@ -39,8 +39,7 @@ Use it via Maven (available on Maven Central)
 ```
 **AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/user-guide/java9)**
 
-Complete Usage Example
---------------
+## Complete Usage Example
 _**More usage examples and documentation
 are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
 ```java
@@ -174,3 +173,4 @@ Values passed to the main method take precedence over system properties as so on
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 _**&?!**_
+
