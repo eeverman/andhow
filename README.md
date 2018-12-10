@@ -7,7 +7,8 @@
 Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
 
 <img src="https://github.com/eeverman/andhow/raw/master/andhow.gif" alt="AndHow animation" style="clear: both">
-# AndHow!  strong.valid.simple.AppConfiguration
+AndHow!  strong.valid.simple.AppConfiguration
+=============================
 AndHow is an easy to use configuration framework with strong typing and detailed 
 validation for web apps, command line or any application environment.
 
