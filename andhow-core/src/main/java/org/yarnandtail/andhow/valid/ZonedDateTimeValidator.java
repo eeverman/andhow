@@ -55,7 +55,7 @@ public abstract class ZonedDateTimeValidator implements Validator<ZonedDateTime>
         public GreaterThanOrEqualTo(ZonedDateTime ref) { super(ref); }
 
         @Override
-        public boolean isValid(ZonedDateTime value) { return value != null && value.isEqual(ref) && value.isAfter(ref); }
+        public boolean isValid(ZonedDateTime value) { return value != null && (value.isEqual(ref) || value.isAfter(ref)); }
 
         @Override
         public String getTheValueMustDescription() { return "be greater than or equal to " + ref; }
@@ -91,7 +91,7 @@ public abstract class ZonedDateTimeValidator implements Validator<ZonedDateTime>
         public LessThanOrEqualTo(ZonedDateTime ref) { super(ref); }
 
         @Override
-        public boolean isValid(ZonedDateTime value) { return value != null && value.isEqual(ref) &&value.isBefore(ref); }
+        public boolean isValid(ZonedDateTime value) { return value != null && (value.isEqual(ref) || value.isBefore(ref)); }
 
         @Override
         public String getTheValueMustDescription() { return "be less than or equal to " + ref; }
