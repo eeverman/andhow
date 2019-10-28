@@ -86,4 +86,29 @@ public class ZonedDateTimeValidatorTest {
         assertFalse(instance.isValid(CURRENT_TIME.plus(1, ChronoUnit.DAYS)));
         assertFalse(instance.isValid(null));
     }
+
+    @Test
+    public void testLessThanOrEqualTo_IsSpecificationValid() {
+        ZonedDateTimeValidator.LessThanOrEqualTo instance = new ZonedDateTimeValidator.LessThanOrEqualTo(CURRENT_TIME);
+        assertTrue(instance.isSpecificationValid());
+
+        instance = new ZonedDateTimeValidator.LessThanOrEqualTo(null);
+        assertFalse(instance.isSpecificationValid());
+        assertEquals(EXPECTED_DBL_VALIDATOR_INVALID_MESSAGE, instance.getInvalidSpecificationMessage());
+    }
+
+    @Test
+    public void testLessThanOrEqualTo_GetTheValueMustDescription() {
+        ZonedDateTimeValidator.LessThanOrEqualTo instance = new ZonedDateTimeValidator.LessThanOrEqualTo(CURRENT_TIME);
+        assertEquals("be less than or equal to " + CURRENT_TIME, instance.getTheValueMustDescription());
+    }
+
+    @Test
+    public void testLessThanOrEqualTo_IsValid() {
+        ZonedDateTimeValidator.LessThanOrEqualTo instance = new ZonedDateTimeValidator.LessThanOrEqualTo(CURRENT_TIME);
+        assertTrue(instance.isValid(CURRENT_TIME));
+        assertTrue(instance.isValid(CURRENT_TIME.minus(1, ChronoUnit.DAYS)));
+        assertFalse(instance.isValid(CURRENT_TIME.plus(1, ChronoUnit.DAYS)));
+        assertFalse(instance.isValid(null));
+    }
 }
