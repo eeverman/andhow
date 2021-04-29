@@ -11,14 +11,15 @@ branches:
 install:
   # Prepend Java entry, remove Ruby entry (C:\Ruby193\bin;) from PATH
   - cmd: choco upgrade maven
+  - cmd: C:\ProgramData\chocolatey\bin\RefreshEnv
   - cmd: SET PATH=%JAVA_HOME%\bin;%PATH:C:\Ruby193\bin;=%;
   - cmd: SET MAVEN_OPTS=-XX:MaxPermSize=1g -Xmx2g
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=1g -Xmx2g
   # Print debug info
-  - cmd: C:\ProgramData\chocolatey\bin\mvn.exe --version
+  - cmd: mvn --version
   - cmd: java -version
 build_script:
-  - C:\ProgramData\chocolatey\bin\mvn.exe clean install
+  - mvn clean install
 cache:
   - C:\maven\ -> appveyor.yml
   - C:\Users\appveyor\.m2\ -> pom.xml
