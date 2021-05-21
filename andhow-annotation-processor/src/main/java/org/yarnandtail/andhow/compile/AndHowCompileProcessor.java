@@ -1,8 +1,10 @@
 package org.yarnandtail.andhow.compile;
 
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
-import com.sun.source.util.Trees;
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.util.*;
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -37,6 +39,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  * Property containing classes.
  */
 @SupportedAnnotationTypes("*")
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class AndHowCompileProcessor extends AbstractProcessor {
 	
 	private static final String INIT_CLASS_NAME = AndHowInit.class.getCanonicalName();
@@ -65,17 +68,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 
 	@Override
-	public SourceVersion getSupportedSourceVersion() {
-		//Only scanning for declaration of AndHow Properties, so should
-		//be immune to most new language constructs.
-		return SourceVersion.latestSupported();
-	}
-
-	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-
-		Filer filer = processingEnv.getFiler();
-		Messager log = this.processingEnv.getMessager();
+		
+		//Some IDEs (IntelliJ) wrap the PE, so we unwrap it first
+		ProcessingEnvironment unwrappedProcessingEnv = unwrapProcessingEnv(this.processingEnv);
+		
+		Filer filer = unwrappedProcessingEnv.getFiler();
+		Messager log = unwrappedProcessingEnv.getMessager();
 		
 		boolean isLastRound = roundEnv.processingOver();
 		
@@ -147,7 +146,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 				TypeElement te = (TypeElement) e;
 				AndHowElementScanner7 st = new AndHowElementScanner7(
-						this.processingEnv, 
+						unwrappedProcessingEnv,
 						Property.class.getCanonicalName(),
 						INIT_CLASS_NAME,
 						TEST_INIT_CLASS_NAME);
@@ -283,6 +282,40 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		public CauseEffect(String fullClassName, Element causeElement) {
 			this.fullClassName = fullClassName;
 			this.causeElement = causeElement;
+		}
+	}
+
+	/**
+	 * Unwrap the ProcessingEnvironment from a (possibly) IntelliJ wrapper.
+	 * This implementation was taken from code posted by Vicky Ronnen in a IntelliJ bug discussion thread:
+	 * https://youtrack.jetbrains.com/issue/IDEA-256707
+	 * It has no apparent license and was posted on a public discussion thread.
+	 * It is apparently a slimmed down version of similar code in Project Lambok, which
+	 * is itself an open source project.
+	 *
+	 * @param possiblyWrappedProcessingEnv
+	 * @return
+	 */
+	public static ProcessingEnvironment unwrapProcessingEnv(ProcessingEnvironment possiblyWrappedProcessingEnv) {
+		if (Proxy.isProxyClass(possiblyWrappedProcessingEnv.getClass())) {
+			InvocationHandler invocationHandler = Proxy.getInvocationHandler(possiblyWrappedProcessingEnv);
+			try {
+				Field field = invocationHandler.getClass().getDeclaredField("val$delegateTo");
+				field.setAccessible(true);
+				Object o = field.get(invocationHandler);
+				if (o instanceof ProcessingEnvironment) {
+					return (ProcessingEnvironment) o;
+				} else {
+					possiblyWrappedProcessingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "got " +
+							o.getClass() + " expected instanceof com.sun.tools.javac.processing.JavacProcessingEnvironment");
+					return null;
+				}
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				possiblyWrappedProcessingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+				return null;
+			}
+		} else {
+			return possiblyWrappedProcessingEnv;	//It wasn't wrapped
 		}
 	}
 
