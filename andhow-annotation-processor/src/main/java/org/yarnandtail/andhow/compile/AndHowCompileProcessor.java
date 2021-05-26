@@ -70,8 +70,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 		
-		//Some IDEs (IntelliJ) wrap the PE, so we unwrap it first
-		ProcessingEnvironment unwrappedProcessingEnv = unwrapProcessingEnv(this.processingEnv);
+		//TODO:  Unwrap the IntelliJ ProcessingEnvironment
+		ProcessingEnvironment unwrappedProcessingEnv = this.processingEnv;
 		
 		Filer filer = unwrappedProcessingEnv.getFiler();
 		Messager log = unwrappedProcessingEnv.getMessager();
@@ -285,38 +285,5 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}
 	}
 
-	/**
-	 * Unwrap the ProcessingEnvironment from a (possibly) IntelliJ wrapper.
-	 * This implementation was taken from code posted by Vicky Ronnen in a IntelliJ bug discussion thread:
-	 * https://youtrack.jetbrains.com/issue/IDEA-256707
-	 * It has no apparent license and was posted on a public discussion thread.
-	 * It is apparently a slimmed down version of similar code in Project Lambok, which
-	 * is itself an open source project.
-	 *
-	 * @param possiblyWrappedProcessingEnv
-	 * @return
-	 */
-	public static ProcessingEnvironment unwrapProcessingEnv(ProcessingEnvironment possiblyWrappedProcessingEnv) {
-		if (Proxy.isProxyClass(possiblyWrappedProcessingEnv.getClass())) {
-			InvocationHandler invocationHandler = Proxy.getInvocationHandler(possiblyWrappedProcessingEnv);
-			try {
-				Field field = invocationHandler.getClass().getDeclaredField("val$delegateTo");
-				field.setAccessible(true);
-				Object o = field.get(invocationHandler);
-				if (o instanceof ProcessingEnvironment) {
-					return (ProcessingEnvironment) o;
-				} else {
-					possiblyWrappedProcessingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "got " +
-							o.getClass() + " expected instanceof com.sun.tools.javac.processing.JavacProcessingEnvironment");
-					return null;
-				}
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				possiblyWrappedProcessingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
-				return null;
-			}
-		} else {
-			return possiblyWrappedProcessingEnv;	//It wasn't wrapped
-		}
-	}
 
 }
