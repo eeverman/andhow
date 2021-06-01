@@ -72,6 +72,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<modules>
@@ -181,10 +183,11 @@
 							<rules>
 								<requireMavenVersion>
 									<!-- 3.2.2 req'ed for this bug fix: https://issues.apache.org/jira/browse/MNG-4565 -->
-									<version>3.2.2</version>
+									<version>(3.5,4.0)</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<version>[1.8.0,1.9)</version>
+									<!-- 1.8 thru 15.  JDK 16 seems to have issues -->
+									<version>[1.8.0,16)</version>
 								</requireJavaVersion>
 							</rules>    
 						</configuration>
