@@ -143,7 +143,7 @@ public class PropertyRegistrarClassGeneratorTest {
 		assertEquals("list.add(\"" + PROP1_NAME + "\", \"" + INNER1_SIMP_NAME + "\", \"" + INNER2_SIMP_NAME + "\");", eachAdds[3]);
 		assertEquals("list.add(\"" + PROP2_NAME + "\");", eachAdds[4]);	//No inner path b/c in inherits from above
 	}
-	
+
 	/**
 	 * Basic gross test that the generated source is compilable
 	 */
@@ -159,6 +159,17 @@ public class PropertyRegistrarClassGeneratorTest {
 						.compile(JavaFileObjects.forSourceString(gen.buildGeneratedClassFullName(), sourceStr));
 		
 		assertThat(compilation).succeeded();
+
+		//Check the source file
+
+		//This method is separately tested, so lets trust it works correctly
+		int javaVersion = CompileUtil.getMajorJavaVersion(System.getProperty("java.version"));
+
+		if (javaVersion < 9) {
+			assertTrue(sourceStr.contains("@javax.annotation.Generated("));
+		} else {
+			assertTrue(sourceStr.contains("@javax.annotation.processing.Generated("));
+		}
 
 	}
 	

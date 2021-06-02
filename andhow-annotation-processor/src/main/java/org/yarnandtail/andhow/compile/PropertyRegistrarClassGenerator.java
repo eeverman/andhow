@@ -24,7 +24,8 @@ public class PropertyRegistrarClassGenerator {
 	 * Create a new instance w all info needed to generateSource a PropertyRegistrar file.
 	 * 
 	 * @param compUnit CompileUnit instance w/ all needed class and property info
-	 * @param generatingClass The class (likely an AnnotationProcessor) that will be annotated as the generator
+	 * @param generatingClass The class of our AnnotationProcessor to be listed as the generator in the
+	 *                        Generated annotation.
 	 * @param runDate  The Calendar date-time of the run, used for annotation.
 	 *		Passed in so all generated files can have the same timestamp.
 	 */
@@ -42,6 +43,7 @@ public class PropertyRegistrarClassGenerator {
 	public String getTemplate() throws Exception {
 		return IOUtil.getUTF8ResourceAsString(getTemplatePath());
 	}
+
 	
 	public String generateSource() throws Exception {
 
@@ -50,11 +52,14 @@ public class PropertyRegistrarClassGenerator {
 
 		String source = String.format(template,
 				buildPackageString(),
-				compUnit.getRootCanonicalName(), compUnit.getRootSimpleName(),
+				compUnit.getRootCanonicalName(),
+				compUnit.getRootSimpleName(),
 				buildGeneratedClassSimpleName(),
 				PropertyRegistrar.class.getCanonicalName(),
-				generatingClass.getCanonicalName(), buildRunDateString(),
-				buildRegistrationAddsString()
+				generatingClass.getCanonicalName(),
+				buildRunDateString(),
+				buildRegistrationAddsString(),
+				CompileUtil.getGeneratedAnnotationClassName()
 		);
 		
 		return source;
