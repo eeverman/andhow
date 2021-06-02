@@ -4,12 +4,15 @@ import org.yarnandtail.andhow.service.AbstractPropertyRegistrar;
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
 
 /*
-Java9 places 'Generated' in a module that needs to be separate included in a build
-or brought in as a dependency.  As a result, just using a comment instead.
-@javax.annotation.Generated(
+AndHow generated class that is discovered via the Service Provider API to
+register a proxied class as having AndHow properties.  These properties
+can then be auto-discovered and assigned values at startup.
+See:  https://github.com/eeverman/andhow
+*/
+@%9$s(
 	value="%6$s",
 	date="%7$s",
-	comments="Proxy for %2$s registered as a service provider in META-INF/services/%5$s") */
+	comments="Proxy for %2$s registered as a service provider in META-INF/services/%5$s")
 public class %4$s extends AbstractPropertyRegistrar {
 
 	@Override
