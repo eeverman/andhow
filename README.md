@@ -1,13 +1,18 @@
 [![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
-# Introducing AndHow's new Logo
-<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="166" height="215" alt="AndHow's new logo"  style="float: left">
 
-Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
+
+## New Release:  0.4.1, June 2, 2021 ([notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.1)).
+<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="83" height="107" alt="AndHow's new logo"  style="float: left; margin-right: 1em; margin-bottom: .6em;">
+
+This larger update fixes several issues due to newer JVMs and the IntelliJ IDE.
+Special thanks to first time contributor [Vicky Ronnen](https://github.com/VickyRonnen) for fixing Issue [497](https://github.com/eeverman/andhow/issues/497) -
+This bug made AndHow unusable for anyone using newer versions of IntelliJ.
+
 
 ![Andhow Visual](andhow.gif)
-# AndHow!  strong.valid.simple.AppConfiguration
+## AndHow!  strong.valid.simple.AppConfiguration
 AndHow is an easy to use configuration framework with strong typing and detailed 
 validation for web apps, command line or any application environment.
 
@@ -33,7 +38,7 @@ or the *Slack* group (See details on the
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
 </dependency>
 ```
 **AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/user-guide/java9)**
