@@ -59,7 +59,7 @@ public class AndHowNonProductionUtil {
 	/**
 	 * Sets a new {@code AndHowCore}
 	 * 
-	 * This inserts an entire new state into AndHow.  Inserting a {@null} core
+	 * This inserts an entire new state into AndHow.  Inserting a <code>null</code> core
 	 * puts AndHow into a reset state that is invalid during production, but
 	 * can be useful during testing.  In this state, AndHow will allow itself
 	 * to be reinitialized, which is not the intended operation during
