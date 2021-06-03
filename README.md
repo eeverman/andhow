@@ -4,7 +4,7 @@
 
 
 ## New Release:  0.4.1, June 2, 2021 ([notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.1)).
-<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="83" height="107" alt="AndHow's new logo"  style="float: left; margin-right: 1em; margin-bottom: .6em;">
+<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="83" height="107" alt="AndHow's new logo"  align="left">
 
 This larger update fixes several issues due to newer JVMs and the IntelliJ IDE.
 Special thanks to first time contributor [Vicky Ronnen](https://github.com/VickyRonnen) for fixing Issue [497](https://github.com/eeverman/andhow/issues/497) -
