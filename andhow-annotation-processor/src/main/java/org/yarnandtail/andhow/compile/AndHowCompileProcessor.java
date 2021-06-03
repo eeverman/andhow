@@ -213,7 +213,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * @throws Exception If unable to write (out of disc space?)
 	 */
 	public void writeClassFile(Filer filer,
-														 PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
+			PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
 
 		String classContent = generator.generateSource();
 
@@ -226,8 +226,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 
 	protected void writeServiceFile(Filer filer,
-																	String fullyQualifiedServiceInterfaceName,
-																	List<CauseEffect> implementingClasses) throws IOException {
+			String fullyQualifiedServiceInterfaceName, List<CauseEffect> implementingClasses) throws IOException {
 
 		//Get a unique causing elements
 		HashSet<Element> set = new HashSet();
