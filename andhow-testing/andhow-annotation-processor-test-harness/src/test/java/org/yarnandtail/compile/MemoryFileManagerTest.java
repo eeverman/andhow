@@ -5,9 +5,7 @@ package org.yarnandtail.compile;
 import java.io.IOException;
 import java.io.Writer;
 import javax.tools.*;
-import javax.tools.JavaFileManager.Location;
-import org.yarnandtail.compile.MemoryFileManager;
-import org.yarnandtail.compile.TestClassLoader;
+
 import org.junit.Before;
 import org.junit.Test;
 

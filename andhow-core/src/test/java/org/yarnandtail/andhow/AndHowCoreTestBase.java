@@ -2,7 +2,11 @@ package org.yarnandtail.andhow;
 
 import java.util.Properties;
 import javax.naming.NamingException;
-import org.junit.*;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
@@ -45,50 +49,50 @@ public class AndHowCoreTestBase {
 	 */
 	private static SimpleNamingContextBuilder builder;
 	
-	@BeforeClass
+	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
 		AndHowCoreTestUtil.destroyAndHow();
 	}
 	
-	@BeforeClass
+	@BeforeAll
 	public static void storeSysPropsBeforeClass() {
 		beforeClassSystemProps = AndHowCoreTestUtil.clone(System.getProperties());
 	}
 	
-	@Before
+	@BeforeEach
 	public void killAndHowStateBeforeTest() {
 		AndHowCoreTestUtil.destroyAndHow();
 	}
 	
-	@Before
+	@BeforeEach
 	public void storeSysPropsBeforeTest() {
 		beforeTestSystemProps = AndHowCoreTestUtil.clone(System.getProperties());
 	}
 	
-	@After
+	@AfterEach
 	public void killAndHowStateAfterTest() {
 		AndHowCoreTestUtil.destroyAndHow();
 	}
 	
-	@After
+	@AfterEach
 	public void clearJNDIAfterTest() {
 		if (builder != null) {
 			builder.clear();
 		}
 	}
 	
-	@After
+	@AfterEach
 	public void restoreSysPropsAfterTest() {
 		System.setProperties(beforeTestSystemProps);
 	}
 	
 	
-	@AfterClass
+	@AfterAll
 	public static void killAndHowStateAfterClass() {
 		AndHowCoreTestUtil.destroyAndHow();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void restoreSysPropsAfterClass() {
 		System.setProperties(beforeClassSystemProps);
 	}

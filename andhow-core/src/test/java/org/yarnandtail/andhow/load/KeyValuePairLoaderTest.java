@@ -3,10 +3,10 @@ package org.yarnandtail.andhow.load;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -39,7 +39,7 @@ public class KeyValuePairLoaderTest {
 		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		

@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.yarnandtail.andhow.NonProductionConfig.NonProductionConfigImpl;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
 import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;

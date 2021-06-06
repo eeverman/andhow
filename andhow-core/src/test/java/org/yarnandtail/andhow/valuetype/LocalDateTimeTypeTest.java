@@ -3,8 +3,8 @@
 package org.yarnandtail.andhow.valuetype;
 
 import java.time.LocalDateTime;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
@@ -12,8 +12,6 @@ import org.yarnandtail.andhow.api.ParsingException;
  * @author ericeverman
  */
 public class LocalDateTimeTypeTest {
-	
-
 
 	@Test
 	public void testParseHappyPath() throws ParsingException {
@@ -32,32 +30,44 @@ public class LocalDateTimeTypeTest {
 		assertNull(type.parse(null));
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseTooManyDecimalPlaces() throws ParsingException {
+	@Test
+	public void testParseTooManyDecimalPlaces() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
 		assertFalse(type.isParsable("2007-12-03T10:15:30.1234567891"));
-		type.parse("2007-12-03T10:15:30.1234567891");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("2007-12-03T10:15:30.1234567891")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseEmpty() throws ParsingException {
+	@Test
+	public void testParseEmpty() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
 		assertFalse(type.isParsable(""));
-		type.parse("");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseIncorrect24Hour() throws ParsingException {
+	@Test
+	public void testParseIncorrect24Hour() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
 		assertFalse(type.isParsable("2007-12-03T24:15:30.123456789"));
-		type.parse("2007-12-03T24:15:30.123456789");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("2007-12-03T24:15:30.123456789")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseMissingZeroPadding() throws ParsingException {
+	@Test
+	public void testParseMissingZeroPadding() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
 		assertFalse(type.isParsable("2007-12-03T10:15:3"));
-		type.parse("2007-12-03T10:15:3");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("2007-12-03T10:15:3")
+		);
 	}
 	
 	@Test

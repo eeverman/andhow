@@ -2,10 +2,10 @@ package org.yarnandtail.andhow.load;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -41,7 +41,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		
 		appValuesBuilder = new ValidatedValuesWithContextMutable();

@@ -2,12 +2,12 @@ package org.yarnandtail.andhow.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.yarnandtail.andhow.service.PropertyRegistrationList;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.property.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

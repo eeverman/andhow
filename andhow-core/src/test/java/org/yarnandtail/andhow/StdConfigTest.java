@@ -4,7 +4,7 @@ package org.yarnandtail.andhow;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.api.StandardLoader;
@@ -12,7 +12,7 @@ import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

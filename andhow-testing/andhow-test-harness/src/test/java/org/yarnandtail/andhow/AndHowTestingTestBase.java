@@ -1,8 +1,7 @@
 package org.yarnandtail.andhow;
 
 import java.lang.reflect.Field;
-import java.util.Properties;
-import javax.naming.NamingException;
+
 import org.junit.*;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 

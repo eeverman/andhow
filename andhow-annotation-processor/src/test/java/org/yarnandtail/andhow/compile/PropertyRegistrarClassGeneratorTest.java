@@ -3,7 +3,7 @@ package org.yarnandtail.andhow.compile;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 import java.util.*;
-import javax.tools.JavaFileObject;
+
 import org.junit.Test;
 import org.junit.Before;
 

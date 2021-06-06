@@ -1,11 +1,11 @@
 package org.yarnandtail.andhow;
 
 
-import static org.junit.Assert.*;
-import org.junit.FixMethodOrder;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.TestMethodOrder;
 
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 
@@ -16,7 +16,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem;
  * bleed over from one test to another. 
  * @author eeverman
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class AndHowReentrantTest extends AndHowCoreTestBase {
 	
 	

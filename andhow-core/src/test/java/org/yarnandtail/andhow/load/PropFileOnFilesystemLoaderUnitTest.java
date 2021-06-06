@@ -4,12 +4,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -46,7 +46,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
@@ -73,7 +73,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 	}
 	
-	@After
+	@AfterEach
 	public void afterTest() {
 		if (tempPropertiesFile != null) {
 			tempPropertiesFile.delete();

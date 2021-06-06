@@ -2,10 +2,10 @@ package org.yarnandtail.andhow.example.restclient;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
@@ -24,7 +24,7 @@ public class SampleRestClientAppTest extends AndHowCoreTestBase {
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.example.restclient.SampleRestClientGroup";
 
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		
 		cmdLineArgs = new String[0];

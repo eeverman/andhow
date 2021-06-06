@@ -1,6 +1,5 @@
 package com.dep2;
 
-import com.dep2.*;
 import org.dataprocess.ExternalServiceConnector;
 import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;

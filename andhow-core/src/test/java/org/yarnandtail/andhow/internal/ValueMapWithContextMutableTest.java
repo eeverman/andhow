@@ -3,9 +3,9 @@ package org.yarnandtail.andhow.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;

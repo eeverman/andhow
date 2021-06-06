@@ -2,18 +2,14 @@ package org.yarnandtail.andhow;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.*;
-
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.SysPropExporter;
-import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.util.NameUtil;
 
 /**
  *

@@ -1,12 +1,12 @@
 package org.yarnandtail.andhow.load.std;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.junit.After;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -35,7 +35,7 @@ public class StdSysPropLoaderTest {
 		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
@@ -55,7 +55,7 @@ public class StdSysPropLoaderTest {
 		
 	}
 	
-	@After
+	@AfterEach
 	public void post() throws Exception {
 		clearSysProps();
 	}
