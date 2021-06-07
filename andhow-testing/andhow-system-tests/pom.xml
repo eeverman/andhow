@@ -20,7 +20,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -28,11 +28,18 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- All dependencies are test dependencies only -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

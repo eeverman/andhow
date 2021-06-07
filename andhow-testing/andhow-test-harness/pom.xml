@@ -19,18 +19,49 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-core</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
-		<!-- All dependencies are test dependencies only -->
+
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
+			<!-- This should be optional, but is a too baked in.
+			This issue:  https://github.com/eeverman/andhow/issues/309
+			  should remove it -->
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>compile</scope>
+		</dependency>
+
+		<!--
+		This package is designed to be used unit testing utils for apps,
+		so dependencies that would normally be test scope are compile scope.
+		However, they are optional so that the downstream app can choose if
+		it wants to use Junit 4 or 5 (and use newer versions than what is
+		used here).
+		-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

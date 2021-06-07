@@ -1,6 +1,9 @@
 package org.yarnandtail.andhow;
 
-import org.junit.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 
 
 /**
@@ -14,11 +17,10 @@ import org.junit.*;
  *
  * <a href="https://github.com/eeverman/andhow/blob/master/andhow-testing/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dep1/src/test/java/com/dep1/EarthMapMakerUsingAHBaseTestClassTest.java#L25">
  *   Here is a example</a>Here is a example that shows how this can be used.
- * 
+ *
  * @author eeverman
- * @depricated Use AndHowJunit4TestBase instead, or upgrade to AndHowJunit5TestBase.
  */
-public class AndHowTestBase extends AndHowTestBaseImpl {
+public class AndHowJunit5TestBase extends AndHowTestBaseImpl {
 
 	/**
 	 * Stores the AndHow Core (its state) and System Properties prior to a test class.
@@ -26,7 +28,7 @@ public class AndHowTestBase extends AndHowTestBaseImpl {
 	 * related class) to SEVERE.  If JNDI is used for a test, it's startup
 	 * is verbose to System.out, so this turns it off.
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void andHowSnapshotBeforeTestClass() {
 		AndHowTestBaseImpl.andHowSnapshotBeforeTestClass();
 	}
@@ -37,7 +39,7 @@ public class AndHowTestBase extends AndHowTestBaseImpl {
 	 * It also resets the logging level for SimpleNamingContextBuilder (a JNDI
 	 * related class) to what ever it was prior to the run.
 	 */
-	@AfterClass
+	@AfterAll
 	public static void resetAndHowSnapshotAfterTestClass() {
 		AndHowTestBaseImpl.resetAndHowSnapshotAfterTestClass();
 	}
@@ -48,7 +50,7 @@ public class AndHowTestBase extends AndHowTestBaseImpl {
 	 * related class) to SEVERE.  If JNDI is used for a test, it's startup
 	 * is verbose to System.out, so this turns it off.
 	 */
-	@Before
+	@BeforeEach
 	public void andHowSnapshotBeforeSingleTest() {
 		super.andHowSnapshotBeforeSingleTest();
 	}
@@ -59,7 +61,7 @@ public class AndHowTestBase extends AndHowTestBaseImpl {
 	 * It also resets the logging level for SimpleNamingContextBuilder (a JNDI
 	 * related class) to what ever it was prior to the run.
 	 */
-	@After
+	@AfterEach
 	public void resetAndHowSnapshotAfterSingleTest() {
 		super.resetAndHowSnapshotAfterSingleTest();
 	}

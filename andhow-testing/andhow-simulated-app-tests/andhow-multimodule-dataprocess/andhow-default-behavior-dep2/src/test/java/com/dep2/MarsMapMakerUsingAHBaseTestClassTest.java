@@ -1,12 +1,12 @@
 package com.dep2;
 
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
-import org.yarnandtail.andhow.AndHowTestBase;
-import org.yarnandtail.andhow.NonProductionConfig;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.MethodOrderer;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
+import org.yarnandtail.andhow.AndHowJunit5TestBase;
+import org.yarnandtail.andhow.NonProductionConfig;
 
 /**
  * Note that these test methods are specified to be executed in Alph sort order
@@ -14,8 +14,8 @@ import static org.junit.Assert.*;
  * 
  * @author ericeverman
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowTestBase {
+@TestMethodOrder(MethodOrderer.MethodName.class)
+public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
 	
 	public MarsMapMakerUsingAHBaseTestClassTest() {
 	}
