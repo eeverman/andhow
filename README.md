@@ -41,7 +41,7 @@ or the *Slack* group (See details on the
     <version>0.4.1</version>
 </dependency>
 ```
-**AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/user-guide/java9)**
+**AndHow can be used in projects with Java 8 - Java 15.  Work to support Java 16 is underway and will be a major release.  There are [some considerations](https://sites.google.com/view/andhow/user-guide/java9-and-above) for Java 9 and above if your project uses Jigsaw Modules.**
 
 ## Complete Usage Example
 _**More usage examples and documentation
