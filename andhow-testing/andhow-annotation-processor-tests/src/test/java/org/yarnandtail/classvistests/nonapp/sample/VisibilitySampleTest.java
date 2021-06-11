@@ -2,9 +2,9 @@ package org.yarnandtail.classvistests.nonapp.sample;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * These are some characterization tests of how visibility of non-public

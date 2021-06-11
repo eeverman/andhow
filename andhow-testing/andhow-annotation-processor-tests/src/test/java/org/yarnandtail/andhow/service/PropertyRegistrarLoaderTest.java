@@ -1,12 +1,13 @@
 package org.yarnandtail.andhow.service;
 
 import java.util.List;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.classvistests.sample.NonStaticInnerClassSample;
 import org.yarnandtail.classvistests.sample.PropertySample;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.yarnandtail.andhow.api.GroupProxy;
 

@@ -3,10 +3,10 @@
 package org.yarnandtail.andhow;
 
 import java.util.Properties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.internal.AndHowCore;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -62,7 +62,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 		AndHowNonProductionUtil.setAndHowCore(ahCore1);	//swap cores
 		
 		//The key assertion
-		assertTrue("Should have inserted a new core", ahCore1 == AndHowNonProductionUtil.getAndHowCore());
+		assertTrue(ahCore1 == AndHowNonProductionUtil.getAndHowCore(), "Should have inserted a new core");
 	}
 
 	/**
@@ -75,12 +75,12 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 		AndHowConfiguration config = AndHow.findConfig();
 		AndHowNonProductionUtil.forceRebuild(config);	//Should be OK even when a new build
 		AndHowCore ahCore1 = AndHowNonProductionUtil.getAndHowCore();
-		assertNotNull("Util should create a new instance even if no current instance", ahCore1);
+		assertNotNull(ahCore1, "Util should create a new instance even if no current instance");
 		
 		AndHowNonProductionUtil.forceRebuild(config);	//Now an actual rebuild
 		AndHowCore ahCore2 = AndHowNonProductionUtil.getAndHowCore();
 		assertNotNull(ahCore2);
-		assertFalse("The core instances should be different instances", ahCore1 == ahCore2);
+		assertFalse(ahCore1 == ahCore2, "The core instances should be different instances");
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class AndHowNonProductionUtilTest extends AndHowTestingTestBase {
 	@Test
 	public void testDestroyAndHowCore() {
 
-		assertNull("AndHow should be null at test start", AndHowNonProductionUtil.getAndHowInstance());
+		assertNull(AndHowNonProductionUtil.getAndHowInstance(), "AndHow should be null at test start");
 		AndHow.instance();	//force creation
 		AndHowNonProductionUtil.destroyAndHowCore();
 		assertNotNull(AndHowNonProductionUtil.getAndHowInstance());

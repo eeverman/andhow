@@ -1,9 +1,9 @@
 package org.dataprocess;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.AndHowTestBase;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

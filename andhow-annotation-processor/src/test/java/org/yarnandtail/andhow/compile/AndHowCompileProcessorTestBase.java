@@ -6,7 +6,7 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.util.IOUtil;
 import org.yarnandtail.compile.MemoryFileManager;
 import org.yarnandtail.compile.TestClassLoader;
@@ -31,7 +31,7 @@ public class AndHowCompileProcessorTestBase {
 	
 	Set<TestSource> sources;	//New set of source files to compile
 	
-	@Before
+	@BeforeEach
 	public void setupTest() {
 		compiler = ToolProvider.getSystemJavaCompiler();
 		manager = new MemoryFileManager(compiler);

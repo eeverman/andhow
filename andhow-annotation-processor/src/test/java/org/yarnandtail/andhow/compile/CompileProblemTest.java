@@ -4,8 +4,8 @@ package org.yarnandtail.andhow.compile;
 
 import java.util.ArrayList;
 import javax.lang.model.element.Element;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.yarnandtail.andhow.compile.CompileProblem.*;
 import static org.mockito.Mockito.*;
 import org.yarnandtail.andhow.compile.AndHowCompileProcessor.CauseEffect;
