@@ -1,15 +1,15 @@
 package org.dataprocess;
 
-import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.AndHowTestBase;
+import org.yarnandtail.andhow.AndHowJunit5TestBase;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author ericeverman
  */
-public class ExternalServiceConnectorTest extends AndHowTestBase {
+public class ExternalServiceConnectorTest extends AndHowJunit5TestBase {
 	
 	public ExternalServiceConnectorTest() {
 	}

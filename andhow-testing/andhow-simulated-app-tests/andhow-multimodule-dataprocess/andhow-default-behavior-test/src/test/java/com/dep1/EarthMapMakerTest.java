@@ -1,22 +1,19 @@
 package com.dep1;
 
 import org.dataprocess.ExternalServiceConnector;
-import org.junit.jupiter.api.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author ericeverman
  */
-public class EarthMapMakerTest extends AndHowTestBase {
+public class EarthMapMakerTest extends AndHowJunit5TestBase {
 
 	@Test
 	public void testConfigFromPropertiesFileOnly() {
