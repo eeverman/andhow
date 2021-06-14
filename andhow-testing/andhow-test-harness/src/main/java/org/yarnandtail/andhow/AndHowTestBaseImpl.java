@@ -75,6 +75,9 @@ public class AndHowTestBaseImpl {
 	 * <p>
 	 * bind() each variable, then call build().
 	 *
+	 * @deprecated This will be removed in the next major release to avoid
+	 * having JNDI dependencies in a user visible class.  Most user will not
+	 * need to test their apps with JNDI.
 	 * @return A JNDI context for setting properties via JNDI.
 	 * @throws NamingException If JNDI cannot be initiated.
 	 */
