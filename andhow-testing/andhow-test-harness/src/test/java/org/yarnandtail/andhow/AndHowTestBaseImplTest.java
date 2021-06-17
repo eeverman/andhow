@@ -81,11 +81,13 @@ class AndHowTestBaseImplTest {
 
 	}
 
-
 	@Test
 	void andHowSnapshotBeforeAndAfterSingleTest() {
-
 		AndHowTestBaseImpl testBase = new AndHowTestBaseImpl();
+		doAndHowSnapshotBeforeAndAfterSingleTest(testBase);
+	}
+
+	void doAndHowSnapshotBeforeAndAfterSingleTest(AndHowTestBaseImpl testBase) {
 
 		AndHowCore beforeTheTestCore = AndHowNonProductionUtil.getAndHowCore();
 		Properties originalProperties = System.getProperties();
