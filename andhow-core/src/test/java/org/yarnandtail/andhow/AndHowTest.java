@@ -3,7 +3,9 @@ package org.yarnandtail.andhow;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.junit.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.*;
@@ -12,7 +14,7 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This test is a minimal unit teat because this class is not really testable
@@ -39,7 +41,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		FlagProp FLAG_NULL = FlagProp.builder().mustBeNonNull().build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void setup() throws Exception {
 		
 		configPtGroups.clear();

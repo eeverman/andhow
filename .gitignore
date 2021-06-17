@@ -11,3 +11,4 @@ release.properties
 #IntelliJ Project directory
 .idea/
 **.iml
+.java-version

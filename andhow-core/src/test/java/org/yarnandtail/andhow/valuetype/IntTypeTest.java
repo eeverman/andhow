@@ -2,8 +2,8 @@
  */
 package org.yarnandtail.andhow.valuetype;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
@@ -24,39 +24,54 @@ public class IntTypeTest {
 		assertNull(type.parse(null));
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseDecimalNumber() throws ParsingException {
+	@Test
+	public void testParseDecimalNumber() {
 		IntType type = IntType.instance();
 		assertFalse(type.isParsable("1234.1234"));
-		type.parse("1234.1234");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("1234.1234")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseNotANumber() throws ParsingException {
+	@Test
+	public void testParseNotANumber() {
 		IntType type = IntType.instance();
 		assertFalse(type.isParsable("apple"));
-		type.parse("apple");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("apple")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
+	@Test
 	public void testParseEmpty() throws ParsingException {
 		IntType type = IntType.instance();
 		assertFalse(type.isParsable(""));
-		type.parse("");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseTooBig() throws ParsingException {
+	@Test
+	public void testParseTooBig() {
 		IntType type = IntType.instance();
 		assertFalse(type.isParsable("9999999999999999999999999999999999999999"));
-		type.parse("9999999999999999999999999999999999999999");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("9999999999999999999999999999999999999999")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseTooSmall() throws ParsingException {
+	@Test
+	public void testParseTooSmall() {
 		IntType type = IntType.instance();
 		assertFalse(type.isParsable("-9999999999999999999999999999999999999999"));
-		type.parse("-9999999999999999999999999999999999999999");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("-9999999999999999999999999999999999999999")
+		);
 	}
 	
 	@Test

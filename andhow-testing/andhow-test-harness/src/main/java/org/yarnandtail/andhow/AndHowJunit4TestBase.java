@@ -1,6 +1,9 @@
 package org.yarnandtail.andhow;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 
 /**
@@ -14,11 +17,10 @@ import org.junit.*;
  *
  * <a href="https://github.com/eeverman/andhow/blob/master/andhow-testing/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dep1/src/test/java/com/dep1/EarthMapMakerUsingAHBaseTestClassTest.java#L25">
  *   Here is a example</a>Here is a example that shows how this can be used.
- * 
+ *
  * @author eeverman
- * @depricated Use AndHowJunit4TestBase instead, or upgrade to AndHowJunit5TestBase.
  */
-public class AndHowTestBase extends AndHowTestBaseImpl {
+public class AndHowJunit4TestBase extends AndHowTestBaseImpl {
 
 	/**
 	 * Stores the AndHow Core (its state) and System Properties prior to a test class.

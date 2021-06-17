@@ -12,24 +12,5 @@
 		andhow-default-behavior-test to test property behavior
 		in external compiled libraries.</description>
 
-	<dependencies>
-		<dependency>
-			<!-- Using the combined, single jar dependency -->
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<!-- Using the combined, single jar dependency -->
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-test-harness</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-	</dependencies>
 
 </project>

@@ -1,11 +1,13 @@
 package org.yarnandtail.andhow;
 
 import java.lang.reflect.Field;
-import org.junit.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 
-import static org.junit.Assert.*;
 
 /**
  * 
@@ -24,12 +26,12 @@ public class AndHowTest {
 
 	private AndHow originalAndHowInstance;
 	
-	@Before
+	@BeforeEach
 	public void clearAndHow() {
 		originalAndHowInstance = setAndHowInstance(null);
 	}
 	
-	@After
+	@AfterEach
 	public void restoreAndHow() {
 		setAndHowInstance(originalAndHowInstance);
 	}
@@ -45,8 +47,8 @@ public class AndHowTest {
 		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		
-		assertNotEquals("Should return a new instance each time", config1, config2);
-		assertFalse("findConfig should not force initialization", AndHow.isInitialize());
+		assertNotEquals(config1, config2, "Should return a new instance each time");
+		assertFalse(AndHow.isInitialize(), "findConfig should not force initialization");
 	}
 
 	/**

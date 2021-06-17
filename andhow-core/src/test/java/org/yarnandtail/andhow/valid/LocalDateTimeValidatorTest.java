@@ -2,8 +2,8 @@ package org.yarnandtail.andhow.valid;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -20,12 +20,12 @@ public class LocalDateTimeValidatorTest {
 		LocalDateTimeValidator.Before instance = new LocalDateTimeValidator.Before(DEC_03_2007_AT_5PM);
 		assertTrue(instance.isSpecificationValid());
 		
-		assertTrue("One nano second before", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
-		assertTrue("One day second before", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.DAYS)));
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)), "One nano second before");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.DAYS)), "One day second before");
 		
-		assertFalse("Same date should not be valid", instance.isValid(DEC_03_2007_AT_5PM));
-		assertFalse("One nano after should not be valid", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
-		assertFalse("Null should not be valid", instance.isValid(null));
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM), "Same date should not be valid");
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)), "One nano after should not be valid");
+		assertFalse(instance.isValid(null), "Null should not be valid");
 
 		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
 
@@ -37,12 +37,12 @@ public class LocalDateTimeValidatorTest {
 		LocalDateTimeValidator.SameTimeOrBefore instance = new LocalDateTimeValidator.SameTimeOrBefore(DEC_03_2007_AT_5PM);
 		assertTrue(instance.isSpecificationValid());
 		
-		assertTrue("One nano second before", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
-		assertTrue("One day second before", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.DAYS)));
-		assertTrue("Same date should be valid", instance.isValid(DEC_03_2007_AT_5PM));
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)), "One nano second before");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.DAYS)), "One day second before");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM), "Same date should be valid");
 		
-		assertFalse("One nano after should not be valid", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
-		assertFalse("Null should not be valid", instance.isValid(null));
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)), "One nano after should not be valid");
+		assertFalse(instance.isValid(null), "Null should not be valid");
 
 		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
 
@@ -54,12 +54,12 @@ public class LocalDateTimeValidatorTest {
 		LocalDateTimeValidator.After instance = new LocalDateTimeValidator.After(DEC_03_2007_AT_5PM);
 		assertTrue(instance.isSpecificationValid());
 		
-		assertTrue("One nano second after", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
-		assertTrue("One day second before", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.DAYS)));
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)), "One nano second after");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.DAYS)), "One day second before");
 		
-		assertFalse("Same date should not be valid", instance.isValid(DEC_03_2007_AT_5PM));
-		assertFalse("One nano before should not be valid", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
-		assertFalse("Null should not be valid", instance.isValid(null));
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM), "Same date should not be valid");
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)), "One nano before should not be valid");
+		assertFalse(instance.isValid(null), "Null should not be valid");
 
 		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
 
@@ -71,12 +71,12 @@ public class LocalDateTimeValidatorTest {
 		LocalDateTimeValidator.SameTimeOrAfter instance = new LocalDateTimeValidator.SameTimeOrAfter(DEC_03_2007_AT_5PM);
 		assertTrue(instance.isSpecificationValid());
 		
-		assertTrue("One nano second after", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)));
-		assertTrue("One day second after", instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.DAYS)));
-		assertTrue("Same date should be valid", instance.isValid(DEC_03_2007_AT_5PM));
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.NANOS)), "One nano second after");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM.plus(1, ChronoUnit.DAYS)), "One day second after");
+		assertTrue(instance.isValid(DEC_03_2007_AT_5PM), "Same date should be valid");
 		
-		assertFalse("One nano before should not be valid", instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
-		assertFalse("Null should not be valid", instance.isValid(null));
+		assertFalse(instance.isValid(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)), "One nano before should not be valid");
+		assertFalse(instance.isValid(null), "Null should not be valid");
 
 		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
 

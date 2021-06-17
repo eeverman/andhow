@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow;
 
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
@@ -21,7 +21,7 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 	String[] cmdLineArgsWFullClassName = new String[0];
 
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		
 		cmdLineArgsWFullClassName = new String[] {

@@ -3,8 +3,8 @@ package org.yarnandtail.andhow.compile;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.compile.CompileProblem.PropMissingFinal;
 import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStatic;
 import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStaticFinal;
@@ -41,8 +41,11 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
         
-		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
-				d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)).count());
+		assertEquals(0,
+				diagnostics.getDiagnostics().stream().filter(
+						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+				).count(),
+				"Should be no warn/errors");
 			
         assertNotNull(genClass);
 		
@@ -91,8 +94,11 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
         
-		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
-				d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)).count());
+		assertEquals(0,
+				diagnostics.getDiagnostics().stream().filter(
+						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+				).count(),
+				"Should be no warn/errors");
 
         assertNotNull(genClass);
 		

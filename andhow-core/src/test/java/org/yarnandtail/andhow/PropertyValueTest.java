@@ -1,9 +1,10 @@
 package org.yarnandtail.andhow;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.property.StrProp;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.yarnandtail.andhow.SimpleParams.*;
 
 /**
@@ -140,9 +141,11 @@ public class PropertyValueTest {
 		assertEquals(SPV5.getValue(), "abc");
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testConstructor() {
-		PropertyValue NULL_PROP = new PropertyValue((StrProp)null, null);
+		assertThrows(RuntimeException.class, () ->
+				new PropertyValue((StrProp)null, null)
+		);
 	}
 	
 }

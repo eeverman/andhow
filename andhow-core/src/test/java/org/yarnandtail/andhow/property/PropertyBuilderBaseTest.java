@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.property;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Name;
 import org.yarnandtail.andhow.valuetype.FlagType;
@@ -52,32 +52,40 @@ public class PropertyBuilderBaseTest {
 		assertTrue(kathy.isIn() && kathy.isOut());
 	}
 	
-	@Test(expected=AppFatalException.class)
+	@Test
 	public void testAliasesSlashCharactersNotAllowed() {
 		TestBuilder builder = new TestBuilder();
-		
-		builder.aliasInAndOut("a/path/looking/one");
+
+		assertThrows(AppFatalException.class, () ->
+			builder.aliasInAndOut("a/path/looking/one")
+		);
 	}
 	
-	@Test(expected=AppFatalException.class)
+	@Test
 	public void testAliasesQuoteCharactersNotAllowed() {
 		TestBuilder builder = new TestBuilder();
-		
-		builder.aliasInAndOut("\"NoQuotes\"");
+
+		assertThrows(AppFatalException.class, () ->
+			builder.aliasInAndOut("\"NoQuotes\"")
+		);
 	}
 	
-	@Test(expected=AppFatalException.class)
+	@Test
 	public void testAliasesSpaceCharactersNotAllowed() {
 		TestBuilder builder = new TestBuilder();
-		
-		builder.aliasInAndOut("  NoSpaces");
+
+		assertThrows(AppFatalException.class, () ->
+			builder.aliasInAndOut("  NoSpaces")
+		);
 	}
 	
-	@Test(expected=AppFatalException.class)
+	@Test
 	public void testAliasesNullNotAllowed() {
 		TestBuilder builder = new TestBuilder();
-		
-		builder.aliasInAndOut(null);
+
+		assertThrows(AppFatalException.class, () ->
+			builder.aliasInAndOut(null)
+		);
 	}
 	
 }

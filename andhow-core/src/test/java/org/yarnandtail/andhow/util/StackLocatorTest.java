@@ -1,8 +1,7 @@
 package org.yarnandtail.andhow.util;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is testing production code from Log4J, so this is really just characterization.

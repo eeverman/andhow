@@ -5,17 +5,16 @@ package org.yarnandtail.andhow;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.NonProductionConfig.NonProductionConfigImpl;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
 import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.property.StrProp;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.yarnandtail.andhow.AndHowNonProductionUtil.PERMISSION_MSG;
 
 /**
@@ -57,11 +56,13 @@ public class NonProductionConfigTest {
 		assertEquals("NULL", kvps.get(2));
 	}
 	
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testAddCmdLineArgWithNull() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
-		config.addCmdLineArg(null, "one");
-		
+
+		assertThrows(RuntimeException.class, () -> {
+			config.addCmdLineArg(null, "one");
+		});
 	}
 	
 	@Test

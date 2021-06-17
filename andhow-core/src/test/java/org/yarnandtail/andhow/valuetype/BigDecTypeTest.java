@@ -1,13 +1,11 @@
 package org.yarnandtail.andhow.valuetype;
 
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for BigDecType
@@ -16,8 +14,6 @@ import static org.junit.Assert.*;
  */
 public class BigDecTypeTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     private static final String PARSE_ERROR_MSG = "Unable to convert to a BigDecimal numeric value";
     private BigDecType type = BigDecType.instance();
 
@@ -32,16 +28,22 @@ public class BigDecTypeTest {
 
     @Test
     public void testParseEmpty() throws ParsingException {
-        expectParsingException();
         assertFalse(type.isParsable(""));
-        type.parse("");
+
+        Exception e = assertThrows(ParsingException.class, () ->
+            type.parse("")
+        );
+        assertEquals(PARSE_ERROR_MSG, e.getMessage());
     }
 
     @Test
     public void testParseNotANumber() throws ParsingException {
-        expectParsingException();
         assertFalse(type.isParsable("apple"));
-        type.parse("apple");
+
+        Exception e = assertThrows(ParsingException.class, () ->
+            type.parse("apple")
+        );
+        assertEquals(PARSE_ERROR_MSG, e.getMessage());
     }
 
     @Test
@@ -51,8 +53,4 @@ public class BigDecTypeTest {
         assertNotNull(type.cast(o));
     }
 
-    private void expectParsingException() {
-        thrown.expect(ParsingException.class);
-        thrown.expectMessage(PARSE_ERROR_MSG);
-    }
 }

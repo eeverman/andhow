@@ -1,10 +1,10 @@
 package org.yarnandtail.andhow.api;
 
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.load.*;
 import java.util.*;
-import org.junit.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.yarnandtail.andhow.property.StrProp;
 

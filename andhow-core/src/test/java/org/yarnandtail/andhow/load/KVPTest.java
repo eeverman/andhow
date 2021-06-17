@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.load;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
@@ -98,34 +98,46 @@ public class KVPTest {
 		
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadEmptyFlagName() throws Exception {
-		KVP.splitKVP("=value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadEmptyFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("=value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadSpaceOnlyFlagName() throws Exception {
-		KVP.splitKVP("  =value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadSpaceOnlyFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("  =value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadAllSpaceAndTabFlagName() throws Exception {
-		KVP.splitKVP("   \t =value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadAllSpaceAndTabFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("   \t =value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadAllWhitespaceAndNewLinesFlagName() throws Exception {
-		KVP.splitKVP("   \t\n\r\f = value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadAllWhitespaceAndNewLinesFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("   \t\n\r\f = value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadAllBackspaceFlagName() throws Exception {
-		KVP.splitKVP("\b =value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadAllBackspaceFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("\b =value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void splitKVPBadAllWhitespaceAndBackspaceFlagName() throws Exception {
-		KVP.splitKVP("   \b  =value", KeyValuePairLoader.KVP_DELIMITER);
+	@Test
+	public void splitKVPBadAllWhitespaceAndBackspaceFlagName() {
+		assertThrows(ParsingException.class, () ->
+			KVP.splitKVP("   \b  =value", KeyValuePairLoader.KVP_DELIMITER)
+		);
 	}
 	
 	@Test
@@ -145,9 +157,11 @@ public class KVPTest {
 		assertNull(kvp.getValue());
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void newKVPByNameOnlyBadEmptyName() throws Exception {
-		new KVP("  \t \r\n ");
+	@Test
+	public void newKVPByNameOnlyBadEmptyName() {
+		assertThrows(ParsingException.class, () ->
+			new KVP("  \t \r\n ")
+		);
 	}
 	
 	@Test
@@ -163,8 +177,10 @@ public class KVPTest {
 		assertNull(kvp.getValue());
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void newKVPByNameAndValueBadEmptyName() throws Exception {
-		new KVP("  \t \r\n ", "value");
+	@Test
+	public void newKVPByNameAndValueBadEmptyName(){
+		assertThrows(ParsingException.class, () ->
+			new KVP("  \t \r\n ", "value")
+		);
 	}
 }

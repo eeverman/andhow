@@ -6,10 +6,10 @@ import java.nio.charset.Charset;
 import java.util.*;
 import javax.tools.*;
 import javax.tools.Diagnostic.Kind;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.util.IOUtil;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * A lot of this code was borrowed from here:
@@ -48,8 +48,11 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
-		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
-				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
+		assertEquals(0,
+				diagnostics.getDiagnostics().stream().filter(
+						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+				).count(),
+				"Should be no warn/errors");
 
 		//
 		//Test the initiation files
@@ -75,8 +78,11 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
         
 		String prodInitSvs = IOUtil.toString(loader.getResourceAsStream(INIT_SVS_PATH), Charset.forName("UTF-8"));     
 
-		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
-				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
+		assertEquals(0,
+				diagnostics.getDiagnostics().stream().filter(
+						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+				).count(),
+				"Should be no warn/errors");
 
 		//
 		//Test the initiation files
@@ -99,8 +105,11 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
         
    		String testInitSvs = IOUtil.toString(loader.getResourceAsStream(TEST_INIT_SVS_PATH), Charset.forName("UTF-8"));
      
-		assertEquals("Should be no warn/errors", 0, diagnostics.getDiagnostics().stream().filter(
-				d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)).count());
+		assertEquals(0,
+				diagnostics.getDiagnostics().stream().filter(
+						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+				).count(),
+				"Should be no warn/errors");
 		
 
 		//

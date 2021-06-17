@@ -39,10 +39,6 @@
 		
 		<!-- All dependencies are test dependencies only -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.google.testing.compile</groupId>
 			<artifactId>compile-testing</artifactId>
 		</dependency>

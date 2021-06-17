@@ -1,14 +1,11 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.load.std.StdEnvVarLoader;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
@@ -39,7 +36,7 @@ public class StdEnvVarLoaderTest {
 		FlagProp FLAG_NULL = FlagProp.builder().build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		
 		appValuesBuilder = new ValidatedValuesWithContextMutable();

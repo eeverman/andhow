@@ -1,9 +1,8 @@
 package org.yarnandtail.andhow.service;
 
-import org.yarnandtail.andhow.service.PropertyRegistrationList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *

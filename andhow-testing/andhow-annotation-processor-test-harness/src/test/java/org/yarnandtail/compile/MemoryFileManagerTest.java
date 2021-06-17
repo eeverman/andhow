@@ -5,13 +5,11 @@ package org.yarnandtail.compile;
 import java.io.IOException;
 import java.io.Writer;
 import javax.tools.*;
-import javax.tools.JavaFileManager.Location;
-import org.yarnandtail.compile.MemoryFileManager;
-import org.yarnandtail.compile.TestClassLoader;
-import org.junit.Before;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -26,7 +24,7 @@ public class MemoryFileManagerTest {
 	public MemoryFileManagerTest() {
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		compiler = ToolProvider.getSystemJavaCompiler();
 		manager = new MemoryFileManager(compiler);

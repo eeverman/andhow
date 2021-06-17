@@ -3,8 +3,9 @@
 package org.yarnandtail.andhow.sample;
 
 import java.io.UnsupportedEncodingException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import org.yarnandtail.andhow.api.GroupProxyMutable;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
@@ -12,8 +13,6 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
-
-import static org.junit.Assert.*;
 
 /**
  *
@@ -31,7 +30,7 @@ public class JndiLoaderSamplePrinterTest {
 				.mustBeNonNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
 	}
 	
-	@Before
+	@BeforeEach
 	public void setup() {
 		config = new StaticPropertyConfigurationMutable(new CaseInsensitiveNaming());
 		
@@ -42,8 +41,8 @@ public class JndiLoaderSamplePrinterTest {
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP1", Config.MY_PROP1));
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP2", Config.MY_PROP2));
 		
-		assertNull("Error adding property", config.addProperty(groupProxy1, Config.MY_PROP1));
-		assertNull("Error adding property", config.addProperty(groupProxy1, Config.MY_PROP2));
+		assertNull(config.addProperty(groupProxy1, Config.MY_PROP1));
+		assertNull(config.addProperty(groupProxy1, Config.MY_PROP2));
 
 	}
 	

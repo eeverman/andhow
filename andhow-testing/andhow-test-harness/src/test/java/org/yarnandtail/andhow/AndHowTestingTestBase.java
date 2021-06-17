@@ -1,9 +1,11 @@
 package org.yarnandtail.andhow;
 
 import java.lang.reflect.Field;
-import java.util.Properties;
-import javax.naming.NamingException;
-import org.junit.*;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**
@@ -34,24 +36,24 @@ public class AndHowTestingTestBase {
 	 */
 	private static SimpleNamingContextBuilder builder;
 	
-	@BeforeClass
+	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
 		destroyAndHow();
 	}
 	
 	
-	@Before
+	@BeforeEach
 	public void killAndHowStateBeforeTest() {
 		destroyAndHow();
 	}
 	
 	
-	@After
+	@AfterEach
 	public void killAndHowStateAfterTest() {
 		destroyAndHow();
 	}
 	
-	@AfterClass
+	@AfterAll
 	public static void killAndHowStateAfterClass() {
 		destroyAndHow();
 	}

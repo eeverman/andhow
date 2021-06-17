@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.valuetype;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
@@ -38,18 +38,24 @@ public class DblTypeTest {
 
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseNotANumber() throws ParsingException {
+	@Test
+	public void testParseNotANumber() {
 		DblType type = DblType.instance();
 		assertFalse(type.isParsable("apple"));
-		type.parse("apple");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("apple")
+		);
 	}
 	
-	@Test(expected=ParsingException.class)
-	public void testParseEmpty() throws ParsingException {
+	@Test
+	public void testParseEmpty() {
 		DblType type = DblType.instance();
 		assertFalse(type.isParsable(""));
-		type.parse("");
+
+		assertThrows(ParsingException.class, () ->
+			type.parse("")
+		);
 	}
 	
 	@Test

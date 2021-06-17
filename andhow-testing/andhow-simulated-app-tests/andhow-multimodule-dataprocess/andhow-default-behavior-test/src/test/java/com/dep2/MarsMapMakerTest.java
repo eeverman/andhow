@@ -1,23 +1,19 @@
 package com.dep2;
 
-import com.dep2.*;
 import org.dataprocess.ExternalServiceConnector;
-import org.junit.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author ericeverman
  */
-public class MarsMapMakerTest extends AndHowTestBase {
+public class MarsMapMakerTest extends AndHowJunit5TestBase {
 
 	@Test
 	public void testConfigFromPropertiesFileOnly() {

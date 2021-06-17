@@ -4,12 +4,12 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem.LoaderPropertyNotRegistered;
@@ -31,7 +31,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	}
 	
 
-	@Before
+	@BeforeEach
 	public void init() throws Exception {
 		
 		//copy a properties file to a temp location
@@ -42,7 +42,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 
 	}
 	
-	@After
+	@AfterEach
 	public void afterTest() {
 		if (tempPropertiesFile != null) {
 			tempPropertiesFile.delete();

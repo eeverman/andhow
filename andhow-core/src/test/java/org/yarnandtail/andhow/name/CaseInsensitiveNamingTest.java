@@ -1,8 +1,8 @@
 package org.yarnandtail.andhow.name;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.PropertyNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.api.GroupProxy;

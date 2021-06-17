@@ -4,9 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.api.ParsingException;
 
 /**
  *
@@ -17,7 +18,7 @@ public class TextUtilTest {
 	PrintStream ps;
 	private static String FIND_INSTANCE_STRING_BROWNFOX = "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog";
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		baos = new ByteArrayOutputStream();
 		ps = new PrintStream(baos) {
@@ -54,9 +55,11 @@ public class TextUtilTest {
 		assertEquals("abcXXXdef[[NULL]]xyz", TextUtil.format("abc{}def{}xyz", "XXX", null, null));
 	}
 	
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test
 	public void testFormatException() {
-		assertEquals("abcXXXxyz", TextUtil.format("abc{}xyz{}", "XXX"));
+		assertThrows(ArrayIndexOutOfBoundsException.class, () ->
+			assertEquals("abcXXXxyz", TextUtil.format("abc{}xyz{}", "XXX"))
+		);
 	}
 
 

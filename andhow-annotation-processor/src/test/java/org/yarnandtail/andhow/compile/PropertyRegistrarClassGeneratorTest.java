@@ -3,13 +3,13 @@ package org.yarnandtail.andhow.compile;
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.JavaFileObjects;
 import java.util.*;
-import javax.tools.JavaFileObject;
-import org.junit.Test;
-import org.junit.Before;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static com.google.testing.compile.CompilationSubject.assertThat;
 import static com.google.testing.compile.Compiler.javac;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -28,7 +28,7 @@ public class PropertyRegistrarClassGeneratorTest {
 	
 	private GregorianCalendar runDate;
 	
-	@Before
+	@BeforeEach
 	public void initEach() {
 		runDate = new GregorianCalendar();
 		//runDate.setTimeZone(TimeZone.getTimeZone(ZoneId.of("GMT-6")));
