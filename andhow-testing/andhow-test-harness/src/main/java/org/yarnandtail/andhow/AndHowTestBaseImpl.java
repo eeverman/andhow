@@ -60,6 +60,7 @@ public class AndHowTestBaseImpl {
 	 * that were previously stored prior to this class' test run.
 	 * It also resets the logging level for SimpleNamingContextBuilder (a JNDI
 	 * related class) to what ever it was prior to the run.
+	 * Any JNDI bindings set via getJndi() are cleared.
 	 */
 	public static void resetAndHowSnapshotAfterTestClass() {
 		System.setProperties(beforeClassSystemProps);
@@ -68,12 +69,26 @@ public class AndHowTestBaseImpl {
 		//Reset to the log level prior to the test class
 		Logger.getGlobal().setLevel(beforeClassLogLevel);
 		Logger.getLogger(SimpleNamingContextBuilder.class.getCanonicalName()).setLevel(beforeClassLogLevel);
+
+		if (builder != null) {
+			builder.clear();
+			builder.deactivate();
+		}
 	}
 
 	/**
 	 * Simple consistent way to get an empty JNDI context.
 	 * <p>
-	 * bind() each variable, then call build().
+	 * Call {@code SimpleNamingContextBuilder.bind()} for each variable to add
+	 * to the context, then {@code SimpleNamingContextBuilder.activate()} to
+	 * make the context active.  To fetch values from the context,
+	 * use:
+	 * <pre>{@code
+	 * InitialContext ctx = new InitialContext();
+	 * ctx.lookup("java:comp/some/name");
+	 * }</pre>
+	 * The context is deactivated and cleared after each test and after the
+	 * test class completes.
 	 *
 	 * @deprecated This will be removed in the next major release to avoid
 	 * having JNDI dependencies in a user visible class.  Most user will not
@@ -104,6 +119,7 @@ public class AndHowTestBaseImpl {
 	 * that were previously stored prior to a test run.
 	 * It also resets the logging level for SimpleNamingContextBuilder (a JNDI
 	 * related class) to what ever it was prior to the run.
+	 * Any JNDI bindings set via getJndi() are cleared.
 	 */
 	public void resetAndHowSnapshotAfterSingleTest() {
 		System.setProperties(beforeTestSystemProps);
@@ -111,6 +127,7 @@ public class AndHowTestBaseImpl {
 
 		if (builder != null) {
 			builder.clear();
+			builder.deactivate();
 		}
 	}
 }
