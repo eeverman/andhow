@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.compile;
+package org.yarnandtail.compile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,9 +8,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.util.IOUtil;
-import org.yarnandtail.compile.MemoryFileManager;
-import org.yarnandtail.compile.TestClassLoader;
-import org.yarnandtail.compile.TestSource;
 
 /**
  *
@@ -19,17 +16,17 @@ import org.yarnandtail.compile.TestSource;
 public class AndHowCompileProcessorTestBase {
 	
 	/** Classpath of the generated service file for AndHow property registration */
-	static final String REGISTRAR_SVS_PATH = 
+	protected static final String REGISTRAR_SVS_PATH =
 			"/META-INF/services/org.yarnandtail.andhow.service.PropertyRegistrar";
-	static final String INIT_SVS_PATH = "/META-INF/services/org.yarnandtail.andhow.AndHowInit";
-   	static final String TEST_INIT_SVS_PATH = "/META-INF/services/org.yarnandtail.andhow.AndHowTestInit";
-     
-	JavaCompiler compiler;
-	MemoryFileManager manager;
-	DiagnosticCollector<JavaFileObject> diagnostics;
-	TestClassLoader loader;
-	
-	Set<TestSource> sources;	//New set of source files to compile
+	protected static final String INIT_SVS_PATH = "/META-INF/services/org.yarnandtail.andhow.AndHowInit";
+	protected static final String TEST_INIT_SVS_PATH = "/META-INF/services/org.yarnandtail.andhow.AndHowTestInit";
+
+	protected JavaCompiler compiler;
+	protected MemoryFileManager manager;
+	protected DiagnosticCollector<JavaFileObject> diagnostics;
+	protected TestClassLoader loader;
+
+	protected Set<TestSource> sources;	//New set of source files to compile
 	
 	@BeforeEach
 	public void setupTest() {

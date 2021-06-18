@@ -42,10 +42,6 @@
 			<groupId>com.google.testing.compile</groupId>
 			<artifactId>compile-testing</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

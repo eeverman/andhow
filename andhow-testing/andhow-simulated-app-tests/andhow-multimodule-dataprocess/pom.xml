@@ -28,18 +28,5 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-        </dependency>
     </dependencies>
 </project>
