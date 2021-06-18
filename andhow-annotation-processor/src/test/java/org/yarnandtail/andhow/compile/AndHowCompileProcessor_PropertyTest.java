@@ -10,6 +10,7 @@ import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStatic;
 import org.yarnandtail.andhow.compile.CompileProblem.PropMissingStaticFinal;
 import org.yarnandtail.andhow.service.*;
 import org.yarnandtail.andhow.util.IOUtil;
+import org.yarnandtail.compile.AndHowCompileProcessorTestBase;
 
 /**
  * A lot of this code was borrowed from here:
