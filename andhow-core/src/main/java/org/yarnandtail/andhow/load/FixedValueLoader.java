@@ -21,16 +21,46 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	protected boolean unknownPropertyAProblem = true;
 	
 	protected List<PropertyValue> values = new ArrayList();
+
+	protected List<KOP> kopValues = new ArrayList();
 			
 	public FixedValueLoader() {
 	}
-	
+
+	/**
+	 * Set property values as PropertyValues, which require live
+	 * references to each Property.
+	 * Values set in this way are additive to properties set via
+	 * setKopValues and duplicate properties between the
+	 * two will nominally be considered duplicates.
+	 *
+	 * @param values
+	 */
 	public void setPropertyValues(List<PropertyValue> values) {
 		if (values != null) {
 			this.values.addAll(values);
 		}
 	}
-	
+
+	/**
+	 * Set property values as KOPs.
+	 * Values set in this way are additive to properties set via
+	 * setPropertyValues and duplicate properties between the
+	 * two will nominally be considered duplicates.
+	 *
+	 * @param values
+	 */
+	public void setKopValues(List<KOP> values) {
+		if (values != null) {
+			this.kopValues.addAll(values);
+		}
+	}
+
+	/**
+	 * @deprecated This method duplicates functionality and will
+	 * be removed.
+	 * @param values
+	 */
 	public void setPropertyValues(PropertyValue... values) {
 		if (values != null && values.length > 0) {
 			this.values.addAll(Arrays.asList(values));

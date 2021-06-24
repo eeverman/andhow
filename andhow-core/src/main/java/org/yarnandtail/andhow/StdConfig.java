@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.load.KOP;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -34,6 +35,7 @@ public class StdConfig {
 				throw new IllegalArgumentException("The property cannot be null");
 			}
 
+			//simple check for duplicates doesn't consider KOP values
 			for (PropertyValue pv : _fixedVals) {
 				if (property.equals(pv.getProperty())) {
 					throw new IllegalArgumentException("A fixed value for this property has been assigned twice.");
@@ -42,6 +44,30 @@ public class StdConfig {
 
 			PropertyValue pv = new PropertyValue(property, value);
 			_fixedVals.add(pv);
+
+			return (S) this;
+		}
+
+		@Override
+		public S addFixedValue(String name, final Object value) {
+
+			final String cleanName = TextUtil.trimToNull(name);
+			if (cleanName == null) {
+				throw new IllegalArgumentException("The property name cannot be empty or null");
+			}
+
+			//Simple check for duplicates doesn't check for other addFixedValue method or aliases
+			if (_fixedKopVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(cleanName))) {
+				throw new IllegalArgumentException(
+						"A fixed value for the Property '" + cleanName + "' has been assigned twice.");
+			}
+
+			try {
+				KOP kop = new KOP(cleanName, value);
+				_fixedKopVals.add(kop);
+			} catch (ParsingException e) {
+				throw new IllegalArgumentException(e);
+			}
 
 			return (S) this;
 		}
