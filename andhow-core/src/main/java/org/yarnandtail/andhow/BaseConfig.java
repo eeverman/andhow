@@ -3,7 +3,7 @@ package org.yarnandtail.andhow;
 import java.lang.reflect.*;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.KOP;
+import org.yarnandtail.andhow.load.KeyObjectPair;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
@@ -39,7 +39,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 
 	//A list of hardcoded values used by the StdFixedValueLoader.
 	//Provided as key name (string) and value (object)
-	protected final List<KOP> _fixedKopVals = new ArrayList();
+	protected final List<KeyObjectPair> _fixedKeyObjectPairVals = new ArrayList();
 
 	//A list of command line arguments
 	protected final List<String> _cmdLineArgs = new ArrayList();
@@ -77,6 +77,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	protected StdFixedValueLoader buildStdFixedValueLoader() {
 		StdFixedValueLoader loader = new StdFixedValueLoader();
 		loader.setPropertyValues(_fixedVals);
+		loader.setKeyObjectPairValues(_fixedKeyObjectPairVals);
 		return loader;
 	}
 	

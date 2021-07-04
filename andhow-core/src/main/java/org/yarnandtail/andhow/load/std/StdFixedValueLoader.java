@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.api.StandardLoader;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.FixedValueLoader;
 
 /**
@@ -27,7 +27,7 @@ import org.yarnandtail.andhow.load.FixedValueLoader;
  * <h3>Basic Behaviors</h3>
  * <ul>
  * <li><b>Pre-trims String values: No</b> (Individual Properties may still trim values)
- * <li><b>Complains about unrecognized properties: NA</b> - This is not possible
+ * <li><b>Complains about unrecognized properties: Yes</b> - Only applies to Properties specified by name
  * <li><b>Default behavior:  None</b> - This loader is only active if values are directly set as shown below
  * </ul>
  * <h3>Loader Details and Configuration</h3>
@@ -43,7 +43,10 @@ import org.yarnandtail.andhow.load.FixedValueLoader;
  * 
  * {@literal @}Override public AndHowConfiguration getConfiguration() {
  *   return  StdConfig.instance()
- *     .addFixedValue(MY_PROP, "some value");  //MY_PROP is some visible property
+ *     .addFixedValue(MY_PROP, 23L);  //MY_PROP is some visible property of type Long.
+ *     .addFixedValue("A_PROPERTY_NAME", "abc")	//A name or alias of a Property works as well
+ *     //In both cases, the value (23L or "abc") must be of the same type as the Property or
+ *     //an error will be thrown.
  *   }
  * }
  * </pre>

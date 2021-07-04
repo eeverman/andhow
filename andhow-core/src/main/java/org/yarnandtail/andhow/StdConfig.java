@@ -2,7 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.KOP;
+import org.yarnandtail.andhow.load.KeyObjectPair;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -49,44 +49,47 @@ public class StdConfig {
 		}
 
 		@Override
-		public S addFixedValue(String name, final Object value) {
-
-			final String cleanName = TextUtil.trimToNull(name);
-			if (cleanName == null) {
-				throw new IllegalArgumentException("The property name cannot be empty or null");
+		public S removeFixedValue(Property<?> property) {
+			if (property == null) {
+				throw new IllegalArgumentException("The property cannot be null");
 			}
 
-			//Simple check for duplicates doesn't check for other addFixedValue method or aliases
-			if (_fixedKopVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(cleanName))) {
-				throw new IllegalArgumentException(
-						"A fixed value for the Property '" + cleanName + "' has been assigned twice.");
-			}
-
-			try {
-				KOP kop = new KOP(cleanName, value);
-				_fixedKopVals.add(kop);
-			} catch (ParsingException e) {
-				throw new IllegalArgumentException(e);
-			}
+			_fixedVals.removeIf(f -> f.getProperty().equals(property));
 
 			return (S) this;
 		}
 
 		@Override
-		public S removeFixedValue(Property<?> property) {
+		public S addFixedValue(String propertyNameOrAlias, final Object value) {
 
-			if (property == null) {
-				throw new IllegalArgumentException("The property cannot be null");
+			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
+
+			//This is checked later during loading, but the check is only for unknown prop names.
+			//Doing this check here is more specifc and appropriate for an IllegalArgumentException.
+			if (cleanName == null) {
+				throw new IllegalArgumentException("The property name cannot be empty or null");
 			}
 
-			Iterator<PropertyValue> it = _fixedVals.iterator();
-			while (it.hasNext()) {
-				PropertyValue pv = it.next();
-				if (property.equals(pv.getProperty())) {
-					it.remove();
-					break;
-				}
+			//Simple check for duplicates
+			if (_fixedKeyObjectPairVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(cleanName))) {
+				throw new IllegalArgumentException(
+						"A fixed value for the Property '" + cleanName + "' has been assigned twice.");
 			}
+
+			_fixedKeyObjectPairVals.add(new KeyObjectPair(cleanName, value));
+
+			return (S) this;
+		}
+
+		@Override
+		public S removeFixedValue(String propertyNameOrAlias) {
+			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
+
+			if (cleanName == null) {
+				throw new IllegalArgumentException("The property name cannot be null");
+			}
+
+			_fixedKeyObjectPairVals.removeIf(f -> f.getName().equals(cleanName));
 
 			return (S) this;
 		}

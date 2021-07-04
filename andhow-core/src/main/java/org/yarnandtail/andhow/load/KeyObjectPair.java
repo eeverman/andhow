@@ -7,14 +7,14 @@ import org.yarnandtail.andhow.util.TextUtil;
  * Key-Object Pair
  * Contains a String name of a property and an Object value.
  */
-public class KOP {
+public class KeyObjectPair {
 
 	private String name;
 	private Object value;
 
-	private KOP() {}
+	private KeyObjectPair() {}
 
-	public KOP(String name) throws ParsingException {
+	public KeyObjectPair(String name) throws ParsingException {
 		this.name = TextUtil.trimToNull(name);
 
 		if (this.name == null) {
@@ -22,13 +22,9 @@ public class KOP {
 		}
 	}
 
-	public KOP(String name, Object value) throws ParsingException {
-		this.name = TextUtil.trimToNull(name);
+	public KeyObjectPair(String name, Object value) {
+		this.name = name;
 		this.value = value;
-
-		if (this.name == null) {
-			throw new ParsingException("The key (parameter name) cannot be empty", name);
-		}
 	}
 
 	public String getName() {

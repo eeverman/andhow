@@ -40,6 +40,17 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return
 	 */
 	<T> C addFixedValue(Property<T> property, T value);
+	
+	/**
+	 * Removes a Property value set <em>only</em> via addFixedValue(Property<T>, T value)
+	 * from the list of fixed values.
+	 *
+	 * It is not an error to attempt to remove a property that is not in this fixed value list.
+	 *
+	 * @param property A non-null property.
+	 * @return
+	 */
+	C removeFixedValue(Property<?> property);
 
 	/**
 	 * Sets a fixed, non-configurable value for a named Property.
@@ -57,17 +68,22 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return
 	 */
 	C addFixedValue(String name, Object value);
-	
+
 	/**
-	 * Removes a PropertyValue from the list of fixed values.
+	 * Removes a Property value set <em>only</em> via addFixedValue(String name, Object value)
+	 * from the list of fixed values.
 	 *
-	 * It is not an error to attempt to remove a property that is not in the
-	 * current fixed value list.
+	 * Note that to successfully remove a fixed value from this list, the name must exactly
+	 * match the name used to set the property via addFixedValue(String, Object).  Since
+	 * Properties can have aliases, you must know the exact name to set the property.
 	 *
-	 * @param property A non-null property.
+	 * It is not an error to attempt to remove a property that is not in this fixed value list,
+	 * or to attempt to remove a property value that does not exist - these are just no-ops.
+	 *
+	 * @param propertyNameOrAlias The name or alias of a property.
 	 * @return
 	 */
-	C removeFixedValue(Property<?> property);
+	C removeFixedValue(String propertyNameOrAlias);
 	
 	void build();
 }
