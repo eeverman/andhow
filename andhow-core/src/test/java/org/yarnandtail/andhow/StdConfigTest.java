@@ -7,10 +7,14 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
 import org.yarnandtail.andhow.api.Loader;
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.DblProp;
+import org.yarnandtail.andhow.property.LngProp;
+import org.yarnandtail.andhow.property.StrProp;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -121,6 +125,84 @@ public class StdConfigTest {
 		assertEquals(loader8, loaders.get(13));
 		assertEquals(StdPropFileOnClasspathLoader.class, loaders.get(14).getClass());
 		assertEquals(loader9, loaders.get(15));
+	}
+
+	@Test
+	public void FixedValuesBasedOnPropertiesTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		StrProp MY_STR_1 = StrProp.builder().build();
+		LngProp MY_LNG_2 = LngProp.builder().build();
+		DblProp MY_DBL_3 = DblProp.builder().build();
+
+		config.addFixedValue(MY_STR_1, "ABC");
+		config.addFixedValue(MY_LNG_2, 23L);
+
+		assertEquals(2, config.getFixedValues().size());
+		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_STR_1, "ABC"));
+		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_LNG_2, 23L));
+
+		config.removeFixedValue(MY_STR_1);
+		assertEquals(1, config.getFixedValues().size());
+		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_LNG_2, 23L));
+
+		//it should be OK and a no-op to attempt to remove a non-existing property
+		//...but how would this ever happen??
+		config.removeFixedValue(MY_DBL_3);
+		assertEquals(1, config.getFixedValues().size());
+
+		config.removeFixedValue(MY_LNG_2);
+		assertEquals(0, config.getFixedValues().size());
+	}
+
+
+	@Test
+	public void FixedValuesBasedOnNamesTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		//These properties don't really exist - no checking is done until loading, when
+		//the Loader attempts to match up the name w/ a property.  For now this just tests
+		//the logic in StdConfig.
+		config.addFixedValue("MY_STR_1", "ABC");
+		config.addFixedValue("MY_LNG_2", 23L);
+
+		assertEquals(2, config.getFixedKeyObjectPairValues().size());
+		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_STR_1", "ABC"));
+		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_LNG_2", 23L));
+
+		config.removeFixedValue("MY_STR_1");
+		assertEquals(1, config.getFixedKeyObjectPairValues().size());
+		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_LNG_2", 23L));
+
+		//it should be OK and a no-op to attempt to remove a non-existing property, or a property not in the list.
+		config.removeFixedValue("MY_DBL_3");
+		assertEquals(1, config.getFixedKeyObjectPairValues().size());
+
+		config.removeFixedValue("MY_LNG_2");
+		assertEquals(0, config.getFixedKeyObjectPairValues().size());
+	}
+
+	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
+		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
+		return pv != null && pv.getValue().equals(value);
+	}
+
+	boolean containsNameAndValue(List<KeyObjectPair> keyObjectPairs, String name, Object value) {
+		KeyObjectPair kop = keyObjectPairs.stream().filter(p -> p.getName().equals(name)).findFirst().get();
+		return kop != null && kop.getValue().equals(value);
+	}
+
+	/**
+	 * Custom StdConfig class that has access methods for fields not otherwise accessable.
+	 */
+	public static final class MyStdConfig extends StdConfig.StdConfigAbstract<MyStdConfig> {
+		public List<PropertyValue> getFixedValues() {
+			return _fixedVals;
+		}
+
+		public List<KeyObjectPair> getFixedKeyObjectPairValues() {
+			return _fixedKeyObjectPairVals;
+		}
 	}
 	
 }
