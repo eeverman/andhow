@@ -3,6 +3,7 @@
 package org.yarnandtail.andhow;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
@@ -17,6 +18,8 @@ import org.yarnandtail.andhow.property.LngProp;
 import org.yarnandtail.andhow.property.StrProp;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  *
@@ -182,6 +185,15 @@ public class StdConfigTest {
 		assertEquals(0, config.getFixedKeyObjectPairValues().size());
 	}
 
+	@Test
+	public void setCmdLineArgsTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		String[] args = new String[] {"abc=123", "xyz='456"};
+		config.setCmdLineArgs(args);
+		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
+	}
+
 	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
 		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
 		return pv != null && pv.getValue().equals(value);
@@ -202,6 +214,10 @@ public class StdConfigTest {
 
 		public List<KeyObjectPair> getFixedKeyObjectPairValues() {
 			return _fixedKeyObjectPairVals;
+		}
+
+		public List<String> getCmdLineArgs() {
+			return _cmdLineArgs;
 		}
 	}
 	
