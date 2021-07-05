@@ -2,9 +2,8 @@
  */
 package org.yarnandtail.andhow;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
 import org.yarnandtail.andhow.api.Loader;
@@ -194,6 +193,19 @@ public class StdConfigTest {
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 	}
 
+	@Test
+	public void setEnvironmentPropertiesTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		Map<String, String> envVars = new HashMap<>();
+		envVars.put("abc", "123");
+		envVars.put("xyz", "456");
+
+		config.setEnvironmentProperties(envVars);
+
+		assertTrue(envVars.equals(config.getEnvironmentProperties()));
+	}
+
 	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
 		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
 		return pv != null && pv.getValue().equals(value);
@@ -218,6 +230,10 @@ public class StdConfigTest {
 
 		public List<String> getCmdLineArgs() {
 			return _cmdLineArgs;
+		}
+
+		public Map<String, String> getEnvironmentProperties() {
+			return envProperties;
 		}
 	}
 	
