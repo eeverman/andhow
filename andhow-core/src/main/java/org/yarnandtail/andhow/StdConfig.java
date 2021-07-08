@@ -50,47 +50,36 @@ public class StdConfig {
 
 		@Override
 		public S removeFixedValue(Property<?> property) {
-			if (property == null) {
-				throw new IllegalArgumentException("The property cannot be null");
-			}
-
 			_fixedVals.removeIf(f -> f.getProperty().equals(property));
-
 			return (S) this;
 		}
 
 		@Override
-		public S addFixedValue(String propertyNameOrAlias, final Object value) {
+		public S addFixedValue(final String propertyNameOrAlias, final Object value) {
 
-			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
+			try {
+				KeyObjectPair kop = new KeyObjectPair(propertyNameOrAlias, value);
 
-			//This is checked later during loading, but the check is only for unknown prop names.
-			//Doing this check here is more specifc and appropriate for an IllegalArgumentException.
-			if (cleanName == null) {
-				throw new IllegalArgumentException("The property name cannot be empty or null");
+				//Simple check for duplicates
+				if (_fixedKeyObjectPairVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(kop.getName()))) {
+					throw new IllegalArgumentException(
+							"A fixed value for the Property '" + kop.getName() + "' has been assigned twice.");
+				}
+
+				_fixedKeyObjectPairVals.add(kop);
+
+				return (S) this;
+
+			} catch (ParsingException e) {
+				throw new IllegalArgumentException(e);
 			}
 
-			//Simple check for duplicates
-			if (_fixedKeyObjectPairVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(cleanName))) {
-				throw new IllegalArgumentException(
-						"A fixed value for the Property '" + cleanName + "' has been assigned twice.");
-			}
-
-			_fixedKeyObjectPairVals.add(new KeyObjectPair(cleanName, value));
-
-			return (S) this;
 		}
 
 		@Override
-		public S removeFixedValue(String propertyNameOrAlias) {
+		public S removeFixedValue(final String propertyNameOrAlias) {
 			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
-
-			if (cleanName == null) {
-				throw new IllegalArgumentException("The property name cannot be null");
-			}
-
-			_fixedKeyObjectPairVals.removeIf(f -> f.getName().equals(cleanName));
-
+			_fixedKeyObjectPairVals.removeIf(k -> k.getName().equals(cleanName));
 			return (S) this;
 		}
 
@@ -249,13 +238,33 @@ public class StdConfig {
 		}
 
 		/**
-		 * Allows the System environment to be overridden.
+		 * Sets the System environment vars that AndHow will use to load Property values
+		 * from for the {@Code StdEnvVarLoader} loader.
 		 *
-		 * @param envProperties
+		 * If this method is not called or is called with a null Map, the actual env vars
+		 * from {@Code System.getenv()} will be used.  Calling this method with an empty
+		 * Map will effectively prevent AndHow from receiving configuration from env vars.
+		 *
+		 * <em></em>This does not actually change actual environment variables or what is
+		 * returned from {@Code System.getenv()}. It only replaces what AndHow will see for env vars.
+		 *
+		 * Note: There is no reason to use this method:  Use one of the {@Code addFixedValue()}
+		 * methods instead.  Those methods are more clear, don't have to parse values, and
+		 * (unlike this method) are not deprecated.
+		 *
+		 * @deprecated This method will be removed in a future release - it has no meaningful
+		 * 	usage.  Use the addFixedValue() methods instead.
+		 * @param newEnvProperties
 		 * @return
 		 */
-		public S setEnvironmentProperties(Map<String, String> envProperties) {
-			this.envProperties = envProperties;
+		public S setEnvironmentProperties(Map<String, String> newEnvProperties) {
+
+			if (newEnvProperties != null) {
+				this.envProperties = new HashMap<>();
+				this.envProperties.putAll(newEnvProperties);
+			} else {
+				this.envProperties = null;
+			}
 			return (S) this;
 		}
 

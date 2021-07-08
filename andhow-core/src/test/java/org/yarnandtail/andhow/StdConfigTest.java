@@ -203,7 +203,22 @@ public class StdConfigTest {
 
 		config.setEnvironmentProperties(envVars);
 
+		assertEquals(2, config.getEnvironmentProperties().size());
 		assertTrue(envVars.equals(config.getEnvironmentProperties()));
+		assertFalse(envVars == config.getEnvironmentProperties(), "Should be disconnected object");
+
+		//Now try setting new values - they should replace the old
+		Map<String, String> envVars2 = new HashMap<>();
+		envVars2.put("bob", "bob_val");
+		config.setEnvironmentProperties(envVars2);
+
+		assertEquals(1, config.getEnvironmentProperties().size());
+		assertTrue(envVars2.equals(config.getEnvironmentProperties()));
+
+		//Now set to null
+		config.setEnvironmentProperties(null);
+		assertNull(config.getEnvironmentProperties());
+
 	}
 
 	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
