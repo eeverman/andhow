@@ -144,6 +144,24 @@ public class StdConfigTest {
 		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_STR_1, "ABC"));
 		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_LNG_2, 23L));
 
+		//Try to add a duplicate property
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.addFixedValue(MY_STR_1, "ZZZ");
+		});
+
+		assertEquals("ABC",
+				config.getFixedValues().stream().filter(p -> p.getProperty().equals(MY_STR_1)).findFirst().get()
+						.getValue().toString(),
+				"The value set for this Property should be unchanged");
+
+		//Try to add a null property
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.addFixedValue((Property)null, "ZZZ");
+		});
+
+		assertEquals(2, config.getFixedValues().size(), "Still should have two values");
+
+		//Try removing some
 		config.removeFixedValue(MY_STR_1);
 		assertEquals(1, config.getFixedValues().size());
 		assertTrue(containsPropertyAndValue(config.getFixedValues(), MY_LNG_2, 23L));
@@ -172,6 +190,29 @@ public class StdConfigTest {
 		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_STR_1", "ABC"));
 		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_LNG_2", 23L));
 
+		//Try to add a duplicate property
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.addFixedValue("MY_STR_1", "ZZZ");
+		});
+
+		assertEquals("ABC",
+				config.getFixedKeyObjectPairValues().stream().filter(k -> k.getName().equals("MY_STR_1")).findFirst().get()
+						.getValue().toString(),
+				"The value set for this Property should be unchanged");
+
+		//Try to add a null property name
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.addFixedValue((String)null, "ZZZ");
+		});
+
+		//Try to add an empty (all space) property name
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.addFixedValue("   ", "ZZZ");
+		});
+
+		assertEquals(2, config.getFixedKeyObjectPairValues().size(), "Still should have two values");
+
+		//Try removing some
 		config.removeFixedValue("MY_STR_1");
 		assertEquals(1, config.getFixedKeyObjectPairValues().size());
 		assertTrue(containsNameAndValue(config.getFixedKeyObjectPairValues(), "MY_LNG_2", 23L));
