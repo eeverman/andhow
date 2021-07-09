@@ -3,18 +3,18 @@ package org.yarnandtail.andhow.api;
 import java.util.List;
 
 /**
- * Extention of ValueMap that adds contextual information to the ValueMap.
+ * Extention of ValidatedValues that adds contextual information.
  * 
- * ValueMap has all the needed info to provide values for Proerties during runtime.
+ * ValidatedValues has all the needed info to provide values for Properties during runtime.
  * This class provides more metadata, such as where a value was loaded from, if
  * there are Problems encountered during value loading and which values were loaded
  * by which Loader, etc..
  * 
- * During startup, a mutable version of ValueMapWithContext if incrementally loaded
+ * During startup, a mutable version of ValueMapWithContext is incrementally loaded
  * with values and reported issues.  After loading is complete, values are copied
- * to immutable versions of ValueMap and ValueMapWithContext.  ValueMap is used
- * to fetch values as needed, ValueMapWithContext provides metadata on values if
- * needed.
+ * to an immutable ValidatedValues and ValidatedValuesWithContext.
+ * ValidatedValues is used to fetch values as needed, ValidatedValuesWithContext
+ * provides metadata on values if needed.
  * 
  * @author eeverman
  */

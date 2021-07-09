@@ -17,46 +17,12 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 /**
  * Note:  This directly tests a single loader so it is not possible to
  * test for missing required values.  Loaders can't know if a value is missing -
- * that only can be figured out after all loaders are comlete.
+ * that only can be figured out after all loaders are complete.
  * 
  * @author eeverman
  */
-public class KeyValuePairLoaderTest {
-	
-	StaticPropertyConfigurationMutable appDef;
-	ValidatedValuesWithContextMutable appValuesBuilder;
-	
-	public interface SimpleParams {
-		//Strings
-		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
-		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
-		StrProp STR_ENDS_WITH_XXX = StrProp.builder().mustEndWith("XXX").build();
+public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
-
-		//Flags
-		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
-		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).build();
-		FlagProp FLAG_NULL = FlagProp.builder().build();
-	}
-
-	@BeforeEach
-	public void init() throws Exception {
-		appValuesBuilder = new ValidatedValuesWithContextMutable();
-		
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
-		
-		appDef = new StaticPropertyConfigurationMutable(bns);
-		appDef.addProperty(proxy, SimpleParams.STR_BOB);
-		appDef.addProperty(proxy, SimpleParams.STR_NULL);
-		appDef.addProperty(proxy, SimpleParams.STR_ENDS_WITH_XXX);
-		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
-		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
-		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
-
-	}
-	
 	@Test
 	public void testCmdLineLoaderHappyPathAsList() {
 		

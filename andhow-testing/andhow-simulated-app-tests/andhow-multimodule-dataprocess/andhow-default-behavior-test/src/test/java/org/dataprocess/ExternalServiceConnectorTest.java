@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * The EarthMapMakerTest has more complete examples of testing.
  *
  * @author ericeverman
  */
@@ -13,11 +14,7 @@ public class ExternalServiceConnectorTest extends AndHowJunit5TestBase {
 	
 	public ExternalServiceConnectorTest() {
 	}
-	
 
-	/**
-	 * Test of getConnectionUrl method, of class EarthMapMaker.
-	 */
 	@Test
 	public void testAllConfigValues() {
 		ExternalServiceConnector esc = new ExternalServiceConnector();

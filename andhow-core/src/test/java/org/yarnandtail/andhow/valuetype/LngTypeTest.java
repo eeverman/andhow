@@ -49,6 +49,14 @@ public class LngTypeTest {
 			type.parse("")
 		);
 	}
+
+	@Test
+	public void stringMarkedWithLSufixIsError() {
+		LngType type = LngType.instance();
+		assertThrows(ParsingException.class, () ->
+				type.parse("34L")
+		);
+	}
 	
 	@Test
 	public void testParseTooBig() {

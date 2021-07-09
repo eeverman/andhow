@@ -47,6 +47,14 @@ public class DblTypeTest {
 			type.parse("apple")
 		);
 	}
+
+	@Test
+	public void stringMarkedAsLongIsError() {
+		DblType type = DblType.instance();
+		assertThrows(ParsingException.class, () ->
+				type.parse("34L")
+		);
+	}
 	
 	@Test
 	public void testParseEmpty() {
