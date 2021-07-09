@@ -24,9 +24,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
  *
  * @author ericeverman
  */
-public class StdConfigTest {
+public class StdConfigGetterAndSetterTest {
 	
-	public StdConfigTest() {
+	public StdConfigGetterAndSetterTest() {
 	}
 
 	/**
