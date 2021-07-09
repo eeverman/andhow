@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.LoaderValues;
 import org.yarnandtail.andhow.api.ParsingException;
+import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.yarnandtail.andhow.load.BaseForLoaderTests.SimpleParams.*;
 
 public class FixedValueLoaderTest extends BaseForLoaderTests {
@@ -83,16 +85,77 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 	@Test
 	public void duplicatePropertyValuesCauseProblems() {
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_BOB, "ignored because its a duplicate property entry"));
 
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
+
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		//Make sure we have a duplicate problem reported
+		assertEquals(1, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());	//No problems at an ind level
+		Problem p = result.getProblems().get(0);
+		assertTrue(p instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
+		assertEquals(STR_BOB, ((LoaderProblem.DuplicatePropertyLoaderProblem) p).getBadValueCoord().getProperty());
+
+		//The initial assignment should have still worked
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 	}
 
 	@Test
-	public void duplicateKeyObjectPairsCauseProblems() {
+	public void duplicateKeyObjectPairsCauseProblems() throws ParsingException {
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "ignored because its a duplicate property entry"));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		//Make sure we have a duplicate problem reported
+		assertEquals(1, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());	//No problems at an ind level
+		Problem p = result.getProblems().get(0);
+		assertTrue(p instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
+		assertEquals(STR_BOB, ((LoaderProblem.DuplicatePropertyLoaderProblem) p).getBadValueCoord().getProperty());
+
+		//The initial assignment should have still worked
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 	}
 
 	@Test
-	public void duplicateBetweenPVsAndKopsCauseProblems() {
+	public void duplicateBetweenPVsAndKopsCauseProblems() throws ParsingException {
 
+		//Set based on PropertyValues
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+
+		//Set based on KeyObjectPair
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "ignored because its a duplicate property entry"));
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
+		loader.setKeyObjectPairValues(kops);
+
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		//Make sure we have a duplicate problem reported
+		assertEquals(1, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());	//No problems at an ind level
+		Problem p = result.getProblems().get(0);
+		assertTrue(p instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
+		assertEquals(STR_BOB, ((LoaderProblem.DuplicatePropertyLoaderProblem) p).getBadValueCoord().getProperty());
+
+		//The initial assignment should have still worked
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 	}
 }
