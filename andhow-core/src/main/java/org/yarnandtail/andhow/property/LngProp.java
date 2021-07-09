@@ -13,6 +13,14 @@ import org.yarnandtail.andhow.valuetype.LngType;
  * 
  * By default this uses the TrimToNullTrimmer, which removes all whitespace from
  * the value and ultimately null if the value is all whitespace.
+ *
+ * If a LngProp is configured as a string, such as from a properties file, on
+ * command line, environment variable, etc., the value does NOT include a trailing
+ * 'L', as is done with Java literals.  E.g., this is the correct way to spec
+ * a long value in a properties file:
+ * <code>
+ * name.of.my.long.property.MY_PROPERTY = 90
+ * </code>
  * 
  * @author eeverman
  */

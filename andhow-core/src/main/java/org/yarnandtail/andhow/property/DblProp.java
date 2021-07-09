@@ -13,6 +13,21 @@ import org.yarnandtail.andhow.valuetype.DblType;
  * 
  * By default this uses the TrimToNullTrimmer, which removes all whitespace from
  * the value and ultimately null if the value is all whitespace.
+ *
+ * If a DblProp is configured as a string, such as from a properties file, on
+ * command line, environment variable, etc., the value MAY include a trailing
+ * 'D' of 'F' (lower case is ok too), as is done with Java literals.  This is
+ * different than the behavior of LngProp, but is a result of how Java parses
+ * these values.
+ *
+ * E.g., here are several correct ways to spec double value in a properties file:
+ * <code>
+ * name.of.my.double.property.MY_PROPERTY_1 = 90.00
+ * name.of.my.double.property.MY_PROPERTY_2 = 80.00D
+ * name.of.my.double.property.MY_PROPERTY_3 = 70.00F
+ * name.of.my.double.property.MY_PROPERTY_4 = 60.00d
+ * name.of.my.double.property.MY_PROPERTY_5 = 4
+ * </code>
  * 
  * @author eeverman
  */
