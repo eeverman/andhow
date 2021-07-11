@@ -159,10 +159,20 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnClasspathLoader must
-		 * be found and a RuntimeException will be thrown if it is not found.
+		 * If called to set this to 'required', a classpath properties file must
+		 * exist and be readable.  This flag is used by the {@Code StdPropFileOnClasspathLoader}.
 		 *
-		 * This is not set by default, allowing the properties file to be optional.
+		 * Since the {@Code StdPropFileOnClasspathLoader} has a default property file name,
+		 * {@Code /andhow.properties}, setting this to 'required' means that either that
+		 * default file name or another that you configure instead must exist.
+		 *
+		 * @See setClasspathPropFilePath methods for details on using a non-default
+		 * classpath properties file.
+		 *
+		 * A RuntimeException will be thrown if this is set to 'required' and there
+		 * is no classpath properties file that can be read.
+		 * <br>
+		 * This is NOT set by default, allowing the properties file to be optional.
 		 *
 		 * @return
 		 */
@@ -172,10 +182,9 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnClasspathLoader is
-		 * optional and will not throw an error if it is not found.
+		 * Sets the properties file on the classpath to be optional, the default.
 		 *
-		 * This is set by default, so there is no need to explicitly call it.
+		 * @See classpathPropertiesRequired
 		 *
 		 * @return
 		 */
@@ -230,7 +239,7 @@ public class StdConfig {
 		}
 
 		/**
-		 * Sets the properties file on the filesystem to be option, the default.
+		 * Sets the properties file on the filesystem to be optional, the default.
 		 *
 		 * @See setFilesystemPropFilePath
 		 *
