@@ -312,7 +312,7 @@ public class StdConfigGetterAndSetterTest {
 				"Loader should see the default value");
 
 	}
-	
+
 	@Test
 	public void setClasspathPropFilePathViaStrPropTest() throws Exception {
 		StrProp MY_PATH_PROPERTY = StrProp.builder().build();
@@ -343,6 +343,7 @@ public class StdConfigGetterAndSetterTest {
 				"Loader should revert to default");
 	}
 
+	@Test
 	public void setClasspathPropFilePathInteractionOfStringAndStrPropTest() {
 		StrProp MY_PATH_PROPERTY = StrProp.builder().build();
 		MyStdConfig config = new MyStdConfig();
