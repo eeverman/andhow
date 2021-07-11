@@ -116,12 +116,15 @@ public class StdConfig {
 						+ "be specified as both a String and StrProp");
 			}
 
-			if (classpathPropFilePathString != null && !classpathPropFilePathString.startsWith("/")
-					&& (classpathPropFilePathString.endsWith(".properties") || classpathPropFilePathString.endsWith(".xml"))) {
-
-				throw new IllegalArgumentException("The path to the property file on "
-						+ "the classpath should start with a '/' if the filename contains a dot.");
+			if (
+					classpathPropFilePathString != null &&
+					classpathPropFilePathString.contains(".") &&
+					!classpathPropFilePathString.startsWith("/")
+			) {
+				throw new IllegalArgumentException("A path to a property file on the classpath "
+						+ "must start with a '/' if the filename contains a dot.");
 			}
+
 			this.classpathPropFilePathStr = classpathPropFilePathString;
 
 			return (S) this;
@@ -156,10 +159,20 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnClasspathLoader must
-		 * be found and a RuntimeException will be thrown if it is not found.
+		 * If called to set this to 'required', a classpath properties file must
+		 * exist and be readable.  This flag is used by the {@Code StdPropFileOnClasspathLoader}.
 		 *
-		 * This is not set by default, allowing the properties file to be optional.
+		 * Since the {@Code StdPropFileOnClasspathLoader} has a default property file name,
+		 * {@Code /andhow.properties}, setting this to 'required' means that either that
+		 * default file name or another that you configure instead must exist.
+		 *
+		 * @See setClasspathPropFilePath methods for details on using a non-default
+		 * classpath properties file.
+		 *
+		 * A RuntimeException will be thrown if this is set to 'required' and there
+		 * is no classpath properties file that can be read.
+		 * <br>
+		 * This is NOT set by default, allowing the properties file to be optional.
 		 *
 		 * @return
 		 */
@@ -169,10 +182,9 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnClasspathLoader is
-		 * optional and will not throw an error if it is not found.
+		 * Sets the properties file on the classpath to be optional, the default.
 		 *
-		 * This is set by default, so there is no need to explicitly call it.
+		 * @See classpathPropertiesRequired
 		 *
 		 * @return
 		 */
@@ -202,10 +214,22 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnFilesystemLoader must
-		 * be found and a RuntimeException will be thrown if it is not found.
+		 * If called to set this to 'required', a non-null configured value for the
+		 * filesystem properties file must point to an existing, readable properties
+		 * file.  This flag is used by the {@Code StdPropFileOnFilesystemLoader}.
 		 *
-		 * This is not set by default, allowing the properties file to be optional.
+		 * A RuntimeException will be thrown if this is set to 'required' and there
+		 * is a path specified which points to a file that does not exist.
+		 * Configuring a filesystem path is a two step process:<ul>
+		 * <li>First, a StrProp Property must be specified for this configuration
+		 * via the {@Code setFilesystemPropFilePath} method</li>
+		 * <li>Then, a value must be configured for in an any way that AndHow
+		 * reads and loads values, such as environment vars, system properties, etc..</li>
+		 * </ul>
+		 * If and non-null value is configured, its doesn't point to a readable properties
+		 * file, AND this required flag is set, a RuntimeException will be thrown at startup.
+		 * <br>
+		 * This is NOT set by default, allowing the properties file to be optional.
 		 *
 		 * @return
 		 */
@@ -215,10 +239,9 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnFilesystemLoader is
-		 * optional and will not throw an error if it is not found.
+		 * Sets the properties file on the filesystem to be optional, the default.
 		 *
-		 * This is set by default, so there is no need to explicitly call it.
+		 * @See setFilesystemPropFilePath
 		 *
 		 * @return
 		 */

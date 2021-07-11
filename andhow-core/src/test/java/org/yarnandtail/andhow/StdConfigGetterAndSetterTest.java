@@ -6,9 +6,8 @@ import java.util.*;
 
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.StdConfig.StdConfigImpl;
-import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.api.StandardLoader;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -19,6 +18,7 @@ import org.yarnandtail.andhow.property.StrProp;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -232,6 +232,12 @@ public class StdConfigGetterAndSetterTest {
 		String[] args = new String[] {"abc=123", "xyz='456"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
+
+		Object o = TestUtil.getField(config.buildStdMainStringArgsLoader(), "keyValuePairs");
+		List<String> kvps = (List<String>)o;
+
+		assertEquals(2, kvps.size());
+		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
 	}
 
 	@Test
@@ -260,6 +266,127 @@ public class StdConfigGetterAndSetterTest {
 		config.setEnvironmentProperties(null);
 		assertNull(config.getEnvironmentProperties());
 
+	}
+
+	@Test
+	public void setClasspathPropFilePathViaStringTest() throws Exception {
+		MyStdConfig config = new MyStdConfig();
+		ValidatedValuesWithContextMutable vvs = new ValidatedValuesWithContextMutable();
+		Class<?> vvsClass = ValidatedValuesWithContext.class;	//class of getEffectivePath argument
+
+		assertNull(config.getClasspathPropFileProp());
+		assertNull(config.getClasspathPropFilePath());
+		assertEquals("/andhow.properties",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				"Loader should see the default value");
+
+		config.setClasspathPropFilePath("/andhow.test.properties");
+		assertEquals("/andhow.test.properties", config.getClasspathPropFilePath());
+		assertNull(config.getClasspathPropFileProp());
+		assertEquals("/andhow.test.properties",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				"Loader should see this configured value");
+
+		config.setClasspathPropFilePath("/andhow.test.props");
+		assertEquals("/andhow.test.props", config.getClasspathPropFilePath());
+		assertEquals("/andhow.test.props",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				"Loader should see this configured value");
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.setClasspathPropFilePath("andhow.test.props");
+		}, "paths containing dots must start w/ a slash");
+
+		assertEquals("/andhow.test.props", config.getClasspathPropFilePath(), "Should be unchanged");
+
+		config.setClasspathPropFilePath("/org/comcorp/project/andhow.test.properties");
+		assertEquals("/org/comcorp/project/andhow.test.properties", config.getClasspathPropFilePath());
+		assertEquals("/org/comcorp/project/andhow.test.properties",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				"Loader should see this configured value");
+
+		config.setClasspathPropFilePath((String)null);
+		assertNull(config.getClasspathPropFilePath());
+		assertEquals("/andhow.properties",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				"Loader should see the default value");
+
+	}
+
+	@Test
+	public void setClasspathPropFilePathViaStrPropTest() throws Exception {
+		StrProp MY_PATH_PROPERTY = StrProp.builder().build();
+
+		MyStdConfig config = new MyStdConfig();
+
+		ValidatedValue validatedValue = new ValidatedValue(MY_PATH_PROPERTY, "/my.prop.file");
+		List<ValidatedValue> vvList = new ArrayList<>();
+		vvList.add(validatedValue);
+
+		LoaderValues loaderValues = new LoaderValues(new FixedValueLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
+		ValidatedValuesWithContextMutable validatedValues = new ValidatedValuesWithContextMutable();
+		validatedValues.addValues(loaderValues);
+		Class<?> vvsClass = ValidatedValuesWithContext.class;	//class of getEffectivePath argument
+
+		config.setClasspathPropFilePath(MY_PATH_PROPERTY);
+		assertNull(config.getClasspathPropFilePath());
+		assertEquals(MY_PATH_PROPERTY, config.getClasspathPropFileProp());
+		assertEquals("/my.prop.file",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
+				"Loader should see this configured value");
+
+		config.setClasspathPropFilePath((StrProp)null);
+		assertNull(config.getClasspathPropFilePath());
+		assertNull(config.getClasspathPropFileProp());
+		assertEquals("/andhow.properties",
+				TestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
+				"Loader should revert to default");
+	}
+
+	@Test
+	public void setClasspathPropFilePathInteractionOfStringAndStrPropTest() {
+		StrProp MY_PATH_PROPERTY = StrProp.builder().build();
+		MyStdConfig config = new MyStdConfig();
+
+		config.setClasspathPropFilePath(MY_PATH_PROPERTY);
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.setClasspathPropFilePath("/some.other.path");
+		}, "Can't set via String and StrProp at the same time");
+		assertNull(config.getClasspathPropFilePath(), "Should not have set the value due to error");
+
+		config.setClasspathPropFilePath((StrProp)null);
+		config.setClasspathPropFilePath("/some.other.path");	//now its OK
+		assertEquals("/some.other.path", config.getClasspathPropFilePath());
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			config.setClasspathPropFilePath(MY_PATH_PROPERTY);
+		}, "String version is set, so now this one causes the error");
+		assertNull(config.getClasspathPropFileProp(), "Should not have set the value due to error");
+
+	}
+
+	@Test void classpathPropertiesRequiredOrNotTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		assertFalse(config.getClasspathPropFileRequired(), "False should be the default");
+		assertFalse(config.buildStdPropFileOnClasspathLoader().isMissingFileAProblem(), "False should be the default");
+
+		config.classpathPropertiesRequired();
+
+		assertTrue(config.getClasspathPropFileRequired());
+		assertTrue(config.buildStdPropFileOnClasspathLoader().isMissingFileAProblem());
+	}
+
+	@Test void filesystemPropertiesRequiredOrNotTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		assertFalse(config.getFilesystemPropFileRequired(), "False should be the default");
+		assertFalse(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem(), "False should be the default");
+
+		config.filesystemPropFileRequired();
+
+		assertTrue(config.getFilesystemPropFileRequired());
+		assertTrue(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem());
 	}
 
 	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
@@ -291,6 +418,14 @@ public class StdConfigGetterAndSetterTest {
 		public Map<String, String> getEnvironmentProperties() {
 			return envProperties;
 		}
+
+		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }
+
+		public StrProp getClasspathPropFileProp() { return this.classpathPropFilePathProp; }
+
+		public boolean getClasspathPropFileRequired() { return _missingClasspathPropFileAProblem; }
+
+		public boolean getFilesystemPropFileRequired() { return _missingFilesystemPropFileAProblem; }
 	}
 	
 }

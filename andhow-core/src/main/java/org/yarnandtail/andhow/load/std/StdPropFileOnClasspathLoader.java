@@ -42,13 +42,39 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * Full details on how Java parses properties files can be found in the
  * <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#load-java.io.Reader-">properties file specification</a>.
  * <p>
- * Configuring the name or classpath of the properties file can be used to
- * enable different configuration profiles based on the environment.
- * For instance, a system property could specify that {@code /test.properties}
- * be used on a test server and {@code /production.properties} on a production
- * server.  An example of configuring the property file path:
- * <br>
- * <pre>
+ * Since resources on the test classpath override those on the main classpath,
+ * its easy to have separate configurations for production and testing simply
+ * by having two {@code andhow.properties} files, one on the main classpath
+ * and one on test.  There are many other options with classpath properties files.
+ * <p>
+ * To change the name of the properties file used for testing, a class like the
+ * example below can be added to your test classpath:
+ * <pre>{@Code
+ * import org.yarnandtail.andhow.*;
+ * import org.yarnandtail.andhow.property.StrProp;
+ *
+ * public class UsePropertyFileOnClasspath implements AndHowTestInit {
+ *
+ *   {@literal @}Override
+ *   public AndHowConfiguration getConfiguration() {
+ *     return  StdConfig.instance()
+ *       .setClasspathPropFilePath("/my_test_configuration_properties_file.prop");
+ *   }
+ * }
+ * }</pre>
+ * If AndHow finds a {@Code AndHowTestInit} implementation on the classpath,
+ * it uses it in preference to other initiation points.
+ * With this only on the test classpath, AndHow will still use the default
+ * {@code andhow.properties} for production.
+ * <p>
+ * With slightly fancier configuration, something like {@code /staging.properties}
+ * could be used in a staging environment and {@code /production.properties}
+ * used in production.  In a case like this we need the classpath to be
+ * configurable, not hard-coded like the example above.  To do that we need
+ * a Property to configure it with, then we tell AndHow which property was
+ * used.<br>
+ * Here is an example of a configurable classpath:
+ * <pre>{@Code
  * import org.yarnandtail.andhow.*;
  * import org.yarnandtail.andhow.property.StrProp;
  * 
@@ -63,7 +89,7 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  *       .setClasspathPropFilePath(MY_CLASSPATH);
  *   }
  * }
- * </pre>
+ * }</pre>
  * The code above adds the property {@code MY_CLASSPATH}
  * (the name is arbitrary) which is used to configure the 
  * {@code StdPropFileOnClasspathLoader} with a custom property file location.
@@ -71,6 +97,9 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * see if a value has been loaded for {@code MY_CLASSPATH} by any prior loader.
  * If a value is present, the loader tries to load from the configured classpath.
  * If no value is configured, the default classpath is assumed.
+ * Properties file loaders are the last loaders, so configuration the classpath
+ * can be done by virtually anything: environment vars, system properties,
+ * command line args, JNDI...
  * 
  * <h3>This is a Standard Loader</h3>
  * Like all {@code StandardLoader}'s, this loader is intended to be auto-created
