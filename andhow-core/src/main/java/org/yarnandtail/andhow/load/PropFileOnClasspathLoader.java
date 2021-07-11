@@ -7,8 +7,8 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
 /**
- * Reads from a Java .property file on the classpath, following standard java
- * conventions for the structure of those file.
+ * Reads from a Java .properties file on the classpath, following standard java
+ * conventions for the structure of those key:value pair files.
  *
  * This loader finds the properties file via either a String or StrProperty
  * specified in the constructor. If the StrProperty is used, an earlier an

@@ -116,12 +116,15 @@ public class StdConfig {
 						+ "be specified as both a String and StrProp");
 			}
 
-			if (classpathPropFilePathString != null && !classpathPropFilePathString.startsWith("/")
-					&& (classpathPropFilePathString.endsWith(".properties") || classpathPropFilePathString.endsWith(".xml"))) {
-
-				throw new IllegalArgumentException("The path to the property file on "
-						+ "the classpath should start with a '/' if the filename contains a dot.");
+			if (
+					classpathPropFilePathString != null &&
+					classpathPropFilePathString.contains(".") &&
+					!classpathPropFilePathString.startsWith("/")
+			) {
+				throw new IllegalArgumentException("A path to a property file on the classpath "
+						+ "must start with a '/' if the filename contains a dot.");
 			}
+
 			this.classpathPropFilePathStr = classpathPropFilePathString;
 
 			return (S) this;
