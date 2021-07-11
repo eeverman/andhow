@@ -205,10 +205,22 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnFilesystemLoader must
-		 * be found and a RuntimeException will be thrown if it is not found.
+		 * If called to set this to 'required', a non-null configured value for the
+		 * filesystem properties file must point to an existing, readable properties
+		 * file.  This flag is used by the {@Code StdPropFileOnFilesystemLoader}.
 		 *
-		 * This is not set by default, allowing the properties file to be optional.
+		 * A RuntimeException will be thrown if this is set to 'required' and there
+		 * is a path specified which points to a file that does not exist.
+		 * Configuring a filesystem path is a two step process:<ul>
+		 * <li>First, a StrProp Property must be specified for this configuration
+		 * via the {@Code setFilesystemPropFilePath} method</li>
+		 * <li>Then, a value must be configured for in an any way that AndHow
+		 * reads and loads values, such as environment vars, system properties, etc..</li>
+		 * </ul>
+		 * If and non-null value is configured, its doesn't point to a readable properties
+		 * file, AND this required flag is set, a RuntimeException will be thrown at startup.
+		 * <br>
+		 * This is NOT set by default, allowing the properties file to be optional.
 		 *
 		 * @return
 		 */
@@ -218,10 +230,9 @@ public class StdConfig {
 		}
 
 		/**
-		 * If set, the properties file loaded by StdPropFileOnFilesystemLoader is
-		 * optional and will not throw an error if it is not found.
+		 * Sets the properties file on the filesystem to be option, the default.
 		 *
-		 * This is set by default, so there is no need to explicitly call it.
+		 * @See setFilesystemPropFilePath
 		 *
 		 * @return
 		 */

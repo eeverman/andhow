@@ -365,6 +365,30 @@ public class StdConfigGetterAndSetterTest {
 
 	}
 
+	@Test void classpathPropertiesRequiredOrNotTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		assertFalse(config.getClasspathPropFileRequired(), "False should be the default");
+		assertFalse(config.buildStdPropFileOnClasspathLoader().isMissingFileAProblem(), "False should be the default");
+
+		config.classpathPropertiesRequired();
+
+		assertTrue(config.getClasspathPropFileRequired());
+		assertTrue(config.buildStdPropFileOnClasspathLoader().isMissingFileAProblem());
+	}
+
+	@Test void filesystemPropertiesRequiredOrNotTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		assertFalse(config.getFilesystemPropFileRequired(), "False should be the default");
+		assertFalse(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem(), "False should be the default");
+
+		config.filesystemPropFileRequired();
+
+		assertTrue(config.getFilesystemPropFileRequired());
+		assertTrue(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem());
+	}
+
 	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
 		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
 		return pv != null && pv.getValue().equals(value);
@@ -398,6 +422,10 @@ public class StdConfigGetterAndSetterTest {
 		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }
 
 		public StrProp getClasspathPropFileProp() { return this.classpathPropFilePathProp; }
+
+		public boolean getClasspathPropFileRequired() { return _missingClasspathPropFileAProblem; }
+
+		public boolean getFilesystemPropFileRequired() { return _missingFilesystemPropFileAProblem; }
 	}
 	
 }
