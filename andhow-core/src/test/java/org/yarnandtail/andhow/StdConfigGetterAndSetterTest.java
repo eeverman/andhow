@@ -312,8 +312,7 @@ public class StdConfigGetterAndSetterTest {
 				"Loader should see the default value");
 
 	}
-
-
+	
 	@Test
 	public void setClasspathPropFilePathViaStrPropTest() throws Exception {
 		StrProp MY_PATH_PROPERTY = StrProp.builder().build();
@@ -321,7 +320,10 @@ public class StdConfigGetterAndSetterTest {
 		MyStdConfig config = new MyStdConfig();
 
 		ValidatedValue validatedValue = new ValidatedValue(MY_PATH_PROPERTY, "/my.prop.file");
-		LoaderValues loaderValues = new LoaderValues(new FixedValueLoader(), List.of(validatedValue), ProblemList.EMPTY_PROBLEM_LIST);
+		List<ValidatedValue> vvList = new ArrayList<>();
+		vvList.add(validatedValue);
+
+		LoaderValues loaderValues = new LoaderValues(new FixedValueLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
 		ValidatedValuesWithContextMutable validatedValues = new ValidatedValuesWithContextMutable();
 		validatedValues.addValues(loaderValues);
 		Class<?> vvsClass = ValidatedValuesWithContext.class;	//class of getEffectivePath argument
