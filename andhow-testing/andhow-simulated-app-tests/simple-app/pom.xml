@@ -17,6 +17,11 @@
 			<artifactId>andhow</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-test-harness</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${artifactId}</finalName>
