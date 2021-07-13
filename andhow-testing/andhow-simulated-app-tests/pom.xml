@@ -11,7 +11,8 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>andhow-multimodule-dataprocess</module>
-		<module>simple-app</module>
+		<module>example-app-1</module>
+		<module>example-app-2</module>
 	</modules>
 	
 	<build>

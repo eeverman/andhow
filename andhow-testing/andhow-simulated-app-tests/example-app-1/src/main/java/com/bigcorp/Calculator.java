@@ -16,7 +16,7 @@ public class Calculator {
 			.mustBeNonNull().mustEqual("DOUBLE", "FLOAT").build();
 
 	/**
-	 * Do the calculation, but choose which implemenation to use based on CALC_MODE
+	 * Do the calculation, but choose which implementation to use based on CALC_MODE
 	 * @param a
 	 * @param b
 	 * @return
@@ -27,9 +27,7 @@ public class Calculator {
 		} else if (MODE.getValue().equals("FLOAT")) {
 			return doFloatCalc(a, b);
 		} else {
-			throw new IllegalStateException(
-					"The validation on CALC_MODE ensures this never happens"
-			);
+			throw new IllegalStateException("Validation on CALC_MODE ensures this never happens");
 		}
 	}
 
@@ -48,14 +46,14 @@ public class Calculator {
 	 * To run from command line, first use Maven to create a runnable jar.
 	 * Here are the commands, executed from the root of the AndHow project, to build and run the jar:<br>
 	 * <pre>{@Code
-	 * > mvn clean package
-	 * > java -jar andhow-testing/andhow-simulated-app-tests/simple-app/target/simple-app.jar 1.23 4.56
+	 * > mvn clean package -DskipTests -Dmaven.javadoc.skip=true
+	 * > java -jar andhow-testing/andhow-simulated-app-tests/example-app-1/target/app.jar 1.23 4.56
 	 * }</pre>
 	 * The output of running this command will be:
 	 * <pre>{@Code
 	 * Result is 0.26973684210526316 (Double)
 	 * }</pre>
-	 * How did it know to use the Double implementation?  AndHow finds the {@Code andhow.properties}
+	 * How did it know to use the Double implementation?  AndHow finds the {@Code checker.production.properties}
 	 * file on the classpath and reads the configured value for CALC_MODE.  {@CODE CALC_MODE.getValue()}
 	 * returns 'DOUBLE'.  Compare this to the unit test for this class...
 	 * <p>
@@ -63,7 +61,7 @@ public class Calculator {
 	 * could be overwritten via env. vars., JNDI, system properties, etc..
 	 * Rerunning the main method with a system property like this:
 	 * <pre>{@Code
-	 * > java -Dcom.bigcorp.Calculator.CALC_MODE=FLOAT -jar andhow-testing/andhow-simulated-app-tests/simple-app/target/simple-app.jar 1.23 4.56
+	 * > java -Dcom.bigcorp.Calculator.CALC_MODE=FLOAT -jar andhow-testing/andhow-simulated-app-tests/example-app-1/target/app.jar 1.23 4.56
 	 * }</pre>
 	 * will result in {@Code Result is 0.26973686 (Float)}
 	 *

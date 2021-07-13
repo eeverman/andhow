@@ -3,7 +3,8 @@ package com.bigcorp;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.KillAndHowBeforeEachTest;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTestExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,15 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * {@Code CalculatorTest1} didn't fully test the app because only some code is executed in the FLOAT
  * configuration.  This test demos testing other configurations.
  * <p>
- * The {@Code KillAndHowBeforeEachTest} Junit extension is used to test the app in different
- * configurations.  With this extension the AndHow configuration is erased prior to each test,
- * allowing each test to specify its own AndHow configuration.  If a test doesn't explicitly
- * initialize AndHow, the default AndHow configuration will be invoked.
+ * The {@Code @KillAndHowBeforeEachTest} annotation erases the configured state of AndHow before
+ * each test so the test can specify its own AndHow configuration.  If a test doesn't explicitly
+ * initialize AndHow, AndHow will initialize normally as soon as the first Property value is referenced.
  * <p>
- * When all tests are complete, {@Code KillAndHowBeforeEachTest} will reset the AndHow
- * configuration back to what it was at the start of the test.
+ * When all tests are complete, {@Code KillAndHowBeforeEachTest} resets the AndHow state
+ * back to what it was at the start of the test.
  */
-@ExtendWith(KillAndHowBeforeEachTest.class)	// <-- JUnit extension
+@KillAndHowBeforeEachTest  // <-- Uses the JUnit extension mechanism
 class CalculatorTest2 {
 
 	/**
@@ -41,7 +41,7 @@ class CalculatorTest2 {
 	/**
 	 * If the test method doesn't initialize AndHow, AndHow will initialize automatically as soon
 	 * as a Property is accessed and load the default configuration from the test
-	 * {@Code andhow.properties} file.
+	 * {@Code checker.production.properties} file.
 	 */
 	@Test
 	public void revertToDefaultConfigIfAndHowIsNotInitialized() {
