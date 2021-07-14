@@ -7,19 +7,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * In the test environment, the application is configured to use the 'FLOAT'
- * implementation, as configured in the {@Code checker.production.properties} on the TEST CLASSPATH.
+ * implementation, as configured in the {@Code andhow.properties} on the TEST CLASSPATH.
  *
  * Resources on the test classpath override the main classpath, so this is a natural and useful
  * outcome.  Just like in production, AndHow will auto-discover its configuration during testing.
  * <p>
- * Using the test {@Code checker.production.properties} file, however, means that all the tests run with the
- * same configuration.  How do we test the application in other configurations?
- * See {@Code CalculatorTest2} for the answer...
+ * Using the test {@Code andhow.properties} file, however, means that all the tests run with the
+ * same 'FLOAT' configuration value.  How do we test the application with the DOUBLE configuration?
+ * See {@Code CalculatorDoubleConfigTest} for the answer...
  * <p>
  * ...and much more flexible and complex configuration is possible for production and testing -
  * be sure to look at other of the 'simulated-app-tests'.
  */
-class CalculatorTest1 {
+class CalculatorDefaultTest {
 
 	/**
 	 * Verify that the app runs in FLOAT mode in the test environment.

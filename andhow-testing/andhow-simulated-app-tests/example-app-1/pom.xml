@@ -26,29 +26,6 @@
 	<build>
 		<finalName>app</finalName>
 		<plugins>
-<!--			<plugin>-->
-<!--				<artifactId>maven-assembly-plugin</artifactId>-->
-<!--				<configuration>-->
-<!--					<descriptorRefs>-->
-<!--						<descriptorRef>jar-with-dependencies</descriptorRef>-->
-<!--					</descriptorRefs>-->
-<!--					<appendAssemblyId>false</appendAssemblyId>-->
-<!--					<archive>-->
-<!--						<manifest>-->
-<!--							<mainClass>com.bigcorp.Checker</mainClass>-->
-<!--						</manifest>-->
-<!--					</archive>-->
-<!--				</configuration>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--&lt;!&ndash;						<id>make-assembly</id> &lt;!&ndash; this is used for inheritance merges &ndash;&gt;&ndash;&gt;-->
-<!--						<phase>package</phase> &lt;!&ndash; bind to the packaging phase &ndash;&gt;-->
-<!--						<goals>-->
-<!--							<goal>single</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--			</plugin>-->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -58,6 +35,10 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

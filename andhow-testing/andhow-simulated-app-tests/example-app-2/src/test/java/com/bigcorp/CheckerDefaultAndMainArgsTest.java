@@ -1,15 +1,10 @@
 package com.bigcorp;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.junit5.KillAndHowBeforeAllTestsExtension;
 import org.yarnandtail.andhow.junit5.KillAndHowBeforeThisTest;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * In the test environment, the application is configured to use the 'FLOAT'
@@ -25,27 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * ...and much more flexible and complex configuration is possible for production and testing -
  * be sure to look at other of the 'simulated-app-tests'.
  */
-@ExtendWith(KillAndHowBeforeAllTestsExtension.class)
-class CheckerTest2 {
+public class CheckerDefaultAndMainArgsTest {
 
 	/**
-	 * To test our app in a very specific configuration, we can override configuration from all
-	 * other sources by initializing AndHow with fixed values.  The {@Code KillAndHowBeforeAllTests}
-	 * annotation resets AndHow before the start of testing and restores it after all tests are
-	 * complete, so all tests will share the configured state below.
-	 */
-	@BeforeAll
-  public static void configAndHowForAllTests(){
-		AndHow.findConfig()
-				.addFixedValue(Checker.Config.PROTOCOL, "https")
-				.addFixedValue(Checker.Config.SERVER, "imgs.xkcd.com")
-				.addFixedValue(Checker.Config.PORT, "80")
-				.addFixedValue(Checker.Config.PATH, "/comics/the_mother_of_all_suspicious_files.png")
-				.build();
-	}
-
-	/**
-	 * Verify the the app only sees the 'fixed' values from above.
+	 * Verify the the app sees its default configuration.
+	 * <p>
+	 * In the {@Code AppInitialtion.ANDHOW_CLASSPATH_FILE} Property, the default value is
+	 * 'checker.default.properties'.  In that same class we also tell AndHow to use the value of that
+	 * Property to decide which property file to use, thus property values are read from
+	 * 'checker.default.properties'.
 	 */
 	@Test
 	public void verifyTestEnvironmentConfiguration() {
@@ -53,21 +36,8 @@ class CheckerTest2 {
 
 		String url = v.getServiceUrl();
 
-		assertEquals("https://imgs.xkcd.com:80/comics/the_mother_of_all_suspicious_files.png", url,
-				"The url is build based on the fixed values in the 'BeforeAll' method");
-	}
-
-	/**
-	 * Running this method again will use the same configuration.
-	 */
-	@Test
-	public void verifyTestEnvironmentConfiguration2() {
-		Checker v = new Checker();
-
-		String url = v.getServiceUrl();
-
-		assertEquals("https://imgs.xkcd.com:80/comics/the_mother_of_all_suspicious_files.png", url,
-				"The url is build based on the fixed values in the 'BeforeAll' method");
+		assertEquals("https://default.bigcorp.com:80/validate", url,
+				"The url should match the configuration in checker.default.properties");
 	}
 
 	/**
@@ -82,14 +52,14 @@ class CheckerTest2 {
 	 * @throws Exception
 	 */
 	@KillAndHowBeforeThisTest
-	//@Test
+	@Test
 	public void mainMethodAlsoSeesDefaultProperties() throws Exception {
 
 		String text = tapSystemOut(() -> {
 			Checker.main(new String[]{});
 		});
 
-		assertTrue(text.contains("https://imgs.xkcd.com:80/comics/the_mother_of_all_suspicious_files.png"),
+		assertTrue(text.contains("https://default.bigcorp.com:80/validate"),
 				"The url should match the configuration in checker.default.properties");
 	}
 

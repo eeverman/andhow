@@ -39,7 +39,6 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<inherited>true</inherited>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>
