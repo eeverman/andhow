@@ -22,13 +22,18 @@ public class Calculator {
 	 * @return
 	 */
 	public Number doCalc(Number a, Number b) {
+
+		Number result = null;
+
 		if (MODE.getValue().equals("DOUBLE")) {
-			return doDoubleCalc(a, b);
+			result = doDoubleCalc(a, b);
 		} else if (MODE.getValue().equals("FLOAT")) {
-			return doFloatCalc(a, b);
+			result = doFloatCalc(a, b);
 		} else {
-			throw new IllegalStateException("Validation on CALC_MODE ensures this never happens");
+			//throw new IllegalStateException("Validation on CALC_MODE ensures this never happens");
 		}
+
+		return result;
 	}
 
 	protected Number doDoubleCalc(Number a, Number b) {

@@ -5,22 +5,23 @@ import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
 /**
- * A hypothetical class that checks if a external service is running.  The url
- * of the external service is configured by a few AndHow properties.
- *
+ * A hypothetical class that checks if a configured service url is 'live'.
+ * The url of the external service is configured by AndHow properties.
+ * <p>
  * Of course, this isn't a complete application, but its easy to imagine {@Code doCheck} being
- * called by an AWS Lambda function, as a command line utility, or just some library part of a larger app.
+ * called by an AWS Lambda function, as a command line utility, or as just a library in a larger app.
  */
 public class Checker {
 
-	//All the config Properties - Its a best practice to group AndHow Properties into an interface.
-	static interface Config {
-		public static final StrProp PROTOCOL = StrProp.builder().mustBeNonNull().
+	//All the config Properties for this class
+	// - Its a best practice to group AndHow Properties into an interface.
+	interface Config {
+		StrProp PROTOCOL = StrProp.builder().mustBeNonNull().
 				mustEqual("http", "https").build();
-		public static final StrProp SERVER = StrProp.builder().mustBeNonNull().build();
-		public static final IntProp PORT = IntProp.builder().mustBeNonNull().
+		StrProp SERVER = StrProp.builder().mustBeNonNull().build();
+		IntProp PORT = IntProp.builder().mustBeNonNull().
 				mustBeGreaterThanOrEqualTo(80).mustBeLessThanOrEqualTo(8888).build();
-		public static final StrProp PATH = StrProp.builder().mustStartWith("/").build();
+		StrProp PATH = StrProp.builder().mustStartWith("/").build();
 	}
 
 	/**
@@ -32,14 +33,12 @@ public class Checker {
 				Config.PORT.getValue() + Config.PATH.getValue();
 	}
 
-	/**
-	 * Hypothetical validation method that would use the service url...
-	 * @param value
-	 * @return
+	/*
+	 * In the real world, this method would verify the configured url works...
 	 */
-	public boolean doCheck(String value) {
-		return true;	//In theory we called the service url to verify this thing.  yep.
-	}
+//	public boolean checkTheUrl() {
+//		... verify the url return a http 200 code or something ...
+//	}
 
 	/**
 	 * A main method to run this app as it might be in a real environment.
@@ -75,7 +74,6 @@ public class Checker {
 		AndHow.findConfig().setCmdLineArgs(args).build();	//Have to call build here or it doesn't work!!
 
 		Checker v = new Checker();
-
 		System.out.println("Service url: " + v.getServiceUrl());	//  <--display the configured url
 	}
 
