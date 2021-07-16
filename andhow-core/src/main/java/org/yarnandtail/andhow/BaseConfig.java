@@ -169,14 +169,9 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	public void build() {
 		AndHow.instance(this);
 	}
-	
-	/**
-	 * The list of default loaders as a list.
-	 * 
-	 * This is a disconnected list from any instance of the BaseConfig.
-	 * @return 
-	 */
-	public static List<Class<? extends StandardLoader>> getDefaultLoaderList() {
+
+	@Override
+	public List<Class<? extends StandardLoader>> getDefaultLoaderList() {
 		
 		List<Class<? extends StandardLoader>> loaders = new ArrayList();
 		

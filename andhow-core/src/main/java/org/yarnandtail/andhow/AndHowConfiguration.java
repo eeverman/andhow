@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.property.StrProp;
 
 /**
  *
@@ -84,6 +85,174 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return
 	 */
 	C removeFixedValue(String propertyNameOrAlias);
-	
+
+	/**
+	 * Sets the classpath path to a properties file for the
+	 * {@Code StdPropFileOnClasspathLoader} to read and load from.
+	 *
+	 * If no path is specified via one of the two {@Code setClasspathPropFilePath} methods,
+	 * the default classpath of '/andhow.properties' is used.
+	 * <p>
+	 * As per Java convention, a path on the classpath can use dots or slashes to separate packages.
+	 * However, if the file name itself contains dots, then the path must start with a slash and use
+	 * slashes to separate packages.
+	 * <p>
+	 * Valid Examples:
+	 * <ul>
+	 * <li>/andhow.property - The default. The file is at the root and the name contains a dot</li>
+	 * <li>/org/ngo/config.props - Similar to above, but in the org.ngo package, the file name is 'config.props'</li>
+	 * <li>org.ngo.props - The package is org.ngo, the file name is 'props'.
+	 * There are no dots in the file name, so its OK to use dots to separate the packages</li>
+	 * </ul>
+	 *
+	 * @param classpathPropFilePathString
+	 * @return
+	 */
+	C setClasspathPropFilePath(String classpathPropFilePathString);
+
+	/**
+	 * Sets the classpath path via a StrProp (a Property of String type) to a
+	 * properties file for the {@Code StdPropFileOnClasspathLoader} to read and load from.
+	 *
+	 * If no path is specified via one of the two {@Code setClasspathPropFilePath} methods,
+	 * the default classpath of '/andhow.properties' is used.
+	 * <p>
+	 * As per Java convention, a path on the classpath can use dots or slashes to separate packages.
+	 * However, if the file name itself contains dots, then the path must start with a slash and use
+	 * slashes to separate packages.  Its common to have a '.properties' extension on the properties
+	 * file, so its good practice to add a validation rule to the StrProp used here to ensure it
+	 * {@Code mustStartWith("/")}.
+	 * <p>
+	 * Valid Examples of configured values:
+	 * <ul>
+	 * <li>/andhow.property - The default. The file is at the root and the name contains a dot</li>
+	 * <li>/org/ngo/config.props - Similar to above, but in the org.ngo package, the file name is 'config.props'</li>
+	 * <li>org.ngo.props - The package is org.ngo, the file name is 'props'.
+	 * There are no dots in the file name, so its OK to use dots to separate the packages</li>
+	 * </ul>
+	 *
+	 * @param classpathPropFilePathProperty
+	 * @return
+	 */
+	C setClasspathPropFilePath(StrProp classpathPropFilePathProperty);
+
+	/**
+	 * If called to set this to 'required', a classpath properties file must
+	 * exist and be readable.  This flag is used by the {@Code StdPropFileOnClasspathLoader}.
+	 *
+	 * Since the {@Code StdPropFileOnClasspathLoader} has a default property file name,
+	 * {@Code /andhow.properties}, setting this to 'required' means that either that
+	 * default file name or another that you configure instead must exist.
+	 *
+	 * @See setClasspathPropFilePath methods for details on using a non-default
+	 * classpath properties file.
+	 *
+	 * A RuntimeException will be thrown if this is set to 'required' and there
+	 * is no classpath properties file that can be read.
+	 * <br>
+	 * This is NOT set by default, allowing the properties file to be optional.
+	 *
+	 * @return
+	 */
+	C classpathPropertiesRequired();
+
+	/**
+	 * Sets the properties file on the classpath to be optional, the default.
+	 *
+	 * @See classpathPropertiesRequired
+	 *
+	 * @return
+	 */
+	C classpathPropertiesNotRequired();
+
+	/**
+	 * Sets the filesystem path via a StrProp (a Property of String type) to a
+	 * properties file for the StdPropFileOnFilesystemLoader to load.
+	 *
+	 * If no property is set to specify a path, or a property is set by has no
+	 * value, this loader won't be used. If the property is specified but the
+	 * specified file is missing, an error will be thrown based on the
+	 * filesystemPropFileRequired flag.
+	 *
+	 * Paths should generally be absolute and correctly formed for the host
+	 * environment.
+	 *
+	 * @param filesystemPropFilePath
+	 * @return
+	 */
+	C setFilesystemPropFilePath(StrProp filesystemPropFilePath);
+
+	/**
+	 * If called to set this to 'required', a non-null configured value for the
+	 * filesystem properties file must point to an existing, readable properties
+	 * file.  This flag is used by the {@Code StdPropFileOnFilesystemLoader}.
+	 *
+	 * A RuntimeException will be thrown if this is set to 'required' and there
+	 * is a path specified which points to a file that does not exist.
+	 * Configuring a filesystem path is a two step process:<ul>
+	 * <li>First, a StrProp Property must be specified for this configuration
+	 * via the {@Code setFilesystemPropFilePath} method</li>
+	 * <li>Then, a value must be configured for in an any way that AndHow
+	 * reads and loads values, such as environment vars, system properties, etc..</li>
+	 * </ul>
+	 * If and non-null value is configured, its doesn't point to a readable properties
+	 * file, AND this required flag is set, a RuntimeException will be thrown at startup.
+	 * <br>
+	 * This is NOT set by default, allowing the properties file to be optional.
+	 *
+	 * @return
+	 */
+	C filesystemPropFileRequired();
+
+	/**
+	 * Sets the properties file on the filesystem to be optional, the default.
+	 *
+	 * @See setFilesystemPropFilePath
+	 *
+	 * @return
+	 */
+	C filesystemPropFileNotRequired();
+
+	//
+	//Loader related
+
+	/**
+	 * The default list of standard loaders, as a list of Classes that implement
+	 * {@Code StandardLoader}
+	 * <p>
+	 * The returned list is disconnected from the actual list of loaders - it is
+	 * intended to be a starting point for applications that want to modify the
+	 * list, then call setStandardLoaders().
+	 * <p>
+	 * Unlike other methods of this class, it does not fluently return a method
+	 * to itself, so your code will need a AndHowConfiguration instance reference to
+	 * use it, eg:
+	 * <pre>{@Code
+	 * public class MyAppInitiation implements AndHowInit {
+	 *    @Override
+	 *  	public AndHowConfiguration getConfiguration() {
+	 * 			AndHowConfiguration config = AndHow.findConfig();
+	 * 			List<Class<? extends StandardLoader>> sll = config.getDefaultLoaderList();
+	 * 			...do some rearranging of the list...
+	 *
+	 * 			config.setStandardLoaders(sll) ...and go on to call other methods on config...
+	 * 		}
+	 * }
+	 * }</pre>
+	 * <p>
+	 * Note:  AndHow version up to and including 0.4.1 had this method as a static
+	 * method.
+	 * @return
+	 */
+	List<Class<? extends StandardLoader>> getDefaultLoaderList();
+
+	C setStandardLoaders(List<Class<? extends StandardLoader>> newStandardLoaders);
+
+	C setStandardLoaders(Class<? extends StandardLoader>... newStandardLoaders);
+
+	C insertLoaderBefore(Class<? extends StandardLoader> insertBeforeThisLoader, Loader loaderToInsert);
+
+	C insertLoaderAfter(Class<? extends StandardLoader> insertAfterThisLoader, Loader loaderToInsert);
+
 	void build();
 }

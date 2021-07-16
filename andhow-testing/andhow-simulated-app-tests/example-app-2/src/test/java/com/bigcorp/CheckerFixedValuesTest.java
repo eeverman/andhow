@@ -3,12 +3,12 @@ package com.bigcorp;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.junit5.KillAndHowBeforeAllTests;
 import org.yarnandtail.andhow.junit5.KillAndHowBeforeThisTest;
 
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Lets say there is a very specific configuration state we need to test our app in.
@@ -34,7 +34,7 @@ public class CheckerFixedValuesTest {
 		AndHow.findConfig()
 				.addFixedValue(Checker.Config.PROTOCOL, "https")
 				.addFixedValue(Checker.Config.SERVER, "imgs.xkcd.com")
-				.addFixedValue(Checker.Config.PORT, "80")
+				.addFixedValue(Checker.Config.PORT, 80)
 				.addFixedValue(Checker.Config.PATH, "/comics/the_mother_of_all_suspicious_files.png")
 				.build();  //build() initializes AndHow, otherwise it would wait for the 1st Property access.
 	}
@@ -61,28 +61,25 @@ public class CheckerFixedValuesTest {
 	}
 
 	/**
-	 * Since the main method calls {@Code AndHow.findConfig()...build()}, forcing AndHow to
-	 * initialize itself, we <em>must 'kill'</em> the AndHow configured state before calling main.
-	 * Otherwise AndHow would throw a RuntimeException.
+	 * One of AndHow's main jobs is to enforce a single, stable configuration state and complain
+	 * loudly (with an AppFatalException) if application code tries to change that state by
+	 * re-initializing AndHow.  This test verifies that.
 	 * <p>
-	 * Resetting AndHow before this test means that this test will see the default configuration.
+	 * The main() method explicitly initializes AndHow and so does this test class.  Thus, the main
+	 * method will throw a {@Code AppFatalException} because AndHow detects the attempt to
+	 * reinitialize it.
 	 * <p>
-	 * In production, its AndHow's job to enforce a single, stable configuration state and it complains
-	 * loudly if application code tries to re-initialize it.  During testing, however, we need to
-	 * 'break the rules' with things like {@Code @KillAndHowBeforeThisTest} and other AndHow test
-	 * helpers.
+	 * If we did want to call the main method here, @{Code @KillAndHowBeforeThisTest} could be added
+	 * to this test method to start over with an unconfigured state for just this test.
 	 * @throws Exception
 	 */
-	@KillAndHowBeforeThisTest
 	@Test
-	public void mainMethodAlsoSeesDefaultProperties() throws Exception {
+	public void mainMethodShouldThrowAnErrorBecauseAndHowIsAlreadyInitialized() throws Exception {
 
-		String text = tapSystemOut(() -> {
-			Checker.main(new String[]{});
-		});
+		assertThrows(AppFatalException.class, () ->
+				Checker.main(new String[]{})
+		);
 
-		assertTrue(text.contains("https://default.bigcorp.com:80/validate"),
-				"The url should match the configuration in checker.default.properties");
 	}
 
 }

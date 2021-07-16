@@ -93,20 +93,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
-		/**
-		 * Sets the classpath path to a properties file for the
-		 * StdPropFileOnClasspathLoader to load.
-		 *
-		 * If no path is specified via either a String or StrProp, the path
-		 * '/andhow.properties' is used.<br>
-		 *
-		 * Paths should start with a forward slash and have packages delimited by
-		 * forward slashes. If the file name contains a dot, the path <em>must</em>
-		 * start with a forward slash.
-		 *
-		 * @param classpathPropFilePathString
-		 * @return
-		 */
+		@Override
 		public S setClasspathPropFilePath(String classpathPropFilePathString) {
 
 			classpathPropFilePathString = TextUtil.trimToNull(classpathPropFilePathString);
@@ -130,22 +117,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
-		/**
-		 * Sets the classpath path via a StrProp (a Property of String type) to a
-		 * properties file for the StdPropFileOnClasspathLoader to load.
-		 *
-		 * If no path is specified via either a String or StrProp, the path
-		 * '/andhow.properties' is used.<br>
-		 *
-		 * Paths should start with a forward slash and have packages delimited by
-		 * forward slashes. If the file name contains a dot, the path <em>must</em>
-		 * start with a forward slash. Thus, it is good practice to add a validation
-		 * rule to the StrProp used here to ensure it
-		 * <code>mustStartWith("/")</code>.
-		 *
-		 * @param classpathPropFilePathProperty
-		 * @return
-		 */
+		@Override
 		public S setClasspathPropFilePath(StrProp classpathPropFilePathProperty) {
 
 			if (classpathPropFilePathStr != null && classpathPropFilePathProperty != null) {
@@ -158,93 +130,31 @@ public class StdConfig {
 			return (S) this;
 		}
 
-		/**
-		 * If called to set this to 'required', a classpath properties file must
-		 * exist and be readable.  This flag is used by the {@Code StdPropFileOnClasspathLoader}.
-		 *
-		 * Since the {@Code StdPropFileOnClasspathLoader} has a default property file name,
-		 * {@Code /andhow.properties}, setting this to 'required' means that either that
-		 * default file name or another that you configure instead must exist.
-		 *
-		 * @See setClasspathPropFilePath methods for details on using a non-default
-		 * classpath properties file.
-		 *
-		 * A RuntimeException will be thrown if this is set to 'required' and there
-		 * is no classpath properties file that can be read.
-		 * <br>
-		 * This is NOT set by default, allowing the properties file to be optional.
-		 *
-		 * @return
-		 */
+		@Override
 		public S classpathPropertiesRequired() {
 			_missingClasspathPropFileAProblem = true;
 			return (S) this;
 		}
 
-		/**
-		 * Sets the properties file on the classpath to be optional, the default.
-		 *
-		 * @See classpathPropertiesRequired
-		 *
-		 * @return
-		 */
+		@Override
 		public S classpathPropertiesNotRequired() {
 			_missingClasspathPropFileAProblem = false;
 			return (S) this;
 		}
 
-		/**
-		 * Sets the filesystem path via a StrProp (a Property of String type) to a
-		 * properties file for the StdPropFileOnFilesystemLoader to load.
-		 *
-		 * If no property is set to specify a path, or a property is set by has no
-		 * value, this loader won't be used. If the property is specified but the
-		 * specified file is missing, an error will be thrown based on the
-		 * filesystemPropFileRequired flag.
-		 *
-		 * Paths should generally be absolute and correctly formed for the host
-		 * environment.
-		 *
-		 * @param filesystemPropFilePath
-		 * @return
-		 */
+		@Override
 		public S setFilesystemPropFilePath(StrProp filesystemPropFilePath) {
 			this.filesystemPropFilePathProp = filesystemPropFilePath;
 			return (S) this;
 		}
 
-		/**
-		 * If called to set this to 'required', a non-null configured value for the
-		 * filesystem properties file must point to an existing, readable properties
-		 * file.  This flag is used by the {@Code StdPropFileOnFilesystemLoader}.
-		 *
-		 * A RuntimeException will be thrown if this is set to 'required' and there
-		 * is a path specified which points to a file that does not exist.
-		 * Configuring a filesystem path is a two step process:<ul>
-		 * <li>First, a StrProp Property must be specified for this configuration
-		 * via the {@Code setFilesystemPropFilePath} method</li>
-		 * <li>Then, a value must be configured for in an any way that AndHow
-		 * reads and loads values, such as environment vars, system properties, etc..</li>
-		 * </ul>
-		 * If and non-null value is configured, its doesn't point to a readable properties
-		 * file, AND this required flag is set, a RuntimeException will be thrown at startup.
-		 * <br>
-		 * This is NOT set by default, allowing the properties file to be optional.
-		 *
-		 * @return
-		 */
+		@Override
 		public S filesystemPropFileRequired() {
 			_missingFilesystemPropFileAProblem = true;
 			return (S) this;
 		}
 
-		/**
-		 * Sets the properties file on the filesystem to be optional, the default.
-		 *
-		 * @See setFilesystemPropFilePath
-		 *
-		 * @return
-		 */
+		@Override
 		public S filesystemPropFileNotRequired() {
 			_missingFilesystemPropFileAProblem = false;
 			return (S) this;
@@ -253,6 +163,7 @@ public class StdConfig {
 		/**
 		 * Allows system properties to be overridden.
 		 *
+		 * @deprecated
 		 * @param properties
 		 */
 		public S setSystemProperties(Properties properties) {
@@ -291,6 +202,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
+		@Override
 		public S setStandardLoaders(List<Class<? extends StandardLoader>> newStandardLoaders) {
 
 			standardLoaders.clear();
@@ -299,6 +211,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
+		@Override
 		public S setStandardLoaders(Class<? extends StandardLoader>... newStandardLoaders) {
 
 			standardLoaders.clear();
@@ -310,6 +223,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
+		@Override
 		public S insertLoaderBefore(
 				Class<? extends StandardLoader> insertBeforeThisLoader, Loader loaderToInsert) {
 
@@ -324,6 +238,7 @@ public class StdConfig {
 			return (S) this;
 		}
 
+		@Override
 		public S insertLoaderAfter(
 				Class<? extends StandardLoader> insertAfterThisLoader, Loader loaderToInsert) {
 
