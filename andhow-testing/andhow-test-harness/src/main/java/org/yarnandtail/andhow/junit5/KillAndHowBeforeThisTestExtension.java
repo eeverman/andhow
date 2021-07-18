@@ -43,11 +43,6 @@ public class KillAndHowBeforeThisTestExtension implements BeforeEachCallback, Af
 	 */
 	@Override
 	public void beforeEach(ExtensionContext extensionContext) throws Exception {
-
-		Optional<Class<?>> c = extensionContext.getTestClass();
-		Optional<Object> ti = extensionContext.getTestInstance();
-		Optional<Method> m = extensionContext.getTestMethod();
-
 		AndHowCore core = AndHowNonProductionUtil.getAndHowCore();
 		getStore(extensionContext).put(CORE_KEY, core);
 		AndHowNonProductionUtil.destroyAndHowCore();
