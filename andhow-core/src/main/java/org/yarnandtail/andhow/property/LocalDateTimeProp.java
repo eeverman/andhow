@@ -7,7 +7,7 @@ import org.yarnandtail.andhow.valid.LocalDateTimeValidator;
 import org.yarnandtail.andhow.valuetype.LocalDateTimeType;
 
 /**
- * A Property that refers to a Long value.
+ * A Property that refers to a LocalDateTime value.
  * 
  * All the basic Java types use a three letter abv. to keep declaration lines
  * short, in the form of:  [Type]Prop
