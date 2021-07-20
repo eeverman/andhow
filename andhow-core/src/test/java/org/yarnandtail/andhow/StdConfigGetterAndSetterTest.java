@@ -69,7 +69,7 @@ public class StdConfigGetterAndSetterTest {
 		assertEquals(StdFixedValueLoader.class, loaders.get(0).getClass());
 		assertEquals(StdJndiLoader.class, loaders.get(1).getClass());
 		
-		std.setStandardLoaders(BaseConfig.getDefaultLoaderList());
+		std.setStandardLoaders(std.getDefaultLoaderList());
 		loaders = std.buildLoaders();
 		assertEquals(7, loaders.size());
 		assertEquals(StdFixedValueLoader.class, loaders.get(0).getClass());

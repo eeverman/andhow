@@ -11,12 +11,34 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>andhow-multimodule-dataprocess</module>
+		<module>example-app-1</module>
+		<module>example-app-2</module>
 	</modules>
 	
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+						<appendAssemblyId>false</appendAssemblyId>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
-				<inherited>true</inherited>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<configuration>
 					<skip>true</skip>

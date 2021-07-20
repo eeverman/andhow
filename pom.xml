@@ -172,6 +172,12 @@
 				<version>1.10.19</version>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.github.stefanbirkner</groupId>
+				<artifactId>system-lambda</artifactId>
+				<version>1.2.0</version>
+				<scope>test</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -197,6 +203,10 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.github.stefanbirkner</groupId>
+			<artifactId>system-lambda</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -211,7 +221,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>3.3.0</version>
-					<inherited>true</inherited>
 					<executions>
 						<execution>
 							<id>javadoc-jar</id>
@@ -229,9 +238,12 @@
 					</executions>
 				</plugin>
 				<plugin>
-					<inherited>true</inherited>
 					<artifactId>maven-deploy-plugin</artifactId>
 					<version>2.8.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.3.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
