@@ -1,14 +1,19 @@
-[![Build Status](https://travis-ci.org/eeverman/andhow.svg?branch=master)](https://travis-ci.org/eeverman/andhow)
+[![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/master/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
-# Introducing AndHow's new Logo
-<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="166" height="215" alt="AndHow's new logo"  style="float: left">
 
-Many thanks to everyone who participated in the [AndHow logo contest](https://github.com/eeverman/andhow/issues/427) in October.  All six logo entries were solid, but [Carl Schroedl](https://github.com/carlschroedl)'s entry was a clear winner.  Carl's logo looks a bit like a swiss army knife or bottle opener, reflecting the utility aspect of AndHow.  The logo also combines an ampersand (&) and a question mark into one simple and clever symbol.    Well done Carl!
+
+## New Release:  0.4.1, June 2, 2021 ([notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.1)).
+<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's new logo"  align="left">
+
+This larger update fixes several issues due to newer JVMs and the IntelliJ IDE.
+Special thanks to first time contributor [Vicky Ronnen](https://github.com/VickyRonnen) for fixing Issue [497](https://github.com/eeverman/andhow/issues/497) -
+This bug made AndHow unusable for anyone using newer versions of IntelliJ.
+
 
 ![Andhow Visual](andhow.gif)
-# AndHow!  strong.valid.simple.AppConfiguration
-AndHow is an easy to use configuration framework with strong typing and detailed 
+## AndHow!  strong.valid.simple.AppConfiguration
+AndHow is an easy to use configuration framework with strong typing and detailed
 validation for web apps, command line or any application environment.
 
 _**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
@@ -33,10 +38,10 @@ or the *Slack* group (See details on the
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
 </dependency>
 ```
-**AndHow can be used in projects with Java 8 and above, however, Java 9 and above have [some restrictions](https://sites.google.com/view/andhow/user-guide/java9)**
+**AndHow can be used in projects with Java 8 - Java 15.  Work to support Java 16 is underway and will be the next major release.  There are [some considerations](https://sites.google.com/view/andhow/user-guide/java9-and-above) for Java 9 and above if your project uses Jigsaw Modules.**
 
 ## Complete Usage Example
 _**More usage examples and documentation
@@ -106,7 +111,7 @@ the first Property is accessed.
 
 ### How do I actually configure some values?
 We're getting there.
-The example has defaults for each property so with no other configuration available, 
+The example has defaults for each property so with no other configuration available,
 the main method uses the defaults and prints:
 ```
 3...2...1...Go-Go-Go!
@@ -120,7 +125,7 @@ public final static IntProp COUNT_DOWN_START = IntProp.builder().mustBeNonNull()
 private final static StrProp LAUNCH_CMD = StrProp.builder().mustBeNonNull()
 		.mustMatchRegex(".*Go.*").build();  //default removed
 ```
-Both properties must be non-null, so removing the defaults causes the validation 
+Both properties must be non-null, so removing the defaults causes the validation
 rules to be violated at startup.  Here is an excerpt from the console when that happens:
 ```
 ========================================================================
@@ -133,11 +138,11 @@ Property org.simple.GettingStarted.LAUNCH_CMD: This Property must be non-null
 ```
 
 **AndHow does validation at startup for all properties in the entire application.**
-Properties, _even those defined in 3rd party jars_, are discovered and values for 
+Properties, _even those defined in 3rd party jars_, are discovered and values for
 them are loaded and validated.  
-If validation fails (as it did above), AndHow throws a RuntimeException to stop 
-application startup and uses property metadata to generate specific error 
-messages and (helpfully) sample configuration files. 
+If validation fails (as it did above), AndHow throws a RuntimeException to stop
+application startup and uses property metadata to generate specific error
+messages and (helpfully) sample configuration files.
 Here is an excerpt of the Java Properties file created when the code above failed validation:
 ```
 # ######################################################################
@@ -151,9 +156,9 @@ org.simple.GettingStarted.COUNT_DOWN_START = [Integer]
 # The property value must match the regex expression '.*Go.*'
 org.simple.GettingStarted.LAUNCH_CMD = [String]
 ```
-AndHow uses all of the provided metadata to create a detailed and well commented 
+AndHow uses all of the provided metadata to create a detailed and well commented
 configuration file for your project.  
-Insert some real values into that file and place it on your classpath at 
+Insert some real values into that file and place it on your classpath at
 `/andhow.properties` and it will automatically be discovered and loaded at startup.
 By default, AndHow discovers and loads configuration from seven common sources.  
 The default list of configuration loading, in order, is:
@@ -172,4 +177,3 @@ Values passed to the main method take precedence over system properties as so on
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 _**&?!**_
-
