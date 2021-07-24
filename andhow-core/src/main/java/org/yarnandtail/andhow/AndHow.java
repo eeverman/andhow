@@ -3,6 +3,8 @@ package org.yarnandtail.andhow;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
@@ -53,6 +55,14 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 */
 	private static AtomicBoolean initializing = new AtomicBoolean(false);
 
+	/**
+	 * The configuration that has been returned from findConfiguration.
+	 * On the first call, a new instance is returned.  Future calls return this
+	 * same instance.
+	 */
+	private static AtomicReference<AndHowConfiguration<? extends AndHowConfiguration>>
+			inProcessConfig = new AtomicReference();
+
 	private AndHow(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
 			
@@ -64,34 +74,66 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 	
 	/**
-	 * Finds and creates a new instance of the <code>AndHowConfiguration</code>
-	 * that would be used if <code>AndHow.instance()</code> was called.
-	 * 
-	 * <strong>Note:</strong> If <code>AndHow.instance()</code> is later called, a new
-	 * <code>AndHowConfiguration</code> will be returned, not this same instance.
+	 * Prior to AndHow initialization, this method finds the configuration that will be used.
+	 *
+	 * On the first call to this method, a new {@Code AndHowConfiguration} instance will be
+	 * created.  Later calls to this method prior to AndHow initialization will return that
+	 * same instance.  After AndHow is initialized this method will return null, since no
+	 * modification to the configuration can be made after AndHow has initialized.
 	 * <p>
-	 * This method provides a way to add command line parameters or fixed values
-	 * to the existing configuration and then immediately initiate <code>AndHow</code>.
+	 * The new {@Code AndHowConfiguration} is created in one of two ways:
+	 * <ol>
+	 * <li>If there is a class implementing the {@Code AndHowInit} interface on the classpath,
+	 * 	 that class' {@Code getConfiguration()} method will be called to construct the instance.
+	 * 	 This is an easy configuration point to configure AndHow for production or test.
+	 * <li>Otherwise, a default implementation of {@Code AndHowConfiguration} is created
+	 *   and returned.
+	 * </ol>
+	 * <p>
+	 * This method provides a way to 'grab' the configuration before AndHow initialization
+	 * and make additions or customizations.  Common reasons for doing this would be:
+	 * <ul>
+	 * <li>In the {@Code main(String[] args)} method to add the command line arguments to
+	 * AndHow (see code example below)
+	 * <li>To provide different configuration or modify the list Loaders based on
+	 * the entry point of the application.
+	 * <li>In a test class to add 'fixed' configuration values needed for a specific test
+	 * (See test examples in the simulated app tests)
+	 * </ul>
 	 * <p>
 	 * Example usage:
 	 * <pre>{@code
-	 * AndHow.findConfig().setCmdLineArgs(myCmdLineArgs).build();
+	 * public static void main(String[] args) {
+	 *   AndHow.findConfig().setCmdLineArgs(myCmdLineArgs);
+	 *   //Do other stuff - AndHow initializes as soon as the first Property access happens.
+	 * }
 	 * }</pre>
-	 * The call to <code>build()</code> at the end of that command string is
-	 * just a convenience method to call <code>AndHow.instance(thisConfiguration);</code>
-	 * 
+	 * <p>
+	 * Note: There was a subtle behaviour change from v1.4.1 to v1.4.2:  Beginning with
+	 * v1.4.2, this method returns the same instance each time.  In v1.4.1 and earlier, a
+	 * newly created instance was returned for each call.
+	 *
 	 * @return 
 	 */
 	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig() {
-		return AndHowUtil.findConfiguration(StdConfig.instance());
+		if (inProcessConfig.get() == null) {
+			AndHowConfiguration<? extends AndHowConfiguration> conf =
+					AndHowUtil.findConfiguration(StdConfig.instance());
+
+			//This may fail to set the value, but in that case its already been set.
+			inProcessConfig.compareAndSet(null, conf);
+		}
+		return inProcessConfig.get();
 	}
 
 	/**
-	 * Returns the current AndHow instance.  If there is no instance, one is created
-	 * using auto-discovered configuration.
+	 * Returns the single instance of AndHow.
+	 *
+	 * If the AndHow is null, a new instance is created by initializing AndHow
+	 * using configuration found via findConfig().
 	 * 
-	 * @return
-	 * @throws AppFatalException 
+	 * @return The singleton AndHow instance
+	 * @throws AppFatalException If AndHow is mis-configured
 	 */
 	public static AndHow instance() throws AppFatalException {
 		if (singleInstance != null && singleInstance.core != null) {
@@ -99,7 +141,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		} else {
 			synchronized (LOCK) {
 				if (singleInstance == null || singleInstance.core == null) {
-					return instance(AndHowUtil.findConfiguration(StdConfig.instance()));
+					return instance(findConfig());
 				} else {
 					return singleInstance;
 				}
@@ -109,16 +151,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	/**
-	 * Builds a new AndHow instance using the specified configuration ONLY IF
-	 * there is no existing AndHow instance.
-	 * 
-	 * A fatal RuntimeException will be thrown if there is an existing AndHow
-	 * instance.  This method does not normally need to be used to initiate AndHow.
-	 * See the AndHow class docs for typical configuration examples.
+	 * Initialized AndHow with the passed configuration - This method is not normally
+	 * needed or used in production.
 	 *
-	 * @param config
-	 * @return
-	 * @throws AppFatalException
+	 * AndHow is a singleton, so this method will throw an AppFatalException if
+	 * AndHow has already been initialized.
+	 *
+	 * @param config The AndHowConfiguration to be used to build the new instance.
+	 * @return The singleton AndHow instance, newly built from the configuration.
+	 * @throws AppFatalException If AndHow has already been initialized.
 	 */
 	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
 		synchronized (LOCK) {
@@ -135,8 +176,9 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 						try {
 							
 							initializing.getAndSet(true);	//Block re-entrant initialization
+							inProcessConfig.set(null);							//No more configuration changes
 							initialization = new Initialization();	//Record initialization time & place
-							singleInstance = new AndHow(config);	//Build new instance
+							singleInstance = new AndHow(config);		//Build new instance
 							
 						} finally {
 							initializing.getAndSet(false);	//Done w/ init regardless of possible error
@@ -160,6 +202,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 						try {
 							
 							initializing.getAndSet(true);	//Block re-entrant initialization
+							inProcessConfig.set(null);							//No more configuration changes
 							initialization = new Initialization();	//Record initialization time & place
 
 							AndHowCore newCore = new AndHowCore(

@@ -47,7 +47,7 @@ public class AndHowTest {
 		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		
-		assertNotEquals(config1, config2, "Should return a new instance each time");
+		assertEquals(config1, config2, "Should return the same instance each time");
 		assertFalse(AndHow.isInitialize(), "findConfig should not force initialization");
 	}
 
