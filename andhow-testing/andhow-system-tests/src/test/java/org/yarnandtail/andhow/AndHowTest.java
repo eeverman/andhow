@@ -36,20 +36,7 @@ public class AndHowTest {
 		setAndHowInstance(originalAndHowInstance);
 	}
 	
-	/**
-	 * Test of findConfig method, of class AndHow.
-	 * This method is mostly pass-thru to a util method, so just a smoke test here.
-	 */
-	@Test
-	public void testFindConfig() {
-		
-		
-		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
-		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
-		
-		assertEquals(config1, config2, "Should return the same instance each time");
-		assertFalse(AndHow.isInitialize(), "findConfig should not force initialization");
-	}
+
 
 	/**
 	 * Test of instance method, of class AndHow.

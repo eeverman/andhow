@@ -63,6 +63,20 @@ public class AndHowTest extends AndHowCoreTestBase {
 		};
 		
 	}
+
+	/*
+	 * TODO:  There is no AndHowInit instance on the classpath, so this test only tests
+	 * findConfig creating a default Config instance.  A separate maven module with a
+	 * separate classpath is needed to test behaviour when there is a AndHowInit on
+	 * the path.
+	 */
+	@Test
+	public void testFindConfig() {
+		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
+		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
+		assertSame(config1, config2, "Should return the same instance each time");
+		assertFalse(AndHow.isInitialize(), "findConfig should not force initialization");
+	}
 	
 	@Test
 	public void testInitialization() {

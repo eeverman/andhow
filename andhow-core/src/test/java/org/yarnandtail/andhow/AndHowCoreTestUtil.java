@@ -2,6 +2,8 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import org.yarnandtail.andhow.internal.AndHowCore;
 
 /**
@@ -103,6 +105,37 @@ public class AndHowCoreTestUtil {
 			throw new RuntimeException(PERMISSION_MSG, ex);
 		}
 		
+	}
+
+	/**
+	 * Forces the AndHow inProcessConfig to a new value.
+	 *
+	 * This is the configuration that is being built prior to initialization and held so that multiple
+	 * calls to findConfig return the same instance.
+	 * Resetting this to null is required to really reset AndHow to ground state during testing.
+	 * @return The original in-process configuration, which may have been null due to configuration
+	 * 		not being started or having completed.
+	 */
+	public static AndHowConfiguration<? extends AndHowConfiguration>
+			setAndHowInProgressConfiguration(AndHowConfiguration<? extends AndHowConfiguration> newConfig) {
+
+		try {
+
+			Field inProcessConfigField = AndHow.class.getDeclaredField("inProcessConfig");
+			inProcessConfigField.setAccessible(true);
+
+			AtomicReference<AndHowConfiguration<? extends AndHowConfiguration>> configRef =
+					(AtomicReference<AndHowConfiguration<? extends AndHowConfiguration>>)(inProcessConfigField.get(null));
+
+			AndHowConfiguration<? extends AndHowConfiguration> config = configRef.get();
+			configRef.set(newConfig);
+
+			return config;
+
+		} catch (IllegalAccessException | NoSuchFieldException ex) {
+			throw new RuntimeException(PERMISSION_MSG, ex);
+		}
+
 	}
 	
 	public static void forceRebuild(AndHowConfiguration config) {
