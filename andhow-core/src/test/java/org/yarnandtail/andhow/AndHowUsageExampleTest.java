@@ -38,7 +38,7 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testAllValuesAreSet() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
@@ -55,7 +55,7 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testOptionalValuesAreUnset() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
@@ -74,7 +74,7 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 	public void testMissingValuesException() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class);
 			
 			AndHow.instance(config);

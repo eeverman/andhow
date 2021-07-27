@@ -13,6 +13,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
+import static org.yarnandtail.andhow.internal.ConstructionProblem.InitiationLoopException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,6 +65,13 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 	}
 
+	@Test
+	public void testTheTest() {
+		//This could be generalized to use the class.getCanonicalName(),
+		//but this one place we make it explicit
+		assertEquals("org.yarnandtail.andhow.SimpleParams.", paramFullPath);
+	}
+
 	/*
 	 * TODO:  There is no AndHowInit instance on the classpath, so this test only tests
 	 * findConfig creating a default Config instance.  A separate maven module with a
@@ -75,40 +83,58 @@ public class AndHowTest extends AndHowCoreTestBase {
 		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		assertSame(config1, config2, "Should return the same instance each time");
-		assertFalse(AndHow.isInitialize(), "findConfig should not force initialization");
+		assertFalse(AndHow.isInitialized(), "findConfig should not force initialization");
 	}
 	
 	@Test
-	public void testInitialization() {
+	public void testInitializationClass() {
 		Long startTime = System.currentTimeMillis();
-		
-		AndHow.Initialization init = new AndHow.Initialization();
+		StdConfig.StdConfigImpl config = StdConfig.instance();
+
+		AndHow.Initialization init = new AndHow.Initialization(config);
 		
 		Long endTime = System.currentTimeMillis();
 		
 		assertEquals(this.getClass().getName(), init.getStackTrace()[0].getClassName());
-		assertEquals("testInitialization", init.getStackTrace()[0].getMethodName());
+		assertEquals("testInitializationClass", init.getStackTrace()[0].getMethodName(),
+				"The stack trace should go back 1 level to ignore the construction of Initialization");
+		assertSame(config, init.getConfig());
 		assertTrue(startTime <= init.getTimeStamp());
 		assertTrue(endTime >= init.getTimeStamp());
 	}
-	
-	
+
 	@Test
-	public void testIsInitialize() {
-		assertFalse(AndHow.isInitialize());
+	public void instanceMethodAndInitializedMethodShouldAgree() {
+		assertNull(AndHowTestUtil.getAndHowInstance());
+		assertFalse(AndHow.isInitialized());
+		assertNotNull(AndHow.instance());
+		assertNotNull(AndHowTestUtil.getAndHowInstance());
+		assertTrue(AndHow.isInitialized());
 	}
-	
+
 	@Test
-	public void testTheTest() {
-		//This could be generalized to use the class.getCanonicalName(),
-		//but this one place we make it explicit
-		assertEquals("org.yarnandtail.andhow.SimpleParams.", paramFullPath);
+	public void attemptingToInitializeDuringInitializationShouldBeBlocked() {
+		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
+		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
+
+		config1.setGetNamingStrategyCallback(() -> {
+			AndHow.instance(config2);	//Try to initialize again when config.getNamingStrategy is called
+			return null;
+		});
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
+		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
+		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
+		assertSame(config2, initLoopEx.getSecondInit().getConfig());
 	}
 	
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.groups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
@@ -143,7 +169,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 		try {
 
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(kvpl, kvpl)
 				.groups(configPtGroups);
 			
@@ -168,7 +194,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
 		
 		try {
-				AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				AndHowConfiguration config = AndHowTestConfig.instance()
 					.groups(configPtGroups)
 					.group(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
@@ -189,7 +215,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		baseName += "." + RequiredParams.class.getSimpleName() + ".";
 		
 		try {
-				AndHowConfiguration config = AndHowCoreTestConfig.instance()
+				AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");

@@ -1,7 +1,10 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
+import java.util.function.Supplier;
+
 import org.yarnandtail.andhow.api.GroupProxy;
+import org.yarnandtail.andhow.api.NamingStrategy;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
@@ -25,13 +28,13 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * 
  * @author ericeverman
  */
-public class AndHowCoreTestConfig {
+public class AndHowTestConfig {
 	
-	public static NonProductionConfigImpl instance() {
-		return new NonProductionConfigImpl();
+	public static AndHowTestConfigImpl instance() {
+		return new AndHowTestConfigImpl();
 	}
 	
-	public static final class NonProductionConfigImpl extends NonProductionConfigAbstract<NonProductionConfigImpl> {
+	public static final class AndHowTestConfigImpl extends NonProductionConfigAbstract<AndHowTestConfigImpl> {
 		
 	}
 	
@@ -42,7 +45,21 @@ public class AndHowCoreTestConfig {
 		
 		//If non-empty, it overrides the default list of loaders
 		protected final List<Loader> _loaders = new ArrayList();
-		
+
+		//
+
+		/* A callback to simulate weird loops and contention during initializtion */
+		private Supplier<Object> namingStrategyCallback;
+
+		@Override
+		public NamingStrategy getNamingStrategy() {
+
+			if (namingStrategyCallback != null) {
+				namingStrategyCallback.get();
+			}
+
+			return super.getNamingStrategy();
+		}
 
 		/**
 		 * Adds a command line argument in key=value form.
@@ -134,7 +151,17 @@ public class AndHowCoreTestConfig {
 		}
 
 		public void forceBuild() {
-			AndHowCoreTestUtil.forceRebuild(this);
+			AndHowTestUtil.forceRebuild(this);
+		}
+
+		/**
+		 * Set a callback that is called when getNamingStrategy() is called.
+		 * This is to simulate unusual conditions during startup, such as init loops
+		 * where the configuration calls findConfig, and other weird things for testing.
+		 * @param callback
+		 */
+		public void setGetNamingStrategyCallback(Supplier<Object> callback) {
+			namingStrategyCallback = callback;
 		}
 	}
 }

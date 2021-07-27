@@ -85,7 +85,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
 		
 		AndHow.instance(config);
@@ -121,7 +121,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
 		
 		AndHow.instance(config);
@@ -159,7 +159,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
 				.group(SimpleParams.class);
 		
@@ -193,7 +193,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				.group(SimpleParams.class);
@@ -235,7 +235,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
 		
 		AndHow.instance(config);
@@ -272,7 +272,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
 		
 		AndHow.instance(config);
@@ -306,7 +306,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(SimpleParams.class);
 			
 			AndHow.instance(config);
@@ -337,7 +337,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(SimpleParams.class);
 			
 			AndHow.instance(config);
@@ -370,7 +370,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(SimpleParams.class);
 			
 			AndHow.instance(config);
@@ -404,7 +404,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(ValidParams.class);
 			
 			AndHow.instance(config);
@@ -428,7 +428,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(ValidParams.class);
 			
 			AndHow.instance(config);

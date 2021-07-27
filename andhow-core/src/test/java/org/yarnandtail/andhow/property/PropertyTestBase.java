@@ -25,7 +25,7 @@ public class PropertyTestBase extends AndHowCoreTestBase {
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(TEST_CONFIG.class)
 				.groups(groups)
 				.addFixedValue(TEST_CONFIG.PROP_FILE, propFilePath)

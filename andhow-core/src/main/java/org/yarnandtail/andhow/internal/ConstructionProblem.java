@@ -342,10 +342,11 @@ public abstract class ConstructionProblem implements Problem {
 		public String getProblemDescription() {
 			
 			return "AndHow detected a loop during initiation.  "
-					+ "Likely causes are: " + System.lineSeparator()
-					+ "- Multiple places in application code where AndHow.instance(AndHowConfiguration) is called" + System.lineSeparator()
-					+ "- static initiation blocks or static variables that are initiated refering to the value of an AndHow Property" + System.lineSeparator()
-					+ "- AndHow Properties that refer to the value of other AndHow properties in their construction" + System.lineSeparator()
+					+ "Likely causes are calls [Property].value() or AndHow.instance() in an unexpected place, such as: " + System.lineSeparator()
+					+ "- Static initiation blocks or static variable initiation values, e.g., 'static int MyVar = [Some AndHow Prop].getValue()'" + System.lineSeparator()
+					+ "- An AndHow Property that refers to the value of another AndHow property in its construction" + System.lineSeparator()
+					+ "- An AndHowInit implementation that calls one of these methods in its getConfiguration method" + System.lineSeparator()
+					+ "- A custom AndHowConfiguration instance using one of these methods (likely an exotic test setup)"
 					+ "::The first line in the stack trace following this error referring to your application code is likely causing the initiation loop::";
 		}
 		

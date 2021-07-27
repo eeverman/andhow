@@ -35,18 +35,7 @@ public class AndHowTest {
 	public void restoreAndHow() {
 		setAndHowInstance(originalAndHowInstance);
 	}
-	
 
-
-	/**
-	 * Test of instance method, of class AndHow.
-	 */
-	@Test
-	public void testInstance_0args() {
-		assertFalse(AndHow.isInitialize());
-		assertNotNull(AndHow.instance());
-		assertTrue(AndHow.isInitialize());
-	}
 
 	/**
 	 * Test of instance method, of class AndHow.
