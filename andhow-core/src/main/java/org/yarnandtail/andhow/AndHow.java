@@ -133,13 +133,15 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * configuration and actually be starting over.
 	 *
 	 * @return The AndHowConfiguration with continuity between calls
-	 * @throws RuntimeException A fatal exception if called after AndHow has initialized.
+	 * @throws AppFatalException A fatal exception if called after AndHow has initialized.
 	 */
-	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig() {
+	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig()
+			throws AppFatalException {
+
 		synchronized (LOCK) { //Access to the config is sync'ed same as init code
 
 			if (isInitialized()) {
-				throwFatal("AndHow is already initialized, so access to the configuration is blocked.", null);
+				throw new AppFatalException("AndHow is already initialized, so access to the configuration is blocked.");
 			}
 
 			if (inProcessConfig == null) {
@@ -160,10 +162,9 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @throws AppFatalException If AndHow is mis-configured
 	 */
 	public static AndHow instance() throws AppFatalException {
+
 		if (isInitialized()) {
-
 			return singleInstance;
-
 		} else {
 
 			synchronized (LOCK) {
@@ -191,77 +192,62 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @throws AppFatalException If AndHow has already been initialized.
 	 */
 	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+
 		synchronized (LOCK) {
 
 			if (isInitialized()) {
+				throw new AppFatalException("AndHow is already initialized - " +
+						"Cannot re-initialize with new configuration");
+			}
 
-				throw new AppFatalException(
-						"Cannot construct a new AndHow instance when there is an existing one.");
+			if (! initializing) {
 
-			} else {
+				initializing = true;										//Block re-entrant initialization
+				inProcessConfig = null;									//No more configuration changes
+				initialization = new Initialization(config);	//Record initialization time & place
+
 
 				if (singleInstance == null) {
-					
-					if (! initializing) {
-						
-						try {
-							
-							initializing = true;										//Block re-entrant initialization
-							inProcessConfig = null;									//No more configuration changes
-							initialization = new Initialization(config);	//Record initialization time & place
-							singleInstance = new AndHow(config);		//Build new instance
-							
-						} finally {
-							initializing = false;										//Done w/ init regardless of possible error
-						}
-						
-					} else {
-						
-						throw new AppFatalException(
-								new ConstructionProblem.InitiationLoopException(initialization, new Initialization(config)));
+
+					try {
+						singleInstance = new AndHow(config);		//Build new instance
+					} finally {
+						initializing = false;	//Done w/ init regardless of possible error
 					}
-					
+
 				} else if (singleInstance.core == null) {
 
-					/*
-					 In production, there is only ever one AndHow instance and its one Core for the life of
-					 the app.  During unit testing, however, test utilities may replace the Core to allow
-					 testing with different configuration states.  This is possible while not invalidating app
-					 code which might hold a reference to the AndHow singleton.
-					 This code handles this special case.
-	 				*/
+				/*
+				 In production there is only one AndHow instance and its Core for the life of the app.
+				 During unit testing, however, reflection utilities may replace the Core to allow testing
+				 with different configuration states.  This is possible w/o invalidating app references
+				 to the AndHow singleton.  'singleInstance.core == null' is that special case.
+				*/
+					try {
 
-					if (! initializing) {
-						
-						try {
-							
-							initializing = true;										//Block re-entrant initialization
-							inProcessConfig = null;									//No more configuration changes
-							initialization = new Initialization(config);	//Record initialization time & place
+						AndHowCore newCore = new AndHowCore(
+								config.getNamingStrategy(),
+								config.buildLoaders(),
+								config.getRegisteredGroups());
 
-							AndHowCore newCore = new AndHowCore(
-									config.getNamingStrategy(),
-									config.buildLoaders(),
-									config.getRegisteredGroups());
+						singleInstance.core = newCore;
 
-							singleInstance.core = newCore;
-
-						} finally {
-							initializing = false;	//Done w/ init regardless of possible error
-						}
-						
-					} else {
-						
-						throw new AppFatalException(
-								new ConstructionProblem.InitiationLoopException(initialization, new Initialization(config)));
-						
+					} finally {
+						initializing = false;	//Done w/ init regardless of possible error
 					}
 
+				}	else {
+					throw new IllegalStateException("This exception can never be reached.");
 				}
-				
-				return singleInstance;
 
+			} else {
+				//Oops, code in AndHowInit or AndHowConfiguration forced AndHow initialization
+				throw new AppFatalException(
+						new ConstructionProblem.InitiationLoopException(
+								initialization, new Initialization(config)));
 			}
+
+			return singleInstance;
 
 		}	//end sync
 	}
@@ -345,27 +331,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public NamingStrategy getNamingStrategy() {
 		return core.getNamingStrategy();
 	}
-	
-	/**
-	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user code
-	 * of the build.
-	 *
-	 * @param message
-	 */
-	private static void throwFatal(String message, Throwable throwable) {
-
-		if (throwable instanceof AppFatalException) {
-			throw (AppFatalException) throwable;
-		} else {
-			AppFatalException afe = new AppFatalException(message, throwable);
-			StackTraceElement[] stes = afe.getStackTrace();
-			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			afe.setStackTrace(stes);
-			throw afe;
-		}
-	}
-	
 
 	/**
 	 * Encapsulate when and where AndHow was initialized.
@@ -397,7 +362,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		public AndHowConfiguration<? extends AndHowConfiguration> getConfig() {
 			return config;
 		}
-		
 	}
 
 }

@@ -84,31 +84,59 @@ public class AndHowTest extends AndHowCoreTestBase {
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		assertSame(config1, config2, "Should return the same instance each time");
 		assertFalse(AndHow.isInitialized(), "findConfig should not force initialization");
-	}
-	
-	@Test
-	public void testInitializationClass() {
-		Long startTime = System.currentTimeMillis();
-		StdConfig.StdConfigImpl config = StdConfig.instance();
 
-		AndHow.Initialization init = new AndHow.Initialization(config);
-		
-		Long endTime = System.currentTimeMillis();
-		
-		assertEquals(this.getClass().getName(), init.getStackTrace()[0].getClassName());
-		assertEquals("testInitializationClass", init.getStackTrace()[0].getMethodName(),
-				"The stack trace should go back 1 level to ignore the construction of Initialization");
-		assertSame(config, init.getConfig());
-		assertTrue(startTime <= init.getTimeStamp());
-		assertTrue(endTime >= init.getTimeStamp());
+		AndHow.instance();	//Initialize and try to get config...
+
+		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
 	}
 
 	@Test
-	public void instanceMethodAndInitializedMethodShouldAgree() {
+	public void callingInstanceShouldReturnTheSameInstance() {
+
+		AndHow ah1 =  AndHow.instance();
+		AndHow ah2 =  AndHow.instance();
+
+		assertSame(ah1, ah2, "Very important that all calls to this method return the same");
+	}
+
+	@Test
+	public void callingInstanceWithConfigShouldFailIfAlreadyInitialized() {
+		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
+
+		AndHow.instance(config1);
+
+		assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+	}
+
+	@Test
+	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtil.getAndHowInstance());
 		assertFalse(AndHow.isInitialized());
 		assertNotNull(AndHow.instance());
 		assertNotNull(AndHowTestUtil.getAndHowInstance());
+		assertTrue(AndHow.isInitialized());
+	}
+
+	/**
+	 * During testing, reflection utilities may 'kill' the core to simulate different
+	 * config states, leaving the AndHow singleton alone so app ref's to it are not
+	 * broken.  This test ensures that works properly.
+	 */
+	@Test
+	public void initializedMethodShouldAgreeWithSmashedCoreForTestingInitializationProcess() {
+		AndHow orgInstance = AndHow.instance();
+		AndHowCore orgCore = AndHowTestUtil.setAndHowCore(null);
+
+		assertNotNull(AndHowTestUtil.getAndHowInstance(), "The instance should still exist");
+		assertFalse(AndHow.isInitialized(), "Core is null, so considered uninitialized");
+
+		AndHow afterInstance = AndHow.instance();	//should work as normal
+		AndHowCore afterCore = AndHowTestUtil.getAndHowCore();
+
+		assertSame(orgInstance, afterInstance,
+				"'Same' is the reason tests kill the core, not the singleton");
+		assertNotSame(orgCore, afterCore,
+				"The core is new, not the singleton");
 		assertTrue(AndHow.isInitialized());
 	}
 
@@ -228,7 +256,22 @@ public class AndHowTest extends AndHowCoreTestBase {
 			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty());
 		}
 	}
-	
 
+	@Test
+	public void testInitializationClass() {
+		Long startTime = System.currentTimeMillis();
+		StdConfig.StdConfigImpl config = StdConfig.instance();
+
+		AndHow.Initialization init = new AndHow.Initialization(config);
+
+		Long endTime = System.currentTimeMillis();
+
+		assertEquals(this.getClass().getName(), init.getStackTrace()[0].getClassName());
+		assertEquals("testInitializationClass", init.getStackTrace()[0].getMethodName(),
+				"The stack trace should go back 1 level to ignore the construction of Initialization");
+		assertSame(config, init.getConfig());
+		assertTrue(startTime <= init.getTimeStamp());
+		assertTrue(endTime >= init.getTimeStamp());
+	}
 	
 }
