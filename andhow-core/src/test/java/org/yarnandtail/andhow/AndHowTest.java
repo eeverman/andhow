@@ -7,6 +7,7 @@ import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.EffectiveName;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
@@ -112,9 +113,11 @@ public class AndHowTest extends AndHowCoreTestBase {
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtil.getAndHowInstance());
 		assertFalse(AndHow.isInitialized());
+		assertFalse(AndHow.isInitialize(), "deprecated, but still tested");
 		assertNotNull(AndHow.instance());
 		assertNotNull(AndHowTestUtil.getAndHowInstance());
 		assertTrue(AndHow.isInitialized());
+		assertTrue(AndHow.isInitialize(), "deprecated, but still tested");
 	}
 
 	/**
@@ -169,7 +172,23 @@ public class AndHowTest extends AndHowCoreTestBase {
 		AndHow.instance(config);
 		
 		assertTrue(AndHow.getInitializationTrace().length > 0);
+		//STR_BOB (Set to 'test')
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
+		assertEquals("test", AndHow.instance().getValue(SimpleParams.STR_BOB));
+		assertEquals("test", AndHow.instance().getExplicitValue(SimpleParams.STR_BOB));
+		assertTrue(AndHow.instance().isExplicitlySet(SimpleParams.STR_BOB));
+		List<EffectiveName> sbAliases = AndHow.instance().getAliases(SimpleParams.STR_BOB);
+		assertEquals("STRING_BOB", sbAliases.get(0).getEffectiveInName());
+		assertEquals("Stringy.Bob", sbAliases.get(1).getEffectiveOutName());
+		assertEquals("org.yarnandtail.andhow.SimpleParams.STR_BOB", AndHow.instance().getCanonicalName(SimpleParams.STR_BOB));
+		assertEquals(SimpleParams.class, AndHow.instance().getGroupForProperty(SimpleParams.STR_BOB).getProxiedGroup());
+		assertTrue(AndHow.instance().getNamingStrategy() instanceof CaseInsensitiveNaming);
+
+		//INT_TEN (defaults to 10 and not explicitly set)
+		assertEquals(10, AndHow.instance().getValue(SimpleParams.INT_TEN));
+		assertNull(AndHow.instance().getExplicitValue(SimpleParams.INT_TEN));
+		assertFalse(AndHow.instance().isExplicitlySet(SimpleParams.INT_TEN));
+
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
