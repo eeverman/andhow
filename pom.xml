@@ -81,7 +81,7 @@
 		<module>andhow-core</module>
 		<module>andhow-annotation-processor</module>
 		<module>andhow</module>
-		<module>andhow-testing/andhow-system-tests</module>
+		<module>andhow-testing/andhow-integration-test</module>
 		<module>andhow-testing/andhow-annotation-processor-tests</module>
 		<module>andhow-testing/andhow-simulated-app-tests</module>
 		<module>andhow-testing/andhow-test-harness</module>

@@ -7,11 +7,11 @@
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>andhow-system-tests</artifactId>
+	<artifactId>andhow-integration-test</artifactId>
 	<packaging>jar</packaging>
-	<name>AndHow System Tests</name>
+	<name>AndHow Integration Test</name>
 	<description>
-		System tests that require running the entire AndHow framework, including the annotation compiler
+		Integration test that require running the entire AndHow framework, including the annotation compiler
 		and Property and configuration self-discovery.
 	</description>
 

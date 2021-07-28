@@ -52,7 +52,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testHappyPath() throws Exception {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 						tempPropertiesFile.getAbsolutePath())
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
@@ -75,7 +75,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							tempPropertiesFile.getAbsolutePath())
 					.setFilesystemPropFilePath(TestProps.FILEPATH)
@@ -102,7 +102,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
 				.group(SimpleParams.class)
@@ -119,7 +119,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.setFilesystemPropFilePath(TestProps.FILEPATH)

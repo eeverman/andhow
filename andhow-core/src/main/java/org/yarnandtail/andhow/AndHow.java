@@ -1,8 +1,7 @@
 package org.yarnandtail.andhow;
 
-import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
@@ -39,23 +38,50 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
 
-	private static volatile AndHow singleInstance;
+	/** Dedicated object for synchronization of configuration and initialization */
 	private static final Object LOCK = new Object();
 
-	private volatile AndHowCore core;
-	
-	/** Stack trace and time of startup */
-	private static volatile Initialization initialization;
-	
-	/**
-	 * True only during the instance(AndHowConfiguration) method to detect
-	 * re-entrant initialization
-	 */
-	private static AtomicBoolean initializing = new AtomicBoolean(false);
+	//
+	//All the fields are volatile for visibility to threads.
+	//All code where fields can be modified are synchronized on the LOCK object.
 
-	private AndHow(AndHowConfiguration config) throws AppFatalException {
+	/**
+	 * The AndHow singleton.
+	 *
+	 * The singleton instance is null until AndHow is initialized, then a singleton is created that
+	 * will live for the life of the application.
+	 * <p>
+	 * See {@Code core} for comparison.
+	 */
+	private static volatile AndHow singleInstance;
+	
+	/** Stack trace and other debug info about the startup & initiation of AndHow */
+	private static volatile Initialization initialization = null;
+	
+	/* True only during instance(AndHowConfiguration) method to detect re-entrant initialization */
+	private static volatile Boolean initializing = false;
+
+	/* Config that was returned from findConfig, but has not yet been used to initialize AndHow. */
+	private static volatile AndHowConfiguration<? extends AndHowConfiguration> inProcessConfig = null;
+
+	/**
+	 * The core contains the entire state of AndHow, including values of Properties, once
+	 * AndHow has been initialized.  It is the only non-static variable of this class.
+	 *
+	 * Pre-initialization state such the loader list, debug info, and other flags
+	 * (basically the static final vars of this class) are not held in the core.
+	 * <p>
+	 * References to the core are never given out, while app code can easily get a reference
+	 * to the singleton AndHow, which contains the core.  This is intentional.
+	 * In production, there is only ever one AndHow instance and its one Core for the life of the app.
+	 * During unit testing, however, test utilities may replace the Core to allow testing with
+	 * different configuration states.  This is possible while not invalidating app code which might
+	 * hold a reference to the AndHow singleton.
+	 */
+	private volatile AndHowCore core;
+
+	private AndHow(AndHowConfiguration<? extends AndHowConfiguration> config) throws AppFatalException {
 		synchronized (LOCK) {
-			
 			core = new AndHowCore(
 					config.getNamingStrategy(),
 					config.buildLoaders(),
@@ -64,135 +90,164 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 	
 	/**
-	 * Finds and creates a new instance of the <code>AndHowConfiguration</code>
-	 * that would be used if <code>AndHow.instance()</code> was called.
-	 * 
-	 * <strong>Note:</strong> If <code>AndHow.instance()</code> is later called, a new
-	 * <code>AndHowConfiguration</code> will be returned, not this same instance.
+	 * Prior to AndHow initialization, this method finds the configuration that will be used.
+	 *
+	 * On the first call to this method, a new {@Code AndHowConfiguration} instance will be
+	 * created.  Later calls to this method prior to AndHow initialization will return that
+	 * same instance.  After AndHow is initialized this method will throw a fatal exception, since no
+	 * modification to the configuration can be made after AndHow has initialized.
 	 * <p>
-	 * This method provides a way to add command line parameters or fixed values
-	 * to the existing configuration and then immediately initiate <code>AndHow</code>.
+	 * The new {@Code AndHowConfiguration} is created in one of two ways:
+	 * <ol>
+	 * <li>If there is a class implementing the {@Code AndHowInit} interface on the classpath,
+	 * 	 that class' {@Code getConfiguration()} method will be called to construct the instance.
+	 * 	 This is an easy configuration point to configure AndHow for production or test.
+	 * <li>Otherwise, a default implementation of {@Code AndHowConfiguration} is created
+	 *   and returned.
+	 * </ol>
+	 * <p>
+	 * This method provides a way to 'grab' the configuration before AndHow initialization
+	 * and make additions or customizations.  Common reasons for doing this would be:
+	 * <ul>
+	 * <li>In the {@Code main(String[] args)} method to add the command line arguments to
+	 * AndHow (see code example below)
+	 * <li>To provide different configuration or modify the list Loaders based on
+	 * the entry point of the application.
+	 * <li>In a test class to add 'fixed' configuration values needed for a specific test
+	 * (See test examples in the simulated app tests)
+	 * </ul>
 	 * <p>
 	 * Example usage:
 	 * <pre>{@code
-	 * AndHow.findConfig().setCmdLineArgs(myCmdLineArgs).build();
+	 * public static void main(String[] args) {
+	 *   AndHow.findConfig().setCmdLineArgs(myCmdLineArgs);
+	 *   //Do other stuff - AndHow initializes as soon as the first Property access happens.
+	 * }
 	 * }</pre>
-	 * The call to <code>build()</code> at the end of that command string is
-	 * just a convenience method to call <code>AndHow.instance(thisConfiguration);</code>
-	 * 
-	 * @return 
+	 * <p>
+	 * Note: There was a behaviour change from v1.4.1 to v1.4.2:  Beginning with
+	 * v1.4.2, this method returns the same instance each time until initialization, then it throws
+	 * a fatal exception.  In v1.4.1 and earlier, a newly created instance was returned for each call.
+	 * This is a large behaviour change, but its really blocking an unsafe application operation
+	 * or an unepected application 'no-op' where the caller might expect to keep working on the same
+	 * configuration and actually be starting over.
+	 *
+	 * @return The AndHowConfiguration with continuity between calls
+	 * @throws AppFatalException A fatal exception if called after AndHow has initialized.
 	 */
-	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig() {
-		return AndHowUtil.findConfiguration(StdConfig.instance());
+	public static AndHowConfiguration<? extends AndHowConfiguration> findConfig()
+			throws AppFatalException {
+
+		synchronized (LOCK) { //Access to the config is sync'ed same as init code
+
+			if (isInitialized()) {
+				throw new AppFatalException("AndHow is already initialized, so access to the configuration is blocked.");
+			}
+
+			if (inProcessConfig == null) {
+				inProcessConfig = AndHowUtil.findConfiguration(StdConfig.instance());
+			}
+			return inProcessConfig;
+
+		}	//end sync
 	}
 
 	/**
-	 * Returns the current AndHow instance.  If there is no instance, one is created
-	 * using auto-discovered configuration.
+	 * Returns the single instance of AndHow.
+	 *
+	 * If the AndHow is null, a new instance is created by initializing AndHow
+	 * using configuration found via findConfig().
 	 * 
-	 * @return
-	 * @throws AppFatalException 
+	 * @return The singleton AndHow instance - the same instance for the life of the app.
+	 * @throws AppFatalException If AndHow is mis-configured
 	 */
 	public static AndHow instance() throws AppFatalException {
-		if (singleInstance != null && singleInstance.core != null) {
+
+		if (isInitialized()) {
 			return singleInstance;
 		} else {
+
 			synchronized (LOCK) {
-				if (singleInstance == null || singleInstance.core == null) {
-					return instance(AndHowUtil.findConfiguration(StdConfig.instance()));
-				} else {
+
+				if (isInitialized()) {
 					return singleInstance;
+				} else {
+					return instance(findConfig());
 				}
-			}
+
+			}	// end sync
 
 		}
 	}
 
 	/**
-	 * Builds a new AndHow instance using the specified configuration ONLY IF
-	 * there is no existing AndHow instance.
-	 * 
-	 * A fatal RuntimeException will be thrown if there is an existing AndHow
-	 * instance.  This method does not normally need to be used to initiate AndHow.
-	 * See the AndHow class docs for typical configuration examples.
+	 * Initialized AndHow with the passed configuration - This method is not normally
+	 * needed or used in production.
 	 *
-	 * @param config
-	 * @return
-	 * @throws AppFatalException
+	 * AndHow is a singleton, so this method will throw an AppFatalException if
+	 * AndHow has already been initialized.
+	 *
+	 * @param config The AndHowConfiguration to be used to build the new instance.
+	 * @return The singleton AndHow instance, newly built from the configuration.
+	 * @throws AppFatalException If AndHow has already been initialized.
 	 */
 	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+
 		synchronized (LOCK) {
 
-			if (singleInstance != null && singleInstance.core != null) {
-				throw new AppFatalException("Cannot request construction of new "
-						+ "AndHow instance when there is an existing instance.");
-			} else {
+			if (isInitialized()) {
+				throw new AppFatalException("AndHow is already initialized - " +
+						"Cannot re-initialize with new configuration");
+			}
+
+			if (! initializing) {
+
+				initializing = true;										//Block re-entrant initialization
+				inProcessConfig = null;									//No more configuration changes
+				initialization = new Initialization(config);	//Record initialization time & place
+
 
 				if (singleInstance == null) {
-					
-					if (! initializing.get()) {
-						
-						try {
-							
-							initializing.getAndSet(true);	//Block re-entrant initialization
-							initialization = new Initialization();	//Record initialization time & place
-							singleInstance = new AndHow(config);	//Build new instance
-							
-						} finally {
-							initializing.getAndSet(false);	//Done w/ init regardless of possible error
-						}
-						
-					} else {
-						
-						throw new AppFatalException(
-								new ConstructionProblem.InitiationLoopException(initialization, new Initialization()));
+
+					try {
+						singleInstance = new AndHow(config);		//Build new instance
+					} finally {
+						initializing = false;	//Done w/ init regardless of possible error
 					}
-					
+
 				} else if (singleInstance.core == null) {
 
-					/*	This is a concession for testing.  During testing the
-					core is deleted to force AndHow to reload.  Its really an
-					invalid state (instance and core should be null/non-null
-					together, but its handled here to simplify testing.  */
-					
-					if (! initializing.get()) {
-						
-						try {
-							
-							initializing.getAndSet(true);	//Block re-entrant initialization
-							initialization = new Initialization();	//Record initialization time & place
+				/*
+				 In production there is only one AndHow instance and its Core for the life of the app.
+				 During unit testing, however, reflection utilities may replace the Core to allow testing
+				 with different configuration states.  This is possible w/o invalidating app references
+				 to the AndHow singleton.  'singleInstance.core == null' is that special case.
+				*/
+					try {
 
-							AndHowCore newCore = new AndHowCore(
-									config.getNamingStrategy(),
-									config.buildLoaders(),
-									config.getRegisteredGroups());
-							Field coreField = AndHow.class.getDeclaredField("core");
-							coreField.setAccessible(true);
-							coreField.set(singleInstance, newCore);
+						AndHowCore newCore = new AndHowCore(
+								config.getNamingStrategy(),
+								config.buildLoaders(),
+								config.getRegisteredGroups());
 
-						} catch (Exception ex) {
-							
-							if (ex instanceof AppFatalException) {
-								throw (AppFatalException) ex;
-							} else {
-								throwFatal("", ex);
-							}
-						} finally {
-							initializing.getAndSet(false);	//Done w/ init regardless of possible error
-						}
-						
-					} else {
-						
-						throw new AppFatalException(
-								new ConstructionProblem.InitiationLoopException(initialization, new Initialization()));
-						
+						singleInstance.core = newCore;
+
+					} finally {
+						initializing = false;	//Done w/ init regardless of possible error
 					}
 
+				}	else {
+					throw new IllegalStateException("This exception can never be reached.");
 				}
-				
-				return singleInstance;
 
+			} else {
+				//Oops, code in AndHowInit or AndHowConfiguration forced AndHow initialization
+				throw new AppFatalException(
+						new ConstructionProblem.InitiationLoopException(
+								initialization, new Initialization(config)));
 			}
+
+			return singleInstance;
 
 		}	//end sync
 	}
@@ -200,9 +255,19 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	/**
 	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
 	 *
+	 * @deprecated This method name was typod.  Please use isInitialized() instead.
 	 * @return
 	 */
 	public static boolean isInitialize() {
+		return isInitialized();
+	}
+
+	/**
+	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
+	 *
+	 * @return
+	 */
+	public static boolean isInitialized() {
 		return singleInstance != null && singleInstance.core != null;
 	}
 	
@@ -266,41 +331,24 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public NamingStrategy getNamingStrategy() {
 		return core.getNamingStrategy();
 	}
-	
-	/**
-	 * Builds and throws an AppFatalException. The stack trace is edited to
-	 * remove 2 method calls, which should put the stacktrace at the user code
-	 * of the build.
-	 *
-	 * @param message
-	 */
-	private static void throwFatal(String message, Throwable throwable) {
-
-		if (throwable instanceof AppFatalException) {
-			throw (AppFatalException) throwable;
-		} else {
-			AppFatalException afe = new AppFatalException(message, throwable);
-			StackTraceElement[] stes = afe.getStackTrace();
-			stes = Arrays.copyOfRange(stes, 2, stes.length);
-			afe.setStackTrace(stes);
-			throw afe;
-		}
-	}
-	
 
 	/**
-	 * Encapsilate when and where AndHow was initialized.
+	 * Encapsulate when and where AndHow was initialized.
 	 * 
 	 * Useful for debugging re-entrant startups or uncontrolled startup conditions.
+	 * There is no API access to the instance created of this class,
+	 * it is intended to be viewed in an IDE debugger.
 	 */
 	public static class Initialization {
-		private StackTraceElement[] stackTrace;
-		private long timeStamp;
+		private final StackTraceElement[] stackTrace;
+		private final long timeStamp;
+		private final AndHowConfiguration<? extends AndHowConfiguration> config;
 		
-		public Initialization() {
+		public Initialization(AndHowConfiguration<? extends AndHowConfiguration> config) {
 			timeStamp = System.currentTimeMillis();
 			StackTraceElement[] ste = new Exception().getStackTrace();
 			stackTrace = Arrays.copyOfRange(ste, 1, ste.length - 1);
+			this.config = config;
 		}
 
 		public StackTraceElement[] getStackTrace() {
@@ -310,7 +358,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		public long getTimeStamp() {
 			return timeStamp;
 		}
-		
+
+		public AndHowConfiguration<? extends AndHowConfiguration> getConfig() {
+			return config;
+		}
 	}
 
 }

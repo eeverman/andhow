@@ -86,7 +86,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testOutAliasForGroup1() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -128,7 +128,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(grp2Name + ".strProp1", STR1)
 				.addCmdLineArg(grp2Name + ".strProp2", STR2)
 				.addCmdLineArg(grp2Name + ".intProp1", INT1.toString())
@@ -151,7 +151,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 		
 		String grp2Name = AliasGroup2.class.getCanonicalName();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(AliasGroup1.class)
 				.group(AliasGroup2.class)
 				.addCmdLineArg(STR_PROP1_IN, STR1)
@@ -199,7 +199,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 	public void testSingleOutDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_IN_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -226,7 +226,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 	public void testSingleOutDuplicateWithinASingleGroup() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(AliasGroup5.class);
 			
 			AndHow.instance(config);
@@ -249,7 +249,7 @@ public class AndHow_AliasOutTest extends AndHowCoreTestBase {
 	public void testTwoOutOutDuplicatesBetweenTwoGroups() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(AliasGroup6.class)
 					.group(AliasGroup7.class);
 			

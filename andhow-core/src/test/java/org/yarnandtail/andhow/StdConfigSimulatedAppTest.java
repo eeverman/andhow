@@ -1,13 +1,11 @@
 package org.yarnandtail.andhow;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -38,7 +36,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 			GROUP_PATH + ".classpath_prop_file" + KVP_DELIMITER + CLASSPATH_BEGINNING + "all.props.speced.properties"
 		};
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -54,7 +52,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testAllValuesAreSetViaFixedPropertyValueAndPropFile() {
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addFixedValue(SampleRestClientGroup.CLASSPATH_PROP_FILE,
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (PropertyValue)
@@ -71,7 +69,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testAllValuesAreSetViaFixedPropertyValueAndPropFileOverridingWithFixedPropertyValue() {
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addFixedValue(SampleRestClientGroup.CLASSPATH_PROP_FILE,
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (PropertyValue)
@@ -88,7 +86,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testAllValuesAreSetViaFixedKeyObjectPairAndPropFile() {
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addFixedValue(GROUP_PATH + ".classpath_prop_file", /* case ignored */
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (KeyObjectPair)
@@ -105,7 +103,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testAllValuesAreSetViaFixedKeyObjectPairAndPropFileOverridingWithFixedKeyObjectPair() {
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.addFixedValue(GROUP_PATH + ".classpath_prop_file", /* case ignored */
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (KeyObjectPair)
@@ -128,7 +126,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 				CLASSPATH_BEGINNING + "all.props.speced.properties"
 		);
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setEnvironmentProperties(envvars)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -150,7 +148,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 				CLASSPATH_BEGINNING + "all.props.speced.properties"
 		);
 
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setSystemProperties(props)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -186,7 +184,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
 		};		
 				
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -219,7 +217,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 		try {
 			
 			//Error expected b/c some values are invalid
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.group(SampleRestClientGroup.class)
 					.setCmdLineArgs(cmdLineArgs)
 					.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)

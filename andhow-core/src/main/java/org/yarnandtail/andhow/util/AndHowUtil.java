@@ -392,7 +392,8 @@ public class AndHowUtil {
 		return null;
 	}
 	
-	public static AndHowConfiguration findConfiguration(AndHowConfiguration defaultConfig) 
+	public static AndHowConfiguration<? extends AndHowConfiguration>
+			findConfiguration(AndHowConfiguration<? extends AndHowConfiguration> defaultConfig)
 			throws AppFatalException {
 		
 		InitLoader prodLoader = new InitLoader();

@@ -67,7 +67,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testFirstSetOfInAliasesViaCmdLine() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -83,7 +83,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testSecondSetOfInAliasesViaCmdLine() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
@@ -98,7 +98,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testThirdSetOfInAliasesViaCmdLine() {
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
@@ -124,7 +124,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
@@ -147,7 +147,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
@@ -171,7 +171,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
@@ -195,7 +195,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 
 		jndi.activate();
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
 		
@@ -214,7 +214,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	public void testSingleInDuplicateOfGroup1InAlias() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -241,7 +241,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	public void testSingleInDuplicateOfGroup1InAliasInLowerCase() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
@@ -267,7 +267,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	public void testSingleInDuplicateOfGroup1InOutAlias() {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())

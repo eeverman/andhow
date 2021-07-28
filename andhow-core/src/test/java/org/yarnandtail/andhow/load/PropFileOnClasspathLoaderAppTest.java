@@ -27,7 +27,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testHappyPath() throws Exception {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
@@ -50,7 +50,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	public void testInvalid() throws Exception {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
 					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
@@ -71,7 +71,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testNullReferencePropLoaderProperty() throws Exception {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class)
 				.group(TestProps.class);	//This must be declared or the Prop loader can't work
 		
@@ -85,7 +85,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	public void testUnregisteredPropLoaderProperty() throws Exception {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
@@ -109,7 +109,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	@Test
 	public void testUnspecifiedConfigParam() throws Exception {
 		
-		AndHowConfiguration config = AndHowCoreTestConfig.instance()
+		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 				.classpathPropertiesRequired()
 				.group(SimpleParams.class)
@@ -126,7 +126,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
 		
 		try {
-			AndHowConfiguration config = AndHowCoreTestConfig.instance()
+			AndHowConfiguration config = AndHowTestConfig.instance()
 					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
 							"asdfasdfasdf/asdfasdf/asdf")
 					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)

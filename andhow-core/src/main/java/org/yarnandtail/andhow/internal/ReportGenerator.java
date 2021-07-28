@@ -133,7 +133,7 @@ public class ReportGenerator {
 
 		String sampleDirPath = Options.SAMPLES_DIRECTORY.getDefaultValue();
 		
-		if (AndHow.isInitialize()) {
+		if (AndHow.isInitialized()) {
 			sampleDirPath = Options.SAMPLES_DIRECTORY.getValue();
 		}
 		

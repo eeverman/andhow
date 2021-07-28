@@ -51,27 +51,27 @@ public class AndHowCoreTestBase {
 	
 	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
-		AndHowCoreTestUtil.destroyAndHow();
+		AndHowTestUtil.killAndHowFully();
 	}
 	
 	@BeforeAll
 	public static void storeSysPropsBeforeClass() {
-		beforeClassSystemProps = AndHowCoreTestUtil.clone(System.getProperties());
+		beforeClassSystemProps = AndHowTestUtil.clone(System.getProperties());
 	}
 	
 	@BeforeEach
 	public void killAndHowStateBeforeTest() {
-		AndHowCoreTestUtil.destroyAndHow();
+		AndHowTestUtil.killAndHowFully();
 	}
 	
 	@BeforeEach
 	public void storeSysPropsBeforeTest() {
-		beforeTestSystemProps = AndHowCoreTestUtil.clone(System.getProperties());
+		beforeTestSystemProps = AndHowTestUtil.clone(System.getProperties());
 	}
 	
 	@AfterEach
 	public void killAndHowStateAfterTest() {
-		AndHowCoreTestUtil.destroyAndHow();
+		AndHowTestUtil.killAndHowFully();
 	}
 	
 	@AfterEach
@@ -89,7 +89,7 @@ public class AndHowCoreTestBase {
 	
 	@AfterAll
 	public static void killAndHowStateAfterClass() {
-		AndHowCoreTestUtil.destroyAndHow();
+		AndHowTestUtil.killAndHowFully();
 	}
 	
 	@AfterAll
