@@ -33,13 +33,11 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 
 	@BeforeEach
 	public void init() throws Exception {
-		
 		//copy a properties file to a temp location
 		URL inputUrl = getClass().getResource("/org/yarnandtail/andhow/load/SimpleParams1.properties");
 		tempPropertiesFile = File.createTempFile("andhow_test", ".properties");
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
-
 	}
 	
 	@AfterEach
@@ -59,9 +57,8 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 				.filesystemPropFileRequired()
 				.group(SimpleParams.class)
 				.group(TestProps.class);
-		
-		AndHow.instance(config);
-		
+
+		AndHow.setConfig(config);
 
 		assertEquals(tempPropertiesFile.getAbsolutePath(), TestProps.FILEPATH.getValue());
 		assertEquals("kvpBobValue", SimpleParams.STR_BOB.getValue());
@@ -73,24 +70,20 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testUnregisteredPropLoaderProperty() throws Exception {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
-							tempPropertiesFile.getAbsolutePath())
-					.setFilesystemPropFilePath(TestProps.FILEPATH)
-					.filesystemPropFileRequired()
-					.group(SimpleParams.class);
-					//.group(TestProps.class)	//Missing - should fail
 
-			AndHow.instance(config);
-		
-			fail("The Property loader config parameter is not registered, so it should have failed");
-		} catch (AppFatalException afe) {
-			List<LoaderPropertyNotRegistered> probs = afe.getProblems().filter(LoaderPropertyNotRegistered.class);
-			assertEquals(1, probs.size());
-		}
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH),
+						tempPropertiesFile.getAbsolutePath())
+				.setFilesystemPropFilePath(TestProps.FILEPATH)
+				.filesystemPropFileRequired()
+				.group(SimpleParams.class);
+				//.group(TestProps.class)	//Missing - should fail
 
+		AndHow.setConfig(config);
+
+		AppFatalException afe = assertThrows(AppFatalException.class, () -> AndHow.instance());
+		List<LoaderPropertyNotRegistered> probs = afe.getProblems().filter(LoaderPropertyNotRegistered.class);
+		assertEquals(1, probs.size());
 	}
 	
 	/**
@@ -107,8 +100,8 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 				.filesystemPropFileRequired()
 				.group(SimpleParams.class)
 				.group(TestProps.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		//These are just default values
 		assertEquals("bob", SimpleParams.STR_BOB.getValue());
@@ -117,24 +110,20 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH), 
-							"asdfasdfasdf/asdfasdf/asdf")
-					.setFilesystemPropFilePath(TestProps.FILEPATH)
-					.filesystemPropFileRequired()
-					.group(SimpleParams.class)
-					.group(TestProps.class);
-		
-			AndHow.instance(config);
-			
-			fail("The Property loader config property is not pointing to a real file location");
-			
-		} catch (AppFatalException afe) {
-			List<SourceNotFoundLoaderProblem> probs = afe.getProblems().filter(SourceNotFoundLoaderProblem.class);
-			assertEquals(1, probs.size());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.FILEPATH),
+						"asdfasdfasdf/asdfasdf/asdf")
+				.setFilesystemPropFilePath(TestProps.FILEPATH)
+				.filesystemPropFileRequired()
+				.group(SimpleParams.class)
+				.group(TestProps.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException afe = assertThrows(AppFatalException.class, () -> AndHow.instance());
+		List<SourceNotFoundLoaderProblem> probs = afe.getProblems().filter(SourceNotFoundLoaderProblem.class);
+		assertEquals(1, probs.size());
 	}
 
 }

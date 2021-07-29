@@ -72,8 +72,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -88,8 +88,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -103,8 +103,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -127,8 +127,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -150,8 +150,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -174,8 +174,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -198,8 +198,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.group(AliasGroup1.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals(STR1, AliasGroup1.strProp1.getValue());
 		assertEquals(STR2, AliasGroup1.strProp2.getValue());
@@ -213,80 +213,75 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 	@Test
 	public void testSingleInDuplicateOfGroup1InAlias() {
 		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
-					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
-					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-					.group(AliasGroup1.class)
-					.group(AliasGroup2.class);
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
+				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+				.group(AliasGroup1.class)
+				.group(AliasGroup2.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
-			AndHow.instance(config);
-			
-			fail("Should have thrown an exception");
-		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
-			
-			assertEquals(1, probs.size());
-			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
-			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
-			
-			assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().getProperty());
-			assertEquals(STR_PROP1_IN, nun.getConflictName());
-		}
+		assertEquals(1, probs.size());
+		assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+		ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+
+		assertEquals(AliasGroup2.strProp1, nun.getBadPropertyCoord().getProperty());
+		assertEquals(STR_PROP1_IN, nun.getConflictName());
 	}
 	
 
 	@Test
 	public void testSingleInDuplicateOfGroup1InAliasInLowerCase() {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
-					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
-					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-					.group(AliasGroup1.class)
-					.group(AliasGroup4.class);
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
+				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+				.group(AliasGroup1.class)
+				.group(AliasGroup4.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
-			AndHow.instance(config);
-			
-			fail("Should have thrown an exception");
-		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
-			
-			assertEquals(1, probs.size());
-			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
-			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
-			
-			assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().getProperty());
-			assertEquals(STR_PROP1_IN.toLowerCase(), nun.getConflictName());
-		}
+		assertEquals(1, probs.size());
+		assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+		ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+
+		assertEquals(AliasGroup4.strProp1, nun.getBadPropertyCoord().getProperty());
+		assertEquals(STR_PROP1_IN.toLowerCase(), nun.getConflictName());
 	}
 	
 	@Test
 	public void testSingleInDuplicateOfGroup1InOutAlias() {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
-					.addCmdLineArg(STR_PROP2_ALIAS, STR2)
-					.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-					.group(AliasGroup1.class)
-					.group(AliasGroup3.class);
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
+				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
+				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
+				.group(AliasGroup1.class)
+				.group(AliasGroup3.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
 			
-			AndHow.instance(config);
-			
-			fail("Should have thrown an exception");
-		} catch (AppFatalException e) {
-			List<ConstructionProblem> probs = e.getProblems().filter(ConstructionProblem.class);
-			
-			assertEquals(1, probs.size());
-			assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
-			ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
-			
-			assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().getProperty());
-			assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
-		}
+		assertEquals(1, probs.size());
+		assertTrue(probs.get(0) instanceof ConstructionProblem.NonUniqueNames);
+		ConstructionProblem.NonUniqueNames nun = (ConstructionProblem.NonUniqueNames)probs.get(0);
+
+		assertEquals(AliasGroup3.strProp1, nun.getBadPropertyCoord().getProperty());
+		assertEquals(STR_PROP1_IN_AND_OUT_ALIAS, nun.getConflictName());
 	}
 	
 }

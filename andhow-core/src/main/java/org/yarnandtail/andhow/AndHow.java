@@ -100,8 +100,9 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * The new {@Code AndHowConfiguration} is created in one of two ways:
 	 * <ol>
 	 * <li>If there is a class implementing the {@Code AndHowInit} interface on the classpath,
-	 * 	 that class' {@Code getConfiguration()} method will be called to construct the instance.
-	 * 	 This is an easy configuration point to configure AndHow for production or test.
+	 * 	 it will be discovered and that class' {@link AndHowInit#getConfiguration()} method will be
+	 * 	 called to construct the instance.  This is an easy configuration point to configure AndHow
+	 * 	 for production or test.
 	 * <li>Otherwise, a default implementation of {@Code AndHowConfiguration} is created
 	 *   and returned.
 	 * </ol>
@@ -117,19 +118,29 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * (See test examples in the simulated app tests)
 	 * </ul>
 	 * <p>
-	 * Example usage:
+	 * Example usage in a main method:
 	 * <pre>{@code
 	 * public static void main(String[] args) {
 	 *   AndHow.findConfig().setCmdLineArgs(myCmdLineArgs);
 	 *   //Do other stuff - AndHow initializes as soon as the first Property access happens.
+	 *   //...
+	 *   //AndHow.instance();	//Forces initialization, but isn't required
 	 * }
 	 * }</pre>
+	 * <p>
+	 * In the above example, AndHow will initialize itself as soon as the first Property value
+	 * is accessed, e.g. {@code MyProperty.getValue()}.  In nearly all cases this is acceptable.
+	 * If, however, you are worried your application has thread contention at startup or the
+	 * application doesn't access property values until some later event happens, you can
+	 * force initialization by calling {@code AndHow.instance()}.  Initialization will force
+	 * validation of all property values and will block other attempts to initialize AndHow,
+	 * perhaps helping to pinpoint startup contention.
 	 * <p>
 	 * Note: There was a behaviour change from v1.4.1 to v1.4.2:  Beginning with
 	 * v1.4.2, this method returns the same instance each time until initialization, then it throws
 	 * a fatal exception.  In v1.4.1 and earlier, a newly created instance was returned for each call.
 	 * This is a large behaviour change, but its really blocking an unsafe application operation
-	 * or an unepected application 'no-op' where the caller might expect to keep working on the same
+	 * or an unexpected application 'no-op' where the caller might expect to keep working on the same
 	 * configuration and actually be starting over.
 	 *
 	 * @return The AndHowConfiguration with continuity between calls
@@ -141,7 +152,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		synchronized (LOCK) { //Access to the config is sync'ed same as init code
 
 			if (isInitialized()) {
-				throw new AppFatalException("AndHow is already initialized, so access to the configuration is blocked.");
+				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
 			}
 
 			if (inProcessConfig == null) {
@@ -153,11 +164,52 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	/**
-	 * Returns the single instance of AndHow.
+	 * Prior to AndHow initialization, this method explicitly sets the configuration to be used.
 	 *
-	 * If the AndHow is null, a new instance is created by initializing AndHow
+	 * After AndHow is initialized this method will throw a fatal exception since no
+	 * modification to configuration is possible after initialization.
+	 * <p>
+	 * It is easier and safer to use {@link #findConfig()}, which will a auto-discover
+	 * configuration, however, during testing or some advanced use cases,
+	 * it can be useful to ignore the normal configuration discovery mechanism.
+	 * <p>
+	 * If this method is used, configuration created by {@link AndHowInit#getConfiguration()}
+	 * and possibly later modified by calls to {@link #findConfig()} up to this point
+	 * will be replaced by the configuration set here.  Later calls to {@link #findConfig()} will
+	 * return this new value.
+	 *
+	 * @param config The new configuration which must not be null.
+	 * @throws AppFatalException If AndHow is already initialized or the passed config is null.
+	 */
+	public static void setConfig(AndHowConfiguration<? extends AndHowConfiguration> config)
+			throws AppFatalException {
+
+		if (config == null) {
+			throw new AppFatalException("Cannot set a null configuration");
+		}
+
+		synchronized (LOCK) { //Access to the config is sync'ed same as init code
+
+			if (isInitialized()) {
+				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
+			}
+
+			inProcessConfig = config;
+
+		}	//end sync
+	}
+
+	/**
+	 * Returns the singleton instance of AndHow, initializing a new instance if one doesn't exist.
+	 *
+	 * If AndHow is not yet initialized, a new instance is created by initializing AndHow
 	 * using configuration found via findConfig().
-	 * 
+	 * AndHow initialization configures AndHow, loads Property values from all sources (such as
+	 * env. vars., System Props, etc.), then validates all values.
+	 * <p>
+	 * In production, use of this method is optional at startup. See {@link #findConfig()}
+	 * for an example of how to access and modify configuration, and initialize AndHow.
+	 *
 	 * @return The singleton AndHow instance - the same instance for the life of the app.
 	 * @throws AppFatalException If AndHow is mis-configured
 	 */
@@ -172,7 +224,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				if (isInitialized()) {
 					return singleInstance;
 				} else {
-					return instance(findConfig());
+					return initialize(findConfig());
 				}
 
 			}	// end sync
@@ -181,17 +233,47 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	}
 
 	/**
-	 * Initialized AndHow with the passed configuration - This method is not normally
-	 * needed or used in production.
+	 * Initialize AndHow with the passed configuration - This method is not normally needed or used in
+	 * production and will throw a Runtime exception if called more than once, directly or indirectly.
 	 *
-	 * AndHow is a singleton, so this method will throw an AppFatalException if
-	 * AndHow has already been initialized.
+	 * AndHow initialization configures AndHow, loads Property values from all sources (such as
+	 * env. vars., System Props, etc.), then validates all values.
+	 * <p>
+	 * In production, application code never needs to call this method.  See {@link #findConfig()}
+	 * for an example of how to access and modify configuration, and initialize AndHow.
+	 * <p>
+	 * The behaviour of this method is very different from the no-arg instance method.
+	 * {@code instance()} can be called repeatedly to get the AndHow instance, a singleton.
+	 * {@code instance(AndHowConfiguration)} can only be called once to do the one-time
+	 * initialization.  Because of this, this method was deprecated and will be removed.
 	 *
-	 * @param config The AndHowConfiguration to be used to build the new instance.
+	 * @deprecated See notes on {@link #findConfig()}.
+	 * @param config The non-null configuration to be used to build the new AndHow singleton.
 	 * @return The singleton AndHow instance, newly built from the configuration.
-	 * @throws AppFatalException If AndHow has already been initialized.
+	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
+	 * 	Property value validation errors.
 	 */
+	@Deprecated
 	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
+		return initialize(config);
+	}
+
+	/**
+	 * Initialize AndHow with the passed configuration - This method is not normally needed or used in
+	 * production and will throw a Runtime exception if called more than once, directly or indirectly.
+	 *
+	 * AndHow initialization configures AndHow, loads Property values from all sources (such as
+	 * env. vars., System Props, etc.), then validates all values.
+	 * In normal usage, this method should not be called by application code and
+	 *
+	 * @deprecated Use {@code AndHow.findConfig()} and {@code AndHow.instance()} instead. See notes.
+	 * @param config The non-null configuration to be used to build the new AndHow singleton.
+	 * @return The singleton AndHow instance, newly built from the configuration.
+	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
+	 * 	Property value validation errors.
+	 */
+	@Deprecated
+	private static AndHow initialize(AndHowConfiguration config) throws AppFatalException {
 
 		synchronized (LOCK) {
 
@@ -258,6 +340,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @deprecated This method name was typod.  Please use isInitialized() instead.
 	 * @return
 	 */
+	@Deprecated
 	public static boolean isInitialize() {
 		return isInitialized();
 	}

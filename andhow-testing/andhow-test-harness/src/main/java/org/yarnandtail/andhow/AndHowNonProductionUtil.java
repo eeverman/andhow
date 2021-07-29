@@ -115,7 +115,8 @@ public class AndHowNonProductionUtil {
 		if (ahInstance == null) {
 
 			//This is an uninitialized AndHow instance, initialize 'normally'
-			AndHow.instance(config);
+			AndHow.setConfig(config);
+			AndHow.instance();
 
 		} else {
 			//AndHow is already initialized, so just reassign the core

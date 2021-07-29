@@ -52,7 +52,7 @@ public class AndHowUtil {
 						appDef.addExportGroup(eg);
 					}
 
-				} catch (InstantiationException ex) {
+				} catch (InstantiationException | NoSuchMethodException | InvocationTargetException ex) {
 					ConstructionProblem.ExportException ee
 							= new ConstructionProblem.ExportException(ex, group,
 									"Unable to created a new instance of one of the Exporters for this group.  "
@@ -136,7 +136,7 @@ public class AndHowUtil {
 	 * @throws IllegalAccessException
 	 */
 	public static List<Exporter> getExporters(GroupProxy group)
-			throws InstantiationException, IllegalAccessException {
+			throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
 		ArrayList<Exporter> exps = new ArrayList();
 
@@ -145,7 +145,7 @@ public class AndHowUtil {
 		for (GroupExport ge : groupExports) {
 			Class<? extends Exporter> expClass = ge.exporter();
 
-			Exporter exporter = expClass.newInstance();
+			Exporter exporter = expClass.getDeclaredConstructor().newInstance();
 
 			exporter.setExportByCanonicalName(ge.exportByCanonicalName());
 			exporter.setExportByOutAliases(ge.exportByOutAliases());
@@ -383,7 +383,7 @@ public class AndHowUtil {
 		
 		if (c != null) {
 			try {
-				return c.newInstance();
+				return c.getDeclaredConstructor().newInstance();
 			} catch (Throwable ex) {
 				//ignore
 			}
