@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
@@ -63,6 +64,12 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 	/* Config that was returned from findConfig, but has not yet been used to initialize AndHow. */
 	private static volatile AndHowConfiguration<? extends AndHowConfiguration> inProcessConfig = null;
+
+	private static volatile UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>>
+			configLocator = c -> AndHowUtil.findConfiguration(c);
+
+	/* Flag to block reentrant calls to findConfig() and setConfig() */
+	private static final ThreadLocal<Boolean> findingConfig = ThreadLocal.withInitial(() -> false);
 
 	/**
 	 * The core contains the entire state of AndHow, including values of Properties, once
@@ -155,9 +162,34 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
 			}
 
-			if (inProcessConfig == null) {
-				inProcessConfig = AndHowUtil.findConfiguration(StdConfig.instance());
+			if (inProcessConfig == null) {	//No config exists, so need to create
+
+				if (findingConfig.get()) {	//This thread is in a reentrant loop of calling findConfig!
+
+					//Relax... This is normal.  Typical loop path:
+					// 1) AndHow begins initialization or the application calls findConfig()
+					// 2) findConfig() calls AndHowUtil.findConfiguration()
+					// 3) AndHowUtil discovers and calls the user implementation of AndHowInit.getConfiguration()
+					// 4) That method needs to return an AndHowConfiguration instance, so it calls AndHow.findConfig()
+					//    to get an instance - its a loop!
+					//This flow is supported and considered a best practice so that all access to configuration
+					//takes place via findConfig().
+
+					inProcessConfig =  StdConfig.instance();	//Break the loop by directly creating new instance
+
+				} else {	//Not in a loop
+
+					findingConfig.set(true);	//Block reentrant calls
+
+					try {
+						inProcessConfig = configLocator.apply(StdConfig.instance());
+						//inProcessConfig = AndHowUtil.findConfiguration(StdConfig.instance());
+					} finally {
+						findingConfig.remove();	//Remove threadlocal variable from thread
+					}
+				}
 			}
+
 			return inProcessConfig;
 
 		}	//end sync
@@ -192,6 +224,14 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 			if (isInitialized()) {
 				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
+			}
+
+			if (findingConfig.get()) {  //This thread is in a reentrant loop of calling findConfig!
+				throw new AppFatalException(
+						"Cannot call AndHow.setConfig() from inside AndHowInit.getConfiguration(). " +
+						"See the user guide for examples of how to configure AndHow.");
+			} else {
+				findingConfig.remove();	//Calling get creates a ThreadLocal, so remove
 			}
 
 			inProcessConfig = config;

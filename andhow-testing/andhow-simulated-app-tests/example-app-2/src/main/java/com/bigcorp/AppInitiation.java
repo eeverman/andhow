@@ -13,8 +13,7 @@ public class AppInitiation implements AndHowInit {
 	@Override
 	public AndHowConfiguration getConfiguration() {
 
-		return
-				StdConfig.instance().setClasspathPropFilePath(ANDHOW_CLASSPATH_FILE);
+		return AndHow.findConfig().setClasspathPropFilePath(ANDHOW_CLASSPATH_FILE);
 
 	}
 }
