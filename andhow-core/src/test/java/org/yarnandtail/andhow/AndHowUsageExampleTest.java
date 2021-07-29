@@ -42,15 +42,15 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
-		AndHow.instance(config);
+		AndHow.setConfig(config);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
 		assertEquals("google.com", SERVICE_CONFIG.REST_ENDPOINT_URL.getValue());
-		assertEquals(new Integer(4), SERVICE_CONFIG.RETRY_COUNT.getValue());
-		assertEquals(new Integer(10), SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
-		assertEquals(new Double(9.8), SERVICE_CONFIG.GRAVITY.getValue(), .00000001d);
-		assertEquals(new Double(3.14), SERVICE_CONFIG.PIE.getValue(), .00000001d);
+		assertEquals(4, SERVICE_CONFIG.RETRY_COUNT.getValue());
+		assertEquals(10, SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
+		assertEquals(9.8, SERVICE_CONFIG.GRAVITY.getValue(), .00000001d);
+		assertEquals(3.14, SERVICE_CONFIG.PIE.getValue(), .00000001d);
 	}
 	
 	@Test
@@ -60,32 +60,32 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
 				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
 				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99");
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
 		assertEquals("yahoo.com", SERVICE_CONFIG.REST_ENDPOINT_URL.getValue());
-		assertEquals(new Integer(3), SERVICE_CONFIG.RETRY_COUNT.getValue());
-		assertEquals(new Integer(99), SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
+		assertEquals(3, SERVICE_CONFIG.RETRY_COUNT.getValue());
+		assertEquals(99, SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
 	}
 	
 	@Test
 	public void testMissingValuesException() {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(UI_CONFIG.class).group(SERVICE_CONFIG.class);
-			
-			AndHow.instance(config);
-			
-			fail();
-		} catch (AppFatalException ce) {
-			assertEquals(3, ce.getProblems().filter(RequirementProblem.class).size());
-			assertEquals(UI_CONFIG.DISPLAY_NAME, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
-			assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ce.getProblems().filter(RequirementProblem.class).get(1).getPropertyCoord().getProperty());
-			assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ce.getProblems().filter(RequirementProblem.class).get(2).getPropertyCoord().getProperty());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(UI_CONFIG.class).group(SERVICE_CONFIG.class);
+
+
+			AndHow.setConfig(config);
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		assertEquals(3, ex.getProblems().filter(RequirementProblem.class).size());
+		assertEquals(UI_CONFIG.DISPLAY_NAME, ex.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
+		assertEquals(SERVICE_CONFIG.REST_ENDPOINT_URL, ex.getProblems().filter(RequirementProblem.class).get(1).getPropertyCoord().getProperty());
+		assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ex.getProblems().filter(RequirementProblem.class).get(2).getPropertyCoord().getProperty());
+
 	}
 	
 	public static interface UI_CONFIG {
@@ -99,8 +99,6 @@ public class AndHowUsageExampleTest extends AndHowCoreTestBase {
 		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().build();
 		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).mustBeLessThan(10.2d).build();
 		DblProp PIE = DblProp.builder().mustBeGreaterThanOrEqualTo(3.1).mustBeLessThanOrEqualTo(3.2).build();
-
 	}
-	
 
 }

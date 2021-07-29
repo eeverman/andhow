@@ -167,6 +167,9 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	
 	@Override
 	public void build() {
+		System.err.println(
+				"Config.build() is deprecated and will be removed in the next major release. " +
+						"See Javadocs for alternatives.");
 		AndHow.instance(this);
 	}
 

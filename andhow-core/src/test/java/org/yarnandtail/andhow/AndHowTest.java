@@ -23,6 +23,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * as a unit test.
  * <br>
  * See the AndHowSystem Test sub-project for better test coverage.
+ *
+ * When the AndHow.instance(config) method is removed, this test will need to be
+ * updated to call the private AndHow.initialize(config).
  * 
  * @author ericeverman
  */
@@ -89,6 +92,33 @@ public class AndHowTest extends AndHowCoreTestBase {
 		AndHow.instance();	//Initialize and try to get config...
 
 		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+	}
+
+	@Test
+	public void setConfigShouldReplaceConfig() {
+		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
+		AndHowConfiguration<? extends AndHowConfiguration> config2 = StdConfig.instance();
+
+		assertNotSame(config1, config2);
+
+		AndHow.setConfig(config2);	//set to config2
+		assertSame(config2, AndHow.findConfig());
+
+		AndHow.setConfig(config1);	//set back to config1
+		assertSame(config1, AndHow.findConfig());
+	}
+
+	@Test
+	public void setConfigShouldThrowAppFatalSometimes() {
+		AndHowConfiguration<? extends AndHowConfiguration> config = StdConfig.instance();
+
+		assertThrows(AppFatalException.class, () -> AndHow.setConfig(null),
+				"Cannot set to null");
+
+		AndHow.instance();	//force initialize
+
+		assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
+				"Cannot access after init");
 	}
 
 	@Test
@@ -193,11 +223,11 @@ public class AndHowTest extends AndHowCoreTestBase {
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(10), SimpleParams.INT_TEN.getValue());
+		assertEquals(10, SimpleParams.INT_TEN.getValue());
 		assertNull(SimpleParams.INT_NULL.getValue());
-		assertEquals(new Long(10), SimpleParams.LNG_TEN.getValue());
+		assertEquals(10, SimpleParams.LNG_TEN.getValue());
 		assertNull(SimpleParams.LNG_NULL.getValue());
-		assertEquals(new Double(10), SimpleParams.DBL_TEN.getValue());
+		assertEquals(10, SimpleParams.DBL_TEN.getValue());
 		assertNull(SimpleParams.DBL_NULL.getValue());
 		assertEquals(LocalDateTime.parse("2007-10-01T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertNull(SimpleParams.LDT_NULL.getValue());

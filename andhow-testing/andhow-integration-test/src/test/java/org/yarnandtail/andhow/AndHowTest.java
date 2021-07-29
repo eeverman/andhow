@@ -44,7 +44,7 @@ public class AndHowTest {
 	public void testInstance_AndHowConfiguration() {
 		AndHowConfiguration<? extends AndHowConfiguration> config = AndHow.findConfig();
 		config.addFixedValue(MY_STR_PROP1, "val");
-		AndHow inst = AndHow.instance(config);
+		AndHow inst = AndHow.instance();
 		
 		assertEquals("val", MY_STR_PROP1.getValue());
 		assertEquals("val", inst.getValue(MY_STR_PROP1));

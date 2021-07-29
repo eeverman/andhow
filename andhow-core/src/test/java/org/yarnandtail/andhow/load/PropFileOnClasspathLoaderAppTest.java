@@ -35,8 +35,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
-		
+		AndHow.setConfig(config);
 
 		assertEquals("/org/yarnandtail/andhow/load/SimpleParams1.properties", TestProps.CLAZZ_PATH.getValue());
 		assertEquals("kvpBobValue", SimpleParams.STR_BOB.getValue());
@@ -48,23 +47,21 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testInvalid() throws Exception {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
-					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
-					.classpathPropertiesRequired()
-					.group(SimpleParams.class)
-					.group(TestProps.class);
-		
-			AndHow.instance(config);
-		
-				fail("The property file contains several invalid props - should have errored");
-		} catch (AppFatalException afe) {
-			List<Problem> probs = afe.getProblems();
-			assertEquals(5, probs.size());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH),
+						"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
+				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
+				.classpathPropertiesRequired()
+				.group(SimpleParams.class)
+				.group(TestProps.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException afe = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<Problem> probs = afe.getProblems();
+		assertEquals(5, probs.size());
 
 	}
 	
@@ -74,30 +71,29 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class)
 				.group(TestProps.class);	//This must be declared or the Prop loader can't work
-		
-		AndHow.instance(config);	
 
+		AndHow.setConfig(config);
+		AndHow.instance();
 		
 		//It is OK to have a null config for the PropFile loader - it just turns it off
 	}
 	
 	@Test
 	public void testUnregisteredPropLoaderProperty() throws Exception {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"/org/yarnandtail/andhow/load/SimpleParams1.properties")
-					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
-					.group(SimpleParams.class);
-					//.group(TestProps.class) //Missing - should cause failure
-			AndHow.instance(config);
-		
-			fail("The Property loader config parameter is not registered, so it should have failed");
-		} catch (AppFatalException afe) {
-			List<LoaderPropertyNotRegistered> probs = afe.getProblems().filter(LoaderPropertyNotRegistered.class);
-			assertEquals(1, probs.size());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH),
+						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
+				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
+				.group(SimpleParams.class);
+				//.group(TestProps.class) //Missing - should cause failure
+
+		AndHow.setConfig(config);
+
+		AppFatalException afe = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<LoaderPropertyNotRegistered> probs = afe.getProblems().filter(LoaderPropertyNotRegistered.class);
+		assertEquals(1, probs.size());
 	}
 	
 	/**
@@ -115,7 +111,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.group(SimpleParams.class)
 				.group(TestProps.class);
 		
-		AndHow.instance(config);
+		AndHow.setConfig(config);
 		
 		//These are just default values
 		assertEquals("bob", SimpleParams.STR_BOB.getValue());
@@ -124,24 +120,21 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	
 	@Test
 	public void testABadClasspathThatDoesNotPointToAFile() throws Exception {
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH), 
-							"asdfasdfasdf/asdfasdf/asdf")
-					.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
-					.classpathPropertiesRequired()
-					.group(SimpleParams.class)
-					.group(TestProps.class);
-		
-			AndHow.instance(config);
-			
-			fail("The Property loader config property is not pointing to a real file location");
-			
-		} catch (AppFatalException afe) {
-			List<SourceNotFoundLoaderProblem> probs = afe.getProblems().filter(SourceNotFoundLoaderProblem.class);
-			assertEquals(1, probs.size());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH),
+						"asdfasdfasdf/asdfasdf/asdf")
+				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
+				.classpathPropertiesRequired()
+				.group(SimpleParams.class)
+				.group(TestProps.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException afe = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<SourceNotFoundLoaderProblem> probs = afe.getProblems().filter(SourceNotFoundLoaderProblem.class);
+		assertEquals(1, probs.size());
 	}
 
 }

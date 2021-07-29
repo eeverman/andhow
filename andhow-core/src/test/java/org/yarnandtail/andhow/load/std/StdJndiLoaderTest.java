@@ -87,18 +87,18 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
-		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
-		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
-		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
+		assertEquals(-999, SimpleParams.INT_TEN.getValue());
+		assertEquals(999, SimpleParams.INT_NULL.getValue());
+		assertEquals(-999, SimpleParams.LNG_TEN.getValue());
+		assertEquals(999, SimpleParams.LNG_NULL.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
@@ -123,20 +123,20 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
-		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
-		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
-		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
-		assertEquals(new Long(-999), SimpleParams.LNG_TEN.getValue());
-		assertEquals(new Long(999), SimpleParams.LNG_NULL.getValue());
+		assertEquals(-999, SimpleParams.INT_TEN.getValue());
+		assertEquals(999, SimpleParams.INT_NULL.getValue());
+		assertEquals(-999, SimpleParams.LNG_TEN.getValue());
+		assertEquals(999, SimpleParams.LNG_NULL.getValue());
+		assertEquals(-999, SimpleParams.LNG_TEN.getValue());
+		assertEquals(999, SimpleParams.LNG_NULL.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
@@ -162,16 +162,16 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
-		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
+		assertEquals(-999, SimpleParams.INT_TEN.getValue());
+		assertEquals(999, SimpleParams.INT_NULL.getValue());
 	}
 	
 	@Test
@@ -197,15 +197,15 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
+		assertEquals(-999, SimpleParams.INT_TEN.getValue());
 		assertNull(SimpleParams.INT_NULL.getValue());
 	}
 	
@@ -224,11 +224,11 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), new Integer(-999));
-		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), new Integer(999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), Integer.valueOf(-999));
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), Integer.valueOf(999));
 		jndi.bind("java:comp/env/" + 
-				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), new Long(-999));
-		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), new Long(999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), Long.valueOf(-999));
+		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), Long.valueOf(999));
 		jndi.bind("java:comp/env/" + 
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
@@ -237,17 +237,16 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
-		
-		
+
+		AndHow.setConfig(config);
+
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-999), SimpleParams.INT_TEN.getValue());
-		assertEquals(new Integer(999), SimpleParams.INT_NULL.getValue());
+		assertEquals(-999, SimpleParams.INT_TEN.getValue());
+		assertEquals(999, SimpleParams.INT_NULL.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
@@ -266,16 +265,16 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.bind("java:" + 
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
-		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), new Integer(-9999));
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), -9999);
 		jndi.bind("java:" + 
-				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), new Integer(9999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)),9999);
 		
 		jndi.activate();
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.group(SimpleParams.class);
-		
-		AndHow.instance(config);
+
+		AndHow.setConfig(config);
 		
 		
 		assertEquals("test2", SimpleParams.STR_BOB.getValue());
@@ -283,8 +282,8 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
 		assertEquals(true, SimpleParams.FLAG_FALSE.getValue());
 		assertEquals(true, SimpleParams.FLAG_NULL.getValue());
-		assertEquals(new Integer(-9999), SimpleParams.INT_TEN.getValue());
-		assertEquals(new Integer(9999), SimpleParams.INT_NULL.getValue());
+		assertEquals(-9999, SimpleParams.INT_TEN.getValue());
+		assertEquals(9999, SimpleParams.INT_NULL.getValue());
 	}
 	
 	//
@@ -305,22 +304,18 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 
 		jndi.activate();
 		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(SimpleParams.class);
-			
-			AndHow.instance(config);
-		
-			fail("Should not reach this point");
-			
-		} catch (AppFatalException e) {
-			List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
-			
-			assertEquals(1, lps.size());
-			assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
-			
-		}
-		
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(SimpleParams.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
+
+		assertEquals(1, lps.size());
+		assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 	}
 	
 
@@ -330,31 +325,28 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 		
-		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), new Long(-9999));
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), Long.valueOf(-9999));
 		jndi.bind("java:" + 
-				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), new Float(22));
-		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), new Integer(-9999));
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), Float.valueOf(22));
+		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), Integer.valueOf(-9999));
 		jndi.activate();
 		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(SimpleParams.class);
-			
-			AndHow.instance(config);
-		
-			fail("Should not reach this point");
-			
-		} catch (AppFatalException e) {
-			List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
-			
-			assertEquals(3, lps.size());
-			assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
-			assertEquals(SimpleParams.INT_TEN, lps.get(0).getBadValueCoord().getProperty());
-			assertTrue(lps.get(1) instanceof LoaderProblem.ObjectConversionValueProblem);
-			assertEquals(SimpleParams.INT_NULL, lps.get(1).getBadValueCoord().getProperty());
-			assertTrue(lps.get(2) instanceof LoaderProblem.ObjectConversionValueProblem);
-			assertEquals(SimpleParams.LNG_TEN, lps.get(2).getBadValueCoord().getProperty());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(SimpleParams.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+		List<LoaderProblem> lps = e.getProblems().filter(LoaderProblem.class);
+
+		assertEquals(3, lps.size());
+		assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.INT_TEN, lps.get(0).getBadValueCoord().getProperty());
+		assertTrue(lps.get(1) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.INT_NULL, lps.get(1).getBadValueCoord().getProperty());
+		assertTrue(lps.get(2) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.LNG_TEN, lps.get(2).getBadValueCoord().getProperty());
 	}
 	
 	@Test
@@ -368,27 +360,23 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
 		jndi.activate();
-		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(SimpleParams.class);
-			
-			AndHow.instance(config);
-		
-			fail("Should not reach this point");
-			
-		} catch (AppFatalException e) {
-			List<LoaderProblem> vps = e.getProblems().filter(LoaderProblem.class);
-			
-			assertEquals(3, vps.size());
-			assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);
-			assertEquals(SimpleParams.INT_TEN, vps.get(0).getBadValueCoord().getProperty());
-			assertTrue(vps.get(1) instanceof LoaderProblem.StringConversionLoaderProblem);
-			assertEquals(SimpleParams.INT_NULL, vps.get(1).getBadValueCoord().getProperty());
-			assertTrue(vps.get(2) instanceof LoaderProblem.StringConversionLoaderProblem);
-			assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
-		}
-	
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(SimpleParams.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<LoaderProblem> vps = e.getProblems().filter(LoaderProblem.class);
+
+		assertEquals(3, vps.size());
+		assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.INT_TEN, vps.get(0).getBadValueCoord().getProperty());
+		assertTrue(vps.get(1) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.INT_NULL, vps.get(1).getBadValueCoord().getProperty());
+		assertTrue(vps.get(2) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
 	}
 	
 
@@ -403,19 +391,17 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 				bns.getUriName(NameUtil.getAndHowName(ValidParams.class, ValidParams.STR_XXX)), "YYY");
 		jndi.activate();
 		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(ValidParams.class);
-			
-			AndHow.instance(config);
-		
-			fail("Should not reach this point");
-			
-		} catch (AppFatalException e) {
-			List<Problem> vps = e.getProblems();
-			
-			assertEquals(2, vps.size());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(ValidParams.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<Problem> vps = e.getProblems();
+
+		assertEquals(2, vps.size());
 	}
 	
 	@Test
@@ -427,22 +413,18 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), "9");
 		jndi.activate();
 		
-		try {
-			AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(ValidParams.class);
-			
-			AndHow.instance(config);
-		
-			fail("Should not reach this point");
-			
-		} catch (AppFatalException e) {
-			List<Problem> vps = e.getProblems();
-			
-			assertEquals(1, vps.size());
-			assertTrue(vps.get(0) instanceof ValueProblem);
-			assertEquals(ValidParams.INT_TEN, ((ValueProblem)(vps.get(0))).getBadValueCoord().getProperty());
-		}
+
+		AndHowConfiguration config = AndHowTestConfig.instance()
+				.group(ValidParams.class);
+
+		AndHow.setConfig(config);
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> AndHow.instance());
+
+		List<Problem> vps = e.getProblems();
+
+		assertEquals(1, vps.size());
+		assertTrue(vps.get(0) instanceof ValueProblem);
+		assertEquals(ValidParams.INT_TEN, ((ValueProblem)(vps.get(0))).getBadValueCoord().getProperty());
 	}
-	
-	
 }
