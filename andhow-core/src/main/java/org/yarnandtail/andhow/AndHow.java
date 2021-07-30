@@ -65,8 +65,8 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	/* Config that was returned from findConfig, but has not yet been used to initialize AndHow. */
 	private static volatile AndHowConfiguration<? extends AndHowConfiguration> inProcessConfig = null;
 
-	private static volatile UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>>
-			configLocator = c -> AndHowUtil.findConfiguration(c);
+	/* This is 'final', but can be swapped out w/ Reflection for testing */
+	private static UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>> configLocator = null;
 
 	/* Flag to block reentrant calls to findConfig() and setConfig() */
 	private static final ThreadLocal<Boolean> findingConfig = ThreadLocal.withInitial(() -> false);
@@ -182,8 +182,13 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					findingConfig.set(true);	//Block reentrant calls
 
 					try {
-						inProcessConfig = configLocator.apply(StdConfig.instance());
-						//inProcessConfig = AndHowUtil.findConfiguration(StdConfig.instance());
+
+						if (configLocator != null) {
+							inProcessConfig = configLocator.apply(StdConfig.instance());
+						} else {
+							inProcessConfig = AndHowUtil.findConfiguration(StdConfig.instance());
+						}
+
 					} finally {
 						findingConfig.remove();	//Remove threadlocal variable from thread
 					}

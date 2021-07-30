@@ -3,6 +3,7 @@ package org.yarnandtail.andhow;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,22 +77,53 @@ public class AndHowTest extends AndHowCoreTestBase {
 		assertEquals("org.yarnandtail.andhow.SimpleParams.", paramFullPath);
 	}
 
-	/*
-	 * TODO:  There is no AndHowInit instance on the classpath, so this test only tests
-	 * findConfig creating a default Config instance.  A separate maven module with a
-	 * separate classpath is needed to test behaviour when there is a AndHowInit on
-	 * the path.
-	 */
 	@Test
-	public void testFindConfig() {
+	public void findConfigShouldReturnSameInstanceEachTimeAndNotCauseInitialization() {
 		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
 		AndHowConfiguration<? extends AndHowConfiguration> config2 = AndHow.findConfig();
 		assertSame(config1, config2, "Should return the same instance each time");
 		assertFalse(AndHow.isInitialized(), "findConfig should not force initialization");
+	}
 
-		AndHow.instance();	//Initialize and try to get config...
-
+	@Test
+	public void findConfigShouldThrowExceptionIfCalledAfterInitialization() {
+		AndHow.instance();
 		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+	}
+
+	@Test
+	public void findConfigLocatorShouldBeUsedIfNonNullAndOnlyOnFirstFindConfigCall() {
+
+		final AtomicInteger callCount = new AtomicInteger();
+		final StdConfig.StdConfigImpl config = StdConfig.instance();
+
+		//This locator should be called when AndHow.findConfig() is called to locate a config.
+		//After the first invocation, the config is returned w/o calling the locator.
+		AndHowTestUtil.setAndHowConfigLocator((c) -> {
+				callCount.incrementAndGet();
+				return config;
+		});
+
+		assertSame(config, AndHow.findConfig(), "Should return the instance from our locator");
+		assertSame(config, AndHow.findConfig(), "Should return the instance from our locator");
+		assertEquals(1, callCount.get(), "Should only be called the first time");
+		assertNotNull(AndHow.instance());		//as normal
+	}
+
+	@Test
+	public void findConfigShouldReturnNewConfigIfReentrant() {
+
+		//This locator will be called when AndHow.findConfig() is called, creating a loop.
+		//This loop is normal and expected and should be handled correctly.
+		//When detected, AndHow should just return a new AndHowConfiguration instance
+		//rather than have a stack overflow.
+		AndHowTestUtil.setAndHowConfigLocator(
+				c -> AndHow.findConfig()
+		);
+
+		assertNotNull(AndHow.findConfig());	//should be stockoverflow free
+		assertNotNull(AndHow.instance());		//as normal
+		AndHow.instance();
 	}
 
 	@Test
@@ -119,6 +151,25 @@ public class AndHowTest extends AndHowCoreTestBase {
 
 		assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
 				"Cannot access after init");
+	}
+
+	@Test
+	public void setConfigShouldThrowAnExceptionIfCalledFromWithinFindConfig() {
+
+		//This situation could happen in application code's implementation of
+		//AndHowInit.getConfiguration().  AndHow.findConfig() was invoked to find configuration,
+		//which calls the app code getConfiguration() and in that method implementation
+		//setConfig() is called.  Its bad.  Not clear what it would mean.  Needs to throw an error.
+
+		final StdConfig.StdConfigImpl config = StdConfig.instance();
+
+		//This locator should be called when AndHow.findConfig() is called.
+		AndHowTestUtil.setAndHowConfigLocator((c) -> {
+			AndHow.setConfig(config);	//Bad!  Must throw error!
+			return config;
+		});
+
+		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
 	}
 
 	@Test
