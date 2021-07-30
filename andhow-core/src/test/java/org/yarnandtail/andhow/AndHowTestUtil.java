@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 import org.yarnandtail.andhow.internal.AndHowCore;
 
@@ -60,6 +61,7 @@ public class AndHowTestUtil {
 		setAndHowInitialization(null);
 		setAndHowInProgressConfiguration(null);
 		setAndHowInitializing(false);
+		setAndHowConfigLocator(null);
 	}
 	
 	public static AndHow setAndHowInstance(AndHow newInstance) {
@@ -74,6 +76,32 @@ public class AndHowTestUtil {
 	 */
 	public static AndHow.Initialization setAndHowInitialization(AndHow.Initialization newInit) {
 		return ReflectionTestUtil.setStaticFieldValue(AndHow.class, "initialization", newInit);
+	}
+
+	/**
+	 * Set a locator to find AndHowConfiguration.
+	 *
+	 * The locator is used in AndHow.findConfig().  If no config exists, the normal path is
+	 * for AndHow to call {@code AndHowUtil.findConfiguration(c)}, however, if a locator
+	 * is set to nonnull, it will be used instead.
+	 * <p>
+	 * The locator takes a default Configuration to return if a configuration cannot
+	 * be found otherwise.  See {@link AndHow#findConfig()} for details.
+	 * <p>
+	 * Example setting to a custom locator:
+	 * <pre>{@code setAndHowConfigLocator(c -> return MyConfig); }</pre>
+	 * Example setting back to null:
+	 * <pre>{@code setAndHowConfigLocator(null); }</pre>
+	 * <p>
+	 * If this is set to some custom value for testing, it must be set back to
+	 * null or future initialization will use the custom locator.
+	 *
+	 * @return The original locator, which may have been null.
+	 */
+	public static UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>>
+		setAndHowConfigLocator(UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>> newLocator) {
+
+		return ReflectionTestUtil.setStaticFieldValue(AndHow.class, "configLocator", newLocator);
 	}
 
 	/**
