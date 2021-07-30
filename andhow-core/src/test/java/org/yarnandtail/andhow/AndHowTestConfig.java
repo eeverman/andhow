@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.NamingStrategy;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
@@ -40,11 +39,11 @@ public class AndHowTestConfig {
 	
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 		
-		//If non-empty, it overrides the default group discovery
-		protected final List<Class<?>> _groups = new ArrayList();
+		//If non-null, it overrides the default group discovery
+		protected List<Class<?>> _groups = null;
 		
-		//If non-empty, it overrides the default list of loaders
-		protected final List<Loader> _loaders = new ArrayList();
+		//If non-null, it overrides the default list of loaders
+		protected List<Loader> _loaders = null;
 
 		//
 
@@ -99,6 +98,8 @@ public class AndHowTestConfig {
 		 * @return
 		 */
 		public N group(Class<?> group) {
+			if (_groups == null) _groups = new ArrayList();
+
 			_groups.add(group);
 			return (N) this;
 		}
@@ -113,6 +114,8 @@ public class AndHowTestConfig {
 		 * @return
 		 */
 		public N groups(Collection<Class<?>> groups) {
+			if (_groups == null) _groups = new ArrayList();
+
 			this._groups.addAll(groups);
 			return (N) this;
 		}
@@ -120,12 +123,10 @@ public class AndHowTestConfig {
 		@Override
 		public List<GroupProxy> getRegisteredGroups() {
 
-			if (this._groups.size() > 0) {
+			if (_groups != null) {
 				return AndHowUtil.buildGroupProxies(_groups);
 			} else {
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-				List<GroupProxy> registeredGroups = registrar.getGroups();
-				return registeredGroups;
+				return null;
 			}
 		}
 		
@@ -137,16 +138,18 @@ public class AndHowTestConfig {
 		 * @return 
 		 */
 		public N setLoaders(Loader... loaders) {
+			if (_loaders == null) _loaders = new ArrayList();
+
 			_loaders.addAll(Arrays.asList(loaders));
 			return (N) this;
 		}
 
 		@Override
 		public List<Loader> buildLoaders() {
-			if (_loaders.isEmpty()) {
-				return super.buildLoaders();
-			} else {
+			if (_loaders != null) {
 				return _loaders;
+			} else {
+				return super.buildLoaders();
 			}
 		}
 

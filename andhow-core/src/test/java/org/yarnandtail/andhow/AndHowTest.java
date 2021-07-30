@@ -300,8 +300,9 @@ public class AndHowTest extends AndHowCoreTestBase {
 			AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(kvpl, kvpl)
 				.groups(configPtGroups);
-			
-			AndHow.instance(config);
+
+			AndHow.setConfig(config);
+			AndHow.instance();
 			
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

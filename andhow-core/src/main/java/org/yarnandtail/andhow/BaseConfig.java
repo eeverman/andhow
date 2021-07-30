@@ -7,7 +7,6 @@ import org.yarnandtail.andhow.load.KeyObjectPair;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
@@ -160,9 +159,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 
 	@Override
 	public List<GroupProxy> getRegisteredGroups() {
-		PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-		List<GroupProxy> registeredGroups = registrar.getGroups();
-		return registeredGroups;
+		return null;
 	}
 	
 	@Override

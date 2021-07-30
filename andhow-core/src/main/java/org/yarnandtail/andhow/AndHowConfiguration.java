@@ -10,9 +10,35 @@ import org.yarnandtail.andhow.property.StrProp;
  */
 public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	List<Loader> buildLoaders();
-	
+
+	/**
+	 * Return a custom list of 'Groups' (classes or interfaces containing AndHow Properties)
+	 * to use instead of allowing the auto-discovery to find the Groups.
+	 *
+	 * AndHow will use a {@link java.util.ServiceLoader} to discover all classes containing
+	 * AndHow Properties in conjunction with a generated manifest of those classes created at
+	 * compile time.  Each class containing at least one AndHow Property is called a <em>Group</em>
+	 * and is represented by a {@link GroupProxy} object.
+	 * <p>
+	 * If this method returns non-null, then AndHow does not use this auto-discovery mechanism
+	 * and just uses the returned list of GroupProxies.  This is primarily for testing, where
+	 * it is useful to test on only a small set of Groups and Properties.
+	 * <p>
+	 * Returning an empty list from this method would result in AndHow initializing with
+	 * no registered Groups.
+	 *
+	 * @return A list of GroupProxies to use instead of the auto-discovery process.  May
+	 *   return null (and normally does) to allow the normal auto-discovery to happen.
+	 */
 	List<GroupProxy> getRegisteredGroups();
 
+	/**
+	 * Return the naming strategy used to form Property names, match them to values and display them.
+	 *
+	 * Currently only {@link org.yarnandtail.andhow.name.CaseInsensitiveNaming} is implemented.
+	 *
+	 * @return The strategy to use.  Must not be null.
+	 */
 	NamingStrategy getNamingStrategy();
 	
 	/**
