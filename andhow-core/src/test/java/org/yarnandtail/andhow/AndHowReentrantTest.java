@@ -23,7 +23,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 	@Test
 	public void test_1_AndHowReentrantTest_BadSample_1() {
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(AndHowReentrantTest_BadSample_1.class);
+				.addOverrideGroup(AndHowReentrantTest_BadSample_1.class);
 
 		AndHow.setConfig(config);
 
@@ -39,7 +39,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 	@Test
 	public void test_2_AndHowReentrantTest_OkSample_1() {
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(AndHowReentrantTest_OkSample_1.class);
+				.addOverrideGroup(AndHowReentrantTest_OkSample_1.class);
 
 		AndHow.setConfig(config);
 		AndHow.instance();
@@ -53,7 +53,7 @@ public class AndHowReentrantTest extends AndHowCoreTestBase {
 	@Test
 	public void test_3_AndHowReentrantTest_BadSample_2() {
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(AndHowReentrantTest_BadSample_2.class);
+				.addOverrideGroup(AndHowReentrantTest_BadSample_2.class);
 
 		AndHow.setConfig(config);
 

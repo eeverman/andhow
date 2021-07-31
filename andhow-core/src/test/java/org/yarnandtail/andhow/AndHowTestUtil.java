@@ -124,25 +124,6 @@ public class AndHowTestUtil {
 	public static Boolean setAndHowInitializing(boolean newInitializingStatus) {
 		return ReflectionTestUtil.setStaticFieldValue(AndHow.class, "initializing", Boolean.valueOf(newInitializingStatus));
 	}
-
-	public static void forceRebuild(AndHowConfiguration config) {
-
-		AndHow ahInstance = getAndHowInstance();
-
-		if (ahInstance == null) {
-
-			//This is an uninitialized AndHow instance, initialize 'normally'
-			AndHow.setConfig(config);
-			AndHow.instance();
-
-		} else {
-			//AndHow is already initialized, so just reassign the core
-
-			AndHowCore core = new AndHowCore(config.getNamingStrategy(), config.buildLoaders(), config.getRegisteredGroups());
-			AndHowTestUtil.setAndHowCore(core);
-
-		}
-	}
 	
 	/**
 	 * Creates a clone of a Properties object so it can be detached from System.

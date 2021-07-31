@@ -37,7 +37,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 		};
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
@@ -53,7 +53,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	public void testAllValuesAreSetViaFixedPropertyValueAndPropFile() {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.addFixedValue(SampleRestClientGroup.CLASSPATH_PROP_FILE,
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (PropertyValue)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -70,7 +70,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	public void testAllValuesAreSetViaFixedPropertyValueAndPropFileOverridingWithFixedPropertyValue() {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.addFixedValue(SampleRestClientGroup.CLASSPATH_PROP_FILE,
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (PropertyValue)
 				.addFixedValue(SampleRestClientGroup.REST_PORT, 99)	//Override value in prop file
@@ -87,7 +87,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	public void testAllValuesAreSetViaFixedKeyObjectPairAndPropFile() {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.addFixedValue(GROUP_PATH + ".classpath_prop_file", /* case ignored */
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (KeyObjectPair)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
@@ -104,7 +104,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 	public void testAllValuesAreSetViaFixedKeyObjectPairAndPropFileOverridingWithFixedKeyObjectPair() {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.addFixedValue(GROUP_PATH + ".classpath_prop_file", /* case ignored */
 						CLASSPATH_BEGINNING + "all.props.speced.properties")	//set via FixedValue (KeyObjectPair)
 				.addFixedValue(GROUP_PATH + ".REST_PORT", 98)	//Override value in prop file
@@ -127,7 +127,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 		);
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.setEnvironmentProperties(envvars)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
@@ -149,7 +149,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 		);
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.setSystemProperties(props)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
@@ -185,7 +185,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 		};		
 				
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
@@ -217,7 +217,7 @@ public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
 
 		//Error expected b/c some values are invalid
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SampleRestClientGroup.class)
+				.addOverrideGroup(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();

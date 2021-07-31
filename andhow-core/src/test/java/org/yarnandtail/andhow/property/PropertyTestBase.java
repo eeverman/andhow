@@ -26,8 +26,8 @@ public class PropertyTestBase extends AndHowCoreTestBase {
 		List<Class<?>> groups = Arrays.asList(group);
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(TEST_CONFIG.class)
-				.groups(groups)
+				.addOverrideGroup(TEST_CONFIG.class)
+				.addOverrideGroups(groups)
 				.addFixedValue(TEST_CONFIG.PROP_FILE, propFilePath)
 				.setClasspathPropFilePath(TEST_CONFIG.PROP_FILE)
 				.classpathPropertiesRequired();

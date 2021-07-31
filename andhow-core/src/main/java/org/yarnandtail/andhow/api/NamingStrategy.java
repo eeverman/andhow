@@ -1,6 +1,16 @@
 package org.yarnandtail.andhow.api;
 
 /**
+ * Defines how Property names are formed, matched and displayed.
+ *
+ * Property names, which are based on the package, classname, and variable name of the Property,
+ * are a mix of uppercase and lowercase.  Since one source of configuration is environmental
+ * variables, the case insensitivity of Windows is an issue:  On Windows, all env. vars.
+ * are converted to upper case.
+ * <p>
+ * Because of this, the default NamingStrategy is
+ * {@link org.yarnandtail.andhow.name.CaseInsensitiveNaming}, however, its pluggable via
+ * this interface - A case sensitive strategy could be used on non-windows systems.
  *
  * @author eeverman
  */

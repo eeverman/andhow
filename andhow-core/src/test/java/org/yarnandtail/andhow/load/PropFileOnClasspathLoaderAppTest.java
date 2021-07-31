@@ -32,8 +32,8 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 				.classpathPropertiesRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 		
 		AndHow.setConfig(config);
 
@@ -53,8 +53,8 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 						"/org/yarnandtail/andhow/load/SimpleParamsInvalid.properties")
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 				.classpathPropertiesRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 
 		AndHow.setConfig(config);
 
@@ -69,8 +69,8 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 	public void testNullReferencePropLoaderProperty() throws Exception {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class)
-				.group(TestProps.class);	//This must be declared or the Prop loader can't work
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);	//This must be declared or the Prop loader can't work
 
 		AndHow.setConfig(config);
 		AndHow.instance();
@@ -85,7 +85,7 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 				.addCmdLineArg(NameUtil.getAndHowName(TestProps.class, TestProps.CLAZZ_PATH),
 						"/org/yarnandtail/andhow/load/SimpleParams1.properties")
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 				//.group(TestProps.class) //Missing - should cause failure
 
 		AndHow.setConfig(config);
@@ -108,8 +108,8 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 				.classpathPropertiesRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 		
 		AndHow.setConfig(config);
 		
@@ -126,8 +126,8 @@ public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
 						"asdfasdfasdf/asdfasdf/asdf")
 				.setClasspathPropFilePath(TestProps.CLAZZ_PATH)
 				.classpathPropertiesRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 
 		AndHow.setConfig(config);
 

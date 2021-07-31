@@ -17,10 +17,22 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * are known to AndHow.  It also provides a simple method to force AndHow to
  * reload based on a specific configuration, which is a common need during testing.
  * <p>
- * Typical usage is {@code NonProductionConfig.instance()...}
+ * Typical usage inside of a JUnit 5 test method:
+ * <pre>{@code
+ *
+ * @Test
+ * @KillAndHowBeforeThisTest
+ * public void myTest() {
+ *   NonProductionConfigImpl config = NonProductionConfig.instance();
+ *   ...Do some stuff like set groups...
+ *   AndHow.setConfig(config);
+ *   AndHow.instance();
+ *
+ *   ...My assertions
+ * }
+ * }</pre>
  * 
  * @author ericeverman
- * @param <N>
  */
 public class NonProductionConfig {
 	
@@ -39,13 +51,15 @@ public class NonProductionConfig {
 	}
 	
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
-		
-		//If non-empty, it overrides the default group discovery
-		protected final List<Class<?>> _groups = new ArrayList();
-		
-		//If non-empty, it overrides the default list of loaders
-		protected final List<Loader> _loaders = new ArrayList();
-		
+
+		//
+		// If loaders and the related methods change, be sure to
+		// update AndHowTestConfig as well.  Unfortunately must be duplicate code. :-(
+
+		//If non-null, it overrides the default list of loaders
+		protected List<Loader> _loaders = null;
+
+		// //
 
 		/**
 		 * Adds a command line argument in key=value form.
@@ -73,68 +87,95 @@ public class NonProductionConfig {
 
 			return (N) this;
 		}
-		
 
 		/**
-		 * Add a group to the list of groups being built.
+		 * Add a group to a custom list of 'Groups' (classes or interfaces containing AndHow Properties)
+		 * to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
 		 *
-		 * @param group A group (a class) to add to the known
-		 * classes containing AndHow {@code Property} declarations.
-		 * @return The same NonProductionConfig instance to continue configuring.
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param group A group (a class) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
+		public N addOverrideGroup(Class<?> group) {
+			if (overrideGroups == null) overrideGroups = new ArrayList();
+
+			overrideGroups.add(group);
+			return (N) this;
+		}
+
+		/**
+		 * Add a group to a custom list of 'Groups' (classes or interfaces containing
+		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
+		 *
+		 * @deprecated Use {@link #addOverrideGroups(Collection)}
+		 * @param group A group (a classe) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
+		 */
+		@Deprecated
 		public N group(Class<?> group) {
-			_groups.add(group);
+			return addOverrideGroup(group);
+		}
+
+		/**
+		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
+		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
+		 *
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
+		 *
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param groups A collection of groups (classes) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
+		 */
+		public N addOverrideGroups(Collection<Class<?>> groups) {
+			if (overrideGroups == null) overrideGroups = new ArrayList();
+
+			overrideGroups.addAll(groups);
 			return (N) this;
 		}
 
 		/**
-		 * Add a list of groups to the list of groups being built.
+		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
+		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
-		 *
-		 * @param groups A collection of groups (classes) to add to the known
-		 * classes containing AndHow {@code Property} declarations.
-		 * @return The same NonProductionConfig instance to continue configuring.
+		 * @deprecated Use {@link #addOverrideGroups(Collection)}
+		 * @param groups A collection of groups (classes) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
+		@Deprecated
 		public N groups(Collection<Class<?>> groups) {
-			this._groups.addAll(groups);
-			return (N) this;
+			return addOverrideGroups(groups);
 		}
 
-		@Override
-		public List<GroupProxy> getRegisteredGroups() {
-
-			if (this._groups.size() > 0) {
-				return AndHowUtil.buildGroupProxies(_groups);
-			} else {
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-				List<GroupProxy> registeredGroups = registrar.getGroups();
-				return registeredGroups;
-			}
-		}
-		
 		/**
 		 * Sets an exclusive list of loaders, bypassing all default loaders and
 		 * ignoring any loaders added via insertBefore or insertAfter loaders.
-		 * 
+		 *
 		 * @param loaders
-		 * @return The same NonProductionConfig instance to continue configuring.
+		 * @return
 		 */
 		public N setLoaders(Loader... loaders) {
+			if (_loaders == null) _loaders = new ArrayList();
+
 			_loaders.addAll(Arrays.asList(loaders));
 			return (N) this;
 		}
 
 		@Override
 		public List<Loader> buildLoaders() {
-			if (_loaders.isEmpty()) {
-				return super.buildLoaders();
-			} else {
+			if (_loaders != null) {
 				return _loaders;
+			} else {
+				return super.buildLoaders();
 			}
 		}
 

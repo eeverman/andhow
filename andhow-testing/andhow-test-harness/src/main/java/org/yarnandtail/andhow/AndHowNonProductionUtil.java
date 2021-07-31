@@ -2,7 +2,10 @@ package org.yarnandtail.andhow;
 
 import java.lang.reflect.*;
 import java.util.*;
+
+import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 
 /**
  * A collection of utilities for breaking the 'AndHow rules' during testing.
@@ -121,9 +124,34 @@ public class AndHowNonProductionUtil {
 		} else {
 			//AndHow is already initialized, so just reassign the core
 
-			AndHowCore core = new AndHowCore(config.getNamingStrategy(), config.buildLoaders(), config.getRegisteredGroups());
+			AndHowCore core = new AndHowCore(
+					config.getNamingStrategy(),
+					config.buildLoaders(),
+					findGroups(config.getRegisteredGroups()));
+
 			AndHowNonProductionUtil.setAndHowCore(core);
 
+		}
+	}
+
+	/**
+	 * Determine the 'Groups' (classes or interfaces containing AndHow Properties) that should be in
+	 * scope of AndHow.
+	 *
+	 * AndHowConfiguration may pass a non-null list of groups to override automatic discovery, mostly
+	 * for use during testing.  If the passed 'overrideGroups' is null, use auto-discovery.  If
+	 * non-null, use the passed list, even if empty.
+	 *
+	 * @param overrideGroups A list of groups to use instead of the normal auto-discovery.
+	 *   If overrideGroups is null, auto-discovery is used.  If non-null (even empty) overrideGroups is used.
+	 * @return A list of groups that are in-scope for AndHow.
+	 */
+	private static List<GroupProxy> findGroups(List<GroupProxy> overrideGroups) {
+		if (overrideGroups == null) {
+			PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+			return registrar.getGroups();
+		} else {
+			return overrideGroups;
 		}
 	}
 	

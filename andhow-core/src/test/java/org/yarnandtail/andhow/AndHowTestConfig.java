@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.NamingStrategy;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
@@ -34,19 +33,20 @@ public class AndHowTestConfig {
 		return new AndHowTestConfigImpl();
 	}
 	
-	public static final class AndHowTestConfigImpl extends NonProductionConfigAbstract<AndHowTestConfigImpl> {
+	public static final class AndHowTestConfigImpl extends AndHowTestConfigAbstract<AndHowTestConfigImpl> {
 		
 	}
 	
-	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
-		
-		//If non-empty, it overrides the default group discovery
-		protected final List<Class<?>> _groups = new ArrayList();
-		
-		//If non-empty, it overrides the default list of loaders
-		protected final List<Loader> _loaders = new ArrayList();
+	public static abstract class AndHowTestConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 
 		//
+		// If loaders and the related methods change, be sure to
+		// update NonProductionConfig as well.  Unfortunately must be duplicate code. :-(
+		
+		//If non-null, it overrides the default list of loaders
+		protected List<Loader> _loaders = null;
+
+		// //
 
 		/* A callback to simulate weird loops and contention during initializtion */
 		private Supplier<Object> namingStrategyCallback;
@@ -71,7 +71,7 @@ public class AndHowTestConfig {
 		 *
 		 * @param key
 		 * @param value
-		 * @return
+		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addCmdLineArg(String key, String value) {
 
@@ -89,46 +89,52 @@ public class AndHowTestConfig {
 		}
 		
 
+		//
+		// Update NonProductionConfig if there are any changes to Groups or Loaders....
+		//
+
 		/**
-		 * Add a group to the list of groups being built.
+		 * Add a group to a custom list of 'Groups' (classes or interfaces containing AndHow Properties)
+		 * to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
 		 *
-		 * @param group
-		 * @return
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param group A group (a class) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
-		public N group(Class<?> group) {
-			_groups.add(group);
+		public N addOverrideGroup(Class<?> group) {
+			if (overrideGroups == null) overrideGroups = new ArrayList();
+
+			overrideGroups.add(group);
 			return (N) this;
 		}
 
 		/**
-		 * Add a list of groups to the list of groups being built.
+		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
+		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
 		 *
-		 * @param groups
-		 * @return
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param groups A collection of groups (classes) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
-		public N groups(Collection<Class<?>> groups) {
-			this._groups.addAll(groups);
+		public N addOverrideGroups(Collection<Class<?>> groups) {
+			if (overrideGroups == null) overrideGroups = new ArrayList();
+
+			this.overrideGroups.addAll(groups);
 			return (N) this;
 		}
 
-		@Override
-		public List<GroupProxy> getRegisteredGroups() {
-
-			if (this._groups.size() > 0) {
-				return AndHowUtil.buildGroupProxies(_groups);
-			} else {
-				PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-				List<GroupProxy> registeredGroups = registrar.getGroups();
-				return registeredGroups;
-			}
-		}
-		
 		/**
 		 * Sets an exclusive list of loaders, bypassing all default loaders and
 		 * ignoring any loaders added via insertBefore or insertAfter loaders.
@@ -137,21 +143,19 @@ public class AndHowTestConfig {
 		 * @return 
 		 */
 		public N setLoaders(Loader... loaders) {
+			if (_loaders == null) _loaders = new ArrayList();
+
 			_loaders.addAll(Arrays.asList(loaders));
 			return (N) this;
 		}
 
 		@Override
 		public List<Loader> buildLoaders() {
-			if (_loaders.isEmpty()) {
-				return super.buildLoaders();
-			} else {
+			if (_loaders != null) {
 				return _loaders;
+			} else {
+				return super.buildLoaders();
 			}
-		}
-
-		public void forceBuild() {
-			AndHowTestUtil.forceRebuild(this);
 		}
 
 		/**

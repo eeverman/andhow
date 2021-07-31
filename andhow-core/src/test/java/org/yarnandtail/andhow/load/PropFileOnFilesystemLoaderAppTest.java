@@ -55,8 +55,8 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 						tempPropertiesFile.getAbsolutePath())
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 
 		AndHow.setConfig(config);
 
@@ -76,7 +76,7 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 						tempPropertiesFile.getAbsolutePath())
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 				//.group(TestProps.class)	//Missing - should fail
 
 		AndHow.setConfig(config);
@@ -98,8 +98,8 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 
 		AndHow.setConfig(config);
 		
@@ -116,8 +116,8 @@ public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
 						"asdfasdfasdf/asdfasdf/asdf")
 				.setFilesystemPropFilePath(TestProps.FILEPATH)
 				.filesystemPropFileRequired()
-				.group(SimpleParams.class)
-				.group(TestProps.class);
+				.addOverrideGroup(SimpleParams.class)
+				.addOverrideGroup(TestProps.class);
 
 		AndHow.setConfig(config);
 
