@@ -53,11 +53,8 @@ public class NonProductionConfig {
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 
 		//
-		// If groups, loaders and the related methods change, be sure to
+		// If loaders and the related methods change, be sure to
 		// update AndHowTestConfig as well.  Unfortunately must be duplicate code. :-(
-
-		//If non-null, it overrides the default group discovery
-		protected List<Class<?>> _groups = null;
 
 		//If non-null, it overrides the default list of loaders
 		protected List<Loader> _loaders = null;
@@ -106,9 +103,9 @@ public class NonProductionConfig {
 		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addOverrideGroup(Class<?> group) {
-			if (_groups == null) _groups = new ArrayList();
+			if (overrideGroups == null) overrideGroups = new ArrayList();
 
-			_groups.add(group);
+			overrideGroups.add(group);
 			return (N) this;
 		}
 
@@ -140,9 +137,9 @@ public class NonProductionConfig {
 		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addOverrideGroups(Collection<Class<?>> groups) {
-			if (_groups == null) _groups = new ArrayList();
+			if (overrideGroups == null) overrideGroups = new ArrayList();
 
-			this._groups.addAll(groups);
+			overrideGroups.addAll(groups);
 			return (N) this;
 		}
 
@@ -157,16 +154,6 @@ public class NonProductionConfig {
 		@Deprecated
 		public N groups(Collection<Class<?>> groups) {
 			return addOverrideGroups(groups);
-		}
-
-		@Override
-		public List<GroupProxy> getRegisteredGroups() {
-
-			if (_groups != null) {
-				return AndHowUtil.buildGroupProxies(_groups);
-			} else {
-				return null;
-			}
 		}
 
 		/**

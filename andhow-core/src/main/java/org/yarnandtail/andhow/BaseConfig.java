@@ -10,6 +10,7 @@ import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
+ * Basic abstract implementation for AndHowConfiguration instances.
  *
  * @author ericeverman
  * @param <C> The class to return from each of the fluent builder methods, which
@@ -25,7 +26,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	};
 	
 	protected List<Class<? extends StandardLoader>> standardLoaders = new ArrayList();
-	
+
 	/* Two lists of custom loader instances to insert before or after a specific
 	standard loader.  Each before or after reference to a std loader may contain
 	multiple custom instances to insert. */
@@ -59,57 +60,111 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	protected Map<String, String> envProperties;
 	
 	protected NamingStrategy naming = new CaseInsensitiveNaming();
-	
+
+	/**
+	 * If non-null, overrides the default group discovery process with this override list.
+	 * There is no set method here - subclasses may make editable for use in testing.
+	 */
+	protected List<Class<?>> overrideGroups = null;
+
+	/**
+	 * Construct a new instance.
+	 */
 	protected BaseConfig() {
 		standardLoaders = getDefaultLoaderList();
-	}
-	
-	protected BaseConfig(List<Class<? extends StandardLoader>> standardLoaders) {
-		this.standardLoaders = standardLoaders;
 	}
 
 	@Override
 	public NamingStrategy getNamingStrategy() {
 		return naming;
 	}
-	
+
+	/**
+	 * Build a StdFixedValueLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdFixedValueLoader buildStdFixedValueLoader() {
 		StdFixedValueLoader loader = new StdFixedValueLoader();
 		loader.setPropertyValues(_fixedVals);
 		loader.setKeyObjectPairValues(_fixedKeyObjectPairVals);
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdMainStringArgsLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdMainStringArgsLoader buildStdMainStringArgsLoader() {
 		StdMainStringArgsLoader loader = new StdMainStringArgsLoader();
 		loader.setKeyValuePairs(_cmdLineArgs);
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdSysPropLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdSysPropLoader buildStdSysPropLoader() {
 		StdSysPropLoader loader = new StdSysPropLoader();
 		loader.setMap(systemProperties);
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdJndiLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdJndiLoader buildStdJndiLoader() {
 		StdJndiLoader loader = new StdJndiLoader();
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdEnvVarLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdEnvVarLoader buildStdEnvVarLoader() {
 		StdEnvVarLoader loader = new StdEnvVarLoader();
 		loader.setMap(envProperties);
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdPropFileOnFilesystemLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdPropFileOnFilesystemLoader buildStdPropFileOnFilesystemLoader() {
 		StdPropFileOnFilesystemLoader loader = new StdPropFileOnFilesystemLoader();
 		loader.setFilePath(filesystemPropFilePathProp);
 		loader.setMissingFileAProblem(_missingFilesystemPropFileAProblem);
 		return loader;
 	}
-	
+
+	/**
+	 * Build a StdPropFileOnClasspathLoader, passing it the needed context.
+	 *
+	 * This method, like the other buildStd....Loader methods is called based on the class
+	 * name of a {@link StandardLoader}.
+	 * @return A new StandardLoader, initialized with proper context for its type.
+	 */
 	protected StdPropFileOnClasspathLoader buildStdPropFileOnClasspathLoader() {
 		StdPropFileOnClasspathLoader loader = new StdPropFileOnClasspathLoader();
 		loader.setMissingFileAProblem(_missingClasspathPropFileAProblem);
@@ -159,7 +214,11 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 
 	@Override
 	public List<GroupProxy> getRegisteredGroups() {
-		return null;
+		if (overrideGroups != null) {
+			return AndHowUtil.buildGroupProxies(overrideGroups);
+		} else {
+			return null;
+		}
 	}
 	
 	@Override

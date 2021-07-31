@@ -33,18 +33,15 @@ public class AndHowTestConfig {
 		return new AndHowTestConfigImpl();
 	}
 	
-	public static final class AndHowTestConfigImpl extends NonProductionConfigAbstract<AndHowTestConfigImpl> {
+	public static final class AndHowTestConfigImpl extends AndHowTestConfigAbstract<AndHowTestConfigImpl> {
 		
 	}
 	
-	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
+	public static abstract class AndHowTestConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 
 		//
-		// If groups, loaders and the related methods change, be sure to
+		// If loaders and the related methods change, be sure to
 		// update NonProductionConfig as well.  Unfortunately must be duplicate code. :-(
-
-		//If non-null, it overrides the default group discovery
-		protected List<Class<?>> _groups = null;
 		
 		//If non-null, it overrides the default list of loaders
 		protected List<Loader> _loaders = null;
@@ -111,9 +108,9 @@ public class AndHowTestConfig {
 		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addOverrideGroup(Class<?> group) {
-			if (_groups == null) _groups = new ArrayList();
+			if (overrideGroups == null) overrideGroups = new ArrayList();
 
-			_groups.add(group);
+			overrideGroups.add(group);
 			return (N) this;
 		}
 
@@ -132,22 +129,12 @@ public class AndHowTestConfig {
 		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addOverrideGroups(Collection<Class<?>> groups) {
-			if (_groups == null) _groups = new ArrayList();
+			if (overrideGroups == null) overrideGroups = new ArrayList();
 
-			this._groups.addAll(groups);
+			this.overrideGroups.addAll(groups);
 			return (N) this;
 		}
 
-		@Override
-		public List<GroupProxy> getRegisteredGroups() {
-
-			if (_groups != null) {
-				return AndHowUtil.buildGroupProxies(_groups);
-			} else {
-				return null;
-			}
-		}
-		
 		/**
 		 * Sets an exclusive list of loaders, bypassing all default loaders and
 		 * ignoring any loaders added via insertBefore or insertAfter loaders.
