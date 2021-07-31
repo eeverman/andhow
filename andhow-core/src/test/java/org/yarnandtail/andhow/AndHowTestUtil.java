@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.UnaryOperator;
 
 import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.testutil.ReflectionTestUtil;
 
 /**
  * A testing utility class that breaks major rules of AndHow.
@@ -123,18 +124,6 @@ public class AndHowTestUtil {
 	 */
 	public static Boolean setAndHowInitializing(boolean newInitializingStatus) {
 		return ReflectionTestUtil.setStaticFieldValue(AndHow.class, "initializing", Boolean.valueOf(newInitializingStatus));
-	}
-	
-	/**
-	 * Creates a clone of a Properties object so it can be detached from System.
-	 * 
-	 * @param props
-	 * @return 
-	 */
-	public static Properties clone(Properties props) {
-		Properties newProps = new Properties();
-		newProps.putAll(props);
-		return newProps;
 	}
 
 }

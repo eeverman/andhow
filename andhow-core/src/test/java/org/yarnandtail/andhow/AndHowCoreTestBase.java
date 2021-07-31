@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+import org.yarnandtail.andhow.testutil.GeneralTestUtil;
 
 /**
  * A test base class that COMPLETELY kills AndHow between each test and test classes.
@@ -56,7 +57,7 @@ public class AndHowCoreTestBase {
 	
 	@BeforeAll
 	public static void storeSysPropsBeforeClass() {
-		beforeClassSystemProps = AndHowTestUtil.clone(System.getProperties());
+		beforeClassSystemProps = GeneralTestUtil.clone(System.getProperties());
 	}
 	
 	@BeforeEach
@@ -66,7 +67,7 @@ public class AndHowCoreTestBase {
 	
 	@BeforeEach
 	public void storeSysPropsBeforeTest() {
-		beforeTestSystemProps = AndHowTestUtil.clone(System.getProperties());
+		beforeTestSystemProps = GeneralTestUtil.clone(System.getProperties());
 	}
 	
 	@AfterEach

@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.testutil;
 
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ReflectionSupport;

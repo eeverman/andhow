@@ -14,6 +14,7 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.DblProp;
 import org.yarnandtail.andhow.property.LngProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.testutil.ReflectionTestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.*;

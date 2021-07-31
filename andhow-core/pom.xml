@@ -23,5 +23,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${groupId}</groupId>
+			<artifactId>andhow-test-reflection-utils</artifactId>
+			<version>${version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

@@ -9,7 +9,7 @@ import org.yarnandtail.andhow.NonProductionConfig;
 
 
 /**
- * Note that these test methods are specified to be executed in Alph sort order
+ * Note that these test methods are specified to be executed in Alpha sort order
  * to check the impact of the default config verses a forced config.
  * 
  * @author ericeverman
