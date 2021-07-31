@@ -130,6 +130,13 @@ public class StdConfigGetterAndSetterTest {
 	}
 
 	@Test
+	public void getRegisteredGroupsShouldReturnNull() {
+		MyStdConfig config = new MyStdConfig();
+		assertNull(config.getRegisteredGroups(),
+				"This should return non-null for test loaders during testing.");
+	}
+
+	@Test
 	public void FixedValuesBasedOnPropertiesTest() {
 		MyStdConfig config = new MyStdConfig();
 

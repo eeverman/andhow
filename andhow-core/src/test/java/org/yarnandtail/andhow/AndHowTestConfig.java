@@ -38,14 +38,18 @@ public class AndHowTestConfig {
 	}
 	
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
-		
+
+		//
+		// If groups, loaders and the related methods change, be sure to
+		// update NonProductionConfig as well.  Unfortunately must be duplicate code. :-(
+
 		//If non-null, it overrides the default group discovery
 		protected List<Class<?>> _groups = null;
 		
 		//If non-null, it overrides the default list of loaders
 		protected List<Loader> _loaders = null;
 
-		//
+		// //
 
 		/* A callback to simulate weird loops and contention during initializtion */
 		private Supplier<Object> namingStrategyCallback;
@@ -70,7 +74,7 @@ public class AndHowTestConfig {
 		 *
 		 * @param key
 		 * @param value
-		 * @return
+		 * @return This configuration instance for fluent configuration.
 		 */
 		public N addCmdLineArg(String key, String value) {
 
@@ -88,16 +92,25 @@ public class AndHowTestConfig {
 		}
 		
 
+		//
+		// Update NonProductionConfig if there are any changes to Groups or Loaders....
+		//
+
 		/**
-		 * Add a group to the list of groups being built.
+		 * Add a group to a custom list of 'Groups' (classes or interfaces containing AndHow Properties)
+		 * to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
 		 *
-		 * @param group
-		 * @return
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param group A group (a class) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
-		public N group(Class<?> group) {
+		public N addOverrideGroup(Class<?> group) {
 			if (_groups == null) _groups = new ArrayList();
 
 			_groups.add(group);
@@ -105,15 +118,20 @@ public class AndHowTestConfig {
 		}
 
 		/**
-		 * Add a list of groups to the list of groups being built.
+		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
+		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
 		 *
-		 * Group order makes no difference, but for error reports and sample
-		 * configuration files, the order is preserved.
+		 * Adding groups is optional - if no groups are added, auto-discovery will find them all.
+		 * For testing, however, it can be useful to test with a subset of configuration groups.
 		 *
-		 * @param groups
-		 * @return
+		 * Group order makes no difference.
+		 *
+		 * @see AndHowConfiguration#getRegisteredGroups()
+		 *
+		 * @param groups A collection of groups (classes) to add to those known to AndHow.
+		 * @return This configuration instance for fluent configuration.
 		 */
-		public N groups(Collection<Class<?>> groups) {
+		public N addOverrideGroups(Collection<Class<?>> groups) {
 			if (_groups == null) _groups = new ArrayList();
 
 			this._groups.addAll(groups);
@@ -151,10 +169,6 @@ public class AndHowTestConfig {
 			} else {
 				return super.buildLoaders();
 			}
-		}
-
-		public void forceBuild() {
-			AndHowTestUtil.forceRebuild(this);
 		}
 
 		/**

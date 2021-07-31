@@ -247,7 +247,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 	public void testCmdLineLoaderUsingClassBaseName() {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.groups(configPtGroups)
+				.addOverrideGroups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
 		AndHow.instance(config);
@@ -299,7 +299,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 
 			AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(kvpl, kvpl)
-				.groups(configPtGroups);
+				.addOverrideGroups(configPtGroups);
 
 			AndHow.setConfig(config);
 			AndHow.instance();
@@ -324,8 +324,8 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 		try {
 				AndHowConfiguration config = AndHowTestConfig.instance()
-					.groups(configPtGroups)
-					.group(RequiredParams.class)
+					.addOverrideGroups(configPtGroups)
+					.addOverrideGroup(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
 				
 				AndHow.instance(config);
@@ -345,7 +345,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		
 		try {
 				AndHowConfiguration config = AndHowTestConfig.instance()
-					.group(RequiredParams.class)
+					.addOverrideGroup(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
 				

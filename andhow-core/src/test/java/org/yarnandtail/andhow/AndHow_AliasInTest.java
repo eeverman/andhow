@@ -71,7 +71,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN, STR1)
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -87,7 +87,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT1_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -102,7 +102,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN_AND_OUT_ALIAS, STR1)
 				.addCmdLineArg(STR_PROP2_IN_ALT2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALT_IN1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -126,7 +126,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -149,7 +149,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -173,7 +173,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -197,7 +197,7 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
-				.group(AliasGroup1.class);
+				.addOverrideGroup(AliasGroup1.class);
 
 		AndHow.setConfig(config);
 		
@@ -218,8 +218,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.group(AliasGroup2.class);
+				.addOverrideGroup(AliasGroup1.class)
+				.addOverrideGroup(AliasGroup2.class);
 
 		AndHow.setConfig(config);
 
@@ -243,8 +243,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.group(AliasGroup4.class);
+				.addOverrideGroup(AliasGroup1.class)
+				.addOverrideGroup(AliasGroup4.class);
 
 		AndHow.setConfig(config);
 
@@ -267,8 +267,8 @@ public class AndHow_AliasInTest extends AndHowCoreTestBase {
 				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error
 				.addCmdLineArg(STR_PROP2_ALIAS, STR2)
 				.addCmdLineArg(INT_PROP1_ALIAS, INT1.toString())
-				.group(AliasGroup1.class)
-				.group(AliasGroup3.class);
+				.addOverrideGroup(AliasGroup1.class)
+				.addOverrideGroup(AliasGroup3.class);
 
 		AndHow.setConfig(config);
 

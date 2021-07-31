@@ -86,7 +86,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 		
@@ -122,7 +122,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 		
@@ -161,7 +161,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 		
@@ -196,7 +196,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 		
@@ -236,7 +236,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 
@@ -272,7 +272,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 		
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 		
@@ -306,7 +306,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 
@@ -333,7 +333,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 
@@ -362,7 +362,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		jndi.activate();
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(SimpleParams.class);
+				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
 
@@ -393,7 +393,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(ValidParams.class);
+				.addOverrideGroup(ValidParams.class);
 
 		AndHow.setConfig(config);
 
@@ -415,7 +415,7 @@ public class StdJndiLoaderTest extends AndHowCoreTestBase {
 		
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
-				.group(ValidParams.class);
+				.addOverrideGroup(ValidParams.class);
 
 		AndHow.setConfig(config);
 
