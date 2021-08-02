@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author ericeverman
  */
-public class StdJndiLoaderTest extends AndHowCoreTestBase {
+public class StdJndiLoaderTest extends AndHowTestBase {
 	
 	public interface ValidParams {
 		//Strings

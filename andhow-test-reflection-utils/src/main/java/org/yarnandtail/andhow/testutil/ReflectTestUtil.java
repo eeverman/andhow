@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Testing Utils
  */
-public class ReflectionTestUtil {
+public class ReflectTestUtil {
 
 	public static final String PERMISSION_MSG =
 			"There is some type of permissions/access error while trying to access  private fields. "

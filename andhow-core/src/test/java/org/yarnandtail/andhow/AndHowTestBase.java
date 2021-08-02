@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.testutil.GeneralTestUtil;
+import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
 
 /**
  * A test base class that COMPLETELY kills AndHow between each test and test classes.
@@ -26,7 +27,7 @@ import org.yarnandtail.andhow.testutil.GeneralTestUtil;
  * 
  * @author ericeverman
  */
-public class AndHowCoreTestBase {
+public class AndHowTestBase {
 	
 	/**
 	 * System properties before the tests and subclass @BeforeClass initializer
@@ -52,7 +53,7 @@ public class AndHowCoreTestBase {
 	
 	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
-		AndHowTestUtil.killAndHowFully();
+		NoDependencyAndHowTestUtil.killAndHowFully();
 	}
 	
 	@BeforeAll
@@ -62,7 +63,7 @@ public class AndHowCoreTestBase {
 	
 	@BeforeEach
 	public void killAndHowStateBeforeTest() {
-		AndHowTestUtil.killAndHowFully();
+		NoDependencyAndHowTestUtil.killAndHowFully();
 	}
 	
 	@BeforeEach
@@ -72,7 +73,7 @@ public class AndHowCoreTestBase {
 	
 	@AfterEach
 	public void killAndHowStateAfterTest() {
-		AndHowTestUtil.killAndHowFully();
+		NoDependencyAndHowTestUtil.killAndHowFully();
 	}
 	
 	@AfterEach
@@ -90,7 +91,7 @@ public class AndHowCoreTestBase {
 	
 	@AfterAll
 	public static void killAndHowStateAfterClass() {
-		AndHowTestUtil.killAndHowFully();
+		NoDependencyAndHowTestUtil.killAndHowFully();
 	}
 	
 	@AfterAll

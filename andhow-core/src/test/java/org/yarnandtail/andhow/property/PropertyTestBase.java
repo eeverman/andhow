@@ -8,10 +8,10 @@ import org.yarnandtail.andhow.util.TextUtil;
  *
  * @author eeverman
  */
-public class PropertyTestBase extends AndHowCoreTestBase {
+public class PropertyTestBase extends AndHowTestBase {
 	
 	
-	public <T extends AndHowCoreTestBase> String buildPropFilePath(T testClass, String propFileSuffix) {
+	public <T extends AndHowTestBase> String buildPropFilePath(T testClass, String propFileSuffix) {
 		String testPkgName = testClass.getClass().getPackage().getName();
 		String testClsName = testClass.getClass().getSimpleName();
 		
@@ -19,8 +19,8 @@ public class PropertyTestBase extends AndHowCoreTestBase {
 				TextUtil.trimToEmpty(propFileSuffix) + ".properties";
 	}
 	
-	public <T extends AndHowCoreTestBase> void  buildConfig(T testClass, String propFileSuffix,
-			Class<?>... group) {
+	public <T extends AndHowTestBase> void  buildConfig(T testClass, String propFileSuffix,
+																											Class<?>... group) {
 		
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);

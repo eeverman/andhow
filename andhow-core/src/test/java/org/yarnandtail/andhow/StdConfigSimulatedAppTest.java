@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author eeverman
  */
-public class StdConfigSimulatedAppTest extends AndHowCoreTestBase {
+public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.StdConfigSimulatedAppTest.SampleRestClientGroup";
 	private static final String CLASSPATH_BEGINNING = "/org/yarnandtail/andhow/StdConfigSimulatedAppTest.";

@@ -22,7 +22,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropFileOnFilesystemLoaderAppTest extends AndHowCoreTestBase {
+public class PropFileOnFilesystemLoaderAppTest extends AndHowTestBase {
 
 	File tempPropertiesFile = null;
 	
