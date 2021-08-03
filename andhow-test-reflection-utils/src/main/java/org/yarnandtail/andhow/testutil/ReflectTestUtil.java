@@ -21,7 +21,7 @@ public class ReflectTestUtil {
 					+ "Is there a security manager enforcing security during testing?";
 
 	/**
-	 * Invokes the named String returning method on the instance via reflection,
+	 * Invokes the named String returning instance method on the instance via reflection,
 	 * bypassing visibility.
 	 *
 	 * For some tests, this is an easy way test the internal effect of some actions.
@@ -40,30 +40,49 @@ public class ReflectTestUtil {
 			return (String)invokeMethod(instance, name, args, types);
 	}
 
+	/**
+	 * Invokes the named String returning, single arg, instance method on the instance via reflection,
+	 * bypassing visibility.
+	 *
+	 * @param instance The object instance to call the method on.
+	 * @param name The name of a String returning method, which must be an instance method.
+	 * @param arg The single argument to pass to the method
+	 * @param type Type of the argument, which allos the argument to be null.
+	 * @return The return value of the method
+	 */
 	public static String stringMethod(Object instance, String name, Object arg, Class<?> type) {
 		return (String)invokeMethod(instance, name, new Object[]{arg}, new Class<?>[]{type});
 	}
 
+	/**
+	 * Invoke a String returning instance method with an array of arguments, all of which must
+	 * be non-null.
+	 *
+	 * Note:  Java will auto-box primitives, causing the type to not match the signiture of
+	 * a method with primitive arguments.  This method cannot be used for methods with
+	 * primative types.  It also cannot be used to pass null arguments, since there is
+	 * no way to figure out the types.
+	 *
+	 * @param instance The object instance to call the method on.
+	 * @param name The name of a String returning method, which must be an instance method.
+	 * @param args Arguments to the method, which must be all non-null
+	 * @return Return value of the invoked method
+	 */
 	public static String stringMethod(Object instance, String name, Object... args) {
 		return (String)invokeMethod(instance, name, args, getTypes(args));
 	}
 
-	public static Object getField(Object instance, String name) {
-		List<Field> fields = ReflectionSupport.findFields(instance.getClass(), f -> f.getName().equals(name), HierarchyTraversalMode.BOTTOM_UP);
-
-		if (fields.size() != 1) {
-			throw new IllegalArgumentException("Expected to find 1 field, instead found: " + fields.size());
-		}
-
-		Optional<Object> optObj = ReflectionSupport.tryToReadFieldValue(fields.get(0), instance).toOptional();
-
-		if (optObj.isPresent()) {
-			return optObj.get();
-		} else {
-			throw new IllegalArgumentException("Unable to return a value");
-		}
-	}
-
+	/**
+	 * Invokes the named String returning instance  method on the instance via reflection,
+	 * bypassing visibility.
+	 *
+	 * @param instance The object instance to call the method on.
+	 * @param name The name of a String returning method, which must be an instance method.
+	 * @param args Arguments to the method
+	 * @param types The argument types of the method which must match the method, not the args.
+	 * @return The String returned by the method
+	 * @return The return value of the method
+	 */
 	public static Object invokeMethod(Object instance, String name, Object[] args, Class<?>[] types) {
 
 		Optional<Method> method = ReflectionSupport.findMethod(instance.getClass(), name, types);
@@ -74,17 +93,6 @@ public class ReflectTestUtil {
 			throw new IllegalArgumentException("Method not found");
 		}
 	}
-
-	public static Class<?>[] getTypes(Object... args) {
-		List<? extends Object> types = new ArrayList();
-
-		if (args != null) {
-			types = Arrays.stream(args).map(a -> a.getClass()).collect(Collectors.toList());
-		}
-
-		return types.toArray(new Class<?>[types.size()]);
-	}
-
 
 	/**
 	 * Get the value of an instance Field.
@@ -188,5 +196,32 @@ public class ReflectTestUtil {
 		} catch (NoSuchFieldException ex) {
 			throw new RuntimeException(PERMISSION_MSG, ex);
 		}
+	}
+
+
+	public static Object getField(Object instance, String name) {
+		List<Field> fields = ReflectionSupport.findFields(instance.getClass(), f -> f.getName().equals(name), HierarchyTraversalMode.BOTTOM_UP);
+
+		if (fields.size() != 1) {
+			throw new IllegalArgumentException("Expected to find 1 field, instead found: " + fields.size());
+		}
+
+		Optional<Object> optObj = ReflectionSupport.tryToReadFieldValue(fields.get(0), instance).toOptional();
+
+		if (optObj.isPresent()) {
+			return optObj.get();
+		} else {
+			throw new IllegalArgumentException("Unable to return a value");
+		}
+	}
+
+	public static Class<?>[] getTypes(Object... args) {
+		List<? extends Object> types = new ArrayList();
+
+		if (args != null) {
+			types = Arrays.stream(args).map(a -> a.getClass()).collect(Collectors.toList());
+		}
+
+		return types.toArray(new Class<?>[types.size()]);
 	}
 }
