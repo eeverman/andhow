@@ -91,6 +91,14 @@ class ReflectTestUtilTest {
 						new Object[] {"MyName", Integer.valueOf(4)},
 						new Class<?>[] {String.class, int.class})
 		);
+
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> ReflectTestUtil.invokeMethod(this, "IDONTEXIST",
+						new Object[] {"MyName", Integer.valueOf(4)},
+						new Class<?>[] {String.class, int.class})
+		);
+
 	}
 
 
@@ -262,19 +270,25 @@ class ReflectTestUtilTest {
 
 	}
 
+	@Test
+	void getWritableField() {
+		//Most test cases are already implicit in the other tests
 
-	//
-	// These are all implicitly tested within the other methods
-//	@Test
-//	void getWritableField() {
-//	}
-//
-//	@Test
-//	void getField() {
-//	}
-//
-//
-//	@Test
-//	void getTypes() {
-//	}
+		assertThrows(RuntimeException.class,
+				() -> ReflectTestUtil.getWritableField(this.getClass(), "IDONOTEXIST")
+		);
+	}
+
+	@Test
+	void getTypes() {
+		//Most test cases are already implicit in the other tests
+
+		assertEquals(0, ReflectTestUtil.getTypes().length);
+		assertEquals(0, ReflectTestUtil.getTypes(null).length);
+
+		assertThrows(RuntimeException.class,
+				() -> ReflectTestUtil.getTypes("", null)
+		);
+	}
+
 }

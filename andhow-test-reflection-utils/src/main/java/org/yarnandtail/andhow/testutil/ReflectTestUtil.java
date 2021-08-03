@@ -225,36 +225,50 @@ public class ReflectTestUtil {
 	 * @param fieldName The name of a static field in the class
 	 * @return The field, set accessible.
 	 */
+//	public static Field getWritableField(Class<?> clazz, String fieldName) {
+//		try {
+//
+//			Field field = clazz.getDeclaredField(fieldName);
+//			field.setAccessible(true);
+//
+//			return field;
+//
+//		} catch (NoSuchFieldException ex) {
+//			throw new RuntimeException(PERMISSION_MSG, ex);
+//		}
+//	}
+
+	/**
+	 * Get a Field (static or instance), make it accessible and only throw a RuntimeException if there is a problem.
+	 *
+	 * @param clazz The class to find the field in
+	 * @param fieldName The name of a static field in the class
+	 * @return The field, set accessible.
+	 */
 	public static Field getWritableField(Class<?> clazz, String fieldName) {
-		try {
+		List<Field> fields = ReflectionSupport.findFields(clazz, f -> f.getName().equals(fieldName), HierarchyTraversalMode.BOTTOM_UP);
 
-			Field field = clazz.getDeclaredField(fieldName);
-			field.setAccessible(true);
-
-			return field;
-
-		} catch (NoSuchFieldException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
-	}
-
-
-	public static Object getField(Object instance, String name) {
-		List<Field> fields = ReflectionSupport.findFields(instance.getClass(), f -> f.getName().equals(name), HierarchyTraversalMode.BOTTOM_UP);
-
-		if (fields.size() != 1) {
+		if (fields.size() > 1) {
 			throw new IllegalArgumentException("Expected to find 1 field, instead found: " + fields.size());
+		} else if (fields.size() == 0) {
+			throw new IllegalArgumentException("Field '" + fieldName + "' not found");
 		}
 
-		Optional<Object> optObj = ReflectionSupport.tryToReadFieldValue(fields.get(0), instance).toOptional();
+		Field field = fields.get(0);
+		field.setAccessible(true);
 
-		if (optObj.isPresent()) {
-			return optObj.get();
-		} else {
-			throw new IllegalArgumentException("Unable to return a value");
-		}
+		return field;
 	}
 
+	/**
+	 * Get the types of a list of objects for use as argument types.
+	 *
+	 * This may be called with no arguments or a single null argument meaning -
+	 * I have no arguments.  However, if multiple arguments are passed, they must each be non-null.
+	 *
+	 * @param args
+	 * @return
+	 */
 	public static Class<?>[] getTypes(Object... args) {
 		List<? extends Object> types = new ArrayList();
 

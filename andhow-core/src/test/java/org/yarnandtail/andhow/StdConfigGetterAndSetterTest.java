@@ -241,8 +241,7 @@ public class StdConfigGetterAndSetterTest {
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
-		Object o = ReflectTestUtil.getField(config.buildStdMainStringArgsLoader(), "keyValuePairs");
-		List<String> kvps = (List<String>)o;
+		List<String> kvps = ReflectTestUtil.getInstanceFieldValue(config.buildStdMainStringArgsLoader(), "keyValuePairs", List.class);
 
 		assertEquals(2, kvps.size());
 		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
