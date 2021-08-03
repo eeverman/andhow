@@ -19,6 +19,12 @@ class ReflectTestUtilTest {
 	private static int myStaticInt = 542;
 	private static Integer myStaticInteger = 543;
 
+	// subcclass of this class that masks some values
+	static class Subclass extends ReflectTestUtilTest {
+		private String myString = "SubCarl";
+		private static String myStaticString = "SubStatic";
+	}
+
 	//
 	//Sample private String methods to try to invoke
 
@@ -46,6 +52,9 @@ class ReflectTestUtilTest {
 		myStaticString = "Static";
 		myStaticInt = 542;
 		myStaticInteger = 543;
+
+		//Subclass
+		Subclass.myStaticString = "SubStatic";
 	}
 
 	@AfterEach
@@ -104,6 +113,8 @@ class ReflectTestUtilTest {
 
 	@Test
 	void getInstanceFieldValue() {
+
+		// Directly on class
 		assertEquals(
 				"Carl",
 				ReflectTestUtil.getInstanceFieldValue(this, "myString", String.class)
@@ -115,6 +126,13 @@ class ReflectTestUtilTest {
 		assertEquals(
 				43,
 				ReflectTestUtil.getInstanceFieldValue(this, "myInteger", Integer.class)
+		);
+
+		//On the subclass
+		Subclass sub = new Subclass();
+		assertEquals(
+				"SubCarl",
+				ReflectTestUtil.getInstanceFieldValue(sub, "myString", String.class)
 		);
 	}
 
@@ -184,6 +202,23 @@ class ReflectTestUtilTest {
 				ReflectTestUtil.setInstanceFieldValue(this, "myInteger", 1001, Integer.class)
 		);
 
+		//
+		// on the subclass
+		Subclass sub = new Subclass();
+		assertEquals(
+				"SubCarl",
+				ReflectTestUtil.setInstanceFieldValue(sub, "myString", "Bob", String.class),
+				"Should return the previous value"
+		);
+		assertEquals(
+				"Bob",
+				ReflectTestUtil.setInstanceFieldValue(sub, "myString", null, String.class),
+				"Should return the previous value"
+		);
+		assertNull(
+				ReflectTestUtil.setInstanceFieldValue(sub, "myString", null, String.class),
+				"Should return the previous value"
+		);
 	}
 
 	@Test
@@ -199,6 +234,13 @@ class ReflectTestUtilTest {
 		assertEquals(
 				543,
 				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticInteger", Integer.class)
+		);
+
+		//
+		// on the subclass
+		assertEquals(
+				"SubStatic",
+				ReflectTestUtil.getStaticFieldValue(Subclass.class, "myStaticString", String.class)
 		);
 	}
 
@@ -268,15 +310,32 @@ class ReflectTestUtilTest {
 				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInteger", 10001)
 		);
 
+		//
+		// on the subclass
+		assertEquals(
+				"SubStatic",
+				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", "Bob"),
+				"Should return the previous value"
+		);
+		assertEquals(
+				"Bob",
+				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", null),
+				"Should return the previous value"
+		);
+		assertNull(
+				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", null),
+				"Should return the previous value"
+		);
 	}
 
 	@Test
 	void getWritableField() {
 		//Most test cases are already implicit in the other tests
 
-		assertThrows(RuntimeException.class,
+		assertThrows(IllegalArgumentException.class,
 				() -> ReflectTestUtil.getWritableField(this.getClass(), "IDONOTEXIST")
 		);
+
 	}
 
 	@Test

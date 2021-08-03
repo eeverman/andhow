@@ -225,33 +225,11 @@ public class ReflectTestUtil {
 	 * @param fieldName The name of a static field in the class
 	 * @return The field, set accessible.
 	 */
-//	public static Field getWritableField(Class<?> clazz, String fieldName) {
-//		try {
-//
-//			Field field = clazz.getDeclaredField(fieldName);
-//			field.setAccessible(true);
-//
-//			return field;
-//
-//		} catch (NoSuchFieldException ex) {
-//			throw new RuntimeException(PERMISSION_MSG, ex);
-//		}
-//	}
-
-	/**
-	 * Get a Field (static or instance), make it accessible and only throw a RuntimeException if there is a problem.
-	 *
-	 * @param clazz The class to find the field in
-	 * @param fieldName The name of a static field in the class
-	 * @return The field, set accessible.
-	 */
 	public static Field getWritableField(Class<?> clazz, String fieldName) {
 		List<Field> fields = ReflectionSupport.findFields(clazz, f -> f.getName().equals(fieldName), HierarchyTraversalMode.BOTTOM_UP);
 
-		if (fields.size() > 1) {
+		if (fields.size() != 1) {
 			throw new IllegalArgumentException("Expected to find 1 field, instead found: " + fields.size());
-		} else if (fields.size() == 0) {
-			throw new IllegalArgumentException("Field '" + fieldName + "' not found");
 		}
 
 		Field field = fields.get(0);
