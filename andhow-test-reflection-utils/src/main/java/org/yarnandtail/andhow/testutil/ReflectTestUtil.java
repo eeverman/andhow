@@ -139,9 +139,27 @@ public class ReflectTestUtil {
 	/**
 	 * Get the value of a static Field.
 	 *
-	 * @param clazz The class to find the field in
+	 * Unlike an instance field, a static field is not inherited by subclasses.  If you have these
+	 * two classes:
+	 * <pre>{@code
+	 * class A {
+	 *   static int classAInt;
+	 * }
+	 *
+	 * class B extends A {
+	 *   static int classBInt;
+	 * }
+	 * }</pre>
+	 *
+	 * To get the value of {@code classAInt}, you must call
+	 * {@code getStaticFieldValue(A.class, "classAInt", int.class)}.  If you call the same method on
+	 * class B, the field will not be found.
+	 *
+	 * @param clazz The class to find the field in (not a subclass of it)
 	 * @param fieldName The name of a static field in the class
-	 * @param fieldType The type of the field
+	 * @param fieldType The type of the field - Really just a convenience so the caller doesn't have
+	 *                  to cast the result.  The value may be null as long as there is a compiler known
+	 *                  type for the argument.
 	 * @return The field value
 	 */
 	public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName, Class<T> fieldType) {
@@ -155,16 +173,38 @@ public class ReflectTestUtil {
 		}
 	}
 
+
 	/**
-	 * Set the value of a static Field.
 	 *
-	 * @param clazz The class to find the field in
+	 * Sets the value of a static Field.
+	 *
+	 * Unlike an instance field, a static field is not inherited by subclasses.  If you have these
+	 * two classes:
+	 * <pre>{@code
+	 * class A {
+	 *   static int classAInt;
+	 * }
+	 *
+	 * class B extends A {
+	 *   static int classBInt;
+	 * }
+	 * }</pre>
+	 *
+	 * To set the value of {@code classAInt}, you must call
+	 * {@code setStaticFieldValue(A.class, "classAInt", 42)}.  If you call the same method on
+	 * class B, the field will not be found.
+	 * <p>
+	 * Since static fields must be uniquely named at the class level, primitives and autoboxing of
+	 * types is not a problem.
+	 *
+	 * @param clazz The class to find the field in (not a subclass of it)
 	 * @param fieldName The name of a static field in the class
-	 * @param value The new value for the field
-	 * @return The original field value
+	 * @param value The new value for the field.
+	 * @return The field value
 	 */
 	public static <T> T setStaticFieldValue(Class<?> clazz, String fieldName, T value) {
 
+		//Passing Object.class just defers the cast to this next line
 		T orgVal = (T)getStaticFieldValue(clazz, fieldName, Object.class);
 
 		Field field = getWritableField(clazz, fieldName);
