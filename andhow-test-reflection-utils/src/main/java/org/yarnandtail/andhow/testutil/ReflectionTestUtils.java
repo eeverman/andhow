@@ -15,11 +15,16 @@ import java.util.stream.Collectors;
  * Generic (in the sense that they don't specifically apply to AndHow) test utilities that
  * access private fields and methods.
  */
-public class ReflectionUtils {
+public final class ReflectionTestUtils {
 
 	public static final String PERMISSION_MSG =
 			"There is some type of permissions/access error - "
 					+ "See the underlying error message.";
+
+	/**
+	 * No instances.
+	 */
+	private ReflectionTestUtils() {}
 
 	/**
 	 * Invokes the named String returning instance method on the instance via reflection,
@@ -264,5 +269,19 @@ public class ReflectionUtils {
 		}
 
 		return types.toArray(new Class<?>[types.size()]);
+	}
+
+	/**
+	 * Performs Class.forName, but only throws a RuntimeException so no exception needs to be handled.
+	 *
+	 * @param className The full class name, as would be needed for Class.forName
+	 * @return The Class<?> for that name.
+	 */
+	public static Class<?> getClassByName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

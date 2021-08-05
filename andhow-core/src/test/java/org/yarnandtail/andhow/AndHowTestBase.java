@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
  * A test base class that COMPLETELY kills AndHow between each test and test classes.
@@ -52,7 +52,7 @@ public class AndHowTestBase {
 	
 	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
-		NoDependencyAndHowTestUtil.killAndHowFully();
+		AndHowTestUtils.killAndHowFully();
 	}
 	
 	@BeforeAll
@@ -62,7 +62,7 @@ public class AndHowTestBase {
 	
 	@BeforeEach
 	public void killAndHowStateBeforeTest() {
-		NoDependencyAndHowTestUtil.killAndHowFully();
+		AndHowTestUtils.killAndHowFully();
 	}
 	
 	@BeforeEach
@@ -72,7 +72,7 @@ public class AndHowTestBase {
 	
 	@AfterEach
 	public void killAndHowStateAfterTest() {
-		NoDependencyAndHowTestUtil.killAndHowFully();
+		AndHowTestUtils.killAndHowFully();
 	}
 	
 	@AfterEach
@@ -90,7 +90,7 @@ public class AndHowTestBase {
 	
 	@AfterAll
 	public static void killAndHowStateAfterClass() {
-		NoDependencyAndHowTestUtil.killAndHowFully();
+		AndHowTestUtils.killAndHowFully();
 	}
 	
 	@AfterAll

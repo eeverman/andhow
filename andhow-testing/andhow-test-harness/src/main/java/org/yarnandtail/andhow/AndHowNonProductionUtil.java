@@ -5,7 +5,7 @@ import java.util.*;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
  * A collection of utilities for breaking the 'AndHow rules' during testing.
@@ -16,24 +16,29 @@ import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
  * deprecated and will be removed at some point since they are only for JUnit 4 support,
  * which is aging...
  */
-public class AndHowNonProductionUtil extends NoDependencyAndHowTestUtil {
+public final class AndHowNonProductionUtil {
 	
 	public static final String PERMISSION_MSG = 
 			"There is some type of permissions/access error while trying to access and modify"
 			+ "private fields during testing. "
 			+ "Is there a security manager enforcing security during testing?";
-	
+
+	/**
+	 * No instances.
+	 */
+	private AndHowNonProductionUtil() {}
+
 	/**
 	 * Gets the current AndHow instance without forcing its creation.
 	 * 
 	 * @return The AndHow instance or null if it is not initialized.
 	 */
 	public static AndHow getAndHowInstance() {
-		return (AndHow) NoDependencyAndHowTestUtil.getAndHow();
+		return (AndHow) AndHowTestUtils.getAndHow();
 	}
 	
 	public static AndHowCore getAndHowCore() {
-		return (AndHowCore) NoDependencyAndHowTestUtil.getAndHowCore();
+		return (AndHowCore) AndHowTestUtils.getAndHowCore();
 	}
 	
 	/**
@@ -52,7 +57,7 @@ public class AndHowNonProductionUtil extends NoDependencyAndHowTestUtil {
 	 * @return The old core
 	 */
 	public static AndHowCore setAndHowCore(AndHowCore core) {
-		return (AndHowCore) NoDependencyAndHowTestUtil.setAndHowCore(core);
+		return (AndHowCore) AndHowTestUtils.setAndHowCore(core);
 	}
 	
 	/**
