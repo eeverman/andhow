@@ -18,7 +18,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  * some of the higher-level errors can be tested
  * @author eeverman
  */
-public class PropFileOnClasspathLoaderAppTest extends AndHowCoreTestBase {
+public class PropFileOnClasspathLoaderAppTest extends AndHowTestBase {
 	
 	public static interface TestProps {
 		StrProp CLAZZ_PATH = StrProp.builder().build();

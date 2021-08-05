@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ericeverman
  */
-public class AndHow_AliasInTest extends AndHowCoreTestBase {
+public class AndHow_AliasInTest extends AndHowTestBase {
 	
 	//
 	//Alias names

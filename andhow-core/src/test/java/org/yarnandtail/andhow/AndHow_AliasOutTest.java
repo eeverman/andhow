@@ -15,7 +15,7 @@ import org.yarnandtail.andhow.property.StrProp;
  *
  * @author ericeverman
  */
-public class AndHow_AliasOutTest extends AndHowCoreTestBase {
+public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	//
 	//Alias names

@@ -52,7 +52,7 @@ public class AndHowTestBaseImpl {
 
 
 		beforeClassCore = AndHowNonProductionUtil.getAndHowCore();
-		beforeClassSystemProps = AndHowNonProductionUtil.clone(System.getProperties());
+		beforeClassSystemProps = (Properties) System.getProperties().clone();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class AndHowTestBaseImpl {
 	 * is verbose to System.out, so this turns it off.
 	 */
 	public void andHowSnapshotBeforeSingleTest() {
-		beforeTestSystemProps = AndHowNonProductionUtil.clone(System.getProperties());
+		beforeTestSystemProps = (Properties) System.getProperties().clone();
 		beforeTestCore = AndHowNonProductionUtil.getAndHowCore();
 	}
 

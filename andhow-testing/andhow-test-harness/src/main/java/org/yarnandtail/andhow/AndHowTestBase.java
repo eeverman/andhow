@@ -8,16 +8,18 @@ import org.junit.*;
  *
  * This class resets AndHow and System.properties to their prior
  * state after each test run, as well as after all tests have run.  This, used with
- * <code>NonProductionConfig.instance().forceBuild()</code>
+ * <code>NonProductionConfig.instance().forceBuild(MyNew_AndHowConfiguration)</code>
  * and setting SystemProperties at the start of a test, can be used to set a
  * specific AndHow configuration for a test or suite of tests.
  *
- * <a href="https://github.com/eeverman/andhow/blob/master/andhow-testing/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dep1/src/test/java/com/dep1/EarthMapMakerUsingAHBaseTestClassTest.java#L25">
- *   Here is a example</a>Here is a example that shows how this can be used.
- * 
- * @author eeverman
- * @depricated Use AndHowJunit4TestBase instead, or upgrade to AndHowJunit5TestBase.
+ * Here is a example that shows how this can be used (Note the link goes to version 1.4.1,
+ * since the use of this base class is no longer the preferred way to do testing) :
+ * <a href="https://github.com/eeverman/andhow/blob/andhow-0.4.1/andhow-testing/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dep1/src/test/java/com/dep1/EarthMapMakerUsingAHBaseTestClassTest.java#L25">
+ *
+ * @depricated Switch to JUnit5 and the annotations in the {@link org.yarnandtail.andhow.junit5}
+ * package, which is better, safer and easier to use.
  */
+@Deprecated
 public class AndHowTestBase extends AndHowTestBaseImpl {
 
 	/**

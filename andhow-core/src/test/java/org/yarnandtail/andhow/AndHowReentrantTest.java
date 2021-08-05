@@ -17,7 +17,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem;
  * @author eeverman
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class AndHowReentrantTest extends AndHowCoreTestBase {
+public class AndHowReentrantTest extends AndHowTestBase {
 	
 	
 	@Test

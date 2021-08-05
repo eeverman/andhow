@@ -15,6 +15,8 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
+
 import static org.yarnandtail.andhow.internal.ConstructionProblem.InitiationLoopException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 
  * @author ericeverman
  */
-public class AndHowTest extends AndHowCoreTestBase {
-	
+public class AndHowTest extends AndHowTestBase {
 
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 	CaseInsensitiveNaming basicNaming = new CaseInsensitiveNaming();
@@ -99,7 +100,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 
 		//This locator should be called when AndHow.findConfig() is called to locate a config.
 		//After the first invocation, the config is returned w/o calling the locator.
-		AndHowTestUtil.setAndHowConfigLocator((c) -> {
+		AndHowTestUtils.setAndHowConfigLocator((c) -> {
 				callCount.incrementAndGet();
 				return config;
 		});
@@ -117,7 +118,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		//This loop is normal and expected and should be handled correctly.
 		//When detected, AndHow should just return a new AndHowConfiguration instance
 		//rather than have a stack overflow.
-		AndHowTestUtil.setAndHowConfigLocator(
+		AndHowTestUtils.setAndHowConfigLocator(
 				c -> AndHow.findConfig()
 		);
 
@@ -164,7 +165,7 @@ public class AndHowTest extends AndHowCoreTestBase {
 		final StdConfig.StdConfigImpl config = StdConfig.instance();
 
 		//This locator should be called when AndHow.findConfig() is called.
-		AndHowTestUtil.setAndHowConfigLocator((c) -> {
+		AndHowTestUtils.setAndHowConfigLocator((c) -> {
 			AndHow.setConfig(config);	//Bad!  Must throw error!
 			return config;
 		});
@@ -192,11 +193,11 @@ public class AndHowTest extends AndHowCoreTestBase {
 
 	@Test
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
-		assertNull(AndHowTestUtil.getAndHowInstance());
+		assertNull(AndHowTestUtils.getAndHow());
 		assertFalse(AndHow.isInitialized());
 		assertFalse(AndHow.isInitialize(), "deprecated, but still tested");
 		assertNotNull(AndHow.instance());
-		assertNotNull(AndHowTestUtil.getAndHowInstance());
+		assertNotNull(AndHowTestUtils.getAndHow());
 		assertTrue(AndHow.isInitialized());
 		assertTrue(AndHow.isInitialize(), "deprecated, but still tested");
 	}
@@ -209,13 +210,13 @@ public class AndHowTest extends AndHowCoreTestBase {
 	@Test
 	public void initializedMethodShouldAgreeWithSmashedCoreForTestingInitializationProcess() {
 		AndHow orgInstance = AndHow.instance();
-		AndHowCore orgCore = AndHowTestUtil.setAndHowCore(null);
+		AndHowCore orgCore = AndHowTestUtils.setAndHowCore(null);
 
-		assertNotNull(AndHowTestUtil.getAndHowInstance(), "The instance should still exist");
+		assertNotNull(AndHowTestUtils.getAndHow(), "The instance should still exist");
 		assertFalse(AndHow.isInitialized(), "Core is null, so considered uninitialized");
 
 		AndHow afterInstance = AndHow.instance();	//should work as normal
-		AndHowCore afterCore = AndHowTestUtil.getAndHowCore();
+		AndHowCore afterCore = (AndHowCore) AndHowTestUtils.getAndHowCore();
 
 		assertSame(orgInstance, afterInstance,
 				"'Same' is the reason tests kill the core, not the singleton");

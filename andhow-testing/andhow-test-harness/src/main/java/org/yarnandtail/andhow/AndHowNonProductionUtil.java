@@ -1,62 +1,44 @@
 package org.yarnandtail.andhow;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
  * A collection of utilities for breaking the 'AndHow rules' during testing.
- * 
- * @author ericeverman
+ *
+ * The methods in this class are unsafe for using directly and are instead used
+ * by JUnit annotations in the {@link org.yarnandtail.andhow.junit5} package.  They are also
+ * used in the AndHowTestBase, but these classes are both
+ * deprecated and will be removed at some point since they are only for JUnit 4 support,
+ * which is aging...
  */
-public class AndHowNonProductionUtil {
+public final class AndHowNonProductionUtil {
 	
 	public static final String PERMISSION_MSG = 
 			"There is some type of permissions/access error while trying to access and modify"
 			+ "private fields during testing. "
 			+ "Is there a security manager enforcing security during testing?";
-	
+
+	/**
+	 * No instances.
+	 */
+	private AndHowNonProductionUtil() {}
+
 	/**
 	 * Gets the current AndHow instance without forcing its creation.
 	 * 
 	 * @return The AndHow instance or null if it is not initialized.
 	 */
 	public static AndHow getAndHowInstance() {
-		try {
-			Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
-			ahInstanceField.setAccessible(true);
-			
-			AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
-			
-			return ahInstance;
-		} catch (Exception ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
+		return (AndHow) AndHowTestUtils.getAndHow();
 	}
 	
 	public static AndHowCore getAndHowCore() {
-
-		try {
-
-			Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
-			ahInstanceField.setAccessible(true);
-
-			AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
-
-			if (ahInstance == null) {
-				return null;
-			} else {
-				Field ahCoreField = AndHow.class.getDeclaredField("core");
-				ahCoreField.setAccessible(true);
-				return (AndHowCore) ahCoreField.get(ahInstance);
-			}
-
-		} catch (Exception ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
+		return (AndHowCore) AndHowTestUtils.getAndHowCore();
 	}
 	
 	/**
@@ -72,31 +54,10 @@ public class AndHowNonProductionUtil {
 	 * @param core A core instance to replace the current core with.  If AndHow
 	 * is uninitialized, this will throw an error because it is assumed to be
 	 * replacing a core.
+	 * @return The old core
 	 */
-	public static void setAndHowCore(AndHowCore core) {
-
-		try {
-
-			Field ahInstanceField = AndHow.class.getDeclaredField("singleInstance");
-			ahInstanceField.setAccessible(true);
-
-			AndHow ahInstance = (AndHow)(ahInstanceField.get(null));
-
-			if (ahInstance == null) {
-				if (core == null) {
-					//no problem - its all null anyway
-				} else {
-					throw new RuntimeException("Cannot set a new core when AndHow is uninitialized");
-				}
-			} else {
-				Field ahCoreField = AndHow.class.getDeclaredField("core");
-				ahCoreField.setAccessible(true);
-				ahCoreField.set(ahInstance, core);
-			}
-
-		} catch (IllegalAccessException | NoSuchFieldException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
+	public static AndHowCore setAndHowCore(AndHowCore core) {
+		return (AndHowCore) AndHowTestUtils.setAndHowCore(core);
 	}
 	
 	/**
@@ -106,11 +67,15 @@ public class AndHowNonProductionUtil {
 	 * passed configuration.  If AndHow has already initialized, a new
 	 * {@code AndHowCore} is created using the passed configuration and it will
 	 * replace the current core held by the singleton AndHow instance.
-	 * 
+	 *
+	 * @deprecated This method is unsafe and there is no reason to use it.
+	 * Instead, use the <code>org.yarnandtail.andhow.junit5.Kill...</code>
+	 * annotations.
 	 * @param config The configuration to use, which must be non-null.  If you
 	 * don't have specific needs for the configuration, you can use
 	 * {@code AndHow.findConfiguration()}.
 	 */
+	@Deprecated
 	public static void forceRebuild(AndHowConfiguration config) {
 
 		AndHow ahInstance = getAndHowInstance();
@@ -157,14 +122,14 @@ public class AndHowNonProductionUtil {
 	
 	/**
 	 * Creates a clone of a Properties object so it can be detached from System.
-	 * 
+	 *
+	 * @deprecated Use <code>(Properties) Properties.clone()</code>
 	 * @param props
 	 * @return 
 	 */
+	@Deprecated
 	public static Properties clone(Properties props) {
-		Properties newProps = new Properties();
-		newProps.putAll(props);
-		return newProps;
+		return (Properties)props.clone();
 	}
 	
 	/**
@@ -177,7 +142,12 @@ public class AndHowNonProductionUtil {
 	 * to be reinitialized, which is not the intended operation during
 	 * normal usage, but is useful during testing to test the application's
 	 * behaviour with a variety of  configurations.
+	 *
+	 * @deprecated This method is unsafe and there is no reason to use it.
+	 * Instead, use the <code>org.yarnandtail.andhow.junit5.Kill...</code>
+	 * annotations.
 	 */
+	@Deprecated
 	public static void destroyAndHowCore() {
 		if (getAndHowInstance() != null) {
 			setAndHowCore(null);

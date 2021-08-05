@@ -14,7 +14,7 @@ import org.yarnandtail.andhow.property.*;
  *
  * @author eeverman
  */
-public class AndHowUsageExampleTest extends AndHowCoreTestBase {
+public class AndHowUsageExampleTest extends AndHowTestBase {
 	
 	String uiFullPath = UI_CONFIG.class.getCanonicalName() + ".";
 	String svsFullPath = SERVICE_CONFIG.class.getCanonicalName() + ".";
