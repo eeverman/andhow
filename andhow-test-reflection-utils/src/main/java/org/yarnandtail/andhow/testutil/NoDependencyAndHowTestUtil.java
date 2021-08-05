@@ -19,55 +19,6 @@ import java.util.function.UnaryOperator;
  */
 public class NoDependencyAndHowTestUtil {
 
-	private static volatile Class<?> andHowClass;
-	private static volatile Class<?> andHowCoreClass;
-	private static volatile Class<?> andHowInitializationClass;
-	private static volatile Class<?> andHowConfigurationClass;
-
-	private static Class<?> getAndHowClass() {
-		if (andHowClass == null) {
-			try {
-				andHowClass = Class.forName("org.yarnandtail.andhow.AndHow");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return andHowClass;
-	}
-
-	private static Class<?> getAndHowCoreClass() {
-		if (andHowCoreClass == null) {
-			try {
-				andHowCoreClass = Class.forName("org.yarnandtail.andhow.internal.AndHowCore");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return andHowCoreClass;
-	}
-
-	private static Class<?> getAndHowInitializationClass() {
-		if (andHowInitializationClass == null) {
-			try {
-				andHowInitializationClass = Class.forName("org.yarnandtail.andhow.AndHow$Initialization");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return andHowInitializationClass;
-	}
-
-	private static Class<?> getAndHowConfigurationClass() {
-		if (andHowConfigurationClass == null) {
-			try {
-				andHowConfigurationClass = Class.forName("org.yarnandtail.andhow.AndHowConfiguration");
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return andHowConfigurationClass;
-	}
-
 	/**
 	 * Kill AndHow to ground state, as it would be prior to any initialization.
 	 * This is different than how AndHow is 'killed' during application tests, which only kills
@@ -194,6 +145,39 @@ public class NoDependencyAndHowTestUtil {
 
 	public static ThreadLocal<Boolean> getFindingConfig() {
 		return ReflectTestUtil.getStaticFieldValue(getAndHowClass(), "findingConfig", ThreadLocal.class);
+	}
+
+	/**
+	 * Performs Class.forName, but only throws a RuntimeException so no exception needs to be handled.
+	 *
+	 * @param className The full class name, as would be needed for Class.forName
+	 * @return The Class<?> for that name.
+	 */
+	public static Class<?> getClassByName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	//
+	//Basic access to AndHow classes via reflection so there is no dependency
+
+	private static Class<?> getAndHowClass() {
+		return getClassByName("org.yarnandtail.andhow.AndHow");
+	}
+
+	private static Class<?> getAndHowCoreClass() {
+		return getClassByName("org.yarnandtail.andhow.internal.AndHowCore");
+	}
+
+	private static Class<?> getAndHowInitializationClass() {
+		return getClassByName("org.yarnandtail.andhow.AndHow$Initialization");
+	}
+
+	private static Class<?> getAndHowConfigurationClass() {
+		return getClassByName("org.yarnandtail.andhow.AndHowConfiguration");
 	}
 
 }

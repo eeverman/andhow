@@ -162,4 +162,15 @@ class NoDependencyAndHowTestUtilTest {
 		//This is really, really internal state, so there is no set method.
 		assertFalse(NoDependencyAndHowTestUtil.getFindingConfig().get());
 	}
+
+	@Test
+	void getClassByNameTest() {
+		Class<?> thisClass = NoDependencyAndHowTestUtil.getClassByName(
+				"org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtilTest");
+
+		assertSame(this.getClass(), thisClass);
+
+		assertThrows(RuntimeException.class,
+				() -> NoDependencyAndHowTestUtil.getClassByName("I.dont.exist.Something"));
+	}
 }
