@@ -33,6 +33,26 @@ class NoDependencyAndHowTestUtilTest {
 
 	@Test
 	void killAndHowFully() {
+		final AndHowConfiguration config1 = new AndHowConfiguration() {};
+		final AndHowConfiguration config2 = new AndHowConfiguration() {};
+
+		UnaryOperator<AndHowConfiguration<? extends AndHowConfiguration>> configLocator1 =
+				(c) -> { return config1; };
+
+		//Set a few things that are normally null/false
+		NoDependencyAndHowTestUtil.setAndHowInitializing(true);
+		NoDependencyAndHowTestUtil.setAndHowConfigLocator(configLocator1);
+		NoDependencyAndHowTestUtil.setAndHowInProcessConfig(config2);
+
+		NoDependencyAndHowTestUtil.killAndHowFully();	//kill
+
+		//Everying should be null-ish
+		assertNull(NoDependencyAndHowTestUtil.getAndHow());
+		assertNull(NoDependencyAndHowTestUtil.getAndHowCore());
+		assertNull(NoDependencyAndHowTestUtil.setAndHowInitialization(null));
+		assertFalse(NoDependencyAndHowTestUtil.setAndHowInitializing(true));
+		assertNull(NoDependencyAndHowTestUtil.setAndHowInProcessConfig(null));
+		assertNull(NoDependencyAndHowTestUtil.setAndHowConfigLocator(null));
 	}
 
 	@Test
