@@ -12,13 +12,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Testing Utils
+ * Generic (in the sense that they don't specifically apply to AndHow) test utilities that
+ * access private fields and methods.
  */
-public class ReflectTestUtil {
+public class ReflectionUtils {
 
 	public static final String PERMISSION_MSG =
-			"There is some type of permissions/access error while trying to access  private fields. "
-					+ "Is there a security manager enforcing security during testing?";
+			"There is some type of permissions/access error - "
+					+ "See the underlying error message.";
 
 	/**
 	 * Invokes the named String returning instance method on the instance via reflection,
@@ -103,14 +104,8 @@ public class ReflectTestUtil {
 	 * @return The field value
 	 */
 	public static <T> T getInstanceFieldValue(Object instance, String fieldName, Class<T> fieldType) {
-
 		Field field = getWritableField(instance.getClass(), fieldName);
-
-		try {
-			return (T)(field.get(instance));
-		} catch (IllegalAccessException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
+		return (T) getFieldValue(field, instance);
 	}
 
 	/**
@@ -123,17 +118,8 @@ public class ReflectTestUtil {
 	 * @return The original field fieldValue
 	 */
 	public static <T> T setInstanceFieldValue(Object instance, String fieldName, T fieldValue, Class<T> fieldType) {
-		T orgVal = (T)getInstanceFieldValue(instance, fieldName, fieldType);
-
 		Field field = getWritableField(instance.getClass(), fieldName);
-
-		try {
-			field.set(instance, fieldValue);
-		} catch (IllegalAccessException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
-
-		return orgVal;
+		return (T) setFieldValue(field, instance, fieldValue);
 	}
 
 	/**
@@ -163,14 +149,8 @@ public class ReflectTestUtil {
 	 * @return The field value
 	 */
 	public static <T> T getStaticFieldValue(Class<?> clazz, String fieldName, Class<T> fieldType) {
-
 		Field field = getWritableField(clazz, fieldName);
-
-		try {
-			return (T)(field.get(null));
-		} catch (IllegalAccessException ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
+		return (T) getFieldValue(field, null);
 	}
 
 
@@ -203,15 +183,44 @@ public class ReflectTestUtil {
 	 * @return The field value
 	 */
 	public static <T> T setStaticFieldValue(Class<?> clazz, String fieldName, T value) {
-
-		//Passing Object.class just defers the cast to this next line
-		T orgVal = (T)getStaticFieldValue(clazz, fieldName, Object.class);
-
 		Field field = getWritableField(clazz, fieldName);
+		return (T) setFieldValue(field, null, value);
+	}
+
+	/**
+	 * Get the value of a field w/o throwing an Exception that needs to be caught.
+	 *
+	 * @param field The field to retrieve the value of.
+	 * @param instance The object instance the field is a member of, may be null
+	 *                 to access static fields.
+	 * @return
+	 */
+	public static Object getFieldValue(Field field, Object instance) {
+		try {
+			return field.get(instance);
+		} catch (Exception ex) {
+			throw new RuntimeException(PERMISSION_MSG, ex);
+		}
+	}
+
+	/**
+	 * Get the value of a field w/o throwing an Exception that needs to be caught.
+	 *
+	 * The value previously assigned to the field is returned.
+	 *
+	 * @param field The field to retrieve the value of.
+	 * @param instance The object instance the field is a member of, may be null
+	 * 				to access static fields.
+	 * @param value The value to assign, which may be null.
+	 * @return The value previously assigned to the field.
+	 */
+	public static Object setFieldValue(Field field, Object instance, Object value) {
+
+		Object orgVal = getFieldValue(field, instance);
 
 		try {
-			field.set(null, value);
-		} catch (IllegalAccessException ex) {
+			field.set(instance, value);
+		} catch (Exception ex) {
 			throw new RuntimeException(PERMISSION_MSG, ex);
 		}
 

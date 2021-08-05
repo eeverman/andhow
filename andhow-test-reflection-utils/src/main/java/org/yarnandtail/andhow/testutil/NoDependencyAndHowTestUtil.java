@@ -35,7 +35,7 @@ public class NoDependencyAndHowTestUtil {
 	}
 
 	public static Object getAndHow() {
-		return ReflectTestUtil.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
+		return ReflectionUtils.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
 	}
 
 	public static Object setAndHow(Object newAndHow) {
@@ -44,15 +44,15 @@ public class NoDependencyAndHowTestUtil {
 			throw new RuntimeException("newAndHow must be of the type: " + getAndHowClass().getCanonicalName());
 		}
 
-		return ReflectTestUtil.setStaticFieldValue(getAndHowClass(), "singleInstance", newAndHow);
+		return ReflectionUtils.setStaticFieldValue(getAndHowClass(), "singleInstance", newAndHow);
 	}
 	
 	public static Object getAndHowCore() {
-		Object ahInstance = ReflectTestUtil.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
+		Object ahInstance = ReflectionUtils.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
 		if (ahInstance == null) {
 			return null;
 		} else {
-			return ReflectTestUtil.getInstanceFieldValue(ahInstance, "core", getAndHowCoreClass());
+			return ReflectionUtils.getInstanceFieldValue(ahInstance, "core", getAndHowCoreClass());
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class NoDependencyAndHowTestUtil {
 			throw new RuntimeException("newCore must be of the type: " + getAndHowCoreClass().getCanonicalName());
 		}
 
-		Object ahInstance = ReflectTestUtil.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
+		Object ahInstance = ReflectionUtils.getStaticFieldValue(getAndHowClass(), "singleInstance", getAndHowClass());
 
 		if (ahInstance == null) {
 			if (newCore == null) {
@@ -71,7 +71,7 @@ public class NoDependencyAndHowTestUtil {
 				throw new RuntimeException("Cannot set a new core when AndHow is uninitialized");
 			}
 		} else {
-			return ReflectTestUtil.setInstanceFieldValue(ahInstance, "core", newCore, (Class<T>)(getAndHowCoreClass()));
+			return ReflectionUtils.setInstanceFieldValue(ahInstance, "core", newCore, (Class<T>)(getAndHowCoreClass()));
 		}
 	}
 
@@ -88,7 +88,7 @@ public class NoDependencyAndHowTestUtil {
 					"The newInit must be of the type: " + getAndHowInitializationClass().getCanonicalName());
 		}
 
-		return ReflectTestUtil.setStaticFieldValue(getAndHowClass(), "initialization", newInit);
+		return ReflectionUtils.setStaticFieldValue(getAndHowClass(), "initialization", newInit);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class NoDependencyAndHowTestUtil {
 	 * @return The original locator, which may have been null.
 	 */
 	public static <T> UnaryOperator<T> setAndHowConfigLocator(UnaryOperator<T> newLocator) {
-		return ReflectTestUtil.setStaticFieldValue(
+		return ReflectionUtils.setStaticFieldValue(
 				getAndHowClass(), "configLocator", newLocator);
 	}
 
@@ -128,7 +128,7 @@ public class NoDependencyAndHowTestUtil {
 					"The newConfig instance must be of the type: " + getAndHowConfigurationClass().getCanonicalName());
 		}
 
-		return ReflectTestUtil.setStaticFieldValue(getAndHowClass(), "inProcessConfig", newConfig);
+		return ReflectionUtils.setStaticFieldValue(getAndHowClass(), "inProcessConfig", newConfig);
 	}
 
 	/**
@@ -140,11 +140,11 @@ public class NoDependencyAndHowTestUtil {
 		 if (newInitializingStatus == null) {
 			 throw new RuntimeException("Cannot set the initializating status to null");
 		 }
-		return ReflectTestUtil.setStaticFieldValue(getAndHowClass(), "initializing", newInitializingStatus);
+		return ReflectionUtils.setStaticFieldValue(getAndHowClass(), "initializing", newInitializingStatus);
 	}
 
 	public static ThreadLocal<Boolean> getFindingConfig() {
-		return ReflectTestUtil.getStaticFieldValue(getAndHowClass(), "findingConfig", ThreadLocal.class);
+		return ReflectionUtils.getStaticFieldValue(getAndHowClass(), "findingConfig", ThreadLocal.class);
 	}
 
 	/**

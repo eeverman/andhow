@@ -14,7 +14,7 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.DblProp;
 import org.yarnandtail.andhow.property.LngProp;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.testutil.ReflectTestUtil;
+import org.yarnandtail.andhow.testutil.ReflectionUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.*;
@@ -241,7 +241,7 @@ public class StdConfigGetterAndSetterTest {
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
-		List<String> kvps = ReflectTestUtil.getInstanceFieldValue(config.buildStdMainStringArgsLoader(), "keyValuePairs", List.class);
+		List<String> kvps = ReflectionUtils.getInstanceFieldValue(config.buildStdMainStringArgsLoader(), "keyValuePairs", List.class);
 
 		assertEquals(2, kvps.size());
 		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
@@ -284,20 +284,20 @@ public class StdConfigGetterAndSetterTest {
 		assertNull(config.getClasspathPropFileProp());
 		assertNull(config.getClasspathPropFilePath());
 		assertEquals("/andhow.properties",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
 				"Loader should see the default value");
 
 		config.setClasspathPropFilePath("/andhow.test.properties");
 		assertEquals("/andhow.test.properties", config.getClasspathPropFilePath());
 		assertNull(config.getClasspathPropFileProp());
 		assertEquals("/andhow.test.properties",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
 				"Loader should see this configured value");
 
 		config.setClasspathPropFilePath("/andhow.test.props");
 		assertEquals("/andhow.test.props", config.getClasspathPropFilePath());
 		assertEquals("/andhow.test.props",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
 				"Loader should see this configured value");
 
 		assertThrows(IllegalArgumentException.class, () -> {
@@ -309,13 +309,13 @@ public class StdConfigGetterAndSetterTest {
 		config.setClasspathPropFilePath("/org/comcorp/project/andhow.test.properties");
 		assertEquals("/org/comcorp/project/andhow.test.properties", config.getClasspathPropFilePath());
 		assertEquals("/org/comcorp/project/andhow.test.properties",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
 				"Loader should see this configured value");
 
 		config.setClasspathPropFilePath((String)null);
 		assertNull(config.getClasspathPropFilePath());
 		assertEquals("/andhow.properties",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", vvs, vvsClass),
 				"Loader should see the default value");
 
 	}
@@ -339,14 +339,14 @@ public class StdConfigGetterAndSetterTest {
 		assertNull(config.getClasspathPropFilePath());
 		assertEquals(MY_PATH_PROPERTY, config.getClasspathPropFileProp());
 		assertEquals("/my.prop.file",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
 				"Loader should see this configured value");
 
 		config.setClasspathPropFilePath((StrProp)null);
 		assertNull(config.getClasspathPropFilePath());
 		assertNull(config.getClasspathPropFileProp());
 		assertEquals("/andhow.properties",
-				ReflectTestUtil.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
+				ReflectionUtils.stringMethod(config.buildStdPropFileOnClasspathLoader(), "getEffectivePath", validatedValues, vvsClass),
 				"Loader should revert to default");
 	}
 

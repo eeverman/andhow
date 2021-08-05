@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReflectTestUtilTest {
@@ -65,7 +67,7 @@ class ReflectTestUtilTest {
 	void stringMethodWithArrayOfParamsAndTypes() {
 		assertEquals(
 				"MyName4",
-				ReflectTestUtil.stringMethod(this, "sampleMethod1",
+				ReflectionUtils.stringMethod(this, "sampleMethod1",
 						new Object[] {"MyName", Integer.valueOf(4)},
 						new Class<?>[] {String.class, int.class})
 		);
@@ -75,7 +77,7 @@ class ReflectTestUtilTest {
 	void testStringMethodWithSingleParamAndType() {
 		assertEquals(
 				"BOBtrue",
-				ReflectTestUtil.stringMethod(this, "sampleMethod2",
+				ReflectionUtils.stringMethod(this, "sampleMethod2",
 						true, boolean.class)
 		);
 	}
@@ -84,11 +86,11 @@ class ReflectTestUtilTest {
 	void testStringMethodWithSingleArrayOfArguments() {
 		assertEquals(
 				"MyName5",
-				ReflectTestUtil.stringMethod(this, "sampleMethod3","MyName", 5)
+				ReflectionUtils.stringMethod(this, "sampleMethod3","MyName", 5)
 		);
 		assertEquals(
 				"BOBtrue",
-				ReflectTestUtil.stringMethod(this, "sampleMethod4",true)
+				ReflectionUtils.stringMethod(this, "sampleMethod4",true)
 		);
 	}
 
@@ -96,14 +98,14 @@ class ReflectTestUtilTest {
 	void invokeMethod() {
 		assertEquals(
 				"MyName4",
-				ReflectTestUtil.invokeMethod(this, "sampleMethod1",
+				ReflectionUtils.invokeMethod(this, "sampleMethod1",
 						new Object[] {"MyName", Integer.valueOf(4)},
 						new Class<?>[] {String.class, int.class})
 		);
 
 		assertThrows(
 				IllegalArgumentException.class,
-				() -> ReflectTestUtil.invokeMethod(this, "IDONTEXIST",
+				() -> ReflectionUtils.invokeMethod(this, "IDONTEXIST",
 						new Object[] {"MyName", Integer.valueOf(4)},
 						new Class<?>[] {String.class, int.class})
 		);
@@ -117,22 +119,22 @@ class ReflectTestUtilTest {
 		// Directly on class
 		assertEquals(
 				"Carl",
-				ReflectTestUtil.getInstanceFieldValue(this, "myString", String.class)
+				ReflectionUtils.getInstanceFieldValue(this, "myString", String.class)
 		);
 		assertEquals(
 				42,
-				ReflectTestUtil.getInstanceFieldValue(this, "myInt", int.class)
+				ReflectionUtils.getInstanceFieldValue(this, "myInt", int.class)
 		);
 		assertEquals(
 				43,
-				ReflectTestUtil.getInstanceFieldValue(this, "myInteger", Integer.class)
+				ReflectionUtils.getInstanceFieldValue(this, "myInteger", Integer.class)
 		);
 
 		//On the subclass
 		Subclass sub = new Subclass();
 		assertEquals(
 				"SubCarl",
-				ReflectTestUtil.getInstanceFieldValue(sub, "myString", String.class)
+				ReflectionUtils.getInstanceFieldValue(sub, "myString", String.class)
 		);
 	}
 
@@ -140,23 +142,23 @@ class ReflectTestUtilTest {
 	void setInstanceFieldValue() {
 		assertEquals(
 				"Carl",
-				ReflectTestUtil.setInstanceFieldValue(this, "myString", "Bob", String.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myString", "Bob", String.class),
 				"Should return the previous value"
 		);
 		assertEquals(
 				"Bob",
-				ReflectTestUtil.setInstanceFieldValue(this, "myString", null, String.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myString", null, String.class),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.setInstanceFieldValue(this, "myString", null, String.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myString", null, String.class),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.getInstanceFieldValue(this, "myString", String.class)
+				ReflectionUtils.getInstanceFieldValue(this, "myString", String.class)
 		);
 		assertNull(
-				ReflectTestUtil.setInstanceFieldValue(this, "myString", "NotNull", String.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myString", "NotNull", String.class),
 				"Should return the previous value"
 		);
 
@@ -164,16 +166,16 @@ class ReflectTestUtilTest {
 		// int
 		assertEquals(
 				42,
-				ReflectTestUtil.setInstanceFieldValue(this, "myInt", Integer.valueOf(99), int.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myInt", Integer.valueOf(99), int.class),
 				"Should return the previous value"
 		);
 		assertEquals(
 				99,
-				ReflectTestUtil.setInstanceFieldValue(this, "myInt", 100, int.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myInt", 100, int.class),
 				"Should return the previous value"
 		);
-		assertThrows(IllegalArgumentException.class,
-				() -> ReflectTestUtil.setInstanceFieldValue(this, "myInt", null, int.class),
+		assertThrows(RuntimeException.class,
+				() -> ReflectionUtils.setInstanceFieldValue(this, "myInt", null, int.class),
 				"Cannot set a primitive null"
 		);
 
@@ -181,25 +183,25 @@ class ReflectTestUtilTest {
 		// Integer
 		assertEquals(
 				43,
-				ReflectTestUtil.setInstanceFieldValue(this, "myInteger", Integer.valueOf(999), Integer.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myInteger", Integer.valueOf(999), Integer.class),
 				"Should return the previous value"
 		);
 		assertEquals(
 				999,
-				ReflectTestUtil.setInstanceFieldValue(this, "myInteger", 1000, Integer.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myInteger", 1000, Integer.class),
 				"Should return the previous value"
 		);
 		assertEquals(
 				1000,
-				ReflectTestUtil.setInstanceFieldValue(this, "myInteger", null, Integer.class),
+				ReflectionUtils.setInstanceFieldValue(this, "myInteger", null, Integer.class),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.getInstanceFieldValue(this, "myInteger", Integer.class),
+				ReflectionUtils.getInstanceFieldValue(this, "myInteger", Integer.class),
 				"get value should agree w/ set value"
 		);
 		assertNull(
-				ReflectTestUtil.setInstanceFieldValue(this, "myInteger", 1001, Integer.class)
+				ReflectionUtils.setInstanceFieldValue(this, "myInteger", 1001, Integer.class)
 		);
 
 		//
@@ -207,16 +209,16 @@ class ReflectTestUtilTest {
 		Subclass sub = new Subclass();
 		assertEquals(
 				"SubCarl",
-				ReflectTestUtil.setInstanceFieldValue(sub, "myString", "Bob", String.class),
+				ReflectionUtils.setInstanceFieldValue(sub, "myString", "Bob", String.class),
 				"Should return the previous value"
 		);
 		assertEquals(
 				"Bob",
-				ReflectTestUtil.setInstanceFieldValue(sub, "myString", null, String.class),
+				ReflectionUtils.setInstanceFieldValue(sub, "myString", null, String.class),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.setInstanceFieldValue(sub, "myString", null, String.class),
+				ReflectionUtils.setInstanceFieldValue(sub, "myString", null, String.class),
 				"Should return the previous value"
 		);
 	}
@@ -225,22 +227,22 @@ class ReflectTestUtilTest {
 	void getStaticFieldValue() {
 		assertEquals(
 				"Static",
-				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticString", String.class)
+				ReflectionUtils.getStaticFieldValue(this.getClass(), "myStaticString", String.class)
 		);
 		assertEquals(
 				542,
-				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticInt", int.class)
+				ReflectionUtils.getStaticFieldValue(this.getClass(), "myStaticInt", int.class)
 		);
 		assertEquals(
 				543,
-				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticInteger", Integer.class)
+				ReflectionUtils.getStaticFieldValue(this.getClass(), "myStaticInteger", Integer.class)
 		);
 
 		//
 		// on the subclass
 		assertEquals(
 				"SubStatic",
-				ReflectTestUtil.getStaticFieldValue(Subclass.class, "myStaticString", String.class)
+				ReflectionUtils.getStaticFieldValue(Subclass.class, "myStaticString", String.class)
 		);
 	}
 
@@ -248,23 +250,23 @@ class ReflectTestUtilTest {
 	void setStaticFieldValue() {
 		assertEquals(
 				"Static",
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticString", "Bob"),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticString", "Bob"),
 				"Should return the previous value"
 		);
 		assertEquals(
 				"Bob",
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticString", null),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticString", null),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticString", null),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticString", null),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticString", String.class)
+				ReflectionUtils.getStaticFieldValue(this.getClass(), "myStaticString", String.class)
 		);
 		assertNull(
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticString", "NotNull"),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticString", "NotNull"),
 				"Should return the previous value"
 		);
 
@@ -272,16 +274,16 @@ class ReflectTestUtilTest {
 		// int
 		assertEquals(
 				542,
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInt", Integer.valueOf(999)),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInt", Integer.valueOf(999)),
 				"Should return the previous value"
 		);
 		assertEquals(
 				999,
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInt", 1000),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInt", 1000),
 				"Should return the previous value"
 		);
-		assertThrows(IllegalArgumentException.class,
-				() -> ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInt", null),
+		assertThrows(RuntimeException.class,
+				() -> ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInt", null),
 				"Cannot set a primitive null"
 		);
 
@@ -289,41 +291,41 @@ class ReflectTestUtilTest {
 		// Integer
 		assertEquals(
 				543,
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInteger", Integer.valueOf(9999)),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInteger", Integer.valueOf(9999)),
 				"Should return the previous value"
 		);
 		assertEquals(
 				9999,
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInteger", 10000),
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInteger", 10000),
 				"Should return the previous value"
 		);
 		assertEquals(
 				10000,
-				(Integer) ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInteger", null),
+				(Integer) ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInteger", null),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.getStaticFieldValue(this.getClass(), "myStaticInteger", Integer.class),
+				ReflectionUtils.getStaticFieldValue(this.getClass(), "myStaticInteger", Integer.class),
 				"get value should agree w/ set value"
 		);
 		assertNull(
-				ReflectTestUtil.setStaticFieldValue(this.getClass(), "myStaticInteger", 10001)
+				ReflectionUtils.setStaticFieldValue(this.getClass(), "myStaticInteger", 10001)
 		);
 
 		//
 		// on the subclass
 		assertEquals(
 				"SubStatic",
-				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", "Bob"),
+				ReflectionUtils.setStaticFieldValue(Subclass.class, "myStaticString", "Bob"),
 				"Should return the previous value"
 		);
 		assertEquals(
 				"Bob",
-				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", null),
+				ReflectionUtils.setStaticFieldValue(Subclass.class, "myStaticString", null),
 				"Should return the previous value"
 		);
 		assertNull(
-				ReflectTestUtil.setStaticFieldValue(Subclass.class, "myStaticString", null),
+				ReflectionUtils.setStaticFieldValue(Subclass.class, "myStaticString", null),
 				"Should return the previous value"
 		);
 	}
@@ -333,7 +335,7 @@ class ReflectTestUtilTest {
 		//Most test cases are already implicit in the other tests
 
 		assertThrows(IllegalArgumentException.class,
-				() -> ReflectTestUtil.getWritableField(this.getClass(), "IDONOTEXIST")
+				() -> ReflectionUtils.getWritableField(this.getClass(), "IDONOTEXIST")
 		);
 
 	}
@@ -342,12 +344,41 @@ class ReflectTestUtilTest {
 	void getTypes() {
 		//Most test cases are already implicit in the other tests
 
-		assertEquals(0, ReflectTestUtil.getTypes().length);
-		assertEquals(0, ReflectTestUtil.getTypes(null).length);
+		assertEquals(0, ReflectionUtils.getTypes().length);
+		assertEquals(0, ReflectionUtils.getTypes(null).length);
 
 		assertThrows(RuntimeException.class,
-				() -> ReflectTestUtil.getTypes("", null)
+				() -> ReflectionUtils.getTypes("", null)
 		);
 	}
 
+	@Test
+	void getFieldValueTest() {
+		Field msField = ReflectionUtils.getWritableField(this.getClass(), "myString");
+		assertEquals("Carl", ReflectionUtils.getFieldValue(msField, this));
+
+		try {
+			msField.setAccessible(false);
+			assertThrows(
+					RuntimeException.class,
+					() -> ReflectionUtils.getFieldValue(msField, this));
+		} finally {
+			msField.setAccessible(true);
+		}
+	}
+
+	@Test
+	void setFieldValueTest() {
+		Field msField = ReflectionUtils.getWritableField(this.getClass(), "myString");
+		assertEquals("Carl", ReflectionUtils.setFieldValue(msField, this, "Bob"));
+
+		try {
+			msField.setAccessible(false);
+			assertThrows(
+					RuntimeException.class,
+					() -> ReflectionUtils.setFieldValue(msField, this, "wont work"));
+		} finally {
+			msField.setAccessible(true);
+		}
+	}
 }
