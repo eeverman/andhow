@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
-import org.yarnandtail.andhow.testutil.GeneralTestUtil;
 import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
 
 /**
@@ -58,7 +57,7 @@ public class AndHowTestBase {
 	
 	@BeforeAll
 	public static void storeSysPropsBeforeClass() {
-		beforeClassSystemProps = GeneralTestUtil.clone(System.getProperties());
+		beforeClassSystemProps = (Properties)System.getProperties().clone();
 	}
 	
 	@BeforeEach
@@ -68,7 +67,7 @@ public class AndHowTestBase {
 	
 	@BeforeEach
 	public void storeSysPropsBeforeTest() {
-		beforeTestSystemProps = GeneralTestUtil.clone(System.getProperties());
+		beforeTestSystemProps = (Properties)System.getProperties().clone();
 	}
 	
 	@AfterEach

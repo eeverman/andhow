@@ -1,12 +1,10 @@
 package org.yarnandtail.andhow;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.testutil.GeneralTestUtil;
 import org.yarnandtail.andhow.testutil.NoDependencyAndHowTestUtil;
 
 /**
@@ -120,14 +118,13 @@ public class AndHowNonProductionUtil extends NoDependencyAndHowTestUtil {
 	/**
 	 * Creates a clone of a Properties object so it can be detached from System.
 	 *
-	 * @deprecated Use the same method from {@link org.yarnandtail.andhow.testutil.GeneralTestUtil}
-	 * instead.
+	 * @deprecated Use <code>(Properties) Properties.clone()</code>
 	 * @param props
 	 * @return 
 	 */
 	@Deprecated
 	public static Properties clone(Properties props) {
-		return GeneralTestUtil.clone(props);
+		return (Properties)props.clone();
 	}
 	
 	/**
