@@ -86,7 +86,7 @@
 		<module>andhow-testing/andhow-simulated-app-tests</module>
 		<module>andhow-testing/andhow-test-harness</module>
 		<module>andhow-testing/andhow-annotation-processor-test-harness</module>
-		<module>andhow-test-reflection-utils</module>
+		<module>andhow-shared-test-utils</module>
 	</modules>
 
 	<repositories>

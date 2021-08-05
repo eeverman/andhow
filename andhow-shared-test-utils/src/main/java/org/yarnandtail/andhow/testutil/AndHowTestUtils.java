@@ -124,7 +124,8 @@ public final class AndHowTestUtils {
 				throw new RuntimeException("Cannot set a new core when AndHow is uninitialized");
 			}
 		} else {
-			return ReflectionTestUtils.setInstanceFieldValue(ahInstance, "core", newCore, (Class<T>)(getAndHowCoreClass()));
+			return ReflectionTestUtils.setInstanceFieldValue(
+					ahInstance, "core", newCore, (Class<T>)(getAndHowCoreClass()));
 		}
 	}
 
@@ -221,7 +222,8 @@ public final class AndHowTestUtils {
 	 * @return The finding Config flag value.
 	 */
 	public static ThreadLocal<Boolean> getFindingConfig() {
-		return ReflectionTestUtils.getStaticFieldValue(getAndHowClass(), "findingConfig", ThreadLocal.class);
+		return ReflectionTestUtils.getStaticFieldValue(
+				getAndHowClass(), "findingConfig", ThreadLocal.class);
 	}
 
 	//

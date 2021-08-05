@@ -10,12 +10,12 @@
 		<version>0.4.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>andhow-test-reflection-utils</artifactId>
+	<artifactId>andhow-shared-test-utils</artifactId>
 	<packaging>jar</packaging>
-	<name>AndHow Test Reflection Utils</name>
+	<name>AndHow shared test utilities</name>
 	<description>
-		These shared classes provide some common reflection utilities to make testing easier,
-		such as reading or modifying private fields.
+		These shared classes provide common test utilities to make testing easier,
+		both for testing the AndHow framework and testing apps using AndHow.
 	</description>
 
 	<dependencies>
