@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${groupId}</groupId>
-			<artifactId>andhow-test-reflection-utils</artifactId>
+			<artifactId>andhow-shared-test-utils</artifactId>
 			<version>${version}</version>
 			<scope>test</scope>
 		</dependency>
