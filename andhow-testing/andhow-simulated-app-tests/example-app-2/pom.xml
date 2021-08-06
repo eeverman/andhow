@@ -19,7 +19,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-test-harness</artifactId>
+			<artifactId>andhow-junit5-extensions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

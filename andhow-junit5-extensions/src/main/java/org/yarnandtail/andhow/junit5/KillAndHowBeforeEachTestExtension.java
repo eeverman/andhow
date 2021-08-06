@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.junit5;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.yarnandtail.andhow.AndHowNonProductionUtil;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 
 /**
@@ -44,7 +44,7 @@ public class KillAndHowBeforeEachTestExtension extends KillAndHowBeforeAllTestsE
 	 */
 	@Override
 	public void beforeEach(ExtensionContext extensionContext) throws Exception {
-		AndHowNonProductionUtil.destroyAndHowCore();
+		AndHowTestUtils.setAndHowCore(null);
 	}
 
 }

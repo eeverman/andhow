@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AndHowNonProductionUtil;
-import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +19,7 @@ import static org.mockito.Mockito.*;
  */
 class KillAndHowBeforeAllTestsExtensionTest {
 
-	AndHowCore andHowCoreCreatedDuringTest;
+	Object andHowCoreCreatedDuringTest;
 
 	//The expected namespace used to store values within the Extension
 	ExtensionContext.Namespace expectedNamespace;
@@ -37,12 +35,12 @@ class KillAndHowBeforeAllTestsExtensionTest {
 	void setUp() {
 
 		// Setup AndHow for the test
-		assertNull(AndHowNonProductionUtil.getAndHowCore(),
+		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Just checking - no test should leave AndHow initialized");
 
-		AndHow.instance();	//force creation
+		AndHowTestUtils.invokeAndHowInstance();	//force creation
 
-		andHowCoreCreatedDuringTest = AndHowNonProductionUtil.getAndHowCore();
+		andHowCoreCreatedDuringTest = AndHowTestUtils.getAndHowCore();
 
 		assertNotNull(andHowCoreCreatedDuringTest, "Should be non-null because we forced creation");
 
@@ -59,7 +57,7 @@ class KillAndHowBeforeAllTestsExtensionTest {
 
 	@AfterEach
 	void tearDown() {
-		AndHowNonProductionUtil.destroyAndHowCore();
+		AndHowTestUtils.setAndHowCore(null);
 	}
 
 	@Test
@@ -70,7 +68,7 @@ class KillAndHowBeforeAllTestsExtensionTest {
 		// The initial event called on extension by JUnit
 		theExt.beforeAll(extensionContext);
 
-		assertNull(AndHowNonProductionUtil.getAndHowCore(),
+		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Extension should have killed the core");
 
 		// The final event called on the extension by Junit
@@ -78,7 +76,7 @@ class KillAndHowBeforeAllTestsExtensionTest {
 
 		//
 		// Verify the overall outcome
-		assertEquals(andHowCoreCreatedDuringTest, AndHowNonProductionUtil.getAndHowCore(),
+		assertEquals(andHowCoreCreatedDuringTest, AndHowTestUtils.getAndHowCore(),
 				"Extension should have reinstated the same core instance created in setup");
 
 
@@ -89,7 +87,7 @@ class KillAndHowBeforeAllTestsExtensionTest {
 
 		InOrder orderedStoreCalls = inOrder(store);
 		orderedStoreCalls.verify(store).put(keyForPut.capture(), eq(andHowCoreCreatedDuringTest));
-		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), eq(AndHowCore.class));
+		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), eq(AndHowTestUtils.getAndHowCoreClass()));
 		verifyNoMoreInteractions(store);	//Really don't want any other interaction w/ the store
 
 		assertEquals(keyForPut.getValue(), keyForRemove.getValue(),

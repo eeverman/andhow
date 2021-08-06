@@ -1,14 +1,15 @@
 package org.yarnandtail.andhow.testutil;
 
+import java.lang.reflect.*;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ReflectionSupport;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +44,7 @@ public final class ReflectionTestUtils {
 	 * @throws Exception
 	 */
 	public static String stringMethod(Object instance, String name, Object[] args, Class<?>[] types) {
-			return (String)invokeMethod(instance, name, args, types);
+			return (String)invokeInstanceMethod(instance, name, args, types);
 	}
 
 	/**
@@ -57,7 +58,7 @@ public final class ReflectionTestUtils {
 	 * @return The return value of the method
 	 */
 	public static String stringMethod(Object instance, String name, Object arg, Class<?> type) {
-		return (String)invokeMethod(instance, name, new Object[]{arg}, new Class<?>[]{type});
+		return (String)invokeInstanceMethod(instance, name, new Object[]{arg}, new Class<?>[]{type});
 	}
 
 	/**
@@ -75,28 +76,69 @@ public final class ReflectionTestUtils {
 	 * @return Return value of the invoked method
 	 */
 	public static String stringMethod(Object instance, String name, Object... args) {
-		return (String)invokeMethod(instance, name, args, getTypes(args));
+		return (String)invokeInstanceMethod(instance, name, args, getTypes(args));
 	}
 
 	/**
-	 * Invokes the named String returning instance  method on the instance via reflection,
-	 * bypassing visibility.
+	 * Invokes the named instance method on the instance via reflection, bypassing visibility.
 	 *
 	 * @param instance The object instance to call the method on.
 	 * @param name The name of a String returning method, which must be an instance method.
 	 * @param args Arguments to the method
 	 * @param types The argument types of the method which must match the method, not the args.
-	 * @return The String returned by the method
 	 * @return The return value of the method
 	 */
-	public static Object invokeMethod(Object instance, String name, Object[] args, Class<?>[] types) {
+	public static Object invokeInstanceMethod(Object instance, String name, Object[] args, Class<?>[] types) {
 
 		Optional<Method> method = ReflectionSupport.findMethod(instance.getClass(), name, types);
 
 		if (method.isPresent()) {
-			return ReflectionSupport.invokeMethod(method.get(), instance, args);
+			return invokeMethod(method.get(), instance, args);
 		} else {
 			throw new IllegalArgumentException("Method not found");
+		}
+	}
+	
+	/**
+	 * Invokes the named static method via reflection, bypassing visibility.
+	 *
+	 * @param clazz The class to call the method on.
+	 * @param name The name of a String returning method, which must be an instance method.
+	 * @param args Arguments to the method.  May be empty or null for zero argument methods
+	 * @param types The argument types of the method which must match the method, not the args.
+	 *		Must be empty for zero arg methods, not null.
+	 * @return The return value of the method
+	 */
+	public static Object invokeStaticMethod(Class<?> clazz, String name, Object[] args, Class<?>[] types) {
+
+		Optional<Method> method = ReflectionSupport.findMethod(clazz, name, types);
+
+		if (method.isPresent()) {
+			return invokeMethod(method.get(), null, args);
+		} else {
+			throw new IllegalArgumentException("Method not found");
+		}
+	}
+	
+	/**
+	 * Invoke the Method, static or instance, with the passed arguments.
+	 * 
+	 * If an instance method, the instance must be non-null.  If a static method,
+	 * the instance must be null.  Normally invoking a method by reflection can throw
+	 * several different types of exceptions which must be handled - This method only
+	 * throws a RuntimeException.
+	 * 
+	 * @param method The method to invoke.
+	 * @param instance The instance to invoke the method on, or null if a static method.
+	 * @param args The arguments to pass to the method.
+	 * @return The return value of the invocation, which will be null for a void method.
+	 */
+	public static Object invokeMethod(Method method, Object instance, Object[] args) {
+		try {
+			method.setAccessible(true);
+			return method.invoke(instance, args);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 

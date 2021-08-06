@@ -26,6 +26,20 @@ public class AndHow {
 	//...and one instance field
 	private volatile AndHowCore core;
 
+	private AndHow(AndHowConfiguration<? extends AndHowConfiguration> config) {
+		core = new AndHowCore();
+	}
+		
+	/**
+	 * Fake instance method
+	 * @return 
+	 */
+	public static AndHow instance() {
+		if (singleInstance == null || singleInstance.core == null) {
+			fullyInitialize();
+		}
+		return singleInstance;
+	}
 
 	//...and one inner class
 	public static class Initialization {
@@ -33,11 +47,11 @@ public class AndHow {
 	}
 
 	/**
-	 * Method to initialize the singleton for testing
+	 * Method to initialize the singleton for testing, which just destroys everything and
+	 * replaces it w/ new instances.
 	 */
 	public static void fullyInitialize() {
-		singleInstance = new AndHow();
-		singleInstance.core = new AndHowCore();
+		singleInstance = new AndHow(null);
 		initialization = new Initialization();
 		initializing = false;
 		inProcessConfig = null;

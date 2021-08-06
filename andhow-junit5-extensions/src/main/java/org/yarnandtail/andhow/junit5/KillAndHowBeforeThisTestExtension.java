@@ -1,11 +1,7 @@
 package org.yarnandtail.andhow.junit5;
 
 import org.junit.jupiter.api.extension.*;
-import org.yarnandtail.andhow.AndHowNonProductionUtil;
-import org.yarnandtail.andhow.internal.AndHowCore;
-
-import java.lang.reflect.Method;
-import java.util.Optional;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
  * JUnit Extension that can be placed on an <em>individual test method</em> to reset AndHow to its
@@ -32,20 +28,13 @@ public class KillAndHowBeforeThisTestExtension implements BeforeEachCallback, Af
 	public static final String CORE_KEY = "core_key";
 
 	/**
-	 * The state of AndHow, stored before any tests in the current test class are run.
-	 */
-	private AndHowCore beforeAllAndHowCore;
-
-	/**
 	 * Store the state of AndHow before this test, then destroy the state so AndHow is unconfigured.
 	 * @param extensionContext
 	 * @throws Exception
 	 */
 	@Override
 	public void beforeEach(ExtensionContext extensionContext) throws Exception {
-		AndHowCore core = AndHowNonProductionUtil.getAndHowCore();
-		getStore(extensionContext).put(CORE_KEY, core);
-		AndHowNonProductionUtil.destroyAndHowCore();
+		getStore(extensionContext).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 	}
 
 	/**
@@ -55,8 +44,8 @@ public class KillAndHowBeforeThisTestExtension implements BeforeEachCallback, Af
 	 */
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		AndHowCore core = getStore(context).remove(CORE_KEY, AndHowCore.class);
-		AndHowNonProductionUtil.setAndHowCore(core);
+		Object core = getStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
+		AndHowTestUtils.setAndHowCore(core);
 	}
 
 	/**

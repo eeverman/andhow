@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
-import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.AndHowNonProductionUtil;
-import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -18,9 +16,9 @@ import static org.mockito.Mockito.*;
  * Beyond unit testing, the extension is used in many of the simulated app tests
  * (see that module for usage examples).
  */
-class KillAndHowBeforeThisTestExtensionTest {
+class KillAndHowBeforeEachTestExtensionTest {
 
-	AndHowCore andHowCoreCreatedDuringTest;
+	Object andHowCoreCreatedDuringTest;
 
 	//The expected namespace used to store values within the Extension
 	ExtensionContext.Namespace expectedNamespace;
@@ -33,15 +31,15 @@ class KillAndHowBeforeThisTestExtensionTest {
 
 
 	@BeforeEach
-	void setUp() throws NoSuchMethodException {
+	void setUp() {
 
 		// Setup AndHow for the test
-		assertNull(AndHowNonProductionUtil.getAndHowCore(),
+		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Just checking - no test should leave AndHow initialized");
 
-		AndHow.instance();	//force creation
+		AndHowTestUtils.invokeAndHowInstance();	//force creation
 
-		andHowCoreCreatedDuringTest = AndHowNonProductionUtil.getAndHowCore();
+		andHowCoreCreatedDuringTest = AndHowTestUtils.getAndHowCore();
 
 		assertNotNull(andHowCoreCreatedDuringTest, "Should be non-null because we forced creation");
 
@@ -52,33 +50,41 @@ class KillAndHowBeforeThisTestExtensionTest {
 		when(store.remove(any(), any())).thenReturn(andHowCoreCreatedDuringTest);
 
 		extensionContext = mock(ExtensionContext.class);
-		when(extensionContext.getRequiredTestInstance()).thenReturn(this);
-		when(extensionContext.getRequiredTestMethod()).thenReturn(this.getClass().getMethod("completeWorkflow"));
+		when(extensionContext.getRequiredTestClass()).thenReturn((Class)(this.getClass()));
 		when(extensionContext.getStore(any())).thenReturn(store);
 	}
 
 	@AfterEach
 	void tearDown() {
-		AndHowNonProductionUtil.destroyAndHowCore();
+		AndHowTestUtils.setAndHowCore(null);
 	}
 
 	@Test
-	public void completeWorkflow() throws Exception {
+	void completeWorkflow() throws Exception {
 
-		KillAndHowBeforeThisTestExtension theExt = new KillAndHowBeforeThisTestExtension();
+		KillAndHowBeforeEachTestExtension theExt = new KillAndHowBeforeEachTestExtension();
 
 		// The initial event called on extension by JUnit
-		theExt.beforeEach(extensionContext);
+		theExt.beforeAll(extensionContext);
 
-		assertNull(AndHowNonProductionUtil.getAndHowCore(),
+		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Extension should have killed the core");
 
+		AndHowTestUtils.invokeAndHowInstance();	//force creation again!
+
+		theExt.beforeEach(extensionContext);
+
+		assertNull(AndHowTestUtils.getAndHowCore(),
+				"Extension should have killed the core... again!");
+
+		//Note:  after each is not implemented b/c its not needed
+
 		// The final event called on the extension by Junit
-		theExt.afterEach(extensionContext);
+		theExt.afterAll(extensionContext);
 
 		//
 		// Verify the overall outcome
-		assertEquals(andHowCoreCreatedDuringTest, AndHowNonProductionUtil.getAndHowCore(),
+		assertEquals(andHowCoreCreatedDuringTest, AndHowTestUtils.getAndHowCore(),
 				"Extension should have reinstated the same core instance created in setup");
 
 
@@ -89,7 +95,7 @@ class KillAndHowBeforeThisTestExtensionTest {
 
 		InOrder orderedStoreCalls = inOrder(store);
 		orderedStoreCalls.verify(store).put(keyForPut.capture(), eq(andHowCoreCreatedDuringTest));
-		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), eq(AndHowCore.class));
+		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), eq(AndHowTestUtils.getAndHowCoreClass()));
 		verifyNoMoreInteractions(store);	//Really don't want any other interaction w/ the store
 
 		assertEquals(keyForPut.getValue(), keyForRemove.getValue(),
@@ -101,25 +107,16 @@ class KillAndHowBeforeThisTestExtensionTest {
 				ArgumentCaptor.forClass(ExtensionContext.Namespace.class);
 
 		//Each method is called once in beforeAll and afterAll
-		verify(extensionContext, times(2)).getRequiredTestInstance();	//Must be called to figure out the Test class
+		verify(extensionContext, times(2)).getRequiredTestClass();	//Must be called to figure out the Test class
 		verify(extensionContext, times(2)).getStore(namespace.capture());
 
 		//Verify the namespace used
-		// The namespace is an implementation detail, but must include the Extension class, the
-		// instance of the test (this instance)*, and since this extension is specific to the actual
-		// test method called, the Method of the test (this method).
-		// There isn't an easy way to test that minimum spec, so here just check for a specific namespace.
-		// * This extension is different from the other in needing the test instance rather than the
-		// test class.  Since this extension stores values at the instance method level, it is unique
-		// to that level rather than to the class level.
+		// The namespace is an implementation detail, but must include the Extension class and the
+		// Tested class (this class in this case).  There isn't an easy way to test that minimum spec,
+		// so here just check for a specific namespace.
 		expectedNamespace = ExtensionContext.Namespace.create(
-				KillAndHowBeforeThisTestExtension.class,
-				this,
-				this.getClass().getMethod("completeWorkflow"));
+				KillAndHowBeforeEachTestExtension.class,
+				(Class)(this.getClass()));
 		assertEquals(expectedNamespace, namespace.getValue());
-
-
 	}
-
-
 }

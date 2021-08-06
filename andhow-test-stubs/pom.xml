@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.yarnandtail</groupId>
+        <artifactId>andhow-parent</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>andhow-test-stubs</artifactId>
+    <packaging>jar</packaging>
+	
+	<name>AndHow Test Stubs</name>
+	<description>
+		Simple stub classes that match names and fields of some key classes to be used in tests.
+		This allows testing modules to be tested against the classes in this module to
+		prove the tests and JUnit extensions work, so they can be used to test AndHow itself.
+		
+		Without this, its not possible to write testing utils and JUnit extensions that can
+		be used on AndHow itself, because they cannot be tested.
+	</description>
+</project>
