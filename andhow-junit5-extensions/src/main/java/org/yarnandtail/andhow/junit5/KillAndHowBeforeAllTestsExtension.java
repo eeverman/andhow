@@ -3,8 +3,7 @@ package org.yarnandtail.andhow.junit5;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.yarnandtail.andhow.AndHowNonProductionUtil;
-import org.yarnandtail.andhow.internal.AndHowCore;
+import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
  * JUnit Extension that can be placed on a <em>test class</em> to reset AndHow to its unconfigured
@@ -48,15 +47,13 @@ public class KillAndHowBeforeAllTestsExtension implements BeforeAllCallback, Aft
 	 */
 	@Override
 	public void beforeAll(ExtensionContext extensionContext) throws Exception {
-		AndHowCore core = AndHowNonProductionUtil.getAndHowCore();
-		getStore(extensionContext).put(CORE_KEY, core);
-		AndHowNonProductionUtil.destroyAndHowCore();
+		getStore(extensionContext).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 	}
 
 	@Override
-	public void afterAll(ExtensionContext extensionContext) throws Exception {
-		AndHowCore core = getStore(extensionContext).remove(CORE_KEY, AndHowCore.class);
-		AndHowNonProductionUtil.setAndHowCore(core);
+	public void afterAll(ExtensionContext context) throws Exception {
+		Object core = getStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
+		AndHowTestUtils.setAndHowCore(core);
 	}
 
 	/**

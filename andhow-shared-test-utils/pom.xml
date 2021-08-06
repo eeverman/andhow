@@ -24,6 +24,12 @@
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-test-stubs</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>

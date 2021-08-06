@@ -44,6 +44,20 @@ public final class AndHowTestUtils {
 		setAndHowConfigLocator(null);
 		getFindingConfig().set(false);
 	}
+	
+	/**
+	 * Invoke AndHow.instance(), returning an AndHow instance and forcing initiation
+	 * if AndHow is not already initiated.
+	 * 
+	 * See AndHow.instance().
+	 *
+	 * Since this module has no dependency on AndHow, the return type of Object.
+	 *
+	 * @return The current AndHow instance, or null if it is uninitiated.
+	 */
+	public static Object invokeAndHowInstance() {
+		return ReflectionTestUtils.invokeStaticMethod(getAndHowClass(), "instance", null, new Class<?>[] {});
+	}
 
 	/**
 	 * The current AndHow singleton instance, without forcing its creation.
@@ -233,7 +247,7 @@ public final class AndHowTestUtils {
 	 * Get the Class<?> of AndHow - needed since this module has no AndHow dependency.
 	 * @return Class<?> of AndHow
 	 */
-	private static Class<?> getAndHowClass() {
+	public static Class<?> getAndHowClass() {
 		return ReflectionTestUtils.getClassByName("org.yarnandtail.andhow.AndHow");
 	}
 
@@ -241,7 +255,7 @@ public final class AndHowTestUtils {
 	 * Get the Class<?> of AndHowCore - needed since this module has no AndHow dependency.
 	 * @return Class<?> of AndHowCore
 	 */
-	private static Class<?> getAndHowCoreClass() {
+	public static Class<?> getAndHowCoreClass() {
 		return ReflectionTestUtils.getClassByName("org.yarnandtail.andhow.internal.AndHowCore");
 	}
 
@@ -257,7 +271,7 @@ public final class AndHowTestUtils {
 	 * Get the Class<?> of AndHowConfiguration - needed since this module has no AndHow dependency.
 	 * @return Class<?> of AndHowConfiguration
 	 */
-	private static Class<?> getAndHowConfigurationClass() {
+	public static Class<?> getAndHowConfigurationClass() {
 		return ReflectionTestUtils.getClassByName("org.yarnandtail.andhow.AndHowConfiguration");
 	}
 

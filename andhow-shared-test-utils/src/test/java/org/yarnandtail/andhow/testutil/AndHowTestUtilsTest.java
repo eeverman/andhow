@@ -14,11 +14,12 @@ class AndHowTestUtilsTest {
 
 	@BeforeEach
 	void setUp() {
-		AndHow.fullyInitialize();
+		AndHow._fullyInitialize();
 	}
 
 	@AfterEach
 	void tearDown() {
+		AndHow._fullyDestroy();
 	}
 
 	@Test
@@ -29,6 +30,15 @@ class AndHowTestUtilsTest {
 		assertFalse(AndHowTestUtils.setAndHowInitializing(true));
 		assertNull(AndHowTestUtils.setAndHowInProcessConfig(null));
 		assertNull(AndHowTestUtils.setAndHowConfigLocator(null));
+	}
+	
+	@Test
+	void invokeAndHowInstance() {
+		AndHow._fullyDestroy();
+		
+		Object single = AndHowTestUtils.invokeAndHowInstance();
+		assertNotNull(single);
+		assertSame(single, AndHowTestUtils.invokeAndHowInstance());
 	}
 
 	@Test
