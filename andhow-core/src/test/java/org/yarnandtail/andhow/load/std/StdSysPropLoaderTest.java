@@ -2,6 +2,8 @@ package org.yarnandtail.andhow.load.std;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.yarnandtail.andhow.junit5.ext.RestoreSysPropsAfterEachTestExt;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +20,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
+@ExtendWith(RestoreSysPropsAfterEachTestExt.class)
 public class StdSysPropLoaderTest {
 	
 	StaticPropertyConfigurationMutable appDef;
@@ -50,26 +53,7 @@ public class StdSysPropLoaderTest {
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_FALSE);
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
-
-		clearSysProps();
 		
-	}
-	
-	@AfterEach
-	public void post() throws Exception {
-		clearSysProps();
-	}
-	
-	void clearSysProps() throws Exception {
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		//Clear all known system properties
-		for (NameAndProperty nap : AndHowUtil.getProperties(SimpleParams.class)) {
-			String canon = bns.buildNames(nap.property, simpleProxy).getCanonicalName().getActualName();
-			System.clearProperty(canon);
-		}
-		
-		System.clearProperty("XXX");	//used in one test
 	}
 	
 	protected String getPropName(Property p) throws Exception {
@@ -100,16 +84,9 @@ public class StdSysPropLoaderTest {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 	
-	/*  The HashTable that System.properties uses does not allow null values, so
-		no need (or way) to test nulls here. */
-//	@Test
-//	public void testNullValues() throws Exception {
-//	}
-	
 	@Test
 	public void testEmptyValues() throws Exception {
-		
-		
+
 		System.setProperty(getPropName(SimpleParams.STR_BOB), "");
 		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");
@@ -132,8 +109,7 @@ public class StdSysPropLoaderTest {
 	
 	@Test
 	public void testAllWhitespaceValues() throws Exception {
-		
-		
+
 		System.setProperty(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
@@ -159,8 +135,7 @@ public class StdSysPropLoaderTest {
 	
 	@Test
 	public void testQuotedStringValues() throws Exception {
-		
-		
+
 		System.setProperty(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
 		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");

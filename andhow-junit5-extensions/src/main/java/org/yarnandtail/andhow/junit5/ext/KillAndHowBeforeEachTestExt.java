@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.junit5;
+package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -34,16 +34,16 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  * }
  * }</pre>
  */
-public class KillAndHowBeforeEachTestExtension extends KillAndHowBeforeAllTestsExtension
+public class KillAndHowBeforeEachTestExt extends KillAndHowBeforeAllTestsExt
 		implements BeforeEachCallback {
 
 	/**
 	 * Destroy the AndHow state before each test so that each starts with AndHow unconfigured.
-	 * @param extensionContext
+	 * @param context
 	 * @throws Exception
 	 */
 	@Override
-	public void beforeEach(ExtensionContext extensionContext) throws Exception {
+	public void beforeEach(ExtensionContext context) throws Exception {
 		AndHowTestUtils.setAndHowCore(null);
 	}
 

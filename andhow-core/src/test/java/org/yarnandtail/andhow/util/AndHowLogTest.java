@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,6 +43,9 @@ public class AndHowLogTest {
 		testNonErrByteArray = new ByteArrayOutputStream();
 		testNonErrPrintStream = new PrintStream(testNonErrByteArray, true);
 		handler.setNonErrStream(testNonErrPrintStream);
+
+		// Reset the log level
+		log.setLevel(null);
 	}
 
 	@AfterEach
@@ -52,9 +56,6 @@ public class AndHowLogTest {
 		handler.setErrStream(null);
 		handler.setNonErrStream(null);
 
-		// Reset the log level
-		System.clearProperty(AndHowLogTest.class.getCanonicalName() + ".level");
-		log.setLevel(null);
 	}
 
 	/**
@@ -70,6 +71,7 @@ public class AndHowLogTest {
 	 * Test of trace method, of class AndHowLog.
 	 */
 	@Test
+	@RestoreSysPropsAfterThisTest
 	public void testTrace_String() {
 		String sampleMsg = "This is a fact you don't care about";
 
@@ -105,6 +107,7 @@ public class AndHowLogTest {
 	 * Test of trace method, of class AndHowLog.
 	 */
 	@Test
+	@RestoreSysPropsAfterThisTest
 	public void testTrace_String_ObjectArr() {
 		log.trace("Some debug on line {0}, message ''{1}''", "42", "Bee Boo");
 		assertEquals(0, testNonErrByteArray.toString().length(), "trace is off by default");

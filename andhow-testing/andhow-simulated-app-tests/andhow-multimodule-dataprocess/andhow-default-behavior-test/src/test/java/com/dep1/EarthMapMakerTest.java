@@ -4,9 +4,10 @@ import org.dataprocess.ExternalServiceConnector;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -77,6 +78,7 @@ public class EarthMapMakerTest extends AndHowJunit5TestBase {
 	 * @throws Exception
 	 */
 	@Test
+	@RestoreSysPropsAfterThisTest
 	public void testOrderOfLoading() throws Exception {
 		
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");

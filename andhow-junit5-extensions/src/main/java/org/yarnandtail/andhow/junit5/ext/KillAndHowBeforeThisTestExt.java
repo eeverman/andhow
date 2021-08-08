@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.junit5;
+package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
@@ -23,18 +23,19 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  * }
  * }</pre>
  */
-public class KillAndHowBeforeThisTestExtension implements BeforeEachCallback, AfterEachCallback {
+public class KillAndHowBeforeThisTestExt extends ExtensionBase
+		implements BeforeEachCallback, AfterEachCallback {
 
 	public static final String CORE_KEY = "core_key";
 
 	/**
 	 * Store the state of AndHow before this test, then destroy the state so AndHow is unconfigured.
-	 * @param extensionContext
+	 * @param context
 	 * @throws Exception
 	 */
 	@Override
-	public void beforeEach(ExtensionContext extensionContext) throws Exception {
-		getStore(extensionContext).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
+	public void beforeEach(ExtensionContext context) throws Exception {
+		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 	}
 
 	/**
@@ -44,18 +45,8 @@ public class KillAndHowBeforeThisTestExtension implements BeforeEachCallback, Af
 	 */
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		Object core = getStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
+		Object core = getPerTestMethodStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 	}
-
-	/**
-	 * Create or return the unique storage space for this test class for this extension.
-	 * @param context
-	 * @return
-	 */
-	private ExtensionContext.Store getStore(ExtensionContext context) {
-		return context.getStore(ExtensionContext.Namespace.create(getClass(), context.getRequiredTestInstance(), context.getRequiredTestMethod()));
-	}
-
 
 }
