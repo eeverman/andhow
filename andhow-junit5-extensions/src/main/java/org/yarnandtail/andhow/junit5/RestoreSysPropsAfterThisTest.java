@@ -10,8 +10,14 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation that can be placed on a test method to store System.Properties values prior to the
- * test method, then restore them after the test method is run.
+ * Annotation for a test method to isolate and restore any changes made to System.Properties.
+ *
+ * Specifically, changes made to System.Properties within a:<p>
+ * <ul>
+ * <li><b>{@code @BeforeAll} ARE NOT REVERTED - USE {@code RestoreSysPropsAfterEachTest} for this</b></li>
+ * <li><b>{@code @BeforeEach} ARE NOT REVERTED - USE {@code RestoreSysPropsAfterEachTest} for this</b></li>
+ * <li><b>{@code @Test} method</b> will be visible only to that test and reverted after that test</li>
+ * </ul><p>
  *
  * This can be useful for verifying your application behaves as you expect when you set specific
  * System properties, without affecting other tests.

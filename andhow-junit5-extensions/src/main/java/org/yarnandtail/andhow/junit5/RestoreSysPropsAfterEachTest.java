@@ -11,18 +11,18 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation that can be placed on a test class to store System.Properties values prior to the test
- * class, then restore them after each test method is run.
+ * Annotation for a test class to isolate and restore any changes made to System.Properties.
  *
- * This annotation will restore changes made in {@code @BeforeAll} and {@code @BeforeEach} as well,
- * but their System.Properties modifications will be visible within the tests.
+ * Specifically, changes made to System.Properties within a:<p>
+ * <ul>
+ * <li><b>{@code @BeforeAll}</b> will be visible to each test and reverted after the last test or {@code @AfterAll}</li>
+ * <li><b>{@code @BeforeEach}</b> will be visible to each test and reverted after each test or {@code @AfterEach}</li>
+ * <li><b>{@code @Test} method</b> will be visible only to that test and reverted after that test</li>
+ * </ul><p>
+ * This can be useful for verifying an application behaves as expected with specific Sys Props
+ * without affecting other tests. Use this annotation when several test methods share a set of
+ * Sys Prop settings, or if multiple tests set Sys Props.
  * <p>
- * This can be useful for verifying your application behaves as you expect when you set specific
- * System properties, without affecting other tests.
- * <p>
- * Since the property values are reset after each test is run to the state created by
- * {@code @BeforeAll} and {@code @BeforeEach}, it makes sense to use this annotation
- * when you need a shared complex property state which is modified slightly for each test.
  * Here is a complete usage example:
  * <pre>{@Code
  * @RestoreSysPropsAfterEachTest
@@ -30,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  *   @BeforeAll //Could be @BeforeAll or use both
  *   public static void configAndHowForAllTests(){
- * 		System.setProperty("SomeKey", "SomeValue");
+ * 		System.setProperty("SomeKey", "SomeValue");	// will be visible to myTest
  *   }
  *
  *   @Test

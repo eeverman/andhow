@@ -17,8 +17,8 @@ public class RestoreSysPropsAfterThisTestExt extends ExtensionBase
 	/**
 	 * Store the Sys Props as they were prior to this test.
 	 *
-	 * Note:  If the Sys Props are modified prior to this, that modified state will be stored and
-	 * then restored after.
+	 * Happens after {@code @BeforeAll} and before {@code @BeforeEach}, so this stores
+	 * Sys Props as they were after possible mods in {@code @BeforeAll}.
 	 *
 	 * @param context
 	 * @throws Exception
@@ -30,6 +30,9 @@ public class RestoreSysPropsAfterThisTestExt extends ExtensionBase
 
 	/**
 	 * Restore after this test method and remove from the store.
+	 *
+	 * Happens before {@code @AfterEach}, so {@code @AfterEach} will see the state left
+	 * by {@code @BeforeEach} unless it was modified by the test.
 	 *
 	 * @param context
 	 * @throws Exception
