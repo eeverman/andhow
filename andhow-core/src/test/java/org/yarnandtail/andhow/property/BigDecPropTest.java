@@ -7,6 +7,7 @@ import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.api.ProblemList;
 import org.yarnandtail.andhow.internal.RequirementProblem.NonNullPropertyProblem;
 import org.yarnandtail.andhow.internal.ValueProblem.InvalidValueProblem;
+import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import javax.naming.NamingException;
 
@@ -70,6 +71,7 @@ public class BigDecPropTest extends PropertyTestBase {
     }
 
     @Test
+    @RestoreSysPropsAfterThisTest
     public void happyPathTest_SystemProp() {
         System.setProperty(LESS_THAN_SYS_PROP_PATH, SYS_PROP_VALUE.toString());
         this.buildConfig(this, "_happyPath", BigDecGroup.class);

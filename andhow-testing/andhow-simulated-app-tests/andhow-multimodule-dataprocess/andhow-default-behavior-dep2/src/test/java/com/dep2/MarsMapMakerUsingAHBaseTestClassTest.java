@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.yarnandtail.andhow.AndHowJunit5TestBase;
 import org.yarnandtail.andhow.NonProductionConfig;
+import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterEachTest;
 
 /**
  * Note that these test methods are specified to be executed in Alph sort order
@@ -14,6 +15,7 @@ import org.yarnandtail.andhow.NonProductionConfig;
  * 
  * @author ericeverman
  */
+@RestoreSysPropsAfterEachTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
 	

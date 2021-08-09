@@ -23,9 +23,15 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.yarnandtail</groupId>
+            <groupId>${groupId}</groupId>
             <artifactId>andhow-test-harness</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${groupId}</groupId>
+            <artifactId>andhow-junit5-extensions</artifactId>
+            <version>${version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

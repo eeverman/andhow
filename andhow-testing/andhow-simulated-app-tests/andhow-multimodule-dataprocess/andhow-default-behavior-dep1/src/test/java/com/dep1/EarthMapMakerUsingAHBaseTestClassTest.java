@@ -6,6 +6,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import static org.junit.jupiter.api.Assertions.*;
 import org.yarnandtail.andhow.AndHowJunit5TestBase;
 import org.yarnandtail.andhow.NonProductionConfig;
+import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterEachTest;
 
 
 /**
@@ -14,6 +15,7 @@ import org.yarnandtail.andhow.NonProductionConfig;
  * 
  * @author ericeverman
  */
+@RestoreSysPropsAfterEachTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
 	

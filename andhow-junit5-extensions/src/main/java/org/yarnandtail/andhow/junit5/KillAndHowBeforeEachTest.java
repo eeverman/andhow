@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.junit5;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTestExtension;
+import org.yarnandtail.andhow.junit5.ext.KillAndHowBeforeEachTestExt;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Example usage:
  * <pre>{@Code
  * @KillAndHowBeforeEachTest
- * public class MyJunit5TestClass {
+ * public class MyJunit5Test {
  *
  *   @Test
  *   public void doATest(){
@@ -37,12 +37,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <p>
  * Note:  Using this annotation on a JUnit test class is the same as using
  * {@Code @ExtendWith(KillAndHowBeforeEachTestExtension.class)} on a class, but this annotation is
- * safer because it cannot be put on a method.  '@ExtendWith' allows placement on a method,
- * but the extension will only work properly on a class.
+ * safer because it blocks placement on a method.
  */
 @Target({ TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@ExtendWith(KillAndHowBeforeEachTestExtension.class)
+@ExtendWith(KillAndHowBeforeEachTestExt.class)
 public @interface KillAndHowBeforeEachTest {
 
 }

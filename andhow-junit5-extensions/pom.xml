@@ -56,7 +56,7 @@
 			<optional>true</optional>
 		</dependency>
 		
-		
+		<!-- More traditional test dependencies -->
 		<dependency>
 			<!--
 			A minimal stub implementation that can be tested against, providing
@@ -66,6 +66,10 @@
 			<artifactId>andhow-test-stubs</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
 		</dependency>
 	</dependencies>
 
