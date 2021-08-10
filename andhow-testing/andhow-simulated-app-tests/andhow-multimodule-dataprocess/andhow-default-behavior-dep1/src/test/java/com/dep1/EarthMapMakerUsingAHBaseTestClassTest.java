@@ -4,33 +4,34 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import static org.junit.jupiter.api.Assertions.*;
-import org.yarnandtail.andhow.AndHowJunit5TestBase;
-import org.yarnandtail.andhow.NonProductionConfig;
+
+import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.AndHowConfiguration;
+import org.yarnandtail.andhow.StdConfig;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest;
 import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterEachTest;
 
 
 /**
- * Note that these test methods are specified to be executed in Alpha sort order
- * to check the impact of the default config verses a forced config.
+ * Test methods are executed in Alpha sort order.
  * 
  * @author ericeverman
  */
+@KillAndHowBeforeEachTest
 @RestoreSysPropsAfterEachTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
+public class EarthMapMakerUsingAHBaseTestClassTest {
 	
-	public EarthMapMakerUsingAHBaseTestClassTest() {
-	}
-
-	
-	@Test
-	public void testA_ConfigFromSysProps() {
+	@Test	//ordered
+	public void test1_ConfigFromSysProps() {
 
 		System.setProperty("EMM.LogServer", "http://localhost.logger/EMM/");
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
-		
-		NonProductionConfig.instance().forceBuild();
+
+		//Bypass config discovery of {@link TestInitiation} and set a vanilla config, which will
+		//see the Sys Props from above.
+		AndHow.setConfig(StdConfig.instance());
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -41,14 +42,13 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase 
 	}
 	
 	/**
-	 * This test should be ordered between the other two tests (see @FixMethodOrder on class)
+	 * This test happens in order after test1 & before test 3.
 	 * 
-	 * The outer two tests force a custom construction.  This test doesn't not
-	 * force configuration to see if the configuration specified by the auto-discovered
-	 * TestInitiation class is used.
+	 * The outer two tests force a custom construction, but this test should see the auto-discovered
+	 * TestInitiation configuration.
 	 */
-	@Test
-	public void testB_ZeroConfig() {
+	@Test	//ordered
+	public void test2_ZeroConfig() {
 
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -64,17 +64,19 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase 
 		assertEquals(24, emm.getSouthBound());
 	}
 	
-	@Test
-	public void testC_ConfigFromCmdLineThenSysProps() {
+	@Test	//ordered
+	public void test3_ConfigFromCmdLineThenSysProps() {
 
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
-		
 
-		NonProductionConfig.instance().setCmdLineArgs(new String[] {
+		AndHowConfiguration config = StdConfig.instance().setCmdLineArgs(new String[] {
 					"com.dep1.EarthMapMaker.MAP_NAME=CmdLineMapName",
-					"com.dep1.EarthMapMaker.WEST_BOUND=-179"})
-				.forceBuild();
+					"com.dep1.EarthMapMaker.WEST_BOUND=-179"});
+
+		//Bypass config discovery of {@link TestInitiation} and set a vanilla config, which will
+		//see the Sys Props and cmdline args from above.
+		AndHow.setConfig(config);
 		
 		EarthMapMaker emm = new EarthMapMaker();
 		
@@ -86,6 +88,4 @@ public class EarthMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase 
 		//default value (was changed in testB
 		assertEquals("http://prod.mybiz.com.logger/EarthMapMaker/", emm.getLogServerUrl());
 	}
-
-	
 }

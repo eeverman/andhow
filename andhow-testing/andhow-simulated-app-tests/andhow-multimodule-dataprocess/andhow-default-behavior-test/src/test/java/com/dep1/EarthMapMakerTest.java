@@ -6,7 +6,12 @@ import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 
 import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest;
 import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
+
+import javax.naming.InitialContext;
+import org.yarnandtail.andhow.internal.ValueProblem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ericeverman
  */
-public class EarthMapMakerTest extends AndHowJunit5TestBase {
+@KillAndHowBeforeEachTest
+public class EarthMapMakerTest {
 
 	/**
 	 * This test will see the properties set in the andhow.properties file on the classpath.
@@ -53,10 +59,11 @@ public class EarthMapMakerTest extends AndHowJunit5TestBase {
 	@Test
 	public void testUsingCustomConfiguration() {
 
-		NonProductionConfig.instance()
+		AndHowConfiguration config = StdConfig.instance()
 				.addFixedValue(EarthMapMaker.MAP_NAME, "SomeNameILike") /* via Property reference */
-				.addFixedValue("com.dep1.EarthMapMaker.EAST_BOUND", 42) /* via Property name */
-				.forceBuild();
+				.addFixedValue("com.dep1.EarthMapMaker.EAST_BOUND", 42); /* via Property name */
+		
+		AndHow.setConfig(config);
 
 		EarthMapMaker emm = new EarthMapMaker();
 
@@ -79,19 +86,17 @@ public class EarthMapMakerTest extends AndHowJunit5TestBase {
 	 */
 	@Test
 	@RestoreSysPropsAfterThisTest
+	@EnableJndiForThisTestMethod
 	public void testOrderOfLoading() throws Exception {
 		
 		System.setProperty("com.dep1.EarthMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
-		
-		
-		SimpleNamingContextBuilder jndi = getJndi();
+
+		InitialContext jndi = new InitialContext();
 		jndi.bind("java:" + "com.dep1.EarthMapMaker.MAP_NAME", "JndiPropMapName");
 		jndi.bind("java:" + "com.dep1.EarthMapMaker.SOUTH_BOUND", "7");
 		jndi.bind("java:comp/env/" + "org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL", "test/");
-		jndi.activate();
 
-		NonProductionConfig.instance().forceBuild();
 		
 		//VALUES IN THE PROPS FILE
 		//org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL = http://forwardcorp.com/service/
@@ -121,12 +126,12 @@ public class EarthMapMakerTest extends AndHowJunit5TestBase {
 	@Test
 	public void testAttemptToAssignAnInvalidValue() {
 
-		//LOG_SERVER must start w/ "http://"
-		assertThrows(AppFatalException.class, () ->{
-			NonProductionConfig.instance()
-					.addFixedValue("com.dep1.EarthMapMaker.LOG_SERVER", "ftp://blah/")
-					.forceBuild();
-		});
+		AndHowConfiguration config = StdConfig.instance()
+				.addFixedValue("com.dep1.EarthMapMaker.LOG_SERVER", "ftp://blah/");
+		AndHow.setConfig(config);
 
+		//LOG_SERVER must start w/ "http://"
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance());
+		assertTrue(ex.getProblems().get(0) instanceof ValueProblem.InvalidValueProblem);
 	}
 }

@@ -34,5 +34,10 @@
             <version>${version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <!-- Optional of andhow-junit5-extensions for JNDI testing -->
+            <groupId>com.github.h-thurow</groupId>
+            <artifactId>simple-jndi</artifactId>
+        </dependency>
     </dependencies>
 </project>
