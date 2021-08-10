@@ -36,6 +36,7 @@ public class EnableJndiForThisTestClassExt extends ExtensionBase
 		getPerTestClassStore(context).put(KEY, System.getProperties().clone());
 
 		System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleJndiContextFactory");
+		System.setProperty("org.osjava.sj.delimiter", "/");
 		System.setProperty("org.osjava.sj.jndi.shared", "true");
 		System.setProperty("org.osjava.sj.jndi.ignoreClose", "true");
 

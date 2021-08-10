@@ -26,6 +26,7 @@ public class EnableJndiForThisTestClassTest {
 		//
 		// Create a context and assign some values
 		InitialContext orgCtx = new InitialContext();
+		EnableJndiUtil.createSubcontexts(orgCtx, "org/do/well/out/there");
 		orgCtx.bind(TEST_NAME, TEST_VAL);
 		orgCtx.close();
 	}
