@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * reset ofter a test is complete.
  */
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class EnableJndiForThisTestTest {
+public class EnableJndiForThisTestMethodTest {
 	private static String TEST_NAME = "org/do/well/out/there/SECRET_PIN";
 
 	private static String TEST_VAL = "ABCD";
@@ -30,7 +30,7 @@ public class EnableJndiForThisTestTest {
 	}
 
 	@Test  //In order
-	@EnableJndiForThisTest
+	@EnableJndiForThisTestMethod
 	void test2_JndiWorksWhenAnnotationIsUsed() throws NamingException {
 
 		//
@@ -40,7 +40,7 @@ public class EnableJndiForThisTestTest {
 		orgCtx.close();
 
 		//
-		// Meanwhile, somewhere deep in the code under test...
+		// Meanwhile, somewhere deep in the system under test...
 
 		InitialContext appCtx = new InitialContext();
 		assertEquals(TEST_VAL, appCtx.lookup(TEST_NAME));

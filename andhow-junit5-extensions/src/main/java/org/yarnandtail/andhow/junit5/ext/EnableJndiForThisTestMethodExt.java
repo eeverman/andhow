@@ -9,9 +9,12 @@ import java.util.Properties;
 
 /**
  * JUnit 5 extension that enables JNDI for use in an individual test method.
- *
+ * <p>
+ * <em>It is easier and safer to use the {@code @EnableJndiForThisTestMethod} annotation.</em>
+ * That annotation uses this class and prevents this extension from being used on a test class
+ * (this extension only works correctly on a test <em>method</em>).
  */
-public class EnableJndiForThisTestExt extends ExtensionBase
+public class EnableJndiForThisTestMethodExt extends ExtensionBase
 		implements BeforeEachCallback, AfterEachCallback {
 
 	protected final static String KEY = "KEY";

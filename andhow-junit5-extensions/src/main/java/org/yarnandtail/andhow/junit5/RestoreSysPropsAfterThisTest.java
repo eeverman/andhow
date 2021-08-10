@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Since the values are stored and reset around a single test method, it makes sense to use this
  * annotation when you plan to modify Sys Props in just a single test method.
  * Here is a complete usage example:
- * <pre>{@Code
+ * <pre>{@code
  * public class MyJunit5Test {
  *
  *   @Test
