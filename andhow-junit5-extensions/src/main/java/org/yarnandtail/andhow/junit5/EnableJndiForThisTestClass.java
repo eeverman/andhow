@@ -31,6 +31,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * 		  // Create a context and assign some values
  * 		  InitialContext orgCtx = new InitialContext();
+ * 		  EnableJndiUtil.createSubcontexts(ctx, "org/do/good");
  * 		  ctx.bind("org/do/good/SECRET", "ABCD");
  * 		  ctx.close();
  * 		}
