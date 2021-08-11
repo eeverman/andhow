@@ -12,6 +12,7 @@ import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import javax.naming.InitialContext;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.junit5.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -93,10 +94,12 @@ public class EarthMapMakerTest {
 		System.setProperty("com.dep1.EarthMapMaker.EAST_BOUND", "-99");
 
 		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env");
 		jndi.bind("java:" + "com.dep1.EarthMapMaker.MAP_NAME", "JndiPropMapName");
 		jndi.bind("java:" + "com.dep1.EarthMapMaker.SOUTH_BOUND", "7");
 		jndi.bind("java:comp/env/" + "org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL", "test/");
 
+		assertEquals("test/", jndi.lookup("java:comp/env/org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL"));
 		
 		//VALUES IN THE PROPS FILE
 		//org.dataprocess.ExternalServiceConnector.ConnectionConfig.SERVICE_URL = http://forwardcorp.com/service/
