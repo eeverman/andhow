@@ -163,9 +163,9 @@ public abstract class LoaderProblem implements Problem {
 		
 		@Override
 		public String getProblemDescription() {
-			return "Constructing the JNDI Context for the JndiLoader threw an Exception.  " +
-					"If there is no JNDI Context availabler for this entry point to the application, " +
-					"remove the JndiLoader from the list of Loaders.";
+			return "Attempting to read from the JNDI InitialContext threw an unexpected exception.  " +
+				"If there is no JNDI Context available for this application entry point, " +
+				"ensure it is marked as optional (the default) or removed from the list of Loaders.";
 		}
 	}
 	
