@@ -1,19 +1,20 @@
 package com.dep2;
 
 import org.dataprocess.ExternalServiceConnector;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeThisTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author ericeverman
  */
-public class MarsMapMakerTest extends AndHowJunit5TestBase {
+public class MarsMapMakerTest {
 
 	/**
 	 * Its OK to do nothing.  AndHow will initialize itself at the point
@@ -27,6 +28,7 @@ public class MarsMapMakerTest extends AndHowJunit5TestBase {
 	 * method are reverted after each method / test class completes.
 	 */
 	@Test
+	@KillAndHowBeforeThisTest
 	public void testConfigFromPropertiesFileOnly() {
 		
 		MarsMapMaker mmm = new MarsMapMaker();

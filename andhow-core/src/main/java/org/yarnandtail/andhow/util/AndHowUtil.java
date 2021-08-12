@@ -11,6 +11,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.ConstructionProblem.TooManyAndHowInitInstances;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.service.InitLoader;
+import org.yarnandtail.andhow.service.TestInitLoader;
 
 /**
  * Utilities used by AndHow during initial construction.
@@ -397,8 +398,7 @@ public class AndHowUtil {
 			throws AppFatalException {
 		
 		InitLoader prodLoader = new InitLoader();
-		InitLoader testLoader = (InitLoader) getClassInstanceForName(
-				"org.yarnandtail.andhow.service.TestInitLoader");
+		InitLoader testLoader = new TestInitLoader();
 
 		if (! prodLoader.isValidState()) {
 			throw new AppFatalException(

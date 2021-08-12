@@ -1,8 +1,8 @@
 package org.dataprocess;
 
-import org.yarnandtail.andhow.AndHowJunit5TestBase;
-
 import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeThisTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -10,12 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author ericeverman
  */
-public class ExternalServiceConnectorTest extends AndHowJunit5TestBase {
-	
-	public ExternalServiceConnectorTest() {
-	}
+public class ExternalServiceConnectorTest {
 
 	@Test
+	@KillAndHowBeforeThisTest
 	public void testAllConfigValues() {
 		ExternalServiceConnector esc = new ExternalServiceConnector();
 		assertEquals("http://forwardcorp.com/service/", esc.getConnectionUrl());

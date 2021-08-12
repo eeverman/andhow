@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.yarnandtail.andhow.AndHowJunit5TestBase;
-import org.yarnandtail.andhow.NonProductionConfig;
+import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest;
 import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterEachTest;
 
 /**
@@ -15,22 +15,20 @@ import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterEachTest;
  * 
  * @author ericeverman
  */
+@KillAndHowBeforeEachTest
 @RestoreSysPropsAfterEachTest
 @TestMethodOrder(MethodOrderer.MethodName.class)
-public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
-	
-	public MarsMapMakerUsingAHBaseTestClassTest() {
-	}
+public class MarsMapMakerUsingAHBaseTestClassTest {
 
-	
 	@Test
-	public void testA_ConfigFromSysProps() {
-		System.out.println("testConfigFromSysProps");
-		
+	public void test1_ConfigFromSysProps() {
+
 		System.setProperty("com.dep2.MarsMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep2.MarsMapMaker.EAST_BOUND", "-99");
-		
-		NonProductionConfig.instance().forceBuild();
+
+		//Bypass config discovery of {@link TestInitiation} and set a vanilla config, which will
+		//see the Sys Props from above.
+		AndHow.setConfig(StdConfig.instance());
 		
 		MarsMapMaker emm = new MarsMapMaker();
 		
@@ -38,11 +36,15 @@ public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
 		assertEquals("SysPropMapName", emm.getMapName());
 		assertEquals(-99, emm.getEastBound());
 	}
-	
+
+	/**
+	 * This test happens in order after test1 & before test 3.
+	 *
+	 * The outer two tests force a custom construction, but this test should see the auto-discovered
+	 * TestInitiation configuration.
+	 */
 	@Test
-	public void testB_ZeroConfig() {
-		System.out.println("testZeroConfig");
-		
+	public void test2_ZeroConfig() {
 		MarsMapMaker emm = new MarsMapMaker();
 		
 		//These values set in the TestInitiation (discovered automatically)
@@ -58,17 +60,18 @@ public class MarsMapMakerUsingAHBaseTestClassTest extends AndHowJunit5TestBase {
 	}
 	
 	@Test
-	public void testC_ConfigFromCmdLineThenSysProps() {
-		System.out.println("testConfigFromCmdLineThenSysProps");
-		
+	public void test3_ConfigFromCmdLineThenSysProps() {
 		System.setProperty("com.dep2.MarsMapMaker.MAP_NAME", "SysPropMapName");
 		System.setProperty("com.dep2.MarsMapMaker.EAST_BOUND", "-99");
-		
 
-		NonProductionConfig.instance().setCmdLineArgs(new String[] {
+
+		AndHowConfiguration config = StdConfig.instance().setCmdLineArgs(new String[] {
 					"com.dep2.MarsMapMaker.MAP_NAME=CmdLineMapName",
-					"com.dep2.MarsMapMaker.WEST_BOUND=-179"})
-				.forceBuild();
+					"com.dep2.MarsMapMaker.WEST_BOUND=-179"});
+
+		//Bypass config discovery of {@link TestInitiation} and set a vanilla config, which will
+		//see the Sys Props and cmdline args from above.
+		AndHow.setConfig(config);
 		
 		MarsMapMaker emm = new MarsMapMaker();
 		

@@ -2,6 +2,7 @@ package org.yarnandtail.andhow.service;
 
 import java.util.*;
 import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.service.InitLoader;
 
 /**
  * Dedicated wrapper for a java.util.ServiceLoader that loads TestInitLoader instances.
