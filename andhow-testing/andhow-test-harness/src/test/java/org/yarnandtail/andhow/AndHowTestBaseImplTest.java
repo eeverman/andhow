@@ -23,12 +23,12 @@ class AndHowTestBaseImplTest {
 		AndHowTestBaseImpl testBase = new AndHowTestBaseImpl();
 
 		AndHowCore beforeTheTestCore = AndHowNonProductionUtil.getAndHowCore();
-		Properties originalProperties = System.getProperties();
+		Properties originalProperties = (Properties) System.getProperties().clone();
 		Level beforeClassLogLevel = Logger.getGlobal().getLevel();  //store log level before class
 
 		try {
 			//We shouldn't have this property before we start
-			assertNull(System.getProperty(BOB_NAME));
+			assertFalse(System.getProperties().containsKey(BOB_NAME));
 
 			//Take the snapshot
 			AndHowTestBaseImpl.andHowSnapshotBeforeTestClass();
@@ -64,7 +64,7 @@ class AndHowTestBaseImplTest {
 
 
 			//We shouldn't have this property before we start
-			assertNull(System.getProperty(BOB_NAME));
+			assertFalse(System.getProperties().containsKey(BOB_NAME));
 
 			//Verify the core is back to the original
 			assertTrue(beforeTheTestCore == AndHowNonProductionUtil.getAndHowCore());
@@ -88,12 +88,12 @@ class AndHowTestBaseImplTest {
 	void doAndHowSnapshotBeforeAndAfterSingleTest(AndHowTestBaseImpl testBase) {
 
 		AndHowCore beforeTheTestCore = AndHowNonProductionUtil.getAndHowCore();
-		Properties originalProperties = System.getProperties();
+		Properties originalProperties = (Properties) System.getProperties().clone();
 
 		try {
 
 			//We shouldn't have this property before we start
-			assertNull(System.getProperty(BOB_NAME));
+			assertFalse(System.getProperties().containsKey(BOB_NAME));
 
 			//Take the snapshot
 			testBase.andHowSnapshotBeforeSingleTest();
@@ -118,7 +118,7 @@ class AndHowTestBaseImplTest {
 			//reset
 			testBase.resetAndHowSnapshotAfterSingleTest();
 
-			assertNull(System.getProperty(BOB_NAME));
+			assertFalse(System.getProperties().containsKey(BOB_NAME));
 
 			//Verify the core is back to the original
 			assertTrue(beforeTheTestCore == AndHowNonProductionUtil.getAndHowCore());

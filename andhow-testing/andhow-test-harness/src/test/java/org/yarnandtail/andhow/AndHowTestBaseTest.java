@@ -17,33 +17,25 @@ class AndHowTestBaseTest {
 	@Test
 	void andHowSnapshotBeforeAndAfterTestClass() {
 
-		Properties originalProperties = System.getProperties();
+		Properties originalProperties = (Properties) System.getProperties().clone();
 
 		try {
 
 			//We shouldn't have this property before we start
-			assertNull(System.getProperty(BOB));
+			assertFalse(System.getProperties().containsKey(BOB));
 
 			//Take the snapshot
 			AndHowTestBase.andHowSnapshotBeforeTestClass();
 
-			//Sys props - completely mess them up - reset should reset them...
-			System.setProperties(new Properties());  //zap all properties
 			System.setProperty(BOB, BOB);
 
-
-			//Are the sysProps messed up just like we did above?
 			assertEquals(BOB, System.getProperty(BOB));
-			assertEquals(1, System.getProperties().size());
 
 			//
 			//reset
 			AndHowTestBase.resetAndHowSnapshotAfterTestClass();
 
-
-			//Verify we have the exact same set of SysProps after the reset
-			assertEquals(originalProperties.size(), System.getProperties().size());
-			assertTrue(originalProperties.entrySet().containsAll(System.getProperties().entrySet()));
+			assertFalse(System.getProperties().containsKey(BOB));
 
 		} finally {
 			System.setProperties(originalProperties);
