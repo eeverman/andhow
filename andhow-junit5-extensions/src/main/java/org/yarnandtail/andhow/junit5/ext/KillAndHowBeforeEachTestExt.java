@@ -10,12 +10,12 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  * unconfigured state before each test runs.  When all tests in the class are done, the
  * original AndHow configured state is restored, which may be unconfigured.
  * <p>
- * <em>It is easier and safer to use the @{Code @KillAndHowBeforeEachTest} annotation.</em>
+ * <em>It is easier and safer to use the {@code @KillAndHowBeforeEachTest} annotation.</em>
  * That annotation uses this class and prevents this extension from being used on a test method
  * (this extension only works correctly on a test <em>class</em>).
  * <p>
  * <b>Usage example:</b>
- * <pre>{@Code
+ * <pre>{@code
  * @ExtendWith(KillAndHowBeforeEachTestExtension.class)
  * public class MyJunit5TestClass {
  *

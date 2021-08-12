@@ -24,7 +24,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Sys Prop settings, or if multiple tests set Sys Props.
  * <p>
  * Here is a complete usage example:
- * <pre>{@Code
+ * <pre>{@code
  * @RestoreSysPropsAfterEachTest
  * public class MyJunit5Test {
  *

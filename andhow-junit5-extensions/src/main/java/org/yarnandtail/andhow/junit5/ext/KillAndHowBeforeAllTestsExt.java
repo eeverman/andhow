@@ -11,14 +11,14 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  * original AndHow configured state is restored, which may be unconfigured.
  * <p>
  * With this extension, all tests in the class share the same AndHow configuration, which
- * can be set in a {@Code @BeforeAll} setup method.
+ * can be set in a {@code @BeforeAll} setup method.
  * <p>
- * <em>It is easier and safer to use the @{Code @KillAndHowBeforeAllTests} annotation.</em>
+ * <em>It is easier and safer to use the {@code @KillAndHowBeforeAllTests} annotation.</em>
  * That annotation uses this class and prevents this extension from being used on a test method
  * (this extension only works correctly on a test <em>class</em>).
  * <p>
  * <b>Usage example:</b>
- * <pre>{@Code
+ * <pre>{@code
  * @ExtendWith(KillAndHowBeforeAllTestsExtension.class)
  * public class MyJunit5TestClass {
  *

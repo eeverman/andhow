@@ -55,6 +55,13 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<!-- Alt for spring-test -->
+			<groupId>com.github.h-thurow</groupId>
+			<artifactId>simple-jndi</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
 		
 		<!-- More traditional test dependencies -->
 		<dependency>
@@ -71,6 +78,7 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
 		</dependency>
+
 	</dependencies>
 
 </project>

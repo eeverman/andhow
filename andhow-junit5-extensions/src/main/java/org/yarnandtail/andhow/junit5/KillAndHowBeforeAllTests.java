@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * original AndHow configured state is restored, which may be unconfigured.
  * <p>
  * Example usage:
- * <pre>{@Code
+ * <pre>{@code
  * @KillAndHowBeforeAllTests
  * public class MyJunit5Test {
  *
