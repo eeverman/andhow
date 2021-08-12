@@ -120,22 +120,21 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
-		
-		List<String> jndiRoots = buildJndiRoots(existingValues);
 
 		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
-
+		
 		try {
-			InitialContext ctx = new InitialContext();
-			List<String> propNames = new ArrayList();
+			
+			InitialContext ctx = new InitialContext();	//Normally doesn't throw exception, even if no JNDI
+
+			ctx.getEnvironment();	//Should throw error if JNDI is unavailable
+
+			List<String> jndiRoots = buildJndiRoots(existingValues);
 
 			for (Property<?> prop : appConfigDef.getProperties()) {
 
-				
 				List<String> propJndiNames = buildJndiNames(appConfigDef, jndiRoots, prop);
-				
-
 
 				for (String propName : propJndiNames) {
 					try {
@@ -145,33 +144,24 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 							attemptToAdd(appConfigDef, values, problems, prop, o);
 						}
 
-					} catch (NameNotFoundException nnfe) {
-						//Ignore - this is expected
 					} catch (NamingException ne) {
-						//Glassfish seems to be throwing this error w/
-						//a root cause of NameNotFound for simple NNF exceptions.
-						if (ne.getRootCause() instanceof NameNotFoundException) {
-							//Ignore - expected
-						} else {
-							throw ne;
-						}
+						//Ignore - this is expected if a value is not found
 					}
 				}
-
-
 			}
+			
+		} catch (NamingException  ex) {
 
-		} catch (NamingException ex) {
 			if (isFailedEnvironmentAProblem()) {
-				log.error(
-						"Unable to read from JNDI - Does JNDI exist in this environment? "
-								+ "If this is expected, initialize the JndiLoader ignore non-JNDI environments.", ex);
-				problems.add(new JndiContextLoaderProblem(this));
+				Problem p = new JndiContextLoaderProblem(this);
+				log.error(p.getProblemDescription(), ex);
+				problems.add(p);
 			} else {
-				log.debug("No JNDI Environment found, or a naming error encountered.  The JndiLoader is configured to ignore this.");
+				log.debug("No JNDI Environment found, or a naming error encountered. " +
+					"The JndiLoader is configured to ignore this.");
 			}
 		}
-
+		
 		return new LoaderValues(this, values, problems);
 	}
 
