@@ -12,3 +12,4 @@ release.properties
 .idea/
 **.iml
 .java-version
+**/nb-configuration.xml
