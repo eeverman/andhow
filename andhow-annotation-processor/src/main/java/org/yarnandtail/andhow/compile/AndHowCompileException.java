@@ -28,7 +28,7 @@ public class AndHowCompileException extends RuntimeException {
 	 * Instance when there are one or more AndHow domain 'problems' with the
 	 * code being compiled.
 	 * 
-	 * Examples would include Properties that are not <code>static final</code>
+	 * Examples would include Properties that are not {@code static final}
 	 * or too many init classes on the classpath.
 	 * 
 	 * @param problems A list of problems found during compilation.  This list
