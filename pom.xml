@@ -151,7 +151,7 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<!-- Alt for spring-test -->
+				<!-- Alt for spring-test which will eventually replace it -->
 				<groupId>com.github.h-thurow</groupId>
 				<artifactId>simple-jndi</artifactId>
 				<version>0.23.0</version>
