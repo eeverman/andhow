@@ -2,7 +2,6 @@ package org.yarnandtail.andhow;
 
 import java.lang.annotation.*;
 import org.yarnandtail.andhow.api.Exporter;
-import org.yarnandtail.andhow.internal.GroupExports;
 
 /**
  * Annotation to direct the Properties in a PropertyGroup to be exported to a
@@ -12,7 +11,7 @@ import org.yarnandtail.andhow.internal.GroupExports;
  */
 @Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
 @Target(ElementType.TYPE)	//Only use on type declarations
-@Repeatable(GroupExports.class)
+@Repeatable(GroupExport.List.class)
 @Documented	//Include values for this annotation in JavaDocs
 public @interface GroupExport {
 	
@@ -21,7 +20,7 @@ public @interface GroupExport {
 	 * 
 	 * If this option and exportByOutAliases are both set to export (such as
 	 * setting both to ALWAYS), it is possible to export multiple copies of the
-	 * property value under different names, which is permissable.
+	 * property value under different names, which is permissible.
 	 * 
 	 * @return 
 	 */
@@ -33,7 +32,7 @@ public @interface GroupExport {
 	 * 
 	 * If this option and exportByCanonicalName are both set to export (such as
 	 * setting both to ALWAYS), it is possible to export multiple copies of the
-	 * property value under different names, which is permissable.
+	 * property value under different names, which is permissible.
 	 * 
 	 * @return 
 	 */
@@ -44,4 +43,14 @@ public @interface GroupExport {
 	 * @return
 	 */
 	Class<? extends Exporter> exporter();
+
+	/**
+	 * Required container for Repeatable annotations.
+	 */
+	@Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
+	@Target(ElementType.TYPE)	//Only use on type declarations
+	@Documented	//Include values for this annotation in JavaDocs
+	@interface List {
+		GroupExport[] value();
+	}
 }
