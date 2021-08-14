@@ -29,20 +29,7 @@ public interface Exporter {
 	 * @param option 
 	 */
 	void setExportByOutAliases(EXPORT_OUT_ALIASES option);
-	
-	
-	/**
-	 * Exports all properties.
-	 * 
-	 * Based on its configuration, an exporter can decide which
-	 * properties should be exported and what name or aliases should be used
-	 * when exporting.
-	 * 
-	 * @param definition
-	 * @param values
-	 */
-	void export(StaticPropertyConfigurationInternal definition, ValidatedValues values);
-	
+
 	/**
 	 * Exports a Group.
 	 * 

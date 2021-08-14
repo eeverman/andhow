@@ -2,8 +2,7 @@ package org.yarnandtail.andhow.api;
 
 /**
  * Bundles an exporter and a Group for it to export.
- * 
- * Exporters that have no group (null) are intended to export everything.
+ *
  */
 public class ExportGroup {
 	private Exporter exporter;
