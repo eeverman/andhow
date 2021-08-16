@@ -295,8 +295,8 @@
 				<version>0.8.7</version>
 				<configuration>
 					<formats>
-						<format>HTML</format>
 						<format>XML</format>
+						<format>HTML</format>
 					</formats>
 				</configuration>
 				<executions>
