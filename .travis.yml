@@ -5,8 +5,8 @@ jdk:
 branches:
   except:
   - logo_submission
-  
-script: "mvn cobertura:cobertura"
+
+script: "mvn clean test -Djacoco.skip=false"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
