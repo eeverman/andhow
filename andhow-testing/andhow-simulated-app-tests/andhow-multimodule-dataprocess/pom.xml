@@ -8,7 +8,7 @@
     </parent>
     <artifactId>andhow-multimodule-dataprocess</artifactId>
     <packaging>pom</packaging>
-	
+
     <modules>
         <module>andhow-default-behavior-test</module>
         <module>andhow-default-behavior-dep1</module>
@@ -23,9 +23,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${groupId}</groupId>
+            <groupId>${project.groupId}</groupId>
             <artifactId>andhow-junit5-extensions</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
