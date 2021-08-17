@@ -8,7 +8,7 @@ import org.yarnandtail.andhow.property.StrProp;
  * A hypothetical class that checks if a configured service url is 'live'.
  * The url of the external service is configured by AndHow properties.
  * <p>
- * Of course, this isn't a complete application, but its easy to imagine {@Code doCheck} being
+ * Of course, this isn't a complete application, but its easy to imagine {@code doCheck} being
  * called by an AWS Lambda function, as a command line utility, or as just a library in a larger app.
  */
 public class Checker {
@@ -43,7 +43,7 @@ public class Checker {
 	/**
 	 * A main method to run this app as it might be in a real environment.
 	 * <p>
-	 * In this main method the {@Code AndHow.findConfig()} method is used to append the cmd line
+	 * In this main method the {@code AndHow.findConfig()} method is used to append the cmd line
 	 * arguments to the AndHow configuration.  This allows Property values to be configured from
 	 * these arguments, in addition to all the other way they could be configured.
 	 * <p>>
@@ -51,19 +51,19 @@ public class Checker {
 	 * <p>
 	 * To run from command line, first use Maven to create a runnable jar.
 	 * Here are the commands, executed from the root of the AndHow project, to build and run the jar:<br>
-	 * <pre>{@Code
+	 * <pre>{@code
 	 * > mvn clean package -DskipTests -Dmaven.javadoc.skip=true
 	 * > java -jar andhow-testing/andhow-simulated-app-tests/example-app-2/target/app.jar
 	 * }</pre>
-	 * The output of this command will match the config in {@Code checker.default.properties}:
-	 * <pre>{@Code
+	 * The output of this command will match the config in {@code checker.default.properties}:
+	 * <pre>{@code
 	 * Service url: https://default.bigcorp.com:80/validate
 	 * }</pre>
 	 *
-	 * <pre>{@Code
+	 * <pre>{@code
 	 * > java -Dcom.bigcorp.Calculator.CALC_MODE=FLOAT -jar andhow-testing/andhow-simulated-app-tests/example-app-2/target/app.jar 1.23 4.56
 	 * }</pre>
-	 * will result in {@Code Result is 0.26973686 (Float)}
+	 * will result in {@code Result is 0.26973686 (Float)}
 	 *
 	 * @param args Two arguments that are parsable to numbers.
 	 */

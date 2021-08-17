@@ -15,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * We could do that with a separate properties file, but another way is to configure AndHow with
  * 'fixed values' right in a test.
  * <p>
- * The {@Code @KillAndHowBeforeAllTests} annotation resets AndHow before the start of testing and
+ * The {@code @KillAndHowBeforeAllTests} annotation resets AndHow before the start of testing and
  * restores it after all tests are complete.  The setup method uses
- * {@Code AndHow.findConfig()...build()} to initialize AndHow with several 'fixed values' for the
+ * {@code AndHow.findConfig()...build()} to initialize AndHow with several 'fixed values' for the
  * test scenario.  The AndHow state is not modified between tests, so all tests share the same
  * AndHow configuration state.
  */
@@ -66,7 +66,7 @@ public class CheckerFixedValuesTest {
 	 * re-initializing AndHow.  This test verifies that.
 	 * <p>
 	 * The main() method explicitly initializes AndHow and so does this test class.  Thus, the main
-	 * method will throw a {@Code AppFatalException} because AndHow detects the attempt to
+	 * method will throw a {@code AppFatalException} because AndHow detects the attempt to
 	 * reinitialize it.
 	 * <p>
 	 * If we did want to call the main method here, @{Code @KillAndHowBeforeThisTest} could be added

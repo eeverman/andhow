@@ -7,14 +7,14 @@ import org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * {@Code CalculatorDefaultTest} didn't fully test the app because only some code is executed in the
+ * {@code CalculatorDefaultTest} didn't fully test the app because only some code is executed in the
  * FLOAT configuration.  This test demos testing other configurations.
  * <p>
- * The {@Code @KillAndHowBeforeEachTest} annotation erases the configured state of AndHow before
+ * The {@code @KillAndHowBeforeEachTest} annotation erases the configured state of AndHow before
  * each test so each test can specify its own AndHow configuration.  If a test doesn't explicitly
  * initialize AndHow, AndHow will initialize normally as soon as the first Property value is referenced.
  * <p>
- * When all tests are complete, {@Code KillAndHowBeforeEachTest} resets the AndHow state
+ * When all tests are complete, {@code KillAndHowBeforeEachTest} resets the AndHow state
  * back to what it was at the start of the test.
  */
 @KillAndHowBeforeEachTest  // <-- Uses the JUnit extension mechanism
@@ -37,7 +37,7 @@ class CalculatorDoubleConfigTest {
 	/**
 	 * If the test method doesn't initialize AndHow, AndHow will initialize automatically as soon
 	 * as a Property is accessed and load the default configuration from the test
-	 * {@Code checker.production.properties} file.
+	 * {@code checker.production.properties} file.
 	 */
 	@Test
 	public void revertToDefaultConfigIfTheTestDoesNotInitializeAndHow() {

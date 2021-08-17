@@ -11,12 +11,12 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  * Central AndHow singleton class.
- * 
+ *
  * This class is not directly constructed.  The primary way to configure an
  * instance is indirectly by creating a subclass of org.yarnandtail.andhow.AndHowInit.
  * At startup, AndHow discovers your AndHowInit implementation and uses it to configure
  * a single instance.
- * 
+ *
  * For cases where the application needs to accept command line arguments or
  * augment the configuration with fixed values, the configuration can have those
  * parameters added like this:
@@ -28,7 +28,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * then causes the AndHow instance to be built with that modified configuration.
  * The code above (or any method of AndHow initiation) can only be executed once
  * during the life of the application.
- * 
+ *
  * @author eeverman
  */
 public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
@@ -53,13 +53,13 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * The singleton instance is null until AndHow is initialized, then a singleton is created that
 	 * will live for the life of the application.
 	 * <p>
-	 * See {@Code core} for comparison.
+	 * See {@code core} for comparison.
 	 */
 	private static volatile AndHow singleInstance;
-	
+
 	/** Stack trace and other debug info about the startup & initiation of AndHow */
 	private static volatile Initialization initialization = null;
-	
+
 	/* True only during instance(AndHowConfiguration) method to detect re-entrant initialization */
 	private static volatile Boolean initializing = false;
 
@@ -97,29 +97,29 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 					findGroups(config.getRegisteredGroups()));
 		}
 	}
-	
+
 	/**
 	 * Prior to AndHow initialization, this method finds the configuration that will be used.
 	 *
-	 * On the first call to this method, a new {@Code AndHowConfiguration} instance will be
+	 * On the first call to this method, a new {@code AndHowConfiguration} instance will be
 	 * created.  Later calls to this method prior to AndHow initialization will return that
 	 * same instance.  After AndHow is initialized this method will throw a fatal exception, since no
 	 * modification to the configuration can be made after AndHow has initialized.
 	 * <p>
-	 * The new {@Code AndHowConfiguration} is created in one of two ways:
+	 * The new {@code AndHowConfiguration} is created in one of two ways:
 	 * <ol>
-	 * <li>If there is a class implementing the {@Code AndHowInit} interface on the classpath,
+	 * <li>If there is a class implementing the {@code AndHowInit} interface on the classpath,
 	 * 	 it will be discovered and that class' {@link AndHowInit#getConfiguration()} method will be
 	 * 	 called to construct the instance.  This is an easy configuration point to configure AndHow
 	 * 	 for production or test.
-	 * <li>Otherwise, a default implementation of {@Code AndHowConfiguration} is created
+	 * <li>Otherwise, a default implementation of {@code AndHowConfiguration} is created
 	 *   and returned.
 	 * </ol>
 	 * <p>
 	 * This method provides a way to 'grab' the configuration before AndHow initialization
 	 * and make additions or customizations.  Common reasons for doing this would be:
 	 * <ul>
-	 * <li>In the {@Code main(String[] args)} method to add the command line arguments to
+	 * <li>In the {@code main(String[] args)} method to add the command line arguments to
 	 * AndHow (see code example below)
 	 * <li>To provide different configuration or modify the list Loaders based on
 	 * the entry point of the application.
@@ -400,17 +400,17 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	public static boolean isInitialized() {
 		return singleInstance != null && singleInstance.core != null;
 	}
-	
+
 	/**
 	 * Get the stacktrace of where AndHow was initialized.
-	 * 
+	 *
 	 * This can be useful for debugging InitiationLoopException errors or
 	 * errors caused by trying to initialize AndHow when it is already initialized.
 	 * This stacktrace identifies the point in code that caused the initial
 	 * AndHow initialization, prior to the error.  The reported exception will
 	 * point to the place where AndHow entered a loop during its construction
 	 * or application code attempted to re-initialize AndHow.
-	 * 
+	 *
 	 * @return A stacktrace if it is available (some JVMs may not provide one)
 	 * or an empty stacktrace array if it is not available or AndHow is not
 	 * yet initialized.
@@ -486,7 +486,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
 	/**
 	 * Encapsulate when and where AndHow was initialized.
-	 * 
+	 *
 	 * Useful for debugging re-entrant startups or uncontrolled startup conditions.
 	 * There is no API access to the instance created of this class,
 	 * it is intended to be viewed in an IDE debugger.
@@ -495,7 +495,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		private final StackTraceElement[] stackTrace;
 		private final long timeStamp;
 		private final AndHowConfiguration<? extends AndHowConfiguration> config;
-		
+
 		public Initialization(AndHowConfiguration<? extends AndHowConfiguration> config) {
 			timeStamp = System.currentTimeMillis();
 			StackTraceElement[] ste = new Exception().getStackTrace();

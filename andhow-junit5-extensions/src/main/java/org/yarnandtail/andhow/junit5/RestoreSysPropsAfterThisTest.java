@@ -42,7 +42,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * which will restore changes made in those pre-test methods.
  * <p>
  * Note:  Using this annotation on a JUnit test class is the same as using
- * {@Code @ExtendWith(RestoreSysPropsAfterEachTestExt.class)} on a class, but this annotation is
+ * {@code @ExtendWith(RestoreSysPropsAfterEachTestExt.class)} on a class, but this annotation is
  * safer because it blocks placement on a method.
  */
 @Target({ METHOD, ANNOTATION_TYPE })
