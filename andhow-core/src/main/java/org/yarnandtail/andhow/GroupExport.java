@@ -24,7 +24,8 @@ public @interface GroupExport {
 	 * 
 	 * @return 
 	 */
-	org.yarnandtail.andhow.api.Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName();
+	org.yarnandtail.andhow.api.Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName()
+			default Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS;
 	
 	/**
 	 * Specifies if the out aliases, which are basically aliases for the purpose
@@ -36,7 +37,8 @@ public @interface GroupExport {
 	 * 
 	 * @return 
 	 */
-	org.yarnandtail.andhow.api.Exporter.EXPORT_OUT_ALIASES exportByOutAliases();
+	org.yarnandtail.andhow.api.Exporter.EXPORT_OUT_ALIASES exportByOutAliases()
+			default Exporter.EXPORT_OUT_ALIASES.ALWAYS;
 
 	/**
 	 * The class of the exporter to use.
