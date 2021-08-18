@@ -8,6 +8,7 @@ import org.yarnandtail.andhow.util.AndHowLog;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExportService {
 
@@ -19,7 +20,7 @@ public class ExportService {
 	 *
 	 * @param requestedGroupProxies The initial, unexpanded collection of {@code GroupProxy}s.
 	 * @param allGroupProxies The complete list of all {@code GroupProxy}s.
-	 * @return Exanded set with the requestedGroupProxies plus other nested {@code GroupProxy}s
+	 * @return Expanded set with the requestedGroupProxies plus other nested {@code GroupProxy}s
 	 */
 	public Set<GroupProxy> expandGroupProxySet(Collection<GroupProxy> requestedGroupProxies,
 			Collection<GroupProxy> allGroupProxies) {
@@ -65,41 +66,63 @@ public class ExportService {
 		return exportGroups;
 	}
 
-	public List<Property> buildExportPropertyList(ValidatedValues values, List<GroupProxy> groupList,
-			List<Class<?>> expGroups) throws IllegalAccessException {
+	public Collection<Property<?>> buildExportProperties(ValidatedValues values, List<GroupProxy> groupList,
+			Collection<Class<?>> expGroups) throws IllegalAccessException {
 
-		final List<Property> exportProps = new ArrayList();
+		Collection<GroupProxy> groups = buildExportGroups(groupList, expGroups);
 
-		for (Class<?> clazz : expGroups) {
+		List<Property<?>> props = groups.stream()
+				.flatMap(g -> g.getProperties().stream())
+				.map(n -> n.property).collect(Collectors.toList());
 
-			Optional<Boolean> allowed = isExportAllowed(clazz);
+		return props;
 
-			//TODO:  Better message about nesting and disallowed
-			if (allowed.isPresent() && ! allowed.get()) {
+	}
+
+	public Collection<GroupProxy> buildExportGroups(List<GroupProxy> groupList,
+			Collection<Class<?>> expGroups) throws IllegalAccessException {
+
+		Collection<Class<?>> stemmedClasses = buildExportClasses(expGroups);
+
+		List<GroupProxy> groups = groupList.stream()
+				.filter(g -> stemmedClasses.contains(g.getProxiedGroup()))
+				.collect(Collectors.toList());
+
+		return groups;
+	}
+
+	/**
+	 * Build a complete list of all classes eligible to be exported, based on the
+	 * annotations on the requestedClasses, their containing classes, and the nested classes contained
+	 * within them.
+	 *
+	 * See class javadocs for an explanation of which classes can be exported.  The list returned from
+	 * this method are regardless of if the classes contain AndHow Properties.
+	 *
+	 * @param requestedClasses One of more classes which are requested to be exported.
+	 * @return The classes eligible for export, starting with the requestedClasses and going down
+	 * the hierarchy to contained classes, in no specific order.
+	 * @throws IllegalAccessException If one of the requestedClasses is disallowed for export.
+	 */
+	protected Collection<Class<?>> buildExportClasses(Collection<Class<?>> requestedClasses) throws IllegalAccessException {
+		Collection<Class<?>> exportClasses = new HashSet<Class<?>>();
+
+		for (Class<?> clazz : requestedClasses) {
+			Optional<Boolean> allow = isExportAllowed(clazz);
+
+			if (allow.isPresent() && ! allow.get()) {
+				//TODO:  Better message about nesting and disallowed
 				throw new IllegalAccessException("The class '" + clazz + "' is not annotated for export. " +
 						"To export this class, annotate it with @" + AllowExport.class.getCanonicalName());
-			} else if (! allowed.isPresent()) {
-				Collection<Class<?>> nested = stemInnerExportClasses(clazz);
-
-
+			} else if (allow.isPresent() && allow.get()) {
+				exportClasses.add(clazz);
 			}
 
-
-
-			Optional<GroupProxy> proxy = groupList.stream().filter(
-					g -> g.getProxiedGroup().equals(clazz)
-			).findFirst();
-
-			if (proxy.isPresent()) {
-				proxy.get().getProperties().stream().map(p -> exportProps.add(p.property));
-			} else {
-				throw new IllegalArgumentException("The class '" + clazz + "' has no AndHow Properties, " +
-						"so cannot be exported.");
-			}
+			//find contained allowed classes, regardless if the container was allowed or unmarked.
+			exportClasses.addAll(stemInnerExportClasses(clazz));
 		}
 
-		return exportProps;
-
+		return exportClasses;
 	}
 
 	/**

@@ -4,6 +4,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -77,10 +80,9 @@ class ExportServiceTest {
 				ExportServiceSample1.AllowMe.ImUnsure1.ImUnsure2.class
 		};
 
-		Class<?>[] disallowMeAllowedClasses = {};
 
 		Class<?>[] exportMeAllowedClasses = {
-				//ExportServiceSample1.AllowMe.class, Not included b/c caller adds
+				//ExportServiceSample1.ExportMe.class, Not included b/c caller adds
 				ExportServiceSample1.ExportMe.AllowMe1.class,
 				ExportServiceSample1.ExportMe.ExportMe1.class,
 				ExportServiceSample1.ExportMe.ImUnsure1.class,
@@ -89,8 +91,7 @@ class ExportServiceTest {
 				ExportServiceSample1.ExportMe.ImUnsure1.ImUnsure2.class
 		};
 
-		Class<?>[] imUnsureMeAllowedClasses = {
-				//ExportServiceSample1.AllowMe.class, Not included b/c caller adds
+		Class<?>[] imUnsureAllowedClasses = {
 				ExportServiceSample1.ImUnsure.AllowMe1.class,
 				ExportServiceSample1.ImUnsure.ExportMe1.class,
 		};
@@ -100,7 +101,7 @@ class ExportServiceTest {
 		// The other two containers are not added b/c they are either disallowed or not explicitly
 		// allowed.
 		Class<?>[][] joinedAllowedClasses = {
-				allowMeAllowedClasses, exportMeAllowedClasses, imUnsureMeAllowedClasses,
+				allowMeAllowedClasses, exportMeAllowedClasses, imUnsureAllowedClasses,
 				{ExportServiceSample1.AllowMe.class, ExportServiceSample1.ExportMe.class}};
 		//
 		// The whole sample class
@@ -114,6 +115,7 @@ class ExportServiceTest {
 		assertThat(
 				es.stemInnerExportClasses(ExportServiceSample1.AllowMe.class),
 				Matchers.containsInAnyOrder(allowMeAllowedClasses));
+
 		assertThat(
 				"Degenerate case:  This method should never be called with a class directly or " +
 						"indirectly marked to disallow export.  This method explicitly does not check for " +
@@ -127,7 +129,114 @@ class ExportServiceTest {
 				Matchers.containsInAnyOrder(exportMeAllowedClasses));
 		assertThat(
 				es.stemInnerExportClasses(ExportServiceSample1.ImUnsure.class),
-				Matchers.containsInAnyOrder(imUnsureMeAllowedClasses));
+				Matchers.containsInAnyOrder(imUnsureAllowedClasses));
 
+		//
+		// classes within DisallowMe
+		assertThat(
+				"Degenerate case:  This method should never be called with a class directly or " +
+						"indirectly marked to disallow export.  This method explicitly does not check for " +
+						"allowability of the class it is called on, only going towards the leaf of the tree.",
+				es.stemInnerExportClasses(ExportServiceSample1.DisallowMe.ImUnsure1.class),
+				Matchers.containsInAnyOrder( new Class<?>[]{
+						ExportServiceSample1.DisallowMe.ImUnsure1.AllowMe2.class,
+						ExportServiceSample1.DisallowMe.ImUnsure1.ExportMe2.class}));
+
+	}
+
+	//TODO:  Need to test overlapping requests
+	@Test
+	void buildExportClassesTest() throws IllegalAccessException {
+
+		ExportService es = new ExportService();
+
+		Class<?>[] allowMeAllowedClasses = {
+				ExportServiceSample1.AllowMe.class,
+				ExportServiceSample1.AllowMe.AllowMe1.class,
+				ExportServiceSample1.AllowMe.ExportMe1.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.AllowMe2.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.ExportMe2.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.ImUnsure2.class
+		};
+
+
+		Class<?>[] exportMeAllowedClasses = {
+				ExportServiceSample1.ExportMe.class,
+				ExportServiceSample1.ExportMe.AllowMe1.class,
+				ExportServiceSample1.ExportMe.ExportMe1.class,
+				ExportServiceSample1.ExportMe.ImUnsure1.class,
+				ExportServiceSample1.ExportMe.ImUnsure1.AllowMe2.class,
+				ExportServiceSample1.ExportMe.ImUnsure1.ExportMe2.class,
+				ExportServiceSample1.ExportMe.ImUnsure1.ImUnsure2.class
+		};
+
+		Class<?>[] imUnsureAllowedClasses = {
+				ExportServiceSample1.ImUnsure.AllowMe1.class,
+				ExportServiceSample1.ImUnsure.ExportMe1.class
+		};
+
+		// At the top level, all the other lists plus the containers:
+		// ExportServiceSample1.AllowMe & ExportServiceSample1.ExportMe.
+		// The other two containers are not added b/c they are either disallowed or not explicitly
+		// allowed.
+		Class<?>[][] joinedAllowedClasses = {
+				allowMeAllowedClasses, exportMeAllowedClasses, imUnsureAllowedClasses};
+		//
+		// The whole sample class
+		assertThat(
+				es.buildExportClasses(Collections.singleton(ExportServiceSample1.class)),
+				Matchers.containsInAnyOrder(
+						Stream.of(joinedAllowedClasses).flatMap(Stream::of).toArray()));
+
+		assertThat(
+				"Requesting all of the allowed 1st level inner classes should be same as the parent",
+				es.buildExportClasses(toColl(
+						ExportServiceSample1.AllowMe.class,
+						ExportServiceSample1.ExportMe.class,
+						ExportServiceSample1.ImUnsure.class)),
+				Matchers.containsInAnyOrder(
+						Stream.of(joinedAllowedClasses).flatMap(Stream::of).toArray()));
+
+		//
+		// The first level inner classes
+		assertThat(
+				es.buildExportClasses(Collections.singleton(ExportServiceSample1.AllowMe.class)),
+				Matchers.containsInAnyOrder(allowMeAllowedClasses));
+
+		assertThrows(IllegalAccessException.class,
+				() -> es.buildExportClasses(Collections.singleton(ExportServiceSample1.DisallowMe.class)));
+
+		assertThat(
+				es.buildExportClasses(Collections.singleton(ExportServiceSample1.ExportMe.class)),
+				Matchers.containsInAnyOrder(exportMeAllowedClasses));
+
+		assertThat(
+				es.buildExportClasses(Collections.singleton(ExportServiceSample1.ImUnsure.class)),
+				Matchers.containsInAnyOrder(imUnsureAllowedClasses));
+
+		//
+		// ImUnsure inside DisallowMe
+		assertThrows(IllegalAccessException.class,
+				() -> es.buildExportClasses(Collections.singleton(ExportServiceSample1.DisallowMe.ImUnsure1.class)));
+
+		//
+		// ImUnsure inside AllowMe
+
+		Class<?>[] allowThenUnsureClasses = {
+				ExportServiceSample1.AllowMe.ImUnsure1.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.AllowMe2.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.ExportMe2.class,
+				ExportServiceSample1.AllowMe.ImUnsure1.ImUnsure2.class
+		};
+
+		assertThat(
+				es.buildExportClasses(Collections.singleton(ExportServiceSample1.AllowMe.ImUnsure1.class)),
+				Matchers.containsInAnyOrder(allowThenUnsureClasses));
+	}
+
+
+	protected Collection<Class<?>> toColl(Class<?>... clazzes) {
+		return Arrays.stream(clazzes).collect(Collectors.toList());
 	}
 }
