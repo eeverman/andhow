@@ -237,7 +237,7 @@ public class StdConfigGetterAndSetterTest {
 	public void setCmdLineArgsTest() {
 		MyStdConfig config = new MyStdConfig();
 
-		String[] args = new String[] {"abc=123", "xyz='456"};
+		String[] args = new String[] {"arg1", "arg2"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
@@ -245,6 +245,29 @@ public class StdConfigGetterAndSetterTest {
 
 		assertEquals(2, kvps.size());
 		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
+
+		// Set new values - they should replace the old
+		String[] args2 = new String[]{"arg3", "arg4", "arg5"};
+		config.setCmdLineArgs(args2);
+
+		List<String> actualArgs = config.getCmdLineArgs();
+
+		assertEquals(args2.length, actualArgs.size());
+		assertThat(actualArgs.toArray(), arrayContainingInAnyOrder(args2));
+
+		// Set empty array
+		config.setCmdLineArgs(new String[0]);
+
+		actualArgs = config.getCmdLineArgs();
+
+		assertEquals(0, actualArgs.size());
+
+		// Set null
+		config.setCmdLineArgs(new String[0]);
+
+		actualArgs = config.getCmdLineArgs();
+
+		assertEquals(0, actualArgs.size());
 	}
 
 	@Test
