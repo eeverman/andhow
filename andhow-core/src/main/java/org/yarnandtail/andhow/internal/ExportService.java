@@ -14,62 +14,21 @@ public class ExportService {
 
 	static AndHowLog LOG = AndHowLog.getLogger(ExportService.class);
 
-	/**
-	 * Expands a list of {@code GroupProxy}s to all nested {@code GroupProxy}s that are allowed to be
-	 * exported.
-	 *
-	 * @param requestedGroupProxies The initial, unexpanded collection of {@code GroupProxy}s.
-	 * @param allGroupProxies The complete list of all {@code GroupProxy}s.
-	 * @return Expanded set with the requestedGroupProxies plus other nested {@code GroupProxy}s
-	 */
-	public Set<GroupProxy> expandGroupProxySet(Collection<GroupProxy> requestedGroupProxies,
-			Collection<GroupProxy> allGroupProxies) {
+	public void exportProperties(Collection<Class<?>> expGroups,
+			Collection<GroupProxy> groupList, PropertyExporter exp) throws IllegalAccessException {
 
-		final Set<GroupProxy> exportGroups = new HashSet();
+		buildExportProperties(expGroups, groupList).stream().forEach(p -> exp.apply(p));
 
-		for (GroupProxy proxy : requestedGroupProxies) {
-			proxy.getCanonicalName();
-
-		}
-
-		return exportGroups;
 	}
 
-	public Set<GroupProxy> buildExplicitGroupProxySet(Collection<Class<?>> requestedExportClasses,
-			Collection<GroupProxy> allGroupProxies) throws IllegalAccessException {
-
-		//Will exclude duplicates automatically
-		final Set<GroupProxy> exportGroups = new HashSet();
-
-		for (Class<?> clazz : requestedExportClasses) {
-
-			Optional<Boolean> allowed = isExportAllowed(clazz);
-			if (allowed.isPresent() && ! allowed.get()) {
-				throw new IllegalAccessException("The class '" + clazz + "' is not annotated for export. " +
-						"To export this class, annotate it with @" + AllowExport.class.getCanonicalName());
-			} else {
-
-				//Find the GroupProxy
-				Optional<GroupProxy> proxy = allGroupProxies.stream().filter(
-						g -> g.getProxiedGroup().equals(clazz)
-				).findFirst();
-
-				if (proxy.isPresent()) {
-					exportGroups.add(proxy.get());
-				} else {
-					LOG.warn("The class '" + clazz.getCanonicalName() + "' is requested for " +
-							"export, but this class has no AndHow Properties.");
-				}
-			}
-		}
-
-		return exportGroups;
+	public interface PropertyExporter {
+		public void apply(Property<?> p);
 	}
 
-	public Collection<Property<?>> buildExportProperties(ValidatedValues values, List<GroupProxy> groupList,
-			Collection<Class<?>> expGroups) throws IllegalAccessException {
+	public Collection<Property<?>> buildExportProperties(Collection<Class<?>> expGroups,
+			Collection<GroupProxy> groupList) throws IllegalAccessException {
 
-		Collection<GroupProxy> groups = buildExportGroups(groupList, expGroups);
+		Collection<GroupProxy> groups = buildExportGroups(expGroups, groupList);
 
 		List<Property<?>> props = groups.stream()
 				.flatMap(g -> g.getProperties().stream())
@@ -79,8 +38,8 @@ public class ExportService {
 
 	}
 
-	public Collection<GroupProxy> buildExportGroups(List<GroupProxy> groupList,
-			Collection<Class<?>> expGroups) throws IllegalAccessException {
+	public Collection<GroupProxy> buildExportGroups(Collection<Class<?>> expGroups,
+			Collection<GroupProxy> groupList) throws IllegalAccessException {
 
 		Collection<Class<?>> stemmedClasses = buildExportClasses(expGroups);
 
