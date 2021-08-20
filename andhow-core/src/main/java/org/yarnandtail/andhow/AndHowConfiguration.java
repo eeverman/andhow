@@ -43,6 +43,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	
 	/**
 	 * Sets the command line arguments, removing any previously set commandline args.
+	 * Setting empty or null results in removing all previously set command line arguments
 	 *
 	 * @param commandLineArgs
 	 * @return
