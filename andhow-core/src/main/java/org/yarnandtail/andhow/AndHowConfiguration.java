@@ -40,7 +40,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return The strategy to use.  Must not be null.
 	 */
 	NamingStrategy getNamingStrategy();
-	
+
 	/**
 	 * Sets the command line arguments, removing any previously set commandline args.
 	 * Setting empty or null results in removing all previously set command line arguments
@@ -49,8 +49,8 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return
 	 */
 	C setCmdLineArgs(String[] commandLineArgs);
-	
-	
+
+
 	/**
 	 * Sets a fixed, non-configurable value for a Property.
 	 *
@@ -68,7 +68,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @return
 	 */
 	<T> C addFixedValue(Property<T> property, T value);
-	
+
 	/**
 	 * Removes a Property value set <em>only</em> via addFixedValue(Property<T>, T value)
 	 * from the list of fixed values.
@@ -115,9 +115,9 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 
 	/**
 	 * Sets the classpath path to a properties file for the
-	 * {@Code StdPropFileOnClasspathLoader} to read and load from.
+	 * {@code StdPropFileOnClasspathLoader} to read and load from.
 	 *
-	 * If no path is specified via one of the two {@Code setClasspathPropFilePath} methods,
+	 * If no path is specified via one of the two {@code setClasspathPropFilePath} methods,
 	 * the default classpath of '/andhow.properties' is used.
 	 * <p>
 	 * As per Java convention, a path on the classpath can use dots or slashes to separate packages.
@@ -139,16 +139,16 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 
 	/**
 	 * Sets the classpath path via a StrProp (a Property of String type) to a
-	 * properties file for the {@Code StdPropFileOnClasspathLoader} to read and load from.
+	 * properties file for the {@code StdPropFileOnClasspathLoader} to read and load from.
 	 *
-	 * If no path is specified via one of the two {@Code setClasspathPropFilePath} methods,
+	 * If no path is specified via one of the two {@code setClasspathPropFilePath} methods,
 	 * the default classpath of '/andhow.properties' is used.
 	 * <p>
 	 * As per Java convention, a path on the classpath can use dots or slashes to separate packages.
 	 * However, if the file name itself contains dots, then the path must start with a slash and use
 	 * slashes to separate packages.  Its common to have a '.properties' extension on the properties
 	 * file, so its good practice to add a validation rule to the StrProp used here to ensure it
-	 * {@Code mustStartWith("/")}.
+	 * {@code mustStartWith("/")}.
 	 * <p>
 	 * Valid Examples of configured values:
 	 * <ul>
@@ -165,13 +165,13 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 
 	/**
 	 * If called to set this to 'required', a classpath properties file must
-	 * exist and be readable.  This flag is used by the {@Code StdPropFileOnClasspathLoader}.
+	 * exist and be readable.  This flag is used by the {@code StdPropFileOnClasspathLoader}.
 	 *
-	 * Since the {@Code StdPropFileOnClasspathLoader} has a default property file name,
-	 * {@Code /andhow.properties}, setting this to 'required' means that either that
+	 * Since the {@code StdPropFileOnClasspathLoader} has a default property file name,
+	 * {@code /andhow.properties}, setting this to 'required' means that either that
 	 * default file name or another that you configure instead must exist.
 	 *
-	 * @See setClasspathPropFilePath methods for details on using a non-default
+	 * @see #setClasspathPropFilePath methods for details on using a non-default
 	 * classpath properties file.
 	 *
 	 * A RuntimeException will be thrown if this is set to 'required' and there
@@ -186,7 +186,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	/**
 	 * Sets the properties file on the classpath to be optional, the default.
 	 *
-	 * @See classpathPropertiesRequired
+	 * @see #classpathPropertiesRequired
 	 *
 	 * @return
 	 */
@@ -212,13 +212,13 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	/**
 	 * If called to set this to 'required', a non-null configured value for the
 	 * filesystem properties file must point to an existing, readable properties
-	 * file.  This flag is used by the {@Code StdPropFileOnFilesystemLoader}.
+	 * file.  This flag is used by the {@code StdPropFileOnFilesystemLoader}.
 	 *
 	 * A RuntimeException will be thrown if this is set to 'required' and there
 	 * is a path specified which points to a file that does not exist.
 	 * Configuring a filesystem path is a two step process:<ul>
 	 * <li>First, a StrProp Property must be specified for this configuration
-	 * via the {@Code setFilesystemPropFilePath} method</li>
+	 * via the {@code setFilesystemPropFilePath} method</li>
 	 * <li>Then, a value must be configured for in an any way that AndHow
 	 * reads and loads values, such as environment vars, system properties, etc..</li>
 	 * </ul>
@@ -234,7 +234,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	/**
 	 * Sets the properties file on the filesystem to be optional, the default.
 	 *
-	 * @See setFilesystemPropFilePath
+	 * @see #setFilesystemPropFilePath
 	 *
 	 * @return
 	 */
@@ -245,7 +245,7 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 
 	/**
 	 * The default list of standard loaders, as a list of Classes that implement
-	 * {@Code StandardLoader}
+	 * {@code StandardLoader}
 	 * <p>
 	 * The returned list is disconnected from the actual list of loaders - it is
 	 * intended to be a starting point for applications that want to modify the
@@ -254,18 +254,20 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * Unlike other methods of this class, it does not fluently return a method
 	 * to itself, so your code will need a AndHowConfiguration instance reference to
 	 * use it, eg:
-	 * <pre>{@Code
+	 * <pre>
+	 *     <code>
 	 * public class MyAppInitiation implements AndHowInit {
-	 *    @Override
+	 *    {@literal @}Override
 	 *  	public AndHowConfiguration getConfiguration() {
 	 * 			AndHowConfiguration config = AndHow.findConfig();
-	 * 			List<Class<? extends StandardLoader>> sll = config.getDefaultLoaderList();
+	 * 			{@code List<Class<? extends StandardLoader>> sll = config.getDefaultLoaderList();}
 	 * 			...do some rearranging of the list...
 	 *
 	 * 			config.setStandardLoaders(sll) ...and go on to call other methods on config...
 	 * 		}
 	 * }
-	 * }</pre>
+	 *     </code>
+	 * </pre>
 	 * <p>
 	 * Note:  AndHow version up to and including 0.4.1 had this method as a static
 	 * method.
@@ -287,8 +289,8 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * AndHow initialization is a one-time event, so further changes to this configuration will
 	 * have no effect and additional calls to build() will throw runtime exceptions.
 	 *
-	 * @See org.yarnandtail.andhow.AndHow#instance
-	 * @See org.yarnandtail.andhow.AndHow#initialize
+	 * @see org.yarnandtail.andhow.AndHow#instance
+	 * @see org.yarnandtail.andhow.AndHow#initialize
 	 * @deprecated This method will be removed in the next major release.
 	 * Use AndHow.instance() or AndHow.initialize()
 	 */
