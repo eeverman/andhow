@@ -85,7 +85,7 @@ public class StdConfig {
 
 		@Override
 		public S setCmdLineArgs(String[] commandLineArgs) {
-
+			_cmdLineArgs.clear();
 			if (commandLineArgs != null && commandLineArgs.length > 0) {
 				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 			}

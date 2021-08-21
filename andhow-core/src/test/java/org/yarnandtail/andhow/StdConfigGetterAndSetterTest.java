@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author ericeverman
  */
 public class StdConfigGetterAndSetterTest {
-	
+
 	public StdConfigGetterAndSetterTest() {
 	}
 
@@ -59,34 +59,34 @@ public class StdConfigGetterAndSetterTest {
 	@Test
 	public void testBuildLoadersWithCustomListOfStandardLoaders() {
 		StdConfigImpl std = StdConfig.instance();
-		
+
 		List<Class<? extends StandardLoader>> newLoaders = new ArrayList();
 		newLoaders.add(StdFixedValueLoader.class);
 		newLoaders.add(StdJndiLoader.class);
-		
+
 		std.setStandardLoaders(newLoaders);
 		List<Loader> loaders = std.buildLoaders();
 		assertEquals(2, loaders.size());
 		assertEquals(StdFixedValueLoader.class, loaders.get(0).getClass());
 		assertEquals(StdJndiLoader.class, loaders.get(1).getClass());
-		
+
 		std.setStandardLoaders(std.getDefaultLoaderList());
 		loaders = std.buildLoaders();
 		assertEquals(7, loaders.size());
 		assertEquals(StdFixedValueLoader.class, loaders.get(0).getClass());
 		assertEquals(StdPropFileOnClasspathLoader.class, loaders.get(6).getClass());
-		
+
 		std.setStandardLoaders(StdSysPropLoader.class, StdPropFileOnFilesystemLoader.class);
 		loaders = std.buildLoaders();
 		assertEquals(2, loaders.size());
 		assertEquals(StdSysPropLoader.class, loaders.get(0).getClass());
 		assertEquals(StdPropFileOnFilesystemLoader.class, loaders.get(1).getClass());
 	}
-	
+
 	@Test
 	public void testBuildLoadersWithInsertingLoadersBeforeAndAfter() {
 		StdConfigImpl std = StdConfig.instance();
-		
+
 		Loader loader1 = new MapLoader();
 		Loader loader2 = new KeyValuePairLoader();
 		Loader loader3 = new PropFileOnClasspathLoader();
@@ -96,20 +96,20 @@ public class StdConfigGetterAndSetterTest {
 		Loader loader7 = new KeyValuePairLoader();
 		Loader loader8 = new PropFileOnClasspathLoader();
 		Loader loader9 = new PropFileOnFilesystemLoader();
-		
+
 		//At the beginning of the list
 		std.insertLoaderBefore(StdFixedValueLoader.class, loader1);
 		std.insertLoaderBefore(StdFixedValueLoader.class, loader2);
 		std.insertLoaderAfter(StdFixedValueLoader.class, loader3);
 		std.insertLoaderAfter(StdFixedValueLoader.class, loader4);
 		std.insertLoaderBefore(StdMainStringArgsLoader.class, loader5);
-		
+
 		//At the end of the list
 		std.insertLoaderBefore(StdPropFileOnFilesystemLoader.class, loader6);
 		std.insertLoaderAfter(StdPropFileOnFilesystemLoader.class, loader7);
 		std.insertLoaderBefore(StdPropFileOnClasspathLoader.class, loader8);
 		std.insertLoaderAfter(StdPropFileOnClasspathLoader.class, loader9);
-		
+
 		List<Loader> loaders = std.buildLoaders();
 		assertEquals(16, loaders.size());
 		assertEquals(loader1, loaders.get(0));
@@ -237,7 +237,7 @@ public class StdConfigGetterAndSetterTest {
 	public void setCmdLineArgsTest() {
 		MyStdConfig config = new MyStdConfig();
 
-		String[] args = new String[] {"abc=123", "xyz='456"};
+		String[] args = new String[] {"arg1", "arg2"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
@@ -245,6 +245,30 @@ public class StdConfigGetterAndSetterTest {
 
 		assertEquals(2, kvps.size());
 		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
+
+		// Set new values - they should replace the old
+		String[] args2 = new String[]{"arg3", "arg4", "arg5"};
+		config.setCmdLineArgs(args2);
+
+		List<String> actualArgs = config.getCmdLineArgs();
+
+		assertEquals(args2.length, actualArgs.size());
+		assertThat(actualArgs.toArray(), arrayContainingInAnyOrder(args2));
+
+		// Set empty array
+		config.setCmdLineArgs(new String[0]);
+
+		actualArgs = config.getCmdLineArgs();
+
+		assertEquals(0, actualArgs.size());
+
+		// Set null
+		config.setCmdLineArgs(new String[]{"arg6"});
+		config.setCmdLineArgs(null);
+
+		actualArgs = config.getCmdLineArgs();
+
+		assertEquals(0, actualArgs.size());
 	}
 
 	@Test
@@ -434,5 +458,5 @@ public class StdConfigGetterAndSetterTest {
 
 		public boolean getFilesystemPropFileRequired() { return _missingFilesystemPropFileAProblem; }
 	}
-	
+
 }
