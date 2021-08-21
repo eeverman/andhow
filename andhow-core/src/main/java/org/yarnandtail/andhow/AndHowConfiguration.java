@@ -253,18 +253,20 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * Unlike other methods of this class, it does not fluently return a method
 	 * to itself, so your code will need a AndHowConfiguration instance reference to
 	 * use it, eg:
-	 * <pre>{@code
+	 * <pre>
+	 *     <code>
 	 * public class MyAppInitiation implements AndHowInit {
-	 *    @Override
+	 *    {@literal @}Override
 	 *  	public AndHowConfiguration getConfiguration() {
 	 * 			AndHowConfiguration config = AndHow.findConfig();
-	 * 			List<Class<? extends StandardLoader>> sll = config.getDefaultLoaderList();
+	 * 			{@code List<Class<? extends StandardLoader>> sll = config.getDefaultLoaderList();}
 	 * 			...do some rearranging of the list...
 	 *
 	 * 			config.setStandardLoaders(sll) ...and go on to call other methods on config...
 	 * 		}
 	 * }
-	 * }</pre>
+	 *     </code>
+	 * </pre>
 	 * <p>
 	 * Note:  AndHow version up to and including 0.4.1 had this method as a static
 	 * method.
