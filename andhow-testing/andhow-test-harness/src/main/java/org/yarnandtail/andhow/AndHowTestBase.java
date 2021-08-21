@@ -16,7 +16,7 @@ import org.junit.*;
  * since the use of this base class is no longer the preferred way to do testing) :
  * <a href="https://github.com/eeverman/andhow/blob/andhow-0.4.1/andhow-testing/andhow-simulated-app-tests/andhow-multimodule-dataprocess/andhow-default-behavior-dep1/src/test/java/com/dep1/EarthMapMakerUsingAHBaseTestClassTest.java#L25">
  *
- * @depricated Switch to JUnit5 and the annotations in the {@link org.yarnandtail.andhow.junit5}
+ * @deprecated Switch to JUnit5 and the annotations in the {@link org.yarnandtail.andhow.junit5}
  * package, which is better, safer and easier to use.
  */
 @Deprecated

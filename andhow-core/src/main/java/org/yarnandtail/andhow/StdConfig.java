@@ -10,21 +10,21 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author ericeverman
  */
 public class StdConfig {
-	
+
 	public static StdConfigImpl instance() {
 		return new StdConfigImpl();
 	}
-	
+
 	/**
 	 * Final class 'closes' the generics for an actual implementation.
 	 */
 	public static final class StdConfigImpl extends StdConfigAbstract<StdConfigImpl> {
-		
+
 	}
-	
+
 	/**
 	 * Abstract class here lets this be extended maintaining the generic types
-	 * @param <S> 
+	 * @param <S>
 	 */
 	public static abstract class StdConfigAbstract<S extends StdConfigAbstract<S>> extends BaseConfig<S> {
 
@@ -173,16 +173,16 @@ public class StdConfig {
 
 		/**
 		 * Sets the System environment vars that AndHow will use to load Property values
-		 * from for the {@Code StdEnvVarLoader} loader.
+		 * from for the {@code StdEnvVarLoader} loader.
 		 *
 		 * If this method is not called or is called with a null Map, the actual env vars
-		 * from {@Code System.getenv()} will be used.  Calling this method with an empty
+		 * from {@code System.getenv()} will be used.  Calling this method with an empty
 		 * Map will effectively prevent AndHow from receiving configuration from env vars.
 		 *
 		 * <em></em>This does not actually change actual environment variables or what is
-		 * returned from {@Code System.getenv()}. It only replaces what AndHow will see for env vars.
+		 * returned from {@code System.getenv()}. It only replaces what AndHow will see for env vars.
 		 *
-		 * Note: There is no reason to use this method:  Use one of the {@Code addFixedValue()}
+		 * Note: There is no reason to use this method:  Use one of the {@code addFixedValue()}
 		 * methods instead.  Those methods are more clear, don't have to parse values, and
 		 * (unlike this method) are not deprecated.
 		 *
@@ -252,7 +252,7 @@ public class StdConfig {
 
 			return (S) this;
 		}
-	
+
 	}
-	
+
 }

@@ -27,7 +27,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * }</pre>
  * <p>
  * Note:  Using this annotation on a JUnit test method is the same as using
- * {@Code @ExtendWith(KillAndHowBeforeThisTestExtension.class)} on a method, but this annotation is
+ * {@code @ExtendWith(KillAndHowBeforeThisTestExtension.class)} on a method, but this annotation is
  * safer because it blocks placement on a class.
  */
 @Target({ METHOD, ANNOTATION_TYPE })

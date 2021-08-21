@@ -9,10 +9,12 @@ package org.yarnandtail.andhow;
  * it will be used in preference to {@code AndHowInit} to allow a test configuration to take
  * precedence over the production configuration.  Implementation example, where config values
  * for a local test db are hardcoded into the configuration:
- * <p><pre>{@code
+ * <p>
+ * <pre>
+ *     <code>
  * public class TestInitiation implements AndHowTestInit {
  *
- *  @Override
+ *  {@literal @}Override
  *  public AndHowConfiguration getConfiguration() {
  * 		return AndHow.findConfig()
  * 				.addFixedValue("com.bigcorp.config.DB_URL", "jdbc://local.db")
@@ -20,7 +22,9 @@ package org.yarnandtail.andhow;
  *  }
  *
  * }
- * }</pre><p>
+ *     </code>
+ * </pre>
+ * <p>
  * It is a fatal RuntimeException for there to be more than one {@code AndHowTestInit} on the
  * classpath since this would make startup configuration ambiguous.
  *
