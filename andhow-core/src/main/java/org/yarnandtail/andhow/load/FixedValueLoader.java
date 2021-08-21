@@ -17,14 +17,14 @@ import org.yarnandtail.andhow.api.*;
  * @author eeverman
  */
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
-    @Deprecated
+    
 	protected boolean unknownPropertyAProblem = true;
-	@Deprecated
+
 	protected List<PropertyValue> values = new ArrayList();
 	@Deprecated
 	public FixedValueLoader() {
 	}
-	@Deprecated
+
 	public void setPropertyValues(List<PropertyValue> values) {
 		if (values != null) {
 			this.values.addAll(values);
