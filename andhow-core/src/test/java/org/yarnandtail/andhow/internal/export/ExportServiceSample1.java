@@ -1,21 +1,21 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.internal.export;
 
-import org.yarnandtail.andhow.AllowExport;
-import org.yarnandtail.andhow.DisallowExport;
+import org.yarnandtail.andhow.export.ManualExportAllowed;
+import org.yarnandtail.andhow.export.ExportNotAllowed;
 import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.export.SysPropExporter;
 
 public class ExportServiceSample1 {
 
-	@AllowExport
+	@ManualExportAllowed
 	static interface AllowMe {
 
-		@AllowExport
+		@ManualExportAllowed
 		static interface AllowMe1 {
 
 		}
 
-		@DisallowExport
+		@ExportNotAllowed
 		static interface DisallowMe1 {
 
 		}
@@ -26,12 +26,12 @@ public class ExportServiceSample1 {
 		}
 
 		static interface ImUnsure1 {
-			@AllowExport
+			@ManualExportAllowed
 			static interface AllowMe2 {
 
 			}
 
-			@DisallowExport
+			@ExportNotAllowed
 			static interface DisallowMe2 {
 
 			}
@@ -47,14 +47,14 @@ public class ExportServiceSample1 {
 		}
 	}
 
-	@DisallowExport
+	@ExportNotAllowed
 	static interface DisallowMe {
-		@AllowExport
+		@ManualExportAllowed
 		static interface AllowMe1 {
 
 		}
 
-		@DisallowExport
+		@ExportNotAllowed
 		static interface DisallowMe1 {
 
 		}
@@ -65,12 +65,12 @@ public class ExportServiceSample1 {
 		}
 
 		static interface ImUnsure1 {
-			@AllowExport
+			@ManualExportAllowed
 			static interface AllowMe2 {
 
 			}
 
-			@DisallowExport
+			@ExportNotAllowed
 			static interface DisallowMe2 {
 
 			}
@@ -88,12 +88,12 @@ public class ExportServiceSample1 {
 
 	@GroupExport(exporter = SysPropExporter.class)
 	static interface ExportMe {
-		@AllowExport
+		@ManualExportAllowed
 		static interface AllowMe1 {
 
 		}
 
-		@DisallowExport
+		@ExportNotAllowed
 		static interface DisallowMe1 {
 
 		}
@@ -104,12 +104,12 @@ public class ExportServiceSample1 {
 		}
 
 		static interface ImUnsure1 {
-			@AllowExport
+			@ManualExportAllowed
 			static interface AllowMe2 {
 
 			}
 
-			@DisallowExport
+			@ExportNotAllowed
 			static interface DisallowMe2 {
 
 			}
@@ -126,12 +126,12 @@ public class ExportServiceSample1 {
 	}
 
 	static interface ImUnsure {
-		@AllowExport
+		@ManualExportAllowed
 		static interface AllowMe1 {
 
 		}
 
-		@DisallowExport
+		@ExportNotAllowed
 		static interface DisallowMe1 {
 
 		}

@@ -48,6 +48,16 @@ public interface Exporter {
 	}
 	
 	public static enum EXPORT_OUT_ALIASES {
-		ALWAYS, NEVER;
+		ALWAYS, NEVER, FIRST, LAST;
+	}
+
+	public static class Options {
+		public final EXPORT_CANONICAL_NAME canonicalNameOption;
+		public final EXPORT_OUT_ALIASES outAliasOption;
+
+		public Options(EXPORT_CANONICAL_NAME canonicalNameOption, EXPORT_OUT_ALIASES outAliasOption) {
+			this.canonicalNameOption = canonicalNameOption;
+			this.outAliasOption = outAliasOption;
+		}
 	}
 }

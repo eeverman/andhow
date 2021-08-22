@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow;
+package org.yarnandtail.andhow.export;
 
 import java.lang.annotation.*;
 
@@ -13,5 +13,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
 @Target(ElementType.TYPE)	//Only use on type declarations
 @Documented  //Include values for this annotation in JavaDocs
-public @interface DisallowExport {
+public @interface ExportNotAllowed {
 }

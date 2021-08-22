@@ -17,28 +17,36 @@ public @interface GroupExport {
 	
 	/**
 	 * Specifies if the canonical name should be used to export property values.
+	 *
+	 * The default is {@code INHERIT_FROM_CONTAINER}, which will inherit this setting from the
+	 * containing class if this annotation is on a nested inner class.  If no containing class exists,
+	 * or the containing class doesn't specify, the default is {@code ONLY_IF_NO_OUT_ALIAS}.
+	 *
+	 * Combinations of this option and {@code exportByOutAliases} can result in multiple copies
+	 * of the same value being exported, which is permissible.
 	 * 
-	 * If this option and exportByOutAliases are both set to export (such as
-	 * setting both to ALWAYS), it is possible to export multiple copies of the
-	 * property value under different names, which is permissible.
-	 * 
-	 * @return 
+	 * @return The export option for Property canonical names.
 	 */
 	org.yarnandtail.andhow.api.Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName()
-			default Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS;
+			default Exporter.EXPORT_CANONICAL_NAME.INHERIT_FROM_CONTAINER;
 	
 	/**
-	 * Specifies if the out aliases, which are basically aliases for the purpose
-	 * of exports, should be used to export property values.
+	 * Specifies if the out aliases, which are aliases for the purpose
+	 * of exports, should be used when exporting property values.
+	 *
+	 * The default is {@code INHERIT_FROM_CONTAINER}, which will inherit this setting from the
+	 * containing class if this annotation is on a nested inner class.  If no containing class exists,
+	 * or the containing class doesn't specify, the default is {@code ALWAYS}.
+	 * <p>
+	 * Its possible to have multiple 'out' alias, and {@code ALWAYS} will export all of them.
+	 * This will result in multiple copies of the value being exported.  The {@code FIRST} and
+	 * {@code LAST} options address this by allowing specifying the respective value from the list.
+	 * <p>
 	 * 
-	 * If this option and exportByCanonicalName are both set to export (such as
-	 * setting both to ALWAYS), it is possible to export multiple copies of the
-	 * property value under different names, which is permissible.
-	 * 
-	 * @return 
+	 * @return  The export option for Property 'out' aliases.
 	 */
 	org.yarnandtail.andhow.api.Exporter.EXPORT_OUT_ALIASES exportByOutAliases()
-			default Exporter.EXPORT_OUT_ALIASES.ALWAYS;
+			default Exporter.EXPORT_OUT_ALIASES.INHERIT_FROM_CONTAINER;
 
 	/**
 	 * The class of the exporter to use.

@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.internal.export;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.GroupProxyImmutable;
 import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.property.StrProp;
 
 import java.util.*;

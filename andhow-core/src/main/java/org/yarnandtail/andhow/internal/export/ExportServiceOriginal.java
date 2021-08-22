@@ -1,21 +1,28 @@
-package org.yarnandtail.andhow.internal;
+package org.yarnandtail.andhow.internal.export;
 
-import org.yarnandtail.andhow.AllowExport;
-import org.yarnandtail.andhow.DisallowExport;
+import org.yarnandtail.andhow.export.ManualExportAllowed;
+import org.yarnandtail.andhow.export.ExportNotAllowed;
 import org.yarnandtail.andhow.GroupExport;
-import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.api.GroupProxy;
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.util.AndHowLog;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ExportService {
+public class ExportServiceOriginal {
 
-	static AndHowLog LOG = AndHowLog.getLogger(ExportService.class);
+	static AndHowLog LOG = AndHowLog.getLogger(ExportServiceOriginal.class);
 
 	public void exportProperties(Collection<Class<?>> expGroups,
 			Collection<GroupProxy> groupList, PropertyExporter exp) throws IllegalAccessException {
+
+		Collection<Property<?>> props = buildExportProperties(expGroups, groupList);
+
+		for (Property<?> prop : props) {
+
+		}
 
 		buildExportProperties(expGroups, groupList).stream().forEach(p -> exp.apply(p));
 
@@ -72,7 +79,7 @@ public class ExportService {
 			if (allow.isPresent() && ! allow.get()) {
 				//TODO:  Better message about nesting and disallowed
 				throw new IllegalAccessException("The class '" + clazz + "' is not annotated for export. " +
-						"To export this class, annotate it with @" + AllowExport.class.getCanonicalName());
+						"To export this class, annotate it with @" + ManualExportAllowed.class.getCanonicalName());
 			} else if (allow.isPresent() && allow.get()) {
 				exportClasses.add(clazz);
 			}
@@ -101,7 +108,7 @@ public class ExportService {
 	 * @return
 	 */
 	protected Optional<Boolean> isExportAllowed(Class<?> clazz) {
-		Class<?>[] ALLOW_EXPORT_ANNOTATIONS = {AllowExport.class, GroupExport.class};
+		Class<?>[] ALLOW_EXPORT_ANNOTATIONS = {ManualExportAllowed.class, GroupExport.class};
 
 		Annotation[] anns = clazz.getAnnotations();
 
@@ -109,7 +116,7 @@ public class ExportService {
 			for (Class<?> allow : ALLOW_EXPORT_ANNOTATIONS) {
 				if (a.annotationType().equals(allow)) return Optional.of(Boolean.TRUE);
 			}
-			if (a.annotationType().equals(DisallowExport.class)) return Optional.of(Boolean.FALSE);
+			if (a.annotationType().equals(ExportNotAllowed.class)) return Optional.of(Boolean.FALSE);
 		}
 
 		if (clazz.getDeclaringClass() != null) {

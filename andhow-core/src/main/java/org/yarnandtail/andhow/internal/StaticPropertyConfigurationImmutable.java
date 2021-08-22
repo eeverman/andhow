@@ -1,6 +1,10 @@
 package org.yarnandtail.andhow.internal;
 
+import java.lang.annotation.Annotation;
 import java.util.*;
+
+import org.yarnandtail.andhow.export.ManualExportAllowed;
+import org.yarnandtail.andhow.GroupExport;
 import org.yarnandtail.andhow.api.*;
 
 /**
@@ -131,6 +135,22 @@ public class StaticPropertyConfigurationImmutable implements StaticPropertyConfi
 	@Override
 	public NamingStrategy getNamingStrategy() {
 		return namingStrategy;
+	}
+
+	protected boolean isExportAllowed(Class<?> clazz) {
+		Class<?>[] ALLOW_EXPORT_ANNOTATIONS = {ManualExportAllowed.class, GroupExport.class};
+
+		Annotation[] anns = clazz.getAnnotations();
+
+
+
+		for (Annotation a: anns) {
+			for (Class<?> allow : ALLOW_EXPORT_ANNOTATIONS) {
+				if (a.annotationType().equals(allow)) return true;
+			}
+		}
+
+		return false;
 	}
 
 }
