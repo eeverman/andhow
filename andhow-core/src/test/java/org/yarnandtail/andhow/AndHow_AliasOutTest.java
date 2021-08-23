@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
+import static org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.export.SysPropExporter;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.property.IntProp;
@@ -37,8 +38,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	@GroupExport(
 		exporter=SysPropExporter.class,
-		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
-		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
+		exportByCanonicalName=EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+		exportByOutAliases=EXPORT_OUT_ALIASES.ALWAYS
 	)
 	interface AliasGroup1 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull()
@@ -74,8 +75,8 @@ public class AndHow_AliasOutTest extends AndHowTestBase {
 	
 	@GroupExport(
 		exporter=SysPropExporter.class,
-		exportByCanonicalName=Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
-		exportByOutAliases=Exporter.EXPORT_OUT_ALIASES.ALWAYS
+		exportByCanonicalName=EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+		exportByOutAliases=EXPORT_OUT_ALIASES.ALWAYS
 	)
 	interface AliasGroup2 {
 		StrProp strProp1 = StrProp.builder().mustBeNonNull().build();
