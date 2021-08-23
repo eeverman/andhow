@@ -125,6 +125,21 @@ class MapLoaderTest extends BaseForLoaderTests {
     }
 
     @Test
+    public void loadNullMapTest() {
+        loader.setMap(null);
+
+        LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+        assertEquals(0, result.getProblems().size());
+        assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+        assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+        assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+        assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+        assertNull(result.getValue(SimpleParams.STR_NULL));
+    }
+
+    @Test
     public void getSpecificLoadDescriptionTest() {
         String expectedDescription = "Map";
 
