@@ -73,7 +73,7 @@ public class StdSysPropLoader extends MapLoader implements StandardLoader {
 	
 	@Override
 	public Map<?, ?> getMap() {
-		if (!map.isEmpty()) {
+		if (map != null) {
 			return map;
 		} else {
 			return System.getProperties();

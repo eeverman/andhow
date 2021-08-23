@@ -46,11 +46,11 @@ class MapLoaderTest extends BaseForLoaderTests {
 
         assertTrue(loader.getMap().isEmpty());
 
-        // clear map when called with null
+        // set map as null when called with null
         loader.setMap(Collections.singletonMap("key", "value"));
         loader.setMap(null);
 
-        assertTrue(loader.getMap().isEmpty());
+        assertNull(loader.getMap());
     }
 
     @Test
@@ -165,5 +165,13 @@ class MapLoaderTest extends BaseForLoaderTests {
         loader.releaseResources();
 
         assertTrue(loader.getMap().isEmpty());
+
+        // release resources if map set to null
+        loader.setMap(null);
+        assertNull(loader.getMap());
+
+        loader.releaseResources();
+
+        assertNull(loader.getMap());
     }
 }

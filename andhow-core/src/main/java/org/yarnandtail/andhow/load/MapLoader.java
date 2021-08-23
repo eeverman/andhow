@@ -11,7 +11,7 @@ import org.yarnandtail.andhow.api.*;
  */
 public class MapLoader extends BaseLoader implements ReadLoader {
 
-	protected Map<?, ?> map = Collections.emptyMap();
+	protected Map<?, ?> map = null;
 
 	protected boolean unknownPropertyAProblem = true;
 	
@@ -19,7 +19,7 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	public void setMap(Map<?, ?> map) {
-		this.map = map == null ? Collections.emptyMap() : new HashMap<>(map);
+		this.map = map == null ? null : new HashMap<>(map);
 	}
 	
 	public Map<?, ?> getMap() {
@@ -32,7 +32,7 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 		
 		Map<?, ?> props = getMap();
 
-		if (!props.isEmpty()) {
+		if (props != null && !props.isEmpty()) {
 			ArrayList<ValidatedValue> values = new ArrayList();
 			ProblemList<Problem> problems = new ProblemList();
 
@@ -87,6 +87,8 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	
 	@Override
 	public void releaseResources() {
-		map.clear();
+		if (map != null) {
+			map.clear();
+		}
 	}
 }
