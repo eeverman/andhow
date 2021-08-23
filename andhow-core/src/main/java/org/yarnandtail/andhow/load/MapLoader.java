@@ -11,7 +11,7 @@ import org.yarnandtail.andhow.api.*;
  */
 public class MapLoader extends BaseLoader implements ReadLoader {
 
-	protected Map<?, ?> map = null;
+	protected Map<?, ?> map;
 
 	protected boolean unknownPropertyAProblem = true;
 	
