@@ -2,17 +2,34 @@ package org.yarnandtail.andhow;
 
 import java.lang.annotation.*;
 import org.yarnandtail.andhow.api.Exporter;
-import org.yarnandtail.andhow.internal.GroupExports;
 
 /**
- * Annotation to direct the Properties in a PropertyGroup to be exported to a
- * destination such as System.Properties.
- * 
- * @author eeverman
+ * Causes all the Properties in the annotated class to be exported by the specified Exporter.
+ *
+ * Only {@link org.yarnandtail.andhow.api.Property}'s directly contained in
+ * the annotated class are exported:  Properties in nested inner classes or interfaces are not
+ * included, though those inner classes could also be annotated.
+ * <p>
+ * This example would export the contained Properties to System.Properties, using 'out' aliases if
+ * they exist, otherwise using canonical names:
+ * <p><pre><code>
+ * import org.yarnandtail.andhow.*;
+ * import static org.yarnandtail.andhow.api.Exporter.*;
+ * import org.yarnandtail.andhow.export.SysPropExporter;
+ *
+ * {@literal @}GroupExport(
+ *   	exporter=SysPropExporter.class,
+ * 		exportByCanonicalName=EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+ * 		exportByOutAliases=EXPORT_OUT_ALIASES.ALWAYS
+ * )
+ * class MyClass {
+ * 		//Class containing Property classes...
+ * }
+ * </code></pre>
  */
 @Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
 @Target(ElementType.TYPE)	//Only use on type declarations
-@Repeatable(GroupExports.class)
+@Repeatable(GroupExport.List.class)
 @Documented	//Include values for this annotation in JavaDocs
 public @interface GroupExport {
 	
@@ -44,4 +61,14 @@ public @interface GroupExport {
 	 * @return
 	 */
 	Class<? extends Exporter> exporter();
+
+	/**
+	 * Required container for Repeatable annotations.
+	 */
+	@Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
+	@Target(ElementType.TYPE)	//Only use on type declarations
+	@Documented	//Include values for this annotation in JavaDocs
+	@interface List {
+		GroupExport[] value();
+	}
 }
