@@ -3,11 +3,11 @@ package org.yarnandtail.andhow.load;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.LoaderValues;
+import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.api.ValidatedValue;
+import org.yarnandtail.andhow.internal.LoaderProblem;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,10 +58,10 @@ class MapLoaderTest extends BaseForLoaderTests {
         String basePath = SimpleParams.class.getCanonicalName() + ".";
 
         Map<String, String> args = new HashMap<>();
-        args.put(basePath + "STR_BOB", "test");
+        args.put(basePath + "STR_BOB", "    test    ");
         args.put(basePath + "STR_NULL", "not_null");
         args.put(basePath + "STR_ENDS_WITH_XXX", "XXX");
-        args.put(basePath + "FLAG_TRUE", "false");
+        args.put(basePath + "FLAG_TRUE", "   false   ");
         args.put(basePath + "FLAG_FALSE", "true");
         args.put(basePath + "FLAG_NULL", "true");
 
@@ -158,6 +158,39 @@ class MapLoaderTest extends BaseForLoaderTests {
         loader.setUnknownPropertyAProblem(false);
 
         assertFalse(loader.isUnknownPropertyAProblem());
+    }
+
+    @Test
+    public void mapLoaderWithUnknownProperties() {
+        String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+        Map<String, String> args = new HashMap();
+        args.put(basePath + "XXX", "1");
+        args.put(basePath + "YYY", "2");
+
+        MapLoader loader = new MapLoader();
+
+        // isUnknownPropertyAProblem is True - should detect problems
+        loader.setUnknownPropertyAProblem(true);
+        loader.setMap(args);
+
+        LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+        assertEquals(2, result.getProblems().size());
+        for (Problem lp : result.getProblems()) {
+            assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
+        }
+
+        assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+        // isUnknownPropertyAProblem is False - should ignore problems
+        loader.setUnknownPropertyAProblem(false);
+        loader.setMap(args);
+
+        result = loader.load(appDef, appValuesBuilder);
+
+        assertEquals(0, result.getProblems().size());
+        assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
     }
 
     @Test
