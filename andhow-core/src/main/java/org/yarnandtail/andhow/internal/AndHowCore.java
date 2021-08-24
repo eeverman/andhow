@@ -96,17 +96,9 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		
 		//Export Values if applicable
 		List<ExportGroup> exportGroups = staticConfig.getExportGroups();
+
 		for (ExportGroup eg : exportGroups) {
-			Exporter exporter = eg.getExporter();
-			GroupProxy group = eg.getGroup();
-			
-			if (group != null) {
-				exporter.export(group, staticConfig, this);
-			} else {
-				for (GroupProxy grp : staticConfig.getPropertyGroups()) {
-					exporter.export(grp, staticConfig, this);
-				}
-			}
+			eg.getExporter().export(eg.getGroup(), staticConfig, this);
 		}
 		
 		//Print samples (if requested) to System.out
