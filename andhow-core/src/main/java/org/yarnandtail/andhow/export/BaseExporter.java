@@ -46,14 +46,6 @@ public abstract class BaseExporter implements Exporter {
 	 */
 	public abstract <T> void doExport(String name, Property<T> property, 
 			StaticPropertyConfigurationInternal definition, ValidatedValues values);
-		
-	
-	@Override
-	public void export(StaticPropertyConfigurationInternal definition, ValidatedValues values) {
-		for (GroupProxy pg : definition.getPropertyGroups()) {
-			export(pg, definition, values);
-		}
-	}
 
 	@Override
 	public void export(GroupProxy group, StaticPropertyConfigurationInternal definition, ValidatedValues values) {
