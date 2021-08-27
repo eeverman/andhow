@@ -179,8 +179,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>
-				<artifactId>mockito-all</artifactId>
-				<version>1.10.19</version>
+				<artifactId>mockito-core</artifactId>
+				<version>3.12.4</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
@@ -212,7 +212,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
+			<artifactId>mockito-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.github.stefanbirkner</groupId>
@@ -276,8 +276,8 @@
 									<version>(3.5,4.0)</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<!-- 1.8 thru 15.  JDK 16 seems to have issues -->
-									<version>[1.8.0,16)</version>
+									<!-- 1.8 thru 16 -->
+									<version>[1.8.0,17)</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
