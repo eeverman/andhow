@@ -10,16 +10,16 @@ import org.yarnandtail.andhow.api.*;
  * @author eeverman
  */
 public class MapLoader extends BaseLoader implements ReadLoader {
-	
+
 	protected Map<?, ?> map;
-	
+
 	protected boolean unknownPropertyAProblem = true;
 	
 	public MapLoader() {
 	}
 	
 	public void setMap(Map<?, ?> map) {
-		this.map = map;
+		this.map = map == null ? null : new HashMap<>(map);
 	}
 	
 	public Map<?, ?> getMap() {
@@ -27,12 +27,12 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	}
 	
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, 
+	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues) {
 		
 		Map<?, ?> props = getMap();
-		
-		if (props != null) {
+
+		if (props != null && !props.isEmpty()) {
 			ArrayList<ValidatedValue> values = new ArrayList();
 			ProblemList<Problem> problems = new ProblemList();
 
@@ -87,6 +87,8 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	
 	@Override
 	public void releaseResources() {
-		map = null;
+		if (map != null) {
+			map.clear();
+		}
 	}
 }
