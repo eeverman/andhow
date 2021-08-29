@@ -68,13 +68,13 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 * 
 	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
 	 * AndHow.KVP_DELIMITER.
-	 * 
-	 * @param keyValuePairs 
+	 *
+	 * @deprecated Use {@code KeyValuePairLoader.setKeyValuePairs(List<String>)} instead.
+	 * @param keyValuePairs
 	 */
+	@Deprecated
 	public void setKeyValuePairs(String... keyValuePairs) {
-		if (keyValuePairs != null && keyValuePairs.length > 0) {
-			this.keyValuePairs.addAll(Arrays.asList(keyValuePairs));
-		}
+		this.setKeyValuePairs(keyValuePairs != null ? Arrays.asList(keyValuePairs) : null);
 	}
 	
 	@Override
