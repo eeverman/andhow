@@ -1,7 +1,6 @@
 package org.yarnandtail.andhow.internal.export;
 
-import org.yarnandtail.andhow.GroupExport;
-import org.yarnandtail.andhow.api.Exporter;
+import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.export.ManualExportAllowed;
@@ -11,7 +10,6 @@ import org.yarnandtail.andhow.util.AndHowLog;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ManualExportService {
 
@@ -27,37 +25,35 @@ public class ManualExportService {
 
 		for (Class<?> clazz : exportRoots) {
 
-			Optional<ManualExportAllowed> allow = findAllowAnnotation(clazz);
+			Optional<ManualExportAllowed> allow = findEffectiveAllowAnnotation(clazz);
 
 			if (! allow.isPresent()) {
 				throw new IllegalAccessException("The class '" + clazz + "' is not annotated to allow manual export. " +
 						"To export this class, annotate it with @" + ManualExportAllowed.class.getCanonicalName());
 			}
 
-			stemInnerExportClasses(clazz, allow.get().exportByCanonicalName(),
+			exportClassAndChildren(clazz, allow.get().exportByCanonicalName(),
 					allow.get().exportByOutAliases(),	alreadyExportedClasses, callback);
 		}
 	}
 
 	/**
-	 * Returns {@code true} if this class or its declaring class are annotated to allow manual export.
-	 * <p><ul>
-	 * <li>If {@code true} is returned, either this class is annotated with {@link ManualExportAllowed}
-	 * or this class is an innerclass of a class that is.  The default is to not allow exports,
-	 * so it requires an explicit annotation to allow.
-	 * <li>If {@code false} is returned, there is no 'allow' annotation, or there is an explicit
-	 * {@link ManualExportNotAllowed} on this class or parent class.
-	 * </ul><p>
+	 * Returns the effective {@link ManualExportAllowed} annotation instance if it exists.
+	 * <p>
+	 * The effective annotation may be on the clazz itself or a containing class if the clazz is an
+	 * inner class.  If no annotation is found or a {@ ManualExportNotAllowed}annnotation is found
+	 * closer in the inner class hierarchy, then this class is not manually exportable.
 	 *
-	 * @param clazz
-	 * @return
+	 * @param clazz Determine if this class or its container is annotated for manual export.
+	 * @return The Optional ManualExportAllowed annotation, if it exists.
+	 * @throws IllegalStateException If this class is annotated to both allow and disallow manual exports.
 	 */
-	protected Optional<ManualExportAllowed> findAllowAnnotation(Class<?> clazz) {
+	protected Optional<ManualExportAllowed> findEffectiveAllowAnnotation(Class<?> clazz) throws IllegalStateException {
 
 		Optional<ManualExportAllowed> allow = Optional.empty();
 		Optional<Boolean> disallow = Optional.empty();
 
-		if (clazz.isAnnotationPresent(ManualExportAllowed.class)) allow = Optional.of(clazz.getAnnotation(ManualExportAllowed.class));
+		if (clazz.isAnnotationPresent(ManualExportAllowed.class)) allow = getAllowAnnotation(clazz);
 		if (isManualExportDisallowed(clazz)) disallow = Optional.of(true);
 
 		if (allow.isPresent() && disallow.isPresent()) {
@@ -71,7 +67,7 @@ public class ManualExportService {
 
 			//Not annotated - does it have a containing class?
 			if (clazz.getDeclaringClass() != null) {
-				return findAllowAnnotation(clazz.getDeclaringClass());
+				return findEffectiveAllowAnnotation(clazz.getDeclaringClass());
 			} else {
 				return allow;
 			}
@@ -79,13 +75,26 @@ public class ManualExportService {
 
 	}
 
+	/**
+	 * Gets the {@link ManualExportAllowed} annotation directly on this class.
+	 *
+	 * @param clazz The class to find the annotation on.
+	 * @return An Optional<ManualExportAllowed> if the annotation exists.
+	 */
+	protected Optional<ManualExportAllowed> getAllowAnnotation(Class<?> clazz) {
+		return Optional.ofNullable(clazz.getAnnotation(ManualExportAllowed.class));
+	}
+
 
 	/**
-	 * Returns {@code false} if manual export is explicitly annotated as not allowed
+	 * Returns {@code true} if manual export is explicitly annotated to not be allowed
 	 * on this class.
+	 * <p>
+	 * This does not consider containing classes, it only checks if there is a 'not allowed'
+	 * annotation on this class exclusively.
 	 *
 	 * @param clazz The class to check
-	 * @return
+	 * @return True if manual exports are explicitly not allowed on this class.
 	 */
 	protected boolean isManualExportDisallowed(Class<?> clazz) {
 		for (Class<? extends Annotation> da : DISALLOW_EXPORT_ANNOTATIONS) {
@@ -94,30 +103,34 @@ public class ManualExportService {
 		return false;
 	}
 
-	protected Optional<ManualExportAllowed> getManualExportAnnotation(Class<?> clazz) {
-		return Optional.of(clazz.getAnnotation(ManualExportAllowed.class));
-	}
+
 
 	/**
-	 * Find all inner types of the clazz that can be exported.
+	 * Export this class and all contained, nested inner classes if permitted.
 	 *
-	 * Its not an error to find {@code @DisallowExport} annotations on these inner classes,
-	 * it just means they are not included.  For this reason, the caller must handle allow/
-	 * disallow on the root class on it's own:  The passed class is not checked for exportability and is not
-	 * added to the returned list.
+	 * The clazz and the effective canonicalOption & outAliasOption export options must match and
+	 * the passed clazz and must be legal to export as defined by
+	 * {@link ManualExportService#findEffectiveAllowAnnotation}, otherwise incorrect export options
+	 * will be used and/or non-exportable (ie private) Properties exported.
 	 * <p>
-	 * TLDR:  Don't pass this method a class marked as {@code @DisallowExport} or whose
-	 * declaring class is marked 'disallow'.  This method will return results, even though
-	 * returning results in that case 'breaks the rules.
-	 *
-	 * NOTE:  Assuming here that this is called on a portion of the tree that is explicitly
-	 * allowed.  Don't call on a tree that is disallowed or non-explicit.
-	 * TODO:  Disallow disallow and allow on the same class.
-	 * @param clazz
-	 * @return
+	 * Contained classes that are discovered and annotated with {@link ManualExportNotAllowed} will
+	 * not be exported and no further search within those classes is performed.
+	 * <p>
+	 * The {@code alreadyExportedClasses} collection is used to prevent export of classes already
+	 * exported.  This can happen when this method is called on a list of classes, some of which may
+	 * overlap in their contained classes.
+	 * <p>
+	 * Note that the export options (canonical and outAlias) are preferences in the annotations.
+	 * The manual export handler is free to ignore preferences and form any type of export.
+	 * <p>
+	 * @param clazz The class (and potentially its contained classes) to export.
+	 * @param canonicalOption
+	 * @param outAliasOption
+	 * @param alreadyExportedClasses
+	 * @param callback
 	 */
-	protected void stemInnerExportClasses(Class<?> clazz,
-			Exporter.EXPORT_CANONICAL_NAME canonicalOption, Exporter.EXPORT_OUT_ALIASES outAliasOption,
+	protected void exportClassAndChildren(Class<?> clazz,
+			EXPORT_CANONICAL_NAME canonicalOption, EXPORT_OUT_ALIASES outAliasOption,
 			Set<Class<?>> alreadyExportedClasses, ExportCallback callback) {
 
 		//Already exported as part of a larger group of export classes?
@@ -126,9 +139,9 @@ public class ManualExportService {
 		callback.handleGroup(clazz, canonicalOption, outAliasOption);
 		alreadyExportedClasses.add(clazz);
 
-		for (Class<?> c : clazz.getDeclaredClasses()) {
+		for (Class<?> inner : clazz.getDeclaredClasses()) {
 
-			if (isManualExportDisallowed(c)) {
+			if (isManualExportDisallowed(inner)) {
 
 				continue;	//No export allowed from this class on down the hierarchy
 
@@ -136,15 +149,15 @@ public class ManualExportService {
 
 				//Export not disallowed for this branch of the tree
 
-				Optional<ManualExportAllowed> mea = getManualExportAnnotation(clazz);
+				Optional<ManualExportAllowed> mea = getAllowAnnotation(inner);
 
 				if (mea.isPresent()) {
 					//Explicit new export options
-					stemInnerExportClasses(c, mea.get().exportByCanonicalName(),
+					exportClassAndChildren(inner, mea.get().exportByCanonicalName(),
 							mea.get().exportByOutAliases(), alreadyExportedClasses, callback);
 				} else {
 					//Inherit parent class export options
-					stemInnerExportClasses(c, canonicalOption, outAliasOption, alreadyExportedClasses, callback);
+					exportClassAndChildren(inner, canonicalOption, outAliasOption, alreadyExportedClasses, callback);
 				}
 
 			}
@@ -162,7 +175,7 @@ public class ManualExportService {
 		}
 
 		void handleGroup(Class<?> clazz,
-				Exporter.EXPORT_CANONICAL_NAME canonicalOption, Exporter.EXPORT_OUT_ALIASES outAliasOption) {
+				EXPORT_CANONICAL_NAME canonicalOption, EXPORT_OUT_ALIASES outAliasOption) {
 
 			Optional<GroupProxy> proxy = groupList.stream().filter(g -> g.getProxiedGroup().equals(clazz)).findFirst();
 
@@ -177,6 +190,6 @@ public class ManualExportService {
 
 	public static interface ExportPropertyHandler {
 		void handleProperty(Property property,
-				Exporter.EXPORT_CANONICAL_NAME canonicalOption, Exporter.EXPORT_OUT_ALIASES outAliasOption);
+				EXPORT_CANONICAL_NAME canonicalOption, EXPORT_OUT_ALIASES outAliasOption);
 	}
 }
