@@ -15,7 +15,7 @@ public class ManualExportService {
 
 	static AndHowLog LOG = AndHowLog.getLogger(ManualExportService.class);
 
-	List<Class<? extends Annotation>> DISALLOW_EXPORT_ANNOTATIONS = List.of(ManualExportNotAllowed.class);
+	Class<?>[] DISALLOW_EXPORT_ANNOTATIONS = {ManualExportNotAllowed.class};
 
 	void handleManualExport(List<Class<?>> exportRoots, ExportPropertyHandler handler,
 			Collection<GroupProxy> groupList) throws IllegalAccessException {
@@ -97,8 +97,8 @@ public class ManualExportService {
 	 * @return True if manual exports are explicitly not allowed on this class.
 	 */
 	protected boolean isManualExportDisallowed(Class<?> clazz) {
-		for (Class<? extends Annotation> da : DISALLOW_EXPORT_ANNOTATIONS) {
-			if (clazz.isAnnotationPresent(da)) return true;
+		for (Class<?> da : DISALLOW_EXPORT_ANNOTATIONS) {
+			if (clazz.isAnnotationPresent((Class<? extends Annotation>)da)) return true;
 		}
 		return false;
 	}
@@ -181,7 +181,7 @@ public class ManualExportService {
 
 			if (proxy.isPresent()) {
 				for (NameAndProperty nap : proxy.get().getProperties()) {
-					handler.handleProperty(nap.property, canonicalOption, outAliasOption);
+					handler.handleProperty(nap.property, clazz, canonicalOption, outAliasOption);
 				}
 			}
 
@@ -189,7 +189,7 @@ public class ManualExportService {
 	}
 
 	public static interface ExportPropertyHandler {
-		void handleProperty(Property property,
+		void handleProperty(Property property, Class<?> containingClass,
 				EXPORT_CANONICAL_NAME canonicalOption, EXPORT_OUT_ALIASES outAliasOption);
 	}
 }
