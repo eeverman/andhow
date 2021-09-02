@@ -45,17 +45,12 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 
 	/**
-	 * @deprecated This method duplicates functionality and will
-	 * be removed.  The logic of this method is slightly wrong as
-	 * well (compared to the List version):  As this method is currently
-	 * implemente, an empty array will NOT erase all values.  The
-	 * Other List based methods would erase all values in that case.
+	 * @deprecated Use {@code FixedValueLoader.setPropertyValues(List<PropertyValue>)} instead.
 	 * @param values
 	 */
+	@Deprecated
 	public void setPropertyValues(PropertyValue... values) {
-		if (values != null && values.length > 0) {
-			this.values.addAll(Arrays.asList(values));
-		}
+		this.setPropertyValues(values != null ? Arrays.asList(values) : null);
 	}
 
 	/**

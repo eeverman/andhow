@@ -158,4 +158,54 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		//The initial assignment should have still worked
 		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
 	}
+
+	@Test
+	public void happyPathViaPropertyValuesAsArrayTest() {
+
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_NULL, "not_null"));
+		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
+
+		//spaces on non-string values should be trimmed and not matter
+		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
+		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
+		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
+		props.add(new PropertyValue(FLAG_TRUE, " false "));
+		props.add(new PropertyValue(FLAG_FALSE, " true "));
+		props.add(new PropertyValue(FLAG_NULL, " true "));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props.toArray(new PropertyValue[0]));
+
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals("XXX", result.getExplicitValue(STR_ENDS_WITH_XXX));
+		assertEquals(60L, result.getExplicitValue(LNG_TIME));
+		assertEquals(30, result.getExplicitValue(INT_NUMBER));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+
+		// set null has no effect
+		loader.setPropertyValues((PropertyValue[]) null);
+
+		result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
+		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertEquals("XXX", result.getExplicitValue(STR_ENDS_WITH_XXX));
+		assertEquals(60L, result.getExplicitValue(LNG_TIME));
+		assertEquals(30, result.getExplicitValue(INT_NUMBER));
+		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+	}
 }
