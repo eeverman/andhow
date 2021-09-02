@@ -383,4 +383,21 @@ class ManualExportServiceTest {
 			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
 		verifyNoMoreInteractions(propHandler);
 	}
+
+	void testinvoke() {
+//
+//
+//		Map<String, String> props = AndHow.exportBuilder()
+//			.add(ExportServiceSample.AllowMe.class)
+//			.add(ExportServiceSample.ImUnsure.AllowMe1.class)
+//			.toStringStringMap();
+//
+//		Map<String, Object> customProps = new HashMap<>();
+//		AndHow.exportBuilder()
+//			.add(ExportServiceSample.AllowMe.class)
+//			.toCustom(prefName, value -> customProps.put(prefName, value));
+//
+//		Map<String, String> props = AndHow.export(ExportServiceSample.AllowMe.class)
+//																	.stream().collect(MapStringStringCollector);
+	}
 }

@@ -5,37 +5,47 @@ import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.export.ManualExportAllowed;
 import org.yarnandtail.andhow.export.ManualExportNotAllowed;
 import org.yarnandtail.andhow.export.SysPropExporter;
+import org.yarnandtail.andhow.property.StrProp;
 
 public class ExportServiceSample {
 
 	@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS,
 			exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
-	static interface AllowMe {
+	public interface AllowMe {
+
+		StrProp STR1 = StrProp.builder()
+				.aliasIn("str1in").aliasOut("str1out").aliasInAndOut("str1inandout").build();
 
 		@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
-		static interface AllowMe1 { }
+		interface AllowMe1 {
+			StrProp STR1 = StrProp.builder()
+					.aliasIn("a.a.str1in").aliasOut("a.a.str1out").aliasInAndOut("a.a.str1inandout").build();
+		}
 
 		@ManualExportNotAllowed
-		static interface DisallowMe1 { }
+		interface DisallowMe1 { }
 
 		@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-		static interface ExportMe1 { }
+		interface ExportMe1 {
+			StrProp STR1 = StrProp.builder()
+					.aliasIn("a.e.str1in").aliasOut("a.e.str1out").aliasInAndOut("a.e.str1inandout").build();
+		}
 
-		static interface ImUnsure1 {
+		interface ImUnsure1 {
 			@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
 					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS)
-			static interface AllowMe2 { }
+			interface AllowMe2 { }
 
 			@ManualExportNotAllowed
-			static interface DisallowMe2 { }
+			interface DisallowMe2 { }
 
 			@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-			static interface ExportMe2 { }
+			interface ExportMe2 { }
 
-			static interface ImUnsure2 { }
+			interface ImUnsure2 { }
 		}
 	}
 
@@ -43,32 +53,32 @@ public class ExportServiceSample {
 	////////
 
 	@ManualExportNotAllowed
-	static interface DisallowMe {
+	interface DisallowMe {
 
 		@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
-		static interface AllowMe1 { }
+		interface AllowMe1 { }
 
 		@ManualExportNotAllowed
-		static interface DisallowMe1 { }
+		interface DisallowMe1 { }
 
 		@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-		static interface ExportMe1 { }
+		class ExportMe1 { }
 
-		static interface ImUnsure1 {
+		interface ImUnsure1 {
 			@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
 					exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
-			static interface AllowMe2 { }
+			interface AllowMe2 { }
 
 			@ManualExportNotAllowed
-			static interface DisallowMe2 { }
+			interface DisallowMe2 { }
 
 			@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-			static interface ExportMe2 { }
+			interface ExportMe2 { }
 
-			static interface ImUnsure2 { }
+			interface ImUnsure2 { }
 		}
 	}
 
@@ -77,49 +87,52 @@ public class ExportServiceSample {
 
 	@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 			exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-	static interface ExportMe {
+	public interface ExportMe {
 		@ManualExportAllowed
-		static interface AllowMe1 { }
+		interface AllowMe1 {
+			StrProp STR1 = StrProp.builder()
+					.aliasIn("e.a.str1in").aliasOut("e.a.str1out").aliasInAndOut("e.a.str1inandout").build();
+		}
 
 		@ManualExportNotAllowed
-		static interface DisallowMe1 { }
+		interface DisallowMe1 { }
 
 		@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-		static interface ExportMe1 { }
+		interface ExportMe1 { }
 
-		static interface ImUnsure1 {
+		interface ImUnsure1 {
 			@ManualExportAllowed
-			static interface AllowMe2 { }
+			interface AllowMe2 { }
 
 			@ManualExportNotAllowed
-			static interface DisallowMe2 { }
+			interface DisallowMe2 { }
 
 			@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-			static interface ExportMe2 { }
+			interface ExportMe2 { }
 
-			static interface ImUnsure2 { }
+			interface ImUnsure2 { }
 		}
 	}
 
-	static interface ImUnsure {
+	interface ImUnsure {
 		@ManualExportAllowed
-		static interface AllowMe1 { }
+		interface AllowMe1 { }
 
 		@ManualExportNotAllowed
-		static interface DisallowMe1 { }
+		interface DisallowMe1 { }
 
 		@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-		static interface ExportMe1 { }
+		interface ExportMe1 { }
 
-		static interface ImUnsure1 { }
+		interface ImUnsure1 { }
 	}
 
 	@ManualExportAllowed
 	@ManualExportNotAllowed
-	static interface ImConfused {
-		static interface ImAlsoConfused { }
+	interface ImConfused {
+		interface ImAlsoConfused { }
 	}
 }
