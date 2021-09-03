@@ -1,6 +1,9 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.AndHow;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a configuration point of an application.
@@ -96,7 +99,7 @@ public interface Property<T> {
 	 * and helpText is presented as well, so it does not need to all be included in
 	 * the description.
 	 * 
-	 * @return May be null
+	 * @return May be empty but not null.
 	 */
 	String getDescription();
 	
@@ -107,39 +110,102 @@ public interface Property<T> {
 	List<Validator<T>> getValidators();
 	
 	/**
-	 * The list of Aliases requested by this property in its declaration.
-	 * 
-	 * CAUTION:  This is NOT necessarily the list of Alias actually available
-	 * for this property - use AndHow.getAlias() for that.
-	 * 
-	 * Since Properties from unrelated libraries can be
-	 * used in the same application, the main AndHow application level configuration
-	 * must be able to disable aliases that conflict (i.e., two properties are
-	 * aliased as 'my-prop'.
-	 * 
-	 * Note that the returned aliases may be coalesced.  For instance, if a property
-	 * is build as:
-	 * <code>IntProp MyProp = IntProp.builder().inAlias("Bob").outAlias("Bob").build();</code>
-	 * getConfiguredAliases() may return a single Alias object w/ the name "Bob",
-	 * marked as being both both in and out.
-	 * 
-	 * @return A list of Alias assigned to this Property in the property
-	 *	declaration or an empty list if there are none.
+	 * 'In' & 'Out' aliases requested when this Property was constructed.
+	 * <p>
+	 * The returned aliases may differ from the original requested aliases or those returned by
+	 * {@link #getInAliases()} in two ways:
+	 * <ul>
+	 * <li>{@link NamingStrategy} may modify 'In' aliases, e.g. convert them to uppercase for
+	 *   case-insensitive matching.  {@link #getInAliases()} returns the modified 'In' aliases.</li>
+	 * <li>Aliases may be coalesced if:  If an 'In' alias matches an 'Out' alias, a single
+	 * 'InAndOut' alias may be returned.</li>
+	 * </ul>
+	 *
+	 * @return A non-null list of alias {@link Name}s for this Property.
 	 */
 	List<Name> getRequestedAliases();
 	
 	
 	/**
-	 * Added details that will be shown if the user requests help.
-	 * 
-	 * Assume that the the canonical name, validation requirements
-	 * and description are presented as well.
+	 * Additional help information for this Property that will be included in configuration documentation.
 	 * 
 	 * Help text can provide added details, such as details on how to specify
 	 * special values or interrelated properties.
 	 * 
-	 * @return May be null
+	 * @return May be empty but not null.
 	 */
 	String getHelpText();
+
+	/**
+	 * All the effective 'in' aliases for this property, not including the canonical name.
+	 * <p>
+	 * 'In' aliases are additional names by which a Property value may receive its value from
+	 * a configuration source.  The returned aliases may differ from aliases returned by
+	 * {@link #getRequestedAliases()} because the {@link NamingStrategy} may modify them
+	 * (e.g. convert them to uppercase for case-insensitive matching).
+	 * <p>
+	 * Aliases may be 'in' and/or 'out', so there may be overlap between names returned
+	 * here and those returned from {@link #getOutAliases()}.
+	 *
+	 * @return A non-null list of 'in' aliases.  May or may not be writable, but is
+	 * 	 disconnected from the underlying list - edits have no effect.
+	 */
+	default List<String> getInAliases() {
+		return AndHow.instance().getAliases(this).stream().filter(n -> n.isIn())
+				.map(n -> n.getEffectiveInName()).collect(Collectors.toList());
+	}
+
+	/**
+	 * All the 'out' aliases for this property, not including the canonical name.
+	 * <p>
+	 * 'Out' aliases are names used when a Property is exported, such as exporting a group of
+	 * Property names & values as a Map for a framework that configures this way.
+	 * <p>
+	 * Aliases may be 'in' and/or 'out', so there may be overlap between names returned
+	 * here and those returned from {@link #getInAliases()}.
+	 *
+	 * @return A non-null list of 'out' aliases.  May or may not be writable, but is
+	 * 	disconnected from the underlying list - edits have no effect.
+	 */
+	default List<String> getOutAliases() {
+		return AndHow.instance().getAliases(this).stream().filter(n -> n.isOut())
+				.map(n -> n.getEffectiveOutName()).collect(Collectors.toList());
+	}
+
+	/**
+	 * The canonical name of a {@link Property}.
+	 * <p>
+	 * Canonical Property names are the full Java classname of the class containing the Property, plus
+	 * the Property name, e.g. {@code org.acme.myapp.MyClass.MyProperty}.  Properties contained in
+	 * inner classes and interfaces continue the same naming structure, e.g.
+	 * {@code org.acme.myapp.MyClass.MyInnerClass.MyInnerInterface.MyProperty}.
+	 *
+	 * @return The canonical name of the Property.
+	 */
+	default String getCanonicalName() {
+		return AndHow.instance().getCanonicalName(this);
+	}
+
+	/**
+	 * Converts the effective value of the Property to a String.
+	 * <p>
+	 * Usually this is the same as calling {@code toString()} on the effective value, but some
+	 * Properties may have custom {@link ValueType}s or more complex conversions,
+	 * such as dates and times.
+	 *
+	 * @return Effective value converted to a String, or null if the value is null.
+	 */
+	default String getValueAsString() {
+		return getValueType().toString(getValue());
+	}
+
+	/**
+	 * True if the Property's value is explicitly set to a non-null value via one of the loaders.
+	 *
+	 * @return True if this value is explicitly set.
+	 */
+	default boolean isExplicitlySet() {
+		return AndHow.instance().isExplicitlySet(this);
+	}
 
 }
