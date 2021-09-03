@@ -37,8 +37,7 @@ public interface ValidatedValues {
 	<T> T  getValue(Property<T> prop);
 	
 	/**
-	 * Returns true if the Property's value was explicitly set to a non-null value
-	 * via one of the loaders.
+	 * True if the Property's value is explicitly set to a non-null value via one of the loaders.
 	 * 
 	 * @param prop The property to check
 	 * @return True if this value is explicitly set.

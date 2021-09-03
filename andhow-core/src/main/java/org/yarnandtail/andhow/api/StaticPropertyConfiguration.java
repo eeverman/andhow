@@ -28,23 +28,49 @@ import java.util.List;
 public interface StaticPropertyConfiguration {
 
 	/**
-	 * Returns all aliases (in and out) for a property.
+	 * All the effective 'in' aliases for this property, not including the canonical name.
+	 * <p>
+	 * 'In' aliases are additional names by which a Property value may receive its value from
+	 * a configuration source.  The returned aliases may differ from aliases returned by
+	 * {@link #getRequestedAliases()} because the {@link NamingStrategy} may modify them
+	 * (e.g. convert them to uppercase for case-insensitive matching).
+	 * <p>
+	 * Aliases may be 'in' and/or 'out', so there may be overlap between names returned
+	 * here and those returned from {@link #getOutAliases()}.
 	 *
-	 * This may be different than the aliases requested for the Property, since
-	 * the application-level configuration has the ability to add and remove
-	 * aliases to mitigate name conflicts.
-	 *
+	 * @return A non-null list of 'in' aliases.  May or may not be writable, but is
+	 * 	 disconnected from the underlying list - edits have no effect.
+	 */
+
+	/**
+	 * All the effective 'in' & 'out' aliases for this property, not including the canonical name.
+	 * <p>
+	 * The returned aliases may differ from the original requested aliases in two ways:
+	 * <ul>
+	 * <li>{@link NamingStrategy} may modify 'In' aliases, e.g. convert them to uppercase for
+	 *   case-insensitive matching.  This method returns the modified 'In' aliases.</li>
+	 * <li>Aliases may be coalesced if:  If an 'In' alias matches an 'Out' alias, a single
+	 * 'InAndOut' alias may be returned.</li>
+	 * </ul>
+	 * <p>
 	 * @param property The property to fetch naming information for
-	 * @return All aliases available for this property.
+	 * @return A non-null, non-modifiable list of alias {@link EffectiveName}s for this Property.
+	 * @see Property#getInAliases()
+	 * @see Property#getOutAliases()
+	 * @see Property#getRequestedAliases()
 	 */
 	List<EffectiveName> getAliases(Property<?> property);
 
 	/**
-	 * Returns the canonical name of a registered property.
+	 * The canonical name of a {@link Property}.
+	 * <p>
+	 * Canonical Property names are the full Java classname of the class containing the Property, plus
+	 * the Property name, e.g. {@code org.acme.myapp.MyClass.MyProperty}.  Properties contained in
+	 * inner classes and interfaces continue the same naming structure, e.g.
+	 * {@code org.acme.myapp.MyClass.MyInnerClass.MyInnerInterface.MyProperty}.
 	 *
-	 * If the property is not registered, null is returned.
-	 * @param prop The property to get the canonical name for
-	 * @return The canonical name
+	 * @param prop The Property to get the canonical name for.
+	 * @return The canonical name of the Property.
 	 */
 	String getCanonicalName(Property<?> prop);
 
