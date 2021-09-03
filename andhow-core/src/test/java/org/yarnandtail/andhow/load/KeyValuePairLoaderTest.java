@@ -80,20 +80,6 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
-
-		// set null has no effect
-		cll.setKeyValuePairs((String[]) null);
-
-		result = cll.load(appDef, appValuesBuilder);
-
-		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
-		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("something_XXX", result.getExplicitValue(SimpleParams.STR_ENDS_WITH_XXX));
-		assertEquals(Boolean.FALSE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 	
 

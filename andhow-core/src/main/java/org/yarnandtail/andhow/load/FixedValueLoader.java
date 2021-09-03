@@ -66,6 +66,13 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
+		if (values == null) {
+			values = new ArrayList<>();
+		}
+		if (keyObjectPairValues == null) {
+			keyObjectPairValues = new ArrayList<>();
+		}
+
 		List<ValidatedValue> vvs = new ArrayList(values.size());
 		ProblemList<Problem> problems = new ProblemList();
 
@@ -117,8 +124,12 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	@Override
 	public void releaseResources() {
-		values.clear();
-		keyObjectPairValues.clear();
+		if (values != null) {
+			values.clear();
+		}
+		if (keyObjectPairValues != null) {
+			keyObjectPairValues.clear();
+		}
 	}
 	
 }

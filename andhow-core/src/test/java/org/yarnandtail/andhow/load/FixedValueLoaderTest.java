@@ -5,9 +5,11 @@ import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.LoaderValues;
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.ValidatedValue;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -191,21 +193,63 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+	}
 
-		// set null has no effect
-		loader.setPropertyValues((PropertyValue[]) null);
+	@Test
+	public void nullValuesTest() {
 
-		result = loader.load(appDef, appValuesBuilder);
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<String> args = new ArrayList();
+		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
+		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
+
+		cll.setKeyValuePairs((List<String>) null);
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
+
 
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
-		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("XXX", result.getExplicitValue(STR_ENDS_WITH_XXX));
-		assertEquals(60L, result.getExplicitValue(LNG_TIME));
-		assertEquals(30, result.getExplicitValue(INT_NUMBER));
-		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	@Test
+	public void emptyValueList() {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<String> args = new ArrayList();
+		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
+		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+		cll.setKeyValuePairs(args);
+
+		cll.setKeyValuePairs(Collections.emptyList());
+		LoaderValues result = cll.load(appDef, appValuesBuilder);
+
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 	}
 }
