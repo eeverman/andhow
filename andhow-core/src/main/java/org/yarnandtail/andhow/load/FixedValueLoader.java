@@ -21,11 +21,11 @@ import org.yarnandtail.andhow.api.*;
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	protected boolean unknownPropertyAProblem = true;
-	
-	protected final List<PropertyValue> values = new ArrayList();
 
-	protected final List<KeyObjectPair> keyObjectPairValues = new ArrayList();
-			
+	protected List<PropertyValue> values;
+
+	protected List<KeyObjectPair> keyObjectPairValues;
+
 	public FixedValueLoader() {
 	}
 
@@ -39,9 +39,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	 * @param values
 	 */
 	public void setPropertyValues(List<PropertyValue> values) {
-		if (values != null) {
-			this.values.addAll(values);
-		}
+		this.values = values == null ? null : new ArrayList<>(values);
 	}
 
 	/**
@@ -62,9 +60,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	 * @param values
 	 */
 	public void setKeyObjectPairValues(List<KeyObjectPair> values) {
-		if (values != null) {
-			keyObjectPairValues.addAll(values);
-		}
+		this.keyObjectPairValues = values == null ? null : new ArrayList<>(values);
 	}
 
 	@Override
