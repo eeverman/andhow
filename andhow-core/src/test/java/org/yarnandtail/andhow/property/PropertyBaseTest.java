@@ -16,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- * Tests basic Property methods.
+ * Tests basic Property methods in PropertyBase and also a few default methods in Property.
  *
  * Many of the Property methods are not directly unit testable and require AndHow
  * to be initialized for a meaningful test.  This class does that.
  */
-public class PropertyTest extends PropertyTestBase {
+public class PropertyBaseTest extends PropertyTestBase {
 
 	@Test
 	public void validationGroupGoodValuesTest() {
@@ -36,7 +36,7 @@ public class PropertyTest extends PropertyTestBase {
 		assertNull(Config.STR1.getDefaultValue());
 		assertEquals("Str1 Desc", Config.STR1.getDescription());
 		assertEquals("Str1 Help", Config.STR1.getHelpText());
-		assertEquals("org.yarnandtail.andhow.property.PropertyTest.Config.STR1",
+		assertEquals("org.yarnandtail.andhow.property.PropertyBaseTest.Config.STR1",
 				Config.STR1.getCanonicalName());
 		assertEquals(PropertyType.SINGLE_NAME_VALUE, Config.STR1.getPropertyType());
 		assertTrue(Config.STR1.getTrimmer() instanceof QuotedSpacePreservingTrimmer);
@@ -48,8 +48,7 @@ public class PropertyTest extends PropertyTestBase {
 		// Aliases
 		assertThat(Config.STR1.getInAliases(),
 				containsInAnyOrder("STR1IN1", "STR1IN2", "STR1INOUT1", "STR1INOUT2"));
-		assertThat("Order is important for Out aliases b/c some export may use first or last," +
-									 "eventually, but for now it is not in the correct order.",
+		assertThat("TODO:  Out aliases should preserve order",
 				Config.STR1.getOutAliases(),
 				containsInAnyOrder("Str1Out1", "Str1Out2", "Str1InOut1", "Str1InOut2"));
 		assertThat(Config.STR1.getRequestedAliases().stream()
@@ -72,7 +71,7 @@ public class PropertyTest extends PropertyTestBase {
 		assertNull(Config.STR2.getDefaultValue());
 		assertTrue(Config.STR2.getDescription().isEmpty());
 		assertTrue(Config.STR2.getHelpText().isEmpty());
-		assertEquals("org.yarnandtail.andhow.property.PropertyTest.Config.STR2",
+		assertEquals("org.yarnandtail.andhow.property.PropertyBaseTest.Config.STR2",
 				Config.STR2.getCanonicalName());
 		assertFalse(Config.STR2.isExplicitlySet());
 		assertEquals(2, Config.STR2.getValidators().size());
