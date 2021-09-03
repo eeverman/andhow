@@ -200,18 +200,23 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
-		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
-		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_NULL, "not_null"));
+		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
 
-		KeyValuePairLoader cll = new KeyValuePairLoader();
-		cll.setKeyValuePairs(args);
+		//spaces on non-string values should be trimmed and not matter
+		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
+		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
+		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
+		props.add(new PropertyValue(FLAG_TRUE, " false "));
+		props.add(new PropertyValue(FLAG_FALSE, " true "));
+		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-		cll.setKeyValuePairs((List<String>) null);
+		FixedValueLoader cll = new FixedValueLoader();
+		cll.setPropertyValues(props);
+
+		cll.setPropertyValues((List<PropertyValue>) null);
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 
 
@@ -229,18 +234,23 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
-		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
-		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_NULL, "not_null"));
+		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
 
-		KeyValuePairLoader cll = new KeyValuePairLoader();
-		cll.setKeyValuePairs(args);
+		//spaces on non-string values should be trimmed and not matter
+		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
+		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
+		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
+		props.add(new PropertyValue(FLAG_TRUE, " false "));
+		props.add(new PropertyValue(FLAG_FALSE, " true "));
+		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-		cll.setKeyValuePairs(Collections.emptyList());
+		FixedValueLoader cll = new FixedValueLoader();
+		cll.setPropertyValues(props);
+
+		cll.setPropertyValues(Collections.emptyList());
 		LoaderValues result = cll.load(appDef, appValuesBuilder);
 
 
