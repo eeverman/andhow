@@ -33,7 +33,7 @@ public interface ValueType<T> {
 	T parse(String sourceValue) throws ParsingException;
 	
 	/**
-	 * Converts an instance of the destination type to string.
+	 * Converts an instance of the destination type to String.
 	 * 
 	 * For most types, simply calling T.toString() is a good enough implementation.
 	 * For dates, times and other more complex types, more detailed conversion may
