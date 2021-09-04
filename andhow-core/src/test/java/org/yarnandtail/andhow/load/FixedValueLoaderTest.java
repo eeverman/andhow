@@ -225,6 +225,9 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertNull(result.getValue(SimpleParams.STR_NULL));
+
+		// release resources when values set to null
+		loader.releaseResources();
 	}
 
 	@Test
@@ -291,6 +294,9 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertNull(result.getValue(SimpleParams.STR_NULL));
+
+		// release resources when kops set to null
+		loader.releaseResources();
 	}
 
 	@Test
