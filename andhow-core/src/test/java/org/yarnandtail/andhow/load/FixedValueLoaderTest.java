@@ -196,9 +196,7 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void nullValuesTest() {
-
-		String basePath = SimpleParams.class.getCanonicalName() + ".";
+	public void setPropertyValuesAsNullTest() {
 
 		List<PropertyValue> props = new ArrayList();
 		props.add(new PropertyValue(STR_BOB, "test"));
@@ -230,7 +228,7 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void emptyValueList() {
+	public void setPropertyValuesAsEmptyList() {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
@@ -253,6 +251,70 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		loader.setPropertyValues(Collections.emptyList());
 		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	@Test
+	public void setKeyObjectParisAsNullTest() throws ParsingException {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
+		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
+		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
+		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
+		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
+		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
+		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
+		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
+		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		loader.setKeyObjectPairValues(null);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	@Test
+	public void setKeyObjectParisAsEmptyList() throws ParsingException {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
+		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
+		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
+		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
+		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
+		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
+		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
+		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
+		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		loader.setKeyObjectPairValues(null);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
