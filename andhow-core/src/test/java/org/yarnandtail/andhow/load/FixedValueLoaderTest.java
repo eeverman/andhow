@@ -213,11 +213,11 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		props.add(new PropertyValue(FLAG_FALSE, " true "));
 		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-		FixedValueLoader cll = new FixedValueLoader();
-		cll.setPropertyValues(props);
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
 
-		cll.setPropertyValues((List<PropertyValue>) null);
-		LoaderValues result = cll.load(appDef, appValuesBuilder);
+		loader.setPropertyValues((List<PropertyValue>) null);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 
 		assertEquals(0, result.getProblems().size());
@@ -247,11 +247,11 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		props.add(new PropertyValue(FLAG_FALSE, " true "));
 		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-		FixedValueLoader cll = new FixedValueLoader();
-		cll.setPropertyValues(props);
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
 
-		cll.setPropertyValues(Collections.emptyList());
-		LoaderValues result = cll.load(appDef, appValuesBuilder);
+		loader.setPropertyValues(Collections.emptyList());
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 
 		assertEquals(0, result.getProblems().size());
