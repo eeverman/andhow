@@ -26,8 +26,8 @@ public class StringMapExporter
 	@Override
 	public BiConsumer<Map<String, String>, PropertyExport> accumulator() {
 		return (map, exp) -> {
-			exp.getPreferedNames().stream().forEach(
-				n -> map.put(n, exp.getValueAsString()));
+			exp.getExportNames().stream().forEach(
+				n -> map.put(n, exp.getProperty().getValueAsString()));
 		};
 	}
 

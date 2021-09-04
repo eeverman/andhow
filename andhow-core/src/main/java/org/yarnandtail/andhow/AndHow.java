@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.UnaryOperator;
 
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.export.PropertyExport;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
@@ -443,6 +444,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		} else {
 			return overrideGroups;
 		}
+	}
+
+	Collection<PropertyExport> export(List<Class<?>> groupClasses) throws IllegalAccessException {
+		return core.export(groupClasses);
 	}
 
 	//

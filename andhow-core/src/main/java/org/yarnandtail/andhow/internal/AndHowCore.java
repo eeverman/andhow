@@ -1,8 +1,12 @@
 package org.yarnandtail.andhow.internal;
 
 import java.io.*;
+
+import org.yarnandtail.andhow.export.PropertyExport;
+import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
@@ -130,6 +134,11 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen	
 		}
 		
+	}
+
+	public Collection<PropertyExport> export(List<Class<?>> groupClasses) throws IllegalAccessException {
+		ManualExportService svs = new ManualExportService();
+		return svs.doManualExport(groupClasses, staticConfig.getPropertyGroups());
 	}
 	
 	@Override

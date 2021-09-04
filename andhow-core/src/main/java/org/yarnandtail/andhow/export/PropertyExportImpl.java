@@ -1,12 +1,10 @@
 package org.yarnandtail.andhow.export;
 
-import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.api.Property;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PropertyExportImpl implements PropertyExport {
 
@@ -14,6 +12,7 @@ public class PropertyExportImpl implements PropertyExport {
 	private final Class<?> containingClass;
 	private final EXPORT_CANONICAL_NAME canNameOpt;
 	private final EXPORT_OUT_ALIASES aliasOpt;
+	private final List<String> exportNames;
 
 	public PropertyExportImpl(Property<?> property, Class<?> containingClass,
 			EXPORT_CANONICAL_NAME canonicalNameOpt, EXPORT_OUT_ALIASES outAliasOpt) {
@@ -22,6 +21,17 @@ public class PropertyExportImpl implements PropertyExport {
 		this.containingClass = containingClass;
 		this.canNameOpt = canonicalNameOpt;
 		this.aliasOpt = outAliasOpt;
+		exportNames = null;
+	}
+
+	private PropertyExportImpl(Property<?> property, Class<?> containingClass,
+			EXPORT_CANONICAL_NAME canonicalNameOpt, EXPORT_OUT_ALIASES outAliasOpt, List<String> exportNames) {
+
+		this.property = property;
+		this.containingClass = containingClass;
+		this.canNameOpt = canonicalNameOpt;
+		this.aliasOpt = outAliasOpt;
+		this.exportNames = exportNames;
 	}
 
 	@Override
@@ -45,10 +55,29 @@ public class PropertyExportImpl implements PropertyExport {
 	}
 
 	@Override
-	public List<String> getPreferedNames() {
+	public List<String> getExportNames() {
+
+		if (exportNames == null) {
+			return buildExportNames();
+		} else {
+			return exportNames;
+		}
+
+	}
+
+	@Override
+	public PropertyExport clone(List<String> exportNames) {
+		return new PropertyExportImpl(property, containingClass, canNameOpt, aliasOpt, exportNames);
+	}
+
+	/**
+	 * Build the export names based on the EXPORT_CANONICAL_NAME & EXPORT_OUT_ALIASES options.
+	 * @return
+	 */
+	protected List<String> buildExportNames() {
 		List<String> names = new ArrayList(1);
 
-		List<String> aliasNames = getOutAliasNames();
+		List<String> aliasNames = property.getOutAliases();
 
 		if (aliasOpt.equals(EXPORT_OUT_ALIASES.ALWAYS)) {
 			names.addAll(aliasNames);
@@ -56,32 +85,12 @@ public class PropertyExportImpl implements PropertyExport {
 
 		if (
 				canNameOpt.equals(EXPORT_CANONICAL_NAME.ALWAYS) ||
-				(canNameOpt.equals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS) && aliasNames.isEmpty())) {
-			names.add(getCanonicalName());
+						(canNameOpt.equals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS) && aliasNames.isEmpty())) {
+			names.add(property.getCanonicalName());
 		}
 
 		return names;
 	}
 
-	@Override
-	public List<String> getOutAliasNames() {
-		return AndHow.instance().getAliases(property).stream().filter(n -> n.isOut())
-				.map(n -> n.getEffectiveOutName()).collect(Collectors.toList());
-	}
 
-	@Override
-	public String getCanonicalName() {
-		return AndHow.instance().getCanonicalName(property);
-	}
-
-	@Override
-	public Object getValue() {
-		return property.getValue();
-	}
-
-	@Override
-	public String getValueAsString() {
-		Object o = getValue();
-		return (o != null)? o.toString() : null;
-	}
 }

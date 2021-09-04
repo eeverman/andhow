@@ -28,15 +28,15 @@ public class ExportServiceSample {
 
 		@GroupExport(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS, exporter = SysPropExporter.class)
-		interface ExportMe1 {
-			StrProp STR1 = StrProp.builder()
-					.aliasIn("a.e.str1in").aliasOut("a.e.str1out").aliasInAndOut("a.e.str1inandout").build();
-		}
+		interface ExportMe1 {	}
 
 		interface ImUnsure1 {
 			@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
 					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS)
-			interface AllowMe2 { }
+			interface AllowMe2 {
+				StrProp STR1 = StrProp.builder()
+						.aliasIn("a.u.a.str1in").aliasOut("a.u.a.str1out").aliasInAndOut("a.u.a.str1inandout").build();
+			}
 
 			@ManualExportNotAllowed
 			interface DisallowMe2 { }

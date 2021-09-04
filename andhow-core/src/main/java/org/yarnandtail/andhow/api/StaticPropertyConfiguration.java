@@ -1,5 +1,8 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.export.PropertyExport;
+
+import java.util.Collection;
 import java.util.List;
 
 /**

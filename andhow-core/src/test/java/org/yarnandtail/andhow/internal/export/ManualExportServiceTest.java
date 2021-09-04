@@ -2,23 +2,15 @@ package org.yarnandtail.andhow.internal.export;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.mockito.Mockito.*;
 import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.GroupProxyImmutable;
-import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.export.ManualExportAllowed;
+import org.yarnandtail.andhow.export.PropertyExport;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.testutil.AndHowTestUtils;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -201,203 +193,209 @@ class ManualExportServiceTest {
 
 	@Test
 	void exportClassAndChildrenWithASingleClass() {
-		ManualExportService.ExportCallback callback = Mockito.mock(ManualExportService.ExportCallback.class);
+
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
+		Collection<PropertyExport> propExports = new ArrayList();
 
 
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
 			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
-			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS);
-		verifyNoMoreInteractions(callback);
-		assertThat(alreadyExportedClasses, containsInAnyOrder(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class));
+		assertEquals(2, propExports.size());
+
+		PropertyExport pe1 = propExports.stream()
+				.filter(p -> p.getProperty().getDescription().startsWith("Prop_1_of_2"))
+				.findFirst().get();
+		PropertyExport pe2 = propExports.stream()
+				.filter(p -> p.getProperty().getDescription().startsWith("Prop_2_of_2"))
+				.findFirst().get();
+
+		assertEquals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class, pe1.getContainingClass());
+		assertEquals(EXPORT_CANONICAL_NAME.NEVER, pe1.getCanonicalNameOption());
+		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, pe1.getOutAliasOption());
+		//
+		assertEquals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class, pe2.getContainingClass());
+		assertEquals(EXPORT_CANONICAL_NAME.NEVER, pe2.getCanonicalNameOption());
+		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, pe2.getOutAliasOption());
+
 	}
 
 	@Test
-	void exportClassAndChildrenWithTheEntireAllowMeInnerclass() {
-		ManualExportService.ExportCallback callback = Mockito.mock(ManualExportService.ExportCallback.class);
+	void exportClassAndChildrenForAllowMe() {
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
+		Collection<PropertyExport> propExports = new ArrayList();
 
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.AllowMe1.class,
-			EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ExportMe1.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
-			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verifyNoMoreInteractions(callback);
-
-		assertThat(alreadyExportedClasses, containsInAnyOrder(entireAllowMeExportableClassList));
+		verifyAllowMeInnerClassExport(propExports);
 	}
 
 	@Test
-	void exportClassAndChildrenWithTheEntireAllowMeInnerclassAndOverlappingInnerClass() {
-		ManualExportService.ExportCallback callback = Mockito.mock(ManualExportService.ExportCallback.class);
+	void exportClassAndChildrenForAllowMeAndOverlappingInnerClasses() {
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
+		Collection<PropertyExport> propExports = new ArrayList();
 
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 
 		//
-		// Also export some inner-classes contained in AllowMe
+		// Also export duplicate inner-classes contained in AllowMe - should be ignored
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.AllowMe1.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ExportMe1.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ImUnsure1.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 
-		//The actual callback calls and exported classes should be the same
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.AllowMe1.class,
-			EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ExportMe1.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
-			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class,
-			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verifyNoMoreInteractions(callback);
+		verifyAllowMeInnerClassExport(propExports);
 
-		assertThat(alreadyExportedClasses, containsInAnyOrder(entireAllowMeExportableClassList));
 	}
 
 
 	@Test
 	void exportClassAndChildrenOfEntireAllowMeInnerclassByAddingEachInnerClassSeparately() {
-		ManualExportService.ExportCallback callback = Mockito.mock(ManualExportService.ExportCallback.class);
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
-
+		Collection<PropertyExport> propExports = new ArrayList();
 
 		//
 		// Export some inner-classes contained in AllowMe
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.AllowMe1.class,
 			EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ExportMe1.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ImUnsure1.class,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 		svs.exportClassAndChildren(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
 			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS,
-			alreadyExportedClasses, callback);
+			alreadyExportedClasses, allClassesGroupProxies, propExports);
 
-		//The actual callback calls and exported classes should be the same except AllowMe not included
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.AllowMe1.class,
+		// The top level 'AllowMe' class is not included, so there are 2 less properties
+		assertEquals(12, propExports.size());
+
+		verify(propExports, ExportServiceSample.AllowMe.AllowMe1.class, 2,
 			EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ExportMe1.class,
+		verify(propExports, ExportServiceSample.AllowMe.ExportMe1.class, 2,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.class,
+		verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.class, 2,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class,
+		verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class, 2,
 			EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class,
+		verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class, 2,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verify(callback).handleGroup(ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class,
+		verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class, 2,
 			EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
-		verifyNoMoreInteractions(callback);
 
-		//Remove AllowMe from the class list
-		List<Class<?>> classList = new ArrayList(Arrays.asList(entireAllowMeExportableClassList));
-		classList.remove(ExportServiceSample.AllowMe.class);
-
-		assertThat(alreadyExportedClasses, containsInAnyOrder(classList.toArray(new Class<?>[0])));
 	}
 
 	@Test
 	void handleManualExportForAllowMe() throws IllegalAccessException {
+		Collection<PropertyExport> propExports = new ArrayList();
 
-		ManualExportService.ExportPropertyHandler propHandler =
-			mock(ManualExportService.ExportPropertyHandler.class);
 		List<Class<?>> exportRoots = new ArrayList();
 		exportRoots.add(ExportServiceSample.AllowMe.class);
 
-		svs.handleManualExport(exportRoots, propHandler, allClassesGroupProxies);
+		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies);
 
-		// Verify calls to the property handler
-
-		//Full detail for the 1st two...
-		ArgumentCaptor<Property<?>> propCapture = ArgumentCaptor.forClass(Property.class);
-		verify(propHandler, times(2)).handleProperty(propCapture.capture(),
-			eq(ExportServiceSample.AllowMe.class),
-			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
-		List<String> propDescs = propCapture.getAllValues().stream().map(p -> p.getDescription())
-			.collect(Collectors.toList());
-		assertThat(propDescs, containsInAnyOrder(
-			"Prop_1_of_2 org.yarnandtail.andhow.internal.export.ExportServiceSample.AllowMe",
-						"Prop_2_of_2 org.yarnandtail.andhow.internal.export.ExportServiceSample.AllowMe"
-			));
-
-		propCapture = ArgumentCaptor.forClass(Property.class);
-		verify(propHandler, times(2)).handleProperty(propCapture.capture(),
-			eq(ExportServiceSample.AllowMe.AllowMe1.class),
-			eq(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS), eq(EXPORT_OUT_ALIASES.NEVER));
-		propDescs = propCapture.getAllValues().stream().map(p -> p.getDescription())
-			.collect(Collectors.toList());
-		assertThat(propDescs, containsInAnyOrder(
-			"Prop_1_of_2 org.yarnandtail.andhow.internal.export.ExportServiceSample.AllowMe.AllowMe1",
-			"Prop_2_of_2 org.yarnandtail.andhow.internal.export.ExportServiceSample.AllowMe.AllowMe1"
-		));
-
-		verify(propHandler, times(2)).handleProperty(any(),
-			eq(ExportServiceSample.AllowMe.ExportMe1.class),
-			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
-		verify(propHandler, times(2)).handleProperty(any(),
-			eq(ExportServiceSample.AllowMe.ImUnsure1.class),
-			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
-		verify(propHandler, times(2)).handleProperty(any(),
-			eq(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class),
-			eq(EXPORT_CANONICAL_NAME.NEVER), eq(EXPORT_OUT_ALIASES.ALWAYS));
-		verify(propHandler, times(2)).handleProperty(any(),
-			eq(ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class),
-			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
-		verify(propHandler, times(2)).handleProperty(any(),
-			eq(ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class),
-			eq(EXPORT_CANONICAL_NAME.ALWAYS), eq(EXPORT_OUT_ALIASES.NEVER));
-		verifyNoMoreInteractions(propHandler);
+		verifyAllowMeInnerClassExport(propExports);
 	}
 
-	void testinvoke() {
-//
-//
-//		Map<String, String> props = AndHow.exportBuilder()
-//			.add(ExportServiceSample.AllowMe.class)
-//			.add(ExportServiceSample.ImUnsure.AllowMe1.class)
-//			.toStringStringMap();
-//
-//		Map<String, Object> customProps = new HashMap<>();
-//		AndHow.exportBuilder()
-//			.add(ExportServiceSample.AllowMe.class)
-//			.toCustom(prefName, value -> customProps.put(prefName, value));
-//
-//		Map<String, String> props = AndHow.export(ExportServiceSample.AllowMe.class)
-//																	.stream().collect(MapStringStringCollector);
+	@Test
+	void handleManualExportForAllowMeAndOverlappingInnerClasses() throws IllegalAccessException {
+		Collection<PropertyExport> propExports = new ArrayList();
+
+		List<Class<?>> exportRoots = new ArrayList();
+		exportRoots.add(ExportServiceSample.AllowMe.class);
+		exportRoots.add(ExportServiceSample.AllowMe.AllowMe1.class);
+		exportRoots.add(ExportServiceSample.AllowMe.ExportMe1.class);
+		exportRoots.add(ExportServiceSample.AllowMe.ImUnsure1.class);
+		exportRoots.add(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class);
+
+		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies);
+
+		verifyAllowMeInnerClassExport(propExports);
 	}
+
+	@Test
+	void handleManualExportShouldErrorForNonExportableClasses() {
+		final ArrayList<Class<?>> exportRoots = new ArrayList();
+		exportRoots.add(ExportServiceSample.class);
+
+		assertThrows(IllegalAccessException.class,
+				() -> svs.doManualExport(exportRoots, allClassesGroupProxies));
+
+		exportRoots.clear();
+		exportRoots.add(ExportServiceSample.DisallowMe.class);
+
+		assertThrows(IllegalAccessException.class,
+				() -> svs.doManualExport(exportRoots, allClassesGroupProxies));
+
+		exportRoots.clear();
+		exportRoots.add(ExportServiceSample.DisallowMe.ImUnsure1.class);
+
+		assertThrows(IllegalAccessException.class,
+				() -> svs.doManualExport(exportRoots, allClassesGroupProxies));
+
+		exportRoots.clear();
+		exportRoots.add(ExportServiceSample.ImUnsure.class);
+
+		assertThrows(IllegalAccessException.class,
+				() -> svs.doManualExport(exportRoots, allClassesGroupProxies));
+	}
+
+
+ void verifyAllowMeInnerClassExport(final Collection<PropertyExport> propExports) {
+	 assertEquals(14, propExports.size());
+
+	 verify(propExports, ExportServiceSample.AllowMe.class, 2,
+			 EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
+	 verify(propExports, ExportServiceSample.AllowMe.AllowMe1.class, 2,
+			 EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, EXPORT_OUT_ALIASES.NEVER);
+	 verify(propExports, ExportServiceSample.AllowMe.ExportMe1.class, 2,
+			 EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
+	 verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.class, 2,
+			 EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
+	 verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class, 2,
+			 EXPORT_CANONICAL_NAME.NEVER, EXPORT_OUT_ALIASES.ALWAYS);
+	 verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class, 2,
+			 EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
+	 verify(propExports, ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class, 2,
+			 EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.NEVER);
+ }
+
+	void verify(final Collection<PropertyExport> propExports, final Class<?> expectedClass, final int expectedPropCount,
+							final EXPORT_CANONICAL_NAME expectCanOpt, final EXPORT_OUT_ALIASES expectAliasOpt) {
+
+		Collection<PropertyExport> pes = propExports.stream()
+				.filter(
+						p -> p.getContainingClass().equals(expectedClass) &&
+										 p.getCanonicalNameOption().equals(expectCanOpt) &&
+										 p.getOutAliasOption().equals(expectAliasOpt)
+				)
+				.collect(Collectors.toList());
+
+		assertEquals(expectedPropCount, pes.size());
+
+		for (int i = 1; i < expectedPropCount; i++) {
+			final int ordinal = i;
+			assertEquals(1, pes.stream().filter(p -> p.getProperty().getDescription().equals(
+					"Prop_" + ordinal + "_of_" + expectedPropCount + " " + p.getContainingClass().getCanonicalName()
+			)).count());
+		}
+
+	}
+
+
 }
