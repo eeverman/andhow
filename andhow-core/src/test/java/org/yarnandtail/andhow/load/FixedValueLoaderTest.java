@@ -193,6 +193,19 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+
+		// set as null
+		loader.setPropertyValues((PropertyValue[]) null);
+
+		result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 	}
 
 	@Test
