@@ -212,7 +212,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 
         loader.releaseResources();
 
-        assertTrue(loader.getMap().isEmpty());
+        assertNull(loader.getMap());
 
         // release resources if map set to null
         loader.setMap(null);
