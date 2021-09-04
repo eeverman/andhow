@@ -124,12 +124,8 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	@Override
 	public void releaseResources() {
-		if (values != null) {
-			values.clear();
-		}
-		if (keyObjectPairValues != null) {
-			keyObjectPairValues.clear();
-		}
+		values = null;
+		keyObjectPairValues = null;
 	}
 	
 }
