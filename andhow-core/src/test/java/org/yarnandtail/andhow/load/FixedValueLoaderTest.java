@@ -313,7 +313,7 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		FixedValueLoader loader = new FixedValueLoader();
 		loader.setKeyObjectPairValues(kops);
 
-		loader.setKeyObjectPairValues(null);
+		loader.setKeyObjectPairValues(Collections.emptyList());
 		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
