@@ -446,7 +446,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		}
 	}
 
-	Collection<PropertyExport> export(List<Class<?>> groupClasses) throws IllegalAccessException {
+	Collection<PropertyExport> export(Class<?>... groupClasses) throws IllegalAccessException {
 		return core.export(groupClasses);
 	}
 

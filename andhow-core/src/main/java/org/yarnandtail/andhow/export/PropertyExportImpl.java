@@ -66,6 +66,16 @@ public class PropertyExportImpl implements PropertyExport {
 	}
 
 	@Override
+	public Object getValue() {
+		return property.getValue();
+	}
+
+	@Override
+	public String getValueAsString() {
+		return property.getValueAsString();
+	}
+
+	@Override
 	public PropertyExport clone(List<String> exportNames) {
 		return new PropertyExportImpl(property, containingClass, canNameOpt, aliasOpt, exportNames);
 	}

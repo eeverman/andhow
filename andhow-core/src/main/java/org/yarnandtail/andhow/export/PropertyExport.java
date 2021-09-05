@@ -63,6 +63,32 @@ public interface PropertyExport {
 	List<String> getExportNames();
 
 	/**
+	 * Fetch the value of the Property.
+	 * <p>
+	 * Nominally this is the same as {@code getProperty().getValue()}, however, subclasses can
+	 * override to rewrite the value.  Take care to override the method that will be used by the
+	 * collector: either {@link #getValue()} or {@link #getValueAsString()}.
+	 *
+	 * @return The value return from the Properties getValue method.  May be null.
+	 */
+	Object getValue();
+
+	/**
+	 * Fetch the value as a String from the Property.
+	 * <p>
+	 * Nominally this is the same as {@code getProperty().getValueAsString()}, however, subclasses can
+	 * override to rewrite the value.  Take care to override the method that will be used by the
+	 * collector: either {@link #getValue()} or {@link #getValueAsString()}.
+	 * <p>
+	 * Note:  The nominal implementation of this method should call
+	 * {@code getProperty().getValueAsString()} and not delegate to {@link #getValue()}, since the
+	 * type returned by getValue may be overridden and not match the Property type.
+	 *
+	 * @return The value return from the Properties getValueAsString method.  May be null.
+	 */
+	String getValueAsString();
+
+	/**
 	 * Clone this instance, specifying a predetermined list of export names.
 	 * <p>
 	 * Calling {@link #getExportNames()} on the new instance returns the specified list exportNames,

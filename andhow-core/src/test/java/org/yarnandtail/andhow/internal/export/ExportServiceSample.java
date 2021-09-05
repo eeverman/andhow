@@ -5,6 +5,7 @@ import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.export.ManualExportAllowed;
 import org.yarnandtail.andhow.export.ManualExportNotAllowed;
 import org.yarnandtail.andhow.export.SysPropExporter;
+import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
 public class ExportServiceSample {
@@ -13,8 +14,8 @@ public class ExportServiceSample {
 			exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
 	public interface AllowMe {
 
-		StrProp STR1 = StrProp.builder()
-				.aliasIn("str1in").aliasOut("str1out").aliasInAndOut("str1inandout").build();
+		IntProp INT1 = IntProp.builder()
+				.aliasIn("int1in").aliasOut("int1out").aliasInAndOut("int1inandout").build();
 
 		@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
 				exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)

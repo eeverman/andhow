@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.export.PropertyExport;
 import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.yarnandtail.andhow.AndHow;
@@ -136,9 +137,14 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		
 	}
 
-	public Collection<PropertyExport> export(List<Class<?>> groupClasses) throws IllegalAccessException {
-		ManualExportService svs = new ManualExportService();
-		return svs.doManualExport(groupClasses, staticConfig.getPropertyGroups());
+	public Collection<PropertyExport> export(Class<?>... groupClasses) throws IllegalAccessException {
+		if (groupClasses != null) {
+			ManualExportService svs = new ManualExportService();
+
+			return svs.doManualExport(Arrays.asList(groupClasses), staticConfig.getPropertyGroups());
+		} else {
+			throw new IllegalArgumentException("Cannot export a null list of classes");
+		}
 	}
 	
 	@Override

@@ -1,47 +1,50 @@
 package org.yarnandtail.andhow;
 
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.export.ManualExportAllowed;
 import org.yarnandtail.andhow.internal.RequirementProblem;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
+import static org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.property.*;
+
+import org.yarnandtail.andhow.export.ExportCollector;
+
+import java.util.Map;
 
 /**
  *
  * @author eeverman
  */
 public class AndHowUsageExampleTest extends AndHowTestBase {
-	
-	String uiFullPath = UI_CONFIG.class.getCanonicalName() + ".";
-	String svsFullPath = SERVICE_CONFIG.class.getCanonicalName() + ".";
-	String[] cmdLineArgsWFullClassName = new String[0];
 
+	AndHowConfiguration config;
 	
 	@BeforeEach
 	public void setup() {
-		
-		cmdLineArgsWFullClassName = new String[] {
-			uiFullPath + "DISPLAY_NAME" + KeyValuePairLoader.KVP_DELIMITER + "My App",
-			uiFullPath + "BACKGROUP_COLOR" + KeyValuePairLoader.KVP_DELIMITER + "ffffff",
-			svsFullPath + "REST_ENDPOINT_URL" + KeyValuePairLoader.KVP_DELIMITER + "google.com",
-			svsFullPath + "RETRY_COUNT" + KeyValuePairLoader.KVP_DELIMITER + "4",
-			svsFullPath + "TIMEOUT_SECONDS" + KeyValuePairLoader.KVP_DELIMITER + "10",
-			svsFullPath + "GRAVITY" + KeyValuePairLoader.KVP_DELIMITER + "9.8",
-			svsFullPath + "PIE" + KeyValuePairLoader.KVP_DELIMITER + "3.14"
-		};
-		
+
+		config = AndHowTestConfig.instance()
+				//addOverrideGroup is a special test-only method that explicitly sets the classes/groups
+				//in use for a test so auto-discovery of groups is not done.
+				.addOverrideGroup(UI_CONFIG.class)
+				.addOverrideGroup(SERVICE_CONFIG.class)
+				//Set the values
+				.addFixedValue(UI_CONFIG.DISPLAY_NAME, "My App")
+				.addFixedValue(UI_CONFIG.BACKGROUP_COLOR, "ffffff")
+				.addFixedValue(SERVICE_CONFIG.REST_ENDPOINT_URL, "google.com")
+				.addFixedValue(SERVICE_CONFIG.RETRY_COUNT, 4)
+				.addFixedValue(SERVICE_CONFIG.TIMEOUT_SECONDS, 10)
+				.addFixedValue(SERVICE_CONFIG.GRAVITY, 9.8)
+				.addFixedValue(SERVICE_CONFIG.PIE, 3.14);
 	}
 	
 	@Test
 	public void testAllValuesAreSet() {
-		AndHowConfiguration config = AndHowTestConfig.instance()
-				.addOverrideGroup(UI_CONFIG.class)
-				.addOverrideGroup(SERVICE_CONFIG.class)
-				.setCmdLineArgs(cmdLineArgsWFullClassName);
 		
 		AndHow.setConfig(config);
 		
@@ -55,13 +58,13 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 	}
 	
 	@Test
-	public void testOptionalValuesAreUnset() {
+	public void testOptionalValuesAreNotset() {
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(UI_CONFIG.class)
 				.addOverrideGroup(SERVICE_CONFIG.class)
-				.addCmdLineArg(uiFullPath + "DISPLAY_NAME", "My App")
-				.addCmdLineArg(svsFullPath + "REST_ENDPOINT_URL", "yahoo.com")
-				.addCmdLineArg(svsFullPath + "TIMEOUT_SECONDS", "99");
+				.addFixedValue(UI_CONFIG.DISPLAY_NAME, "My App")
+				.addFixedValue(SERVICE_CONFIG.REST_ENDPOINT_URL, "yahoo.com")
+				.addFixedValue(SERVICE_CONFIG.TIMEOUT_SECONDS, 99);
 
 		AndHow.setConfig(config);
 		
@@ -89,17 +92,61 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertEquals(SERVICE_CONFIG.TIMEOUT_SECONDS, ex.getProblems().filter(RequirementProblem.class).get(2).getPropertyCoord().getProperty());
 
 	}
-	
-	public static interface UI_CONFIG {
+
+	@Test
+	public void testExportToStringMapWithAllValuesSet() throws IllegalAccessException {
+
+		AndHow.setConfig(config);
+
+		Map<String, String> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream().collect(ExportCollector.stringMap());
+
+		//UI
+		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".DISPLAY_NAME", "My App"));
+		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".BACKGROUP_COLOR", "ffffff"));
+
+		//SVS
+		assertThat(export, hasEntry("re_url", "google.com"));
+		assertThat(export, hasEntry("rc_1", "4"));
+		assertThat(export, hasEntry("rc_2", "4"));
+		assertThat(export, hasEntry("ts", "10"));
+		assertThat(export, hasEntry("g", "9.8"));
+		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", "3.14"));
+		assertEquals(8, export.size());
+	}
+
+	@Test
+	public void testExportToObjectMapWithAllValuesSet() throws IllegalAccessException {
+
+		AndHow.setConfig(config);
+
+		Map<String, Object> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream().collect(ExportCollector.objectMap());
+
+		//UI
+		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".DISPLAY_NAME", "My App"));
+		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".BACKGROUP_COLOR", "ffffff"));
+
+		//SVS
+		assertThat(export, hasEntry("re_url", "google.com"));
+		assertThat(export, hasEntry("rc_1", 4)); //These are object values now instead of strings
+		assertThat(export, hasEntry("rc_2", 4));
+		assertThat(export, hasEntry("ts", 10));
+		assertThat(export, hasEntry("g", 9.8d));
+		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", 3.14d));
+		assertEquals(8, export.size());
+	}
+
+	@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+	interface UI_CONFIG {
 		StrProp DISPLAY_NAME = StrProp.builder().mustBeNonNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
-	
-	public static interface SERVICE_CONFIG {
-		StrProp REST_ENDPOINT_URL = StrProp.builder().mustBeNonNull().build();
-		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).build();
-		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().build();
-		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).mustBeLessThan(10.2d).build();
+
+	@ManualExportAllowed //Defaults to EXPORT_OUT_ALIASES.ALWAYS & EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS
+	interface SERVICE_CONFIG {
+		StrProp REST_ENDPOINT_URL = StrProp.builder().mustBeNonNull().aliasOut("re_url").build();
+		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).aliasOut("rc_1").aliasInAndOut("rc_2").build();
+		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().aliasIn("ignoreForExport").aliasOut("ts").build();
+		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).aliasInAndOut("g").mustBeLessThan(10.2d).build();
 		DblProp PIE = DblProp.builder().mustBeGreaterThanOrEqualTo(3.1).mustBeLessThanOrEqualTo(3.2).build();
 	}
 

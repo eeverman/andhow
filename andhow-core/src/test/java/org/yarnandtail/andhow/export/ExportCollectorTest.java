@@ -6,21 +6,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 import org.yarnandtail.andhow.api.Exporter;
 import org.yarnandtail.andhow.internal.export.ExportServiceSample;
+import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import static java.util.stream.Collectors.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-class StringMapExporterTest {
+class ExportCollectorTest {
+
 	List<PropertyExport> pes;
-
-
 
 	@BeforeEach
 	void setUp() {
@@ -29,16 +27,16 @@ class StringMapExporterTest {
 		// Mockito spies to override methods of live Property instances
 		// These Properties are the ones from ExportServiceSample, but none of the export ann.
 		// from that file are in use due to how this is mocked up (not a complete AndHow env.)
-		StrProp A_Str1Spy = Mockito.spy(ExportServiceSample.AllowMe.STR1);
+		IntProp A_Int1Spy = Mockito.spy(ExportServiceSample.AllowMe.INT1);
 		StrProp AA_Str1Spy = Mockito.spy(ExportServiceSample.AllowMe.AllowMe1.STR1);
 		StrProp AUA_Str1Spy = Mockito.spy(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.STR1);
 		StrProp EA_Str1Spy = Mockito.spy(ExportServiceSample.ExportMe.AllowMe1.STR1);
 
 
 		//
-		Mockito.doReturn("ExportServiceSample.AllowMe.STR1").when(A_Str1Spy).getCanonicalName();
-		Mockito.doReturn("a.str1_value").when(A_Str1Spy).getValue();
-		Mockito.doReturn(Arrays.asList("str1out", "str1inandout")).when(A_Str1Spy).getOutAliases();
+		Mockito.doReturn("ExportServiceSample.AllowMe.INT1").when(A_Int1Spy).getCanonicalName();
+		Mockito.doReturn(1).when(A_Int1Spy).getValue();
+		Mockito.doReturn(Arrays.asList("int1out", "int1inandout")).when(A_Int1Spy).getOutAliases();
 		//
 		Mockito.doReturn("ExportServiceSample.AllowMe.AllowMe1.STR1").when(AA_Str1Spy).getCanonicalName();
 		Mockito.doReturn(null).when(AA_Str1Spy).getValue();
@@ -54,7 +52,7 @@ class StringMapExporterTest {
 
 
 		pes.add(new PropertyExportImpl(
-				A_Str1Spy, ExportServiceSample.AllowMe.class,
+				A_Int1Spy, ExportServiceSample.AllowMe.class,
 				Exporter.EXPORT_CANONICAL_NAME.ALWAYS, Exporter.EXPORT_OUT_ALIASES.NEVER));
 		pes.add(new PropertyExportImpl(  //This one gets skipped entirely
 				AA_Str1Spy, ExportServiceSample.AllowMe.AllowMe1.class,
@@ -67,11 +65,14 @@ class StringMapExporterTest {
 				Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, Exporter.EXPORT_OUT_ALIASES.ALWAYS));
 	}
 
-	@Test
-	void test() {
-		Map<String, String> export = pes.stream().collect(new StringMapExporter());
+	//
+	// StringMap
 
-		assertThat(export, hasEntry("ExportServiceSample.AllowMe.STR1", "a.str1_value"));
+	@Test
+	void exportStreamToStringMap() {
+		Map<String, String> export = pes.stream().collect(ExportCollector.stringMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
@@ -80,10 +81,12 @@ class StringMapExporterTest {
 	}
 
 	@Test
-	void testConvertingCase() {
-		Map<String, String> export = pes.stream().map(p -> p.clone( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) )).collect(new StringMapExporter());
+	void exportStreamToStringMapWithMapToConvertCase() {
+		Map<String, String> export = pes.stream()
+				.map(p -> p.clone( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
+				.collect(ExportCollector.stringMap());
 
-		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.STR1", "a.str1_value"));
+		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.INT1", "1"));
 		assertThat(export, hasEntry("A.U.A.STR1OUT", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("A.U.A.STR1INANDOUT", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("E.A.STR1OUT", "e.a.str1_value"));
@@ -91,13 +94,56 @@ class StringMapExporterTest {
 		assertEquals(5, export.size());
 	}
 	@Test
-	void testFiltering() {
-		Map<String, String> export = pes.stream().filter(p -> p.getContainingClass().getCanonicalName().contains("Unsure")).collect(new StringMapExporter());
+	void exportStreamToStringMapWithFiltering() {
+		Map<String, String> export = pes.stream()
+				.filter(p -> p.getContainingClass().getCanonicalName().contains("Unsure"))
+				.collect(ExportCollector.stringMap());
 
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
 		assertEquals(2, export.size());
+	}
 
+	//
+	// StringProperties
+	@Test
+	void exportStreamToStringProperties() {
+		Properties export = pes.stream().collect(ExportCollector.stringProperties());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertEquals(5, export.size());
+	}
+
+	//
+	// ObjectMap
+	@Test
+	void exportStreamToObjectMap() {
+		Map<String, Object> export = pes.stream().collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));	//1 is an Integer, not Str.
+		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertEquals(5, export.size());
+	}
+
+	//
+	// ObjectProperties
+	@Test
+	void exportStreamToObjectProperties() {
+		Properties export = pes.stream().collect(ExportCollector.objectProperties());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));	//1 is an Integer, not Str.
+		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertEquals(5, export.size());
 	}
 
 }
