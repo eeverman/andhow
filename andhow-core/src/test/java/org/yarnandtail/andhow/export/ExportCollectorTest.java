@@ -16,6 +16,8 @@ import static java.util.stream.Collectors.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+//TODO:  Need to test setting export name list to empty and null to make sure it removes the export
+// and doesn't cause errors.
 class ExportCollectorTest {
 
 	List<PropertyExport> pes;
@@ -47,9 +49,8 @@ class ExportCollectorTest {
 		Mockito.doReturn(Arrays.asList("a.u.a.str1out", "a.u.a.str1inandout")).when(AUA_Str1Spy).getOutAliases();
 		//
 		Mockito.doReturn("ExportServiceSample.ExportMe.AllowMe1.STR1").when(EA_Str1Spy).getCanonicalName();
-		Mockito.doReturn("e.a.str1_value").when(EA_Str1Spy).getValue();
+		Mockito.doReturn(null).when(EA_Str1Spy).getValue();
 		Mockito.doReturn(Arrays.asList("e.a.str1out", "e.a.str1inandout")).when(EA_Str1Spy).getOutAliases();
-
 
 		pes.add(new PropertyExportImpl(
 				A_Int1Spy, ExportServiceSample.AllowMe.class,
@@ -75,24 +76,39 @@ class ExportCollectorTest {
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
 		assertEquals(5, export.size());
 	}
 
 	@Test
-	void exportStreamToStringMapWithMapToConvertCase() {
+	void exportStreamToStringMapAndConvertNameCase() {
 		Map<String, String> export = pes.stream()
-				.map(p -> p.clone( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
+				.map(p -> p.mapNames( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
 				.collect(ExportCollector.stringMap());
 
 		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.INT1", "1"));
 		assertThat(export, hasEntry("A.U.A.STR1OUT", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("A.U.A.STR1INANDOUT", "a.u.a.str1_value"));
-		assertThat(export, hasEntry("E.A.STR1OUT", "e.a.str1_value"));
-		assertThat(export, hasEntry("E.A.STR1INANDOUT", "e.a.str1_value"));
+		assertThat(export, hasEntry("E.A.STR1OUT", null));
+		assertThat(export, hasEntry("E.A.STR1INANDOUT", null));
 		assertEquals(5, export.size());
 	}
+
+	@Test
+	void exportStreamToStringMapAndConvertValueAsString() {
+		Map<String, String> export = pes.stream()
+				.map(p -> p.mapValueAsString( p.getValueAsString() != null ? p.getValueAsString().toUpperCase():null) )
+				.collect(ExportCollector.stringMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+		assertThat(export, hasEntry("a.u.a.str1out", "A.U.A.STR1_VALUE"));
+		assertThat(export, hasEntry("a.u.a.str1inandout", "A.U.A.STR1_VALUE"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(5, export.size());
+	}
+
 	@Test
 	void exportStreamToStringMapWithFiltering() {
 		Map<String, String> export = pes.stream()
@@ -104,19 +120,32 @@ class ExportCollectorTest {
 		assertEquals(2, export.size());
 	}
 
+	@Test // The finisher is not invoked otherwise, so a separate test
+	void stringMapFinisherReturnsIsIdentity() {
+		Map<String, String> map = new HashMap<>();
+		assertSame(map, ExportCollector.stringMap().finisher().apply(map));
+	}
+
 	//
 	// StringProperties
 	@Test
 	void exportStreamToStringProperties() {
-		Properties export = pes.stream().collect(ExportCollector.stringProperties());
+		Properties export = pes.stream().collect(ExportCollector.stringProperties("[null]"));
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
 		assertEquals(5, export.size());
 	}
+
+	@Test // The finisher is not invoked otherwise, so a separate test
+	void stringPropertiesFinisherIsIdentity() {
+		Properties props = new Properties();
+		assertSame(props, ExportCollector.stringProperties("").finisher().apply(props));
+	}
+
 
 	//
 	// ObjectMap
@@ -127,22 +156,73 @@ class ExportCollectorTest {
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));	//1 is an Integer, not Str.
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
 		assertEquals(5, export.size());
+	}
+
+	@Test
+	void exportStreamToObjectMapAndConvertValue() {
+		Map<String, Object> export = pes.stream()
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer) ? (Integer)p.getValue() * 2:p.getValue()) )
+				.collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 2));	// Times 2X
+		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(5, export.size());
+	}
+
+	@Test
+	void exportStreamToObjectMapAndConvertNameAndValue() {
+		Map<String, Object> export = pes.stream()
+				.map(p -> p.mapNames( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer) ? (Integer)p.getValue() * 2:p.getValue()) )
+				.collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.INT1", 2)); // Times 2X
+		assertThat(export, hasEntry("A.U.A.STR1OUT", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("A.U.A.STR1INANDOUT", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("E.A.STR1OUT", null));
+		assertThat(export, hasEntry("E.A.STR1INANDOUT", null));
+
+	}
+
+	@Test
+	void exportStreamToObjectMapAndConvertNameAndValueTwice() {
+		Map<String, Object> export = pes.stream()
+				.map(p -> p.mapNames( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer) ? (Integer)p.getValue() * 2:p.getValue()) )
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof String) ? String.valueOf(p.getValue()).toUpperCase():p.getValue()) )
+				.collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.INT1", 2)); // Times 2X
+		assertThat(export, hasEntry("A.U.A.STR1OUT", "A.U.A.STR1_VALUE"));
+		assertThat(export, hasEntry("A.U.A.STR1INANDOUT", "A.U.A.STR1_VALUE"));
+		assertThat(export, hasEntry("E.A.STR1OUT", null));
+		assertThat(export, hasEntry("E.A.STR1INANDOUT", null));
+		assertEquals(5, export.size());
+	}
+
+	@Test // The finisher is not invoked otherwise, so a separate test
+	void objectMapFinisherIsIdentity() {
+		Map<String, Object> map = new HashMap<>();
+		assertSame(map, ExportCollector.objectMap().finisher().apply(map));
 	}
 
 	//
 	// ObjectProperties
 	@Test
 	void exportStreamToObjectProperties() {
-		Properties export = pes.stream().collect(ExportCollector.objectProperties());
+		Properties export = pes.stream().collect(ExportCollector.objectProperties("[null]"));
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));	//1 is an Integer, not Str.
 		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
 		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1out", "e.a.str1_value"));
-		assertThat(export, hasEntry("e.a.str1inandout", "e.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
 		assertEquals(5, export.size());
 	}
 

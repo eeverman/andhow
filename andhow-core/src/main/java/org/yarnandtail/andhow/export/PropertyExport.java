@@ -52,13 +52,13 @@ public interface PropertyExport {
 	EXPORT_OUT_ALIASES getOutAliasOption();
 
 	/**
-	 * The complete set of export names, which may be zero or many.
+	 * The complete set of export names, which may be null, zero or many.
 	 * <p>
 	 * This method builds and returns the default export name list based on the
 	 * {@link #getCanonicalNameOption()} & {@link #getOutAliasOption()} options, or, if
-	 * {@link #clone(List)} was used to construct this instance, the list of names specified.
+	 * {@link #mapNames(List)} was used to construct this instance, the list of names specified.
 	 *
-	 * @return A list of names which may be empty but not null.
+	 * @return A list of names which may be empty or null.
 	 */
 	List<String> getExportNames();
 
@@ -89,23 +89,27 @@ public interface PropertyExport {
 	String getValueAsString();
 
 	/**
-	 * Clone this instance, specifying a predetermined list of export names.
+	 * Map this instance to a new instance with new export names.
 	 * <p>
-	 * Calling {@link #getExportNames()} on the new instance returns the specified list exportNames,
-	 * overriding the default name logic.  Set exportNames to an empty list to have zero names.
-	 * If exportNames is null, the clone is the same as the original and default names are used.
+	 * Calling {@link #getExportNames()} on the new instance returns the new exportNames,
+	 * overriding the default name logic.  Mapping to an empty or null name list will result in no
+	 * export for this Property.
 	 * <p>
-	 * 'clone' allows the names to be modified in a stream, e.g.:
+	 * mapNewNames allows export names to be modified in-stream, e.g. to upper case:
 	 * <pre>{@code
-	 * AndHow.instance().export().stream().map(p ->
-	 *   p.clone( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()))
-	 * ).collect(new StringMapExporter());
+	 * Map<String, String> export = AndHow.instance().export().stream().map(p ->
+	 *   p.mapNames( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()))
+	 * ).collect(ExportCollector.stringMap());
 	 * }</pre>
 
-	 * @param exportNames
-	 * @return
+	 * @param exportNames The new list of export names to be used, rather than the default
+	 *                    constructed ones.
+	 * @return A new instance which is basically a clone except it has new names.
 	 */
-	PropertyExport clone(List<String> exportNames);
+	PropertyExport mapNames(List<String> exportNames);
 
+	PropertyExport mapValue(Object value);
+
+	public PropertyExport mapValueAsString(String value);
 
 }

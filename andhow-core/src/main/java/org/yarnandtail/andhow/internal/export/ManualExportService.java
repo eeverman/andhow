@@ -13,6 +13,8 @@ import org.yarnandtail.andhow.util.AndHowLog;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
+//TODO:  The exceptions thrown should be runtime only, since the caller must be able to pass a class ref,
+//the illegal access is unexpected.
 public class ManualExportService {
 
 	static AndHowLog LOG = AndHowLog.getLogger(ManualExportService.class);

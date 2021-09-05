@@ -40,7 +40,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 				.addFixedValue(SERVICE_CONFIG.RETRY_COUNT, 4)
 				.addFixedValue(SERVICE_CONFIG.TIMEOUT_SECONDS, 10)
 				.addFixedValue(SERVICE_CONFIG.GRAVITY, 9.8)
-				.addFixedValue(SERVICE_CONFIG.PIE, 3.14);
+				.addFixedValue(SERVICE_CONFIG.PIE, 3.14159);
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertEquals(4, SERVICE_CONFIG.RETRY_COUNT.getValue());
 		assertEquals(10, SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
 		assertEquals(9.8, SERVICE_CONFIG.GRAVITY.getValue(), .00000001d);
-		assertEquals(3.14, SERVICE_CONFIG.PIE.getValue(), .00000001d);
+		assertEquals(3.14159, SERVICE_CONFIG.PIE.getValue(), .00000001d);
 	}
 	
 	@Test
@@ -110,7 +110,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertThat(export, hasEntry("rc_2", "4"));
 		assertThat(export, hasEntry("ts", "10"));
 		assertThat(export, hasEntry("g", "9.8"));
-		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", "3.14"));
+		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", "3.14159"));
 		assertEquals(8, export.size());
 	}
 
@@ -131,7 +131,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertThat(export, hasEntry("rc_2", 4));
 		assertThat(export, hasEntry("ts", 10));
 		assertThat(export, hasEntry("g", 9.8d));
-		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", 3.14d));
+		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", 3.14159d));
 		assertEquals(8, export.size());
 	}
 

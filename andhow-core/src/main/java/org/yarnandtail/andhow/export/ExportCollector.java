@@ -13,27 +13,29 @@ public class ExportCollector {
 
 	//Copied from Collectors:  OK to run in parallel, order not important, finisher is just identity.
 	static final Set<Collector.Characteristics> CH_CONCURRENT_ID
-			= Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.CONCURRENT,
-			Collector.Characteristics.UNORDERED,
-			Collector.Characteristics.IDENTITY_FINISH));
+			= Collections.unmodifiableSet(EnumSet.of(
+					Collector.Characteristics.CONCURRENT,
+					Collector.Characteristics.UNORDERED,
+					Collector.Characteristics.IDENTITY_FINISH)
+	);
 
 	public static StringMap stringMap() {
 		return new StringMap();
 	}
 
-	public static StringProperties stringProperties() {
-		return new StringProperties();
+	public static StringProperties stringProperties(String nullValueString) {
+		return new StringProperties(nullValueString);
 	}
 
 	public static ObjectMap objectMap() {
 		return new ObjectMap();
 	}
 
-	public static ObjectProperties objectProperties() {
-		return new ObjectProperties();
+	public static ObjectProperties objectProperties(Object nullValue) {
+		return new ObjectProperties(nullValue);
 	}
 
-	private static class StringMap implements Collector<PropertyExport, Map<String, String>, Map<String, String>> {
+	static class StringMap implements Collector<PropertyExport, Map<String, String>, Map<String, String>> {
 
 		@Override public Supplier<Map<String, String>> supplier() {
 			return HashMap::new;
@@ -42,8 +44,12 @@ public class ExportCollector {
 		@Override
 		public BiConsumer<Map<String, String>, PropertyExport> accumulator() {
 			return (map, exp) -> {
-				exp.getExportNames().stream().forEach(
-						n -> map.put(n, exp.getValueAsString()));
+				List<String> eNames = exp.getExportNames();
+				if (eNames != null && !eNames.isEmpty()) {
+					eNames.stream().forEach(
+							n -> map.put(n, exp.getValueAsString())
+					);
+				}
 			};
 		}
 
@@ -54,7 +60,7 @@ public class ExportCollector {
 
 		@Override
 		public Function<Map<String, String>, Map<String, String>> finisher() {
-			return i -> (Map<String, String>) i;
+			return Function.identity();
 		}
 
 		@Override public Set<Characteristics> characteristics() {
@@ -62,7 +68,16 @@ public class ExportCollector {
 		}
 	}
 
-	private static class StringProperties implements Collector<PropertyExport, Properties, Properties> {
+	static class StringProperties implements Collector<PropertyExport, Properties, Properties> {
+
+		final String nullValue;
+
+		StringProperties(String nullValue) {
+			this.nullValue = nullValue;
+			if (nullValue == null) {
+				throw new IllegalArgumentException("The nullValue for StringProperties cannot be null");
+			}
+		}
 
 		@Override public Supplier<Properties> supplier() {
 			return Properties::new;
@@ -71,8 +86,12 @@ public class ExportCollector {
 		@Override
 		public BiConsumer<Properties, PropertyExport> accumulator() {
 			return (map, exp) -> {
-				exp.getExportNames().stream().forEach(
-						n -> map.put(n, exp.getValueAsString()));
+				List<String> eNames = exp.getExportNames();
+				if (eNames != null && !eNames.isEmpty()) {
+					eNames.stream().forEach(
+							n -> map.put(n, exp.getValueAsString() != null ? exp.getValueAsString() : nullValue)
+					);
+				}
 			};
 		}
 
@@ -83,7 +102,7 @@ public class ExportCollector {
 
 		@Override
 		public Function<Properties, Properties> finisher() {
-			return i -> (Properties) i;
+			return Function.identity();
 		}
 
 		@Override public Set<Collector.Characteristics> characteristics() {
@@ -91,7 +110,7 @@ public class ExportCollector {
 		}
 	}
 
-	private static class ObjectMap implements Collector<PropertyExport, Map<String, Object>, Map<String, Object>> {
+	static class ObjectMap implements Collector<PropertyExport, Map<String, Object>, Map<String, Object>> {
 
 		@Override public Supplier<Map<String, Object>> supplier() {
 			return HashMap::new;
@@ -100,8 +119,12 @@ public class ExportCollector {
 		@Override
 		public BiConsumer<Map<String, Object>, PropertyExport> accumulator() {
 			return (map, exp) -> {
-				exp.getExportNames().stream().forEach(
-						n -> map.put(n, exp.getValue()));
+				List<String> eNames = exp.getExportNames();
+				if (eNames != null && !eNames.isEmpty()) {
+					eNames.stream().forEach(
+							n -> map.put(n, exp.getValue())
+					);
+				}
 			};
 		}
 
@@ -112,7 +135,7 @@ public class ExportCollector {
 
 		@Override
 		public Function<Map<String, Object>, Map<String, Object>> finisher() {
-			return i -> (Map<String, Object>) i;
+			return Function.identity();
 		}
 
 		@Override public Set<Characteristics> characteristics() {
@@ -121,13 +144,27 @@ public class ExportCollector {
 	}
 
 
-	private static class ObjectProperties extends StringProperties {
+	static class ObjectProperties extends StringProperties {
+
+		final Object nullValue;
+
+		ObjectProperties(Object nullValue) {
+			super("");
+			this.nullValue = nullValue;
+			if (nullValue == null) {
+				throw new IllegalArgumentException("The nullValue for ObjectProperties cannot be null");
+			}
+		}
 
 		@Override
 		public BiConsumer<Properties, PropertyExport> accumulator() {
 			return (map, exp) -> {
-				exp.getExportNames().stream().forEach(
-						n -> map.put(n, exp.getValue()));
+				List<String> eNames = exp.getExportNames();
+				if (eNames != null && !eNames.isEmpty()) {
+					eNames.stream().forEach(
+							n -> map.put(n, exp.getValue() != null ? exp.getValue() : nullValue)
+					);
+				}
 			};
 		}
 
