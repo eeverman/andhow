@@ -21,11 +21,11 @@ import org.yarnandtail.andhow.api.*;
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	protected boolean unknownPropertyAProblem = true;
-	
-	protected final List<PropertyValue> values = new ArrayList();
 
-	protected final List<KeyObjectPair> keyObjectPairValues = new ArrayList();
-			
+	protected List<PropertyValue> values;
+
+	protected List<KeyObjectPair> keyObjectPairValues;
+
 	public FixedValueLoader() {
 	}
 
@@ -39,9 +39,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	 * @param values
 	 */
 	public void setPropertyValues(List<PropertyValue> values) {
-		if (values != null) {
-			this.values.addAll(values);
-		}
+		this.values = values == null ? null : new ArrayList<>(values);
 	}
 
 	/**
@@ -62,28 +60,30 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	 * @param values
 	 */
 	public void setKeyObjectPairValues(List<KeyObjectPair> values) {
-		if (values != null) {
-			keyObjectPairValues.addAll(values);
-		}
+		this.keyObjectPairValues = values == null ? null : new ArrayList<>(values);
 	}
 
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
-		List<ValidatedValue> vvs = new ArrayList(values.size());
+		List<ValidatedValue> vvs = values == null ? new ArrayList<>() : new ArrayList<>(values.size());
 		ProblemList<Problem> problems = new ProblemList();
 
 		//Add all the PropertyValue's.  The Property and value references are 'live',
 		//so lots of potential errors are not possible, however, the value type may
 		//not match the Property, so use 'attemptToAdd' to verify.
-		values.stream().forEach(
-				v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getProperty(), v.getValue())
-		);
+		if (values != null) {
+			values.stream().forEach(
+					v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getProperty(), v.getValue())
+			);
+		}
 
 		//Add all the KeyObjectPairs
-		keyObjectPairValues.stream().forEach(
-				kop -> this.attemptToAdd(appConfigDef, vvs, problems, kop.getName(), kop.getValue())
-		);
+		if (keyObjectPairValues != null) {
+			keyObjectPairValues.stream().forEach(
+					kop -> this.attemptToAdd(appConfigDef, vvs, problems, kop.getName(), kop.getValue())
+			);
+		}
 
 		return new LoaderValues(this, vvs, problems);
 		
@@ -121,8 +121,8 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 
 	@Override
 	public void releaseResources() {
-		values.clear();
-		keyObjectPairValues.clear();
+		values = null;
+		keyObjectPairValues = null;
 	}
 	
 }

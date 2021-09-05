@@ -87,8 +87,6 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	
 	@Override
 	public void releaseResources() {
-		if (map != null) {
-			map.clear();
-		}
+		map = null;
 	}
 }
