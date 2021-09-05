@@ -66,27 +66,24 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
-		if (values == null) {
-			values = new ArrayList<>();
-		}
-		if (keyObjectPairValues == null) {
-			keyObjectPairValues = new ArrayList<>();
-		}
-
-		List<ValidatedValue> vvs = new ArrayList(values.size());
+		List<ValidatedValue> vvs = values == null ? new ArrayList<>() : new ArrayList<>(values.size());
 		ProblemList<Problem> problems = new ProblemList();
 
 		//Add all the PropertyValue's.  The Property and value references are 'live',
 		//so lots of potential errors are not possible, however, the value type may
 		//not match the Property, so use 'attemptToAdd' to verify.
-		values.stream().forEach(
-				v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getProperty(), v.getValue())
-		);
+		if (values != null) {
+			values.stream().forEach(
+					v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getProperty(), v.getValue())
+			);
+		}
 
 		//Add all the KeyObjectPairs
-		keyObjectPairValues.stream().forEach(
-				kop -> this.attemptToAdd(appConfigDef, vvs, problems, kop.getName(), kop.getValue())
-		);
+		if (keyObjectPairValues != null) {
+			keyObjectPairValues.stream().forEach(
+					kop -> this.attemptToAdd(appConfigDef, vvs, problems, kop.getName(), kop.getValue())
+			);
+		}
 
 		return new LoaderValues(this, vvs, problems);
 		
