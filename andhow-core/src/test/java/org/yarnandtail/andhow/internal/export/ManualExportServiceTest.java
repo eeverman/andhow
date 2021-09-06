@@ -192,6 +192,51 @@ class ManualExportServiceTest {
 	}
 
 	@Test
+	void exportClassHappyPathTest() {
+
+		Collection<PropertyExport> propExports = new ArrayList();
+
+		svs.exportClass(ExportServiceSample.AllowMe.AllowMe1.class,
+				EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.ALWAYS,
+				allClassesGroupProxies, propExports);
+
+		assertEquals(2, propExports.size());
+
+		PropertyExport pe1 = propExports.stream()
+				.filter(p -> p.getProperty().getDescription().startsWith("Prop_1_of_2"))
+				.findFirst().get();
+		PropertyExport pe2 = propExports.stream()
+				.filter(p -> p.getProperty().getDescription().startsWith("Prop_2_of_2"))
+				.findFirst().get();
+
+		assertEquals(ExportServiceSample.AllowMe.AllowMe1.class, pe1.getContainingClass());
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, pe1.getCanonicalNameOption());
+		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, pe1.getOutAliasOption());
+		//
+		assertEquals(ExportServiceSample.AllowMe.AllowMe1.class, pe2.getContainingClass());
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, pe2.getCanonicalNameOption());
+		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, pe2.getOutAliasOption());
+	}
+
+	@Test
+	void exportClassWithNoMatchingGroupProxyTest() {
+
+		Collection<PropertyExport> propExports = new ArrayList();
+
+		// Remove the class we try to export from the GroupProxy list -
+		// It now looks like a class which has no AndHow Properties
+		allClassesGroupProxies = allClassesGroupProxies.stream()
+				.filter(g -> ! g.getProxiedGroup().equals(ExportServiceSample.AllowMe.AllowMe1.class))
+				.collect(Collectors.toList());
+
+		svs.exportClass(ExportServiceSample.AllowMe.AllowMe1.class,
+				EXPORT_CANONICAL_NAME.ALWAYS, EXPORT_OUT_ALIASES.ALWAYS,
+				allClassesGroupProxies, propExports);
+
+		assertEquals(0, propExports.size());
+	}
+
+	@Test
 	void exportClassAndChildrenWithASingleClass() {
 
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
