@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.UnaryOperator;
 
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.export.PropertyExport;
+import org.yarnandtail.andhow.export.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
@@ -446,8 +446,48 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 		}
 	}
 
-	Collection<PropertyExport> export(Class<?>... groupClasses) throws IllegalAccessException {
-		return core.export(groupClasses);
+	/**
+	 * Export Property's to a collection for use with frameworks that take configuration as
+	 * key-value maps or similar.
+	 * <p>
+	 * Simple example usage that results in a {@code Map<String, String>} of names and values:
+	 * <pre>{@code
+	 *   //UI_CONFIG & SERVICE_CONFIG contain AndHow Properties
+	 *   Map<String, String> export =
+	 *     AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream()
+	 *     .collect(ExportCollector.stringMap());
+	 * }</pre>
+	 * <p>
+	 * Property export is not allowed by default and is enabled by annotating a class containing
+	 * Properties with {@link ManualExportAllowed}.
+	 * <p>
+	 * {@link ExportCollector} can collect to Maps or {@link java.util.Properties}, as well as exporting
+	 * String or Object values. Many variations are possible: e.g. export object values
+	 * (instead of Strings) and prepend 'aaa_' to each export name:
+	 * <pre>{@code
+	 *   Map<String, Object> export = AndHow.instance().export(SERVICE_CONFIG.class)
+	 *     .stream()
+	 *     .map(p -> p.mapNames(p.getExportNames().stream().map(n -> "aaa_" + n).collect(Collectors.toList())))
+	 *     .collect(ExportCollector.objectMap());
+	 * }</pre>
+	 * <p>
+	 * {@code export()} returns a collection of {@link PropertyExport}'s, one per Property, and
+	 * each PropertyExport has a list of export names for the Property.  Names can include the
+	 * Property's canonical name and any 'out' aliases for the Property.  Which names are included
+	 * is controlled by options on the {@link ManualExportAllowed} annotation, but names can be
+	 * modified by stream filtering or remapping names as in the example above.
+	 * <p>
+	 * The {@link ExportCollector} creates an entry in the final collection for each name, mapping
+	 * it to the Property's Object or String value.  Thus, the ExportCollector 'flattens'
+	 * PropertyExports by expanding the name list and collects them into the final collection.
+	 * <p>
+	 * @param exportClasses The classes to export, which must be annotated to allow export.
+	 * @return The name-value pair collection resulting from exporting all the Properties contained
+	 * 		in the exportClasses.
+	 * @throws IllegalAccessException //Do we want this exception??
+	 */
+	Collection<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
+		return core.export(exportClasses);
 	}
 
 	//

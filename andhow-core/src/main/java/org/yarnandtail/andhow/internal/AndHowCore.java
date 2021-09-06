@@ -137,11 +137,11 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		
 	}
 
-	public Collection<PropertyExport> export(Class<?>... groupClasses) throws IllegalAccessException {
-		if (groupClasses != null) {
+	public Collection<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
+		if (exportClasses != null) {
 			ManualExportService svs = new ManualExportService();
 
-			return svs.doManualExport(Arrays.asList(groupClasses), staticConfig.getPropertyGroups());
+			return svs.doManualExport(Arrays.asList(exportClasses), staticConfig.getPropertyGroups());
 		} else {
 			throw new IllegalArgumentException("Cannot export a null list of classes");
 		}

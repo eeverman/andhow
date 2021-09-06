@@ -16,6 +16,7 @@ import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.export.ExportCollector;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AndHowUsageExampleTest extends AndHowTestBase {
 
@@ -129,6 +130,27 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertThat(export, hasEntry("g", 9.8d));
 		assertThat(export, hasEntry(SERVICE_CONFIG.class.getCanonicalName() + ".PIE", 3.14159d));
 		assertEquals(8, export.size());
+	}
+
+	@Test
+	public void testExportToObjectMapWithAllValuesSetModifyNames() throws IllegalAccessException {
+
+		AndHow.setConfig(config);
+
+		Map<String, Object> export = AndHow.instance().export(SERVICE_CONFIG.class)
+				.stream()
+				.map(p -> p.mapNames(p.getExportNames().stream().map(n -> "aaa_" + n).collect(Collectors.toList())))
+				.collect(ExportCollector.objectMap());
+
+
+		//SVS
+		assertThat(export, hasEntry("aaa_re_url", "google.com"));
+		assertThat(export, hasEntry("aaa_rc_1", 4)); //These are object values now instead of strings
+		assertThat(export, hasEntry("aaa_rc_2", 4));
+		assertThat(export, hasEntry("aaa_ts", 10));
+		assertThat(export, hasEntry("aaa_g", 9.8d));
+		assertThat(export, hasEntry("aaa_" + SERVICE_CONFIG.class.getCanonicalName() + ".PIE", 3.14159d));
+		assertEquals(6, export.size());
 	}
 
 	@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
