@@ -99,8 +99,9 @@ class PropertyExportImplTest {
 		assertThat(ipe.getExportNames(), Matchers.containsInAnyOrder("a1", "a2", "canonical.name.IP"));
 	}
 
+	//This method calls all the 'map' methods on the inner class rather than on the outer
 	@Test
-	void innerClassViaTwoLevelsTest() {
+	void innerClassViaFourLevelsOfMappingTest() {
 		PropertyExportImpl pe = new PropertyExportImpl(IP, PropertyExportImplTest.class,
 				Exporter.EXPORT_CANONICAL_NAME.ALWAYS, Exporter.EXPORT_OUT_ALIASES.ALWAYS);
 
@@ -112,13 +113,21 @@ class PropertyExportImplTest {
 
 		ipe = ipe.mapValueAsString("11");
 
+		ipe = ipe.mapValue(22);
+
+		List<String> newNames2 = new ArrayList();
+		newNames2.add("newName21");
+		newNames2.add("newName22");
+
+		ipe = ipe.mapNames(newNames2);
+
 		assertEquals(IP, ipe.getProperty());
 		assertEquals(PropertyExportImplTest.class, ipe.getContainingClass());
 		assertEquals(Exporter.EXPORT_CANONICAL_NAME.ALWAYS, ipe.getCanonicalNameOption());
 		assertEquals(Exporter.EXPORT_OUT_ALIASES.ALWAYS, ipe.getOutAliasOption());
-		assertEquals(99, ipe.getValue());	//This not modified
+		assertEquals(22, ipe.getValue());
 		assertEquals("11", ipe.getValueAsString());
-		assertThat(ipe.getExportNames(), Matchers.containsInAnyOrder("newName1", "newName2"));
+		assertThat(ipe.getExportNames(), Matchers.containsInAnyOrder("newName21", "newName22"));
 	}
 
 }
