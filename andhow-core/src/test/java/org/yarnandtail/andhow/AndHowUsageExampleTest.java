@@ -17,10 +17,6 @@ import org.yarnandtail.andhow.export.ExportCollector;
 
 import java.util.Map;
 
-/**
- *
- * @author eeverman
- */
 public class AndHowUsageExampleTest extends AndHowTestBase {
 
 	AndHowConfiguration config;

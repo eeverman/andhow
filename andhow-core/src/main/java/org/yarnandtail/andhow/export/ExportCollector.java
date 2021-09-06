@@ -11,6 +11,8 @@ import java.util.stream.Collector;
 
 public class ExportCollector {
 
+	private ExportCollector() { /* No instances */ }
+
 	//Copied from Collectors:  OK to run in parallel, order not important, finisher is just identity.
 	static final Set<Collector.Characteristics> CH_CONCURRENT_ID
 			= Collections.unmodifiableSet(EnumSet.of(

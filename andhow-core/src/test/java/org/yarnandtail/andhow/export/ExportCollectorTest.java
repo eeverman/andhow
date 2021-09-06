@@ -16,8 +16,6 @@ import static java.util.stream.Collectors.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-//TODO:  Need to test setting export name list to empty and null to make sure it removes the export
-// and doesn't cause errors.
 class ExportCollectorTest {
 
 	List<PropertyExport> pes;
@@ -96,9 +94,45 @@ class ExportCollectorTest {
 	}
 
 	@Test
+	void exportStreamToStringMapAndSetNamesToEmptyListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ an empty list - should just remove them from export
+		Map<String, String> export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	? Collections.emptyList():p.getExportNames() ))
+				.collect(ExportCollector.stringMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(3, export.size());
+	}
+
+
+	@Test
+	void exportStreamToStringMapAndSetNamesToNullListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ null - should just remove them from export
+		Map<String, String> export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	?null:p.getExportNames() ))
+				.collect(ExportCollector.stringMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(3, export.size());
+	}
+
+	@Test
 	void exportStreamToStringMapAndConvertValueAsString() {
 		Map<String, String> export = pes.stream()
-				.map(p -> p.mapValueAsString( p.getValueAsString() != null ? p.getValueAsString().toUpperCase():null) )
+				.map(p -> p.mapValueAsString( p.getValueAsString() != null
+																					? p.getValueAsString().toUpperCase():null) )
 				.collect(ExportCollector.stringMap());
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
@@ -140,6 +174,49 @@ class ExportCollectorTest {
 		assertEquals(5, export.size());
 	}
 
+	@Test
+	void exportStreamToStringPropertiesAndSetNamesToEmptyListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ an empty list - should just remove them from export
+		Properties export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	?Collections.emptyList():p.getExportNames() ))
+				.collect(ExportCollector.stringProperties("[null]"));
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
+		assertEquals(3, export.size());
+	}
+
+
+	@Test
+	void exportStreamToStringPropertiesAndSetNamesToNullListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ null - should just remove them from export
+		Properties export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	? null:p.getExportNames() ))
+				.collect(ExportCollector.stringProperties("[null]"));
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
+		assertEquals(3, export.size());
+	}
+
+	@Test
+	void exportStreamToStringPropertiesWithNullNullValueThrowsException() {
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> pes.stream().collect(ExportCollector.stringProperties(null))
+		);
+	}
+
 	@Test // The finisher is not invoked otherwise, so a separate test
 	void stringPropertiesFinisherIsIdentity() {
 		Properties props = new Properties();
@@ -164,7 +241,8 @@ class ExportCollectorTest {
 	@Test
 	void exportStreamToObjectMapAndConvertValue() {
 		Map<String, Object> export = pes.stream()
-				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer) ? (Integer)p.getValue() * 2:p.getValue()) )
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer)
+																	? (Integer)p.getValue() * 2:p.getValue()) )
 				.collect(ExportCollector.objectMap());
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 2));	// Times 2X
@@ -179,7 +257,8 @@ class ExportCollectorTest {
 	void exportStreamToObjectMapAndConvertNameAndValue() {
 		Map<String, Object> export = pes.stream()
 				.map(p -> p.mapNames( p.getExportNames().stream().map(n -> n.toUpperCase()).collect(toList()) ))
-				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer) ? (Integer)p.getValue() * 2:p.getValue()) )
+				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer)
+																	? (Integer)p.getValue() * 2:p.getValue()) )
 				.collect(ExportCollector.objectMap());
 
 		assertThat(export, hasEntry("EXPORTSERVICESAMPLE.ALLOWME.INT1", 2)); // Times 2X
@@ -206,6 +285,42 @@ class ExportCollectorTest {
 		assertEquals(5, export.size());
 	}
 
+	@Test
+	void exportStreamToObjectMapAndSetNamesToEmptyListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ an empty list - should just remove them from export
+		Map<String, Object> export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	? Collections.emptyList():p.getExportNames() ))
+				.collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(3, export.size());
+	}
+
+
+	@Test
+	void exportStreamToObjectMapAndSetNamesToNullListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ null - should just remove them from export
+		Map<String, Object> export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	? null:p.getExportNames() ))
+				.collect(ExportCollector.objectMap());
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", null));
+		assertThat(export, hasEntry("e.a.str1inandout", null));
+		assertEquals(3, export.size());
+	}
+
+
 	@Test // The finisher is not invoked otherwise, so a separate test
 	void objectMapFinisherIsIdentity() {
 		Map<String, Object> map = new HashMap<>();
@@ -224,6 +339,48 @@ class ExportCollectorTest {
 		assertThat(export, hasEntry("e.a.str1out", "[null]"));
 		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
 		assertEquals(5, export.size());
+	}
+
+
+	@Test
+	void exportStreamToObjectPropertiesAndSetNamesToEmptyListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ an empty list - should just remove them from export
+		Properties export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)
+																	? Collections.emptyList():p.getExportNames() ))
+				.collect(ExportCollector.objectProperties("[null]"));
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
+		assertEquals(3, export.size());
+	}
+
+	@Test
+	void exportStreamToObjectPropertiesAndSetNamesToNullListShouldRemoveExport() {
+
+		//Replace the 'a.u.a' Property names w/ null - should just remove them from export
+		Properties export = pes.stream()
+				.map(p -> p.mapNames( p.getContainingClass().equals(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class)?null:p.getExportNames() ))
+				.collect(ExportCollector.objectProperties("[null]"));
+
+		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 1));
+//		assertThat(export, hasEntry("a.u.a.str1out", "a.u.a.str1_value"));
+//		assertThat(export, hasEntry("a.u.a.str1inandout", "a.u.a.str1_value"));
+		assertThat(export, hasEntry("e.a.str1out", "[null]"));
+		assertThat(export, hasEntry("e.a.str1inandout", "[null]"));
+		assertEquals(3, export.size());
+	}
+
+	@Test
+	void exportStreamToObjectPropertiesWithNullNullValueThrowsException() {
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> pes.stream().collect(ExportCollector.objectProperties(null))
+		);
 	}
 
 }
