@@ -34,7 +34,7 @@ public class HibernateInit {
 				.defaultValue("REPEATABLE_READ").build();
 		IntProp INIT_POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.initial_pool_size")
 				.defaultValue(1).mustBeLessThan(20).build();
-		IntProp POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.pool_siz")
+		IntProp POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.pool_size")
 				.defaultValue(20).mustBeLessThan(200).build();
 	}
 
@@ -84,12 +84,9 @@ public class HibernateInit {
 
 
 	/**
-	 * A main method to run this app as it might be in a real environment.
+	 * A main method to run this class as a small app - In a real app, a main method would not be here
+	 * - its just for testing.
 	 * <p>
-	 * In this main method the {@code AndHow.findConfig()} method is used to append the cmd line
-	 * arguments to the AndHow configuration.  This allows Property values to be configured from
-	 * these arguments, in addition to all the other way they could be configured.
-	 * <p>>
 	 * Run it from an IDE , or via command line.
 	 * <p>
 	 * To run from command line, first use Maven to create a runnable jar.
@@ -99,22 +96,11 @@ public class HibernateInit {
 	 * > java -jar andhow-testing/andhow-simulated-app-tests/example-app-3/target/app.jar
 	 * }</pre>
 	 * The output of this command will match the config in {@code andhow.properties}:
-	 * <pre>{@code
-	 * Service url: https://default.bigcorp.com:80/validate
-	 * }</pre>
-	 *
-	 * <pre>{@code
-	 * > java -Dcom.bigcorp.Calculator.CALC_MODE=FLOAT -jar andhow-testing/andhow-simulated-app-tests/example-app-2/target/app.jar 1.23 4.56
-	 * }</pre>
-	 * will result in {@code Result is 0.26973686 (Float)}
-	 *
-	 * @param args Two arguments that are parsable to numbers.
+	 * <pre>
 	 */
 	public static void main(String[] args) throws Exception {
 
-		//Find the AndHow Configuration and add to it the commandline args so they can be used for
-		//configuration as well.
-		AndHow.findConfig().setCmdLineArgs(args);	//Have to call build here or it doesn't work!!
+		AndHow.findConfig().setCmdLineArgs(args);
 
 		HibernateInit hibernateInit = new HibernateInit();
 
