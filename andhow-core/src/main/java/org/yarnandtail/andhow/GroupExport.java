@@ -1,14 +1,18 @@
 package org.yarnandtail.andhow;
 
 import java.lang.annotation.*;
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.Exporter;
 
 /**
  * Causes all the Properties in the annotated class to be exported by the specified Exporter.
- *
- * Only {@link org.yarnandtail.andhow.api.Property}'s directly contained in
- * the annotated class are exported:  Properties in nested inner classes or interfaces are not
- * included, though those inner classes could also be annotated.
+ * <p>
+ * Exports via this annotation happen automatically at startup. There are also manual exports -
+ * See {@link AndHow#export(Class[])}.
+ * <p>
+ * Only {@link Property}'s directly contained in the annotated class are exported:  Properties in
+ * nested inner classes or interfaces are not included, though those inner classes could also be
+ * annotated (this behaviour differs from manual exports).
  * <p>
  * This example would export the contained Properties to System.Properties, using 'out' aliases if
  * they exist, otherwise using canonical names:

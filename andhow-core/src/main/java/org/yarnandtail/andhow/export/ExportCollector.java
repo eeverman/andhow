@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.export;
 
-import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.AndHow;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -9,6 +9,12 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
+/**
+ * Implementations of {@link Collector} that can be used collect a {@code stream()} of
+ * {@link PropertyExport}s into key-value pair Maps or {@link java.util.Properties}.
+ * <p>
+ * See {@link AndHow#export()} for export details and examples.
+ */
 public class ExportCollector {
 
 	private ExportCollector() { /* No instances */ }
@@ -21,18 +27,103 @@ public class ExportCollector {
 					Collector.Characteristics.IDENTITY_FINISH)
 	);
 
+	/**
+	 * Returns a {@link Collector} that collects {@link PropertyExport}s into a
+	 * {@link Map}{@code <String, String>} collection of key-value pairs.
+	 * <p>
+	 * Usage example:
+	 * <pre>{@code
+	 * Map<String, String> export =
+	 *  AndHow.instance().export(MyClass.class)
+	 *    .collect(ExportCollector.stringMap());
+	 * }</pre>
+	 * <p>
+	 * <em>Note:  This method calls {@link PropertyExport#getValueAsString()} for the
+	 * 'value' part of the key-value pair.  That value can be remapped - See
+	 * {@link PropertyExport#mapValueAsString(String)}.</em>
+	 * <p>
+	 * See {@link AndHow#export()} for export details and more examples.
+	 * <p>
+	 * @return A {@link Collector} that creates a {@link Map}{@code <String, String>}
+	 *   from a {@link PropertyExport} stream.
+	 */
 	public static StringMap stringMap() {
 		return new StringMap();
 	}
 
+	/**
+	 * Returns a {@link Collector} that collects {@link PropertyExport}s into a
+	 * {@link java.util.Properties} object with key-value entries that are Strings.
+	 * <p>
+	 * Usage example:
+	 * <pre>{@code
+	 * Map<String, String> export =
+	 *  AndHow.instance().export(MyClass.class)
+	 *    .collect(ExportCollector.stringProperties());
+	 * }</pre>
+	 * <p>
+	 * <em>Note:  This method calls {@link PropertyExport#getValueAsString()} for the
+	 * 'value' part of the key-value pair.  That value can be remapped - See
+	 * {@link PropertyExport#mapValueAsString(String)}.</em>
+	 * <p>
+	 * See {@link AndHow#export()} for export details and more examples.
+	 * <p>
+	 * @param nullValueString The value to use for Properties that have a null
+	 *   value, since {@link java.util.Properties} cannot contain null values.
+	 * @return A {@link Collector} that creates a {@link java.util.Properties} with String
+	 *   values from a {@link PropertyExport} stream.
+	 */
 	public static StringProperties stringProperties(String nullValueString) {
 		return new StringProperties(nullValueString);
 	}
 
+	/**
+	 * Returns a {@link Collector} that collects {@link PropertyExport}s into a
+	 * {@link Map}{@code <String, Object>} collection of key-value pairs.
+	 * <p>
+	 * Usage example:
+	 * <pre>{@code
+	 * Map<String, String> export =
+	 *  AndHow.instance().export(MyClass.class)
+	 *    .collect(ExportCollector.objectMap());
+	 * }</pre>
+	 * <p>
+	 * <em>Note:  This method calls {@link PropertyExport#getValue()} for the
+	 * 'value' part of the key-value pair.  That value can be remapped - See
+	 * {@link PropertyExport#mapValue(Object)}.</em>
+	 * <p>
+	 * See {@link AndHow#export()} for export details and more examples.
+	 * <p>
+	 * @return A {@link Collector} that creates a {@link Map}{@code <String, Object>}
+	 *   from a {@link PropertyExport} stream.
+	 */
 	public static ObjectMap objectMap() {
 		return new ObjectMap();
 	}
 
+	/**
+	 * Returns a {@link Collector} that collects {@link PropertyExport}s into a
+	 * {@link java.util.Properties} object with key-value entries that have Strings
+	 * keys and Object values.
+	 * <p>
+	 * Usage example:
+	 * <pre>{@code
+	 * Map<String, String> export =
+	 *  AndHow.instance().export(MyClass.class)
+	 *    .collect(ExportCollector.objectProperties());
+	 * }</pre>
+	 * <p>
+	 * <em>Note:  This method calls {@link PropertyExport#getValue()} for the
+	 * 'value' part of the key-value pair.  That value can be remapped - See
+	 * {@link PropertyExport#mapValue(Object)}.</em>
+	 * <p>
+	 * See {@link AndHow#export()} for export details and more examples.
+	 * <p>
+	 * @param nullValue The value to use for Properties that have a null value, since
+	 *   {@link java.util.Properties} cannot contain null values.
+	 * @return A {@link Collector} that creates a {@link java.util.Properties} with String
+	 *   keys and Object values from a {@link PropertyExport} stream.
+	 */
 	public static ObjectProperties objectProperties(Object nullValue) {
 		return new ObjectProperties(nullValue);
 	}

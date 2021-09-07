@@ -13,6 +13,7 @@
 		<module>andhow-multimodule-dataprocess</module>
 		<module>example-app-1</module>
 		<module>example-app-2</module>
+		<module>example-app-3</module>
 	</modules>
 	
 	<build>

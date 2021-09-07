@@ -1,28 +1,54 @@
 package org.yarnandtail.andhow.internal.export;
 
+import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.Exporter.*;
 import org.yarnandtail.andhow.api.GroupProxy;
-import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.export.ManualExportAllowed;
 import org.yarnandtail.andhow.export.ManualExportNotAllowed;
 import org.yarnandtail.andhow.export.PropertyExport;
-import org.yarnandtail.andhow.export.PropertyExportImpl;
 import org.yarnandtail.andhow.internal.NameAndProperty;
-import org.yarnandtail.andhow.util.AndHowLog;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
+import java.util.stream.Stream;
 
-//TODO:  The exceptions thrown should be runtime only, since the caller must be able to pass a class ref,
-//the illegal access is unexpected.
+/**
+ * A service for performing a manual export.
+ * <p>
+ * Manual exports are initiated via {@link org.yarnandtail.andhow.AndHow#export(Class[])} - See
+ * that method for usage details and examples.
+ */
 public class ManualExportService {
-
-	static AndHowLog LOG = AndHowLog.getLogger(ManualExportService.class);
 
 	Class<?>[] DISALLOW_EXPORT_ANNOTATIONS = {ManualExportNotAllowed.class};
 
-
-	public Collection<PropertyExport> doManualExport(List<Class<?>> exportRoots, Collection<GroupProxy> groupList) throws IllegalAccessException {
+	/**
+	 * Perform an export for a list of Classes.
+	 * <p>
+	 * An export takes place as follows:
+	 * <ul>
+	 * <li>Each the classes in the list of exportRoots is processed sequentially</li>
+	 * <li>If the class is not annotated with {@link ManualExportAllowed}, an exception is thrown.</li>
+	 * <li>Calling to {@link #exportClassAndChildren}, all {@link Property}s in the class are
+	 * discovered and a {@link PropertyExport} instance made for each one.</li>
+	 * <li>Any inner classes are discovered and also exported, checking to see if they have a
+	 *   {@link ManualExportAllowed} annotation that might set different export options.
+	 * </li>
+	 * </ul>
+	 * A list of all classes that have been exported is kept to prevent overlapping classes from
+	 * creating duplicate exports, e.g. if a class and an innerclass of that class are included in
+	 * the exportRoots list, the result should still not have duplicates.
+	 * <p>
+	 * Only classes for which a {@link GroupProxy} exists have Properties and the proxies have the
+	 * list of Properties contained in each class.
+	 * <p>
+	 * @param exportRoots The list of classes who's Properties should be exported.
+	 * @param groupList The list of GroupProxy's, created during AndHow initialization.
+	 * @return A Stream<PropertyExport> to be mapped, filtered & collected as needed.
+	 * @throws IllegalAccessException If any of the exportRoots are not annotated (directly or
+	 *   indirectly via a containing class) with {@link ManualExportAllowed}.
+	 */
+	public Stream<PropertyExport> doManualExport(List<Class<?>> exportRoots, Collection<GroupProxy> groupList) throws IllegalAccessException {
 
 		Set<Class<?>> alreadyExportedClasses = new HashSet();
 		Collection<PropertyExport> propExports = new ArrayList();
@@ -36,11 +62,11 @@ public class ManualExportService {
 						"To export this class, annotate it with @" + ManualExportAllowed.class.getCanonicalName());
 			}
 
-			exportClassAndChildren(clazz, allow.get().exportByCanonicalName(),
-					allow.get().exportByOutAliases(),	alreadyExportedClasses, groupList, propExports);
+			exportClassAndChildren(clazz, allow.get().useCanonicalName(),
+					allow.get().useOutAliases(),	alreadyExportedClasses, groupList, propExports);
 		}
 
-		return propExports;
+		return propExports.stream();
 	}
 
 	/**
@@ -48,7 +74,7 @@ public class ManualExportService {
 	 *
 	 * The clazz and the effective canonicalOption & outAliasOption export options must match and
 	 * the passed clazz and must be legal to export as defined by
-	 * {@link ManualExportService#findEffectiveAllowAnnotation}, otherwise incorrect export options
+	 * {@link #findEffectiveAllowAnnotation}, otherwise incorrect export options
 	 * will be used and/or non-exportable (ie private) Properties exported.
 	 * <p>
 	 * Contained classes that are discovered and annotated with {@link ManualExportNotAllowed} will
@@ -58,13 +84,11 @@ public class ManualExportService {
 	 * exported.  This can happen when this method is called on a list of classes, some of which may
 	 * overlap in their contained classes.
 	 * <p>
-	 * Note that the export options (canonical and outAlias) are preferences in the annotations.
-	 * The manual export handler is free to ignore preferences and form any type of export.
-	 * <p>
 	 * @param clazz The class (and potentially its contained classes) to export.
-	 * @param canonicalOption
-	 * @param outAliasOption
-	 * @param alreadyExportedClasses
+	 * @param canonicalOption The option as annotated on passed class or a class that contains it.
+	 * @param outAliasOption The option as annotated on passed class or a class that contains it.
+	 * @param alreadyExportedClasses Class which have already been exported, to prevent duplicate
+	 *   exports when a user passes classes nested classes (i.e. a parent class and an inner class).
 	 */
 	protected void exportClassAndChildren(Class<?> clazz,
 			EXPORT_CANONICAL_NAME canonicalOption, EXPORT_OUT_ALIASES outAliasOption,
@@ -91,8 +115,8 @@ public class ManualExportService {
 
 				if (mea.isPresent()) {
 					//Explicit new export options
-					exportClassAndChildren(inner, mea.get().exportByCanonicalName(),
-							mea.get().exportByOutAliases(), alreadyExportedClasses, groupList, propExports);
+					exportClassAndChildren(inner, mea.get().useCanonicalName(),
+							mea.get().useOutAliases(), alreadyExportedClasses, groupList, propExports);
 				} else {
 					//Inherit parent class export options
 					exportClassAndChildren(inner, canonicalOption, outAliasOption, alreadyExportedClasses, groupList, propExports);
@@ -102,6 +126,15 @@ public class ManualExportService {
 		}
 	}
 
+	/**
+	 * Export the Properties contained in a single class with no recursion.
+	 * <p>
+	 * @param clazz The class to export
+	 * @param canNameOpt canonical name option
+	 * @param outAliasOpt out alias names option
+	 * @param groupList The {@link GroupProxy} collection, created during AndHow initialization.
+	 * @param propExports The collection to add the exports to, one per Property.
+	 */
 	protected void exportClass(Class<?> clazz,
 			EXPORT_CANONICAL_NAME canNameOpt, EXPORT_OUT_ALIASES outAliasOpt,
 			Collection<GroupProxy> groupList, Collection<PropertyExport> propExports) {
@@ -121,9 +154,9 @@ public class ManualExportService {
 	 * Returns the effective {@link ManualExportAllowed} annotation instance if it exists.
 	 * <p>
 	 * The effective annotation may be on the clazz itself or a containing class if the clazz is an
-	 * inner class.  If no annotation is found or a {@link ManualExportNotAllowed} annnotation is found
+	 * inner class.  If no annotation is found or a {@link ManualExportNotAllowed} annotation is found
 	 * closer in the inner class hierarchy, then this class is not manually exportable.
-	 *
+	 * <p>
 	 * @param clazz Determine if this class or its container is annotated for manual export.
 	 * @return The Optional ManualExportAllowed annotation, if it exists.
 	 * @throws IllegalStateException If this class is annotated to both allow and disallow manual exports.
@@ -157,7 +190,7 @@ public class ManualExportService {
 
 	/**
 	 * Gets the {@link ManualExportAllowed} annotation directly on this class.
-	 *
+	 * <p>
 	 * @param clazz The class to find the annotation on.
 	 * @return An Optional<ManualExportAllowed> if the annotation exists.
 	 */
@@ -172,7 +205,7 @@ public class ManualExportService {
 	 * <p>
 	 * This does not consider containing classes, it only checks if there is a 'not allowed'
 	 * annotation on this class exclusively.
-	 *
+	 * <p>
 	 * @param clazz The class to check
 	 * @return True if manual exports are explicitly not allowed on this class.
 	 */
@@ -182,7 +215,5 @@ public class ManualExportService {
 		}
 		return false;
 	}
-
-
 
 }

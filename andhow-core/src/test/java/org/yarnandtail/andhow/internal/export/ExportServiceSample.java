@@ -10,15 +10,15 @@ import org.yarnandtail.andhow.property.StrProp;
 
 public class ExportServiceSample {
 
-	@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS,
-			exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+	@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS,
+			useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 	public interface AllowMe {
 
 		IntProp INT1 = IntProp.builder()
 				.aliasIn("int1in").aliasOut("int1out").aliasInAndOut("int1inandout").build();
 
-		@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
-				exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+		@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+				useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 		interface AllowMe1 {
 			StrProp STR1 = StrProp.builder()
 					.aliasIn("a.a.str1in").aliasOut("a.a.str1out").aliasInAndOut("a.a.str1inandout").build();
@@ -32,8 +32,8 @@ public class ExportServiceSample {
 		interface ExportMe1 {	}
 
 		interface ImUnsure1 {
-			@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
-					exportByOutAliases = EXPORT_OUT_ALIASES.ALWAYS)
+			@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
+					useOutAliases = EXPORT_OUT_ALIASES.ALWAYS)
 			interface AllowMe2 {
 				StrProp STR1 = StrProp.builder()
 						.aliasIn("a.u.a.str1in").aliasOut("a.u.a.str1out").aliasInAndOut("a.u.a.str1inandout").build();
@@ -56,8 +56,8 @@ public class ExportServiceSample {
 	@ManualExportNotAllowed
 	interface DisallowMe {
 
-		@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
-				exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+		@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS,
+				useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 		interface AllowMe1 { }
 
 		@ManualExportNotAllowed
@@ -68,8 +68,8 @@ public class ExportServiceSample {
 		class ExportMe1 { }
 
 		interface ImUnsure1 {
-			@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
-					exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+			@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
+					useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 			interface AllowMe2 { }
 
 			@ManualExportNotAllowed

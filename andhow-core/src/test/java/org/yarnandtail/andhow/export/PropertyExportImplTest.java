@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.yarnandtail.andhow.api.Exporter;
+import org.yarnandtail.andhow.internal.export.PropertyExportImpl;
 import org.yarnandtail.andhow.property.IntProp;
 
 import java.util.ArrayList;

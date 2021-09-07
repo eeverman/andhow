@@ -95,7 +95,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 
 		AndHow.setConfig(config);
 
-		Map<String, String> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream().collect(ExportCollector.stringMap());
+		Map<String, String> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).collect(ExportCollector.stringMap());
 
 		//UI
 		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".DISPLAY_NAME", "My App"));
@@ -116,7 +116,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 
 		AndHow.setConfig(config);
 
-		Map<String, Object> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream().collect(ExportCollector.objectMap());
+		Map<String, Object> export = AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).collect(ExportCollector.objectMap());
 
 		//UI
 		assertThat(export, hasEntry(UI_CONFIG.class.getCanonicalName() + ".DISPLAY_NAME", "My App"));
@@ -138,7 +138,6 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		AndHow.setConfig(config);
 
 		Map<String, Object> export = AndHow.instance().export(SERVICE_CONFIG.class)
-				.stream()
 				.map(p -> p.mapNames(p.getExportNames().stream().map(n -> "aaa_" + n).collect(Collectors.toList())))
 				.collect(ExportCollector.objectMap());
 
@@ -153,7 +152,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertEquals(6, export.size());
 	}
 
-	@ManualExportAllowed(exportByCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, exportByOutAliases = EXPORT_OUT_ALIASES.NEVER)
+	@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 	interface UI_CONFIG {
 		StrProp DISPLAY_NAME = StrProp.builder().mustBeNonNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();

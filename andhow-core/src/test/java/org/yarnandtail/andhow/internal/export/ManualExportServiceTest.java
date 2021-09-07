@@ -112,46 +112,46 @@ class ManualExportServiceTest {
 
 		// Top level class has no annotation
 		ManualExportAllowed allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases());
 
 		//
 		// All nested classes in 'AllowMe'
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.AllowMe1.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases());
 
 		assertFalse(svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.DisallowMe1.class).isPresent());
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ExportMe1.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName(), "Inherit from parent");
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases(), "Inherit from parent");
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName(), "Inherit from parent");
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases(), "Inherit from parent");
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ImUnsure1.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName(), "Inherit from parent");
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases(), "Inherit from parent");
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName(), "Inherit from parent");
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases(), "Inherit from parent");
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.NEVER, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.NEVER, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.ALWAYS, allow.useOutAliases());
 
 		assertFalse(svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ImUnsure1.DisallowMe2.class).isPresent());
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ImUnsure1.ExportMe2.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName(), "Inherit from parent");
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases(), "Inherit from parent");
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName(), "Inherit from parent");
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases(), "Inherit from parent");
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.AllowMe.ImUnsure1.ImUnsure2.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName(), "Inherit from parent");
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases(), "Inherit from parent");
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName(), "Inherit from parent");
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases(), "Inherit from parent");
 
 		//
 		// All nested classes in 'DisallowMe'
 		assertFalse(svs.findEffectiveAllowAnnotation(ExportServiceSample.DisallowMe.class).isPresent());
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.DisallowMe.AllowMe1.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases());
 
 		assertFalse(svs.findEffectiveAllowAnnotation(ExportServiceSample.DisallowMe.DisallowMe1.class).isPresent());
 
@@ -160,8 +160,8 @@ class ManualExportServiceTest {
 		assertFalse(svs.findEffectiveAllowAnnotation(ExportServiceSample.DisallowMe.ImUnsure1.class).isPresent());
 
 		allow = svs.findEffectiveAllowAnnotation(ExportServiceSample.DisallowMe.ImUnsure1.AllowMe2.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.NEVER, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.NEVER, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases());
 
 		//
 		// All nested classes in 'ImUnsure'
@@ -187,8 +187,8 @@ class ManualExportServiceTest {
 	@Test
 	void getAllowAnnotationTest() {
 		ManualExportAllowed allow = svs.getAllowAnnotation(ExportServiceSample.AllowMe.class).get();
-		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.exportByCanonicalName());
-		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.exportByOutAliases());
+		assertEquals(EXPORT_CANONICAL_NAME.ALWAYS, allow.useCanonicalName());
+		assertEquals(EXPORT_OUT_ALIASES.NEVER, allow.useOutAliases());
 	}
 
 	@Test
@@ -352,7 +352,7 @@ class ManualExportServiceTest {
 		List<Class<?>> exportRoots = new ArrayList();
 		exportRoots.add(ExportServiceSample.AllowMe.class);
 
-		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies);
+		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies).collect(Collectors.toList());
 
 		verifyAllowMeInnerClassExport(propExports);
 	}
@@ -368,7 +368,7 @@ class ManualExportServiceTest {
 		exportRoots.add(ExportServiceSample.AllowMe.ImUnsure1.class);
 		exportRoots.add(ExportServiceSample.AllowMe.ImUnsure1.AllowMe2.class);
 
-		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies);
+		propExports = svs.doManualExport(exportRoots, allClassesGroupProxies).collect(Collectors.toList());
 
 		verifyAllowMeInnerClassExport(propExports);
 	}

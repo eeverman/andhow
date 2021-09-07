@@ -1,47 +1,89 @@
 package org.yarnandtail.andhow.export;
 
-import org.yarnandtail.andhow.api.Exporter;
+import static org.yarnandtail.andhow.api.Exporter.*;
+import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.AndHow;
 
 import java.lang.annotation.*;
 
 /**
- * Classes annotation with this annotation will allow all AndHow Properties in the class to be
- * exported to a HashMap or other structure by any code holding a reference to the Class.
+ * Enables manual export of {@link Property}'s contained in the annotated class, for use
+ * with frameworks that take configuration as key-value maps or similar.
+ * <p>
+ * Export is not allowed by default. This annotation applies to Properties in the annotated class
+ * as well as those in inner classes/interfaces, however, inner classes can be excluded with
+ * the {@link ManualExportNotAllowed} annotation.
+ * <p>
+ * {@link #useCanonicalName()}} and {@link #useOutAliases()} parameters specify which names for each
+ * Property are included in the export, however, it is easy to rewrite or override the exported
+ * names and values - See {@link AndHow#export(Class[])} for details on performing an export.
+ * <p>
+ * Annotation example:
+ * <pre><code>
+ * //Allow exports for this class & contained classes
+ * {@literal @}ManualExportAllowed
+ * public class MyClass {
  *
- * The {@code exportByCanonicalName} and {@code exportByOutAliases} parameters just provide defaults
- * when the manual export is done:  The code calling export can choose to export any way it chooses.
+ *   // Two 'out' alias names are spec'ed, so key-value pairs would be:
+ *   // int1out1 : [The value of INT1]
+ *   // int1out2 : [The value of INT1]
+ *   static IntProp INT1 = IntProp.builder()
+ *       .aliasOut("int1out1").aliasOut("int1out2").build();
+ *
+ *   // No 'out' names are spec'ed. Default annotation options export
+ *   // with the canonical name, e.g.: [package].MyClass.INT2.
+ *   static IntProp INT2 = IntProp.builder().build();
+ *
+ *   {@literal @}ManualExportAllowed(
+ *       useCanonicalName = EXPORT_CANONICAL_NAME.NEVER,
+ *       useOutAliases = EXPORT_OUT_ALIASES.ALWAYS)
+ *   static interface Inner1 {
+ *
+ *     // No 'out' names are spec'ed. The canonical option is
+ *     // set to NEVER, so this property is not be included.
+ * 	   static StrProp STR1 = StrProp.builder().build();
+ *   }
+ *
+ *   //Inherits 'export allowed' from the containing class
+ *   static class Allowed { ... }
+ *
+ *   //Block export for other contained classes or interfaces
+ *   {@literal @}ManualExportNotAllowed
+ *   static class No { ...Properties in here cannot be exported... }
+ * }
+ * </code></pre>
  */
-@Retention(RetentionPolicy.RUNTIME) //ensures this annotation is available to the VM, not just compiler
-@Target(ElementType.TYPE)	//Only use on type declarations
-@Documented  //Include values for this annotation in JavaDocs
+@Retention(RetentionPolicy.RUNTIME) // Annotation is available to the VM, not just compiler
+@Target(ElementType.TYPE)	// Only use on type declarations
+@Documented  // Include values for this annotation in JavaDocs
 public @interface ManualExportAllowed {
 
 	/**
-	 * Specifies if the canonical name should be used to export property values.
-	 *
-	 * The default is {@code ONLY_IF_NO_OUT_ALIAS}, will export the canonical name and value only
-	 * when there is no out alias for the Property.
-	 *
-	 * Combinations of this option and {@code exportByOutAliases} can result in multiple copies
-	 * of the same value being exported.
-	 *
+	 * Specifies when canonical names should be included in the list of export names.
+	 * <p>
+	 * The default, {@link EXPORT_CANONICAL_NAME#ONLY_IF_NO_OUT_ALIAS}, will include a
+	 * {@link Property}'s canonical name only if the Property has no out aliases specified.
+	 * <p>
+	 * Combinations of this option and {@code useOutAliases} can result in multiple names for the
+	 * same Property in the list of exported key-value pairs.
+	 * <p>
 	 * @return The export option for Property canonical names.
 	 */
-	Exporter.EXPORT_CANONICAL_NAME exportByCanonicalName()
-			default Exporter.EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS;
+	EXPORT_CANONICAL_NAME useCanonicalName()
+			default EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS;
 
 	/**
-	 * Specifies if the out aliases, which are aliases for the purpose
-	 * of exports, should be used when exporting property values.
-	 *
-	 * The default is {@code ALWAYS}, which will export the Property's out-alias and value if an
-	 * alias exists.  Its possible to have multiple 'out' aliases, resulting in multiples copies of
-	 * the value being exported.  The {@code FIRST} and {@code LAST} options address this by
-	 * allowing specifying the respective value from the list.
-	 *
+	 * Specifies if out aliases should be included in the list of export names.
+	 * <p>
+	 * 'Out' aliases are alternate names for a {@link Property} for the purpose of export, so generally
+	 * they are intended to be included.  Thus, the default is {@link EXPORT_OUT_ALIASES#ALWAYS}.
+	 * <p>
+	 * Properties may have multiple out alias names and a canonical name, so its possible to have
+	 * multiple names for the same Property in the list of exported key-value pairs.
+	 * <p>
 	 * @return  The export option for Property 'out' aliases.
 	 */
-	Exporter.EXPORT_OUT_ALIASES exportByOutAliases()
-			default Exporter.EXPORT_OUT_ALIASES.ALWAYS;
+	EXPORT_OUT_ALIASES useOutAliases()
+			default EXPORT_OUT_ALIASES.ALWAYS;
 
 }

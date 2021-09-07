@@ -2,6 +2,7 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.*;
@@ -452,10 +453,10 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * <p>
 	 * Simple example usage that results in a {@code Map<String, String>} of names and values:
 	 * <pre>{@code
-	 *   //UI_CONFIG & SERVICE_CONFIG contain AndHow Properties
-	 *   Map<String, String> export =
-	 *     AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class).stream()
-	 *     .collect(ExportCollector.stringMap());
+	 * //UI_CONFIG & SERVICE_CONFIG contain AndHow Properties
+	 * Map<String, String> export =
+	 *   AndHow.instance().export(UI_CONFIG.class, SERVICE_CONFIG.class)
+	 *   .collect(ExportCollector.stringMap());
 	 * }</pre>
 	 * <p>
 	 * Property export is not allowed by default and is enabled by annotating a class containing
@@ -465,28 +466,35 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * String or Object values. Many variations are possible: e.g. export object values
 	 * (instead of Strings) and prepend 'aaa_' to each export name:
 	 * <pre>{@code
-	 *   Map<String, Object> export = AndHow.instance().export(SERVICE_CONFIG.class)
-	 *     .stream()
-	 *     .map(p -> p.mapNames(p.getExportNames().stream().map(n -> "aaa_" + n).collect(Collectors.toList())))
-	 *     .collect(ExportCollector.objectMap());
+	 * Map<String, Object> export =
+	 *  AndHow.instance().export(SERVICE_CONFIG.class)
+	 *   .map(p -> p.mapNames(
+	 *     p.getExportNames().stream().map(n -> "aaa_" + n).collect(Collectors.toList())
+	 *   ))
+	 *   .collect(ExportCollector.objectMap());
 	 * }</pre>
 	 * <p>
-	 * {@code export()} returns a collection of {@link PropertyExport}'s, one per Property, and
-	 * each PropertyExport has a list of export names for the Property.  Names can include the
-	 * Property's canonical name and any 'out' aliases for the Property.  Which names are included
-	 * is controlled by options on the {@link ManualExportAllowed} annotation, but names can be
-	 * modified by stream filtering or remapping names as in the example above.
+	 * {@code export()} returns a {@link Stream} of {@link PropertyExport}'s, one PropertyExport per
+	 * Property.  Each PropertyExport has a list of export names for the Property.  Names can include
+	 * the Property's canonical name and any 'out' aliases for the Property.  Which names are included
+	 * is controlled by options on the {@link ManualExportAllowed} annotation.
+	 * <p>
+	 * The export names and the values can be remapped via PropertyExport 'map' methods
+	 * (see 'mapNames' in example above).  See {@link PropertyExport} for more mapping examples.
 	 * <p>
 	 * The {@link ExportCollector} creates an entry in the final collection for each name, mapping
 	 * it to the Property's Object or String value.  Thus, the ExportCollector 'flattens'
 	 * PropertyExports by expanding the name list and collects them into the final collection.
 	 * <p>
-	 * @param exportClasses The classes to export, which must be annotated to allow export.
-	 * @return The name-value pair collection resulting from exporting all the Properties contained
-	 * 		in the exportClasses.
-	 * @throws IllegalAccessException //Do we want this exception??
+	 * Exports via the {@code export()} method are 'Manual' - the app must invoke them.  There are
+	 * also 'Auto' exports - See the {@link GroupExport} annotation.
+	 * <p>
+	 * @param exportClasses The classes to have their contained Properties exported.
+	 * @return A Stream of {@link PropertyExport} which can be converted into a collection of
+	 *   key-value pairs via one of the {@link ExportCollector}s.
+	 * @throws IllegalAccessException If any of the exported classes are not annotated to allow export.
 	 */
-	Collection<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
+	public Stream<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
 		return core.export(exportClasses);
 	}
 

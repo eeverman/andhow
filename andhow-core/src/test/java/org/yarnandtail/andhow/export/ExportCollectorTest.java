@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.Mockito;
 import org.yarnandtail.andhow.api.Exporter;
 import org.yarnandtail.andhow.internal.export.ExportServiceSample;
+import org.yarnandtail.andhow.internal.export.PropertyExportImpl;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
@@ -131,8 +132,8 @@ class ExportCollectorTest {
 	@Test
 	void exportStreamToStringMapAndConvertValueAsString() {
 		Map<String, String> export = pes.stream()
-				.map(p -> p.mapValueAsString( p.getValueAsString() != null
-																					? p.getValueAsString().toUpperCase():null) )
+				.map( p -> p.mapValueAsString( p.getValueAsString() != null
+						? p.getValueAsString().toUpperCase():null) )
 				.collect(ExportCollector.stringMap());
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", "1"));
@@ -241,8 +242,9 @@ class ExportCollectorTest {
 	@Test
 	void exportStreamToObjectMapAndConvertValue() {
 		Map<String, Object> export = pes.stream()
-				.map(p -> p.mapValue( (p.getValue() != null && p.getValue() instanceof Integer)
-																	? (Integer)p.getValue() * 2:p.getValue()) )
+				.map(p -> p.mapValue(
+						(p.getValue() != null && p.getValue() instanceof Integer)
+						  ? (Integer)p.getValue() * 2:p.getValue()) )
 				.collect(ExportCollector.objectMap());
 
 		assertThat(export, hasEntry("ExportServiceSample.AllowMe.INT1", 2));	// Times 2X

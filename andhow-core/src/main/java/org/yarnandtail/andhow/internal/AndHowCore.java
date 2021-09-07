@@ -7,8 +7,9 @@ import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
+
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
@@ -137,7 +138,7 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		
 	}
 
-	public Collection<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
+	public Stream<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
 		if (exportClasses != null) {
 			ManualExportService svs = new ManualExportService();
 
