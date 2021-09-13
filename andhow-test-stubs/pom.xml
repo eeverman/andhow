@@ -8,13 +8,13 @@
     </parent>
     <artifactId>andhow-test-stubs</artifactId>
     <packaging>jar</packaging>
-	
+
 	<name>AndHow Test Stubs</name>
 	<description>
 		Simple stub classes that match names and fields of some key classes to be used in tests.
 		This allows testing modules to be tested against the classes in this module to
 		prove the tests and JUnit extensions work, so they can be used to test AndHow itself.
-		
+
 		Without this, its not possible to write testing utils and JUnit extensions that can
 		be used on AndHow itself, because they cannot be tested.
 	</description>
@@ -32,4 +32,16 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <configuration>
+                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
