@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.yarnandtail</groupId>
 	<artifactId>andhow-parent</artifactId>
-	<version>0.4.1</version>
+	<version>0.4.1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>AndHow Parent Project</name>
 	<description>
@@ -56,7 +56,7 @@
 		<connection>scm:git:git@github.com:eeverman/andhow.git</connection>
 		<developerConnection>scm:git:git@github.com:eeverman/andhow.git</developerConnection>
 		<url>https://github.com/eeverman/andhow/tree/master</url>
-		<tag>andhow-0.4.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
@@ -312,55 +312,6 @@
 						<configuration>
 							<source>1.8</source>
 							<target>1.8</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>SomeJDK8s</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-				<file>
-					<exists>${java.home}/../lib/tools.jar</exists>
-				</file>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>com.sun</groupId>
-					<artifactId>tools</artifactId>
-					<version>1.8</version>
-					<scope>system</scope>
-					<systemPath>${java.home}/../lib/tools.jar</systemPath>
-				</dependency>
-			</dependencies>
-		</profile>
-		<profile>
-			<id>java9AndBeyond</id>
-			<!--
-			Its not possible to build a JRE 1.8 compatable jar file using JDK9
-			because of the need to use the '-add-modules' feature of JDK9.
-			Currently the use of jdk9 is blocked by the enforcer plugin, above.
-			For the 0.5.0 release, the JRE8 will be left behind and only this
-			profile will be active.
-			-->
-			<activation>
-				<jdk>[1.9,)</jdk>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<configuration>
-							<compilerArgs>
-								<arg>--add-modules=jdk.compiler</arg>
-							</compilerArgs>
-							<!-- without forking compilation happens in the
-							same process, so no arguments are applied -->
-							<fork>true</fork>
-							<source>1.9</source>
-							<target>1.9</target>
 						</configuration>
 					</plugin>
 				</plugins>
