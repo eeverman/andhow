@@ -35,9 +35,9 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 * The default delimiter between a key and a value.
 	 */
 	public static final String KVP_DELIMITER = "=";
-	
-	private List<String> keyValuePairs = new ArrayList();
-	
+
+	private List<String> keyValuePairs;
+
 	public KeyValuePairLoader() {
 		
 	}
@@ -54,10 +54,7 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 * @param keyValuePairs 
 	 */
 	public void setKeyValuePairs(List<String> keyValuePairs) {
-		if (keyValuePairs != null && keyValuePairs.size() > 0) {
-			this.keyValuePairs.clear();
-			this.keyValuePairs.addAll(keyValuePairs);
-		}
+		this.keyValuePairs = keyValuePairs == null ? null : new ArrayList<>(keyValuePairs);
 	}
 	
 	/**

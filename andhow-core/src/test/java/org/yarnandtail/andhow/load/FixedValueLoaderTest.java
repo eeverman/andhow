@@ -5,9 +5,11 @@ import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.LoaderValues;
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.ValidatedValue;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -192,20 +194,153 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
 
-		// set null has no effect
+		// set as null
 		loader.setPropertyValues((PropertyValue[]) null);
 
 		result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
-		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("not_null", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("XXX", result.getExplicitValue(STR_ENDS_WITH_XXX));
-		assertEquals(60L, result.getExplicitValue(LNG_TIME));
-		assertEquals(30, result.getExplicitValue(INT_NUMBER));
-		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	@Test
+	public void setPropertyValuesAsNullTest() {
+
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_NULL, "not_null"));
+		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
+
+		//spaces on non-string values should be trimmed and not matter
+		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
+		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
+		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
+		props.add(new PropertyValue(FLAG_TRUE, " false "));
+		props.add(new PropertyValue(FLAG_FALSE, " true "));
+		props.add(new PropertyValue(FLAG_NULL, " true "));
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
+
+		loader.setPropertyValues((List<PropertyValue>) null);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+
+		// release resources when values set to null
+		loader.releaseResources();
+	}
+
+	@Test
+	public void setPropertyValuesAsEmptyList() {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<PropertyValue> props = new ArrayList();
+		props.add(new PropertyValue(STR_BOB, "test"));
+		props.add(new PropertyValue(STR_NULL, "not_null"));
+		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
+
+		//spaces on non-string values should be trimmed and not matter
+		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
+		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
+		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
+		props.add(new PropertyValue(FLAG_TRUE, " false "));
+		props.add(new PropertyValue(FLAG_FALSE, " true "));
+		props.add(new PropertyValue(FLAG_NULL, " true "));
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setPropertyValues(props);
+
+		loader.setPropertyValues(Collections.emptyList());
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	@Test
+	public void setKeyObjectParisAsNullTest() throws ParsingException {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
+		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
+		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
+		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
+		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
+		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
+		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
+		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
+		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		loader.setKeyObjectPairValues(null);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
+
+		// release resources when kops set to null
+		loader.releaseResources();
+	}
+
+	@Test
+	public void setKeyObjectParisAsEmptyList() throws ParsingException {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
+		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
+		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
+		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
+		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
+		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
+		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
+		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
+		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		loader.setKeyObjectPairValues(Collections.emptyList());
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
+
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 	}
 }
