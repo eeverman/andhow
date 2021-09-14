@@ -1,9 +1,15 @@
 package org.yarnandtail.andhow.internal;
 
 import java.io.*;
+
+import org.yarnandtail.andhow.export.PropertyExport;
+import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
+
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
@@ -130,6 +136,16 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen	
 		}
 		
+	}
+
+	public Stream<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
+		if (exportClasses != null) {
+			ManualExportService svs = new ManualExportService();
+
+			return svs.doManualExport(Arrays.asList(exportClasses), staticConfig.getPropertyGroups());
+		} else {
+			throw new IllegalArgumentException("Cannot export a null list of classes");
+		}
 	}
 	
 	@Override

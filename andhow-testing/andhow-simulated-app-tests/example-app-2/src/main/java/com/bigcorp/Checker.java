@@ -46,7 +46,7 @@ public class Checker {
 	 * In this main method the {@code AndHow.findConfig()} method is used to append the cmd line
 	 * arguments to the AndHow configuration.  This allows Property values to be configured from
 	 * these arguments, in addition to all the other way they could be configured.
-	 * <p>>
+	 * <p>
 	 * Run it from an IDE , or via command line.
 	 * <p>
 	 * To run from command line, first use Maven to create a runnable jar.
@@ -71,8 +71,10 @@ public class Checker {
 
 		//Find the AndHow Configuration and add to it the commandline args so they can be used for
 		//configuration as well.
-		AndHow.findConfig().setCmdLineArgs(args).build();	//Have to call build here or it doesn't work!!
+		AndHow.findConfig().setCmdLineArgs(args);
 
+
+		//AndHow init happens implicitly as soon as the first Property value is accessed
 		Checker v = new Checker();
 		System.out.println("Service url: " + v.getServiceUrl());	//  <--display the configured url
 	}
