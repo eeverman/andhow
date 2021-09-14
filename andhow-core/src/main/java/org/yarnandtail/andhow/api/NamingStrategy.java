@@ -80,8 +80,8 @@ public interface NamingStrategy {
 	 * @param classpathName
 	 * @return 
 	 */
-	public default boolean isUriNameDistict(String classpathName) {
-		
+	default boolean isUriNameDistinct(String classpathName) {
+
 		if (classpathName == null) return false;
 		
 		return ! classpathName.equals(getUriName(classpathName));
