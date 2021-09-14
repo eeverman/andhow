@@ -225,7 +225,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value
 
 		//Check the URI name first (more likely), then the classpath style name
-		if (appConfigDef.getNamingStrategy().isUriNameDistict(appConfigDef.getCanonicalName(prop))) {
+		if (appConfigDef.getNamingStrategy().isUriNameDistinct(appConfigDef.getCanonicalName(prop))) {
 			propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
 		}
 
@@ -236,7 +236,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 			propNames.add(a.getActualName());
 
 			//Add the URI style name if it is different
-			if (appConfigDef.getNamingStrategy().isUriNameDistict(a.getActualName())) {
+			if (appConfigDef.getNamingStrategy().isUriNameDistinct(a.getActualName())) {
 				propNames.add(appConfigDef.getNamingStrategy().getUriName(a.getActualName()));
 			}
 		});
