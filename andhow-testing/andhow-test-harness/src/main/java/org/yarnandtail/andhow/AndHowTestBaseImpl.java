@@ -96,6 +96,7 @@ public class AndHowTestBaseImpl {
 	 * @return A JNDI context for setting properties via JNDI.
 	 * @throws NamingException If JNDI cannot be initiated.
 	 */
+	@Deprecated
 	public SimpleNamingContextBuilder getJndi() throws NamingException {
 		if (builder == null) {
 			builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
