@@ -23,7 +23,7 @@ public class IntType extends BaseValueType<Integer> {
      *
      * @return An instance of the {@link #IntType()}
      */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static IntType get() {
 		return instance();
 	}

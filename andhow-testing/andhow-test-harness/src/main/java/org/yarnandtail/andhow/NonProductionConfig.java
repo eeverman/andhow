@@ -117,7 +117,7 @@ public class NonProductionConfig {
 		 * @param group A group (a classe) to add to those known to AndHow.
 		 * @return This configuration instance for fluent configuration.
 		 */
-		@Deprecated(forRemoval = true)
+		@Deprecated
 		public N group(Class<?> group) {
 			return addOverrideGroup(group);
 		}
@@ -151,7 +151,7 @@ public class NonProductionConfig {
 		 * @param groups A collection of groups (classes) to add to those known to AndHow.
 		 * @return This configuration instance for fluent configuration.
 		 */
-		@Deprecated(forRemoval = true)
+		@Deprecated
 		public N groups(Collection<Class<?>> groups) {
 			return addOverrideGroups(groups);
 		}

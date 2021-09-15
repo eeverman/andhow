@@ -75,7 +75,7 @@ public final class AndHowNonProductionUtil {
 	 * don't have specific needs for the configuration, you can use
 	 * {@code AndHow.findConfiguration()}.
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static void forceRebuild(AndHowConfiguration config) {
 
 		AndHow ahInstance = getAndHowInstance();
@@ -127,7 +127,7 @@ public final class AndHowNonProductionUtil {
 	 * @param props
 	 * @return
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static Properties clone(Properties props) {
 		return (Properties)props.clone();
 	}
@@ -147,7 +147,7 @@ public final class AndHowNonProductionUtil {
 	 * Instead, use the <code>org.yarnandtail.andhow.junit5.Kill...</code>
 	 * annotations.
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static void destroyAndHowCore() {
 		if (getAndHowInstance() != null) {
 			setAndHowCore(null);

@@ -69,7 +69,7 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	 * @deprecated Use {@code KeyValuePairLoader.setKeyValuePairs(List<String>)} instead.
 	 * @param keyValuePairs
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public void setKeyValuePairs(String... keyValuePairs) {
 		this.setKeyValuePairs(keyValuePairs != null ? Arrays.asList(keyValuePairs) : null);
 	}

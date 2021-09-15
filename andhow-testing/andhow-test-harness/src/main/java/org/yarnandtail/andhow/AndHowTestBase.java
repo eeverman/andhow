@@ -19,7 +19,7 @@ import org.junit.*;
  * @deprecated Switch to JUnit5 and the annotations in the {@link org.yarnandtail.andhow.junit5}
  * package, which is better, safer and easier to use.
  */
-@Deprecated(forRemoval = true)
+@Deprecated
 public class AndHowTestBase extends AndHowTestBaseImpl {
 
 	/**

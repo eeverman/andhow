@@ -29,7 +29,7 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 	 *
 	 * @return An instance of the {@link #LocalDateTimeType()}
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static LocalDateTimeType get() {
 		return instance();
 	}

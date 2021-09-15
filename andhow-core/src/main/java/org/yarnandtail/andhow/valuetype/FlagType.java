@@ -23,7 +23,7 @@ public class FlagType extends BaseValueType<Boolean> {
      *
      * @return An instance of the {@link #FlagType()}
      */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static FlagType get() {
 		return instance();
 	}

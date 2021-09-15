@@ -23,7 +23,7 @@ public class DblType extends BaseValueType<Double> {
      *
      * @return An instance of the {@link #DblType()}
      */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	public static DblType get() {
 		return instance();
 	}

@@ -294,6 +294,6 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 * @deprecated This method will be removed in the next major release.
 	 * Use AndHow.instance() or AndHow.initialize()
 	 */
-	@Deprecated(forRemoval = true)
+	@Deprecated
 	void build();
 }
