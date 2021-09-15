@@ -23,7 +23,7 @@ public class BolType extends BaseValueType<Boolean> {
      *
      * @return An instance of the {@link #BolType()}
      */
-	@Deprecated()
+	@Deprecated(forRemoval = true)
 	public static BolType get() {
 		return instance();
 	}

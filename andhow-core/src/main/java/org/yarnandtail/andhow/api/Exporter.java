@@ -40,7 +40,7 @@ public interface Exporter {
 	 * @param definition
 	 * @param values
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	default void export(StaticPropertyConfigurationInternal definition, ValidatedValues values) {
 		return;
 	}

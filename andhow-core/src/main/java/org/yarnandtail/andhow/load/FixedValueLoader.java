@@ -46,7 +46,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	 * @deprecated Use {@code FixedValueLoader.setPropertyValues(List<PropertyValue>)} instead.
 	 * @param values
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public void setPropertyValues(PropertyValue... values) {
 		this.setPropertyValues(values != null ? Arrays.asList(values) : null);
 	}

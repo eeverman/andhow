@@ -302,7 +302,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
 	 * 	Property value validation errors.
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
 		return initialize(config);
 	}
@@ -321,7 +321,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
 	 * 	Property value validation errors.
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	private static AndHow initialize(AndHowConfiguration config) throws AppFatalException {
 
 		synchronized (LOCK) {
@@ -389,7 +389,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	 * @deprecated This method name was typod.  Please use isInitialized() instead.
 	 * @return
 	 */
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static boolean isInitialize() {
 		return isInitialized();
 	}

@@ -31,25 +31,25 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  *   ...My assertions
  * }
  * }</pre>
- * 
+ *
  * @author ericeverman
  */
 public class NonProductionConfig {
-	
+
 	/**
 	 * Returns a new instance of a {@code NonProductionConfig} implemented by
 	 * an implementing inner class.
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	public static NonProductionConfigImpl instance() {
 		return new NonProductionConfigImpl();
 	}
-	
+
 	public static final class NonProductionConfigImpl extends NonProductionConfigAbstract<NonProductionConfigImpl> {
-		
+
 	}
-	
+
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 
 		//
@@ -117,7 +117,7 @@ public class NonProductionConfig {
 		 * @param group A group (a classe) to add to those known to AndHow.
 		 * @return This configuration instance for fluent configuration.
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public N group(Class<?> group) {
 			return addOverrideGroup(group);
 		}
@@ -151,7 +151,7 @@ public class NonProductionConfig {
 		 * @param groups A collection of groups (classes) to add to those known to AndHow.
 		 * @return This configuration instance for fluent configuration.
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public N groups(Collection<Class<?>> groups) {
 			return addOverrideGroups(groups);
 		}

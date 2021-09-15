@@ -166,7 +166,7 @@ public class StdConfig {
 		 * @deprecated
 		 * @param properties
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public S setSystemProperties(Properties properties) {
 			systemProperties = properties;
 			return (S) this;
@@ -192,7 +192,7 @@ public class StdConfig {
 		 * @param newEnvProperties
 		 * @return
 		 */
-		@Deprecated
+		@Deprecated(forRemoval = true)
 		public S setEnvironmentProperties(Map<String, String> newEnvProperties) {
 
 			if (newEnvProperties != null) {

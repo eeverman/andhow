@@ -23,7 +23,7 @@ public class LngType extends BaseValueType<Long> {
      *
      * @return An instance of the {@link #LngType()}
      */
-	@Deprecated()
+	@Deprecated(forRemoval = true)
 	public static LngType get() {
 		return instance();
 	}
