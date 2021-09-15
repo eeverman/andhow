@@ -31,25 +31,25 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  *   ...My assertions
  * }
  * }</pre>
- * 
+ *
  * @author ericeverman
  */
 public class NonProductionConfig {
-	
+
 	/**
 	 * Returns a new instance of a {@code NonProductionConfig} implemented by
 	 * an implementing inner class.
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
 	public static NonProductionConfigImpl instance() {
 		return new NonProductionConfigImpl();
 	}
-	
+
 	public static final class NonProductionConfigImpl extends NonProductionConfigAbstract<NonProductionConfigImpl> {
-		
+
 	}
-	
+
 	public static abstract class NonProductionConfigAbstract<N extends StdConfigAbstract<N>> extends StdConfigAbstract<N> {
 
 		//
