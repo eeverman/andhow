@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>andhow</artifactId>
 	<packaging>jar</packaging>
-	
+
 	<dependencies>
 		<!--
 		Note that added dependencies will cause them to be included in the bundled
@@ -33,7 +33,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.1.1</version>
+				<version>3.2.4</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -47,6 +47,21 @@
 									<include>org.yarnandtail:andhow-annotation-processor</include>
 								</includes>
 							</artifactSet>
+							<filters>
+								<!-- Prevent dup MANIFEST file warning -->
+								<filter>
+									<artifact>org.yarnandtail:andhow-core</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>org.yarnandtail:andhow-annotation-processor</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
 							<createSourcesJar>true</createSourcesJar>
 							<keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
 						</configuration>
