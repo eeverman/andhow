@@ -3,14 +3,14 @@
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
 
 
-## New Release:  0.4.2, September, 2021 ([notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.2)).
+### New Release:  0.4.2, September, 2021 ([notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.2)).
 <img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's new logo"  align="left">
 
 More notes...
 
 
 ![Andhow Visual](andhow.gif)
-## AndHow!  strong.valid.simple.AppConfiguration
+### AndHow!  strong.valid.simple.AppConfiguration
 AndHow configures your application with strongly typed properties and detailed validation.
 AndHow makes configuration simple and flexible, both in production and in testing.
 
@@ -22,21 +22,21 @@ dependency injection framework.
 _**Learn more in the [User Guide](https://sites.google.com/view/andhow/user-guide) and
 [Sample Projects](https://github.com/eeverman/andhow-samples/tree/main)**_
 
-## Key Features
+### Key Features
 * **Strong Typing**
 * **Detailed validation**
 * **Simple to use and test**
 * **Use Java _public_ & _private_ to control configuration visibility**
 * **Validates _all_ property values at startup to _[Fail Fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf)_**
-* **Loads values from multiple sources (env. vars, system props, cmd line, prop files, JNDI, etc)**
+* **Loads values from multiple sources (env. vars, system props, cmd line, prop files, JNDI, and more)**
 * **Generates configuration template files based on application properties**
 
-## Questions / Discussion / Issues
+### Questions / Discussion / Issues
 * [User forum](https://groups.google.com/d/forum/andhowuser) for questions and help
 * [GitHub Discussions](https://github.com/eeverman/andhow/discussions) for feature &amp; planning discussions
 * [Issues](https://github.com/eeverman/andhow/issues) for bug reporting
 
-## Use it via Maven (available on Maven Central)
+### Use it via Maven (available on Maven Central)
 ```xml
 <dependency>
     <groupId>org.yarnandtail</groupId>
@@ -48,7 +48,7 @@ _**Learn more in the [User Guide](https://sites.google.com/view/andhow/user-guid
 [some considerations](https://sites.google.com/view/andhow/user-guide/java9-and-above) for Java 9+
 projects using Jigsaw Modules.**
 
-## Complete Usage Example
+### Complete Usage Example
 ```java
 package simple;
 import org.yarnandtail.andhow.property.*;
@@ -68,14 +68,14 @@ public class HelloWorld {
   }
 }
 ```
-[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)
-#### // 1 : Declare AndHow Properties
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)</kbd>
+##### // 1 : Declare AndHow Properties
 `StrProp` &amp; `IntProp` are AndHow `Property`s. 
 Properties and their values are constants, so they are always `static final`
 but may be `private` or any scope.  Properties are _**strongly typed**_, so their value,
 default value and validation are type specific.
 
-#### // 2 : Using AndHow Properties
+##### // 2 : Using AndHow Properties
 Properties are used just like static final constants with `.getValue()` tacked on:
 `NAME.getValue()` returns a `String`, `REPEAT_COUNT.getValue()` returns an `Integer`.
 
@@ -91,13 +91,12 @@ SIMPLE.HELLOWWORLD.repeat_count: 4
 Resulting in **`Hello, Kathy`** x4 - AndHow ignores capitalization when reading Property values.
 Unlike most configuration utilities, we didn't have to specify a 'name' for NAME.
 AndHow builds a logical name for each property by combining the
-canonical name of the containing class with the variable name, e.g.: \
-`[Java canonical class name].[AndHow Property name]` --&gt; `simple.HelloWorld.NAME` \
+canonical name of the containing class with the variable name, e.g.:<br/>
+`[Java canonical class name].[AndHow Property name]` --&gt; `simple.HelloWorld.NAME`<br/>
 Thus, naming isn't something you have to worry about and Java itself ensures name uniqueness.
+Let's extends this example a bit...
 
-Let's improve this example a bit...
-
-## Usage Example with validation and command line arguments
+### Adding validation and command line arguments
 ```java
 package simple;  // Imports left out for simplicity
 
@@ -121,8 +120,8 @@ public class HelloWorld2 {
   }
 }
 ```
-[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld2.java)
-#### // 1 : Declare AndHow Properties
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)</kbd>
+##### // 1 : Declare AndHow Properties with validation
 `Property` values can have validation.  At startup, AndHow _**discovers and validates
 all Properties in your entire application**_, ensuring that a mis-configuration application
 _[fails fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf)_ at startup, rather than
@@ -132,7 +131,7 @@ Placing `Property`'s in an interface is best practice for organization and acces
 Only code able to 'see' a `Property` can retrieve its value - standard Java visibility rules.
 Fields in an interface are implicitly `static final`, saving a bit of typing.
 
-#### // 2 : Add command line arguments
+##### // 2 : Add command line arguments
 AndHow loads Property values from several configuration sources in a
 [well established order](https://sites.google.com/view/andhow/user-guide/value-loaders).
 At startup, AndHow scans `System.Properties`, environment variables, JNDI values,
@@ -176,7 +175,8 @@ You can create a configuration template on demand by setting the `AHForceCreateS
 `java -DAHForceCreateSamples=true -cp [classpath] simple.HelloWorld2`
 
 Let's look at a larger, more enterprise-y example.
-## Example with a database connection, aliases and exports
+
+### Example with a database connection, aliases and exports
 In this example, assume we need to configure an ORM framework like [Hibernate](http://hibernate.org).
 3rd party frameworks have their own configuration property names and typically accept properties as
 a `Map` or `util.Properties`.
@@ -184,7 +184,7 @@ This example is in two parts:  A Handler class which might be an AWS Lambda, and
 Object) which stores data to a DB using Hibernate.
 
 ```java
-package simple;  // Assume all three classes are same pkg.  Imports left out for simplicity.
+package simple;  // Both classes are in 'simple'.  Imports left out for simplicity.
 
 public class SaleHandler {
 
@@ -202,8 +202,8 @@ public class SaleHandler {
   }
 }
 ```
-[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleHandler.java) \
-#### // 1 : Declare configuration Property's for this class
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleHandler.java)</kbd>
+##### // 1 : Declare configuration Property's for this class
 AndHow best practice:  **_Place Properties in the class that uses them_**. \
 This makes intuitive sense and there is no need to gather them all into a central _Config_ class -
 AndHow will find, load and validate them all **_and_** create a configuration template listing them all.
@@ -239,30 +239,29 @@ public class SaleDao {
   }
 }
 ```
-[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleDao.java) \
-#### Section // 3 : Declare DB connection Properties
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleDao.java)</kbd>
+##### // 3 : Declare DB connection Properties
 The Properties bundled together in `Db` are annotated with `@ManualExportAllowed`, allowing
 them to be exported to a `Map` or other structure.  `.aliasInAndOut()` adds an _in_ name just like
 'tax' above, but the name is also used when exporting (out).
 
-#### Section // 4 : Export Db properties to a java.util.Properties instance
+##### // 4 : Export Db properties to a java.util.Properties instance
 Property exports use the Java `stream()` API.  Exports are done at the class level:
 `AndHow.instance().export(class...)` specifies one or more `@ManualExportAllowed` annotated classes
-containing AndHow Properties.  `ExportCollector` has collectors that turn a stream of Properties
-into collections.  `ExportCollector.stringProperties("")` is a collector that turns AndHow
-Properties into `java.util.Properties` with String values (using "" for null values).
+containing AndHow Properties.  `ExportCollector` has collectors to turn a stream of Properties
+into collections: `ExportCollector.stringProperties("")` turns AndHow Properties into
+`java.util.Properties` with String values (using "" for null values).
 
-Since we specified alias _out_ names for the Db Properties, the aliases are used for the export.
-AndHow provides validation at startup, configuration from multiple sources, and more...
-and can do that for 3rd party frameworks!
+Since we specified alias _out_ names for the Db Properties, the _Hibernate_ compatible aliases are
+used for the export. AndHow provides validation at startup, configuration from multiple sources,
+and more...  and can do that for 3rd party frameworks!
 
-## Configuration by Tier
+### Configuration by Tier
+... maybe a link to a sample
 
-## Testing Applications with AndHow
-Testing can be complicated:  One configuration for unit testing, another for integration testing.
-Ideally an application would be tested with many combinations of configurations.  AndHow makes this easy.
-
-Lets test the `SaleHandler` above and assume there is an `andhow.properties' file like this:
+### Testing Applications with AndHow
+AndHow makes testing with multiple configurations easy. Let's test the `SaleHandler` from above and
+assume an `andhow.properties' file like this:
 ```properties
 simple.SaleDao.Db.PWD = changeme
 simple.SaleDao.Db.URL = jdbc://mydb
@@ -278,23 +277,27 @@ We can verify the tax rate is set as expected:
     assertEquals(new BigDecimal("11.10"), handler.handle(BigDecimal.TEN));
   }
 ```
-Lets test the app with the tax rate at 12%:
+Now lets test the handler with the tax rate configured to 12%:
 ```java
-  @Test @KillAndHowBeforeThisTest
+  @Test @KillAndHowBeforeThisTest  // 1 'Kill' the current AndHow configuration
   public void verifyTaxRateAt_12Percent() throws Exception {
 
+    // 2 Set a new configured value for TAX_RATE
     AndHow.findConfig().addFixedValue(SaleHandler.Config.TAX_RATE, new BigDecimal(".12"));
 
     SaleHandler handler = new SaleHandler();
 
     // Total sale should be 10.00 + (10.00 * .12)
     assertEquals(new BigDecimal("11.20"), handler.handle(BigDecimal.TEN));
-  }
+  }  // 3 Cleanup after the test
 ```
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/test/java/simple/SaleHandlerTest.java)</kbd>\
+##### // 1 : 'Kill' the current AndHow configuration
 The annotation `@KillAndHowBeforeThisTest` erases AndHow's state before the test.
+##### // 2 : Set a new configured value for TAX_RATE
 `AndHow.findConfig()` grabs the configuration of AndHow itself to add a 'fixed value' for `TAX_RATE`,
 ignoring any other configured value for that property.
-
+##### // 3 : Cleanup after the test
 The tax rate is `.12` just for this test.  When the test is done, AndHow is restored to
 its previous state.  This isn't allowed in production:  Remember, **_AndHow Property values are
 constant and once initialized at startup, do not change_**.  The `@KillAndHow...` annotation uses
