@@ -11,19 +11,25 @@ More notes...
 
 ![Andhow Visual](andhow.gif)
 ## AndHow!  strong.valid.simple.AppConfiguration
-AndHow is an easy to use configuration framework with strong typing and detailed 
-validation for web apps, command line or any application environment.
+AndHow configures your application with strongly typed properties and detailed validation.
+AndHow makes configuration simple and flexible, both in production and in testing.
 
-_**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
+Startup times are fast because AndHow does most of its work _at compile time_, making it ideal for
+lambda functions and utilities where startup time is important.
+AndHow is a good solution for any app that needs configuration, but does not need a full-blown
+dependency injection framework.
+
+_**Learn more in the [User Guide](https://sites.google.com/view/andhow/user-guide) and
+[Sample Projects](https://github.com/eeverman/andhow-samples/tree/main)**_
 
 ## Key Features
 * **Strong Typing**
 * **Detailed validation**
-* **Simple to use**
+* **Simple to use and test**
 * **Use Java _public_ & _private_ to control configuration visibility**
-* **Validates _all_ property values at startup to _[Fail Fast](http://www.practical-programming.org/ppl/docs/articles/fail_fast_principle/fail_fast_principle.html)_**
-* **Loads values from multiple sources (JNDI, env vars, prop files, etc)**
-* **Generates configuration sample file based on  application properties**
+* **Validates _all_ property values at startup to _[Fail Fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf)_**
+* **Loads values from multiple sources (env. vars, system props, cmd line, prop files, JNDI, etc)**
+* **Generates configuration template files based on application properties**
 
 ## Questions / Discussion / Issues
 * [User forum](https://groups.google.com/d/forum/andhowuser) for questions and help
@@ -41,9 +47,6 @@ _**Learn more at the [AndHow main site](https://sites.google.com/view/andhow)**_
 **AndHow can be used in projects with Java 8 - 16. There are
 [some considerations](https://sites.google.com/view/andhow/user-guide/java9-and-above) for Java 9+
 projects using Jigsaw Modules.**
-
-_**More usage examples and documentation
-are available at the [AndHow main site](https://sites.google.com/view/andhow)**_
 
 ## Complete Usage Example
 ```java
@@ -65,7 +68,7 @@ public class HelloWorld {
   }
 }
 ```
-[Full code in AndHow samples]()
+[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)
 #### // 1 : Declare AndHow Properties
 `StrProp` &amp; `IntProp` are AndHow `Property`s. 
 Properties and their values are constants, so they are always `static final`
@@ -118,7 +121,7 @@ public class HelloWorld2 {
   }
 }
 ```
-[Full code in AndHow samples]()
+[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld2.java)
 #### // 1 : Declare AndHow Properties
 `Property` values can have validation.  At startup, AndHow _**discovers and validates
 all Properties in your entire application**_, ensuring that a mis-configuration application
@@ -199,7 +202,7 @@ public class SaleHandler {
   }
 }
 ```
-[Full code in AndHow samples]() \
+[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleHandler.java) \
 #### // 1 : Declare configuration Property's for this class
 AndHow best practice:  **_Place Properties in the class that uses them_**. \
 This makes intuitive sense and there is no need to gather them all into a central _Config_ class -
@@ -236,7 +239,7 @@ public class SaleDao {
   }
 }
 ```
-[Full code in AndHow samples]() \
+[Full code in AndHow samples](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/main/java/simple/SaleDao.java) \
 #### Section // 3 : Declare DB connection Properties
 The Properties bundled together in `Db` are annotated with `@ManualExportAllowed`, allowing
 them to be exported to a `Map` or other structure.  `.aliasInAndOut()` adds an _in_ name just like
