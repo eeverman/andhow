@@ -291,7 +291,7 @@ Now lets test the handler with the tax rate configured to 12%:
     assertEquals(new BigDecimal("11.20"), handler.handle(BigDecimal.TEN));
   }  // 3 Cleanup after the test
 ```
-<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/test/java/simple/SaleHandlerTest.java)</kbd>\
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/02-sales-handler/src/test/java/simple/SaleHandlerTest.java)</kbd>
 ##### // 1 : 'Kill' the current AndHow configuration
 The annotation `@KillAndHowBeforeThisTest` erases AndHow's state before the test.
 ##### // 2 : Set a new configured value for TAX_RATE
