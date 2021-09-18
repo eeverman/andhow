@@ -125,7 +125,7 @@ public class HelloWorld2 {
 #### // 1 : Declare AndHow Properties
 `Property` values can have validation.  At startup, AndHow _**discovers and validates
 all Properties in your entire application**_, ensuring that a mis-configuration application
-[fails fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf) at startup, rather than
+_[fails fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf)_ at startup, rather than
 mysteriously failing later.
 
 Placing `Property`'s in an interface is best practice for organization and access control.
