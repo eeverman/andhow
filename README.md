@@ -125,7 +125,7 @@ public class HelloWorld2 {
 #### // 1 : Declare AndHow Properties
 `Property` values can have validation.  At startup, AndHow _**discovers and validates
 all Properties in your entire application**_, ensuring that a mis-configuration application
-[fails fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf)_ at startup, rather than
+[fails fast](https://www.martinfowler.com/ieeeSoftware/failFast.pdf) at startup, rather than
 mysteriously failing later.
 
 Placing `Property`'s in an interface is best practice for organization and access control.
@@ -260,10 +260,45 @@ and can do that for 3rd party frameworks!
 
 ## Testing Applications with AndHow
 Testing can be complicated:  One configuration for unit testing, another for integration testing.
-Ideally an application would be tested with many configurations.
+Ideally an application would be tested with many combinations of configurations.  AndHow makes this easy.
 
-AndHow makes this easy...
+Lets test the `SaleHandler` above and assume there is an `andhow.properties' file like this:
+```properties
+simple.SaleDao.Db.PWD = changeme
+simple.SaleDao.Db.URL = jdbc://mydb
+simple.SaleHandler.Config.TAX_RATE = .11
+```
+We can verify the tax rate is set as expected:
+```java
+  @Test  //This verifies that the tax rate is .11 from the andhow.properties file
+  public void defaultConfigTaxRateShouldBe_11Percent() throws Exception {
+    SaleHandler handler = new SaleHandler();
 
+    // Total sale should be 10.00 + (10.00 * .11)
+    assertEquals(new BigDecimal("11.10"), handler.handle(BigDecimal.TEN));
+  }
+```
+Lets test the app with the tax rate at 12%:
+```java
+  @Test @KillAndHowBeforeThisTest
+  public void verifyTaxRateAt_12Percent() throws Exception {
+
+    AndHow.findConfig().addFixedValue(SaleHandler.Config.TAX_RATE, new BigDecimal(".12"));
+
+    SaleHandler handler = new SaleHandler();
+
+    // Total sale should be 10.00 + (10.00 * .12)
+    assertEquals(new BigDecimal("11.20"), handler.handle(BigDecimal.TEN));
+  }
+```
+The annotation `@KillAndHowBeforeThisTest` erases AndHow's state before the test.
+`AndHow.findConfig()` grabs the configuration of AndHow itself to add a 'fixed value' for `TAX_RATE`,
+ignoring any other configured value for that property.
+
+The tax rate is `.12` just for this test.  When the test is done, AndHow is restored to
+its previous state.  This isn't allowed in production:  Remember, **_AndHow Property values are
+constant and once initialized at startup, do not change_**.  The `@KillAndHow...` annotation uses
+reflection to bend the rules to make testing easy.
 
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
