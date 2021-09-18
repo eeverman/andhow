@@ -308,6 +308,8 @@ reflection to bend the rules to make testing easy.
 * Example of auto-exports (automatically export property values to System.Properties for 3rd party frameworks that receive configuration via Sys Props)
 * Example of testing where the `andhow.properties` on the main classpath is overridden by the one on the test classpath (a basic feature of Java + maven, but important for testing)
 * Change the name of the `andhow.properties` file to `[MyAppName].properties`
+* Examples w/ tests showing properties being set via environment vars, System.Properties, JNDI, etc. and the order of precedence for them
+* Some real start-up performance numbers...
 
 
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
