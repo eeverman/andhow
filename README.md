@@ -256,9 +256,6 @@ Since we specified alias _out_ names for the Db Properties, the _Hibernate_ comp
 used for the export. AndHow provides validation at startup, configuration from multiple sources,
 and more...  and can do that for 3rd party frameworks!
 
-### Configuration by Tier
-... maybe a link to a sample
-
 ### Testing Applications with AndHow
 AndHow makes testing with multiple configurations easy. Let's test the `SaleHandler` from above and
 assume an `andhow.properties' file like this:
@@ -302,6 +299,16 @@ The tax rate is `.12` just for this test.  When the test is done, AndHow is rest
 its previous state.  This isn't allowed in production:  Remember, **_AndHow Property values are
 constant and once initialized at startup, do not change_**.  The `@KillAndHow...` annotation uses
 reflection to bend the rules to make testing easy.
+
+### Other potential examples to include (possibly just by listing and linking to them)
+* Configuration by deployment Tier
+* Using multiple properties files to split up configuration for larger applications
+* Loading property values from a file on the file system (not classpath)
+* Customizing configuration [source loading order](https://sites.google.com/view/andhow/user-guide/value-loaders) (e.g. remove JNDI from the list loaders, change priority order of loading, etc.)
+* Example of auto-exports (automatically export property values to System.Properties for 3rd party frameworks that receive configuration via Sys Props)
+* Example of testing where the `andhow.properties` on the main classpath is overridden by the one on the test classpath (a basic feature of Java + maven, but important for testing)
+* Change the name of the `andhow.properties` file to `[MyAppName].properties`
+
 
 _**For more examples and documentation, visit the [AndHow main site](https://sites.google.com/view/andhow)**_
 
