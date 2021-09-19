@@ -309,6 +309,7 @@ reflection to bend the rules to make testing easy.
 * Example of testing where the `andhow.properties` on the main classpath is overridden by the one on the test classpath (a basic feature of Java + maven, but important for testing)
 * Change the name of the `andhow.properties` file to `[MyAppName].properties`
 * Examples w/ tests showing properties being set via environment vars, System.Properties, JNDI, etc. and the order of precedence for them
+* How to configure AndHow before AndHow configures you(r application)
 * Some real start-up performance numbers...
 
 
