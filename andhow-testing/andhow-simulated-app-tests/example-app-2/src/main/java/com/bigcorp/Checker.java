@@ -20,7 +20,7 @@ public class Checker {
 				mustEqual("http", "https").build();
 		StrProp SERVER = StrProp.builder().mustBeNonNull().build();
 		IntProp PORT = IntProp.builder().mustBeNonNull().
-				mustBeGreaterThanOrEqualTo(80).mustBeLessThanOrEqualTo(8888).build();
+				greaterThanOrEqualTo(80).lessThanOrEqualTo(8888).build();
 		StrProp PATH = StrProp.builder().mustStartWith("/").build();
 	}
 

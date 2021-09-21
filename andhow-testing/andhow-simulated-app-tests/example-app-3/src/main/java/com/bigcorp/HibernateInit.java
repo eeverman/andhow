@@ -33,9 +33,9 @@ public class HibernateInit {
 				.mustEqual("REPEATABLE_READ", "TRANSACTION_REPEATABLE_READ")
 				.defaultValue("REPEATABLE_READ").build();
 		IntProp INIT_POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.initial_pool_size")
-				.defaultValue(1).mustBeLessThan(20).build();
+				.defaultValue(1).lessThan(20).build();
 		IntProp POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.pool_size")
-				.defaultValue(20).mustBeLessThan(200).build();
+				.defaultValue(20).lessThan(200).build();
 	}
 
 	@ManualExportNotAllowed

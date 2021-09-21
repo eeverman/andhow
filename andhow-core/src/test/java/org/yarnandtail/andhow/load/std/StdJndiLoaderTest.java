@@ -21,31 +21,31 @@ import org.yarnandtail.andhow.util.NameUtil;
  * @author ericeverman
  */
 public class StdJndiLoaderTest extends AndHowTestBase {
-	
+
 	public interface ValidParams {
 		//Strings
 		StrProp STR_XXX = StrProp.builder().mustEndWith("XXX").build();
-		IntProp INT_TEN = IntProp.builder().mustBeGreaterThan(10).build();
+		IntProp INT_TEN = IntProp.builder().greaterThan(10).build();
 
 	}
-	
+
 	@Test
 	public void testSplit() {
 		StdJndiLoader loader = new StdJndiLoader();
-		
+
 		//This is the default
 		List<String> result = loader.split("java:comp/env/, \"\",");
 		assertEquals(2, result.size());
 		assertEquals("java:comp/env/", result.get(0));
 		assertEquals("", result.get(1));
-		
+
 		//Should leave prefix completely unmodified (not add a trailing slash)
 		result = loader.split(" comp/env , , \"_\",x/y/z");
 		assertEquals(3, result.size());
 		assertEquals("comp/env", result.get(0));
 		assertEquals("_", result.get(1));
 		assertEquals("x/y/z", result.get(2));
-		
+
 		//Should be able to indicate an empty string and whitespace w/ double quotes.
 		result = loader.split(" comp/env , \"\" , \" \"");
 		assertEquals(3, result.size());
@@ -57,39 +57,39 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 	@Test
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		jndi.bind("java:comp/env/" + 
+
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
-		jndi.bind("" + 
+		jndi.bind("" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL)), "TRUE");
-		jndi.bind("" + 
+		jndi.bind("" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), "-999");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "999");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), "-999");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL)), "999");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
 		jndi.activate();
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
@@ -102,10 +102,10 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
-	
+
 	@Test
 	public void testHappyPathFromStringsCompEnvAsClasspath() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test");
@@ -120,12 +120,12 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01), "2007-11-02T00:00");
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
 		jndi.activate();
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
@@ -140,31 +140,31 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
-	
+
 	@Test
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		jndi.bind("java:/test/" + 
+
+		jndi.bind("java:/test/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:/test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
 		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), "false");
-		jndi.bind("java:test/" + 
+		jndi.bind("java:test/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), "true");
 		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
 		jndi.bind("java:myapp/root/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should still work
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
 				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
@@ -173,17 +173,17 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(-999, SimpleParams.INT_TEN.getValue());
 		assertEquals(999, SimpleParams.INT_NULL.getValue());
 	}
-	
+
 	@Test
 	public void testHappyPathFromStringsFromAddedAndReplacementNonStdPaths() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		jndi.bind("java:zip/" + 
+
+		jndi.bind("java:zip/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
 		jndi.bind("java:xy/z/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
-		jndi.bind("java:/test/" + 
+		jndi.bind("java:/test/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE)), "false");
 		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE), "true");
 		jndi.bind("java:test/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), "TRUE");
@@ -191,15 +191,15 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		//This should NOT work
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
 		jndi.activate();
-		
-		
+
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.STANDARD_JNDI_ROOTS, "java:zip/,java:xy/z/")
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/  ,  ,java:test/ , java:myapp/root/")
 				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
@@ -208,33 +208,33 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(-999, SimpleParams.INT_TEN.getValue());
 		assertNull(SimpleParams.INT_NULL.getValue());
 	}
-	
+
 	@Test
 	public void testHappyPathFromObjectsCompEnv() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
-		jndi.bind("java:comp/env/" + 
+
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null");
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE), Boolean.TRUE);
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL)), Boolean.TRUE);
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN)), Integer.valueOf(-999));
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), Integer.valueOf(999));
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN)), Long.valueOf(-999));
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), Long.valueOf(999));
-		jndi.bind("java:comp/env/" + 
+		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
-		
+
 		jndi.activate();
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
 
@@ -250,33 +250,33 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_2007_10_01.getValue());
 		assertEquals(LocalDateTime.parse("2007-11-02T00:00"), SimpleParams.LDT_NULL.getValue());
 	}
-	
+
 	@Test
 	public void testHappyPathFromObjectsRoot() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL)), "not_null2");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_TRUE), Boolean.FALSE);
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_FALSE)), Boolean.TRUE);
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), -9999);
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)),9999);
-		
+
 		jndi.activate();
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
 
 		AndHow.setConfig(config);
-		
-		
+
+
 		assertEquals("test2", SimpleParams.STR_BOB.getValue());
 		assertEquals("not_null2", SimpleParams.STR_NULL.getValue());
 		assertEquals(false, SimpleParams.FLAG_TRUE.getValue());
@@ -285,25 +285,25 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(-9999, SimpleParams.INT_TEN.getValue());
 		assertEquals(9999, SimpleParams.INT_NULL.getValue());
 	}
-	
+
 	//
 	//
 	// Non-HappyPath
 	//
-	
+
 	@Test
 	public void testDuplicateValues() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
 
 		jndi.activate();
-		
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -317,20 +317,20 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(1, lps.size());
 		assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 	}
-	
+
 
 	@Test
 	public void testObjectConversionErrors() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), Long.valueOf(-9999));
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), Float.valueOf(22));
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), Integer.valueOf(-9999));
 		jndi.activate();
-		
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -348,15 +348,15 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertTrue(lps.get(2) instanceof LoaderProblem.ObjectConversionValueProblem);
 		assertEquals(SimpleParams.LNG_TEN, lps.get(2).getBadValueCoord().getProperty());
 	}
-	
+
 	@Test
 	public void testStringConversionErrors() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
 		jndi.activate();
@@ -378,19 +378,19 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertTrue(vps.get(2) instanceof LoaderProblem.StringConversionLoaderProblem);
 		assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
 	}
-	
+
 
 	@Test
 	public void testValidationIsEnforcedWhenExactTypeUsed() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), Integer.parseInt("9"));
-		jndi.bind("java:" + 
+		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(ValidParams.class, ValidParams.STR_XXX)), "YYY");
 		jndi.activate();
-		
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(ValidParams.class);
@@ -403,16 +403,16 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 		assertEquals(2, vps.size());
 	}
-	
+
 	@Test
 	public void testValidationIsEnforcedWhenConvertsionUsed() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		
+
 		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), "9");
 		jndi.activate();
-		
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(ValidParams.class);

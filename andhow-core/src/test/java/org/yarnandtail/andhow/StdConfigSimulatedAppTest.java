@@ -27,7 +27,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.StdConfigSimulatedAppTest.SampleRestClientGroup";
 	private static final String CLASSPATH_BEGINNING = "/org/yarnandtail/andhow/StdConfigSimulatedAppTest.";
 
-	
+
 	@Test
 	public void testAllValuesAreSetViaCmdLineArgAndPropFile() {
 
@@ -35,15 +35,15 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		String[] cmdLineArgs = new String[] {
 			GROUP_PATH + ".classpath_prop_file" + KVP_DELIMITER + CLASSPATH_BEGINNING + "all.props.speced.properties"
 		};
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
-		
+
 		AndHow.setConfig(config);
-		
+
 		assertEquals("/org/yarnandtail/andhow/StdConfigSimulatedAppTest.all.props.speced.properties",
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
 		assertAllPointsSpecedValues("testAllValuesAreSetViaCmdLineArgAndPropFile");
@@ -176,14 +176,14 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		assertFalse(SampleRestClientGroup.REQUEST_META_DATA.getValue(), failDesc);
 		assertTrue(SampleRestClientGroup.REQUEST_SUMMARY_DATA.getValue(), failDesc);
 	}
-	
+
 	@Test
 	public void testMinimumPropsAreSetViaCmdLineArgAndPropFile() {
 
 		String[] cmdLineArgs = new String[] {
 				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
-		};		
-				
+		};
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SampleRestClientGroup.class)
 				.setCmdLineArgs(cmdLineArgs)
@@ -191,7 +191,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 				.classpathPropertiesRequired();
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("/org/yarnandtail/andhow/StdConfigSimulatedAppTest.minimum.props.speced.properties",
 				SampleRestClientGroup.CLASSPATH_PROP_FILE.getValue());
 		assertEquals("aquarius.usgs.gov", SampleRestClientGroup.REST_HOST.getValue());
@@ -203,10 +203,10 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		assertFalse(SampleRestClientGroup.REQUEST_SUMMARY_DATA.getValue());	//a default
 
 	}
-	
+
 	@Test
 	public void testInvalidValuesViaCmdLineArgAndPropFile() throws Exception {
-		
+
 		SimpleNamingContextBuilder jndi = getJndi();
 		jndi.activate();
 
@@ -250,7 +250,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		StrProp CLASSPATH_PROP_FILE = StrProp.builder().desc("Classpath location of a properties file w/ props").build();
 		StrProp APP_NAME = StrProp.builder().aliasIn("app.name").aliasIn("app_name").build();
 		StrProp REST_HOST = StrProp.builder().mustMatchRegex(".*\\.usgs\\.gov") .mustBeNonNull().build();
-		IntProp REST_PORT = IntProp.builder().mustBeNonNull().mustBeGreaterThanOrEqualTo(80).mustBeLessThan(10000).build();
+		IntProp REST_PORT = IntProp.builder().mustBeNonNull().greaterThanOrEqualTo(80).lessThan(10000).build();
 		StrProp REST_SERVICE_NAME = StrProp.builder().defaultValue("query/").mustEndWith("/").build();
 		StrProp AUTH_KEY = StrProp.builder().mustBeNonNull().build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(2).build();
