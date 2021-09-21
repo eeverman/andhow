@@ -1,11 +1,7 @@
 package org.yarnandtail.andhow.property;
 
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.api.Problem;
-import org.yarnandtail.andhow.api.ProblemList;
 import org.yarnandtail.andhow.api.PropertyType;
-import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.valuetype.StrType;
 
 import java.util.stream.Collectors;
@@ -141,13 +137,13 @@ public class PropertyBaseTest extends PropertyTestBase {
 	//duplicate and overlapping alias in builder...
 
 	public interface Config {
-		StrProp STR1 = StrProp.builder().mustMatchRegex("[a-z]+")
+		StrProp STR1 = StrProp.builder().matches("[a-z]+")
 				.aliasIn("Str1In1").aliasIn("Str1In2")
 				.aliasOut("Str1Out1").aliasOut("Str1Out2")
 				.aliasInAndOut("Str1InOut1").aliasInAndOut("Str1InOut2")
 				.desc("Str1 Desc").helpText("Str1 Help").build();
 
-		StrProp STR2 = StrProp.builder().mustMatchRegex("[a-z]+").mustEqual("aa", "bb")
+		StrProp STR2 = StrProp.builder().matches("[a-z]+").oneOf("aa", "bb")
 				.aliasIn("Str2In1").aliasIn("Str2In1")	//duplicated
 				.build();
 

@@ -45,7 +45,7 @@ public class BaseForLoaderTests {
 		//Strings
 		StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
 		StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
-		StrProp STR_ENDS_WITH_XXX = StrProp.builder().mustEndWith("XXX").build();
+		StrProp STR_ENDS_WITH_XXX = StrProp.builder().endsWith("XXX").build();
 
 		//Some Numbers
 		LngProp LNG_TIME = LngProp.builder().aliasIn("lngIn").build();
