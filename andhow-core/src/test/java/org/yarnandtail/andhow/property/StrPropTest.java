@@ -57,20 +57,20 @@ public class StrPropTest extends PropertyTestBase {
 	}
 
 	public interface ValidationGroup {
-		StrProp USER_NAME = StrProp.builder().aliasInAndOut("name").matches("[a-z]+")
+		StrProp USER_NAME = StrProp.builder().aliasInAndOut("name").mustMatchRegex("[a-z]+")
 				.mustBeNonNull().desc("Lowercase Only").build();
 
-		StrProp GMAIL_ANY_CASE = StrProp.builder().endsWithIgnoringCase("@gmail.com")
+		StrProp GMAIL_ANY_CASE = StrProp.builder().mustEndWithIgnoreCase("@gmail.com")
 				.description("Ends w/ @gmail.com").build();
 
-		StrProp GMAIL_LOWER_CASE = StrProp.builder().endsWith("@gmail.com")
+		StrProp GMAIL_LOWER_CASE = StrProp.builder().mustEndWith("@gmail.com")
 				.description("Ends w/ '@gmail.com' and is case sensitive")
 				.helpText("helpMe").build();
 
-		StrProp ABC_ANY_CASE = StrProp.builder().startsWithIgnoringCase("abc")
+		StrProp ABC_ANY_CASE = StrProp.builder().mustStartWithIgnoreCase("abc")
 				.description("Starts with 'abc' of any case").build();
 
-		StrProp ABC_UPPER_CASE = StrProp.builder().startsWith("ABC")
+		StrProp ABC_UPPER_CASE = StrProp.builder().mustStartWith("ABC")
 				.description("Starts with 'ABC' exactly").build();
 	}
 }
