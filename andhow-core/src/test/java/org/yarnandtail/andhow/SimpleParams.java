@@ -30,7 +30,7 @@ public interface SimpleParams {
 	//Long
 	LngProp LNG_TEN = LngProp.builder().defaultValue(10L).build();
 	LngProp LNG_NULL = LngProp.builder().build();
-	LngProp LNG_LESS_TEN = LngProp.builder().mustBeLessThan(10L).build();
+	LngProp LNG_LESS_TEN = LngProp.builder().lessThan(10L).build();
 
 	//Double
 	DblProp DBL_TEN = DblProp.builder().defaultValue(10d).build();
