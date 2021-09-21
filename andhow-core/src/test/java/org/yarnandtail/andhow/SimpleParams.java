@@ -35,7 +35,7 @@ public interface SimpleParams {
 	//Double
 	DblProp DBL_TEN = DblProp.builder().defaultValue(10d).build();
 	DblProp DBL_NULL = DblProp.builder().build();
-	DblProp DBL_LESS_ZERO = DblProp.builder().mustBeLessThan(0).build();
+	DblProp DBL_LESS_ZERO = DblProp.builder().lessThan(0).build();
 
 	//LocalDateTime
 	LocalDateTimeProp LDT_2007_10_01 = LocalDateTimeProp.builder().defaultValue(LocalDateTime.parse("2007-10-01T00:00")).build();
