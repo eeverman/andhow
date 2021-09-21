@@ -65,13 +65,29 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
         }
 
         /**
+         * @deprecated Use {@code BigDecBuilder.greaterThan()}
+         */
+        @Deprecated
+        public BigDecBuilder mustBeGreaterThan(BigDecimal reference) {
+            return this.greaterThan(reference);
+        }
+
+        /**
          * The property must be greater than the reference
          * @param reference value the property must be greater than
          * @return the builder instance
          */
-        public BigDecBuilder mustBeGreaterThan(BigDecimal reference) {
+        public BigDecBuilder greaterThan(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThan(reference));
             return instance;
+        }
+
+        /**
+         * @deprecated Use {@code BigDecBuilder.greaterThanOrEqualTo()}
+         */
+        @Deprecated
+        public BigDecBuilder mustBeGreaterThanOrEqualTo(BigDecimal reference) {
+            return this.greaterThanOrEqualTo(reference);
         }
 
         /**
@@ -79,9 +95,17 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
          * @param reference value the property must be greater than or equal to
          * @return the builder instance
          */
-        public BigDecBuilder mustBeGreaterThanOrEqualTo(BigDecimal reference) {
+        public BigDecBuilder greaterThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.GreaterThanOrEqualTo(reference));
             return instance;
+        }
+
+        /**
+         * @deprecated Use {@code BigDecBuilder.lessThan()}
+         */
+        @Deprecated
+        public BigDecBuilder mustBeLessThan(BigDecimal reference) {
+            return this.lessThan(reference);
         }
 
         /**
@@ -89,9 +113,17 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
          * @param reference value the property must be less than
          * @return the builder instance
          */
-        public BigDecBuilder mustBeLessThan(BigDecimal reference) {
+        public BigDecBuilder lessThan(BigDecimal reference) {
             validation(new BigDecValidator.LessThan(reference));
             return instance;
+        }
+
+        /**
+         * @deprecated Use {@code BigDecBuilder.lessThanOrEqualTo()}
+         */
+        @Deprecated
+        public BigDecBuilder mustBeLessThanOrEqualTo(BigDecimal reference) {
+            return this.lessThanOrEqualTo(reference);
         }
 
         /**
@@ -99,7 +131,7 @@ public class BigDecProp extends PropertyBase<BigDecimal> {
          * @param reference value the property must be less than or equal to
          * @return the builder instance
          */
-        public BigDecBuilder mustBeLessThanOrEqualTo(BigDecimal reference) {
+        public BigDecBuilder lessThanOrEqualTo(BigDecimal reference) {
             validation(new BigDecValidator.LessThanOrEqualTo(reference));
             return instance;
         }
