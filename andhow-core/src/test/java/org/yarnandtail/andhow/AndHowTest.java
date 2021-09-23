@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * When the AndHow.instance(config) method is removed, this test will need to be
  * updated to call the private AndHow.initialize(config).
- * 
+ *
  * @author ericeverman
  */
 public class AndHowTest extends AndHowTestBase {
@@ -39,28 +39,28 @@ public class AndHowTest extends AndHowTestBase {
 	ArrayList<Class<?>> configPtGroups = new ArrayList();
 	Map<Property<?>, Object> startVals = new HashMap();
 	String[] cmdLineArgsWFullClassName = new String[0];
-	
+
 	public static interface RequiredParams {
 		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").mustBeNonNull().build();
-		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().mustStartWith("XYZ").build();
+		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().startsWith("XYZ").build();
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).mustBeNonNull().build();
 		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).mustBeNonNull().build();
 		FlagProp FLAG_NULL = FlagProp.builder().mustBeNonNull().build();
 	}
-	
+
 	@BeforeEach
 	public void setup() throws Exception {
-		
+
 		configPtGroups.clear();
 		configPtGroups.add(SimpleParams.class);
-		
+
 		startVals.clear();
 		startVals.put(SimpleParams.STR_BOB, "test");
 		startVals.put(SimpleParams.STR_NULL, "not_null");
 		startVals.put(SimpleParams.FLAG_TRUE, Boolean.FALSE);
 		startVals.put(SimpleParams.FLAG_FALSE, Boolean.TRUE);
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
-		
+
 		cmdLineArgsWFullClassName = new String[] {
 			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
 			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
@@ -68,7 +68,7 @@ public class AndHowTest extends AndHowTestBase {
 			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
 			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
 		};
-		
+
 	}
 
 	@Test
@@ -243,16 +243,16 @@ public class AndHowTest extends AndHowTestBase {
 		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
 		assertSame(config2, initLoopEx.getSecondInit().getConfig());
 	}
-	
+
 	@Test
 	public void testCmdLineLoaderUsingClassBaseName() {
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
-		
+
 		AndHow.instance(config);
-		
+
 		assertTrue(AndHow.getInitializationTrace().length > 0);
 		//STR_BOB (Set to 'test')
 		assertEquals("test", SimpleParams.STR_BOB.getValue());
@@ -285,17 +285,17 @@ public class AndHowTest extends AndHowTestBase {
 		assertNull(SimpleParams.LDT_NULL.getValue());
 
 	}
-	
+
 	/**
 	 * This is really testing how the NonProductionConfig works - how can this be
 	 * targeted to the init config?
 	 */
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
-		
+
 		KeyValuePairLoader kvpl = new KeyValuePairLoader();
 		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
-		
+
 		try {
 
 			AndHowConfiguration config = AndHowTestConfig.instance()
@@ -304,54 +304,54 @@ public class AndHowTest extends AndHowTestBase {
 
 			AndHow.setConfig(config);
 			AndHow.instance();
-			
+
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ConstructionProblem.class).size());
 			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
-			
+
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
 			assertEquals(kvpl, dl.getLoader());
 			assertTrue(ce.getSampleDirectory().length() > 0);
-			
+
 			File sampleDir = new File(ce.getSampleDirectory());
 			assertTrue(sampleDir.exists());
 			assertTrue(sampleDir.listFiles().length > 0);
 		}
 	}
-	
+
 	@Test
 	public void testCmdLineLoaderMissingRequiredParamShouldThrowAConfigException() {
-		
+
 		try {
 				AndHowConfiguration config = AndHowTestConfig.instance()
 					.addOverrideGroups(configPtGroups)
 					.addOverrideGroup(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
-				
+
 				AndHow.instance(config);
-			
+
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(RequirementProblem.class).size());
 			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(RequirementProblem.class).get(0).getPropertyCoord().getProperty());
 		}
 	}
-	
+
 	@Test
 	public void testInvalidValuesShouldCauseValidationException() {
-		
+
 		String baseName = AndHowTest.class.getCanonicalName();
 		baseName += "." + RequiredParams.class.getSimpleName() + ".";
-		
+
 		try {
 				AndHowConfiguration config = AndHowTestConfig.instance()
 					.addOverrideGroup(RequiredParams.class)
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
-				
+
 				AndHow.instance(config);
-			
+
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ValueProblem.class).size());
@@ -375,5 +375,5 @@ public class AndHowTest extends AndHowTestBase {
 		assertTrue(startTime <= init.getTimeStamp());
 		assertTrue(endTime >= init.getTimeStamp());
 	}
-	
+
 }
