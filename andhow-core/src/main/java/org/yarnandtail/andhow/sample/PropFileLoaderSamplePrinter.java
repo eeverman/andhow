@@ -59,7 +59,7 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 			);
 		} else {
 			tb.addLine(
-					TextUtil.format("{} = [{}]", 
+					TextUtil.format("{} =",
 						propCanonName, 
 						prop.getValueType().getDestinationType().getSimpleName())
 			);
