@@ -74,4 +74,8 @@ public class StdMainStringArgsLoader extends KeyValuePairLoader
 		unknownPropertyAProblem = false;
 	}
 
+	@Override
+	public String getSpecificLoadDescription() {
+		return "main(String[] args)";
+	}
 }
