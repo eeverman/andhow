@@ -20,46 +20,46 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author ericeverman
  */
 public class PropFileLoaderSamplePrinterTest {
-	
+
 	StaticPropertyConfigurationMutable config;
 	GroupProxyMutable groupProxy1;
-	
+
 	public static interface Config {
 		IntProp MY_PROP1 = IntProp.builder().build();
 		StrProp MY_PROP2 = StrProp.builder().defaultValue("La la la").desc("mp description")
-				.helpText("Long text on how to use the property").mustStartWith("La").mustEndWith("la")
+				.helpText("Long text on how to use the property").startsWith("La").endsWith("la")
 				.mustBeNonNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
 	}
-	
+
 	@BeforeEach
 	public void setup() {
 		config = new StaticPropertyConfigurationMutable(new CaseInsensitiveNaming());
-		
+
 		groupProxy1 = new GroupProxyMutable(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName(),
 				PropFileLoaderSamplePrinterTest.class.getCanonicalName() + "$Config"
 		);
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP1", Config.MY_PROP1));
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP2", Config.MY_PROP2));
-		
+
 		assertNull(config.addProperty(groupProxy1, Config.MY_PROP1));
 		assertNull(config.addProperty(groupProxy1, Config.MY_PROP2));
 
 	}
-	
+
 
 	@Test
 	public void generalTest() throws UnsupportedEncodingException {
-		
+
 		TestPrintStream out = new TestPrintStream();
 		PropFileLoaderSamplePrinter printer = new PropFileLoaderSamplePrinter();
 		String[] lines;	//The output line array
-		
-		
+
+
 		//Print Sample start
 		out.reset();
 		printer.printSampleStart(config, out);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(6, lines.length);
@@ -69,11 +69,11 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("# Note: When reading property names, matching is done in a case insensitive way, so 'Bob'", lines[3]);
 		assertEquals("# 	would match 'bOB'.", lines[4]);
 		assertEquals("# " + TextUtil.repeat("##", 45), lines[5]);
-		
+
 		//Print group header
 		out.reset();
 		printer.printPropertyGroupStart(config, out, groupProxy1);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(2, lines.length);
@@ -81,11 +81,11 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals(
 				"# Property Group " + PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName(),
 				lines[1]);
-		
+
 		//Print MY_PROP1
 		out.reset();
 		printer.printProperty(config, out, groupProxy1, Config.MY_PROP1);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(3, lines.length);
@@ -95,11 +95,11 @@ public class PropFileLoaderSamplePrinterTest {
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
 						".MY_PROP1 = [Integer]",
 				lines[2]);
-		
+
 		//Print MY_PROP2
 		out.reset();
 		printer.printProperty(config, out, groupProxy1, Config.MY_PROP2);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(9, lines.length);
@@ -115,20 +115,20 @@ public class PropFileLoaderSamplePrinterTest {
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
 						".MY_PROP2 = La la la",
 				lines[8]);
-		
+
 		//Print group closing (should be empty line)
 		out.reset();
 		printer.printPropertyGroupEnd(config, out, groupProxy1);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(1, lines.length);
 		assertEquals("", lines[0]);
-		
+
 		//Print file closing (should be empty line)
 		out.reset();
 		printer.printSampleEnd(config, out);
-		
+
 		//System.out.println(out.getTextAsString());
 		lines = out.getTextAsLines();
 		assertEquals(1, lines.length);
@@ -183,5 +183,5 @@ public class PropFileLoaderSamplePrinterTest {
 	@Test
 	public void testGetSampleFileExtension() {
 	}
-	
+
 }

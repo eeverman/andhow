@@ -17,11 +17,11 @@ public class Checker {
 	// - Its a best practice to group AndHow Properties into an interface.
 	interface Config {
 		StrProp PROTOCOL = StrProp.builder().mustBeNonNull().
-				mustEqual("http", "https").build();
+				oneOf("http", "https").build();
 		StrProp SERVER = StrProp.builder().mustBeNonNull().build();
 		IntProp PORT = IntProp.builder().mustBeNonNull().
 				greaterThanOrEqualTo(80).lessThanOrEqualTo(8888).build();
-		StrProp PATH = StrProp.builder().mustStartWith("/").build();
+		StrProp PATH = StrProp.builder().startsWith("/").build();
 	}
 
 	/**

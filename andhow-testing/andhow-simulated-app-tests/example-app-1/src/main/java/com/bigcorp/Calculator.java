@@ -13,7 +13,7 @@ public class Calculator {
 
 	//The AndHow configuration Property to select between two modes (doesn't have to be public)
 	public static final StrProp MODE = StrProp.builder()
-			.mustBeNonNull().mustEqual("DOUBLE", "FLOAT").build();
+			.mustBeNonNull().oneOf("DOUBLE", "FLOAT").build();
 
 	/**
 	 * Do the calculation, but choose which implementation to use based on CALC_MODE

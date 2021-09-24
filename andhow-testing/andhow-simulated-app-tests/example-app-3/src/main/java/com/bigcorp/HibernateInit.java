@@ -24,13 +24,13 @@ public class HibernateInit {
 		StrProp DRIVER = StrProp.builder().aliasInAndOut("hibernate.connection.driver_class")
 				.mustBeNonNull().build();
 		StrProp CONN_URL = StrProp.builder().aliasInAndOut("hibernate.connection.url")
-				.mustBeNonNull().mustStartWith("jdbc:").build();
+				.mustBeNonNull().startsWith("jdbc:").build();
 		StrProp USER = StrProp.builder().aliasInAndOut("hibernate.connection.username")
 				.mustBeNonNull().build();
 		StrProp PWD = StrProp.builder().aliasInAndOut("hibernate.connection.password")
 				.mustBeNonNull().build();
 		StrProp ISOLATION = StrProp.builder().aliasInAndOut("hibernate.connection.isolation")
-				.mustEqual("REPEATABLE_READ", "TRANSACTION_REPEATABLE_READ")
+				.oneOf("REPEATABLE_READ", "TRANSACTION_REPEATABLE_READ")
 				.defaultValue("REPEATABLE_READ").build();
 		IntProp INIT_POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.initial_pool_size")
 				.defaultValue(1).lessThan(20).build();

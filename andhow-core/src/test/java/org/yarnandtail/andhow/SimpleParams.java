@@ -15,7 +15,7 @@ public interface SimpleParams {
 	//Strings
 	StrProp STR_BOB = StrProp.builder().aliasIn("String_Bob").aliasInAndOut("Stringy.Bob").defaultValue("bob").build();
 	StrProp STR_NULL = StrProp.builder().aliasInAndOut("String_Null").build();
-	StrProp STR_END_XXX = StrProp.builder().mustEndWith("XXX").build();
+	StrProp STR_END_XXX = StrProp.builder().endsWith("XXX").build();
 
 	//Flags
 	FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
