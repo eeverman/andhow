@@ -88,6 +88,7 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	/**
 	 * @deprecated Use {@code PropertyBuilderBase.notNull()}
 	 */
+	@Deprecated
 	public B mustBeNonNull() {
 		return this.notNull();
 	}
