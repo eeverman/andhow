@@ -147,7 +147,7 @@ public class PropertyBaseTest extends PropertyTestBase {
 				.aliasIn("Str2In1").aliasIn("Str2In1")	//duplicated
 				.build();
 
-		StrProp STR3 = StrProp.builder().defaultValue("xxx").mustBeNonNull()
+		StrProp STR3 = StrProp.builder().defaultValue("xxx").notNull()
 				.aliasIn("Str3").aliasIn("Str3")	//duplicated
 				.aliasInAndOut("Str3") //duplicated
 				.build();

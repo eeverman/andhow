@@ -106,7 +106,7 @@ public class BigDecPropTest extends PropertyTestBase {
     }
 
     public interface BigDecGroup {
-        BigDecProp NOT_NULL = BigDecProp.builder().mustBeNonNull().desc(DESCRIPTION).build();
+        BigDecProp NOT_NULL = BigDecProp.builder().notNull().desc(DESCRIPTION).build();
         BigDecProp NULL = BigDecProp.builder().build();
         BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(GREATER_THAN_OR_EQUAL_VALUE).aliasInAndOut("alias").build();
         BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(GREATER_THAN_OR_EQUAL_VALUE).build();

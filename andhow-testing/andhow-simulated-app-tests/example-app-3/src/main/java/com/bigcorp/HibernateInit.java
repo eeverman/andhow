@@ -22,13 +22,13 @@ public class HibernateInit {
 	// - Its a best practice to group AndHow Properties into an interface.
 	private interface Config {
 		StrProp DRIVER = StrProp.builder().aliasInAndOut("hibernate.connection.driver_class")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp CONN_URL = StrProp.builder().aliasInAndOut("hibernate.connection.url")
-				.mustBeNonNull().startsWith("jdbc:").build();
+				.notNull().startsWith("jdbc:").build();
 		StrProp USER = StrProp.builder().aliasInAndOut("hibernate.connection.username")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp PWD = StrProp.builder().aliasInAndOut("hibernate.connection.password")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp ISOLATION = StrProp.builder().aliasInAndOut("hibernate.connection.isolation")
 				.oneOf("REPEATABLE_READ", "TRANSACTION_REPEATABLE_READ")
 				.defaultValue("REPEATABLE_READ").build();

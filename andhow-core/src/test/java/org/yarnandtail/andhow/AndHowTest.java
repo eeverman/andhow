@@ -41,11 +41,11 @@ public class AndHowTest extends AndHowTestBase {
 	String[] cmdLineArgsWFullClassName = new String[0];
 
 	public static interface RequiredParams {
-		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").mustBeNonNull().build();
-		StrProp STR_NULL_R = StrProp.builder().mustBeNonNull().startsWith("XYZ").build();
-		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).mustBeNonNull().build();
-		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).mustBeNonNull().build();
-		FlagProp FLAG_NULL = FlagProp.builder().mustBeNonNull().build();
+		StrProp STR_BOB_R = StrProp.builder().defaultValue("Bob").notNull().build();
+		StrProp STR_NULL_R = StrProp.builder().notNull().startsWith("XYZ").build();
+		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).notNull().build();
+		FlagProp FLAG_TRUE = FlagProp.builder().defaultValue(true).notNull().build();
+		FlagProp FLAG_NULL = FlagProp.builder().notNull().build();
 	}
 
 	@BeforeEach

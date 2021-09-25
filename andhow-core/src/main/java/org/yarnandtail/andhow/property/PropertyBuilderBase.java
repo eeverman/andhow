@@ -86,18 +86,25 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	}
 	
 	/**
-	 * If set, the effective value must be non-null to be considered valid.
-	 * 
-	 * The effective value is the explicitly configured value, or if that is null,
-	 * the default value.
-	 * 
-	 * @return 
+	 * @deprecated Use {@code PropertyBuilderBase.notNull()}
 	 */
 	public B mustBeNonNull() {
+		return this.notNull();
+	}
+
+	/**
+	 * If set, the effective value must be non-null to be considered valid.
+	 *
+	 * The effective value is the explicitly configured value, or if that is null,
+	 * the default value.
+	 *
+	 * @return
+	 */
+	public B notNull() {
 		this._nonNull = true;
 		return instance;
 	}
-	
+
 	/**
 	 * Same as description
 	 * 
