@@ -75,8 +75,8 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * Assigns a default value for the property.
 	 * 
 	 * The default value must pass all assigned validation rules, including
-	 * being mustBeNonNull, if set.
-	 * 
+	 * being notNull, if set.
+	 *
 	 * @param defaultValue
 	 * @return 
 	 */
