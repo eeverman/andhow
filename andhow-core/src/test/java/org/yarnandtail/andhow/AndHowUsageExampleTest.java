@@ -154,15 +154,15 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 
 	@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 	interface UI_CONFIG {
-		StrProp DISPLAY_NAME = StrProp.builder().mustBeNonNull().build();
+		StrProp DISPLAY_NAME = StrProp.builder().notNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 
 	@ManualExportAllowed //Defaults to EXPORT_OUT_ALIASES.ALWAYS & EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS
 	interface SERVICE_CONFIG {
-		StrProp REST_ENDPOINT_URL = StrProp.builder().mustBeNonNull().aliasOut("re_url").build();
+		StrProp REST_ENDPOINT_URL = StrProp.builder().notNull().aliasOut("re_url").build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).aliasOut("rc_1").aliasInAndOut("rc_2").build();
-		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().aliasIn("ignoreForExport").aliasOut("ts").build();
+		IntProp TIMEOUT_SECONDS = IntProp.builder().notNull().aliasIn("ignoreForExport").aliasOut("ts").build();
 		DblProp GRAVITY = DblProp.builder().greaterThan(9.1d).aliasInAndOut("g").lessThan(10.2d).build();
 		DblProp PIE = DblProp.builder().greaterThanOrEqualTo(3.1).lessThanOrEqualTo(3.2).build();
 	}

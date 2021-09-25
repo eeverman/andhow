@@ -25,7 +25,7 @@ public interface Options {
 			.desc("Forces configuration samples to be sent to the console for each loader that supports it.")
 			.helpText("On cmdline, this works as a flag and is assumed 'true' just by being present. In other config sources it can be set to 'true'.")
 			.build();
-	StrProp SAMPLES_DIRECTORY = StrProp.builder().defaultValue("java.io.tmpdir/andhow-samples/").mustBeNonNull().endsWith("/")
+	StrProp SAMPLES_DIRECTORY = StrProp.builder().defaultValue("java.io.tmpdir/andhow-samples/").notNull().endsWith("/")
 			.desc("Path to a directory to be used to write sample configuration to. "
 					+ "The special 'java.io.tmpdir' string is recognized as the current Java temp directory.")
 			.helpText("All paths should be specified w/ forward slashes, even on windows systems.")

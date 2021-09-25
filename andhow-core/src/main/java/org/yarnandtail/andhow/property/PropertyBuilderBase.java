@@ -75,8 +75,8 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	 * Assigns a default value for the property.
 	 * 
 	 * The default value must pass all assigned validation rules, including
-	 * being mustBeNonNull, if set.
-	 * 
+	 * being notNull, if set.
+	 *
 	 * @param defaultValue
 	 * @return 
 	 */
@@ -86,18 +86,26 @@ public abstract class PropertyBuilderBase<B extends PropertyBuilderBase, P exten
 	}
 	
 	/**
+	 * @deprecated Use {@code PropertyBuilderBase.notNull()}
+	 */
+	@Deprecated
+	public B mustBeNonNull() {
+		return this.notNull();
+	}
+
+	/**
 	 * If set, the effective value must be non-null to be considered valid.
-	 * 
+	 *
 	 * The effective value is the explicitly configured value, or if that is null,
 	 * the default value.
-	 * 
-	 * @return 
+	 *
+	 * @return
 	 */
-	public B mustBeNonNull() {
+	public B notNull() {
 		this._nonNull = true;
 		return instance;
 	}
-	
+
 	/**
 	 * Same as description
 	 * 
