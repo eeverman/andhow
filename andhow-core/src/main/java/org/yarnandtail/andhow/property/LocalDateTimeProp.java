@@ -46,23 +46,55 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
-		
+
+		/**
+		 * @deprecated Use {@code LocalDateTimeBuilder.before()}
+		 */
+		@Deprecated
 		public LocalDateTimeBuilder mustBeBefore(LocalDateTime reference) {
+			return this.before(reference);
+		}
+
+		/**
+		 * @deprecated Use {@code LocalDateTimeBuilder.sameOrBefore()}
+		 */
+		@Deprecated
+		public LocalDateTimeBuilder mustBeSameTimeOrBefore(LocalDateTime reference) {
+			return this.sameOrBefore(reference);
+		}
+
+		/**
+		 * @deprecated Use {@code LocalDateTimeBuilder.after()}
+		 */
+		@Deprecated
+		public LocalDateTimeBuilder mustBeAfter(LocalDateTime reference) {
+			return this.after(reference);
+		}
+
+		/**
+		 * @deprecated Use {@code LocalDateTimeBuilder.sameOrAfter()}
+		 */
+		@Deprecated
+		public LocalDateTimeBuilder mustBeSameTimeOrAfter(LocalDateTime reference) {
+			return this.sameOrAfter(reference);
+		}
+
+		public LocalDateTimeBuilder before(LocalDateTime reference) {
 			validation(new LocalDateTimeValidator.Before(reference));
 			return instance;
 		}
-		
-		public LocalDateTimeBuilder mustBeSameTimeOrBefore(LocalDateTime reference) {
+
+		public LocalDateTimeBuilder sameOrBefore(LocalDateTime reference) {
 			validation(new LocalDateTimeValidator.SameTimeOrBefore(reference));
 			return instance;
 		}
-		
-		public LocalDateTimeBuilder mustBeAfter(LocalDateTime reference) {
+
+		public LocalDateTimeBuilder after(LocalDateTime reference) {
 			validation(new LocalDateTimeValidator.After(reference));
 			return instance;
 		}
-		
-		public LocalDateTimeBuilder mustBeSameTimeOrAfter(LocalDateTime reference) {
+
+		public LocalDateTimeBuilder sameOrAfter(LocalDateTime reference) {
 			validation(new LocalDateTimeValidator.SameTimeOrAfter(reference));
 			return instance;
 		}
