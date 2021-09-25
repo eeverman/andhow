@@ -16,10 +16,10 @@ public class Checker {
 	//All the config Properties for this class
 	// - Its a best practice to group AndHow Properties into an interface.
 	interface Config {
-		StrProp PROTOCOL = StrProp.builder().mustBeNonNull().
+		StrProp PROTOCOL = StrProp.builder().notNull().
 				oneOf("http", "https").build();
-		StrProp SERVER = StrProp.builder().mustBeNonNull().build();
-		IntProp PORT = IntProp.builder().mustBeNonNull().
+		StrProp SERVER = StrProp.builder().notNull().build();
+		IntProp PORT = IntProp.builder().notNull().
 				greaterThanOrEqualTo(80).lessThanOrEqualTo(8888).build();
 		StrProp PATH = StrProp.builder().startsWith("/").build();
 	}

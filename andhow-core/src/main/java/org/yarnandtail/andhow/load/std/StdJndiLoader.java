@@ -108,14 +108,14 @@ import org.yarnandtail.andhow.util.TextUtil;
 public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardLoader {
 
 	private boolean failedEnvironmentAProblem = false;
-	
+
 	/**
 	 * There is no reason to use the constructor in production application code
 	 * because AndHow creates a single instance on demand at runtime.
 	 */
 	public StdJndiLoader() {
 	}
-	
+
 	@Override
 	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
@@ -123,9 +123,9 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 
 		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
-		
+
 		try {
-			
+
 			InitialContext ctx = new InitialContext();	//Normally doesn't throw exception, even if no JNDI
 
 			ctx.getEnvironment();	//Should throw error if JNDI is unavailable
@@ -149,7 +149,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 					}
 				}
 			}
-			
+
 		} catch (NamingException  ex) {
 
 			if (isFailedEnvironmentAProblem()) {
@@ -161,7 +161,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 					"The JndiLoader is configured to ignore this.");
 			}
 		}
-		
+
 		return new LoaderValues(this, values, problems);
 	}
 
@@ -187,9 +187,9 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 
 	/**
 	 * Combines the values of STANDARD_JNDI_ROOTS and ADDED_JNDI_ROOTS into one list of jndi root contexts to search.
-	 * 
+	 *
 	 * Expected values might look like:  java:  or java:/comp/env/
-	 * 
+	 *
 	 * @param values The configuration state.
 	 * @return Never null and never non-empty.
 	 */
@@ -199,28 +199,28 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 		//Add the added roots to the search list first, since they are pretty
 		//likely to be the correct ones if someone explicitly added them.
 		//We still check them all anyway, since a duplicate entry would be ambiguous.
-		
+
 		if (values.getValue(CONFIG.ADDED_JNDI_ROOTS) != null) {
 			List<String> addRoots = split(values.getValue(CONFIG.ADDED_JNDI_ROOTS));
 			myJndiRoots.addAll(addRoots);
 		}
-		
+
 		List<String> addRoots = split(values.getValue(CONFIG.STANDARD_JNDI_ROOTS));
 		myJndiRoots.addAll(addRoots);
 
 		return myJndiRoots;
 	}
-	
+
 	/**
 	 * Builds a complete list of complete JNDI names to search for a parameter value.
-	 * 
+	 *
 	 * @param appConfigDef
 	 * @param roots
 	 * @param prop
 	 * @return An ordered list of jndi names, with (hopefully) the most likely names first.
 	 */
 	protected List<String> buildJndiNames(StaticPropertyConfigurationInternal appConfigDef, List<String> roots, Property prop) {
-		
+
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value
 
@@ -247,21 +247,21 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 				propJndiNames.add(root + propName);
 			}
 		}
-		
+
 		return propJndiNames;
 
 	}
 
 	/**
 	 * Spits a comma separate list of JNDI roots into individual root strings.
-	 * 
+	 *
 	 * Use double quotes to indicate and preserve and empty or white space string.
-	 * 
+	 *
 	 * @param rootStr
 	 * @return A list of JNDI root strings
 	 */
 	protected List<String> split(String rootStr) {
-		
+
 		List<String> cleanRoots = new ArrayList();
 
 		if (rootStr != null) {
@@ -294,7 +294,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	public static interface CONFIG {
 
 		StrProp STANDARD_JNDI_ROOTS = StrProp.builder()
-				.defaultValue("java:comp/env/,java:,\"\"").mustBeNonNull()
+				.defaultValue("java:comp/env/,java:,\"\"").notNull()
 				.desc("A comma separated list of standard JNDI root locations to be searched for properties. "
 						+ "Setting this property will replace the standard list, "
 						+ "use ADDED_JNDI_ROOTS to only add to the list. ")
@@ -306,22 +306,22 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 				.helpText("The final JNDI URIs to be searched will look like this '[root][Property Name]'").build();
 
 	}
-	
+
 	@Override
 	public String getLoaderType() {
 		return "JNDI";
 	}
-	
+
 	@Override
 	public String getLoaderDialect() {
 		return null;
 	}
-	
+
 	@Override
 	public void setFailedEnvironmentAProblem(boolean isAProblem) {
 		failedEnvironmentAProblem = isAProblem;
 	}
-	
+
 	@Override
 	public boolean isFailedEnvironmentAProblem() {
 		return failedEnvironmentAProblem;

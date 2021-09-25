@@ -58,7 +58,7 @@ public class StrPropTest extends PropertyTestBase {
 
 	public interface ValidationGroup {
 		StrProp USER_NAME = StrProp.builder().aliasInAndOut("name").mustMatchRegex("[a-z]+")
-				.mustBeNonNull().desc("Lowercase Only").build();
+				.notNull().desc("Lowercase Only").build();
 
 		StrProp GMAIL_ANY_CASE = StrProp.builder().mustEndWithIgnoreCase("@gmail.com")
 				.description("Ends w/ @gmail.com").build();

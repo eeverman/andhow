@@ -9,22 +9,22 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author eeverman
  */
 public class PropertyTestBase extends AndHowTestBase {
-	
-	
+
+
 	public <T extends AndHowTestBase> String buildPropFilePath(T testClass, String propFileSuffix) {
 		String testPkgName = testClass.getClass().getPackage().getName();
 		String testClsName = testClass.getClass().getSimpleName();
-		
-		return "/" + testPkgName.replace(".", "/") + "/" + testClsName + 
+
+		return "/" + testPkgName.replace(".", "/") + "/" + testClsName +
 				TextUtil.trimToEmpty(propFileSuffix) + ".properties";
 	}
-	
+
 	public <T extends AndHowTestBase> void  buildConfig(T testClass, String propFileSuffix,
 																											Class<?>... group) {
-		
+
 		String propFilePath = buildPropFilePath(testClass, propFileSuffix);
 		List<Class<?>> groups = Arrays.asList(group);
-		
+
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(TEST_CONFIG.class)
 				.addOverrideGroups(groups)
@@ -35,10 +35,10 @@ public class PropertyTestBase extends AndHowTestBase {
 		AndHow.setConfig(config);
 		AndHow.instance();
 	}
-	
+
 	public static interface TEST_CONFIG {
-		StrProp PROP_FILE = StrProp.builder().mustBeNonNull().build();
+		StrProp PROP_FILE = StrProp.builder().notNull().build();
 	}
-	
+
 
 }

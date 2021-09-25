@@ -9,11 +9,11 @@ import org.yarnandtail.andhow.property.*;
  */
 @GroupInfo(name="Configuration for Earth map generation", desc="Bounds define max map extents")
 public class EarthMapMaker {
-	public static final StrProp MAP_NAME = StrProp.builder().desc("Name displayed at the top of the map").mustBeNonNull().build();
-	private static final IntProp WEST_BOUND = IntProp.builder().defaultValue(-124).desc("West-most edge of map, in deg. longitude").mustBeNonNull().build();
-	private static final IntProp NORTH_BOUND = IntProp.builder().defaultValue(50).desc("North-most edge of map, in deg. latitue").mustBeNonNull().build();
-	private static final IntProp EAST_BOUND = IntProp.builder().defaultValue(-66).desc("East-most edge of map, in deg. longitude").mustBeNonNull().build();
-	private static final IntProp SOUTH_BOUND = IntProp.builder().defaultValue(24).desc("South-most edge of map, in deg. latitue").mustBeNonNull().build();
+	public static final StrProp MAP_NAME = StrProp.builder().desc("Name displayed at the top of the map").notNull().build();
+	private static final IntProp WEST_BOUND = IntProp.builder().defaultValue(-124).desc("West-most edge of map, in deg. longitude").notNull().build();
+	private static final IntProp NORTH_BOUND = IntProp.builder().defaultValue(50).desc("North-most edge of map, in deg. latitue").notNull().build();
+	private static final IntProp EAST_BOUND = IntProp.builder().defaultValue(-66).desc("East-most edge of map, in deg. longitude").notNull().build();
+	private static final IntProp SOUTH_BOUND = IntProp.builder().defaultValue(24).desc("South-most edge of map, in deg. latitue").notNull().build();
 
 	//System logging configuration for this class
 	public static final BolProp BROADCAST_LOG_EVENTS = BolProp.builder().aliasIn("EMM.Broadcast").defaultValue(true)
