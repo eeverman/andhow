@@ -26,7 +26,7 @@ public class PropFileLoaderSamplePrinterTest {
 		IntProp MY_PROP1 = IntProp.builder().build();
 		StrProp MY_PROP2 = StrProp.builder().defaultValue("La la la").desc("mp description")
 				.helpText("Long text on how to use the property").startsWith("La").endsWith("la")
-				.mustBeNonNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
+				.notNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
 	}
 
 	@BeforeEach

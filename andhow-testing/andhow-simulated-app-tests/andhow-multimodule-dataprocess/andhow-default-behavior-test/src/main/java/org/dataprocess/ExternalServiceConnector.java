@@ -45,7 +45,7 @@ public class ExternalServiceConnector {
 
 	@GroupInfo(name="Connection configuration to some external service", desc="Configures communication to the USGS Aquarius service")
 	public interface ConnectionConfig {
-		StrProp SERVICE_URL = StrProp.builder().endsWith("/").mustBeNonNull().build();
+		StrProp SERVICE_URL = StrProp.builder().endsWith("/").notNull().build();
 		IntProp TIMEOUT = IntProp.builder().defaultValue(50).desc("Timeout in seconds") .build();
 	}
 

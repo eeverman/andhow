@@ -22,20 +22,20 @@ public class HibernateInit {
 	// - Its a best practice to group AndHow Properties into an interface.
 	private interface Config {
 		StrProp DRIVER = StrProp.builder().aliasInAndOut("hibernate.connection.driver_class")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp CONN_URL = StrProp.builder().aliasInAndOut("hibernate.connection.url")
-				.mustBeNonNull().startsWith("jdbc:").build();
+				.notNull().startsWith("jdbc:").build();
 		StrProp USER = StrProp.builder().aliasInAndOut("hibernate.connection.username")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp PWD = StrProp.builder().aliasInAndOut("hibernate.connection.password")
-				.mustBeNonNull().build();
+				.notNull().build();
 		StrProp ISOLATION = StrProp.builder().aliasInAndOut("hibernate.connection.isolation")
 				.oneOf("REPEATABLE_READ", "TRANSACTION_REPEATABLE_READ")
 				.defaultValue("REPEATABLE_READ").build();
 		IntProp INIT_POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.initial_pool_size")
-				.defaultValue(1).mustBeLessThan(20).build();
+				.defaultValue(1).lessThan(20).build();
 		IntProp POOL_SIZE = IntProp.builder().aliasInAndOut("hibernate.connection.pool_size")
-				.defaultValue(20).mustBeLessThan(200).build();
+				.defaultValue(20).lessThan(200).build();
 	}
 
 	@ManualExportNotAllowed

@@ -25,7 +25,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	public interface ValidParams {
 		//Strings
 		StrProp STR_XXX = StrProp.builder().endsWith("XXX").build();
-		IntProp INT_TEN = IntProp.builder().mustBeGreaterThan(10).build();
+		IntProp INT_TEN = IntProp.builder().greaterThan(10).build();
 
 	}
 

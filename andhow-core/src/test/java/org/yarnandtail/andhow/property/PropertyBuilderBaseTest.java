@@ -87,5 +87,14 @@ public class PropertyBuilderBaseTest {
 			builder.aliasInAndOut(null)
 		);
 	}
-	
+
+	@Test
+	public void setNotNullTest() {
+		TestBuilder builder = new TestBuilder();
+		assertFalse(builder._nonNull);
+
+		builder.mustBeNonNull();
+
+		assertTrue(builder._nonNull);
+	}
 }

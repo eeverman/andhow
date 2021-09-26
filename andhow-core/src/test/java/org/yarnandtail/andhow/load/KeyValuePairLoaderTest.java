@@ -237,4 +237,13 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 	}
 
+	@Test
+	public void getSpecificLoadDescriptionTest() {
+		String expectedDescription = "string key value pairs";
+
+		KeyValuePairLoader cll = new KeyValuePairLoader();
+
+		assertEquals(expectedDescription, cll.getSpecificLoadDescription());
+	}
+
 }

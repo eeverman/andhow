@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class AndHowUsageExampleTest extends AndHowTestBase {
 
 	AndHowConfiguration config;
-	
+
 	@BeforeEach
 	public void setup() {
 
@@ -39,12 +39,12 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 				.addFixedValue(SERVICE_CONFIG.GRAVITY, 9.8)
 				.addFixedValue(SERVICE_CONFIG.PIE, 3.14159);
 	}
-	
+
 	@Test
 	public void testAllValuesAreSet() {
-		
+
 		AndHow.setConfig(config);
-		
+
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertEquals("ffffff", UI_CONFIG.BACKGROUP_COLOR.getValue());
 		assertEquals("google.com", SERVICE_CONFIG.REST_ENDPOINT_URL.getValue());
@@ -53,7 +53,7 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 		assertEquals(9.8, SERVICE_CONFIG.GRAVITY.getValue(), .00000001d);
 		assertEquals(3.14159, SERVICE_CONFIG.PIE.getValue(), .00000001d);
 	}
-	
+
 	@Test
 	public void testOptionalValuesAreNotset() {
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -64,14 +64,14 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 				.addFixedValue(SERVICE_CONFIG.TIMEOUT_SECONDS, 99);
 
 		AndHow.setConfig(config);
-		
+
 		assertEquals("My App", UI_CONFIG.DISPLAY_NAME.getValue());
 		assertNull(UI_CONFIG.BACKGROUP_COLOR.getValue());
 		assertEquals("yahoo.com", SERVICE_CONFIG.REST_ENDPOINT_URL.getValue());
 		assertEquals(3, SERVICE_CONFIG.RETRY_COUNT.getValue());
 		assertEquals(99, SERVICE_CONFIG.TIMEOUT_SECONDS.getValue());
 	}
-	
+
 	@Test
 	public void testMissingValuesException() {
 
@@ -154,17 +154,17 @@ public class AndHowUsageExampleTest extends AndHowTestBase {
 
 	@ManualExportAllowed(useCanonicalName = EXPORT_CANONICAL_NAME.ALWAYS, useOutAliases = EXPORT_OUT_ALIASES.NEVER)
 	interface UI_CONFIG {
-		StrProp DISPLAY_NAME = StrProp.builder().mustBeNonNull().build();
+		StrProp DISPLAY_NAME = StrProp.builder().notNull().build();
 		StrProp BACKGROUP_COLOR = StrProp.builder().build();
 	}
 
 	@ManualExportAllowed //Defaults to EXPORT_OUT_ALIASES.ALWAYS & EXPORT_CANONICAL_NAME.ONLY_IF_NO_OUT_ALIAS
 	interface SERVICE_CONFIG {
-		StrProp REST_ENDPOINT_URL = StrProp.builder().mustBeNonNull().aliasOut("re_url").build();
+		StrProp REST_ENDPOINT_URL = StrProp.builder().notNull().aliasOut("re_url").build();
 		IntProp RETRY_COUNT = IntProp.builder().defaultValue(3).aliasOut("rc_1").aliasInAndOut("rc_2").build();
-		IntProp TIMEOUT_SECONDS = IntProp.builder().mustBeNonNull().aliasIn("ignoreForExport").aliasOut("ts").build();
-		DblProp GRAVITY = DblProp.builder().mustBeGreaterThan(9.1d).aliasInAndOut("g").mustBeLessThan(10.2d).build();
-		DblProp PIE = DblProp.builder().mustBeGreaterThanOrEqualTo(3.1).mustBeLessThanOrEqualTo(3.2).build();
+		IntProp TIMEOUT_SECONDS = IntProp.builder().notNull().aliasIn("ignoreForExport").aliasOut("ts").build();
+		DblProp GRAVITY = DblProp.builder().greaterThan(9.1d).aliasInAndOut("g").lessThan(10.2d).build();
+		DblProp PIE = DblProp.builder().greaterThanOrEqualTo(3.1).lessThanOrEqualTo(3.2).build();
 	}
 
 }

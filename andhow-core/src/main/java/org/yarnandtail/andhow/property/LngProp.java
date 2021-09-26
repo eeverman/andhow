@@ -7,10 +7,10 @@ import org.yarnandtail.andhow.valuetype.LngType;
 
 /**
  * A Property that refers to a Long value.
- * 
+ *
  * All the basic Java types use a three letter abv. to keep declaration lines
  * short, in the form of:  [Type]Prop
- * 
+ *
  * By default this uses the TrimToNullTrimmer, which removes all whitespace from
  * the value and ultimately null if the value is all whitespace.
  *
@@ -21,23 +21,23 @@ import org.yarnandtail.andhow.valuetype.LngType;
  * <code>
  * name.of.my.long.property.MY_PROPERTY = 90
  * </code>
- * 
+ *
  * @author eeverman
  */
 public class LngProp extends PropertyBase<Long> {
-	
+
 	public LngProp(
 			Long defaultValue, boolean required, String shortDesc, List<Validator<Long>> validators,
 			List<Name> aliases, PropertyType paramType, ValueType<Long> valueType, Trimmer trimmer,
 			String helpText) {
-		
+
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
-	
+
 	public static LngBuilder builder() {
 		return new LngBuilder();
 	}
-	
+
 	public static class LngBuilder extends PropertyBuilderBase<LngBuilder, LngProp, Long> {
 
 		public LngBuilder() {
@@ -53,23 +53,55 @@ public class LngProp extends PropertyBase<Long> {
 				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
-		
+
+		/**
+		 * @deprecated Use {@code LngBuilder.greaterThan()}
+		 */
+		@Deprecated
 		public LngBuilder mustBeGreaterThan(long reference) {
+			return this.greaterThan(reference);
+		}
+
+		public LngBuilder greaterThan(long reference) {
 			validation(new LngValidator.GreaterThan(reference));
 			return instance;
 		}
-		
+
+		/**
+		 * @deprecated Use {@code LngBuilder.greaterThanOrEqualTo()}
+		 */
+		@Deprecated
 		public LngBuilder mustBeGreaterThanOrEqualTo(long reference) {
+			return greaterThanOrEqualTo(reference);
+		}
+
+		public LngBuilder greaterThanOrEqualTo(long reference) {
 			validation(new LngValidator.GreaterThanOrEqualTo(reference));
 			return instance;
 		}
-		
+
+		/**
+		 * @deprecated Use {@code LngBuilder.lessThan()}
+		 */
+		@Deprecated
 		public LngBuilder mustBeLessThan(long reference) {
+			return this.lessThan(reference);
+		}
+
+		public LngBuilder lessThan(long reference) {
 			validation(new LngValidator.LessThan(reference));
 			return instance;
 		}
-		
+
+		/**
+		 * @deprecated Use {@code LngBuilder.lessThanOrEqualTo()}
+		 */
+		@Deprecated
 		public LngBuilder mustBeLessThanOrEqualTo(long reference) {
+			return this.lessThanOrEqualTo(reference);
+		}
+
+		public LngBuilder lessThanOrEqualTo(long reference) {
 			validation(new LngValidator.LessThanOrEqualTo(reference));
 			return instance;
 		}
