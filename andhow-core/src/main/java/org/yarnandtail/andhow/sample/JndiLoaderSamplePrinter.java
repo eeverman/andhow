@@ -49,28 +49,18 @@ public class JndiLoaderSamplePrinter extends BaseSamplePrinter implements Sample
 	public TextBlock getActualProperty(StaticPropertyConfigurationInternal definition, 
 			GroupProxy group, Property prop) throws Exception {
 		
-		TextBlock tb = new TextBlock(false, false);
+		TextBlock tb = new TextBlock(false, true);
 		
 		String propCanonName = definition.getNamingStrategy().getUriName(group.getCanonicalName(prop));
 		String type = prop.getValueType().getDestinationType().getCanonicalName();
 
-		
-		if (prop.getDefaultValue() != null) {
-			tb.addLine(
-					TextUtil.format("<Environment name=\"{}\" value=\"{}\" type=\"{}\" override=\"false\"/>", 
-						propCanonName, 
-						TextUtil.escapeXml(prop.getDefaultValue().toString()),
-						type)
-			);
-		} else {
-			tb.addLine(
-					TextUtil.format("<Environment name=\"{}\" value=\"[{}]\" type=\"{}\" override=\"false\"/>", 
-						propCanonName, 
-						prop.getValueType().getDestinationType().getSimpleName(),
-						type)
-			);
-		}
-		
+		tb.addLine(
+				TextUtil.format("<Environment name=\"{}\" value=\"{}\" type=\"{}\" override=\"false\"/>",
+					propCanonName,
+					"",
+					type)
+		);
+
 		return tb;
 	}
 

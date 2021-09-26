@@ -5,28 +5,75 @@ import java.util.List;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- *
- * @author ericeverman
+ * A line of text, which may need to be wrapped and/or commented.
  */
 public abstract class TextLine {
 	
 	/**
 	 * Indicates if this line should be wrapped if too long.
 	 * The caller must then decide to actually do the wrapping by calling the
-	 * 'wrapped' methods.
+	 * 'wrapped' methods.  This is tri-state:  null means default to no-wrap, but
+	 * if embedded in a TextBlock, use the TB setting.
 	 */
 	protected Boolean wrap;
 
 	abstract String getLine(PrintFormat format);
 
+	/**
+	 * Write this single line as a line comment.
+	 *
+	 * The comment marker and the content of the line are separated by the
+	 * format.lineCommentPrefixSeparator.
+	 * Calling this on a format that doesn't have line comments (eg xml)
+	 * results in a line that is not a comment.
+	 *
+	 * @param format
+	 * @return
+	 */
 	abstract String getLineComment(PrintFormat format);
 
+	/**
+	 * Within a comment block, write this single line as a block comment.
+	 *
+	 * Calling this on a format that doesn't have block comments (eg properties files)
+	 * result in uncommented text.
+	 *
+	 * @param format
+	 * @param startComment If true, this is the first block line, so write block start.
+	 * @param endComment If true, this is the last block line, so write block end.
+	 * @return
+	 */
 	abstract String getBlockComment(PrintFormat format, boolean startComment, boolean endComment);
 
+	/**
+	 * Wrap a line to the max line length.
+	 *
+	 * @param format
+	 * @return
+	 */
 	abstract List<String> getWrappedLine(PrintFormat format);
 
+	/**
+	 * Wrap a line and format it as a line comment (not a block comment)
+	 *
+	 * Calling this on a format that doesn't have line comments (eg xml)
+	 * results in a line that is not a comment.
+	 * @param format
+	 * @return
+	 */
 	abstract List<String> getWrappedLineComment(PrintFormat format);
 
+	/**
+	 * Within a comment block, write this line and wrap it if it is too long.
+	 *
+	 * Calling this on a format that doesn't have block comments (eg properties files)
+	 * result in uncommented text.
+	 *
+	 * @param format
+	 * @param startComment If true, this is the first block line, so write block start.
+	 * @param endComment If true, this is the last block line, so write block end.
+	 * @return
+	 */
 	abstract List<String> getWrappedBlockComment(PrintFormat format, boolean startComment, boolean endComment);
 	
 	/**
@@ -51,7 +98,9 @@ public abstract class TextLine {
 		
 		@Override
 		public String getLineComment(PrintFormat format) {
-			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + line;
+			return
+					TextUtil.nullToEmpty(format.lineCommentPrefix) +
+					TextUtil.nullToEmpty(format.lineCommentPrefixSeparator) + line;
 		}
 		
 		@Override
@@ -191,7 +240,10 @@ public abstract class TextLine {
 		
 		@Override
 		public String getLineComment(PrintFormat format) {
-			return format.lineCommentPrefix + format.lineCommentPrefixSeparator + "";
+			return
+					TextUtil.nullToEmpty(format.lineCommentPrefix) +
+					TextUtil.nullToEmpty(format.lineCommentPrefixSeparator) +
+					"";
 		}
 		
 		@Override
@@ -221,7 +273,9 @@ public abstract class TextLine {
 		@Override
 		public List<String> getWrappedLineComment(PrintFormat format) {
 			ArrayList<String> lines = new ArrayList();
-			lines.add(format.lineCommentPrefix + format.lineCommentPrefixSeparator + "");
+			lines.add(
+					TextUtil.nullToEmpty(format.lineCommentPrefix) +
+					TextUtil.nullToEmpty(format.lineCommentPrefixSeparator) + "");
 			return lines;
 		}
 		

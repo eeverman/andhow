@@ -12,8 +12,6 @@ import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.Matchers;
 
 /**
  *
@@ -92,13 +90,9 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("# ", lines[0]);
 		assertEquals("# MY_PROP1 (Integer)", lines[1]);
 
-		String expectedPropLine = "^org\\.yarnandtail\\.andhow\\.sample\\.PropFileLoaderSamplePrinterTest\\.Config\\.MY_PROP1[ \\t]+=[ \\t]*$";
-		assertThat(
-				lines[2],
-				Matchers.matchesRegex(expectedPropLine));
 		assertEquals(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
-						".MY_PROP1 =",
+						".MY_PROP1 = ",
 				lines[2]);
 
 		//Print MY_PROP2
@@ -118,7 +112,7 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("# - end with 'la'", lines[7]);
 		assertEquals(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
-						".MY_PROP2 = La la la",
+						".MY_PROP2 = ",
 				lines[8]);
 
 		//Print group closing (should be empty line)

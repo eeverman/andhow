@@ -106,7 +106,7 @@ public abstract class BaseLoader implements Loader {
 	 * Util method to attempt to load an object of an unknown type to a property.
 	 * 
 	 * Used for object based loaders where value are not in text form.
-	 * This loader assumes the passed property is a valid property to to load to,
+	 * This loader assumes the passed property is a valid property to load to,
 	 * but it will check to make sure it is not null, which is not treated as an error.
 	 * 
 	 * @param appConfigDef Used to look up the property name for find the actual property
