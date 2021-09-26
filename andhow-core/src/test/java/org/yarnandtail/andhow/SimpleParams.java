@@ -40,5 +40,5 @@ public interface SimpleParams {
 	//LocalDateTime
 	LocalDateTimeProp LDT_2007_10_01 = LocalDateTimeProp.builder().defaultValue(LocalDateTime.parse("2007-10-01T00:00")).build();
 	LocalDateTimeProp LDT_NULL = LocalDateTimeProp.builder().build();
-	LocalDateTimeProp LDT_AFTER_2000 = LocalDateTimeProp.builder().mustBeAfter(LocalDateTime.parse("2000-01-01T00:00")).build();
+	LocalDateTimeProp LDT_AFTER_2000 = LocalDateTimeProp.builder().after(LocalDateTime.parse("2000-01-01T00:00")).build();
 }
