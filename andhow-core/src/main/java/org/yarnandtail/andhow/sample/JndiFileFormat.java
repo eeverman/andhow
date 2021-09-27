@@ -17,7 +17,7 @@ public class JndiFileFormat extends PrintFormat {
 		blockCommentEnd = "-->";
 		blockCommentSeparator = " "; //Use between the last text and the comment end if on same line
 		lineCommentPrefix = null;
-		lineCommentPrefixSeparator = " ";	//Separate the opening line comment from the text
+		lineCommentPrefixSeparator = null;	//Separate the opening line comment from the text
 		secondLineIndent = "\t";
 		hr = TextUtil.repeat("- ", 45);
 		lineWidth = 90;

@@ -50,20 +50,10 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 		TextBlock tb = new TextBlock(false, false);
 		
 		String propCanonName = group.getCanonicalName(prop);
-		
-		if (prop.getDefaultValue() != null) {
-			tb.addLine(
-					TextUtil.format("{} = {}", 
-						propCanonName, 
-						prop.getDefaultValue())
-			);
-		} else {
-			tb.addLine(
-					TextUtil.format("{} = [{}]", 
-						propCanonName, 
-						prop.getValueType().getDestinationType().getSimpleName())
-			);
-		}
+
+		tb.addLine(
+				TextUtil.format("{} = ", propCanonName)
+		);
 		
 		return tb;
 	}

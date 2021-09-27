@@ -1,5 +1,3 @@
-/*
- */
 package org.yarnandtail.andhow.sample;
 
 import java.io.UnsupportedEncodingException;
@@ -91,9 +89,10 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals(3, lines.length);
 		assertEquals("# ", lines[0]);
 		assertEquals("# MY_PROP1 (Integer)", lines[1]);
+
 		assertEquals(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
-						".MY_PROP1 = [Integer]",
+						".MY_PROP1 = ",
 				lines[2]);
 
 		//Print MY_PROP2
@@ -113,7 +112,7 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("# - end with 'la'", lines[7]);
 		assertEquals(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
-						".MY_PROP2 = La la la",
+						".MY_PROP2 = ",
 				lines[8]);
 
 		//Print group closing (should be empty line)

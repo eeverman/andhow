@@ -89,10 +89,10 @@ public class JndiLoaderSamplePrinterTest {
 		assertEquals(3, lines.length);
 		assertEquals("<!-- ", lines[0]);
 		assertEquals("MY_PROP1 (Integer) -->", lines[1]);
-		assertEquals("<Environment name=\"" +
+		assertEquals("<!-- <Environment name=\"" +
 				JndiLoaderSamplePrinterTest.Config.class.getCanonicalName().replace(".", "/")
-				+ "/MY_PROP1\" value=\"[Integer]\" "
-				+ "type=\"java.lang.Integer\" override=\"false\"/>",
+				+ "/MY_PROP1\" value=\"\" "
+				+ "type=\"java.lang.Integer\" override=\"false\"/> -->",
 				lines[2]);
 
 		//Print MY_PROP2
@@ -110,10 +110,10 @@ public class JndiLoaderSamplePrinterTest {
 		assertEquals("The property value must:", lines[5]);
 		assertEquals("- start with 'La'", lines[6]);
 		assertEquals("- end with 'la' -->", lines[7]);
-		assertEquals("<Environment name=\"" +
+		assertEquals("<!-- <Environment name=\"" +
 				JndiLoaderSamplePrinterTest.Config.class.getCanonicalName().replace(".", "/")
-				+ "/MY_PROP2\" value=\"La la la\" "
-				+ "type=\"java.lang.String\" override=\"false\"/>",
+				+ "/MY_PROP2\" value=\"\" "
+				+ "type=\"java.lang.String\" override=\"false\"/> -->",
 				lines[8]);
 
 		//Print group closing (should be empty line)
