@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * When the AndHow.instance(config) method is removed, this test will need to be
  * updated to call the private AndHow.initialize(config).
  *
- * @author ericeverman
  */
 public class AndHowTest extends AndHowTestBase {
 
@@ -263,7 +262,8 @@ public class AndHowTest extends AndHowTestBase {
 		assertEquals("STRING_BOB", sbAliases.get(0).getEffectiveInName());
 		assertEquals("Stringy.Bob", sbAliases.get(1).getEffectiveOutName());
 		assertEquals("org.yarnandtail.andhow.SimpleParams.STR_BOB", AndHow.instance().getCanonicalName(SimpleParams.STR_BOB));
-		assertEquals(SimpleParams.class, AndHow.instance().getGroupForProperty(SimpleParams.STR_BOB).getProxiedGroup());
+
+		assertEquals(SimpleParams.class, ((AndHowCore)(AndHowTestUtils.getAndHowCore())).getGroupForProperty(SimpleParams.STR_BOB).getProxiedGroup());
 		assertTrue(AndHow.instance().getNamingStrategy() instanceof CaseInsensitiveNaming);
 
 		//INT_TEN (defaults to 10 and not explicitly set)
