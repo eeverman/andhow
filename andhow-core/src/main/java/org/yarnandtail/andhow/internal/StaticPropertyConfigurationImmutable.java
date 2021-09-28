@@ -5,8 +5,7 @@ import org.yarnandtail.andhow.api.*;
 
 /**
  * An immutable instance that can be used during runtime.
- * 
- * @author eeverman
+ *
  */
 public class StaticPropertyConfigurationImmutable implements StaticPropertyConfigurationInternal {
 

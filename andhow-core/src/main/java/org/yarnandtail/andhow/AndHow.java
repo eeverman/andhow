@@ -31,7 +31,6 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * The code above (or any method of AndHow initiation) can only be executed once
  * during the life of the application.
  *
- * @author eeverman
  */
 public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 
@@ -525,11 +524,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 	@Override
 	public String getCanonicalName(Property<?> prop) {
 		return core.getCanonicalName(prop);
-	}
-
-	@Override
-	public GroupProxy getGroupForProperty(Property<?> prop) {
-		return core.getGroupForProperty(prop);
 	}
 
 	@Override

@@ -37,6 +37,15 @@ public interface StaticPropertyConfigurationInternal extends StaticPropertyConfi
 	boolean containsUserGroups();
 
 	/**
+	 * Finds the Group containing the specified Property.
+	 *
+	 * @param prop The property to get the PropertyGroup for
+	 * @return May return null if the Property is not in any group, or during
+	 * construction, if the group has not finished registering all of its properties.
+	 */
+	GroupProxy getGroupForProperty(Property<?> prop);
+
+	/**
 	 * Returns a list of Properties registered in the passed group.
 	 * 
 	 * If the group is unregistered or has no properties, an empty list is returned.

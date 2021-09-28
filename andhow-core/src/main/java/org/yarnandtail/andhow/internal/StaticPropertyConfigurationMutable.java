@@ -7,8 +7,7 @@ import org.yarnandtail.andhow.internal.ConstructionProblem.SecurityException;
 
 /**
  * A mutable version that can be used during AndHow startup.
- * 
- * @author eeverman
+ *
  */
 public class StaticPropertyConfigurationMutable implements StaticPropertyConfigurationInternal {
 	
