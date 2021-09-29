@@ -227,7 +227,7 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void equalsGetTheValueMustDescriptionTest() {
-		StringValidator.Equals instance = new StringValidator.Equals("A", "B", "C");
-		assertEquals("be equal to one of '[A, B, C]'", instance.getTheValueMustDescription());
+		assertEquals("be equal to one of '[A, B, C]'",
+				new StringValidator.Equals("A", "B", "C").getTheValueMustDescription());
 	}
 }
