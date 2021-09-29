@@ -117,8 +117,7 @@ public class StringValidatorTest {
 	}
 
 	/**
-	 * isSpecificationValid method should check for null entries in the array of values.
-	 * A null entry in the array should result in false.
+	 * Test of isSpecificationValid method, of class Equals.
 	 */
 	@Test
 	public void nullEntriesIsSpecificationValidTest() {
