@@ -115,5 +115,15 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
 	}
-	
+
+	/**
+	 * isSpecificationValid method should check for null entries in the array of values.
+	 * A null entry in the array should result in false.
+	 */
+	@Test
+	public void nullEntriesIsSpecificationValidTest() {
+		StringValidator.Equals instance = new StringValidator.Equals("A", null, "C");
+
+		assertFalse(instance.isSpecificationValid());
+	}
 }

@@ -24,7 +24,9 @@ public class StringValidator {
 
 		@Override
 		public boolean isSpecificationValid() {
-			return values != null && values.length != 0;
+			return values != null &&
+					values.length != 0 &&
+					!Arrays.asList(values).contains(null);
 		}
 
 		@Override
