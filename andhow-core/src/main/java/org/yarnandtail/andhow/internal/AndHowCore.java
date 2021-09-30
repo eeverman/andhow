@@ -4,6 +4,7 @@ import java.io.*;
 
 import org.yarnandtail.andhow.export.PropertyExport;
 import org.yarnandtail.andhow.internal.export.ManualExportService;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,13 +18,13 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.util.AndHowLog;
 
 /**
- * Actual central instance of the AndHow state after a successful startup.
- * The advertised AndHow class is really a proxy for this class, and allows
- * interaction with the AndHow framework prior to startup, reloading during unit
- * testing, and (potentially) a future implementation where reloading of production
- * data would be allowed.
- * 
- * @author eeverman
+ * Actual central instance of AndHow's state after a successful initialization.
+ *
+ * The AndHow class is really a proxy for this class, which allows
+ * abstraction of the implementation and re-initialization during unit testing
+ * by swapping out the AndHowCore implementation while maintaining the AndHow
+ * singleton so references to it are stable.
+ *
  */
 public class AndHowCore implements StaticPropertyConfigurationInternal, ValidatedValues {
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCore.class);
@@ -51,20 +52,18 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 				}
 			}
 		}		
-		
-		//The global options are always added to the list of registered groups
-		ArrayList<GroupProxy> effRegGroups = new ArrayList();
-		if (registeredGroups != null && ! registeredGroups.isEmpty()) {
-			effRegGroups.addAll(registeredGroups);
-		} else if (! AndHowUtil.classExists("org.yarnandtail.andhow.compile.AndHowCompileProcessor")) {
-			LOG.warn("org.yarnandtail:andhow-annotation-processor is not currently "
-					+ "on the classpath.  If it was not present at compile time, "
-					+ "AndHow Properties in source code are not discovered and registered. "
-					+ "To resolve, add org.yarnandtail:andhow-annotation-processor "
-					+ "as a dependency at least at compile time.");
+
+		List<GroupProxy> effRegGroups = findGroups(registeredGroups);
+
+		if (registeredGroups == null || registeredGroups.isEmpty()) {
+			LOG.warn("AndHow found no Properties to configure.  " +
+					"If this is unexpected, verify AndHowCompileProcessor was on the classpath at compile time " +
+					"(Maven artifact andhow-annotation-processor) and javac annotation processing was not disabled " +
+					"(javac -proc flags).");
 		}
 		
 		try {
+			//Global options are general config of AndHow itself
 			GroupProxy options = AndHowUtil.buildGroupProxy(Options.class, false);
 			effRegGroups.add(options);
 		} catch (Exception ex) {
@@ -110,6 +109,28 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		//Print samples (if requested) to System.out
 		if (getValue(Options.CREATE_SAMPLES)) {
 			ReportGenerator.printConfigSamples(staticConfig, loaders, false);
+		}
+	}
+
+
+	/**
+	 * Determine the 'Groups' (classes or interfaces containing AndHow Properties) that should be in
+	 * scope of AndHow.
+	 *
+	 * In special situations (testing and exotic use cases), a non-null list of configuredGroups may
+	 * be passed in to bypass automatic discovery.  If the passed groups is null, use auto-discovery.
+	 * If non-null, use the passed list, even if empty.
+	 *
+	 * @param configuredGroups A list of groups to use instead of the normal auto-discovery.
+	 *   If null, auto-discovery is used.  If non-null (even empty) configuredGroups is used.
+	 * @return A list of groups that are in-scope for AndHow.
+	 */
+	private static List<GroupProxy> findGroups(List<GroupProxy> configuredGroups) {
+		if (configuredGroups == null) {
+			PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
+			return registrar.getGroups();
+		} else {
+			return configuredGroups;
 		}
 	}
 	
