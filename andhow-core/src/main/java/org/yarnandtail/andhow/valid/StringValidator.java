@@ -31,7 +31,7 @@ public class StringValidator {
 
 		@Override
 		public String getInvalidSpecificationMessage() {
-			return "The Equals list must contain at least one value";
+			return "The list must contain at least one value and none of the values can be null";
 		}
 
 		@Override

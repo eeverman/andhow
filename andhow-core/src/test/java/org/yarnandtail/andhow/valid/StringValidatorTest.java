@@ -218,7 +218,7 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void equalsGetInvalidSpecificationMessageTest() {
-		assertEquals("The Equals list must contain at least one value",
+		assertEquals("The list must contain at least one value and none of the values can be null",
 				new StringValidator.Equals().getInvalidSpecificationMessage());
 	}
 
