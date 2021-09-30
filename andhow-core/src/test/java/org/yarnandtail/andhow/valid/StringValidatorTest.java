@@ -48,7 +48,25 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
 	}
-	
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class StartsWith.
+	 */
+	@Test
+	public void startsWithGetInvalidSpecificationMessageTest() {
+		assertEquals("The StartsWith expression cannot be null",
+				new StringValidator.StartsWith("A", false).getInvalidSpecificationMessage());
+	}
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class StartsWith.
+	 */
+	@Test
+	public void startsWithGetTheValueMustDescriptionTest() {
+		assertEquals("start with 'A'",
+				new StringValidator.StartsWith("A", false).getTheValueMustDescription());
+	}
+
 
 	/**
 	 * Test of isSpecificationValid method, of class EndsWith.
@@ -86,8 +104,24 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
 	}
-	
-	
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class EndsWith.
+	 */
+	@Test
+	public void endsWithGetInvalidSpecificationMessageTest() {
+		assertEquals("The EndWith expression cannot be null",
+				new StringValidator.EndsWith("A", false).getInvalidSpecificationMessage());
+	}
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class EndsWith.
+	 */
+	@Test
+	public void endsWithGetTheValueMustDescriptionTest() {
+		assertEquals("end with 'A'",
+				new StringValidator.EndsWith("A", false).getTheValueMustDescription());
+	}
 
 	/**
 	 * Test of isSpecificationValid method, of class StringRegex.
@@ -115,5 +149,85 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
 	}
-	
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class Regex.
+	 */
+	@Test
+	public void regexGetInvalidSpecificationMessageTest() {
+		assertEquals("The expression 'abc.*[' is not a valid regex expression",
+				new StringValidator.Regex("abc.*[").getInvalidSpecificationMessage());
+	}
+
+	/**
+	 * Test of getTheValueMustDescriptionTest method, of class Regex.
+	 */
+	@Test
+	public void regexGetTheValueMustDescriptionTest() {
+		assertEquals("match the regex expression 'abc*'",
+				new StringValidator.Regex("abc*").getTheValueMustDescription());
+	}
+
+	/**
+	 * Test of isSpecificationValid method, of class Equals.
+	 */
+	@Test
+	public void equalsIsSpecificationValidTest() {
+		StringValidator.Equals instance = new StringValidator.Equals((String) null);
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.Equals();
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.Equals("A", null, "C");
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.Equals("A");
+		assertTrue(instance.isSpecificationValid());
+
+		instance = new StringValidator.Equals("A", "B", "C");
+		assertTrue(instance.isSpecificationValid());
+	}
+
+	/**
+	 * Test of isValid method, of class Equals.
+	 */
+	@Test
+	public void equalsIsValidTest() {
+		StringValidator.Equals instance = new StringValidator.Equals((String) null);
+		assertFalse(instance.isValid("A"));
+
+		instance = new StringValidator.Equals("A");
+		assertFalse(instance.isValid(null));
+
+		instance = new StringValidator.Equals("A");
+		assertFalse(instance.isValid("B"));
+
+		instance = new StringValidator.Equals("A");
+		assertFalse(instance.isValid("a"));
+
+		instance = new StringValidator.Equals("A");
+		assertTrue(instance.isValid("A"));
+
+		instance = new StringValidator.Equals("A", "B", "C");
+		assertTrue(instance.isValid("B"));
+	}
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class Equals.
+	 */
+	@Test
+	public void equalsGetInvalidSpecificationMessageTest() {
+		assertEquals("The list must contain at least one value and none of the values can be null",
+				new StringValidator.Equals().getInvalidSpecificationMessage());
+	}
+
+	/**
+	 * Test of getTheValueMustDescriptionTest method, of class Equals.
+	 */
+	@Test
+	public void equalsGetTheValueMustDescriptionTest() {
+		assertEquals("be equal to one of '[A, B, C]'",
+				new StringValidator.Equals("A", "B", "C").getTheValueMustDescription());
+	}
 }
