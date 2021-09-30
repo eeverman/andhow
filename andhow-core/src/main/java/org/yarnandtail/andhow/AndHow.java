@@ -8,7 +8,6 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.*;
 import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
