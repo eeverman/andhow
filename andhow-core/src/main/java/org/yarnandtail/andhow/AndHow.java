@@ -95,7 +95,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			core = new AndHowCore(
 					config.getNamingStrategy(),
 					config.buildLoaders(),
-					findGroups(config.getRegisteredGroups()));
+					config.getRegisteredGroups());
 		}
 	}
 
@@ -358,7 +358,7 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 						AndHowCore newCore = new AndHowCore(
 								config.getNamingStrategy(),
 								config.buildLoaders(),
-								findGroups(config.getRegisteredGroups()));
+								config.getRegisteredGroups());
 
 						singleInstance.core = newCore;
 
@@ -421,28 +421,6 @@ public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
 			return initialization.getStackTrace();
 		} else {
 			return new StackTraceElement[0];
-		}
-	}
-
-
-	/**
-	 * Determine the 'Groups' (classes or interfaces containing AndHow Properties) that should be in
-	 * scope of AndHow.
-	 *
-	 * AndHowConfiguration may pass a non-null list of groups to override automatic discovery, mostly
-	 * for use during testing.  If the passed 'overrideGroups' is null, use auto-discovery.  If
-	 * non-null, use the passed list, even if empty.
-	 *
-	 * @param overrideGroups A list of groups to use instead of the normal auto-discovery.
-	 *   If overrideGroups is null, auto-discovery is used.  If non-null (even empty) overrideGroups is used.
-	 * @return A list of groups that are in-scope for AndHow.
-	 */
-	private static List<GroupProxy> findGroups(List<GroupProxy> overrideGroups) {
-		if (overrideGroups == null) {
-			PropertyRegistrarLoader registrar = new PropertyRegistrarLoader();
-			return registrar.getGroups();
-		} else {
-			return overrideGroups;
 		}
 	}
 

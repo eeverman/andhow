@@ -13,8 +13,7 @@ import org.yarnandtail.andhow.internal.NameAndProperty;
  * PropertyRegistrar instances are generated automatically at compile time for
  * classes using AndHow properties.  When a PropertyRegistrar is created, it is
  * recorded as a Service, making it visible to the ServiceLoader.
- * 
- * @author ericeverman
+ *
  */
 public class PropertyRegistrarLoader {
 	private final ClassLoader classLoader;
@@ -79,7 +78,7 @@ public class PropertyRegistrarLoader {
 	 * multiple times.  The contained {@code Property}s are static instances
 	 * for which there will ever only be a single instance.
 	 * 
-	 * @return A disconnected list of new {@code GroupProxy}s.
+	 * @return A disconnected, editable and non-null list of {@code GroupProxy}s.
 	 */
 	public List<GroupProxy> getGroups() {
 		
@@ -134,7 +133,7 @@ public class PropertyRegistrarLoader {
 		}
 		
 		
-		List<GroupProxy> list = new ArrayList();
+		List<GroupProxy> list = new ArrayList();	//must be editable
 		list.addAll(groups.values());
 		return list;
 	}
