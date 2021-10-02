@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.io.InputStream;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
@@ -8,12 +8,12 @@ import org.yarnandtail.andhow.sample.PropFileLoaderSamplePrinter;
 
 /**
  * Shared functionality for all Property file loaders.
- * 
+ *
  * @author ericeverman
  */
-public abstract class PropFileBaseLoader extends BaseLoader 
+public abstract class PropFileBaseLoader extends BaseLoader
 		implements ReadLoader, LocalFileLoader {
-	
+
 	/**
 	 * Property containing the path of a property file. XOR w/ classpathStr
 	 */
@@ -25,25 +25,25 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	protected String pathStr;
 
 	protected boolean missingFileAProblem = true;
-	
+
 	protected boolean unknownPropertyAProblem = true;
-	
+
 	public PropFileBaseLoader() { /* empty for easy construction */ }
-	
-	public LoaderValues loadInputStreamToProps(InputStream inputStream, 
-			String fromPath, StaticPropertyConfigurationInternal appConfigDef,
+
+	public LoaderValues loadInputStreamToProps(InputStream inputStream,
+			String fromPath, PropertyConfigurationInternal appConfigDef,
 			ValidatedValuesWithContext existingValues) throws LoaderException {
-		
-		
+
+
 		if (inputStream == null) {
 			Exception e = new IllegalArgumentException("The InputStream cannot be null");
 			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
 		}
-		
+
 		try {
 			Properties props = new Properties();
 			props.load(inputStream);
-			
+
 			ArrayList<ValidatedValue> values = new ArrayList();
 			ProblemList<Problem> problems = new ProblemList();
 
@@ -59,18 +59,18 @@ public abstract class PropFileBaseLoader extends BaseLoader
 
 			values.trimToSize();
 			return new LoaderValues(this, values, problems);
-			
+
 		} catch (Exception e) {
 			//These are nominally IO exceptions
 			throw new LoaderException(e, this, "properties file at '" + fromPath + "'");
 		}
 	}
-	
+
 	/**
 	 * Utility method to simplify finding the effective path.
-	 * 
+	 *
 	 * @param existingValues
-	 * @return 
+	 * @return
 	 */
 	protected String getEffectivePath(ValidatedValuesWithContext existingValues) {
 		if (pathStr != null) {
@@ -85,7 +85,7 @@ public abstract class PropFileBaseLoader extends BaseLoader
 			return null;
 		}
 	}
-	
+
 	@Override
 	public List<Property> getInstanceConfig() {
 		if (pathProp != null) {
@@ -106,17 +106,17 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	public SamplePrinter getConfigSamplePrinter() {
 		return new PropFileLoaderSamplePrinter();
 	}
-	
+
 	@Override
 	public String getLoaderType() {
 		return "PropertyFile";
 	}
-	
+
 	@Override
 	public String getLoaderDialect() {
 		return "KeyValuePair";
 	}
-	
+
 	@Override
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;
@@ -126,17 +126,17 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	public boolean isUnknownPropertyAProblem() {
 		return unknownPropertyAProblem;
 	}
-	
+
 	@Override
 	public void setMissingFileAProblem(boolean isAProblem) {
 		missingFileAProblem = isAProblem;
 	}
-	
+
 	@Override
 	public boolean isMissingFileAProblem() {
 		return missingFileAProblem;
-	}	
-	
+	}
+
 	@Override
 	public void setFilePath(String path) {
 		if (path != null && pathProp != null) {
@@ -145,7 +145,7 @@ public abstract class PropFileBaseLoader extends BaseLoader
 		}
 		pathStr = path;
 	}
-	
+
 	@Override
 	public void setFilePath(Property<String> path) {
 		if (path != null && pathStr != null) {

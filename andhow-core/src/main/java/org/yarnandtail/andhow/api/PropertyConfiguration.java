@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Public view of configuration and metadata for all known static Properties.
- * 
+ *
  * This is the entire domain of Properties defined as static properties
  * (ie the property is defined as a static variable) and on the classpath
  * (or explicitly configured) to be part of AndHow in the current classloader.
@@ -23,9 +23,9 @@ import java.util.List;
  * Is declared as private.  If any part of the public AndHow API provides an
  * alternate path to access the property and read its value, it would bypass
  * the intended visibility of the property.
- * 
+ *
  */
-public interface StaticPropertyConfiguration {
+public interface PropertyConfiguration {
 
 	/**
 	 * All the effective 'in' aliases for this property, not including the canonical name.

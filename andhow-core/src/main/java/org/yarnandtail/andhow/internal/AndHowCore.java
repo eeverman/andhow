@@ -26,23 +26,23 @@ import org.yarnandtail.andhow.util.AndHowLog;
  * singleton so references to it are stable.
  *
  */
-public class AndHowCore implements StaticPropertyConfigurationInternal, ValidatedValues {
+public class AndHowCore implements PropertyConfigurationInternal, ValidatedValues {
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCore.class);
-	
+
 	//User config
 	private final List<Loader> loaders = new ArrayList();
-	
+
 	//Internal state
-	private final StaticPropertyConfigurationInternal staticConfig;
+	private final PropertyConfigurationInternal staticConfig;
 	private final ValidatedValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
-	
-	public AndHowCore(NamingStrategy naming, List<Loader> loaders, 
-			List<GroupProxy> registeredGroups) 
+
+	public AndHowCore(NamingStrategy naming, List<Loader> loaders,
+			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
-		
+
 		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
-		
+
 		if (loaders != null) {
 			for (Loader loader : loaders) {
 				if (! this.loaders.contains(loader)) {
@@ -51,7 +51,7 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 					problems.add(new ConstructionProblem.DuplicateLoader(loader));
 				}
 			}
-		}		
+		}
 
 		List<GroupProxy> effRegGroups = findGroups(registeredGroups);
 
@@ -61,7 +61,7 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 					"(Maven artifact andhow-annotation-processor) and javac annotation processing was not disabled " +
 					"(javac -proc flags).");
 		}
-		
+
 		try {
 			//Global options are general config of AndHow itself
 			GroupProxy options = AndHowUtil.buildGroupProxy(Options.class, false);
@@ -71,9 +71,9 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 		}
 
 
-		StaticPropertyConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
+		PropertyConfigurationMutable startupDef = AndHowUtil.buildDefinition(effRegGroups, loaders, namingStrategy, problems);
 		staticConfig = startupDef.toImmutable();
-		
+
 		//
 		//If there are ConstructionProblems, we can't continue on to attempt to
 		//load values.
@@ -86,9 +86,9 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			printFailedStartupDetails(afe);
 			throw afe;
 		}
-		
+
 		//No Construction problems, so continue on...
-		
+
 		loadedValues = loadValues(staticConfig, problems).getValueMapWithContextImmutable();
 		doPropertyValidations(staticConfig, loadedValues, problems);
 		checkForValuesWhichMustBeNonNull(staticConfig, problems);
@@ -98,14 +98,14 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			printFailedStartupDetails(afe);
 			throw afe;
 		}
-		
+
 		//Export Values if applicable
 		List<ExportGroup> exportGroups = staticConfig.getExportGroups();
 
 		for (ExportGroup eg : exportGroups) {
 			eg.getExporter().export(eg.getGroup(), staticConfig, this);
 		}
-		
+
 		//Print samples (if requested) to System.out
 		if (getValue(Options.CREATE_SAMPLES)) {
 			ReportGenerator.printConfigSamples(staticConfig, loaders, false);
@@ -133,30 +133,30 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			return configuredGroups;
 		}
 	}
-	
+
 	/**
 	 * Prints failed startup details to System.err
-	 * 
-	 * @param afe 
+	 *
+	 * @param afe
 	 */
 	private void printFailedStartupDetails(AppFatalException afe) {
-		
+
 		File sampleDir = ReportGenerator.printConfigSamples(staticConfig, loaders, true);
 		String sampleDirStr = (sampleDir != null)?sampleDir.getAbsolutePath():"";
 		afe.setSampleDirectory(sampleDirStr);
-		
+
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream(os);
 		ReportGenerator.printProblems(ps, afe, staticConfig);
-		
+
 		try {
 			String message = os.toString("UTF8");
 			//Add separator prefix to prevent log prefixes from indenting 1st line
 			System.err.println(System.lineSeparator() + message);
 		} catch (UnsupportedEncodingException ex) {
-			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen	
+			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen
 		}
-		
+
 	}
 
 	public Stream<PropertyExport> export(Class<?>... exportClasses) throws IllegalAccessException {
@@ -168,103 +168,103 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 			throw new IllegalArgumentException("Cannot export a null list of classes");
 		}
 	}
-	
+
 	@Override
 	public boolean isExplicitlySet(Property<?> prop) {
 		return loadedValues.isExplicitlySet(prop);
 	}
-	
+
 	@Override
 	public <T> T getExplicitValue(Property<T> prop) {
 		return loadedValues.getExplicitValue(prop);
 	}
-	
+
 	@Override
 	public <T> T getValue(Property<T> prop) {
 		return loadedValues.getValue(prop);
 	}
-	
+
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private ValidatedValuesWithContext loadValues(StaticPropertyConfigurationInternal config, ProblemList<Problem> problems) {
+	private ValidatedValuesWithContext loadValues(PropertyConfigurationInternal config, ProblemList<Problem> problems) {
 		ValidatedValuesWithContextMutable existingValues = new ValidatedValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
 			LoaderValues result = loader.load(config, existingValues);
 			existingValues.addValues(result);
 			problems.addAll(result.getProblems());
-			
+
 			loader.releaseResources();
 		}
 
 		return existingValues;
 	}
-	
+
 	/**
 	 * Validates all Property values.
-	 * 
-	 * @param config Needed bc validation is done while construction is 
+	 *
+	 * @param config Needed bc validation is done while construction is
 	 *	not complete, thus the as-is definition is needed prior to it being complete.
 	 * @param loadedValues The values to be validated.
 	 * @param problems Add any new problems to this list
 	 */
-	private void doPropertyValidations(StaticPropertyConfigurationInternal config, 
-			ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
-		
+	private void doPropertyValidations(PropertyConfigurationInternal config,
+                                       ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
+
 		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
 			for (ValidatedValue pv : lvs.getValues()) {
 				doPropertyValidation(config, lvs.getLoader(), problems, pv);
 			}
 		}
 	}
-	
+
 	/**
 	 * Does validation on a single Property value as loaded by a single loader.
-	 * 
+	 *
 	 * @param <T> The shared type of the Property and Value.
-	 * @param config Needed bc validation is done while construction is 
+	 * @param config Needed bc validation is done while construction is
 	 *	not complete, thus the as-is definition is needed prior to it being complete.
 	 * @param loader The loader used to load the value, for context when creating a Problem.
 	 * @param problems Add any new problems to this list
 	 * @param propValue<T> The Property and its value, both of type 'T'.
 	 */
-	private <T> void doPropertyValidation(StaticPropertyConfigurationInternal config,
-			Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
-		
+	private <T> void doPropertyValidation(PropertyConfigurationInternal config,
+                                          Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
+
 		Property<T> prop = propValue.getProperty();
-		
+
 		for (Validator<T> v : prop.getValidators()) {
 			if (! v.isValid(propValue.getValue())) {
-				
-				ValueProblem.InvalidValueProblem problem = 
-						new ValueProblem.InvalidValueProblem(loader, 
+
+				ValueProblem.InvalidValueProblem problem =
+						new ValueProblem.InvalidValueProblem(loader,
 								config.getGroupForProperty(prop).getProxiedGroup(),
 								prop, propValue.getValue(), v);
-				
+
 				propValue.addProblem(problem);
 				problems.add(problem);
 			}
 		}
 	}
-	
 
-	private void checkForValuesWhichMustBeNonNull(StaticPropertyConfigurationInternal config, ProblemList<Problem> problems) {
-		
+
+	private void checkForValuesWhichMustBeNonNull(PropertyConfigurationInternal config, ProblemList<Problem> problems) {
+
 		for (Property<?> prop : config.getProperties()) {
 			if (prop.isNonNullRequired()) {
 				if (getValue(prop) == null) {
-					
+
 					problems.add(new RequirementProblem.NonNullPropertyProblem(
 								config.getGroupForProperty(prop).getProxiedGroup(), prop));
 				}
 			}
 		}
-		
+
 	}
 
-	
+
 	//
 	//ConstructionDefinition Interface
-	
+
 	@Override
 	public List<EffectiveName> getAliases(Property<?> property) {
 		return staticConfig.getAliases(property);
@@ -289,12 +289,12 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 	public Property<?> getProperty(String name) {
 		return staticConfig.getProperty(name);
 	}
-	
+
 	@Override
 	public List<GroupProxy> getPropertyGroups() {
 		return staticConfig.getPropertyGroups();
 	}
-	
+
 	@Override
 	public boolean containsUserGroups() {
 		return staticConfig.containsUserGroups();
@@ -314,5 +314,5 @@ public class AndHowCore implements StaticPropertyConfigurationInternal, Validate
 	public NamingStrategy getNamingStrategy() {
 		return staticConfig.getNamingStrategy();
 	}
-		
+
 }

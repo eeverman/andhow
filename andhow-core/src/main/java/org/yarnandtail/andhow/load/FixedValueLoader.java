@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.util.*;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
@@ -8,14 +8,14 @@ import org.yarnandtail.andhow.api.*;
 /**
  * A utility loader that is used internally to put fixed values into the effective
  * list of configured values.
- * 
+ *
  * This loader does not trim incoming values for String type properties - they are
  * assumed to already be in final form.
  * This loader considers it a problem to be passed unrecognized properties
  * and will throw a RuntimeException if that happens, though this can be set
  * false to allow fixed values set via name to be ignored if the name is not
  * recognized.
- * 
+ *
  * @author eeverman
  */
 public class FixedValueLoader extends BaseLoader implements ReadLoader {
@@ -64,7 +64,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		List<ValidatedValue> vvs = values == null ? new ArrayList<>() : new ArrayList<>(values.size());
 		ProblemList<Problem> problems = new ProblemList();
@@ -86,24 +86,24 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 		}
 
 		return new LoaderValues(this, vvs, problems);
-		
+
 	}
-	
+
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return false;
 	}
-	
+
 	@Override
 	public String getSpecificLoadDescription() {
 		return "a list of fixed values passed in during startup (not dynamically loaded)";
 	}
-	
+
 	@Override
 	public String getLoaderType() {
 		return "FixedValue";
 	}
-	
+
 	@Override
 	public String getLoaderDialect() {
 		return "FromJavaSourceCode";
@@ -113,7 +113,7 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;
 	}
-	
+
 	@Override
 	public boolean isUnknownPropertyAProblem() {
 		return unknownPropertyAProblem;
@@ -124,5 +124,5 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 		values = null;
 		keyObjectPairValues = null;
 	}
-	
+
 }
