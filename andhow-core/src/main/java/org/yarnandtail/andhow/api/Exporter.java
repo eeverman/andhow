@@ -14,7 +14,6 @@ import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
  */
 public interface Exporter {
 
-
 	/**
 	 * Specify if canonical names should be exported.
 	 * @param option
