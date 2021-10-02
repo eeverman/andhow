@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -27,7 +27,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropFileOnFilesystemLoaderUnitTest.properties";
 
-	StaticPropertyConfigurationMutable appDef;
+	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 
@@ -52,7 +52,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
 
-		appDef = new StaticPropertyConfigurationMutable(bns);
+		appDef = new PropertyConfigurationMutable(bns);
 
 		GroupProxy simpleProxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 

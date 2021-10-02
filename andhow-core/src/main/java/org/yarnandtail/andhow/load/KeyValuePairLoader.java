@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -9,7 +9,7 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  * Intended to reads properties from the command line, but could be used for
  * other sources where properties can be passed as an array of strings, each
  * of the form name=value.
- * 
+ *
  * This loader trims incoming values for String type properties using the
  Trimmer of the associated Property.
  This loader considers it a problem to find unrecognized properties
@@ -24,13 +24,13 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  its Trimmer to remove whitespace according to its own rules.  Generally that
  means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
  for everything else.
- * 
+ *
  * @author eeverman
  */
 public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 
 	protected boolean unknownPropertyAProblem = true;
-	
+
 	/**
 	 * The default delimiter between a key and a value.
 	 */
@@ -39,30 +39,30 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	private List<String> keyValuePairs;
 
 	public KeyValuePairLoader() {
-		
+
 	}
-	
+
 	/**
 	 * Sets the list of string arguments, each string containing a key-value pair
 	 * or just a key for flag type values.
-	 * 
+	 *
 	 * Values are copied, so changes to the passed list are not tracked.
-	 * 
+	 *
 	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
 	 * AndHow.KVP_DELIMITER.
-	 * 
-	 * @param keyValuePairs 
+	 *
+	 * @param keyValuePairs
 	 */
 	public void setKeyValuePairs(List<String> keyValuePairs) {
 		this.keyValuePairs = keyValuePairs == null ? null : new ArrayList<>(keyValuePairs);
 	}
-	
+
 	/**
 	 * Sets the list of string arguments, each string containing a key-value pair
 	 * or just a key for flag type values.
-	 * 
+	 *
 	 * Values are copied, so changes to the passed array are not tracked.
-	 * 
+	 *
 	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
 	 * AndHow.KVP_DELIMITER.
 	 *
@@ -73,13 +73,13 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	public void setKeyValuePairs(String... keyValuePairs) {
 		this.setKeyValuePairs(keyValuePairs != null ? Arrays.asList(keyValuePairs) : null);
 	}
-	
+
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
-		
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+
 		ArrayList<ValidatedValue> values = new ArrayList();
 		ProblemList<Problem> problems = new ProblemList();
-		
+
 		if (keyValuePairs != null) {
 			for (String s : keyValuePairs) {
 				try {
@@ -96,25 +96,25 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 
 			values.trimToSize();
 		}
-		
+
 		return new LoaderValues(this, values, problems);
 	}
-	
+
 	@Override
 	public String getSpecificLoadDescription() {
 		return "string key value pairs";
 	}
-	
+
 	@Override
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
-	
+
 	@Override
 	public String getLoaderType() {
 		return "KeyValuePair";
 	}
-	
+
 	@Override
 	public String getLoaderDialect() {
 		return null;
@@ -124,12 +124,12 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	public void setUnknownPropertyAProblem(boolean isAProblem) {
 		unknownPropertyAProblem = isAProblem;
 	}
-	
+
 	@Override
 	public boolean isUnknownPropertyAProblem() {
 		return unknownPropertyAProblem;
 	}
-	
+
 	@Override
 	public void releaseResources() {
 		keyValuePairs = null;

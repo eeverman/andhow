@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.util.Collections;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
@@ -15,18 +15,18 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author eeverman
  */
 public abstract class BaseLoader implements Loader {
-	
-	
+
+
 	@Override
 	public Class<?> getClassConfig() {
 		return null;
 	}
-	
+
 	@Override
 	public List<Property> getInstanceConfig() {
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public SamplePrinter getConfigSamplePrinter() {
 		return null;	//Each implementation needs to provide its own.
@@ -34,17 +34,17 @@ public abstract class BaseLoader implements Loader {
 
 	/**
 	 * Util method to load a String to a property by name.
-	 * 
+	 *
 	 * Used for text based loaders.
-	 * 
+	 *
 	 * @param appConfigDef Used to look up the property name for find the actual property
 	 * @param values List of PropertyValues to add to, which should be only the value of this loader.
 	 * @param loaderProblems A list of Problems to add to if there is a loader related problem
 	 * @param key The property name
-	 * @param strValue The property value 
+	 * @param strValue The property value
 	 */
-	protected void attemptToAdd(StaticPropertyConfigurationInternal appConfigDef, List<ValidatedValue> values, 
-			ProblemList<Problem> loaderProblems, String key, String strValue) {
+	protected void attemptToAdd(PropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
+                                ProblemList<Problem> loaderProblems, String key, String strValue) {
 
 		Property prop = mapNametoProperty(appConfigDef, key);
 
@@ -84,8 +84,8 @@ public abstract class BaseLoader implements Loader {
 	 * @param key The property name
 	 * @param value The property value as an Object, already of the expected type for the Property.
 	 */
-	protected void attemptToAdd(StaticPropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
-															ProblemList<Problem> loaderProblems, String key, Object value) {
+	protected void attemptToAdd(PropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
+                                ProblemList<Problem> loaderProblems, String key, Object value) {
 
 		Property prop = mapNametoProperty(appConfigDef, key);
 
@@ -104,11 +104,11 @@ public abstract class BaseLoader implements Loader {
 
 	/**
 	 * Util method to attempt to load an object of an unknown type to a property.
-	 * 
+	 *
 	 * Used for object based loaders where value are not in text form.
 	 * This loader assumes the passed property is a valid property to load to,
 	 * but it will check to make sure it is not null, which is not treated as an error.
-	 * 
+	 *
 	 * @param appConfigDef Used to look up the property name for find the actual property
 	 * @param values List of PropertyValues to add to, which should be only the value of this loader.
 	 * @param loaderProblems A list of LoaderProblems to add to if there is a loader related problem
@@ -116,13 +116,13 @@ public abstract class BaseLoader implements Loader {
 	 * @param value The Object to be loaded to this property.  If a String and that does
 	 *              not match the Property type, parsing is attempted to convert it.
 	 */
-	protected void attemptToAdd(StaticPropertyConfigurationInternal appConfigDef, List<ValidatedValue> values, 
-			ProblemList<Problem> loaderProblems, Property prop, Object value) {
-		
+	protected void attemptToAdd(PropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
+                                ProblemList<Problem> loaderProblems, Property prop, Object value) {
+
 		if (prop != null) {
-			
+
 			ValidatedValue validatedValue = null;
-			
+
 			if (value.getClass().equals(prop.getValueType().getDestinationType())) {
 
 				validatedValue = new ValidatedValue(prop, value);
@@ -158,8 +158,8 @@ public abstract class BaseLoader implements Loader {
 	 * @param loaderProblems A list of Problems to add to if there is a loader related problem
 	 * @param validatedValue The validated value to load, which may be null which is a no-op.
 	 */
-	protected void attemptToAddIfNotDuplicate(StaticPropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
-																						ProblemList<Problem> loaderProblems, ValidatedValue validatedValue) {
+	protected void attemptToAddIfNotDuplicate(PropertyConfigurationInternal appConfigDef, List<ValidatedValue> values,
+                                              ProblemList<Problem> loaderProblems, ValidatedValue validatedValue) {
 
 		if (validatedValue != null) {
 			ValidatedValue dup = findDuplicateProperty(validatedValue, values);
@@ -172,7 +172,7 @@ public abstract class BaseLoader implements Loader {
 			}
 		}
 	}
-	
+
 	protected ValidatedValue findDuplicateProperty(ValidatedValue current, List<ValidatedValue> values) {
 		for (ValidatedValue ref : values) {
 			if (current.getProperty().equals(ref.getProperty())) {
@@ -181,15 +181,15 @@ public abstract class BaseLoader implements Loader {
 		}
 		return null;
 	}
-	
-	protected <T> ValidatedValue createValue(StaticPropertyConfigurationInternal appConfigDef, 
-			Property<T> prop, String untrimmedString) throws ParsingException {
-		
+
+	protected <T> ValidatedValue createValue(PropertyConfigurationInternal appConfigDef,
+                                             Property<T> prop, String untrimmedString) throws ParsingException {
+
 		T value = null;
-		
+
 		String trimmed = untrimmedString;
 
-		if (prop.getValueType().getDestinationType().equals(String.class) && 
+		if (prop.getValueType().getDestinationType().equals(String.class) &&
 				this.isTrimmingRequiredForStringValues()) {
 
 			trimmed = prop.getTrimmer().trim(untrimmedString);
@@ -203,7 +203,7 @@ public abstract class BaseLoader implements Loader {
 		} else {
 			return null;	//No value to create
 		}
-		
+
 		return new ValidatedValue(prop, value);
 	}
 
@@ -213,7 +213,7 @@ public abstract class BaseLoader implements Loader {
 	 * @param name The name, which will be trimmed and converted to an effective name.
 	 * @return The Property or null if it cannot be found.
 	 */
-	protected Property mapNametoProperty(StaticPropertyConfigurationInternal appConfigDef, String name) {
+	protected Property mapNametoProperty(PropertyConfigurationInternal appConfigDef, String name) {
 
 		name = TextUtil.trimToNull(name);
 
@@ -226,10 +226,10 @@ public abstract class BaseLoader implements Loader {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void releaseResources() {
 		//Nothing to do by default
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.yarnandtail.andhow.api.GroupProxyMutable;
 import org.yarnandtail.andhow.internal.NameAndProperty;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -20,7 +20,7 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public class JndiLoaderSamplePrinterTest {
 
-	StaticPropertyConfigurationMutable config;
+	PropertyConfigurationMutable config;
 	GroupProxyMutable groupProxy1;
 
 	public static interface Config {
@@ -32,7 +32,7 @@ public class JndiLoaderSamplePrinterTest {
 
 	@BeforeEach
 	public void setup() {
-		config = new StaticPropertyConfigurationMutable(new CaseInsensitiveNaming());
+		config = new PropertyConfigurationMutable(new CaseInsensitiveNaming());
 
 		groupProxy1 = new GroupProxyMutable(
 				JndiLoaderSamplePrinterTest.Config.class.getCanonicalName(),

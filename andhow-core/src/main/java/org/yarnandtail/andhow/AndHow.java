@@ -31,7 +31,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * during the life of the application.
  *
  */
-public class AndHow implements StaticPropertyConfiguration, ValidatedValues {
+public class AndHow implements PropertyConfiguration, ValidatedValues {
 
 	//
 	//A few app-wide constants
