@@ -169,10 +169,10 @@ public class StringValidatorTest {
 	}
 
 	/**
-	 * Test of isSpecificationValid method, of class Equals.
+	 * Test of isSpecificationValid method, of class OneOf.
 	 */
 	@Test
-	public void equalsIsSpecificationValidTest() {
+	public void oneOfIsSpecificationValidTest() {
 		StringValidator.OneOf instance = new StringValidator.OneOf((String) null);
 		assertFalse(instance.isSpecificationValid());
 
@@ -190,10 +190,10 @@ public class StringValidatorTest {
 	}
 
 	/**
-	 * Test of isValid method, of class Equals.
+	 * Test of isValid method, of class OneOf.
 	 */
 	@Test
-	public void equalsIsValidTest() {
+	public void oneOfIsValidTest() {
 		StringValidator.OneOf instance = new StringValidator.OneOf((String) null);
 		assertFalse(instance.isValid("A"));
 
@@ -214,19 +214,19 @@ public class StringValidatorTest {
 	}
 
 	/**
-	 * Test of getInvalidSpecificationMessage method, of class Equals.
+	 * Test of getInvalidSpecificationMessage method, of class OneOf.
 	 */
 	@Test
-	public void equalsGetInvalidSpecificationMessageTest() {
+	public void oneOfGetInvalidSpecificationMessageTest() {
 		assertEquals("The list must contain at least one value and none of the values can be null",
 				new StringValidator.OneOf().getInvalidSpecificationMessage());
 	}
 
 	/**
-	 * Test of getTheValueMustDescriptionTest method, of class Equals.
+	 * Test of getTheValueMustDescriptionTest method, of class OneOf.
 	 */
 	@Test
-	public void equalsGetTheValueMustDescriptionTest() {
+	public void oneOfGetTheValueMustDescriptionTest() {
 		assertEquals("be equal to one of '[A, B, C]'",
 				new StringValidator.OneOf("A", "B", "C").getTheValueMustDescription());
 	}
