@@ -230,4 +230,67 @@ public class StringValidatorTest {
 		assertEquals("be equal to one of '[A, B, C]'",
 				new StringValidator.OneOf("A", "B", "C").getTheValueMustDescription());
 	}
+
+	/**
+	 * Test of isSpecificationValid method, of class OneOfIgnoringCase.
+	 */
+	@Test
+	public void oneOfIgnoringCaseIsSpecificationValidTest() {
+		StringValidator.OneOfIgnoringCase instance = new StringValidator.OneOfIgnoringCase((String) null);
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.OneOfIgnoringCase();
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.OneOfIgnoringCase("A", null, "C");
+		assertFalse(instance.isSpecificationValid());
+
+		instance = new StringValidator.OneOfIgnoringCase("A");
+		assertTrue(instance.isSpecificationValid());
+
+		instance = new StringValidator.OneOfIgnoringCase("A", "B", "C");
+		assertTrue(instance.isSpecificationValid());
+	}
+
+	/**
+	 * Test of isValid method, of class OneOfIgnoringCase.
+	 */
+	@Test
+	public void oneOfIgnoringCaseIsValidTest() {
+		StringValidator.OneOfIgnoringCase instance = new StringValidator.OneOfIgnoringCase((String) null);
+		assertFalse(instance.isValid("A"));
+
+		instance = new StringValidator.OneOfIgnoringCase("A");
+		assertFalse(instance.isValid(null));
+
+		instance = new StringValidator.OneOfIgnoringCase("A");
+		assertFalse(instance.isValid("b"));
+
+		instance = new StringValidator.OneOfIgnoringCase("A");
+		assertTrue(instance.isValid("a"));
+
+		instance = new StringValidator.OneOfIgnoringCase("a");
+		assertTrue(instance.isValid("A"));
+
+		instance = new StringValidator.OneOfIgnoringCase("A", "B", "C");
+		assertTrue(instance.isValid("b"));
+	}
+
+	/**
+	 * Test of getInvalidSpecificationMessage method, of class OneOfIgnoringCase.
+	 */
+	@Test
+	public void oneOfIgnoringCaseGetInvalidSpecificationMessageTest() {
+		assertEquals("The list must contain at least one value and none of the values can be null",
+				new StringValidator.OneOfIgnoringCase().getInvalidSpecificationMessage());
+	}
+
+	/**
+	 * Test of getTheValueMustDescriptionTest method, of class OneOf.
+	 */
+	@Test
+	public void oneOfIgnoringCaseGetTheValueMustDescriptionTest() {
+		assertEquals("be equal to one of '[A, B, C]' ignoring case",
+				new StringValidator.OneOfIgnoringCase("A", "B", "C").getTheValueMustDescription());
+	}
 }
