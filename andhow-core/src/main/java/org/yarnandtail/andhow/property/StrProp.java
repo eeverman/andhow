@@ -121,6 +121,10 @@ public class StrProp extends PropertyBase<String> {
 			return this;
 		}
 
+		public StrBuilder oneOfIgnoringCase(String... values) {
+			this.validation(new StringValidator.OneOfIgnoringCase(values));
+			return this;
+		}
 	}
 
 }

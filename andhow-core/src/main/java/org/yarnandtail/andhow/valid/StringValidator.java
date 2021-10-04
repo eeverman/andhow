@@ -49,6 +49,43 @@ public class StringValidator {
 	}
 
 	/**
+	 * Validate that a string is one from the specified set ignoring case.
+	 */
+	public static class OneOfIgnoringCase implements Validator<String> {
+
+		String[] values;
+
+		public OneOfIgnoringCase(String... values) {
+			this.values = values;
+		}
+
+		@Override
+		public boolean isSpecificationValid() {
+			return values != null &&
+					values.length != 0 &&
+					!Arrays.asList(values).contains(null);
+		}
+
+		@Override
+		public String getInvalidSpecificationMessage() {
+			return "The list must contain at least one value and none of the values can be null";
+		}
+
+		@Override
+		public boolean isValid(String value) {
+			if (value != null) {
+				return Arrays.stream(values).anyMatch(value::equalsIgnoreCase);
+			}
+			return false;
+		}
+
+		@Override
+		public String getTheValueMustDescription() {
+			return "be equal to one of '" + Arrays.deepToString(values) + "' ignoring case";
+		}
+	}
+
+	/**
 	 * Validate that a string starts with a specific string.
 	 */
 	public static class StartsWith implements Validator<String> {
