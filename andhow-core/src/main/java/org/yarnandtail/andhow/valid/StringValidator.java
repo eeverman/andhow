@@ -6,7 +6,7 @@ import org.yarnandtail.andhow.api.Validator;
 
 /**
  * A collection of String validation types
- * 
+ *
  * @author ericeverman
  */
 public class StringValidator {
@@ -14,11 +14,11 @@ public class StringValidator {
 	/**
 	 * Validate that a string is one from the specified set.
 	 */
-	public static class Equals implements Validator<String> {
+	public static class OneOf implements Validator<String> {
 
 		String[] values;
 
-		public Equals(String... values) {
+		public OneOf(String... values) {
 			this.values = values;
 		}
 

@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
  * @author ericeverman
  */
 public class StringValidatorTest {
-	
+
 	public StringValidatorTest() {
 	}
-	
+
 	/**
 	 * Test of isSpecificationValid method, of class StartsWith.
 	 */
@@ -19,10 +19,10 @@ public class StringValidatorTest {
 	public void testStartsWithIsSpecificationValid() {
 		StringValidator.StartsWith instance = new StringValidator.StartsWith("abc", true);
 		assertTrue(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.StartsWith("\t", false);
 		assertTrue(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.StartsWith(null, true);
 		assertFalse(instance.isSpecificationValid());
 	}
@@ -39,7 +39,7 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("\tabc"));
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
-		
+
 		instance = new StringValidator.StartsWith("abc", false);
 		assertTrue(instance.isValid("abc"));
 		assertFalse(instance.isValid("aBc"));
@@ -75,10 +75,10 @@ public class StringValidatorTest {
 	public void testEndsWithIsSpecificationValid() {
 		StringValidator.EndsWith instance = new StringValidator.EndsWith("abc", true);
 		assertTrue(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.EndsWith("\t", false);
 		assertTrue(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.EndsWith(null, true);
 		assertFalse(instance.isSpecificationValid());
 	}
@@ -95,7 +95,7 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("abc\t"));
 		assertFalse(instance.isValid("cba"));
 		assertFalse(instance.isValid(null));
-		
+
 		instance = new StringValidator.EndsWith("abc", false);
 		assertTrue(instance.isValid("abc"));
 		assertFalse(instance.isValid("aBc"));
@@ -130,10 +130,10 @@ public class StringValidatorTest {
 	public void testRegexIsSpecificationValid() {
 		StringValidator.Regex instance = new StringValidator.Regex("abc.*");
 		assertTrue(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.Regex("abc.*[");
 		assertFalse(instance.isSpecificationValid());
-		
+
 		instance = new StringValidator.Regex(null);
 		assertFalse(instance.isSpecificationValid());
 	}
@@ -173,19 +173,19 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void equalsIsSpecificationValidTest() {
-		StringValidator.Equals instance = new StringValidator.Equals((String) null);
+		StringValidator.OneOf instance = new StringValidator.OneOf((String) null);
 		assertFalse(instance.isSpecificationValid());
 
-		instance = new StringValidator.Equals();
+		instance = new StringValidator.OneOf();
 		assertFalse(instance.isSpecificationValid());
 
-		instance = new StringValidator.Equals("A", null, "C");
+		instance = new StringValidator.OneOf("A", null, "C");
 		assertFalse(instance.isSpecificationValid());
 
-		instance = new StringValidator.Equals("A");
+		instance = new StringValidator.OneOf("A");
 		assertTrue(instance.isSpecificationValid());
 
-		instance = new StringValidator.Equals("A", "B", "C");
+		instance = new StringValidator.OneOf("A", "B", "C");
 		assertTrue(instance.isSpecificationValid());
 	}
 
@@ -194,22 +194,22 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void equalsIsValidTest() {
-		StringValidator.Equals instance = new StringValidator.Equals((String) null);
+		StringValidator.OneOf instance = new StringValidator.OneOf((String) null);
 		assertFalse(instance.isValid("A"));
 
-		instance = new StringValidator.Equals("A");
+		instance = new StringValidator.OneOf("A");
 		assertFalse(instance.isValid(null));
 
-		instance = new StringValidator.Equals("A");
+		instance = new StringValidator.OneOf("A");
 		assertFalse(instance.isValid("B"));
 
-		instance = new StringValidator.Equals("A");
+		instance = new StringValidator.OneOf("A");
 		assertFalse(instance.isValid("a"));
 
-		instance = new StringValidator.Equals("A");
+		instance = new StringValidator.OneOf("A");
 		assertTrue(instance.isValid("A"));
 
-		instance = new StringValidator.Equals("A", "B", "C");
+		instance = new StringValidator.OneOf("A", "B", "C");
 		assertTrue(instance.isValid("B"));
 	}
 
@@ -219,7 +219,7 @@ public class StringValidatorTest {
 	@Test
 	public void equalsGetInvalidSpecificationMessageTest() {
 		assertEquals("The list must contain at least one value and none of the values can be null",
-				new StringValidator.Equals().getInvalidSpecificationMessage());
+				new StringValidator.OneOf().getInvalidSpecificationMessage());
 	}
 
 	/**
@@ -228,6 +228,6 @@ public class StringValidatorTest {
 	@Test
 	public void equalsGetTheValueMustDescriptionTest() {
 		assertEquals("be equal to one of '[A, B, C]'",
-				new StringValidator.Equals("A", "B", "C").getTheValueMustDescription());
+				new StringValidator.OneOf("A", "B", "C").getTheValueMustDescription());
 	}
 }
