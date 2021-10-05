@@ -62,7 +62,7 @@ public class StrPropTest extends PropertyTestBase {
 		StrProp.StrBuilder builder = new StrProp.StrBuilder();
 		builder.oneOf("A", "B");
 
-		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOf); //now renamed
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOf);
 		StringValidator.OneOf eqValid = (StringValidator.OneOf)(builder._validators.get(0));
 		assertTrue(eqValid.isValid("A") && eqValid.isValid("B"));
 	}
@@ -72,7 +72,7 @@ public class StrPropTest extends PropertyTestBase {
 		StrProp.StrBuilder builder = new StrProp.StrBuilder();
 		builder.oneOfIgnoringCase("A", "B");
 
-		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOfIgnoringCase); //now renamed
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOfIgnoringCase);
 		StringValidator.OneOfIgnoringCase eqValid = (StringValidator.OneOfIgnoringCase)(builder._validators.get(0));
 		assertTrue(eqValid.isValid("a") && eqValid.isValid("b"));
 	}
