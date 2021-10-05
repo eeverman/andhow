@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.io.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
@@ -35,15 +35,15 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author eeverman
  */
 public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
-	
+
 	String specificLoadDescription = null;
-	
+
 	public PropFileOnFilesystemLoader() {
 		/* empty for easy construction */ }
-	
+
 
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -62,10 +62,10 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 			return new LoaderValues(this);
 		}
 	}
-	
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
-			ValidatedValuesWithContext existingValues, String path) {
-		
+
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
+                             ValidatedValuesWithContext existingValues, String path) {
+
 		if (path != null) {
 
 			try {
@@ -89,20 +89,20 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 			} catch (IOException ioe) {
 				return new LoaderValues(this, new LoaderProblem.IOLoaderProblem(this, ioe, "filesystem:" + path));
 			}
-			
+
 		} else {
 			//The filepath to loadJavaPropsToAndhowProps from is not specified, so just ignore it
 			return new LoaderValues(this);
 		}
 	}
-	
+
 	@Override
 	public String getSpecificLoadDescription() {
-		
+
 		if (specificLoadDescription != null) {
 			return specificLoadDescription;
 		} else {
-			
+
 			String path = this.getEffectivePath(null);
 			if (path != null) {
 				return TextUtil.format("file on the file system at path : {} ({})",
@@ -112,22 +112,22 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 			}
 		}
 	}
-	
+
 	/**
 	 * Completely safe way to convert a file system path to an absolute path.
 	 * never errors or returns null.
 	 * @param anything
-	 * @return 
+	 * @return
 	 */
 	private String getAbsPath(String anything) {
-		
+
 		try {
 			File f = new File(anything);
 			return f.getAbsolutePath();
 		} catch (Exception e) {
 			return "[Unknown absolute path]";
 		}
-		
+
 	}
-	
+
 }

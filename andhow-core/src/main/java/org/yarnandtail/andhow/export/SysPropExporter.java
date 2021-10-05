@@ -2,11 +2,11 @@ package org.yarnandtail.andhow.export;
 
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.api.ValidatedValues;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 
 /**
  * Exports Properties to System.Properties.
- * 
+ *
  * @author ericeverman
  */
 public class SysPropExporter extends BaseExporter {
@@ -17,15 +17,15 @@ public class SysPropExporter extends BaseExporter {
 	public SysPropExporter() {}
 
 
-	
+
 	@Override
-	public <T> void doExport(String name, Property<T> property, 
-			StaticPropertyConfigurationInternal definition, ValidatedValues values) {
+	public <T> void doExport(String name, Property<T> property,
+                             PropertyConfigurationInternal definition, ValidatedValues values) {
 		T value = values.getValue(property);
-		
+
 		if (value != null) {
 			System.setProperty(name, property.getValueType().toString(value));
 		}
 	}
-	
+
 }
