@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.valid.StringValidator;
 
 /**
  * Tests StrProp instances as they would be used in an app.
@@ -54,6 +55,26 @@ public class StrPropTest extends PropertyTestBase {
 			assertTrue(problems.stream().allMatch(p -> p instanceof ValueProblem));
 		}
 
+	}
+
+	@Test
+	public void oneOfShouldBuildCorrectValidation() {
+		StrProp.StrBuilder builder = new StrProp.StrBuilder();
+		builder.oneOf("A", "B");
+
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOf); //now renamed
+		StringValidator.OneOf eqValid = (StringValidator.OneOf)(builder._validators.get(0));
+		assertTrue(eqValid.isValid("A") && eqValid.isValid("B"));
+	}
+
+	@Test
+	public void oneOfIgnoringCaseShouldBuildCorrectValidation() {
+		StrProp.StrBuilder builder = new StrProp.StrBuilder();
+		builder.oneOfIgnoringCase("A", "B");
+
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOfIgnoringCase); //now renamed
+		StringValidator.OneOfIgnoringCase eqValid = (StringValidator.OneOfIgnoringCase)(builder._validators.get(0));
+		assertTrue(eqValid.isValid("a") && eqValid.isValid("b"));
 	}
 
 	public interface ValidationGroup {
