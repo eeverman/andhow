@@ -173,7 +173,7 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void oneOfIsSpecificationValidTest() {
-		StringValidator.OneOf instance = new StringValidator.OneOf((String) null);
+		StringValidator.OneOf instance = new StringValidator.OneOf((String[]) null);
 		assertFalse(instance.isSpecificationValid());
 
 		instance = new StringValidator.OneOf();
@@ -236,7 +236,7 @@ public class StringValidatorTest {
 	 */
 	@Test
 	public void oneOfIgnoringCaseIsSpecificationValidTest() {
-		StringValidator.OneOfIgnoringCase instance = new StringValidator.OneOfIgnoringCase((String) null);
+		StringValidator.OneOfIgnoringCase instance = new StringValidator.OneOfIgnoringCase((String[]) null);
 		assertFalse(instance.isSpecificationValid());
 
 		instance = new StringValidator.OneOfIgnoringCase();
