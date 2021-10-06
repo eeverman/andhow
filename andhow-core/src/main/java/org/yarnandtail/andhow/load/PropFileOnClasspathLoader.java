@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationInternal;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.io.IOException;
 import java.io.InputStream;
 import org.yarnandtail.andhow.api.*;
@@ -42,7 +42,7 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 		/* empty for easy construction */ }
 
 	@Override
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -69,8 +69,8 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 	 * @param path
 	 * @return
 	 */
-	public LoaderValues load(StaticPropertyConfigurationInternal appConfigDef,
-			ValidatedValuesWithContext existingValues, String path) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
+                             ValidatedValuesWithContext existingValues, String path) {
 
 		try (InputStream inS = PropFileOnClasspathLoader.class.getResourceAsStream(path)) {
 

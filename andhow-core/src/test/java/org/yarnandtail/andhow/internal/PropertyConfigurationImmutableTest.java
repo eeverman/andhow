@@ -1,16 +1,16 @@
 package org.yarnandtail.andhow.internal;
 
 
+
+import org.junit.jupiter.api.Assertions;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.api.NamingStrategy;
-import org.yarnandtail.andhow.api.ProblemList;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.util.NameUtil;
 
@@ -18,7 +18,7 @@ import org.yarnandtail.andhow.util.NameUtil;
  *
  * @author eeverman
  */
-public class StaticPropertyConfigurationMutableTest {
+public class PropertyConfigurationImmutableTest {
 
 	String paramFullPath = SimpleParams.class.getCanonicalName() + ".";
 
@@ -27,25 +27,39 @@ public class StaticPropertyConfigurationMutableTest {
 		FlagProp FLAG_FALSE = FlagProp.builder().defaultValue(false).build();
 	}
 
+	//Two PropGroups w/ a duplicate (shared) property
 	public interface SampleGroup { StrProp STR_1 = StrProp.builder().build(); }
 	public interface SampleGroupDup { StrProp STR_1_DUP = SampleGroup.STR_1; }
 
 	public interface RandomUnregisteredGroup { StrProp STR_RND = StrProp.builder().build(); }
+
+	/**
+	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
+	 */
+	public static interface BadDefaultAndValidationGroup {
+		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().matches("The[broekn.*").defaultValue("The Big Chill").build();
+		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().matches("[A-F,0-9]*").defaultValue("Red").build();
+		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().matches("[A-F,0-9]*").defaultValue("FFF000").build();
+
+	}
+
 
 	@Test
 	public void testHappyPath() throws Exception {
 
 		NamingStrategy bns = new CaseInsensitiveNaming();
 
-		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
-
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 
-		appDef.addProperty(proxy, SimpleParams.STR_BOB);
-		appDef.addProperty(proxy, SimpleParams.FLAG_FALSE);
+		PropertyConfigurationMutable cdm = new PropertyConfigurationMutable(bns);
+		cdm.addProperty(proxy, SimpleParams.STR_BOB);
+		cdm.addProperty(proxy, SimpleParams.FLAG_FALSE);
+
+
+		PropertyConfigurationInternal appDef = cdm.toImmutable();
 
 		//Canonical Names for Property
-		assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
+		Assertions.assertEquals(paramFullPath + "STR_BOB", appDef.getCanonicalName(SimpleParams.STR_BOB));
 		assertEquals(paramFullPath + "FLAG_FALSE", appDef.getCanonicalName(SimpleParams.FLAG_FALSE));
 
 		//Get properties for Canonical name
@@ -73,13 +87,16 @@ public class StaticPropertyConfigurationMutableTest {
 
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
+		PropertyConfigurationMutable cdm = new PropertyConfigurationMutable(bns);
 
 		GroupProxy sampleGroupProxy = AndHowUtil.buildGroupProxy(SampleGroup.class);
 		GroupProxy sampleGroupDupProxy = AndHowUtil.buildGroupProxy(SampleGroupDup.class);
 
-		problems.add(appDef.addProperty(sampleGroupProxy, SampleGroup.STR_1));
-		problems.add(appDef.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
+		problems.add(cdm.addProperty(sampleGroupProxy, SampleGroup.STR_1));
+
+		problems.add(cdm.addProperty(sampleGroupDupProxy, SampleGroupDup.STR_1_DUP));
+
+		PropertyConfigurationInternal appDef = cdm.toImmutable();
 
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(SampleGroup.STR_1, appDef.getProperties().get(0));
@@ -102,13 +119,17 @@ public class StaticPropertyConfigurationMutableTest {
 
 		NamingStrategy bns = new CaseInsensitiveNaming();
 		ProblemList<ConstructionProblem> problems = new ProblemList();
-		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(bns);
+		PropertyConfigurationMutable cdm = new PropertyConfigurationMutable(bns);
 
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(BadDefaultAndValidationGroup.class);
 
-		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
-		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
-		problems.add(appDef.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.NAME_WITH_BAD_REGEX));
+
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_BAD_DEFAULT));
+
+		problems.add(cdm.addProperty(proxy, BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT));
+
+		PropertyConfigurationInternal appDef = cdm.toImmutable();
 
 		assertEquals(1, appDef.getProperties().size());
 		assertEquals(BadDefaultAndValidationGroup.COLOR_WITH_OK_DEFAULT, appDef.getProperties().get(0));
@@ -130,12 +151,5 @@ public class StaticPropertyConfigurationMutableTest {
 
 	}
 
-	/**
-	 * Used for testing bad default value (don't match the validator) and bad validator config (invalid regex).
-	 */
-	public static interface BadDefaultAndValidationGroup {
-		StrProp NAME_WITH_BAD_REGEX = StrProp.builder().matches("The[broekn.*").defaultValue("The Big Chill").build();
-		StrProp COLOR_WITH_BAD_DEFAULT = StrProp.builder().matches("[A-F,0-9]*").defaultValue("Red").build();
-		StrProp COLOR_WITH_OK_DEFAULT = StrProp.builder().matches("[A-F,0-9]*").defaultValue("FFF000").build();
-	}
+
 }

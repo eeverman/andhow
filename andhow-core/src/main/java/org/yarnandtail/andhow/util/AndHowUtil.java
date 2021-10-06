@@ -2,9 +2,10 @@ package org.yarnandtail.andhow.util;
 
 import java.lang.reflect.*;
 import java.util.*;
+
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
 import org.yarnandtail.andhow.internal.ConstructionProblem.TooManyAndHowInitInstances;
 import org.yarnandtail.andhow.internal.NameAndProperty;
@@ -30,11 +31,11 @@ public class AndHowUtil {
 	 * @param problems If construction problems are found, add to this list.
 	 * @return A fully configured instance
 	 */
-	public static StaticPropertyConfigurationMutable buildDefinition(
+	public static PropertyConfigurationMutable buildDefinition(
 			List<GroupProxy> groups, List<Loader> loaders,
 			NamingStrategy naming, ProblemList<Problem> problems) {
 
-		StaticPropertyConfigurationMutable appDef = new StaticPropertyConfigurationMutable(naming);
+		PropertyConfigurationMutable appDef = new PropertyConfigurationMutable(naming);
 
 		//null groups is possible - used in testing and possibly early uses before params are created
 		if (groups != null) {
@@ -95,8 +96,8 @@ public class AndHowUtil {
 		return appDef;
 	}
 
-	protected static ProblemList<ConstructionProblem> registerGroup(StaticPropertyConfigurationMutable appDef,
-			GroupProxy group) {
+	protected static ProblemList<ConstructionProblem> registerGroup(
+			PropertyConfigurationMutable appDef, GroupProxy group) {
 
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 
@@ -196,47 +197,47 @@ public class AndHowUtil {
 
 		return props;
 	}
-	
+
 	/**
 	 * Invokes buildGroupProxy(group, true).
-	 * 
+	 *
 	 * @param group
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
-	 * @throws SecurityException 
+	 * @throws SecurityException
 	 */
 	public static GroupProxy buildGroupProxy(Class<?> group)
 			throws IllegalArgumentException, IllegalAccessException, SecurityException {
 
 		return buildGroupProxy(group, true);
 	}
-	
+
 	/**
 	 * Wraps a class that contains AndHow Properties in Proxy class for use within AndHow.
-	 * 
+	 *
 	 * A user specified group is the 'standard' type of group where are user
 	 * creates a property and that class containing that property is then registered
 	 * as a group.  A non-userGroup one which is added automatically by AndHow
 	 * to configure AndHow itself or one of the loaders.
-	 * 
+	 *
 	 * @param group
 	 * @param userGroup If true, this group is a user specified group
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
-	 * @throws SecurityException 
+	 * @throws SecurityException
 	 */
 	public static GroupProxy buildGroupProxy(Class<?> group, boolean userGroup)
 			throws IllegalArgumentException, IllegalAccessException, SecurityException {
-		
+
 		List<NameAndProperty> naps = getProperties(group);
-		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group), 
+		GroupProxy groupProxy = new GroupProxyImmutable(NameUtil.getAndHowName(group),
 				NameUtil.getJavaName(group), naps, userGroup);
-		
+
 		return groupProxy;
 	}
-	
+
 	public static List<GroupProxy> buildGroupProxies(Collection<Class<?>> registeredGroups)
 			throws AppFatalException {
 
@@ -265,7 +266,7 @@ public class AndHowUtil {
 		}
 
 	}
-	
+
 
 	/**
 	 * Gets the field name for a property in a class, which is just the last
@@ -307,24 +308,24 @@ public class AndHowUtil {
 
 		return null;
 	}
-	
+
 	/**
 	 * Hunts up the inheritance tree to find the specified method.
-	 * 
+	 *
 	 * setAccessible(true) is called on the method if found.
-	 * 
+	 *
 	 * If the method cannot be found, null is returned.  If a security restriction
 	 * prevents accessing the method, that SecurityException is thrown.
-	 * 
+	 *
 	 * @param target The class to start searching from
 	 * @param name
 	 * @param parameterTypes
 	 * @return
-	 * @throws SecurityException 
+	 * @throws SecurityException
 	 */
-	public static Method findMethod(Class<?> target, String name, Class<?>... parameterTypes) 
+	public static Method findMethod(Class<?> target, String name, Class<?>... parameterTypes)
 			throws SecurityException {
-		
+
 		while (target != null) {
 			try {
 				Method m = target.getDeclaredMethod(name, parameterTypes);
@@ -333,30 +334,30 @@ public class AndHowUtil {
 			} catch (NoSuchMethodException ex) {
 				//expected
 			}
-			
+
 			target = target.getSuperclass();
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Returns true if the specified class name is on the classpath.
-	 * 
+	 *
 	 * This never throws an exception - all exception conditions just return false.
-	 * 
+	 *
 	 * @param className
-	 * @return 
+	 * @return
 	 */
 	public static boolean classExists(String className) {
 		return getClassForName(className) != null;
 	}
-	
+
 	/**
 	 * Loads a class by name with no errors, returning null if the class cannot be found.
-	 * 
+	 *
 	 * @param className
-	 * @return 
+	 * @return
 	 */
 	public static Class<?> getClassForName(String className) {
 		try {
@@ -365,20 +366,20 @@ public class AndHowUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Creates a new Object instance from the named class using the default
 	 * no-arg constructor.
-	 * 
+	 *
 	 * No errors are thrown, null if just returned if the class does not exist,
 	 * there is no no-arg constructor, so some other exception occurs.
-	 * 
+	 *
 	 * @param className
-	 * @return 
+	 * @return
 	 */
 	public static Object getClassInstanceForName(String className) {
 		Class<?> c = getClassForName(className);
-		
+
 		if (c != null) {
 			try {
 				return c.getDeclaredConstructor().newInstance();
@@ -386,29 +387,29 @@ public class AndHowUtil {
 				//ignore
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public static AndHowConfiguration<? extends AndHowConfiguration>
 			findConfiguration(AndHowConfiguration<? extends AndHowConfiguration> defaultConfig)
 			throws AppFatalException {
-		
+
 		InitLoader prodLoader = new InitLoader();
 		InitLoader testLoader = new TestInitLoader();
 
 		if (! prodLoader.isValidState()) {
 			throw new AppFatalException(
-					"Unexpected multiple AndHowInit classes on the classpath", 
+					"Unexpected multiple AndHowInit classes on the classpath",
 					new TooManyAndHowInitInstances(prodLoader.getInitInstances()));
 		}
-		
+
 		if (testLoader != null && ! testLoader.isValidState()) {
 			throw new AppFatalException(
-					"Unexpected multiple AndHowTestInit classes on the classpath", 
+					"Unexpected multiple AndHowTestInit classes on the classpath",
 					new TooManyAndHowInitInstances(testLoader.getInitInstances()));
 		}
-		
+
 		if (testLoader != null && testLoader.hasConfig()) {
 			return testLoader.getAndHowConfiguration(defaultConfig);
 		} else {

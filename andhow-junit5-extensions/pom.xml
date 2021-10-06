@@ -27,15 +27,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<dependency>
-			<!-- This should be optional, but is a too baked in.
-			This issue:  https://github.com/eeverman/andhow/issues/309
-			  should remove it -->
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<scope>optional</scope>
-		</dependency>
-
 		<!--
 		This package is designed to be used unit testing utils for apps,
 		so dependencies that would normally be test scope are compile scope.

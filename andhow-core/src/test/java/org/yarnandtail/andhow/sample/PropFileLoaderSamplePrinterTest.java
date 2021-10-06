@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.GroupProxyMutable;
 import org.yarnandtail.andhow.internal.NameAndProperty;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class PropFileLoaderSamplePrinterTest {
 
-	StaticPropertyConfigurationMutable config;
+	PropertyConfigurationMutable config;
 	GroupProxyMutable groupProxy1;
 
 	public static interface Config {
@@ -31,7 +31,7 @@ public class PropFileLoaderSamplePrinterTest {
 
 	@BeforeEach
 	public void setup() {
-		config = new StaticPropertyConfigurationMutable(new CaseInsensitiveNaming());
+		config = new PropertyConfigurationMutable(new CaseInsensitiveNaming());
 
 		groupProxy1 = new GroupProxyMutable(
 				PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName(),

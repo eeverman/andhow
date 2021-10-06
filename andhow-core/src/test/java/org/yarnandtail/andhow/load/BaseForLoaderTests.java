@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.load;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.api.GroupProxy;
-import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.*;
@@ -17,14 +17,14 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @author eeverman
  */
 public class BaseForLoaderTests {
-	StaticPropertyConfigurationMutable appDef;
+	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 
 	@BeforeEach
 	public void init() throws Exception {
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
-		appDef = new StaticPropertyConfigurationMutable(bns);
+		appDef = new PropertyConfigurationMutable(bns);
 		GroupProxy proxy = AndHowUtil.buildGroupProxy(SimpleParams.class);
 
 		appDef.addProperty(proxy, SimpleParams.STR_BOB);
