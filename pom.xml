@@ -72,8 +72,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<doclint>none</doclint>
 		<jacoco.skip>true</jacoco.skip>
 	</properties>
@@ -337,7 +335,7 @@
 					<arguments>remoteDeploy=true</arguments>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<tagNameFormat>andhow-@{project.version}</tagNameFormat>
-					<releaseProfiles>source-and-javadoc-jar,gpg-sign</releaseProfiles>
+					<releaseProfiles>source-and-javadoc-jar,gpg-sign,release-verification</releaseProfiles>
 					<useReleaseProfile>true</useReleaseProfile>
 					<preparationGoals>clean verify</preparationGoals>
 					<goals>deploy</goals>
@@ -409,6 +407,39 @@
 			</build>
 		</profile>
 		<profile>
+			<id>release-verification</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<version>3.0.0-M2</version>
+						<executions>
+							<execution>
+								<id>enforce-maven</id>
+								<goals>
+									<goal>enforce</goal>
+								</goals>
+								<configuration>
+									<rules>
+										<requireMavenVersion>
+											<!-- 3.2.2 req'ed for this bug fix: https://issues.apache.org/jira/browse/MNG-4565 -->
+											<version>(3.5,4.0)</version>
+										</requireMavenVersion>
+										<requireJavaVersion>
+											<!-- Only 1.8 is allowed during a release -->
+											<version>1.8</version>
+										</requireJavaVersion>
+									</rules>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
 			<id>AllJDK8</id>
 			<activation>
 				<jdk>[1.8,1.9)</jdk>
@@ -421,6 +452,24 @@
 						<configuration>
 							<source>1.8</source>
 							<target>1.8</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>java9AndBeyond</id>
+			<activation>
+				<jdk>[1.9,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>${java.vm.specification.version}</source>
+							<target>${java.vm.specification.version}</target>
 						</configuration>
 					</plugin>
 				</plugins>
