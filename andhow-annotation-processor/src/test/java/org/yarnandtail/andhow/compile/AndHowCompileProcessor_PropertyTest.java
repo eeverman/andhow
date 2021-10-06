@@ -44,7 +44,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
         
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 			
@@ -97,7 +97,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
         
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 

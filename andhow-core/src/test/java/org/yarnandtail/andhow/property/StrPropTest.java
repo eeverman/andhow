@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.valid.StringValidator;
 
 /**
  * Tests StrProp instances as they would be used in an app.

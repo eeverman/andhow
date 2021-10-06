@@ -2,8 +2,6 @@ package org.yarnandtail.andhow.util;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.StaticPropertyConfigurationMutable;
@@ -16,7 +14,6 @@ import org.yarnandtail.andhow.service.TestInitLoader;
 /**
  * Utilities used by AndHow during initial construction.
  *
- * @author eeverman
  */
 public class AndHowUtil {
 

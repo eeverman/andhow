@@ -121,8 +121,8 @@
 							<!-- without forking compilation happens in the
 							same process, so no arguments are applied -->
 							<fork>true</fork>
-							<source>1.9</source>
-							<target>1.9</target>
+							<source>${java.vm.specification.version}</source>
+							<target>${java.vm.specification.version}</target>
 						</configuration>
 					</plugin>
 				</plugins>

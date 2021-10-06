@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.compile;
 
-import org.yarnandtail.andhow.service.PropertyRegistrationList;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -27,12 +26,12 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 'see' all classes as they are compiled.  This class then delegates to a
  * 'scanner' class that does deep inspection on compiled code, looking for
  * AndHow Properties.
- * <br>
+ * <p>
  * When an AndHow Property is found in a class, a new {@code PropertyRegistrar}
  * class is created, which contains the list of Properties in that class.
  * There is a one-to-one correspondence between user classes that contain
  * AndHow Properties and auto-created {@code PropertyRegistrar} classes.
- * <br>
+ * <p>
  * At runtime, AndHow will use the {@code ServiceLoader} to discover all instances
  * of {@code PropertyRegistrar} on the classpath, thus finding all AndHow
  * Property containing classes.
@@ -57,6 +56,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
 
+	//major version of the source and jdk.  jdk 1.8 == 8, jdk 9 == 9 and so on.
+	int srcVersion;
+	int jdkVersion;
+
 	/**
 	 * A no-arg constructor is required.
 	 */
@@ -69,6 +72,9 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		//Unwrap the IntelliJ ProcessingEnvironment if needed
 		super.init(unwrap(processingEnv));
+
+		srcVersion = CompileUtil.getMajorJavaVersion(processingEnv.getSourceVersion());
+		jdkVersion = CompileUtil.getMajorJavaVersion();
 	}
 
 	@Override
@@ -88,8 +94,15 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 
 		if (isLastRound) {
-			debug(log, "Final round of annotation processing. Total root element count: {}",
-					roundEnv.getRootElements().size());
+
+			debug(log, "source version: {}  jdk version: {}", srcVersion, jdkVersion);
+
+			if (! CompileUtil.isGeneratedVersionDeterministic(srcVersion, jdkVersion) ) {
+				warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]'. " +
+						"Current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
+						"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
+						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVersion);
+			}
 
 
 			if (initClasses.size() > 1) {
@@ -110,7 +123,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 								INIT_CLASS_NAME, initClasses.get(0).fullClassName);
 
 						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
-
 					}
 
 					if (testInitClasses.size() == 1) {
@@ -118,7 +130,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 								TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
 
 						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-
 					}
 
 					if (registrars.size() > 0) {
@@ -142,15 +153,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			}
 
 		} else {
-			debug(log, "Another round of annotation processing. "
-					+ "Current root element count: {}", roundEnv.getRootElements().size());
-
 
 			//
 			//Scan all the Compilation units (i.e. class files) for AndHow Properties
 			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
 			for (Element e : roundEnv.getRootElements()) {
-
 
 				TypeElement te = (TypeElement) e;
 				AndHowElementScanner7 st = new AndHowElementScanner7(
@@ -158,23 +165,25 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 						Property.class.getCanonicalName(),
 						INIT_CLASS_NAME,
 						TEST_INIT_CLASS_NAME);
-				CompileUnit ret = st.scan(e);
+				CompileUnit compileUnit = st.scan(e);
 
-
-				if (ret.istestInitClass()) {
-					testInitClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
-				} else if (ret.isInitClass()) {
-					initClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
+				if (compileUnit.istestInitClass()) {
+					testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), te));
+				} else if (compileUnit.isInitClass()) {
+					initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), te));
 				}
 
-				if (ret.hasRegistrations()) {
+				if (compileUnit.hasRegistrations()) {
 
 					debug(log, "Found {} AndHow Properties in class {} ",
-							ret.getRegistrations().size(), ret.getRootCanonicalName());
+							compileUnit.getRegistrations().size(), compileUnit.getRootCanonicalName());
 
-					PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
+					PropertyRegistrarClassGenerator gen =
+							new PropertyRegistrarClassGenerator(
+									compileUnit, AndHowCompileProcessor.class, runDate,
+									srcVersion, jdkVersion);
+
 					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
-					PropertyRegistrationList regs = ret.getRegistrations();
 
 					try {
 						writeClassFile(filer, gen, e);
@@ -185,13 +194,12 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					}
 				}
 
-				problems.addAll(ret.getProblems());
+				problems.addAll(compileUnit.getProblems());
 
 			}
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -225,8 +233,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}
 	}
 
-	protected void writeServiceFile(Filer filer,
-			String fullyQualifiedServiceInterfaceName, List<CauseEffect> implementingClasses) throws IOException {
+	protected void writeServiceFile(Filer filer, String fullyQualifiedServiceInterfaceName,
+			List<CauseEffect> implementingClasses) throws IOException {
 
 		//Get a unique causing elements
 		HashSet<Element> set = new HashSet();
@@ -259,7 +267,18 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * @param args Arguments to put into the {}'s, in order.
 	 */
 	void debug(Messager log, String pattern, Object... args) {
-		log.printMessage(Kind.NOTE, TextUtil.format(pattern, args));
+		log.printMessage(Kind.NOTE, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
+	}
+
+	/**
+	 * Logs a warm message using the javac standard Messager system.
+	 *
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void warn(Messager log, String pattern, Object... args) {
+		log.printMessage(Kind.MANDATORY_WARNING, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
 	}
 
 	/**
@@ -270,7 +289,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * @param args Arguments to put into the {}'s, in order.
 	 */
 	void error(Messager log, String pattern, Object... args) {
-		log.printMessage(Kind.ERROR, TextUtil.format(pattern, args));
+		log.printMessage(Kind.ERROR, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
 	}
 
 	/**

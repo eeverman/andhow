@@ -50,7 +50,7 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
      
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 
@@ -80,7 +80,7 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 
@@ -107,7 +107,7 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
      
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Kind.ERROR) || d.getKind().equals(Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 		
@@ -117,7 +117,6 @@ public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestB
 		assertNotNull(testInitSvs);
 		assertEquals(fullName(pkg, AndHowTestInitA_NAME), testInitSvs.trim());
     }
-	
 
     @Test
     public void testServiceRegistrationOfAndHowInitWithTooManyProdInstances() throws Exception {
