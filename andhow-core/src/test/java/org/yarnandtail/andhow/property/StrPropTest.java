@@ -57,6 +57,26 @@ public class StrPropTest extends PropertyTestBase {
 
 	}
 
+	@Test
+	public void oneOfShouldBuildCorrectValidation() {
+		StrProp.StrBuilder builder = new StrProp.StrBuilder();
+		builder.oneOf("A", "B");
+
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOf);
+		StringValidator.OneOf eqValid = (StringValidator.OneOf)(builder._validators.get(0));
+		assertTrue(eqValid.isValid("A") && eqValid.isValid("B"));
+	}
+
+	@Test
+	public void oneOfIgnoringCaseShouldBuildCorrectValidation() {
+		StrProp.StrBuilder builder = new StrProp.StrBuilder();
+		builder.oneOfIgnoringCase("A", "B");
+
+		assertTrue(builder._validators.get(0) instanceof StringValidator.OneOfIgnoringCase);
+		StringValidator.OneOfIgnoringCase eqValid = (StringValidator.OneOfIgnoringCase)(builder._validators.get(0));
+		assertTrue(eqValid.isValid("a") && eqValid.isValid("b"));
+	}
+
 	public interface ValidationGroup {
 		StrProp USER_NAME = StrProp.builder().aliasInAndOut("name").mustMatchRegex("[a-z]+")
 				.notNull().desc("Lowercase Only").build();
