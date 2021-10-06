@@ -157,20 +157,20 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			//
 			//Scan all the Compilation units (i.e. class files) for AndHow Properties
 			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
-			for (Element e : roundEnv.getRootElements()) {
+			for (Element rootElement : roundEnv.getRootElements()) {
 
-				TypeElement te = (TypeElement) e;
+				TypeElement rootTypeElement = (TypeElement) rootElement;
 				AndHowElementScanner7 st = new AndHowElementScanner7(
 						this.processingEnv,
 						Property.class.getCanonicalName(),
 						INIT_CLASS_NAME,
 						TEST_INIT_CLASS_NAME);
-				CompileUnit compileUnit = st.scan(e);
+				CompileUnit compileUnit = st.scan(rootElement);
 
 				if (compileUnit.istestInitClass()) {
-					testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), te));
+					testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
 				} else if (compileUnit.isInitClass()) {
-					initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), te));
+					initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
 				}
 
 				if (compileUnit.hasRegistrations()) {
@@ -183,10 +183,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 									compileUnit, AndHowCompileProcessor.class, runDate,
 									srcVersion, jdkVersion);
 
-					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
+					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
 
 					try {
-						writeClassFile(filer, gen, e);
+						writeClassFile(filer, gen, rootElement);
 						debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
 					} catch (Exception ex) {
 						error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
