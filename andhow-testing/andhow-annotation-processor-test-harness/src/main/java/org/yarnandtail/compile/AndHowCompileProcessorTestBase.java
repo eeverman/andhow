@@ -88,8 +88,8 @@ public class AndHowCompileProcessorTestBase {
 	 */
 	public static boolean isError(Diagnostic diagnostic) {
 		Diagnostic.Kind kind = diagnostic.getKind();
-		return kind.equals(Diagnostic.Kind.ERROR);
-		//return kind.equals(Kind.ERROR) || kind.equals(Kind.WARNING);
+		//return kind.equals(Diagnostic.Kind.ERROR);
+		return kind.equals(Diagnostic.Kind.ERROR) || kind.equals(Diagnostic.Kind.WARNING);
 	}
 	
 }
