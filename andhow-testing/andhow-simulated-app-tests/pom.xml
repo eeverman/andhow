@@ -57,4 +57,79 @@
 		</plugins>
 	</build>
 
+
+	<profiles>
+		<profile>
+			<id>jdk9_and_up</id>
+			<!--
+			The intention here is to run multiple builds when this is run on JDK9+, using
+			different combinations of source, target and release flags.
+			Some combinations have been issues in the past:
+			https://github.com/eeverman/andhow/issues/630
+			-->
+			<activation>
+				<jdk>[1.9,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>jdk9plus_release8</id>
+								<phase>compile</phase>
+								<goals><goal>compile</goal></goals>
+								<configuration>
+									<fork>true</fork>
+									<release>8</release>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jdk9plus_release9</id>
+								<phase>compile</phase>
+								<goals><goal>compile</goal></goals>
+								<configuration>
+									<fork>true</fork>
+									<release>9</release>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jdk9plus_source8_target8</id>
+								<phase>compile</phase>
+								<goals><goal>compile</goal></goals>
+								<configuration>
+									<fork>true</fork>
+									<source>8</source>
+									<target>8</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jdk9plus_source8_target9</id>
+								<phase>compile</phase>
+								<goals><goal>compile</goal></goals>
+								<configuration>
+									<fork>true</fork>
+									<source>8</source>
+									<target>9</target>
+								</configuration>
+							</execution>
+							<execution>
+								<id>jdk9plus_source9_target9</id>
+								<phase>compile</phase>
+								<goals><goal>compile</goal></goals>
+								<configuration>
+									<fork>true</fork>
+									<source>9</source>
+									<target>9</target>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

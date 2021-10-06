@@ -47,39 +47,4 @@
 		</plugins>
 	</build>
 
-
-	<profiles>
-		<profile>
-			<id>java9AndBeyond</id>
-			<!--
-			Its not possible to build a JRE 1.8 compatible jar file using JDK9+ bc of the need to
-			use the '-add-modules' feature of JDK9. When '-add-modules' is used, javac refuses to
-			compile to a version earlier than 1.9.  Thus, until 1.8 support is dumped by AndHow,
-			distributed releases and snapshots need to be done w/ JDK 1.8.
-			-->
-			<activation>
-				<jdk>[1.9,)</jdk>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<inherited>false</inherited>
-						<configuration combine.self="override">
-<!--							<compilerArgs>-->
-<!--								<arg>&#45;&#45;release=8</arg>-->
-<!--							</compilerArgs>-->
-							<release>8</release>
-<!--							<verbose>true</verbose>-->
-							<!-- without forking compilation happens in the
-							same process, so no arguments are applied -->
-							<fork>true</fork>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 </project>
