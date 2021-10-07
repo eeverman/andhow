@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * A lot of this code was borrowed from here:
  * https://gist.github.com/johncarl81/46306590cbdde5a3003f
- * @author ericeverman
  */
 public class AndHowCompileProcessor_InitTest extends AndHowCompileProcessorTestBase {
 

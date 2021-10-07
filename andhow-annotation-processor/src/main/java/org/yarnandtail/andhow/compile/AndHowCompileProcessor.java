@@ -56,10 +56,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
 
-	//major version of the source and jdk.  jdk 1.8 == 8, jdk 9 == 9 and so on.
-	int srcVersion;
-	int jdkVersion;
-
 	/**
 	 * A no-arg constructor is required.
 	 */
@@ -73,8 +69,31 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		//Unwrap the IntelliJ ProcessingEnvironment if needed
 		super.init(unwrap(processingEnv));
 
-		srcVersion = CompileUtil.getMajorJavaVersion(processingEnv.getSourceVersion());
-		jdkVersion = CompileUtil.getMajorJavaVersion();
+	}
+
+	/**
+	 * The java language level the output file needs to be compatible with.
+	 * <p>
+	 * This is provided by the {@code ProcessingEnvironment.getSourceVersion()} as an enum, but is
+	 * converted here to the major version number.  Version 1.8 return 8, ver. 9 returns 9 and so on.
+	 * <p>
+	 * @return The source level to generate code to.
+	 */
+	public int getSrcVersion() {
+		return CompileUtil.getMajorJavaVersion(processingEnv.getSourceVersion());
+	}
+
+	/**
+	 * The major version number of the JDK used to compile.
+	 * <p>
+	 * This taken from {@code System.getProperty("java.version")},
+	 * See {@link CompileUtil#getMajorJavaVersion()}.
+	 * JDK 1.8 return 8, JDK 9 returns 9 and so on.
+	 * <p>
+	 * @return The major version of the JDK used to compile.
+	 */
+	public int getJdkVersion() {
+		return CompileUtil.getMajorJavaVersion();
 	}
 
 	@Override
@@ -95,13 +114,13 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 		if (isLastRound) {
 
-			debug(log, "source version: {}  jdk version: {}", srcVersion, jdkVersion);
+			debug(log, "source version: {}  jdk version: {}", getSrcVersion(), getJdkVersion());
 
-			if (! CompileUtil.isGeneratedVersionDeterministic(srcVersion, jdkVersion) ) {
+			if (! CompileUtil.isGeneratedVersionDeterministic(getSrcVersion(), getJdkVersion()) ) {
 				warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]'. " +
 						"Current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
 						"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
-						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVersion);
+						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", getJdkVersion());
 			}
 
 
@@ -181,7 +200,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					PropertyRegistrarClassGenerator gen =
 							new PropertyRegistrarClassGenerator(
 									compileUnit, AndHowCompileProcessor.class, runDate,
-									srcVersion, jdkVersion);
+									getSrcVersion(), getJdkVersion());
 
 					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
 
@@ -293,13 +312,11 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 
 	/**
-	 * Match up a causal Element (Basically the compiler representation of a
-	 * class to be compiled) w/ the Class name that will be registered in
-	 * a service registry.
-	 *
-	 * When the AnnotationProcessor writes a new file to the Filer, it wants
-	 * a causal Element to associate with it, apparently this info could be
-	 * used for reporting or something.
+	 * Match up a causal Element (Basically the compiler representation of a class to be compiled) w/
+	 * the Class name that will be registered in a service registry.
+	 * <p>
+	 * When the AnnotationProcessor writes a new file to the Filer, it wants a causal Element to
+	 * associate with it, potentially for report issues to the user.
 	 */
 	protected static class CauseEffect {
 		String fullClassName;
