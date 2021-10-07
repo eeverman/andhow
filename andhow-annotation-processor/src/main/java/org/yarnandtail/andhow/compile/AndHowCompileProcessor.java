@@ -47,21 +47,26 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	private static final String SERVICE_REGISTRY_META_DIR = "META-INF/services/";
 
 	//Static to insure all generated classes have the same timestamp
-	private static Calendar runDate;
+	private static Calendar _runDate;
 
-	private final List<CauseEffect> registrars = new ArrayList();
+	// List of generated classes, one per app classes containing AndHow Properties
+	private final List<CauseEffect> _registrars = new ArrayList<>();
 
-	private final List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
-	private final List<CauseEffect> testInitClasses = new ArrayList();	//List of test init classes (should only ever be 1)
+	//List of init classes (should only ever be 1)
+	private final List<CauseEffect> _initClasses = new ArrayList<>();
 
-	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
+	//List of test init classes (should only ever be 1)
+	private final List<CauseEffect> _testInitClasses = new ArrayList<>();
+
+	//List of problems found. >0 results in an error
+	private final List<CompileProblem> _problems = new ArrayList<>();
 
 	/**
 	 * A no-arg constructor is required.
 	 */
 	public AndHowCompileProcessor() {
 		//used to ensure all metadata files have the same date
-		runDate = new GregorianCalendar();
+		_runDate = new GregorianCalendar();
 	}
 
 	@Override
@@ -113,64 +118,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 
 		if (isLastRound) {
-
-			debug(log, "source version: {}  jdk version: {}", getSrcVersion(), getJdkVersion());
-
-			if (! CompileUtil.isGeneratedVersionDeterministic(getSrcVersion(), getJdkVersion()) ) {
-				warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]'. " +
-						"Current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
-						"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
-						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", getJdkVersion());
-			}
-
-
-			if (initClasses.size() > 1) {
-				problems.add(new CompileProblem.TooManyInitClasses(
-						INIT_CLASS_NAME, initClasses));
-			}
-
-			if (testInitClasses.size() > 1) {
-				problems.add(new CompileProblem.TooManyInitClasses(
-						TEST_INIT_CLASS_NAME, testInitClasses));
-			}
-
-			if (problems.isEmpty()) {
-				try {
-					if (initClasses.size() == 1) {
-
-						debug(log, "Found exactly 1 {} class: {}",
-								INIT_CLASS_NAME, initClasses.get(0).fullClassName);
-
-						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
-					}
-
-					if (testInitClasses.size() == 1) {
-						debug(log, "Found exactly 1 {} class: {}",
-								TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
-
-						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-					}
-
-					if (registrars.size() > 0) {
-						writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-					}
-
-				} catch (IOException e) {
-					throw new AndHowCompileException("Exception while trying to write generated files", e);
-				}
-			} else {
-				error(log, "AndHow Property definition or Init class errors "
-						+ "prevented compilation. Each of the following errors "
-						+ "must be fixed before compilation is possible.");
-				error(log, "AndHow errors discovered: {}", problems.size());
-
-				for (CompileProblem err : problems) {
-					error(log, err.getFullMessage());
-				}
-
-				throw new AndHowCompileException(problems);
-			}
-
+			processLastRound(filer, log, getSrcVersion(), getJdkVersion(),
+			_problems, _initClasses, _testInitClasses, _registrars);
 		} else {
 
 			//
@@ -187,9 +136,9 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				CompileUnit compileUnit = st.scan(rootElement);
 
 				if (compileUnit.istestInitClass()) {
-					testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+					_testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
 				} else if (compileUnit.isInitClass()) {
-					initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+					_initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
 				}
 
 				if (compileUnit.hasRegistrations()) {
@@ -199,10 +148,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 					PropertyRegistrarClassGenerator gen =
 							new PropertyRegistrarClassGenerator(
-									compileUnit, AndHowCompileProcessor.class, runDate,
+									compileUnit, AndHowCompileProcessor.class, _runDate,
 									getSrcVersion(), getJdkVersion());
 
-					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
+					_registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
 
 					try {
 						writeClassFile(filer, gen, rootElement);
@@ -213,12 +162,78 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					}
 				}
 
-				problems.addAll(compileUnit.getProblems());
+				_problems.addAll(compileUnit.getProblems());
 
 			}
 		}
 
 		return false;
+	}
+
+	protected void processLastRound(final Filer filer, final Messager log,
+			final int srcVersion, final int jdkVersion, final List<CompileProblem> compileProblems,
+			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
+			final List<CauseEffect> registrarCEs) {
+
+		debug(log, "Found java source version: {} jdk version: {}", srcVersion, jdkVersion);
+
+		if (registrarCEs.size() > 0 &&
+						! CompileUtil.isGeneratedVersionDeterministic(srcVersion, jdkVersion)) {
+
+			warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]', but the " +
+					"current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
+					"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
+					"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVersion);
+		}
+
+
+		if (initCEs.size() > 1) {
+			compileProblems.add(new CompileProblem.TooManyInitClasses(
+					INIT_CLASS_NAME, initCEs));
+		}
+
+		if (testInitCEs.size() > 1) {
+			compileProblems.add(new CompileProblem.TooManyInitClasses(
+					TEST_INIT_CLASS_NAME, testInitCEs));
+		}
+
+		if (compileProblems.isEmpty()) {
+			try {
+				if (initCEs.size() == 1) {
+
+					debug(log, "Found exactly 1 {} class: {}",
+							INIT_CLASS_NAME, initCEs.get(0).fullClassName);
+
+					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initCEs);
+				}
+
+				if (testInitCEs.size() == 1) {
+					debug(log, "Found exactly 1 {} class: {}",
+							TEST_INIT_CLASS_NAME, testInitCEs.get(0).fullClassName);
+
+					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitCEs);
+				}
+
+				if (registrarCEs.size() > 0) {
+					//Todo:  log total classes
+					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrarCEs);
+				}
+
+			} catch (IOException e) {
+				throw new AndHowCompileException("Exception while trying to write generated files", e);
+			}
+
+		} else {
+			error(log, "AndHow Property definition or Init class errors prevented compilation. " +
+					"Each of the following ({}) errors must be fixed before compilation is possible.",
+					compileProblems.size());
+
+			for (CompileProblem err : compileProblems) {
+				error(log, err.getFullMessage());
+			}
+
+			throw new AndHowCompileException(compileProblems);
+		}
 	}
 
 	/**
