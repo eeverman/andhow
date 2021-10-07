@@ -11,6 +11,11 @@ public class CompileUtil {
 	public static final String JDK9UP_GEN_CLASS = "javax.annotation.processing.Generated";
 
 	/**
+	 * No instances.
+	 */
+	private CompileUtil() { }
+
+	/**
 	 * Determine the correct 'Generated' annotation class name based on the Java major version.
 	 * Java 8 uses the <code>@javax.annotation.Generated</code> annotation to mark a generated class.
 	 * Java 9 and beyond uses <code>@javax.annotation.processing.Generated</code>
