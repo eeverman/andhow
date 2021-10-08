@@ -1,33 +1,31 @@
 package org.yarnandtail.andhow.compile;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 import org.yarnandtail.andhow.AndHowInit;
 import org.yarnandtail.andhow.AndHowTestInit;
 import org.yarnandtail.andhow.compile.AndHowCompileProcessor.CauseEffect;
+import org.yarnandtail.andhow.service.PropertyRegistrar;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.*;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
-
-import org.junit.jupiter.api.Test;
-import static org.hamcrest.Matchers.*;
-
-import org.mockito.InOrder;
-import org.mockito.Mockito;
-import org.yarnandtail.andhow.service.PropertyRegistrar;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.*;
 
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
-import static org.mockito.Mockito.*;
-
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class AndHowCompileProcessorTest {
 
@@ -53,6 +51,8 @@ public class AndHowCompileProcessorTest {
 	// Some reusable values
 	CauseEffect causeEffect1;
 	CauseEffect causeEffect2;
+	RoundEnvironment roundNotFinal;
+	RoundEnvironment roundFinal;
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -65,16 +65,16 @@ public class AndHowCompileProcessorTest {
 		Mockito.when(filerFileObject.openWriter()).thenReturn(filerWriter);
 
 
-
 		pe = Mockito.mock(ProcessingEnvironment.class);
 		Mockito.when(pe.getSourceVersion()).thenReturn(SourceVersion.RELEASE_8);
 		Mockito.when(pe.getMessager()).thenReturn(log);
+		Mockito.when(pe.getFiler()).thenReturn(filer);
 
 		noWriteProcessor = new AndHowCompileProcessor();
 		noWriteProcessor = Mockito.spy(noWriteProcessor);
 		Mockito.doNothing().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 		Mockito.doNothing().when(noWriteProcessor).writeClassFile(any(), any(), any());
-
+		Mockito.when(noWriteProcessor.getJdkVersion()).thenReturn(8);
 
 		runDate = new GregorianCalendar();
 		registrars = new ArrayList<>();
@@ -84,7 +84,10 @@ public class AndHowCompileProcessorTest {
 
 		causeEffect1 = new CauseEffect("com.bigcorp.MyClass1", Mockito.mock(Element.class));
 		causeEffect2 = new CauseEffect("com.bigcorp.MyClass2", Mockito.mock(Element.class));
-
+		roundNotFinal = mock(RoundEnvironment.class);
+		when(roundNotFinal.processingOver()).thenReturn(false);
+		roundFinal = mock(RoundEnvironment.class);
+		when(roundFinal.processingOver()).thenReturn(true);
 	}
 
 	@Test
@@ -135,10 +138,98 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundWithNoClassesFound() {
+	void processRoundsCallsCorrectRoundProcessor() throws Exception {
+
+		Set<? extends TypeElement> annotations = mock(Set.class);
+
+		Mockito.doNothing().when(noWriteProcessor).processNonFinalRound(any(), any(), any(),
+				any(), any(), anyInt(), anyInt(), any(), any(), any(), any());
+		Mockito.doNothing().when(noWriteProcessor).processFinalRound(any(), any(), anyInt(), anyInt(),
+				any(), any(), any(), any());
+
+		noWriteProcessor.init(pe);
+
+		boolean over = roundNotFinal.processingOver();
+		assertFalse(over);
+
+		noWriteProcessor.process(annotations, roundNotFinal);
+		noWriteProcessor.process(annotations, roundNotFinal);
+		noWriteProcessor.process(annotations, roundFinal);
+
+		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
+		processorCalls.verify(noWriteProcessor).init(pe);
+		processorCalls.verify(noWriteProcessor).processNonFinalRound(
+				eq(pe), eq(roundNotFinal), any(), eq(filer), eq(log), eq(8), eq(8), any(), any(), any(), any());
+		processorCalls.verify(noWriteProcessor).processNonFinalRound(
+				eq(pe), eq(roundNotFinal), any(), eq(filer), eq(log), eq(8), eq(8), any(), any(), any(), any());
+		processorCalls.verify(noWriteProcessor, times(1)).processFinalRound(
+				eq(filer), eq(log), eq(8), eq(8), any(), any(), any(), any());
+		processorCalls.verifyNoMoreInteractions();
+	}
+
+
+	@Test
+	void processNonFinalRoundScansAndWritesFiles() throws Exception {
+
+		TypeElement type1 = mock(TypeElement.class);
+		TypeElement type2 = mock(TypeElement.class);
+		TypeElement type3 = mock(TypeElement.class);
+		TypeElement type4 = mock(TypeElement.class);
+		Element typeX = mock(Element.class);
+
+		Set<Element> rootElements = new LinkedHashSet<>();
+		rootElements.add(type1);
+		rootElements.add(type2);
+		rootElements.add(type3);
+		rootElements.add(type4);
+		rootElements.add(typeX);
+
+		CompileUnit compileUnit1 = mock(CompileUnit.class);
+		when(compileUnit1.istestInitClass()).thenReturn(true);
+		when(compileUnit1.getRootCanonicalName()).thenReturn("org.MyTestInit1");
+
+		CompileUnit compileUnit2 = mock(CompileUnit.class);
+		when(compileUnit2.isInitClass()).thenReturn(true);
+		when(compileUnit2.getRootCanonicalName()).thenReturn("org.MyInit2");
+
+		CompileUnit compileUnit3 = PropertyRegistrarClassGeneratorTest.simpleCompileUnit();
+		CompileUnit compileUnit4 = PropertyRegistrarClassGeneratorTest.complexCompileUnit();
+
+		doReturn(rootElements).when(roundNotFinal).getRootElements();
+
+		doReturn(compileUnit1).when(noWriteProcessor).scanTypeElement(pe, type1);
+		doReturn(compileUnit2).when(noWriteProcessor).scanTypeElement(pe, type2);
+		doReturn(compileUnit3).when(noWriteProcessor).scanTypeElement(pe, type3);
+		doReturn(compileUnit4).when(noWriteProcessor).scanTypeElement(pe, type4);
+
+//		doCallRealMethod().when(noWriteProcessor).debug(any(), any(), any());
+//		doCallRealMethod().when(noWriteProcessor).error(any(), any());
+//		doCallRealMethod().when(noWriteProcessor).warn(any(), any());
+
+		noWriteProcessor.init(pe);
+
+		noWriteProcessor.processNonFinalRound(pe, roundNotFinal, runDate, filer, log, 8, 8,
+				problems, initClasses, testInitClasses, registrars);
+
+		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
+		processorCalls.verify(noWriteProcessor).scanTypeElement(pe, type1);
+		processorCalls.verify(noWriteProcessor).scanTypeElement(pe, type2);
+		processorCalls.verify(noWriteProcessor).scanTypeElement(pe, type3);
+		processorCalls.verify(noWriteProcessor).writeClassFile(eq(filer), any(), eq(type3));
+		processorCalls.verify(noWriteProcessor).scanTypeElement(pe, type4);
+		processorCalls.verify(noWriteProcessor).writeClassFile(eq(filer), any(), eq(type4));
+		processorCalls.verify(noWriteProcessor).debug(any(), startsWith("Wrote new"), any());
+		processorCalls.verifyNoMoreInteractions();
+
+		verify(noWriteProcessor, times(0)).error(any(), any(), any());
+		verify(noWriteProcessor, times(0)).warn(any(), any(), any());
+	}
+
+	@Test
+	void processFinalRoundWithNoClassesFound() {
 		AndHowCompileProcessor acp = new AndHowCompileProcessor();
 
-		acp.processLastRound(filer, log, 8, 8,
+		acp.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -147,10 +238,10 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundIndeterminateVersionsWarningDoesntHappenWhenNoRegistrars() {
+	void processFinalRoundIndeterminateVersionsWarningDoesnotHappenWhenNoRegistrars() {
 		AndHowCompileProcessor acp = new AndHowCompileProcessor();
 
-		acp.processLastRound(filer, log, 8, 9,
+		acp.processFinalRound(filer, log, 8, 9,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -159,11 +250,11 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundIndeterminateVersionsWarningDoesHappenWithRegistrars() throws Exception {
+	void processFinalRoundIndeterminateVersionsWarningDoesHappenWithRegistrars() throws Exception {
 
 		registrars.add(causeEffect1);
 
-		noWriteProcessor.processLastRound(filer, log, 8, 9,
+		noWriteProcessor.processFinalRound(filer, log, 8, 9,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -184,11 +275,13 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundCallsWriteServiceFileForSingleInitClass() throws IOException {
+	void processFinalRoundWriteServiceFileForSingleInitClass() throws IOException {
+
+		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
 		initClasses.add(causeEffect1);
 
-		noWriteProcessor.processLastRound(filer, log, 8, 8,
+		noWriteProcessor.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -199,16 +292,23 @@ public class AndHowCompileProcessorTest {
 		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
 		processorCalls.verify(noWriteProcessor).writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
 		processorCalls.verifyNoMoreInteractions();
+
+		InOrder filerCalls = Mockito.inOrder(filer);
+		filerCalls.verify(filer, times(1)).createResource(eq(CLASS_OUTPUT), eq(""),
+				eq("META-INF/services/" + AndHowInit.class.getCanonicalName()),
+				eq(causeEffect1.causeElement));
+		filerCalls.verifyNoMoreInteractions();
+
 	}
 
 	@Test
-	void processLastRoundCreatesErrorIfTwoInitClass() throws Exception {
+	void processFinalRoundCreatesErrorIfTwoInitClass() throws Exception {
 
 		initClasses.add(causeEffect1);
 		initClasses.add(causeEffect2);
 
 		assertThrows(AndHowCompileException.class, () ->
-				noWriteProcessor.processLastRound(filer, log, 8, 8,
+				noWriteProcessor.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars));
 
 		assertEquals(1, problems.size());
@@ -223,12 +323,15 @@ public class AndHowCompileProcessorTest {
 		Mockito.verify(noWriteProcessor, never()).writeClassFile(any(), any(), any());
 	}
 
+
 	@Test
-	void processLastRoundCallsWriteServiceFileForSingleTestInitClass() throws IOException {
+	void processFinalRoundWriteServiceFileForSingleTestInitClass() throws IOException {
+
+		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
 		testInitClasses.add(causeEffect1);
 
-		noWriteProcessor.processLastRound(filer, log, 8, 8,
+		noWriteProcessor.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -239,16 +342,23 @@ public class AndHowCompileProcessorTest {
 		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
 		processorCalls.verify(noWriteProcessor).writeServiceFile(filer, AndHowTestInit.class.getCanonicalName(), testInitClasses);
 		processorCalls.verifyNoMoreInteractions();
+
+		InOrder filerCalls = Mockito.inOrder(filer);
+		filerCalls.verify(filer, times(1)).createResource(eq(CLASS_OUTPUT), eq(""),
+				eq("META-INF/services/" + AndHowTestInit.class.getCanonicalName()),
+				eq(causeEffect1.causeElement));
+		filerCalls.verifyNoMoreInteractions();
+
 	}
 
 	@Test
-	void processLastRoundCreatesErrorIfTwoTestInitClass() throws Exception {
+	void processFinalRoundCreatesErrorIfTwoTestInitClass() throws Exception {
 
 		testInitClasses.add(causeEffect1);
 		testInitClasses.add(causeEffect2);
 
 		assertThrows(AndHowCompileException.class, () ->
-				noWriteProcessor.processLastRound(filer, log, 8, 8,
+				noWriteProcessor.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars));
 
 		assertEquals(1, problems.size());
@@ -264,14 +374,14 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundShouldThrowCompileExceptionWhenWriteThrowsException() throws Exception {
+	void processFinalRoundShouldThrowCompileExceptionWhenWriteThrowsException() throws Exception {
 
 		registrars.add(causeEffect1);
 
 		Mockito.when(filer.createResource(any(), any(), any(), any())).thenThrow(new IOException());
 		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
-		assertThrows(AndHowCompileException.class, () -> noWriteProcessor.processLastRound(filer, log, 9, 9,
+		assertThrows(AndHowCompileException.class, () -> noWriteProcessor.processFinalRound(filer, log, 9, 9,
 				problems, initClasses, testInitClasses, registrars));
 
 		InOrder logCalls = Mockito.inOrder(log);
@@ -285,13 +395,13 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundShouldWriteServiceFileForSingleRegistrar() throws Exception {
+	void processFinalRoundShouldWriteServiceFileForSingleRegistrar() throws Exception {
 
 		registrars.add(causeEffect1);
 
 		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
-		noWriteProcessor.processLastRound(filer, log, 9, 9,
+		noWriteProcessor.processFinalRound(filer, log, 9, 9,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
@@ -309,14 +419,14 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processLastRoundShouldWriteServiceFileForMultiRegistrar() throws Exception {
+	void processFinalRoundShouldWriteServiceFileForMultiRegistrar() throws Exception {
 
 		registrars.add(causeEffect1);
 		registrars.add(causeEffect2);
 
 		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
-		noWriteProcessor.processLastRound(filer, log, 9, 9,
+		noWriteProcessor.processFinalRound(filer, log, 9, 9,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
@@ -333,7 +443,5 @@ public class AndHowCompileProcessorTest {
 		assertEquals(causeEffect1.fullClassName, entries[0]);
 		assertEquals(causeEffect2.fullClassName, entries[1]);
 	}
-
-	//Haven't verified Init class service write yet
 
 }

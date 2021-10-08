@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PropertyRegistrarClassGeneratorTest {
 	
-	private final String ROOT_SIMPLE_NAME = "MyClass";
-	private final String ROOT_PKG = "org.big.comp";
-	private final String ROOT_QUAL_NAME = ROOT_PKG + "." + ROOT_SIMPLE_NAME;
-	private final String INNER1_SIMP_NAME = "Inner1";
-	private final String INNER2_SIMP_NAME = "Inner2";
+	private final static String ROOT_SIMPLE_NAME = "MyClass";
+	private final static String ROOT_PKG = "org.big.comp";
+	private final static String ROOT_QUAL_NAME = ROOT_PKG + "." + ROOT_SIMPLE_NAME;
+	private final static String INNER1_SIMP_NAME = "Inner1";
+	private final static String INNER2_SIMP_NAME = "Inner2";
 	
-	private final String PROP1_NAME = "prop1";
-	private final String PROP2_NAME = "prop2";
+	private final static String PROP1_NAME = "prop1";
+	private final static String PROP2_NAME = "prop2";
 
 	private final String runDateStartsWith = "2017-09-29T14:01:01.999"; //Not checking the exact tz b/c it is local dependent
 	private final String runDateRegex = "2017-09-29T14:01:01\\.999[+-][01]\\d{3}"; //Regex for the timezone
@@ -376,7 +376,7 @@ public class PropertyRegistrarClassGeneratorTest {
 	}
 
 
-	public CompileUnit simpleCompileUnit() {
+	public static CompileUnit simpleCompileUnit() {
 		
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
@@ -387,7 +387,7 @@ public class PropertyRegistrarClassGeneratorTest {
 		return cu;
 	}
 	
-	public CompileUnit simpleCompileUnit_DefaultPkg() {
+	public static CompileUnit simpleCompileUnit_DefaultPkg() {
 		
 		CompileUnit cu = new CompileUnit(ROOT_SIMPLE_NAME);
 		
@@ -399,10 +399,8 @@ public class PropertyRegistrarClassGeneratorTest {
 	}
 	
 	
-	public CompileUnit complexCompileUnit() {
-		
-		
-		
+	public static CompileUnit complexCompileUnit() {
+
 		CompileUnit cu = new CompileUnit(ROOT_QUAL_NAME);
 		
 		//root prop

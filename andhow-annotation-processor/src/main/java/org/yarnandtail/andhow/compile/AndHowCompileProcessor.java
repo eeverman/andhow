@@ -109,68 +109,116 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 
 	@Override
-	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+	public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
 
 		Filer filer = this.processingEnv.getFiler();
 		Messager log = this.processingEnv.getMessager();
+		int srcVer = getSrcVersion();
+		int jdkVer = getJdkVersion();
 
-		boolean isLastRound = roundEnv.processingOver();
-
-
-		if (isLastRound) {
-			processLastRound(filer, log, getSrcVersion(), getJdkVersion(),
-			_problems, _initClasses, _testInitClasses, _registrars);
+		if (! roundEnv.processingOver()) {
+			processNonFinalRound(processingEnv, roundEnv, _runDate, filer, log,
+					srcVer, jdkVer, _problems, _initClasses, _testInitClasses, _registrars);
 		} else {
-
-			//
-			//Scan all the Compilation units (i.e. class files) for AndHow Properties
-			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
-			for (Element rootElement : roundEnv.getRootElements()) {
-
-				TypeElement rootTypeElement = (TypeElement) rootElement;
-				AndHowElementScanner7 st = new AndHowElementScanner7(
-						this.processingEnv,
-						Property.class.getCanonicalName(),
-						INIT_CLASS_NAME,
-						TEST_INIT_CLASS_NAME);
-				CompileUnit compileUnit = st.scan(rootElement);
-
-				if (compileUnit.istestInitClass()) {
-					_testInitClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
-				} else if (compileUnit.isInitClass()) {
-					_initClasses.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
-				}
-
-				if (compileUnit.hasRegistrations()) {
-
-					debug(log, "Found {} AndHow Properties in class {} ",
-							compileUnit.getRegistrations().size(), compileUnit.getRootCanonicalName());
-
-					PropertyRegistrarClassGenerator gen =
-							new PropertyRegistrarClassGenerator(
-									compileUnit, AndHowCompileProcessor.class, _runDate,
-									getSrcVersion(), getJdkVersion());
-
-					_registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
-
-					try {
-						writeClassFile(filer, gen, rootElement);
-						debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
-					} catch (Exception ex) {
-						error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
-						throw new RuntimeException(ex);
-					}
-				}
-
-				_problems.addAll(compileUnit.getProblems());
-
-			}
+			processFinalRound(filer, log, srcVer, jdkVer,
+					_problems, _initClasses, _testInitClasses, _registrars);
 		}
 
 		return false;
 	}
 
-	protected void processLastRound(final Filer filer, final Messager log,
+	/**
+	 * Process a round of annotation processing.
+	 * <p>
+	 * There will always be a 'final' round of processing after all annotation processors have
+	 * completed and stop generating new files.
+	 * <p>
+	 * @param localProcessingEnv The compile-time environment, for writing and analyzing classes
+	 * @param roundEnv State of a single round of annotation processing
+	 * @param runDate Single consistent timestamp for the entire compilation
+	 * @param filer ProcessingEnv provided file system for writing source files
+	 * @param log ProcessingEnv provided message/log system
+	 * @param srcVersion Major version number of the source code the compiler is using
+	 * @param jdkVersion Major version number of the JDK
+	 * @param compileProblems Accumulation of problems - reported in final processing round
+	 * @param initCEs Accumulation of AndHowInit implementing classes, as they are discovered
+	 * @param testInitCEs Accumulation of AndHowTestInit implementing classes, as they are discovered
+	 * @param registrarCEs Accumulation of AndHow Property containing top-level classes, as they are discovered
+	 */
+	protected void processNonFinalRound(final ProcessingEnvironment localProcessingEnv,
+			final RoundEnvironment roundEnv, final Calendar runDate,
+			final Filer filer, final Messager log,
+			final int srcVersion, final int jdkVersion,
+			final List<CompileProblem> compileProblems,
+			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
+			final List<CauseEffect> registrarCEs) {
+
+		//
+		// Scan all the Compilation units (i.e. class files) for AndHow Properties
+		for (Element rootElement : roundEnv.getRootElements()) {
+
+			if (! (rootElement instanceof TypeElement)) {
+				//This is some other root Element, like a module or package declaration.
+				continue;
+			}
+
+			TypeElement rootTypeElement = (TypeElement) rootElement;
+
+			CompileUnit compileUnit = scanTypeElement(localProcessingEnv, rootTypeElement);
+
+			if (compileUnit.istestInitClass()) {
+				testInitCEs.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+			} else if (compileUnit.isInitClass()) {
+				initCEs.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+			}
+
+			if (compileUnit.hasRegistrations()) {
+
+				debug(log, "Found {} AndHow Properties in class {} ",
+						compileUnit.getRegistrations().size(), compileUnit.getRootCanonicalName());
+
+				PropertyRegistrarClassGenerator gen =
+						new PropertyRegistrarClassGenerator(
+								compileUnit, AndHowCompileProcessor.class, runDate,
+								srcVersion, jdkVersion);
+
+				registrarCEs.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
+
+				try {
+					writeClassFile(filer, gen, rootElement);
+					debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
+				} catch (Exception ex) {
+					error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+					throw new RuntimeException(ex);
+				}
+			}
+
+			compileProblems.addAll(compileUnit.getProblems());
+		}
+	}
+
+	/**
+	 * The final round of annotation processing.
+	 * <p>
+	 * No new root elements (i.e. application classes) are processed in this round.  Instead, this
+	 * round is the opportunity to write final generated output:
+	 * <ul>
+	 *   <li>Service loader file in META-INF for AndHowInit instances (max of one)</li>
+	 *   <li>Service loader file in META-INF for AndHowTestInit instances (max of one)</li>
+	 *   <li>Service loader file in META-INF for PropertyRegistrar instances
+	 *   (could be many entries) for each generated proxy class containing AndHow Properties</li>
+	 * </ul>
+	 * <p>
+	 * @param filer ProcessingEnv provided file system for writing source files
+	 * @param log ProcessingEnv provided message/log system
+	 * @param srcVersion Major version number of the source code the compiler is using
+	 * @param jdkVersion Major version number of the JDK
+	 * @param compileProblems Accumulation of problems - reported in final processing round
+	 * @param initCEs Accumulation of AndHowInit implementing classes, as they are discovered
+	 * @param testInitCEs Accumulation of AndHowTestInit implementing classes, as they are discovered
+	 * @param registrarCEs Accumulation of AndHow Property containing top-level classes, as they are discovered
+	 */
+	protected void processFinalRound(final Filer filer, final Messager log,
 			final int srcVersion, final int jdkVersion, final List<CompileProblem> compileProblems,
 			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
 			final List<CauseEffect> registrarCEs) {
@@ -234,6 +282,24 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 			throw new AndHowCompileException(compileProblems);
 		}
+	}
+
+	/**
+	 * Scan the TypeElement for init, testInit and AndHow properties.
+	 * <p>
+	 * @param localProcessingEnv The environment used to analyze the typeElement
+	 * @param typeElement Represents a class being compiled
+	 * @return A CompileUnit, which is a summary of init, testInit and AndHow properties in the Type.
+	 */
+	protected CompileUnit scanTypeElement(
+			final ProcessingEnvironment localProcessingEnv, TypeElement typeElement) {
+
+		AndHowElementScanner7 st = new AndHowElementScanner7(
+				localProcessingEnv,
+				Property.class.getCanonicalName(),
+				INIT_CLASS_NAME,
+				TEST_INIT_CLASS_NAME);
+		return st.scan(typeElement);
 	}
 
 	/**
