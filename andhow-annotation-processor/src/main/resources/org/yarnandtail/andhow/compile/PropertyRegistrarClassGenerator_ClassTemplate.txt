@@ -4,15 +4,14 @@ import org.yarnandtail.andhow.service.AbstractPropertyRegistrar;
 import org.yarnandtail.andhow.service.PropertyRegistrationList;
 
 /*
-AndHow generated class that is discovered via the Service Provider API to
-register a proxied class as having AndHow properties.  These properties
-can then be auto-discovered and assigned values at startup.
+AndHow generated class that is loaded via the Service Provider API to register the AndHow Properties
+contained within the proxied class.  Values are then assigned to the Properties at startup.
 See:  https://github.com/eeverman/andhow
+
+Compile JDK Version String: %7$s      ProcessingEnvironment.SourceVersion: %8$s
 */
-@%9$s(
-	value="%6$s",
-	date="%7$s",
-	comments="Proxy for %2$s registered as a service provider in META-INF/services/%5$s")
+
+%5$s
 public class %4$s extends AbstractPropertyRegistrar {
 
 	@Override
@@ -20,8 +19,6 @@ public class %4$s extends AbstractPropertyRegistrar {
 
 	@Override
 	public void addPropertyRegistrations(PropertyRegistrationList list) {
-%8$s
+%6$s
 	}
-
 }
-

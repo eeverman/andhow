@@ -2,10 +2,8 @@ package org.yarnandtail.compile;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
+import javax.tools.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.util.IOUtil;
 
@@ -78,6 +76,20 @@ public class AndHowCompileProcessorTestBase {
 	 */
 	public String genName(String classPackage, String simpleClassName) {
 		return classPackage + ".$" + simpleClassName + "_AndHowProps";
+	}
+
+	/**
+	 * This is simple logic, but it sometimes needs to be adjusted during devleopment.
+	 * Nominally this might fail for ERROR or WARNING, but during development it is
+	 * useful to emit warning messages to get them to show up.
+	 *
+	 * @param diagnostic
+	 * @return
+	 */
+	public static boolean isError(Diagnostic diagnostic) {
+		Diagnostic.Kind kind = diagnostic.getKind();
+		//return kind.equals(Diagnostic.Kind.ERROR);
+		return kind.equals(Diagnostic.Kind.ERROR) || kind.equals(Diagnostic.Kind.WARNING);
 	}
 	
 }

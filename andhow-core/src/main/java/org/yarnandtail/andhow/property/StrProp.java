@@ -117,10 +117,14 @@ public class StrProp extends PropertyBase<String> {
 		}
 
 		public StrBuilder oneOf(String... values) {
-			this.validation(new StringValidator.Equals(values));
+			this.validation(new StringValidator.OneOf(values));
 			return this;
 		}
 
+		public StrBuilder oneOfIgnoringCase(String... values) {
+			this.validation(new StringValidator.OneOfIgnoringCase(values));
+			return this;
+		}
 	}
 
 }

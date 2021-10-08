@@ -15,7 +15,6 @@ import org.yarnandtail.andhow.service.TestInitLoader;
 /**
  * Utilities used by AndHow during initial construction.
  *
- * @author eeverman
  */
 public class AndHowUtil {
 
@@ -97,8 +96,8 @@ public class AndHowUtil {
 		return appDef;
 	}
 
-	protected static ProblemList<ConstructionProblem> registerGroup(PropertyConfigurationMutable appDef,
-                                                                    GroupProxy group) {
+	protected static ProblemList<ConstructionProblem> registerGroup(
+			PropertyConfigurationMutable appDef, GroupProxy group) {
 
 		ProblemList<ConstructionProblem> problems = new ProblemList();
 
