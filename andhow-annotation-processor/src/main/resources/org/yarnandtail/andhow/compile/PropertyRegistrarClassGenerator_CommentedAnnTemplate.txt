@@ -1,0 +1,8 @@
+/*
+  Annotation commented out because the compilation classpath is unknowable.
+  See: https://github.com/eeverman/andhow/pull/633
+@%1$s(
+	value="%2$s",
+	date="%3$s",
+	comments="Proxy for %4$s registered as a service provider in META-INF/services/%5$s")
+*/

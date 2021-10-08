@@ -15,7 +15,6 @@ import org.yarnandtail.compile.AndHowCompileProcessorTestBase;
 /**
  * A lot of this code was borrowed from here:
  * https://gist.github.com/johncarl81/46306590cbdde5a3003f
- * @author ericeverman
  */
 public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorTestBase {
 	
@@ -44,7 +43,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
         
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 			
@@ -97,7 +96,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
         
 		assertEquals(0,
 				diagnostics.getDiagnostics().stream().filter(
-						d -> d.getKind().equals(Diagnostic.Kind.ERROR) || d.getKind().equals(Diagnostic.Kind.WARNING)
+						d -> isError(d)
 				).count(),
 				"Should be no warn/errors");
 
