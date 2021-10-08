@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.compile;
 
-import org.yarnandtail.andhow.service.PropertyRegistrationList;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -27,12 +26,12 @@ import org.yarnandtail.andhow.util.TextUtil;
  * 'see' all classes as they are compiled.  This class then delegates to a
  * 'scanner' class that does deep inspection on compiled code, looking for
  * AndHow Properties.
- * <br>
+ * <p>
  * When an AndHow Property is found in a class, a new {@code PropertyRegistrar}
  * class is created, which contains the list of Properties in that class.
  * There is a one-to-one correspondence between user classes that contain
  * AndHow Properties and auto-created {@code PropertyRegistrar} classes.
- * <br>
+ * <p>
  * At runtime, AndHow will use the {@code ServiceLoader} to discover all instances
  * of {@code PropertyRegistrar} on the classpath, thus finding all AndHow
  * Property containing classes.
@@ -48,27 +47,58 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	private static final String SERVICE_REGISTRY_META_DIR = "META-INF/services/";
 
 	//Static to insure all generated classes have the same timestamp
-	private static Calendar runDate;
+	private static Calendar _runDate;
 
-	private final List<CauseEffect> registrars = new ArrayList();
+	// List of generated classes, one per app classes containing AndHow Properties
+	private final List<CauseEffect> _registrars = new ArrayList<>();
 
-	private final List<CauseEffect> initClasses = new ArrayList();		//List of init classes (should only ever be 1)
-	private final List<CauseEffect> testInitClasses = new ArrayList();	//List of test init classes (should only ever be 1)
+	//List of init classes (should only ever be 1)
+	private final List<CauseEffect> _initClasses = new ArrayList<>();
 
-	private final List<CompileProblem> problems = new ArrayList();	//List of problems found. >0== RuntimeException
+	//List of test init classes (should only ever be 1)
+	private final List<CauseEffect> _testInitClasses = new ArrayList<>();
+
+	//List of problems found. >0 results in an error
+	private final List<CompileProblem> _problems = new ArrayList<>();
 
 	/**
 	 * A no-arg constructor is required.
 	 */
 	public AndHowCompileProcessor() {
 		//used to ensure all metadata files have the same date
-		runDate = new GregorianCalendar();
+		_runDate = new GregorianCalendar();
 	}
 
 	@Override
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		//Unwrap the IntelliJ ProcessingEnvironment if needed
 		super.init(unwrap(processingEnv));
+
+	}
+
+	/**
+	 * The java language level the output file needs to be compatible with.
+	 * <p>
+	 * This is provided by the {@code ProcessingEnvironment.getSourceVersion()} as an enum, but is
+	 * converted here to the major version number.  Version 1.8 return 8, ver. 9 returns 9 and so on.
+	 * <p>
+	 * @return The source level to generate code to.
+	 */
+	public int getSrcVersion() {
+		return CompileUtil.getMajorJavaVersion(processingEnv.getSourceVersion());
+	}
+
+	/**
+	 * The major version number of the JDK used to compile.
+	 * <p>
+	 * This taken from {@code System.getProperty("java.version")},
+	 * See {@link CompileUtil#getMajorJavaVersion()}.
+	 * JDK 1.8 return 8, JDK 9 returns 9 and so on.
+	 * <p>
+	 * @return The major version of the JDK used to compile.
+	 */
+	public int getJdkVersion() {
+		return CompileUtil.getMajorJavaVersion();
 	}
 
 	@Override
@@ -79,119 +109,197 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	}
 
 	@Override
-	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+	public boolean process(final Set<? extends TypeElement> annotations, final RoundEnvironment roundEnv) {
 
 		Filer filer = this.processingEnv.getFiler();
 		Messager log = this.processingEnv.getMessager();
+		int srcVer = getSrcVersion();
+		int jdkVer = getJdkVersion();
 
-		boolean isLastRound = roundEnv.processingOver();
-
-
-		if (isLastRound) {
-			debug(log, "Final round of annotation processing. Total root element count: {}",
-					roundEnv.getRootElements().size());
-
-
-			if (initClasses.size() > 1) {
-				problems.add(new CompileProblem.TooManyInitClasses(
-						INIT_CLASS_NAME, initClasses));
-			}
-
-			if (testInitClasses.size() > 1) {
-				problems.add(new CompileProblem.TooManyInitClasses(
-						TEST_INIT_CLASS_NAME, testInitClasses));
-			}
-
-			if (problems.isEmpty()) {
-				try {
-					if (initClasses.size() == 1) {
-
-						debug(log, "Found exactly 1 {} class: {}",
-								INIT_CLASS_NAME, initClasses.get(0).fullClassName);
-
-						writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initClasses);
-
-					}
-
-					if (testInitClasses.size() == 1) {
-						debug(log, "Found exactly 1 {} class: {}",
-								TEST_INIT_CLASS_NAME, testInitClasses.get(0).fullClassName);
-
-						writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitClasses);
-
-					}
-
-					if (registrars.size() > 0) {
-						writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-					}
-
-				} catch (IOException e) {
-					throw new AndHowCompileException("Exception while trying to write generated files", e);
-				}
-			} else {
-				error(log, "AndHow Property definition or Init class errors "
-						+ "prevented compilation. Each of the following errors "
-						+ "must be fixed before compilation is possible.");
-				error(log, "AndHow errors discovered: {}", problems.size());
-
-				for (CompileProblem err : problems) {
-					error(log, err.getFullMessage());
-				}
-
-				throw new AndHowCompileException(problems);
-			}
-
+		if (! roundEnv.processingOver()) {
+			processNonFinalRound(processingEnv, roundEnv, _runDate, filer, log,
+					srcVer, jdkVer, _problems, _initClasses, _testInitClasses, _registrars);
 		} else {
-			debug(log, "Another round of annotation processing. "
-					+ "Current root element count: {}", roundEnv.getRootElements().size());
-
-
-			//
-			//Scan all the Compilation units (i.e. class files) for AndHow Properties
-			Iterator<? extends Element> it = roundEnv.getRootElements().iterator();
-			for (Element e : roundEnv.getRootElements()) {
-
-
-				TypeElement te = (TypeElement) e;
-				AndHowElementScanner7 st = new AndHowElementScanner7(
-						this.processingEnv,
-						Property.class.getCanonicalName(),
-						INIT_CLASS_NAME,
-						TEST_INIT_CLASS_NAME);
-				CompileUnit ret = st.scan(e);
-
-
-				if (ret.istestInitClass()) {
-					testInitClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
-				} else if (ret.isInitClass()) {
-					initClasses.add(new CauseEffect(ret.getRootCanonicalName(), te));
-				}
-
-				if (ret.hasRegistrations()) {
-
-					debug(log, "Found {} AndHow Properties in class {} ",
-							ret.getRegistrations().size(), ret.getRootCanonicalName());
-
-					PropertyRegistrarClassGenerator gen = new PropertyRegistrarClassGenerator(ret, AndHowCompileProcessor.class, runDate);
-					registrars.add(new CauseEffect(gen.buildGeneratedClassFullName(), te));
-					PropertyRegistrationList regs = ret.getRegistrations();
-
-					try {
-						writeClassFile(filer, gen, e);
-						debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
-					} catch (Exception ex) {
-						error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
-						throw new RuntimeException(ex);
-					}
-				}
-
-				problems.addAll(ret.getProblems());
-
-			}
+			processFinalRound(filer, log, srcVer, jdkVer,
+					_problems, _initClasses, _testInitClasses, _registrars);
 		}
 
 		return false;
+	}
 
+	/**
+	 * Process a round of annotation processing.
+	 * <p>
+	 * There will always be a 'final' round of processing after all annotation processors have
+	 * completed and stop generating new files.
+	 * <p>
+	 * @param localProcessingEnv The compile-time environment, for writing and analyzing classes
+	 * @param roundEnv State of a single round of annotation processing
+	 * @param runDate Single consistent timestamp for the entire compilation
+	 * @param filer ProcessingEnv provided file system for writing source files
+	 * @param log ProcessingEnv provided message/log system
+	 * @param srcVersion Major version number of the source code the compiler is using
+	 * @param jdkVersion Major version number of the JDK
+	 * @param compileProblems Accumulation of problems - reported in final processing round
+	 * @param initCEs Accumulation of AndHowInit implementing classes, as they are discovered
+	 * @param testInitCEs Accumulation of AndHowTestInit implementing classes, as they are discovered
+	 * @param registrarCEs Accumulation of AndHow Property containing top-level classes, as they are discovered
+	 */
+	protected void processNonFinalRound(final ProcessingEnvironment localProcessingEnv,
+			final RoundEnvironment roundEnv, final Calendar runDate,
+			final Filer filer, final Messager log,
+			final int srcVersion, final int jdkVersion,
+			final List<CompileProblem> compileProblems,
+			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
+			final List<CauseEffect> registrarCEs) {
+
+		//
+		// Scan all the Compilation units (i.e. class files) for AndHow Properties
+		for (Element rootElement : roundEnv.getRootElements()) {
+
+			if (! (rootElement instanceof TypeElement)) {
+				//This is some other root Element, like a module or package declaration.
+				continue;
+			}
+
+			TypeElement rootTypeElement = (TypeElement) rootElement;
+
+			CompileUnit compileUnit = scanTypeElement(localProcessingEnv, rootTypeElement);
+
+			if (compileUnit.istestInitClass()) {
+				testInitCEs.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+			} else if (compileUnit.isInitClass()) {
+				initCEs.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
+			}
+
+			if (compileUnit.hasRegistrations()) {
+
+				debug(log, "Found {} AndHow Properties in class {} ",
+						compileUnit.getRegistrations().size(), compileUnit.getRootCanonicalName());
+
+				PropertyRegistrarClassGenerator gen =
+						new PropertyRegistrarClassGenerator(
+								compileUnit, AndHowCompileProcessor.class, runDate,
+								srcVersion, jdkVersion);
+
+				registrarCEs.add(new CauseEffect(gen.buildGeneratedClassFullName(), rootTypeElement));
+
+				try {
+					writeClassFile(filer, gen, rootElement);
+					debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
+				} catch (Exception ex) {
+					error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
+					throw new RuntimeException(ex);
+				}
+			}
+
+			compileProblems.addAll(compileUnit.getProblems());
+		}
+	}
+
+	/**
+	 * The final round of annotation processing.
+	 * <p>
+	 * No new root elements (i.e. application classes) are processed in this round.  Instead, this
+	 * round is the opportunity to write final generated output:
+	 * <ul>
+	 *   <li>Service loader file in META-INF for AndHowInit instances (max of one)</li>
+	 *   <li>Service loader file in META-INF for AndHowTestInit instances (max of one)</li>
+	 *   <li>Service loader file in META-INF for PropertyRegistrar instances
+	 *   (could be many entries) for each generated proxy class containing AndHow Properties</li>
+	 * </ul>
+	 * <p>
+	 * @param filer ProcessingEnv provided file system for writing source files
+	 * @param log ProcessingEnv provided message/log system
+	 * @param srcVersion Major version number of the source code the compiler is using
+	 * @param jdkVersion Major version number of the JDK
+	 * @param compileProblems Accumulation of problems - reported in final processing round
+	 * @param initCEs Accumulation of AndHowInit implementing classes, as they are discovered
+	 * @param testInitCEs Accumulation of AndHowTestInit implementing classes, as they are discovered
+	 * @param registrarCEs Accumulation of AndHow Property containing top-level classes, as they are discovered
+	 */
+	protected void processFinalRound(final Filer filer, final Messager log,
+			final int srcVersion, final int jdkVersion, final List<CompileProblem> compileProblems,
+			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
+			final List<CauseEffect> registrarCEs) {
+
+		debug(log, "Found java source version: {} jdk version: {}", srcVersion, jdkVersion);
+
+		if (registrarCEs.size() > 0 &&
+						! CompileUtil.isGeneratedVersionDeterministic(srcVersion, jdkVersion)) {
+
+			warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]', but the " +
+					"current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
+					"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
+					"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVersion);
+		}
+
+
+		if (initCEs.size() > 1) {
+			compileProblems.add(new CompileProblem.TooManyInitClasses(
+					INIT_CLASS_NAME, initCEs));
+		}
+
+		if (testInitCEs.size() > 1) {
+			compileProblems.add(new CompileProblem.TooManyInitClasses(
+					TEST_INIT_CLASS_NAME, testInitCEs));
+		}
+
+		if (compileProblems.isEmpty()) {
+			try {
+				if (initCEs.size() == 1) {
+
+					debug(log, "Found exactly 1 {} class: {}",
+							INIT_CLASS_NAME, initCEs.get(0).fullClassName);
+
+					writeServiceFile(filer, AndHowInit.class.getCanonicalName(), initCEs);
+				}
+
+				if (testInitCEs.size() == 1) {
+					debug(log, "Found exactly 1 {} class: {}",
+							TEST_INIT_CLASS_NAME, testInitCEs.get(0).fullClassName);
+
+					writeServiceFile(filer, TEST_INIT_CLASS_NAME, testInitCEs);
+				}
+
+				if (registrarCEs.size() > 0) {
+					//Todo:  log total classes
+					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrarCEs);
+				}
+
+			} catch (IOException e) {
+				throw new AndHowCompileException("Exception while trying to write generated files", e);
+			}
+
+		} else {
+			error(log, "AndHow Property definition or Init class errors prevented compilation. " +
+					"Each of the following ({}) errors must be fixed before compilation is possible.",
+					compileProblems.size());
+
+			for (CompileProblem err : compileProblems) {
+				error(log, err.getFullMessage());
+			}
+
+			throw new AndHowCompileException(compileProblems);
+		}
+	}
+
+	/**
+	 * Scan the TypeElement for init, testInit and AndHow properties.
+	 * <p>
+	 * @param localProcessingEnv The environment used to analyze the typeElement
+	 * @param typeElement Represents a class being compiled
+	 * @return A CompileUnit, which is a summary of init, testInit and AndHow properties in the Type.
+	 */
+	protected CompileUnit scanTypeElement(
+			final ProcessingEnvironment localProcessingEnv, TypeElement typeElement) {
+
+		AndHowElementScanner7 st = new AndHowElementScanner7(
+				localProcessingEnv,
+				Property.class.getCanonicalName(),
+				INIT_CLASS_NAME,
+				TEST_INIT_CLASS_NAME);
+		return st.scan(typeElement);
 	}
 
 	/**
@@ -225,8 +333,8 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}
 	}
 
-	protected void writeServiceFile(Filer filer,
-			String fullyQualifiedServiceInterfaceName, List<CauseEffect> implementingClasses) throws IOException {
+	protected void writeServiceFile(Filer filer, String fullyQualifiedServiceInterfaceName,
+			List<CauseEffect> implementingClasses) throws IOException {
 
 		//Get a unique causing elements
 		HashSet<Element> set = new HashSet();
@@ -259,7 +367,18 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * @param args Arguments to put into the {}'s, in order.
 	 */
 	void debug(Messager log, String pattern, Object... args) {
-		log.printMessage(Kind.NOTE, TextUtil.format(pattern, args));
+		log.printMessage(Kind.NOTE, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
+	}
+
+	/**
+	 * Logs a warm message using the javac standard Messager system.
+	 *
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void warn(Messager log, String pattern, Object... args) {
+		log.printMessage(Kind.MANDATORY_WARNING, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
 	}
 
 	/**
@@ -270,17 +389,15 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * @param args Arguments to put into the {}'s, in order.
 	 */
 	void error(Messager log, String pattern, Object... args) {
-		log.printMessage(Kind.ERROR, TextUtil.format(pattern, args));
+		log.printMessage(Kind.ERROR, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
 	}
 
 	/**
-	 * Match up a causal Element (Basically the compiler representation of a
-	 * class to be compiled) w/ the Class name that will be registered in
-	 * a service registry.
-	 *
-	 * When the AnnotationProcessor writes a new file to the Filer, it wants
-	 * a causal Element to associate with it, apparently this info could be
-	 * used for reporting or something.
+	 * Match up a causal Element (Basically the compiler representation of a class to be compiled) w/
+	 * the Class name that will be registered in a service registry.
+	 * <p>
+	 * When the AnnotationProcessor writes a new file to the Filer, it wants a causal Element to
+	 * associate with it, potentially for report issues to the user.
 	 */
 	protected static class CauseEffect {
 		String fullClassName;

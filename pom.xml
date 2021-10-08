@@ -72,8 +72,6 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<doclint>none</doclint>
 		<jacoco.skip>true</jacoco.skip>
 	</properties>
@@ -421,6 +419,24 @@
 						<configuration>
 							<source>1.8</source>
 							<target>1.8</target>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>java9AndBeyond</id>
+			<activation>
+				<jdk>[1.9,)</jdk>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<source>${java.vm.specification.version}</source>
+							<target>${java.vm.specification.version}</target>
 						</configuration>
 					</plugin>
 				</plugins>

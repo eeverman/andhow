@@ -6,7 +6,7 @@ import org.yarnandtail.andhow.api.Validator;
 
 /**
  * A collection of String validation types
- * 
+ *
  * @author ericeverman
  */
 public class StringValidator {
@@ -14,11 +14,11 @@ public class StringValidator {
 	/**
 	 * Validate that a string is one from the specified set.
 	 */
-	public static class Equals implements Validator<String> {
+	public static class OneOf implements Validator<String> {
 
 		String[] values;
 
-		public Equals(String... values) {
+		public OneOf(String... values) {
 			this.values = values;
 		}
 
@@ -45,6 +45,43 @@ public class StringValidator {
 		@Override
 		public String getTheValueMustDescription() {
 			return "be equal to one of '" + Arrays.deepToString(values) + "'";
+		}
+	}
+
+	/**
+	 * Validate that a string is one from the specified set ignoring case.
+	 */
+	public static class OneOfIgnoringCase implements Validator<String> {
+
+		String[] values;
+
+		public OneOfIgnoringCase(String... values) {
+			this.values = values;
+		}
+
+		@Override
+		public boolean isSpecificationValid() {
+			return values != null &&
+					values.length != 0 &&
+					!Arrays.asList(values).contains(null);
+		}
+
+		@Override
+		public String getInvalidSpecificationMessage() {
+			return "The list must contain at least one value and none of the values can be null";
+		}
+
+		@Override
+		public boolean isValid(String value) {
+			if (value != null) {
+				return Arrays.stream(values).anyMatch(value::equalsIgnoreCase);
+			}
+			return false;
+		}
+
+		@Override
+		public String getTheValueMustDescription() {
+			return "be equal to one of '" + Arrays.deepToString(values) + "' ignoring case";
 		}
 	}
 
