@@ -55,7 +55,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 
 		List<GroupProxy> effRegGroups = findGroups(registeredGroups);
 
-		if (registeredGroups == null || registeredGroups.isEmpty()) {
+		if (effRegGroups.isEmpty()) {
 			LOG.warn("AndHow found no Properties to configure.  " +
 					"If this is unexpected, verify AndHowCompileProcessor was on the classpath at compile time " +
 					"(Maven artifact andhow-annotation-processor) and javac annotation processing was not disabled " +
@@ -123,7 +123,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	 *
 	 * @param configuredGroups A list of groups to use instead of the normal auto-discovery.
 	 *   If null, auto-discovery is used.  If non-null (even empty) configuredGroups is used.
-	 * @return A list of groups that are in-scope for AndHow.
+	 * @return A list of groups that are in-scope for AndHow.  Not null.
 	 */
 	private static List<GroupProxy> findGroups(List<GroupProxy> configuredGroups) {
 		if (configuredGroups == null) {
