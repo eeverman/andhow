@@ -1,6 +1,6 @@
 /*
   Annotation commented out because the compilation classpath is unknowable.
-  See: https://github.com/eeverman/andhow/pull/633
+  See: https://github.com/eeverman/andhow/issues/630
 @%1$s(
 	value="%2$s",
 	date="%3$s",
