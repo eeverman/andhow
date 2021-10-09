@@ -5,8 +5,8 @@ language: java
 jdk: openjdk8
 
 branches:
-  except:
-  - logo_submission
+  only:
+  - main
 
 script: "mvn clean test -Djacoco.skip=false"
 
