@@ -24,12 +24,10 @@ class AndHowLogHandlerTest {
 		// Assign a test stream for err
 		testErrByteArray = new ByteArrayOutputStream();
 		testErrPrintStream = new PrintStream(testErrByteArray, true);
-		handler.setErrStream(testErrPrintStream);
 
 		// Assign a test stream for err
 		testNonErrByteArray = new ByteArrayOutputStream();
 		testNonErrPrintStream = new PrintStream(testNonErrByteArray, true);
-		handler.setNonErrStream(testNonErrPrintStream);
 
 		handler = new AndHowLogHandler(testErrPrintStream, testNonErrPrintStream);
 	}
