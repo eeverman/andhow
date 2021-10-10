@@ -4,8 +4,11 @@ package org.yarnandtail.andhow.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -101,6 +104,47 @@ public class AndHowLogTest {
 		log.setLevel(null);
 		log.trace(sampleMsg);
 		assertTrue(testNonErrByteArray.toString().contains(sampleMsg));
+	}
+
+	/**
+	 * Test of error method, of class AndHowLog.
+	 */
+	@Test
+	public void testMandatoryNote() {
+		log.setLevel(Level.SEVERE);
+		log.mandatoryNote("You have got to see this!");
+		assertTrue(testNonErrByteArray.toString().contains("You have got to see this!"));
+		assertEquals(0, testErrByteArray.toString().length(), "err stream should be empty");
+	}
+
+	public static final String ANSI_CYAN_REGEX = "\\u001b\\[36m";
+	public static final String ANSI_CYAN_RESET = "\\u001B\\[0m";
+
+	@Test
+	public void testMandatoryNoteWithReplacement() {
+		log.setLevel(Level.SEVERE);
+		log.mandatoryNote("A Str: {0} A number: {1} A \"str\" again: {0}", "X", 42);
+
+		String pattern = ANSI_CYAN_REGEX + ".*A Str: X A number: 42 \"str\" again: X" + ANSI_CYAN_RESET + "\\n";
+		MatcherAssert.assertThat(testNonErrByteArray.toString(), Matchers.matchesPattern(pattern));
+	}
+
+	public String assertCyanWrappedAndRemove(String original) {
+		String cleaned = original;
+
+		if (cleaned.startsWith(AndHowLogFormatter.ANSI_CYAN)) {
+			cleaned = cleaned.substring(AndHowLogFormatter.ANSI_CYAN.length());
+			if (cleaned.endsWith(System.lineSeparator())) {
+				cleaned = cleaned.substring(0, cleaned.length() - System.lineSeparator().length());
+			}
+			if (cleaned.endsWith(AndHowLogFormatter.ANSI_RESET)) {
+				cleaned = cleaned.substring(0, cleaned.length() - AndHowLogFormatter.ANSI_RESET.length());
+
+			}
+
+		}
+
+		return cleaned;
 	}
 
 	/**

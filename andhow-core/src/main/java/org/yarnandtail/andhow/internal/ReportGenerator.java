@@ -127,7 +127,7 @@ public class ReportGenerator {
 	 * @return The File directory the sample configuration files were written to.
 	 */
 	public static File printConfigSamples(PropertyConfigurationInternal appDef,
-                                          List<Loader> loaders, boolean isDueToErrors) {
+  		List<Loader> loaders, boolean isDueToErrors) {
 
 		AndHowLog log = AndHowLog.getLogger(ReportGenerator.class);
 
@@ -141,15 +141,13 @@ public class ReportGenerator {
 		File sampleDir = new File(sampleDirPath);
 
 		if (isDueToErrors) {
-			log.error("Drat! There were AndHow startup errors. "
-					+ "Sample configuration files will be generated as a configuration starting point.");
+			log.error("Drat! There are AndHow startup errors. "
+					+ "As a result, a set of sample configuration files will be written to ''{0}''",
+					sampleDirPath);
 		} else {
-			log.info("As requested, sample configuration files "
-					+ "will be created for each Loader that supports it.");
+			log.mandatoryNote("As 'requested', sample configuration files will be created for each " +
+					"Loader that supports it and written to ''{0}''", sampleDirPath);
 		}
-
-		//Must be error level so the path is visible
-		log.error("Configuration sample files will be written to: '" + sampleDirPath + "'");
 
 		try {
 
