@@ -16,10 +16,6 @@ import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author ericeverman
- */
 public class AndHowLogTest {
 
 	private static AndHowLog log = AndHowLog.getLogger(AndHowLogTest.class);
@@ -70,6 +66,15 @@ public class AndHowLogTest {
 		assertEquals(1, log.getHandlers().length);
 	}
 
+	@Test
+	public void testMandatoryNoteWithReplacement() {
+		log.setLevel(Level.SEVERE);
+		log.mandatoryNote("A Str: {0} A number: {1} A \"str\" again: {0}", "X", 42);
+
+		String pattern = ".*A Str: X A number: 42 A \"str\" again: X.*\\s+";
+		MatcherAssert.assertThat(testNonErrByteArray.toString(), Matchers.matchesPattern(pattern));
+	}
+
 	/**
 	 * Test of trace method, of class AndHowLog.
 	 */
@@ -104,47 +109,6 @@ public class AndHowLogTest {
 		log.setLevel(null);
 		log.trace(sampleMsg);
 		assertTrue(testNonErrByteArray.toString().contains(sampleMsg));
-	}
-
-	/**
-	 * Test of error method, of class AndHowLog.
-	 */
-	@Test
-	public void testMandatoryNote() {
-		log.setLevel(Level.SEVERE);
-		log.mandatoryNote("You have got to see this!");
-		assertTrue(testNonErrByteArray.toString().contains("You have got to see this!"));
-		assertEquals(0, testErrByteArray.toString().length(), "err stream should be empty");
-	}
-
-	public static final String ANSI_CYAN_REGEX = "\\u001b\\[36m";
-	public static final String ANSI_CYAN_RESET = "\\u001B\\[0m";
-
-	@Test
-	public void testMandatoryNoteWithReplacement() {
-		log.setLevel(Level.SEVERE);
-		log.mandatoryNote("A Str: {0} A number: {1} A \"str\" again: {0}", "X", 42);
-
-		String pattern = ANSI_CYAN_REGEX + ".*A Str: X A number: 42 \"str\" again: X" + ANSI_CYAN_RESET + "\\n";
-		MatcherAssert.assertThat(testNonErrByteArray.toString(), Matchers.matchesPattern(pattern));
-	}
-
-	public String assertCyanWrappedAndRemove(String original) {
-		String cleaned = original;
-
-		if (cleaned.startsWith(AndHowLogFormatter.ANSI_CYAN)) {
-			cleaned = cleaned.substring(AndHowLogFormatter.ANSI_CYAN.length());
-			if (cleaned.endsWith(System.lineSeparator())) {
-				cleaned = cleaned.substring(0, cleaned.length() - System.lineSeparator().length());
-			}
-			if (cleaned.endsWith(AndHowLogFormatter.ANSI_RESET)) {
-				cleaned = cleaned.substring(0, cleaned.length() - AndHowLogFormatter.ANSI_RESET.length());
-
-			}
-
-		}
-
-		return cleaned;
 	}
 
 	/**

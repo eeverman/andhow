@@ -6,8 +6,6 @@ import java.util.logging.*;
 /**
  * Handles writing a java.util.Logger to a PrintStream, by default System.err for
  * errors and System.out for non-errors.
- *
- * @author ericeverman
  */
 public class AndHowLogHandler extends Handler {
 
@@ -17,7 +15,7 @@ public class AndHowLogHandler extends Handler {
 	 * possibly at the user's request.  The message must be displayed or they won't know where
 	 * it was written to, but it should not look like an error.
 	 */
-	public static final String MANDATORY_NOTE_PREFIX = "Mandatory Note: ";
+	public static final String MANDATORY_NOTE_PREFIX = "!!Important Note!! ";
 
 	private PrintStream errStream = null;
 	private PrintStream outStream = null;

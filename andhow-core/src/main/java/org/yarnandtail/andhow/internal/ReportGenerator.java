@@ -10,8 +10,12 @@ import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProble
 import org.yarnandtail.andhow.util.*;
 
 /**
- *
- * @author ericeverman
+ * Generates configuration template files for the user, based on configured properties and the
+ * Loaders currently available.
+ * <p>
+ * The purpose is to give the user a start point of having a completely configured properties file
+ * (and others) to work from.  All the available properties, their validation rules, default values,
+ * etc. are in these files, with the actual value left blank for the user to fill in.
  */
 public class ReportGenerator {
 
