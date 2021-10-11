@@ -192,7 +192,8 @@ public class AndHowCompileProcessorTest {
 		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 9");
 		logCalls.verify(log).printMessage(
 				ArgumentMatchers.eq(Kind.MANDATORY_WARNING),
-				ArgumentMatchers.matches("AndHowCompileProcessor: The source level is JDK8:.*current JDK is 9.*"));
+				ArgumentMatchers.matches("AndHowCompileProcessor: The source level is JDK8 " +
+						".*current JDK is 9.*the 'Generated' annotation on proxy classes will be commented out"));
 		logCalls.verifyNoMoreInteractions();
 
 	}

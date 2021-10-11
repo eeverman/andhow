@@ -124,7 +124,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			debug(log, "Found java source version: {} jdk version: {}", srcVer, jdkVer);
 
 			if (! CompileUtil.isGeneratedVersionDeterministic(srcVer, jdkVer)) {
-				warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]', but the " +
+				warn(log, "The source level is JDK8 ('javac [--release=8] or [-source=8]'), but the " +
 						"current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
 						"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
 						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVer);
