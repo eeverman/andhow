@@ -180,7 +180,7 @@ public abstract class CompileProblem {
 		/**
 		 * New instance.
 		 *
-		 * @param fullInitClassName The Init interface name
+		 * @param fullInitClassName The Init interface name (could be test init as well)
 		 * @param instances  A list of instances that implement the interface.
 		 */
 		public TooManyInitClasses(

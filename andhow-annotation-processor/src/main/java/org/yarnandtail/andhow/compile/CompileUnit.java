@@ -262,7 +262,7 @@ public class CompileUnit {
 	 *
 	 * @return
 	 */
-	public boolean hasErrors() {
+	public boolean hasProblems() {
 		if (errors != null) {
 			return !errors.isEmpty();
 		} else {

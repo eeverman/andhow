@@ -71,7 +71,7 @@ public class CompileUnitTest {
 		PropertyRegistrationList list = cu.getRegistrations();
 		
 		assertEquals(6, list.size());
-		assertFalse(cu.hasErrors());
+		assertFalse(cu.hasProblems());
 		assertEquals(ROOT_QUAL_NAME, list.getRootCanonicalName());
 		
 		

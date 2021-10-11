@@ -13,10 +13,6 @@ import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author ericeverman
- */
 public class AndHowLogTest {
 
 	private static AndHowLog log = AndHowLog.getLogger(AndHowLogTest.class);
