@@ -229,7 +229,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>3.3.0</version>
+					<version>3.3.1</version>
 					<executions>
 						<execution>
 							<id>javadoc-jar</id>
@@ -239,7 +239,7 @@
 							</goals>
 							<inherited>true</inherited>
 							<configuration>
-								<includeDependencySources>true</includeDependencySources>
+								<includeDependencySources>false</includeDependencySources>
 								<doclint>none</doclint>
 								<quiet>true</quiet>
 							</configuration>
@@ -254,16 +254,20 @@
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>3.3.0</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.0.0</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
 				<executions>
 					<execution>
-						<id>enforce-maven</id>
+						<id>enforce-non-release</id>
 						<goals>
 							<goal>enforce</goal>
 						</goals>
@@ -413,22 +417,20 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-enforcer-plugin</artifactId>
-						<version>3.0.0-M2</version>
 						<executions>
 							<execution>
-								<id>enforce-maven</id>
+								<id>enforce-release-requirements</id>
 								<goals>
 									<goal>enforce</goal>
 								</goals>
-								<configuration>
+								<configuration combine.self="override">
 									<rules>
 										<requireMavenVersion>
-											<!-- 3.2.2 req'ed for this bug fix: https://issues.apache.org/jira/browse/MNG-4565 -->
 											<version>(3.5,4.0)</version>
 										</requireMavenVersion>
 										<requireJavaVersion>
 											<!-- Only 1.8 is allowed during a release -->
-											<version>1.8</version>
+											<version>[1.8.0,9)</version>
 										</requireJavaVersion>
 									</rules>
 								</configuration>
