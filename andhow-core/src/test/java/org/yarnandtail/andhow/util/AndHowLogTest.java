@@ -4,8 +4,11 @@ package org.yarnandtail.andhow.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.logging.Formatter;
 import java.util.logging.Level;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,10 +16,6 @@ import org.yarnandtail.andhow.junit5.RestoreSysPropsAfterThisTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author ericeverman
- */
 public class AndHowLogTest {
 
 	private static AndHowLog log = AndHowLog.getLogger(AndHowLogTest.class);
@@ -65,6 +64,15 @@ public class AndHowLogTest {
 	public void testTest() {
 		assertTrue(log.getHandlers()[0] instanceof AndHowLogHandler);
 		assertEquals(1, log.getHandlers().length);
+	}
+
+	@Test
+	public void testMandatoryNoteWithReplacement() {
+		log.setLevel(Level.SEVERE);
+		log.mandatoryNote("A Str: {0} A number: {1} A \"str\" again: {0}", "X", 42);
+
+		String pattern = ".*A Str: X A number: 42 A \"str\" again: X.*\\s+";
+		MatcherAssert.assertThat(testNonErrByteArray.toString(), Matchers.matchesPattern(pattern));
 	}
 
 	/**
