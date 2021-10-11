@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>andhow-parent</artifactId>
 		<groupId>org.yarnandtail</groupId>
-		<version>0.4.2-rc1</version>
+		<version>0.4.2-rc2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>andhow-shared-test-utils</artifactId>
