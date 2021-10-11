@@ -214,19 +214,20 @@ public class PropertyRegistrationTest {
 		assertTrue(A.compareInnerPathTo(B) > 0);
 		
 	}
-	
-	private boolean compare(List<String> list, String... array) {
-		if (array.length != list.size()) {
-			return false;
-		}
-		
-		for (int i = 0; i < array.length; i++) {
-			if (! array[i].equals(list.get(i))) {
-				return false;
-			}
-		}
-		
-		return true;
+
+	@Test
+	public void innerPathLengthShouldMatchInnerNestingLevel() {
+		PropertyRegistration A = new PropertyRegistration("Root", "aaa", "B");
+		assertEquals(1 , A.getInnerPathLength());
+
+		A = new PropertyRegistration("Root", "aaa", "B", "C");
+		assertEquals(2 , A.getInnerPathLength());
+	}
+
+	@Test
+	public void innerPathLengthShouldBeZeroForNull() {
+		PropertyRegistration A = new PropertyRegistration("Root", "aaa");
+		assertEquals(0 , A.getInnerPathLength());
 	}
 	
 	@Test
@@ -346,6 +347,20 @@ public class PropertyRegistrationTest {
 		B = new PropertyRegistration("org.yat.MyClass", "George", "Inner3");
 		assertTrue(A.compareTo(B) < 0);
 
+	}
+
+	private boolean compare(List<String> list, String... array) {
+		if (array.length != list.size()) {
+			return false;
+		}
+
+		for (int i = 0; i < array.length; i++) {
+			if (! array[i].equals(list.get(i))) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

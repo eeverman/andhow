@@ -56,6 +56,7 @@ public class AndHowCompileProcessorTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
+		//log = Mockito.mock(Messager.class, withSettings().verboseLogging()); //use to print each invocation
 		log = Mockito.mock(Messager.class);
 
 		filer = Mockito.mock(Filer.class);
@@ -169,6 +170,35 @@ public class AndHowCompileProcessorTest {
 
 
 	@Test
+	void processShowsJustOneIndeterminateVersionsWarning() throws Exception {
+
+		registrars.add(causeEffect1);
+
+		Mockito.doNothing().when(noWriteProcessor).processNonFinalRound(any(), any(), any(),
+				any(), any(), anyInt(), anyInt(), any(), any(), any(), any());
+		Mockito.doNothing().when(noWriteProcessor).processFinalRound(any(), any(), anyInt(), anyInt(),
+				any(), any(), any(), any());
+		noWriteProcessor.init(pe);
+
+		when(noWriteProcessor.getJdkVersion()).thenReturn(9);	// getSrcVersion already returns 8
+
+		Set<? extends TypeElement> annotations = mock(Set.class);
+
+		noWriteProcessor.process(annotations, roundNotFinal);
+		noWriteProcessor.process(annotations, roundNotFinal);
+		noWriteProcessor.process(annotations, roundFinal);
+
+		InOrder logCalls = Mockito.inOrder(log);
+		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 9");
+		logCalls.verify(log).printMessage(
+				ArgumentMatchers.eq(Kind.MANDATORY_WARNING),
+				ArgumentMatchers.matches("AndHowCompileProcessor: The source level is JDK8 " +
+						".*current JDK is 9.*the 'Generated' annotation on proxy classes will be commented out"));
+		logCalls.verifyNoMoreInteractions();
+
+	}
+
+	@Test
 	void processNonFinalRoundScansAndWritesFiles() throws Exception {
 
 		TypeElement type1 = mock(TypeElement.class);
@@ -202,10 +232,6 @@ public class AndHowCompileProcessorTest {
 		doReturn(compileUnit3).when(noWriteProcessor).scanTypeElement(pe, type3);
 		doReturn(compileUnit4).when(noWriteProcessor).scanTypeElement(pe, type4);
 
-//		doCallRealMethod().when(noWriteProcessor).debug(any(), any(), any());
-//		doCallRealMethod().when(noWriteProcessor).error(any(), any());
-//		doCallRealMethod().when(noWriteProcessor).warn(any(), any());
-
 		noWriteProcessor.init(pe);
 
 		noWriteProcessor.processNonFinalRound(pe, roundNotFinal, runDate, filer, log, 8, 8,
@@ -226,52 +252,15 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processFinalRoundWithNoClassesFound() {
-		AndHowCompileProcessor acp = new AndHowCompileProcessor();
+	void processFinalRoundWithNoClassesFound() throws Exception {
 
-		acp.processFinalRound(filer, log, 8, 8,
+		noWriteProcessor.processFinalRound(filer, log, 8, 8,
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 8");
-		logCalls.verifyNoMoreInteractions();
-	}
-
-	@Test
-	void processFinalRoundIndeterminateVersionsWarningDoesnotHappenWhenNoRegistrars() {
-		AndHowCompileProcessor acp = new AndHowCompileProcessor();
-
-		acp.processFinalRound(filer, log, 8, 9,
-				problems, initClasses, testInitClasses, registrars);
-
-		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 9");
-		logCalls.verifyNoMoreInteractions();
-	}
-
-	@Test
-	void processFinalRoundIndeterminateVersionsWarningDoesHappenWithRegistrars() throws Exception {
-
-		registrars.add(causeEffect1);
-
-		noWriteProcessor.processFinalRound(filer, log, 8, 9,
-				problems, initClasses, testInitClasses, registrars);
-
-		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 9");
-		logCalls.verify(log).printMessage(
-				ArgumentMatchers.eq(Kind.MANDATORY_WARNING),
-				ArgumentMatchers.matches("AndHowCompileProcessor: The source level is JDK8:.*current JDK is 9.*"));
 		logCalls.verifyNoMoreInteractions();
 
-		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
-		processorCalls.verify(noWriteProcessor, times(1)).writeServiceFile(
-				filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-		processorCalls.verifyNoMoreInteractions();
-
-		//This doesn't happen in the final round
-//		Mockito.verify(noWriteProcessor, times(1))
-//				.writeClassFile(eq(filer), any(), eq(causeEffect1.causeElement));
+		Mockito.verify(noWriteProcessor, never()).writeClassFile(any(), any(), any());
 	}
 
 	@Test
@@ -285,7 +274,6 @@ public class AndHowCompileProcessorTest {
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 8");
 		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found exactly 1 org.yarnandtail.andhow.AndHowInit class: com.bigcorp.MyClass1");
 		logCalls.verifyNoMoreInteractions();
 
@@ -302,21 +290,23 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processFinalRoundCreatesErrorIfTwoInitClass() throws Exception {
+	void processFinalRoundLogsErrorIfTwoInitClassButDoesNotThrow() throws Exception {
 
 		initClasses.add(causeEffect1);
 		initClasses.add(causeEffect2);
 
-		assertThrows(AndHowCompileException.class, () ->
-				noWriteProcessor.processFinalRound(filer, log, 8, 8,
-				problems, initClasses, testInitClasses, registrars));
+		noWriteProcessor.processFinalRound(filer, log, 8, 8,
+				problems, initClasses, testInitClasses, registrars);
 
 		assertEquals(1, problems.size());
 		assertTrue(problems.get(0) instanceof CompileProblem.TooManyInitClasses);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 8");
-		logCalls.verify(log, times(2)).printMessage(eq(Kind.ERROR), any());
+		logCalls.verify(log).printMessage(Kind.ERROR, "AndHowCompileProcessor: " +
+				"AndHow Property definition or Init class errors prevented compilation. " +
+				"Each of the following (1) errors must be fixed before compilation is possible.");
+		logCalls.verify(log).printMessage(eq(Kind.ERROR), startsWith("AndHowCompileProcessor: Multiple (2) implementations of " +
+				"org.yarnandtail.andhow.AndHowInit were found"));
 		logCalls.verifyNoMoreInteractions();
 
 		Mockito.verify(noWriteProcessor, never()).writeServiceFile(any(), any(), any());
@@ -335,7 +325,6 @@ public class AndHowCompileProcessorTest {
 				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 8");
 		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found exactly 1 org.yarnandtail.andhow.AndHowTestInit class: com.bigcorp.MyClass1");
 		logCalls.verifyNoMoreInteractions();
 
@@ -352,21 +341,23 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processFinalRoundCreatesErrorIfTwoTestInitClass() throws Exception {
+	void processFinalRoundCreatesLogsErrorIfTwoTestInitClassButDoesNotThrow() throws Exception {
 
 		testInitClasses.add(causeEffect1);
 		testInitClasses.add(causeEffect2);
 
-		assertThrows(AndHowCompileException.class, () ->
-				noWriteProcessor.processFinalRound(filer, log, 8, 8,
-				problems, initClasses, testInitClasses, registrars));
+		noWriteProcessor.processFinalRound(filer, log, 8, 8,
+				problems, initClasses, testInitClasses, registrars);
 
 		assertEquals(1, problems.size());
 		assertTrue(problems.get(0) instanceof CompileProblem.TooManyInitClasses);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 8 jdk version: 8");
-		logCalls.verify(log, times(2)).printMessage(eq(Kind.ERROR), any());
+		logCalls.verify(log).printMessage(Kind.ERROR, "AndHowCompileProcessor: " +
+				"AndHow Property definition or Init class errors prevented compilation. " +
+				"Each of the following (1) errors must be fixed before compilation is possible.");
+		logCalls.verify(log).printMessage(eq(Kind.ERROR), startsWith("AndHowCompileProcessor: Multiple (2) implementations of " +
+				"org.yarnandtail.andhow.AndHowTestInit were found"));
 		logCalls.verifyNoMoreInteractions();
 
 		Mockito.verify(noWriteProcessor, never()).writeServiceFile(any(), any(), any());
@@ -374,24 +365,24 @@ public class AndHowCompileProcessorTest {
 	}
 
 	@Test
-	void processFinalRoundShouldThrowCompileExceptionWhenWriteThrowsException() throws Exception {
+	void processFinalRoundShouldNotThrowAnExceptionWhenWriteThrowsException() throws Exception {
 
 		registrars.add(causeEffect1);
 
 		Mockito.when(filer.createResource(any(), any(), any(), any())).thenThrow(new IOException());
 		Mockito.doCallRealMethod().when(noWriteProcessor).writeServiceFile(any(), any(), any());
 
-		assertThrows(AndHowCompileException.class, () -> noWriteProcessor.processFinalRound(filer, log, 9, 9,
-				problems, initClasses, testInitClasses, registrars));
+		noWriteProcessor.processFinalRound(filer, log, 9, 9,
+				problems, initClasses, testInitClasses, registrars);
 
 		InOrder logCalls = Mockito.inOrder(log);
-		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found java source version: 9 jdk version: 9");
+		logCalls.verify(log).printMessage(Kind.NOTE, "AndHowCompileProcessor: Found 1 top level classes containing AndHow Properties");
+		logCalls.verify(log).printMessage(eq(Kind.ERROR), startsWith("AndHowCompileProcessor: Exception while trying to write generated files"));
 		logCalls.verifyNoMoreInteractions();
 
 		InOrder processorCalls = Mockito.inOrder(noWriteProcessor);
 		processorCalls.verify(noWriteProcessor, times(1)).writeServiceFile(
 				filer, PropertyRegistrar.class.getCanonicalName(), registrars);
-		processorCalls.verifyNoMoreInteractions();
 	}
 
 	@Test

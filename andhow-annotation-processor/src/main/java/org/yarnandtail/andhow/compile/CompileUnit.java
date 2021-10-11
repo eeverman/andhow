@@ -31,16 +31,16 @@ import java.util.*;
 public class CompileUnit {
 
 	private final String classCanonName;
-	private PropertyRegistrationList registrations;	//late init
-	private List<CompileProblem> errors;	//late init
-	private boolean initClass;	//True if an AndHowInit instance (and not AndHowTestInit)
-	private boolean testInitClass;	//True if an AndHowTestInit instance
+	private PropertyRegistrationList registrations;	// late init
+	private List<CompileProblem> problems;	// late init
+	private boolean initClass;	// True if an AndHowInit instance (and not AndHowTestInit)
+	private boolean testInitClass;	// True if an AndHowTestInit instance
 	
 	/**
 	 * This is being used as a stack. Always push into the tail of the queue and
 	 * always 'pop' from the tail. The nested inner class order from outer to
 	 * inner is then the normal iteration order of the queue from the head to
-	 * the tail.  Uses late initiation.
+	 * the tail.  Never null.
 	 */
 	private ArrayDeque<SimpleType> innerPathStack = new ArrayDeque();
 
@@ -73,11 +73,6 @@ public class CompileUnit {
 	}
 
 	public void pushType(SimpleType simpleName) {
-		
-		if (innerPathStack == null) {
-			innerPathStack = new ArrayDeque();
-		}
-		
 		innerPathStack.addLast(simpleName);
 	}
 
@@ -87,9 +82,10 @@ public class CompileUnit {
 
 	public SimpleType popType() {
 		
-		if (innerPathStack == null || innerPathStack.size() == 0) {
+		if (innerPathStack.size() == 0) {
 			throw new RuntimeException("The nesting order of inner classes is broken - expected to be in an inner class.");
 		}
+
 		return innerPathStack.pollLast();
 	}
 
@@ -110,6 +106,7 @@ public class CompileUnit {
 	public boolean addProperty(String name, boolean _static, boolean _final) {
 
 		if (_static && _final) {
+
 			if (registrations == null) {
 				registrations = new PropertyRegistrationList(classCanonName);
 			}
@@ -117,20 +114,21 @@ public class CompileUnit {
 			registrations.add(name, getInnerPathNames());
 
 			return true;
+
 		} else {
 			
-			if (errors == null) {
-				errors = new ArrayList();
+			if (problems == null) {
+				problems = new ArrayList();
 			}
 		
 			String parentName = NameUtil.getJavaName(classCanonName, this.getInnerPathNames());
 		
 			if (_static) {
-				errors.add(new CompileProblem.PropMissingFinal(parentName, name));
+				problems.add(new CompileProblem.PropMissingFinal(parentName, name));
 			} else if (_final) {
-				errors.add(new CompileProblem.PropMissingStatic(parentName, name));
+				problems.add(new CompileProblem.PropMissingStatic(parentName, name));
 			} else {
-				errors.add(new CompileProblem.PropMissingStaticFinal(parentName, name));
+				problems.add(new CompileProblem.PropMissingStaticFinal(parentName, name));
 			}
 			
 			return false;
@@ -140,25 +138,15 @@ public class CompileUnit {
 	/**
 	 * Return the state of inner class nesting from the outermost to the
 	 * innermost.
-	 *
+	 * <p>
 	 * If the current state is at the root of the top level class, an empty list
 	 * is returned.
-	 *
+	 * <p>
 	 * @see #getInnerPathNames() for just the names of the nested inner classes.
-	 * @return
+	 * @return A disconnected list
 	 */
 	public List<SimpleType> getInnerPath() {
-
-		List<SimpleType> innerPath;
-
-		if (innerPathStack != null && innerPathStack.size() > 0) {
-			innerPath = new ArrayList(innerPathStack);
-			//Collections.reverse(innerPath);
-		} else {
-			innerPath = Collections.EMPTY_LIST;
-		}
-
-		return innerPath;
+		return new ArrayList(innerPathStack);
 	}
 
 	/**
@@ -174,7 +162,7 @@ public class CompileUnit {
 
 		List<String> pathNames;
 
-		if (innerPathStack != null && innerPathStack.size() > 0) {
+		if (innerPathStack.size() > 0) {
 			pathNames = new ArrayList();
 
 			Iterator<SimpleType> it = innerPathStack.iterator();
@@ -246,12 +234,12 @@ public class CompileUnit {
 	/**
 	 * The list of Property errors, either directly added or created indirectly
 	 * by adding properties that had invalid modifiers.
-	 *
-	 * @return
+	 * <p>
+	 * @return A non-null list of CompileProblem's.
 	 */
 	public List<CompileProblem> getProblems() {
-		if (errors != null) {
-			return errors;
+		if (problems != null) {
+			return problems;
 		} else {
 			return Collections.emptyList();
 		}
@@ -262,13 +250,8 @@ public class CompileUnit {
 	 *
 	 * @return
 	 */
-	public boolean hasErrors() {
-		if (errors != null) {
-			return !errors.isEmpty();
-		} else {
-			return false;
-		}
-		
+	public boolean hasProblems() {
+		return problems != null && ! problems.isEmpty();
 	}
 
 	/**

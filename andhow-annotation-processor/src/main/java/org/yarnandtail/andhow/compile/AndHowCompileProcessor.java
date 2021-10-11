@@ -16,6 +16,7 @@ import org.yarnandtail.andhow.service.*;
 
 import static javax.tools.Diagnostic.*;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
+
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -61,6 +62,9 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	//List of problems found. >0 results in an error
 	private final List<CompileProblem> _problems = new ArrayList<>();
 
+	// Toggle to log some basic info just once in the process method
+	private boolean initLogComplete;
+
 	/**
 	 * A no-arg constructor is required.
 	 */
@@ -73,7 +77,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	public synchronized void init(ProcessingEnvironment processingEnv) {
 		//Unwrap the IntelliJ ProcessingEnvironment if needed
 		super.init(unwrap(processingEnv));
-
 	}
 
 	/**
@@ -115,6 +118,18 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		Messager log = this.processingEnv.getMessager();
 		int srcVer = getSrcVersion();
 		int jdkVer = getJdkVersion();
+
+		if (! initLogComplete) {
+			initLogComplete = true;
+			debug(log, "Found java source version: {} jdk version: {}", srcVer, jdkVer);
+
+			if (! CompileUtil.isGeneratedVersionDeterministic(srcVer, jdkVer)) {
+				warn(log, "The source level is JDK8 ('javac [--release=8] or [-source=8]'), but the " +
+						"current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
+						"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
+						"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVer);
+			}
+		}
 
 		if (! roundEnv.processingOver()) {
 			processNonFinalRound(processingEnv, roundEnv, _runDate, filer, log,
@@ -172,7 +187,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				initCEs.add(new CauseEffect(compileUnit.getRootCanonicalName(), rootTypeElement));
 			}
 
-			if (compileUnit.hasRegistrations()) {
+			if (compileUnit.hasRegistrations() && ! compileUnit.hasProblems()) {
 
 				debug(log, "Found {} AndHow Properties in class {} ",
 						compileUnit.getRegistrations().size(), compileUnit.getRootCanonicalName());
@@ -189,7 +204,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 					debug(log, "Wrote new generated class file {}", gen.buildGeneratedClassSimpleName());
 				} catch (Exception ex) {
 					error(log, "Unable to write generated classfile '" + gen.buildGeneratedClassFullName() + "'", ex);
-					throw new RuntimeException(ex);
 				}
 			}
 
@@ -223,18 +237,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 			final List<CauseEffect> initCEs, final List<CauseEffect> testInitCEs,
 			final List<CauseEffect> registrarCEs) {
 
-		debug(log, "Found java source version: {} jdk version: {}", srcVersion, jdkVersion);
-
-		if (registrarCEs.size() > 0 &&
-						! CompileUtil.isGeneratedVersionDeterministic(srcVersion, jdkVersion)) {
-
-			warn(log, "The source level is JDK8: 'javac [--release=8] or [-source=8]', but the " +
-					"current JDK is {}. Thus, the 'Generated' annotation on proxy classes will be " +
-					"commented out.  Not an issue in most cases, but can be fixed by using JDK8 when " +
-					"compiling for JRE8.  See: https://github.com/eeverman/andhow/issues/630", jdkVersion);
-		}
-
-
 		if (initCEs.size() > 1) {
 			compileProblems.add(new CompileProblem.TooManyInitClasses(
 					INIT_CLASS_NAME, initCEs));
@@ -263,12 +265,14 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				}
 
 				if (registrarCEs.size() > 0) {
-					//Todo:  log total classes
+					debug(log, "Found {} top level classes containing AndHow Properties",
+							registrarCEs.size());
+
 					writeServiceFile(filer, PropertyRegistrar.class.getCanonicalName(), registrarCEs);
 				}
 
 			} catch (IOException e) {
-				throw new AndHowCompileException("Exception while trying to write generated files", e);
+				error(log, "Exception while trying to write generated files", e);
 			}
 
 		} else {
@@ -280,7 +284,6 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 				error(log, err.getFullMessage());
 			}
 
-			throw new AndHowCompileException(compileProblems);
 		}
 	}
 
@@ -304,10 +307,10 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 
 	/**
 	 * Writes a new class implementing the {@code PropertyRegistrar} interface.
-	 *
+	 * <p>
 	 * The new class directly corresponds to a user classes containing AndHow
 	 * Properties and will contain meta data about the properties.
-	 *
+	 * <p>
 	 * @param filer The javac file system representation for writing files.
 	 * @param generator AndHow class capable of generating source code for this
 	 * {@code PropertyRegistrar} class.
@@ -318,7 +321,7 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 * Likely this is normally used to associate source code line numbers with
 	 * generated code.
 	 *
-	 * @throws Exception If unable to write (out of disc space?)
+	 * @throws Exception If unable to write (out of disc space?) or other issues
 	 */
 	public void writeClassFile(Filer filer,
 			PropertyRegistrarClassGenerator generator, Element causingElement) throws Exception {
@@ -333,6 +336,18 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 		}
 	}
 
+	/**
+	 * Writes a new META-INF service file with a list of classes implementing the
+	 * specified interface.
+	 * <p>
+	 * The new class directly corresponds to a user classes containing AndHow
+	 * Properties and will contain meta data about the properties.
+	 * <p>
+	 * @param filer The ProcessingEnvironment provided Filer
+	 * @param fullyQualifiedServiceInterfaceName The name of the interface the classes implement
+	 * @param implementingClasses List of CauseEffect's with each class implementing the interface
+	 * @throws IOException If unable to write the file
+	 */
 	protected void writeServiceFile(Filer filer, String fullyQualifiedServiceInterfaceName,
 			List<CauseEffect> implementingClasses) throws IOException {
 
@@ -390,6 +405,20 @@ public class AndHowCompileProcessor extends AbstractProcessor {
 	 */
 	void error(Messager log, String pattern, Object... args) {
 		log.printMessage(Kind.ERROR, "AndHowCompileProcessor: " + TextUtil.format(pattern, args));
+	}
+
+	/**
+	 * Logs an error message using the javac standard Messager system.
+	 *
+	 * @param log The Message instance to use
+	 * @param pattern String pattern with curly variable replacement like this: {}
+	 * @param thrown An error that was thrown
+	 * @param args Arguments to put into the {}'s, in order.
+	 */
+	void error(Messager log, String pattern, Throwable thrown, Object... args) {
+		log.printMessage(Kind.ERROR, "AndHowCompileProcessor: " + TextUtil.format(pattern, args) +
+			System.lineSeparator() + thrown.getMessage()
+		);
 	}
 
 	/**
