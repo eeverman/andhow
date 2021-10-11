@@ -96,6 +96,9 @@ public class CompileUnitTest {
 		assertEquals(ROOT_QUAL_NAME + "." + PROP2_NAME, list.get(5).getCanonicalPropertyName());
 		assertEquals(ROOT_QUAL_NAME, list.get(5).getCanonicalRootName());
 		assertEquals(ROOT_QUAL_NAME, list.get(5).getJavaCanonicalParentName());
+
+		//
+		assertThrows(RuntimeException.class, () -> cu.popType(), "No more types left on stack");
 	}
 	
 	@Test
