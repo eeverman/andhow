@@ -6,14 +6,13 @@ import java.util.logging.Logger;
 
 /**
  * A simple wrapper around the java.util.Logging utility that makes it behave
- * like SLF4J, including more use of standard message formatting.
+ * more like SLF4J, including more use of standard message formatting.
  *
  * Methods that take Object... arguments use curly brace replacement, ie:<br>
- * <code>debug("Hello {}, Welcome to logging", "Carl");</code>, <br>
- * Logs: <code>Hello Carl, Welcome to logging</code><br>
- *
- * See https://www.slf4j.org/apidocs/index.html for complete examples.
- *
+ * <code>debug("Hello ''{0}'', Welcome to logging", "Carl");</code>, <br>
+ * Logs: <code>Hello 'Carl', Welcome to logging</code><br>
+ * (Note that single quotes must be doubled up).
+ * <p>
  * Configuration of logging levels happens can be done in three ways:
  * <ul>
  * <li>Explicitly calling setLevel() on a AndHowLog instance
@@ -124,6 +123,21 @@ public class AndHowLog {
 		} else {
 			baseLogger.setLevel(null);
 		}
+	}
+
+	/**
+	 * Log a manditory note.
+	 * <p>
+	 * This was created for the case where sample configuration is written to a tmp directory,
+	 * possibly at the user's request.  The message must be displayed or the user will not know where
+	 * samples were written, but it should not look like an error.
+	 * <p>
+	 * @param format The format string to use
+	 * @param arguments In-order arguments to be replaced in the string.
+	 */
+	public void mandatoryNote(String format, Object... arguments) {
+		baseLogger.logp(Level.SEVERE, "AndHow", null,
+				AndHowLogHandler.MANDATORY_NOTE_PREFIX + format, arguments);
 	}
 
 	//

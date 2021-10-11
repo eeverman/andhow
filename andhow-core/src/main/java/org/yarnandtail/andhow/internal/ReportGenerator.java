@@ -10,8 +10,12 @@ import org.yarnandtail.andhow.internal.LoaderProblem.UnknownPropertyLoaderProble
 import org.yarnandtail.andhow.util.*;
 
 /**
- *
- * @author ericeverman
+ * Generates configuration template files for the user, based on configured properties and the
+ * Loaders currently available.
+ * <p>
+ * The purpose is to give the user a start point of having a completely configured properties file
+ * (and others) to work from.  All the available properties, their validation rules, default values,
+ * etc. are in these files, with the actual value left blank for the user to fill in.
  */
 public class ReportGenerator {
 
@@ -127,7 +131,7 @@ public class ReportGenerator {
 	 * @return The File directory the sample configuration files were written to.
 	 */
 	public static File printConfigSamples(PropertyConfigurationInternal appDef,
-                                          List<Loader> loaders, boolean isDueToErrors) {
+  		List<Loader> loaders, boolean isDueToErrors) {
 
 		AndHowLog log = AndHowLog.getLogger(ReportGenerator.class);
 
@@ -141,15 +145,13 @@ public class ReportGenerator {
 		File sampleDir = new File(sampleDirPath);
 
 		if (isDueToErrors) {
-			log.error("Drat! There were AndHow startup errors. "
-					+ "Sample configuration files will be generated as a configuration starting point.");
+			log.error("Drat! There are AndHow startup errors. "
+					+ "As a result, a set of sample configuration files will be written to ''{0}''",
+					sampleDirPath);
 		} else {
-			log.info("As requested, sample configuration files "
-					+ "will be created for each Loader that supports it.");
+			log.mandatoryNote("As 'requested', sample configuration files will be created for each " +
+					"Loader that supports it and written to ''{0}''", sampleDirPath);
 		}
-
-		//Must be error level so the path is visible
-		log.error("Configuration sample files will be written to: '" + sampleDirPath + "'");
 
 		try {
 
