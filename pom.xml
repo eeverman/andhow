@@ -237,9 +237,8 @@
 							<goals>
 								<goal>jar</goal>
 							</goals>
-							<inherited>true</inherited>
 							<configuration>
-								<includeDependencySources>false</includeDependencySources>
+								<includeDependencySources>true</includeDependencySources>
 								<doclint>none</doclint>
 								<quiet>true</quiet>
 							</configuration>
@@ -368,7 +367,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -378,10 +376,14 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-					</plugin>
+					<!--
+					Modules needing javadocs should copy this named profile and just include
+					the maven-javadoc-plugin.
+					-->
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--					</plugin>-->
 				</plugins>
 			</build>
 		</profile>
