@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>andhow-simulated-app-tests</artifactId>
 		<groupId>org.yarnandtail</groupId>
-		<version>0.4.2-rc4</version>
+		<version>0.4.2-rc5-SNAPSHOT</version>
 	</parent>
 	<artifactId>example-app-2</artifactId>
 
