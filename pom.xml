@@ -74,6 +74,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<doclint>none</doclint>
 		<jacoco.skip>true</jacoco.skip>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 
 	<modules>
@@ -362,6 +363,9 @@
 	<profiles>
 		<profile>
 			<id>source-and-javadoc-jar</id>
+			<properties>
+				<maven.javadoc.skip>false</maven.javadoc.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
