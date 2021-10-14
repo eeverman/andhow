@@ -47,6 +47,8 @@ _**Learn more in the [User Guide](https://sites.google.com/view/andhow/user-guid
 **AndHow can be used in projects with Java 8 - 16. There are
 [some considerations](https://sites.google.com/view/andhow/user-guide/java9-and-above) for Java 9+
 projects using Jigsaw Modules.**
+### Try it right now
+<iframe frameborder="0" width="100%" height="500px" src="https://replit.com/@EricEverman/AndHowHelloWorld?lite=1&outputonly=1"></iframe>
 
 ### Complete Usage Example
 ```java
@@ -68,7 +70,7 @@ public class HelloWorld {
   }
 }
 ```
-<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)</kbd>
+<kbd><b>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)</b></kbd> • <kbd>**[&gt;&gt; Run it now on Replit &lt;&lt;](https://replit.com/@EricEverman/AndHowHelloWorld?v=1)**</kbd>
 ##### // 1 : Declare AndHow Properties
 `StrProp` &amp; `IntProp` are AndHow `Property`s. 
 Properties and their values are constants, so they are always `static final`
@@ -120,7 +122,7 @@ public class HelloWorld2 {
   }
 }
 ```
-<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)</kbd>
+<kbd>[&gt;&gt; Complete code &lt;&lt;](https://github.com/eeverman/andhow-samples/blob/main/01-hello-world/src/main/java/simple/HelloWorld.java)**</kbd>
 ##### // 1 : Declare AndHow Properties with validation
 `Property` values can have validation.  At startup, AndHow _**discovers and validates
 all Properties in your entire application**_, ensuring that a mis-configuration application
