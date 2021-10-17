@@ -5,39 +5,46 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**
- * A True/False switch that is never null and behaves similarly to a unix cmd line switch.
- * 
+ * A True/False switch that is never null and behaves similarly to a 'nix cmd line switch.
+ * <p>
+ * This would be used for command line arguments that are true by being presence, e.g.:<br>
+ * {@code java MyClass launch}<br>
+ * If {@code launch} is the name or alias of a {@code FlagProp}, launch will true by its presence,
+ * without requiring {@code launch=true} (although that will also work).
+ * <p>
+ * <em>NOTE:  The behavior of this class may be changing</em><br>
+ * The existing behavior causes unexpected values in properties files and will likely
+ * <a href="https://github.com/eeverman/andhow/issues/656">change in the 0.5.0 release</a>
+ * so that it behaves like a BolProp everywhere except on command line.
+ * <p>
  * If unspecified, a Flag defaults to false, however, the default can be set to
- * true (but not null).  Best used for on/off flags, particularly if used from
- * command line where a <i>null</i> value makes no sense.
- * 
+ * true (but not to null).
+ * <p>
  * A FlagProp is similar to a BolProp, but with these differences:
  * <ul>
  * <li>A Flag is never null - it will always return true or false.  Thus,
  * A FlagProp will never throw a RequirementProblem error during configuration -
  * it always has a value.</li>
- * <li>FlagProp.isNonNullRequired() always returns true, as if mustNotBeNull()
- * was called on the builder.
  * <li>FlagProp.getDefaultValue() never returns null and defaults to false.
  * Via the constructor or builder, it is possible to set the default to be true.
- * In that case a loader would need to find it explicitly set to false to change its value.
- * <li>Loaders will interpret the presence of the flag as setting the flag to
- * True (where possible).  For instance, if a Flag is aliased as <em>-enableTorpedos</em>,
- * including <code>-enableTorpedos</code> as a command line argument will cause
- * the CmdLineLoader to set it to true.</li>
+ * In that case a loader would need to find it explicitly set to false to change its value,
+ * e.g. {@code propertyName=false}.
+ * <li>Currently (prior to 0.5.0), referencing a FlagProp in any configuration source (not just
+ * command line args) will set it to true.  For instance, a 'launch' flag will be set true simply
+ * by including:<br>
+ * {@code launch =}<br>
+ * in a properties file.  That will likely change in the 0.5.0 release (see note above).</li>
  * </ul>
  * 
  * <h3>The technical details</h3>
- * What a value is assigned to a FlagProp, it is first trimmed by the
+ * When the name refering to a FlagProp is found, the value is first trimmed by the
  * TrimToNullTrimmer, which removes all whitespace and ultimately turns the value
  * into null if the value is all whitespace.  Since simply being present counts
- * as 'on' for a flag, finding a null value sets the Flag to true.
+ * as 'true' for a flag, finding a null value sets the Flag to true.
  * <p>
  * If after trimming the value is not null, it is parsed by
  * {@link org.yarnandtail.andhow.util.TextUtil#toBoolean(java.lang.String)} to
  * determine if the String is considered true or false.
- * 
- * @author eeverman
  */
 public class FlagProp extends PropertyBase<Boolean> {
 	

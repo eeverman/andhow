@@ -7,17 +7,17 @@ import org.yarnandtail.andhow.api.GroupProxyMutable;
 import org.yarnandtail.andhow.internal.NameAndProperty;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.IntProp;
-import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author ericeverman
- */
 public class PropFileLoaderSamplePrinterTest {
+
+	PrintFormat format;
+
+	TestPrintStream out;
+	PropFileLoaderSamplePrinter printer;
 
 	PropertyConfigurationMutable config;
 	GroupProxyMutable groupProxy1;
@@ -27,10 +27,15 @@ public class PropFileLoaderSamplePrinterTest {
 		StrProp MY_PROP2 = StrProp.builder().defaultValue("La la la").desc("mp description")
 				.helpText("Long text on how to use the property").startsWith("La").endsWith("la")
 				.notNull().aliasIn("mp2").aliasInAndOut("mp2_alias2").aliasOut("mp2_out").build();
+		FlagProp MY_PROP3 = FlagProp.builder().build();
 	}
 
 	@BeforeEach
-	public void setup() {
+	public void setup() throws UnsupportedEncodingException {
+		format = new PropFileFormat();
+		out = new TestPrintStream();
+		printer = new PropFileLoaderSamplePrinter();
+
 		config = new PropertyConfigurationMutable(new CaseInsensitiveNaming());
 
 		groupProxy1 = new GroupProxyMutable(
@@ -39,18 +44,17 @@ public class PropFileLoaderSamplePrinterTest {
 		);
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP1", Config.MY_PROP1));
 		groupProxy1.addProperty(new NameAndProperty("MY_PROP2", Config.MY_PROP2));
+		groupProxy1.addProperty(new NameAndProperty("MY_PROP3", Config.MY_PROP3));
 
 		assertNull(config.addProperty(groupProxy1, Config.MY_PROP1));
 		assertNull(config.addProperty(groupProxy1, Config.MY_PROP2));
-
+		assertNull(config.addProperty(groupProxy1, Config.MY_PROP3));
 	}
 
 
 	@Test
-	public void generalTest() throws UnsupportedEncodingException {
+	public void happyPathTest() throws UnsupportedEncodingException {
 
-		TestPrintStream out = new TestPrintStream();
-		PropFileLoaderSamplePrinter printer = new PropFileLoaderSamplePrinter();
 		String[] lines;	//The output line array
 
 
@@ -115,6 +119,23 @@ public class PropFileLoaderSamplePrinterTest {
 						".MY_PROP2 = ",
 				lines[8]);
 
+		//Print MY_PROP3
+		out.reset();
+		printer.printProperty(config, out, groupProxy1, Config.MY_PROP3);
+
+		//System.out.println(out.getTextAsString());
+		lines = out.getTextAsLines();
+		assertEquals(4, lines.length);
+		assertEquals("# ", lines[0]);
+		assertEquals("# MY_PROP3 (Boolean) NON-NULL", lines[1]);
+		assertEquals("# Default Value: false", lines[2]);
+
+		assertEquals(
+				"# " +
+						PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
+						".MY_PROP3 = ",
+				lines[3]);
+
 		//Print group closing (should be empty line)
 		out.reset();
 		printer.printPropertyGroupEnd(config, out, groupProxy1);
@@ -134,53 +155,22 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("", lines[0]);
 	}
 
-	/**
-	 * Test of getFormat method, of class PropFileLoaderSamplePrinter.
-	 */
+	//
+	// The tests below hit a few of the untest edge cases in the
+	// abstract base class BaseSamplePrinter.
 	@Test
-	public void testGetFormat() {
+	public void printShouldPrintABlankLineBeforeIfRequested() throws UnsupportedEncodingException {
+
+		TextBlock tb = new TextBlock(false, false);
+		tb.setBlankLineBefore(true);
+		tb.addLine("Some Text");
+
+		printer.print(out, tb, format);
+		String[] lines = out.getTextAsLines();
+		assertEquals(2, lines.length);
+		assertEquals("", lines[0]);
+		assertEquals("Some Text", lines[1]);
 	}
 
-	/**
-	 * Test of getSampleFileStart method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetSampleFileStart() {
-	}
-
-	/**
-	 * Test of getSampleStartComment method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetSampleStartComment() {
-	}
-
-	/**
-	 * Test of getInAliaseString method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetInAliaseString() {
-	}
-
-	/**
-	 * Test of getActualProperty method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetActualProperty() throws Exception {
-	}
-
-	/**
-	 * Test of getSampleFileEnd method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetSampleFileEnd() {
-	}
-
-	/**
-	 * Test of getSampleFileExtension method, of class PropFileLoaderSamplePrinter.
-	 */
-	@Test
-	public void testGetSampleFileExtension() {
-	}
 
 }

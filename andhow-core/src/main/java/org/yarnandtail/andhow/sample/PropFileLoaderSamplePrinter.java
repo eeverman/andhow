@@ -4,10 +4,10 @@ import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**
- *
- * @author ericeverman
+ * Prints configuration templates for properties files.
  */
 public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements SamplePrinter {
 	protected PrintFormat format = new PropFileFormat();
@@ -47,13 +47,20 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 	public TextBlock getActualProperty(PropertyConfigurationInternal definition,
                                        GroupProxy group, Property prop) throws Exception {
 
-		TextBlock tb = new TextBlock(false, false);
-
+		TextBlock tb;
 		String propCanonName = group.getCanonicalName(prop);
+
+		if (! (prop.getValueType() instanceof FlagType)) {
+			tb = new TextBlock(false, false);
+		} else {
+			// Flags are read as True just by being present, so comment out.
+			tb = new TextBlock(false, true);
+		}
 
 		tb.addLine(
 				TextUtil.format("{} = ", propCanonName)
 		);
+
 
 		return tb;
 	}
