@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 /**
  * Type representation of Java BigDecimal objects.
  *
- * This class is threadsafe and uses a singleton pattern to prevent  multiple
+ * This class is threadsafe and uses a singleton pattern to prevent multiple
  * instances, since all users can safely use the same instance.
  *
  * @author chace86
