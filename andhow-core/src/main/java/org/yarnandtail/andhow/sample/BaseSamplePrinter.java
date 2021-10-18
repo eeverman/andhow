@@ -33,12 +33,6 @@ public abstract class BaseSamplePrinter implements SamplePrinter {
 
 	public abstract TextBlock getSampleFileEnd();
 
-	protected void printIfNotNull(PrintStream out, String line) {
-		if (line != null) {
-			out.println(line);
-		}
-	}
-
 	protected void print(PrintStream out, TextBlock block, PrintFormat format) {
 
 		if (block == null) return;

@@ -14,10 +14,6 @@ import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
-/**
- *
- * @author ericeverman
- */
 public class JndiLoaderSamplePrinterTest {
 
 	PropertyConfigurationMutable config;
