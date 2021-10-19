@@ -1,28 +1,22 @@
 package org.yarnandtail.andhow.property;
 
-import java.util.List;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valid.LngValidator;
 import org.yarnandtail.andhow.valuetype.LngType;
 
+import java.util.List;
+
 /**
- * A Property that refers to a Long value.
- *
- * All the basic Java types use a three letter abv. to keep declaration lines
- * short, in the form of:  [Type]Prop
- *
- * By default this uses the TrimToNullTrimmer, which removes all whitespace from
- * the value and ultimately null if the value is all whitespace.
- *
- * If a LngProp is configured as a string, such as from a properties file, on
- * command line, environment variable, etc., the value does NOT include a trailing
- * 'L', as is done with Java literals.  E.g., this is the correct way to spec
- * a long value in a properties file:
+ * A {@link Long} configuration Property
+ * <p>
+ * Parsing values from strings is done by the {@link LngType}, which parses values using the
+ * {@link Long#parseLong(String)}.  Note that the {@code parseLong} method
+ * <em>does not accept a trailing 'L' or 'l'</em> as the Java literal does.
+ * E.g., this is the correct way to spec a Long value in a properties file:
  * <code>
  * name.of.my.long.property.MY_PROPERTY = 90
  * </code>
- *
- * @author eeverman
+ * Before parsing String values, the {@link TrimToNullTrimmer} is applied by default.
  */
 public class LngProp extends PropertyBase<Long> {
 
@@ -34,6 +28,13 @@ public class LngProp extends PropertyBase<Long> {
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 
+	/**
+	 * A chainable builder for this property that should terminate with {@code build()}
+	 * <p>
+	 * Use as {@code LngProp.builder()...series of builder methods...build();}
+	 * <p>
+	 * @return The builder instance that can be chained
+	 */
 	public static LngBuilder builder() {
 		return new LngBuilder();
 	}
@@ -50,7 +51,7 @@ public class LngProp extends PropertyBase<Long> {
 		public LngProp build() {
 
 			return new LngProp(_defaultValue, _nonNull, _desc, _validators,
-				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+					_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 

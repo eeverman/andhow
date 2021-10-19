@@ -1,20 +1,17 @@
 package org.yarnandtail.andhow.property;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valid.StringValidator;
 import org.yarnandtail.andhow.valuetype.StrType;
 
 /**
- * A Property that refers to a String value.
- *
- * All the basic Java types use a three letter abv. to keep declaration lines
- * short, in the form of: [Type]Prop
- *
- * By default, this uses the QuotedSpacePreservingTrimmer, which will keep
- * whitespace inside double quotes.
- *
- * @author eeverman
+ * A {@link String} configuration Property
+ * <p>
+ * By default, StrProp uses the {@link QuotedSpacePreservingTrimmer}, which will keep
+ * whitespace inside double quotes for loaders that are coming from text based sources, such
+ * as properties files.
  */
 public class StrProp extends PropertyBase<String> {
 
@@ -24,6 +21,13 @@ public class StrProp extends PropertyBase<String> {
 		super(defaultValue, nonNull, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 
+	/**
+	 * A chainable builder for this property that should terminate with {@code build()}
+	 * <p>
+	 * Use as {@code StrProp.builder()...series of builder methods...build();}
+	 * <p>
+	 * @return The builder instance that can be chained
+	 */
 	public static StrBuilder builder() {
 		return new StrBuilder();
 	}

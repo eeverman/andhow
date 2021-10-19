@@ -1,20 +1,19 @@
 package org.yarnandtail.andhow.property;
 
-import java.util.List;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valid.IntValidator;
 import org.yarnandtail.andhow.valuetype.IntType;
 
+import java.util.List;
+
 /**
- * A Property that refers to an Integer value.
- *
- * All the basic Java types use a three letter abv. to keep declaration lines
- * short, in the form of:  [Type]Prop
- *
- * By default this uses the TrimToNullTrimmer, which removes all whitespace from
- * the value and ultimately null if the value is all whitespace.
- *
- * @author eeverman
+ * An {@link Integer} configuration Property
+ * <p>
+ * Parsing values from strings is done by the {@link IntType}, which parses values using the
+ * {@link Integer#parseInt(String)}.  Note that the {@code parseInt} accepts integer numbers
+ * with the option of a leading '+' or '-'.
+ * <p>
+ * Before parsing String values, the {@link TrimToNullTrimmer} is applied by default.
  */
 public class IntProp extends PropertyBase<Integer> {
 
@@ -26,6 +25,13 @@ public class IntProp extends PropertyBase<Integer> {
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 
+	/**
+	 * A chainable builder for this property that should terminate with {@code build()}
+	 * <p>
+	 * Use as {@code IntProp.builder()...series of builder methods...build();}
+	 * <p>
+	 * @return The builder instance that can be chained
+	 */
 	public static IntBuilder builder() {
 		return new IntBuilder();
 	}
@@ -42,7 +48,7 @@ public class IntProp extends PropertyBase<Integer> {
 		public IntProp build() {
 
 			return new IntProp(_defaultValue, _nonNull, _desc, _validators,
-				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+					_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 
