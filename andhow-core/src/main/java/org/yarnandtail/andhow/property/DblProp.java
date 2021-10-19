@@ -1,26 +1,20 @@
 package org.yarnandtail.andhow.property;
 
-import java.util.List;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valid.DblValidator;
 import org.yarnandtail.andhow.valuetype.DblType;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
- * A Property that refers to a Double value.
- *
- * All the basic Java types use a three letter abv. to keep declaration lines
- * short, in the form of:  [Type]Prop
- *
- * By default this uses the TrimToNullTrimmer, which removes all whitespace from
- * the value and ultimately null if the value is all whitespace.
- *
- * If a DblProp is configured as a string, such as from a properties file, on
- * command line, environment variable, etc., the value MAY include a trailing
- * 'D' of 'F' (lower case is ok too), as is done with Java literals.  This is
- * different than the behavior of LngProp, but is a result of how Java parses
- * these values.
- *
- * E.g., here are several correct ways to spec double value in a properties file:
+ * A {@link BigDecimal} configuration Property
+ * <p>
+ * Parsing values from strings is done by the {@link DblType}, which parses values using the
+ * {@link Double#parseDouble(String)}.  Note that the {@code parseDouble} method accepts a trailing
+ * 'D' of 'F' (lower case is ok too).
+ * <p>
+ * E.g., here are several acceptable ways to spec double value in a properties file:
  * <code>
  * name.of.my.double.property.MY_PROPERTY_1 = 90.00
  * name.of.my.double.property.MY_PROPERTY_2 = 80.00D
@@ -28,8 +22,8 @@ import org.yarnandtail.andhow.valuetype.DblType;
  * name.of.my.double.property.MY_PROPERTY_4 = 60.00d
  * name.of.my.double.property.MY_PROPERTY_5 = 4
  * </code>
- *
- * @author eeverman
+ * <p>
+ * Before parsing String values, the {@link TrimToNullTrimmer} is applied by default.
  */
 public class DblProp extends PropertyBase<Double> {
 
@@ -41,6 +35,13 @@ public class DblProp extends PropertyBase<Double> {
 		super(defaultValue, required, shortDesc, validators, aliases, paramType, valueType, trimmer, helpText);
 	}
 
+	/**
+	 * A chainable builder for this property that should terminate with {@code build()}
+	 * <p>
+	 * Use as {@code DblProp.builder()...series of builder methods...build();}
+	 * <p>
+	 * @return The builder instance that can be chained
+	 */
 	public static DblBuilder builder() {
 		return new DblBuilder();
 	}
@@ -57,7 +58,7 @@ public class DblProp extends PropertyBase<Double> {
 		public DblProp build() {
 
 			return new DblProp(_defaultValue, _nonNull, _desc, _validators,
-				_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
+					_aliases, PropertyType.SINGLE_NAME_VALUE, _valueType, _trimmer, _helpText);
 
 		}
 

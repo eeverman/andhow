@@ -3,41 +3,48 @@ package org.yarnandtail.andhow.valuetype;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
- * Type representation of Java Long objects.
- * 
+ * Metadata and parsing for configuration Properties of the {@link Long} type.
+ * <p>
  * This class is threadsafe and uses a singleton pattern to prevent multiple
- * instances, since all users can safely use the same instance.
- * 
- * @author eeverman
+ * instances, since all users can safely share the same instance.
  */
 public class LngType extends BaseValueType<Long> {
 
 	private static final LngType instance = new LngType();
-	
+
 	private LngType() {
 		super(Long.class);
 	}
 
-    /**
-     * @deprecated since 0.4.1. Use {@link #instance()} instead
-     *
-     * @return An instance of the {@link #LngType()}
-     */
+	/**
+	 * @return An instance of the {@link #LngType()}
+	 * @deprecated since 0.4.1. Use {@link #instance()} instead
+	 */
 	@Deprecated
 	public static LngType get() {
 		return instance();
 	}
 
-    /**
-     * @return An instance of the {@link #LngType()}
-     */
+	/**
+	 * @return An instance of the {@link #LngType()}
+	 */
 	public static LngType instance() {
 		return instance;
 	}
 
+	/**
+	 * Parses a String to a {@link Long}.  The String should already be trimmed.
+	 * <p>
+	 * Parsing is done via {@link Long#parseLong(String)}.
+	 * <p>
+	 *
+	 * @param sourceValue The source string, which should already be trimmed and may be null
+	 * @return The parsed value, or null if null is passed.
+	 * @throws ParsingException if unparsable.
+	 */
 	@Override
 	public Long parse(String sourceValue) throws ParsingException {
-		
+
 		if (sourceValue != null) {
 			try {
 				return Long.parseLong(sourceValue);
@@ -48,10 +55,10 @@ public class LngType extends BaseValueType<Long> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Long cast(Object o) throws RuntimeException {
-		return (Long)o;
+		return (Long) o;
 	}
-	
+
 }

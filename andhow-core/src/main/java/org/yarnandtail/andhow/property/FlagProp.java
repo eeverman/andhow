@@ -35,7 +35,7 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * {@code launch =}<br>
  * in a properties file.  That will likely change in the 0.5.0 release (see note above).</li>
  * </ul>
- * 
+ *
  * <h3>The technical details</h3>
  * When the name refering to a FlagProp is found, the value is first trimmed by the
  * TrimToNullTrimmer, which removes all whitespace and ultimately turns the value
@@ -47,30 +47,37 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * determine if the String is considered true or false.
  */
 public class FlagProp extends PropertyBase<Boolean> {
-	
+
 	public FlagProp(
 			Boolean defaultValue, String shortDesc, List<Name> aliases,
 			PropertyType paramType, ValueType<Boolean> valueType, Trimmer trimmer,
 			String helpText) {
-		
+
 		super(defaultValue, true, shortDesc, null, aliases, paramType, valueType, trimmer, helpText);
 	}
-	
+
 	@Override
 	public Boolean getValue() {
 		Boolean b = super.getValue();
-		
+
 		if (b != null) {
 			return b;
 		} else {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * A chainable builder for this property that should terminate with {@code build()}
+	 * <p>
+	 * Use as {@code FlagProp.builder()...series of builder methods...build();}
+	 * <p>
+	 * @return The builder instance that can be chained
+	 */
 	public static FlagBuilder builder() {
 		return new FlagBuilder();
 	}
-	
+
 	public static class FlagBuilder extends PropertyBuilderBase<FlagBuilder, FlagProp, Boolean> {
 
 		public FlagBuilder () {

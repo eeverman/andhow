@@ -3,12 +3,10 @@ package org.yarnandtail.andhow.valuetype;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
- * Metadata and parsing for the String type.
- * 
+ * Metadata and parsing for configuration Properties of the {@link String} type.
+ * <p>
  * This class is threadsafe and uses a singleton pattern to prevent multiple
- * instances, since all users can safely use the same instance.
- * 
- * @author eeverman
+ * instances, since all users can safely share the same instance.
  */
 public class StrType extends BaseValueType<String> {
 
@@ -25,6 +23,12 @@ public class StrType extends BaseValueType<String> {
 		return instance;
 	}
 
+	/**
+	 * To parse the String type, the passed String is simply returned.
+	 * @param sourceValue The source string, which should already be trimmed and may be null
+	 * @return The parsed value, which is simply the passed value.
+	 * @throws ParsingException (never thrown)
+	 */
 	@Override
 	public String parse(String sourceValue) throws ParsingException {
 		return sourceValue;		//Too simple!  Trimming is handled separately

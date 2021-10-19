@@ -3,38 +3,45 @@ package org.yarnandtail.andhow.valuetype;
 import org.yarnandtail.andhow.api.ParsingException;
 
 /**
- * Type representation of Java Integer objects.
- * 
+ * Metadata and parsing for configuration Properties of the {@link Integer} type.
+ * <p>
  * This class is threadsafe and uses a singleton pattern to prevent multiple
- * instances, since all users can safely use the same instance.
- * 
- * @author eeverman
+ * instances, since all users can safely share the same instance.
  */
 public class IntType extends BaseValueType<Integer> {
 
 	private static final IntType instance = new IntType();
-	
+
 	private IntType() {
 		super(Integer.class);
 	}
 
-    /**
-     * @deprecated since 0.4.1. Use {@link #instance()} instead
-     *
-     * @return An instance of the {@link #IntType()}
-     */
+	/**
+	 * @return An instance of the {@link #IntType()}
+	 * @deprecated since 0.4.1. Use {@link #instance()} instead
+	 */
 	@Deprecated
 	public static IntType get() {
 		return instance();
 	}
 
-    /**
-     * @return An instance of the {@link #IntType()}
-     */
+	/**
+	 * @return An instance of the {@link #IntType()}
+	 */
 	public static IntType instance() {
 		return instance;
 	}
 
+	/**
+	 * Parses a String to an {@link Integer}.  The String should already be trimmed.
+	 * <p>
+	 * Parsing is done via {@link Integer#parseInt(String)}.
+	 * <p>
+	 *
+	 * @param sourceValue The source string, which should already be trimmed and may be null
+	 * @return The parsed value, or null if null is passed.
+	 * @throws ParsingException if unparsable.
+	 */
 	@Override
 	public Integer parse(String sourceValue) throws ParsingException {
 
@@ -48,10 +55,10 @@ public class IntType extends BaseValueType<Integer> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Integer cast(Object o) throws RuntimeException {
-		return (Integer)o;
+		return (Integer) o;
 	}
-	
+
 }
