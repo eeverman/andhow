@@ -8,7 +8,7 @@ branches:
   only:
   - main
 
-script: "mvn clean test -Djacoco.skip=false"
+script: "mvn -T 1C clean test -Djacoco.skip=false"
 
 after_success:
   - curl -Os https://uploader.codecov.io/latest/linux/codecov
