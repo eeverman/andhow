@@ -1,5 +1,3 @@
-/*
- */
 package org.yarnandtail.andhow.valuetype;
 
 import org.junit.jupiter.api.Test;
