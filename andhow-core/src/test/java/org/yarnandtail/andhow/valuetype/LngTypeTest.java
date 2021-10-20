@@ -1,14 +1,19 @@
 package org.yarnandtail.andhow.valuetype;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
 
-/**
- *
- * @author ericeverman
- */
+import static org.junit.jupiter.api.Assertions.*;
+
 public class LngTypeTest {
+
+	@Test
+	public void testInstance() {
+		LngType t1 = LngType.instance();
+		LngType t2 = LngType.instance();
+		assertNotNull(t1);
+		assertSame(t1, t2);
+	}
 
 	@Test
 	public void testParseHappyPath() throws ParsingException {

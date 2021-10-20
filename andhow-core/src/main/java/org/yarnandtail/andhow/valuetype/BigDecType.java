@@ -38,13 +38,16 @@ public class BigDecType extends BaseValueType<BigDecimal> {
 	 */
 	@Override
 	public BigDecimal parse(String sourceValue) throws ParsingException {
-		if (sourceValue == null) {
+		if (sourceValue != null) {
+
+			try {
+				return new BigDecimal(sourceValue);
+			} catch (Exception e) {
+				throw new ParsingException("Unable to convert to a BigDecimal numeric value", sourceValue, e);
+			}
+
+		} else {
 			return null;
-		}
-		try {
-			return new BigDecimal(sourceValue);
-		} catch (Exception e) {
-			throw new ParsingException("Unable to convert to a BigDecimal numeric value", sourceValue, e);
 		}
 	}
 
