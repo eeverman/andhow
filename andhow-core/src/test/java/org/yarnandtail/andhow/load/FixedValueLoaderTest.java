@@ -85,6 +85,42 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
 	}
 
+
+	@Test
+	public void keyObjectPairsNonStringValueShouldBeTrimmed() throws ParsingException {
+
+		String basePath = SimpleParams.class.getCanonicalName() + ".";
+
+		List<KeyObjectPair> kops = new ArrayList();
+		kops.add(new KeyObjectPair(basePath + "STR_BOB", " test "));	// preserve space
+		kops.add(new KeyObjectPair(basePath + "STR_NULL", " not_null "));	// preserve space
+		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", " XXX"));	// preserve space
+		kops.add(new KeyObjectPair(basePath + "LNG_TIME", "  60  "));	// remove space
+		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "  30  "));	// remove space
+		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", "  123.456D  "));	// remove space
+		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", " false ")); // remove space
+		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", "  true  ")); // remove space
+		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", "  ")); // remove space
+
+
+		FixedValueLoader loader = new FixedValueLoader();
+		loader.setKeyObjectPairValues(kops);
+
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
+
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
+		assertEquals(" test ", result.getExplicitValue(STR_BOB));
+		assertEquals(" not_null ", result.getExplicitValue(STR_NULL));
+		assertEquals(" XXX", result.getExplicitValue(STR_ENDS_WITH_XXX));
+		assertEquals(60L, result.getExplicitValue(LNG_TIME));
+		assertEquals(30, result.getExplicitValue(INT_NUMBER));
+		assertEquals(123.456D, result.getExplicitValue(DBL_NUMBER), .00001D);
+		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
+		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+	}
+
 	@Test
 	public void duplicatePropertyValuesCauseProblems() {
 		List<PropertyValue> props = new ArrayList();

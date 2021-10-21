@@ -41,8 +41,8 @@ public class FlagType extends BaseValueType<Boolean> {
 	@Override
 	public Boolean parse(String sourceValue) throws IllegalArgumentException {
 
-		if (TextUtil.trimToNull(sourceValue) == null) {
-			//regardless of trimming, all whitespace is considered == to the flag is present
+		if (sourceValue == null) {
+			//Just the presence of the flag is enough to set true
 			return true;
 		} else {
 			return TextUtil.toBoolean(sourceValue);

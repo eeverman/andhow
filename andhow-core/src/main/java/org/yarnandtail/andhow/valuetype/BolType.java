@@ -59,7 +59,7 @@ public class BolType extends BaseValueType<Boolean> {
 	@Override
 	public Boolean parse(String sourceValue) throws IllegalArgumentException {
 
-		if (TextUtil.trimToNull(sourceValue) != null) {
+		if (sourceValue != null) {
 			return TextUtil.toBoolean(sourceValue);
 		} else {
 			return null;
