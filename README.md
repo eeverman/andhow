@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/main/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
-[![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)<br>
-<kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> :black_circle:
-<kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> :black_circle:
-<kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> :black_circle:
-<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd>
+[![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
+<kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
+<kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> •
+<kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> •
+<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd><br/>
 ---
 ### AndHow!  Configurable constants for Java application configuration
 
@@ -16,7 +16,7 @@ to better support configuring other frameworks that accept configuration as a `M
 
 Special thanks to [Alex Karpov](https://github.com/alex-kar) for many high-quality code fixes and
 improvements in this release.
-
+---
 ![Andhow Visual](andhow.gif)
 
 ### What if you could configure constants?  What if Java application configuration _was_ just constants?
@@ -69,9 +69,9 @@ AndHow throws a detailed `RuntimeException` to [fail fast](https://www.andhowcon
 and prevent the application from running with invalid configuration.
 
 ---
-<kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> :black_circle:
-<kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> :black_circle:
-<kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> :black_circle:
-<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd>
+<kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
+<kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> •
+<kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> •
+<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd><br/>
 _**&?!**_
 
