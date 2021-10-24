@@ -13,7 +13,6 @@
 This release includes several bug fixes and adds a new
 [export feature](https://www.andhowconfig.org/user-guide/integration-and-exports#manual-export-to-maps-java.util.properties-and-more)
 to better support configuring other frameworks that accept configuration as a `Map` or `java.util.Properties`.
-
 Special thanks to [Alex Karpov](https://github.com/alex-kar) for many high-quality code fixes and
 improvements in this release.
 ---
