@@ -10,6 +10,7 @@
 
 #### New Release:  0.4.2, October 24, 2021 - [notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.2).
 <img src="https://github.com/eeverman/andhow/raw/homepage/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's new logo" align="left"></img>
+
 This release includes several bug fixes and adds a new
 [export feature](https://www.andhowconfig.org/user-guide/integration-and-exports#manual-export-to-maps-java.util.properties-and-more)
 to better support configuring other frameworks that accept configuration as a `Map` or `java.util.Properties`.
