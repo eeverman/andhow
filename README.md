@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/main/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
-[![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
+[![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; •
 <kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
 <kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> •
 <kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> •
-<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd><br/>
+<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd> •<br/>
 ---
 ### AndHow!  Configurable constants for Java application configuration
 
@@ -69,9 +69,10 @@ AndHow throws a detailed `RuntimeException` to [fail fast](https://www.andhowcon
 and prevent the application from running with invalid configuration.
 
 ---
-<kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
+• <kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
 <kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> •
 <kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> •
-<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd><br/>
+<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd> •
+---
 _**&?!**_
 
