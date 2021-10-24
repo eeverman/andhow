@@ -4,7 +4,7 @@
 <kbd><b>[AndHow Home](https://www.andhowconfig.org)</b></kbd> •
 <kbd><b>[User Guide](https://www.andhowconfig.org/user-guide)</b></kbd> •
 <kbd><b>[User forum](https://groups.google.com/d/forum/andhowuser)</b></kbd> •
-<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd> •<br/>
+<kbd><b>[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)</b></kbd>
 ---
 ### AndHow!  Configurable constants for Java application configuration
 
