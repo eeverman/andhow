@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/main/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _**&?!**_&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;
 **[AndHow Home](https://www.andhowconfig.org)** •
 **[User Guide](https://www.andhowconfig.org/user-guide)** •
 **[User forum](https://groups.google.com/d/forum/andhowuser)** •
@@ -73,7 +73,8 @@ and prevent the application from running with invalid configuration.
 
 ---
 
-_**&?!**_ &nbsp;&nbsp; • **[AndHow Home](https://www.andhowconfig.org)** •
+_**&?!**_&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**[AndHow Home](https://www.andhowconfig.org)** •
 **[User Guide](https://www.andhowconfig.org/user-guide)** •
 **[User forum](https://groups.google.com/d/forum/andhowuser)** •
-**[Live-code Demo](https://www.andhowconfig.org/live-code-quickstart)** •
+**[Live-code Demo](https://www.andhowconfig.org/live-code-quickstart)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_**&?!**_
