@@ -1,11 +1,12 @@
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![codecov](https://codecov.io/gh/eeverman/andhow/branch/main/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; •
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _**&?!**_&nbsp;&nbsp;&nbsp;
 **[AndHow Home](https://www.andhowconfig.org)** •
 **[User Guide](https://www.andhowconfig.org/user-guide)** •
 **[User forum](https://groups.google.com/d/forum/andhowuser)** •
-**[Livecode Quickstart](https://www.andhowconfig.org/live-code-quickstart)**
+**[Live-code Demo](https://www.andhowconfig.org/live-code-quickstart)**
+
 ---
 ### AndHow!  Configurable constants for Java application configuration
 
@@ -17,6 +18,7 @@ This release includes several bug fixes and adds a new
 to better support configuring other frameworks that accept configuration as a `Map` or `java.util.Properties`.
 _Special thanks to [Alex Karpov](https://github.com/alex-kar)_ for many high-quality code fixes and
 improvements in this release.
+
 ---
 ![Andhow Visual](andhow.gif)
 
@@ -70,10 +72,8 @@ AndHow throws a detailed `RuntimeException` to [fail fast](https://www.andhowcon
 and prevent the application from running with invalid configuration.
 
 ---
-• **[AndHow Home](https://www.andhowconfig.org)** •
+
+_**&?!**_ &nbsp;&nbsp; • **[AndHow Home](https://www.andhowconfig.org)** •
 **[User Guide](https://www.andhowconfig.org/user-guide)** •
 **[User forum](https://groups.google.com/d/forum/andhowuser)** •
-**[Live-code Quickstart](https://www.andhowconfig.org/live-code-quickstart)** •
----
-_**&?!**_
-
+**[Live-code Demo](https://www.andhowconfig.org/live-code-quickstart)** •
