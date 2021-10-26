@@ -249,18 +249,18 @@ public class ConstructionProblemTest {
         assertEquals(lp.getProblemContext(), TextUtil.format("Reading from {}", "some loader description"));
     }
 
-    @Test
-    public void testGetProblemContextInput3(){
-        MockitoAnnotations.initMocks(this);
-        ConstructionProblemTest.loaderProblemWithSetter lp = Mockito.mock(ConstructionProblemTest.loaderProblemWithSetter.class, CALLS_REAL_METHODS);
-        lp.setBadValueCoord(badValueCoord);
-        Mockito.when(lp.getBadValueCoord()).thenReturn(badValueCoord);
-        Mockito.when(lp.getBadValueCoord().getProperty()).thenReturn(prop);
-        lp.setGroup();
-        Mockito.when(badValueCoord.getPropName()).thenReturn("some property name");
-        assertNotNull(lp.getProblemContext());
-        assertEquals(lp.getProblemContext(), TextUtil.format("Reading from {}", "some loader description"));
-    }
+//    @Test
+//    public void testGetProblemContextInput3(){
+//        MockitoAnnotations.initMocks(this);
+//        ConstructionProblemTest.loaderProblemWithSetter lp = Mockito.mock(ConstructionProblemTest.loaderProblemWithSetter.class, CALLS_REAL_METHODS);
+//        lp.setBadValueCoord(badValueCoord);
+//        Mockito.when(lp.getBadValueCoord()).thenReturn(badValueCoord);
+//        Mockito.when(lp.getBadValueCoord().getProperty()).thenReturn(prop);
+//        lp.setGroup();
+//        Mockito.when(badValueCoord.getPropName()).thenReturn("some property name");
+//        assertNotNull(lp.getProblemContext());
+//        assertEquals(lp.getProblemContext(), TextUtil.format("Reading from {}", "some loader description"));
+//    }
 
     @Test
     public void testGetProblemContextInput4(){
