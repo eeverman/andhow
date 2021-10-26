@@ -38,7 +38,7 @@ public abstract class LoaderProblem implements Problem {
 		
 		if (badValueCoord != null) {
 			
-			if (badValueCoord.getGroup() != null && badValueCoord.getProperty() != null) {
+				if (badValueCoord.getGroup() != null && badValueCoord.getProperty() != null) {
 				propName = badValueCoord.getPropName();
 			}
 			
@@ -82,6 +82,7 @@ public abstract class LoaderProblem implements Problem {
 		public IOLoaderProblem(Loader loader, Exception exception, String resourcePath) {
 			badValueCoord = new LoaderValueCoord(loader, null, null);
 			this.exception = exception;
+			this.resourcePath = resourcePath;
 		}
 		
 		@Override
