@@ -23,6 +23,12 @@ browsing the code, rather than an unreleased development version.
 
 ...and always feel free to contribute tests for untested or poorly tested code
 
+### Code style
+* This project uses _tabs_ for indentation. 
+If you are working on a file that is not tab indent, please convert it to tabs (but don't do other files).
+* Add complete Javadocs for new methods and classes (other than test classes unless needed)
+* Good javadocs comments _what_ and _why_.  We usually don't need comments on how.
+
 ### More help getting started
 There is a New Workstation setup page if you need additional help, or post a question on the
 [forum](https://groups.google.com/g/andhowuser).
