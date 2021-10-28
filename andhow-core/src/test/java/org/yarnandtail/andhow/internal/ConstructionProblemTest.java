@@ -9,9 +9,26 @@ import java.util.ArrayList;
 import java.util.List;
 import org.yarnandtail.andhow.AndHow;
 
-
-
 public class ConstructionProblemTest {
+
+    public class loaderProblemWithSetter extends LoaderProblem{
+        public void setBadValueCoord (LoaderValueCoord badValueCoord){
+            this.badValueCoord = badValueCoord;
+        }
+
+        @Override
+        public String getProblemDescription() {
+            return "description";
+        }
+
+        public void setGroup(){
+            this.badValueCoord.group = (Class<?>) Integer.class;
+        }
+
+        public Class <?> getGroup(){
+            return this.badValueCoord.group;
+        }
+    }
 
     @Test    
     public void testNoUniqueNames() {
