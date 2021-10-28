@@ -1,9 +1,9 @@
 ## How to contribute to _AndHow_
 
-First, thank you for getting involved - Let's work together and make something cool!
+First, _**thank you**_ for getting involved - Let's work together and make something cool!
 
 ### First Steps
-* _**Star**_ the AndHow project on GitHub.
+* _**[Star](https://github.com/eeverman/andhow/stargazers)**_ the AndHow project on GitHub.
 This raises the profile of AndHow a bit and may help others become contributors.
 * If you are unfamiliar with the project, read through the home page at
 [www.andhowconfig.org](https://www.andhowconfig.org) (4 minute read).
@@ -12,9 +12,22 @@ This raises the profile of AndHow a bit and may help others become contributors.
 * The _**main**_ branch is the branch to work from: branch from it, make PRs to it
 * The _homepage_ branch is the default branch displayed on GitHub
 
-This can be confusing since most projects use _main_ as the default branch.  The advantage of this
-structure is that the default _homepage_ branch displays the stable released version to people
-browsing the code, rather than an unreleased development version.
+This can be confusing because most projects use main as the default branch, but there are
+[advantages to this structure](https://www.andhowconfig.org/developer-guide/project-branching-structure#github-and-the-default-branch).
+
+### Typical Task / Issue workflow
+AndHow uses the typical [feature branch repository strategy](https://martinfowler.com/articles/branching-patterns.html#feature-branching)
+(aka fork-and-branch), where developers work on a branch in their own repository.  Basic steps are:
+* Fork the AndHow project on GitHub
+* _Clone_ from your fork to your local machine to work on it
+* Work on a task in a new branch created just for that task - create the branch from your **_main_**
+* Submit completed work (or work in progress for review) as a Pull Request to **_main_**
+of the canonical repository
+
+Feature branch names should look like this:  `Issue123-A-short-name-for-the-issue`
+
+If that is all new to you, here is a bit of
+[help with a first git checkout](https://www.andhowconfig.org/developer-guide/first-checkout-with-git).
 
 ### Unit Testing
 **As a contributor, please:**
@@ -30,7 +43,8 @@ If you are working on a file that is not tab indent, please convert it to tabs (
 * Good javadocs comments _what_ and _why_.  We usually don't need comments on how.
 
 ### More help getting started
-There is a New Workstation setup page if you need additional help, or post a question on the
+There is a [New Workstation setup](https://www.andhowconfig.org/developer-guide/new-workstation-setup)
+page if you need additional help, or post a question on the
 [forum](https://groups.google.com/g/andhowuser).
 
 ### Working well together
