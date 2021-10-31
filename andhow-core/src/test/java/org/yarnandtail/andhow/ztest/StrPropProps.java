@@ -95,7 +95,7 @@ public class StrPropProps {
 	public static final StrProp PROP_200 = StrProp.builder().trimmer(TrimToNullTrimmer.instance())
 			.aliasIn("StrPropProps.PROP_200").build();
 	public static final StrProp PROP_210 = StrProp.builder().valueType(UpperCaseParser.instance())
-			.matches("[A-Z]+").aliasIn("StrPropProps.PROP_210").build();
+			.matches("[A-Z ]+").aliasIn("StrPropProps.PROP_210").build();
 
 
 	/**
