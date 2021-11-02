@@ -2,28 +2,31 @@ package org.yarnandtail.andhow.zIntegration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.*;
-import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.AndHowTestConfig;
+import org.yarnandtail.andhow.BaseConfig;
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.ValidatedValues;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.load.BaseForLoaderTests;
 import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.zTestGroups.StrPropProps;
 import org.yarnandtail.andhow.zTestGroups.FlagPropProps;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static com.github.stefanbirkner.systemlambda.SystemLambda.*;
+import org.yarnandtail.andhow.zTestGroups.StrPropProps;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErr;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests the KeyValuePairLoader as the only loader in a completely configured
  * AndHowCore.
- *
+ * <p>
  * This is close to how AndHow runs in production, except:
  * * No auto-discovery / registry of Properties
  * * No auto-discovery of AndHowInit
@@ -77,7 +80,7 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	@Test
 	public void testTest() {
-		config.setCmdLineArgs(new String[] {"foo=bar"});
+		config.setCmdLineArgs(new String[]{"foo=bar"});
 
 		assertEquals(1, config.buildLoaders().size());
 		assertTrue(config.buildLoaders().get(0) instanceof StdMainStringArgsLoader);
@@ -210,7 +213,7 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	}
 
-		public List<String> buildEveryStrPropValue1() {
+	public List<String> buildEveryStrPropValue1() {
 		List<String> args = new ArrayList();
 
 		// Null OK | No Default | No Validations
@@ -290,7 +293,6 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		assertEquals("\" space_n_quotes \"", result.getExplicitValue(StrPropProps.PROP_200));
 		assertEquals(" UPPERCASEME ", result.getExplicitValue(StrPropProps.PROP_210));
 	}
-
 
 
 	public List<String> buildEveryFlagPropValue1() {
