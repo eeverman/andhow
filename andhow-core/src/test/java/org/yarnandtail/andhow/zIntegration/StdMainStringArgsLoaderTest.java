@@ -10,6 +10,7 @@ import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.zTestGroups.StrPropProps;
+import org.yarnandtail.andhow.zTestGroups.FlagPropProps;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.*;
@@ -30,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	protected static final String STRPROP_BASE = StrPropProps.class.getCanonicalName() + ".";
+	protected static final String FLAGPROP_BASE = FlagPropProps.class.getCanonicalName() + ".";
 
 	AndHowTestConfig.AndHowTestConfigImpl config;
 
@@ -37,7 +39,7 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
 		config.setStandardLoaders(StdMainStringArgsLoader.class)
-				.addOverrideGroup(StrPropProps.class);
+				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class);
 	}
 
 	protected AndHowCore buildCore(BaseConfig aConfig) {
@@ -80,14 +82,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		assertEquals(1, config.buildLoaders().size());
 		assertTrue(config.buildLoaders().get(0) instanceof StdMainStringArgsLoader);
 		assertTrue(config.getNamingStrategy() instanceof CaseInsensitiveNaming);
-		assertEquals(1, config.getRegisteredGroups().size());
-		assertTrue(config.getRegisteredGroups().get(0).getProxiedGroup().equals(StrPropProps.class));
-
+		assertEquals(2, config.getRegisteredGroups().size());
 	}
 
 	@Test
-	public void anUnrecognizedPropertyShouldNotCauseAProblem() throws Exception {
-		config.setCmdLineArgs(new String[] {"foo=bar"});
+	public void settingNoValuesShouldResultInNonNullPropertyProblems() throws Exception {
 
 		//Trick to allow access w/in the lambda
 		final AppFatalException[] afeArray = new AppFatalException[1];
@@ -119,6 +118,99 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	@Test
 	public void setEveryValue1() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+		args.addAll(buildEveryFlagPropValue1());
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertEveryFlagPropValue1(core);
+	}
+
+	@Test
+	public void setEveryValue2() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+		args.addAll(buildEveryFlagPropValue2());
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertEveryFlagPropValue2(core);
+	}
+
+	@Test
+	public void setEveryValue3() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+		args.addAll(buildEveryFlagPropValue3());
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertEveryFlagPropValue3(core);
+	}
+
+	@Test
+	public void setEveryValue4() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+		args.addAll(buildEveryFlagPropValue4());
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertEveryFlagPropValue4(core);
+	}
+
+	@Test
+	public void setEveryValue5() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+		args.addAll(buildEveryFlagPropValue5());
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertEveryFlagPropValue5(core);
+	}
+
+	@Test
+	public void setNoFlags() throws IllegalAccessException {
+		List<String> args = buildEveryStrPropValue1();
+
+		//
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+		assertFlagDefaultValues(core);
+	}
+
+	@Test
+	public void anUnrecognizedPropertyShouldNotCauseAProblem() throws Exception {
+
+		List<String> args = buildEveryStrPropValue1();
+		args.add("foo=bar");
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		// If there were problems, an exception would be thrown
+		AndHowCore core = buildCore(config);
+
+		//printValues(core, StrPropProps.class);
+		assertEveryStrPropValue1(core);
+
+	}
+
+		public List<String> buildEveryStrPropValue1() {
 		List<String> args = new ArrayList();
 
 		// Null OK | No Default | No Validations
@@ -168,17 +260,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		args.add("StrPropProps.PROP_200" + "=" + "  \" space_n_quotes \" ");
 		args.add(STRPROP_BASE + "PROP_210" + "=" + " \" upperCaseMe \" ");
 
-		//
-		config.setCmdLineArgs(args.toArray(new String[args.size()]));
-		AndHowCore core = buildCore(config);
-
-
-		//printValues(core, StrPropProps.class);
-		assertEveryValue1(core);
+		return args;
 	}
 
 
-	public void assertEveryValue1(ValidatedValues result) {
+	public void assertEveryStrPropValue1(ValidatedValues result) {
 		assertEquals("two \nwords", result.getExplicitValue(StrPropProps.PROP_0));
 		assertEquals(" words in space ", result.getExplicitValue(StrPropProps.PROP_10));
 
@@ -203,6 +289,124 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		assertEquals(" \"A b\" ", result.getExplicitValue(StrPropProps.PROP_133));
 		assertEquals("\" space_n_quotes \"", result.getExplicitValue(StrPropProps.PROP_200));
 		assertEquals(" UPPERCASEME ", result.getExplicitValue(StrPropProps.PROP_210));
+	}
+
+
+
+	public List<String> buildEveryFlagPropValue1() {
+		List<String> args = new ArrayList();
+
+		// Not Null | No Default | No Validations
+		args.add("FlagPropProps.PROP_100");
+
+		// Not Null | Has Default | No Validations
+		args.add(FLAGPROP_BASE + "PROP_110");
+		args.add(FLAGPROP_BASE + "PROP_111");
+
+		// Special type is true on 'X' only (though should still be true if present)
+		args.add(FLAGPROP_BASE + "PROP_200");
+
+		return args;
+	}
+
+	public void assertEveryFlagPropValue1(ValidatedValues result) {
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_100));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_110));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_111));
+		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_200));
+	}
+
+	public List<String> buildEveryFlagPropValue2() {
+		List<String> args = new ArrayList();
+
+		// Not Null | No Default | No Validations
+		args.add("FlagPropProps.PROP_100=");
+
+		// Not Null | Has Default | No Validations
+		args.add(FLAGPROP_BASE + "PROP_110=");
+		args.add(FLAGPROP_BASE + "PROP_111=");
+
+		// Special type is true on 'X' only (though should still be true if present)
+		args.add(FLAGPROP_BASE + "PROP_200=");
+
+		return args;
+	}
+
+	public void assertEveryFlagPropValue2(ValidatedValues result) {
+		assertEveryFlagPropValue1(result);
+	}
+
+	public List<String> buildEveryFlagPropValue3() {
+		List<String> args = new ArrayList();
+
+		// Not Null | No Default | No Validations
+		args.add("FlagPropProps.PROP_100= \t\b\n\r\f ");
+
+		// Not Null | Has Default | No Validations
+		args.add(FLAGPROP_BASE + "PROP_110=\t\b\n\r\f ");
+		args.add(FLAGPROP_BASE + "PROP_111= \t\b\n\r\f");
+
+		// Special type is true on 'X' only (though should still be true if present)
+		args.add(FLAGPROP_BASE + "PROP_200= \t\b\n\r\f\t\b\n\r\f ");
+
+		return args;
+	}
+
+	public void assertEveryFlagPropValue3(ValidatedValues result) {
+		assertEveryFlagPropValue1(result);
+	}
+
+	public List<String> buildEveryFlagPropValue4() {
+		List<String> args = new ArrayList();
+
+		// Not Null | No Default | No Validations
+		args.add("FlagPropProps.PROP_100" + "=" + " true ");
+
+		// Not Null | Has Default | No Validations
+		args.add(FLAGPROP_BASE + "PROP_110" + "=" + " yes ");
+		args.add(FLAGPROP_BASE + "PROP_111" + "=" + " y ");
+
+		// Special type is true on 'X' only (though should still be true if present)
+		args.add(FLAGPROP_BASE + "PROP_200" + "=" + " X ");
+
+		return args;
+	}
+
+	public void assertEveryFlagPropValue4(ValidatedValues result) {
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_100));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_110));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_111));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_200));
+	}
+
+	public List<String> buildEveryFlagPropValue5() {
+		List<String> args = new ArrayList();
+
+		// Not Null | No Default | No Validations
+		args.add("FlagPropProps.PROP_100" + "=" + " false ");
+
+		// Not Null | Has Default | No Validations
+		args.add(FLAGPROP_BASE + "PROP_110" + "=" + " xxx ");
+		args.add(FLAGPROP_BASE + "PROP_111" + "=" + " 1234.5725\" ");
+
+		// Special type is true on 'X' only (though should still be true if present)
+		args.add(FLAGPROP_BASE + "PROP_200" + "=" + " O ");
+
+		return args;
+	}
+
+	public void assertEveryFlagPropValue5(ValidatedValues result) {
+		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_100));
+		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_110));
+		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_111));
+		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_200));
+	}
+
+	public void assertFlagDefaultValues(ValidatedValues result) {
+		assertEquals(false, result.getValue(FlagPropProps.PROP_100));
+		assertEquals(true, result.getValue(FlagPropProps.PROP_110));
+		assertEquals(false, result.getValue(FlagPropProps.PROP_111));
+		assertEquals(false, result.getValue(FlagPropProps.PROP_200));
 	}
 
 }

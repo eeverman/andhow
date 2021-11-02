@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.property.TrimToNullTrimmer;
 import org.yarnandtail.andhow.valuetype.BaseValueType;
 
 /*
+ *  Key for values
  *  | Series   |NullOK?| Default | Valid? |
  *  | 0  - 9   |   Y   |		N	   |    N	  |
  *  | 10 - 19  |   Y   |    Y    |    N	  |
@@ -24,6 +25,7 @@ import org.yarnandtail.andhow.valuetype.BaseValueType;
  * Validation w/ quote
  */
 public class StrPropProps {
+
 	//
 	// Null OK | No Default | No Validations
 	public static final StrProp PROP_0 = StrProp.builder().aliasIn("StrPropProps.PROP_0").build();
