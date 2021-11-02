@@ -1,31 +1,30 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
-import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
+
+import java.util.*;
 
 /**
- * Intended to reads properties from the command line, but could be used for
+ * Intended to read properties from the command line, but could be used for
  * other sources where properties can be passed as an array of strings, each
  * of the form name=value.
- *
+ * <p>
  * This loader trims incoming values for String type properties using the
- Trimmer of the associated Property.
- This loader considers it a problem to find unrecognized properties
- on the command line and will throw a RuntimeException if that happens.
-
- For FlgProp properties (flags), the KeyValuePairLoader will interpret the presence of
- the property name as setting the property true.
-
- The JVM considers whitespace as breaks between values, however, it can be
- escaped with a backslash to include it in the value passed to the KeyValuePairLoader.
- After the KeyValuePairLoader receives the value, each individual Property will use
- its Trimmer to remove whitespace according to its own rules.  Generally that
- means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
- for everything else.
- *
- * @author eeverman
+ * Trimmer of the associated Property.
+ * This loader considers it a problem to find unrecognized properties
+ * and will throw a RuntimeException if that happens.
+ * <p>
+ * For FlgProp properties (flags), the KeyValuePairLoader will interpret the presence of
+ * the property name as setting the property true.
+ * <p>
+ * The java command considers whitespace delimiter between values, however, it can be
+ * escaped with a backslash to include it in the value passed to the KeyValuePairLoader.
+ * After the KeyValuePairLoader receives the value, each individual Property will use
+ * its Trimmer to remove whitespace according to its own rules.  Generally that
+ * means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
+ * for everything else.
  */
 public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 
