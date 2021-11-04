@@ -12,11 +12,13 @@ public class StrType extends BaseValueType<String> {
 
 	private static final StrType instance = new StrType();
 	
-	private StrType() {
+	protected StrType() {
 		super(String.class);
 	}
 
 	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #StrType()}
 	 */
 	public static StrType instance() {

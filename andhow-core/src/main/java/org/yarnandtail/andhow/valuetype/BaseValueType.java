@@ -4,8 +4,8 @@ import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.api.ValueType;
 
 /**
+ * Simple ValueType base class that provides shared functionality
  *
- * @author eeverman
  * @param <T> The Class type this ValueType represents
  */
 public abstract class BaseValueType<T> implements ValueType<T> {
@@ -15,7 +15,7 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 	public BaseValueType(Class<T> clazzType) {
 		this.clazzType = clazzType;
 	}
-	
+
 	@Override
 	public Class<T> getDestinationType() {
 		return clazzType;
@@ -30,7 +30,7 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 			return false;
 		}
 	}
-	
+
 	@Override
 	public String toString(T value) {
 		if (value != null) {
@@ -39,5 +39,5 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 			return null;
 		}
 	}
-	
+
 }

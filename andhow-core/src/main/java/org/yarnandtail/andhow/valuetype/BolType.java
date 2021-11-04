@@ -1,6 +1,5 @@
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
@@ -13,7 +12,7 @@ public class BolType extends BaseValueType<Boolean> {
 
 	private static final BolType instance = new BolType();
 
-	private BolType() {
+	protected BolType() {
 		super(Boolean.class);
 	}
 
@@ -27,6 +26,8 @@ public class BolType extends BaseValueType<Boolean> {
 	}
 
 	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #BolType()}
 	 */
 	public static BolType instance() {
@@ -52,6 +53,7 @@ public class BolType extends BaseValueType<Boolean> {
 	 * If it does not match a value in the list and does not trim to null, {@code False} is returned.
 	 * If the value is null after trimming, null is returned.
 	 * <p>
+	 *
 	 * @param sourceValue The source string, which should already be trimmed and may be null
 	 * @return The parsed value, or null if null is passed.
 	 * @throws IllegalArgumentException (doesn't currently happen)
