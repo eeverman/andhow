@@ -3,6 +3,7 @@ package org.yarnandtail.andhow.zTestGroups;
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.valuetype.BaseValueType;
+import org.yarnandtail.andhow.valuetype.FlagType;
 
 /*
  *  Key for values
@@ -37,34 +38,25 @@ public class FlagPropProps {
 	//
 	// Special Trimmers and Types
 	public static final FlagProp PROP_200 = FlagProp.builder()
-			.valueType(FlagPropProps.XOParser.instance()).build();
+			.valueType(new XOParser()).build();
 
 
 	/**
 	 * A custom parser that considers X to be true and O to be false.
 	 */
-	static public class XOParser extends BaseValueType<Boolean> {
-		private static final FlagPropProps.XOParser instance = new FlagPropProps.XOParser();
-		private XOParser() {
-			super(Boolean.class);
-		}
+	static public class XOParser extends FlagType {
 
-		public static FlagPropProps.XOParser instance() {
-			return instance;
+		public XOParser() {
+			super();
 		}
 
 		@Override
-		public Boolean parse(String sourceValue) throws ParsingException {
+		public Boolean parse(String sourceValue) {
 			if ("X".equals(sourceValue)) {
 				return true;
 			} else {
 				return false;
 			}
-		}
-
-		@Override
-		public Boolean cast(Object o) throws RuntimeException {
-			return (Boolean)o;
 		}
 
 		@Override

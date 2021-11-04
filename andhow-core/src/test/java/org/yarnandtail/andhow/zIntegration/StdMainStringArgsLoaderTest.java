@@ -11,8 +11,7 @@ import org.yarnandtail.andhow.load.BaseForLoaderTests;
 import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.zTestGroups.FlagPropProps;
-import org.yarnandtail.andhow.zTestGroups.StrPropProps;
+import org.yarnandtail.andhow.zTestGroups.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -211,6 +210,24 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		//printValues(core, StrPropProps.class);
 		assertEveryStrPropValue1(core);
 
+	}
+
+	@Test
+	public void tryOutNewAutoLoadAndAssert() throws IllegalAccessException {
+		StdMainStringPropLoad loader = new StdMainStringPropLoad();
+
+		PropExpectations expectations = StrPropProps.buildEveryStrPropValue1();
+
+		List<String> args = loader.buildSources(StrPropProps.class, expectations, 1, false);
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		// If there were problems, an exception would be thrown
+		AndHowCore core = buildCore(config);
+
+		PropAssertions pas = new PropAssertions(core, core);
+
+		pas.assertAll(expectations, 1, true);
 	}
 
 	public List<String> buildEveryStrPropValue1() {
