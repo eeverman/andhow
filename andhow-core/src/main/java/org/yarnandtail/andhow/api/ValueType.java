@@ -1,12 +1,11 @@
 package org.yarnandtail.andhow.api;
 
 /**
- * The type of a Property.
- * 
- * Also handles parsing and casting of Strings and Objects to the destination
+ * The datatype and type conversion handler of a Property.
+ * <p>
+ * Handles parsing and casting of Strings and Objects to the destination
  * type represented by an instance of a ValueType.
- * 
- * @author eeverman
+ *
  */
 public interface ValueType<T> {
 	
@@ -50,22 +49,24 @@ public interface ValueType<T> {
 	/**
 	 * Returns true if the string can safely be parsed into the destination type
 	 * by the parse() method.
-	 * 
+	 * <p>
+	 * Currently, this generally true for null values, which doesn't seem to matter since
+	 * parse is not called if a value is null.
+	 * <p>
 	 * @param sourceValue
 	 * @return true or false - this should never throw an exception.
 	 */
 	boolean isParsable(String sourceValue);
 	
 	/**
-	 * Attempt to cast the passed object to the generic type T.
-	 * AndHow uses this internally to cast values known to already be of type T,
-	 * but were stored in a generic way.
-	 * If used for unknown types that are not castable to T, it will throw
-	 * a RuntimeException, though this should never happen unless used by
-	 * application code.
-	 * 
-	 * @param o
-	 * @return
+	 * Attempt to cast the object to the generic type T, which is a concrete class in subclasses.
+	 * <p>
+	 * AndHow uses this internally to cast values known to already be of type T, but were stored
+	 * in a generic way.  If used for unknown types that are not castable to T, it will throw
+	 * a RuntimeException, though this should never happen unless used by application code.
+	 * <p>
+	 * @param o Object to cast
+	 * @return A cast obeject
 	 * @throws RuntimeException 
 	 */
 	T cast(Object o) throws RuntimeException;

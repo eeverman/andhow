@@ -12,7 +12,7 @@ public class IntType extends BaseValueType<Integer> {
 
 	private static final IntType instance = new IntType();
 
-	private IntType() {
+	protected IntType() {
 		super(Integer.class);
 	}
 
@@ -26,6 +26,8 @@ public class IntType extends BaseValueType<Integer> {
 	}
 
 	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #IntType()}
 	 */
 	public static IntType instance() {

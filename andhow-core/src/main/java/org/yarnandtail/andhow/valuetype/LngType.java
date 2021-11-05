@@ -12,7 +12,7 @@ public class LngType extends BaseValueType<Long> {
 
 	private static final LngType instance = new LngType();
 
-	private LngType() {
+	protected LngType() {
 		super(Long.class);
 	}
 
@@ -26,6 +26,8 @@ public class LngType extends BaseValueType<Long> {
 	}
 
 	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #LngType()}
 	 */
 	public static LngType instance() {
