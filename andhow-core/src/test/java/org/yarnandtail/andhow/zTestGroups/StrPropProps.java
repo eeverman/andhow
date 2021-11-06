@@ -1,11 +1,11 @@
 package org.yarnandtail.andhow.zTestGroups;
 
 import org.yarnandtail.andhow.api.ParsingException;
+import org.yarnandtail.andhow.internal.RequirementProblem;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.property.TrimToNullTrimmer;
 import org.yarnandtail.andhow.valuetype.StrType;
-
-import java.util.List;
+import static org.yarnandtail.andhow.zTestGroups.RawValueType.*;
 
 /*
  *  Key for values
@@ -103,76 +103,116 @@ public class StrPropProps {
 
 
 
-	public static PropExpectations buildEveryStrPropValue1() {
+	public static PropExpectations buildExpectations1() {
 
 		PropExpectations exp = new PropExpectations();
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).rawStrings("%NAME%=" + "  two \nwords  ")
-				.trimResult("two \nwords").noTrimResult("  two \nwords  ");
+		exp.add(PROP_0).raw("  two \nwords  ").trimResult("two \nwords").noTrimSameAsRaw();
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).rawStrings("%NAME%=" + "  \" words in space \"  ")
-				.trimResult(" words in space ").noTrimResult("  \" words in space \"  ");
+		exp.add(PROP_10).raw("  \" words in space \"  ").trimResult(" words in space ").noTrimSameAsRaw();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).rawStrings("%NAME%=" + "  StaR\tT ing  ")
-				.trimResult("StaR\tT ing").noTrimResult("  StaR\tT ing  ");
-		exp.add(PROP_21).rawStrings("%NAME%=" + "\t\"star\tInG\"\t")
-				.trimResult("star\tInG").noTrimResult("\t\"star\tInG\"\t");
-		exp.add(PROP_22).rawStrings("%NAME%=" + " \" \"a b\" \" ")
-				.trimResult(" \"a b\" ").noTrimResult(" \" \"a b\" \" ");
-		exp.add(PROP_23).rawStrings("%NAME%=" + " \" \"A B\" \" ")
-				.trimResult(" \"A B\" ").noTrimResult(" \" \"A B\" \" ");
+		exp.add(PROP_20).raw("  StaR\tT ing  ").trimResult("StaR\tT ing").noTrimSameAsRaw();
+		exp.add(PROP_21).raw("\t\"star\tInG\"\t").trimResult("star\tInG").noTrimSameAsRaw();
+		exp.add(PROP_22).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
+		exp.add(PROP_23).raw(" \" \"A B\" \" ").trimResult(" \"A B\" ").noTrimSameAsRaw();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).rawStrings("%NAME%=" + "  \tStaRs star inging\t  ")
-				.trimResult("StaRs star inging").noTrimResult("  \tStaRs star inging\t  ");
-		exp.add(PROP_31).rawStrings("%NAME%=" + "\t  \"star star iNgiNG\"  \t")
-				.trimResult("star star iNgiNG").noTrimResult("\t  \"star star iNgiNG\"  \t");
-		exp.add(PROP_32).rawStrings("%NAME%=" + " \" \"a b\" \" ")
-				.trimResult(" \"a b\" ").noTrimResult(" \" \"a b\" \" ");
-		exp.add(PROP_33).rawStrings("%NAME%=" + " \" \"A b\" \" ")
-				.trimResult(" \"A b\" ").noTrimResult(" \" \"A b\" \" ");
+		exp.add(PROP_30).raw("  \tStaRs star inging\t  ").trimResult("StaRs star inging").noTrimSameAsRaw();
+		exp.add(PROP_31).raw("\t  \"star star iNgiNG\"  \t").trimResult("star star iNgiNG").noTrimSameAsRaw();
+		exp.add(PROP_32).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
+		exp.add(PROP_33).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).rawStrings("%NAME%=" + " \" \" ").trimResult(" ").noTrimResult(" \" \" ");
+		exp.add(PROP_100).raw(" \" \" ").trimResult(" ").noTrimSameAsRaw();
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).rawStrings("%NAME%=" + " \"\" ").trimResult("").noTrimResult(" \"\" ");
+		exp.add(PROP_110).raw(" \"\" ").trimResult("").noTrimSameAsRaw();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).rawStrings("%NAME%=" + "\t  StaR\tstar\ting  \t")
-				.trimResult("StaR\tstar\ting").noTrimResult("\t  StaR\tstar\ting  \t");
-		exp.add(PROP_121).rawStrings("%NAME%=" + "\"star\tstar\tiNG\"")
-				.trimResult("star\tstar\tiNG").noTrimResult("\"star\tstar\tiNG\"");
-		exp.add(PROP_122).rawStrings("%NAME%=" + "\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f")
-				.trimResult(" \"a b\" ").noTrimResult("\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f");
-		exp.add(PROP_123).rawStrings("%NAME%=" + " \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ")
-				.trimResult(" \"a B\" ").noTrimResult(" \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ");
+		exp.add(PROP_120).raw("\t  StaR\tstar\ting  \t").trimResult("StaR\tstar\ting").noTrimSameAsRaw();
+		exp.add(PROP_121).raw("\"star\tstar\tiNG\"").trimResult("star\tstar\tiNG").noTrimSameAsRaw();
+		exp.add(PROP_122).raw("\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f").trimResult(" \"a b\" ").noTrimSameAsRaw();
+		exp.add(PROP_123).raw(" \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ").trimResult(" \"a B\" ").noTrimSameAsRaw();
 
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).rawStrings("%NAME%=" + "\t\b\n\r\f StaRs star inging \t\b\n\r\f ")
-				.trimResult("StaRs star inging").noTrimResult("\t\b\n\r\f StaRs star inging \t\b\n\r\f ");
-		exp.add(PROP_131).rawStrings("%NAME%=" + " \t\b\n\r\f star star iNgiNG \t\b\n\r\f ")
-				.trimResult("star star iNgiNG").noTrimResult(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ");
-		exp.add(PROP_132).rawStrings("%NAME%=" + " \" \"a b\" \" ")
-				.trimResult(" \"a b\" ").noTrimResult(" \" \"a b\" \" ");
-		exp.add(PROP_133).rawStrings("%NAME%=" + " \" \"A b\" \" ")
-				.trimResult(" \"A b\" ").noTrimResult(" \" \"A b\" \" ");
+		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inging \t\b\n\r\f ").trimResult("StaRs star inging").noTrimSameAsRaw();
+		exp.add(PROP_131).raw(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ").trimResult("star star iNgiNG").noTrimSameAsRaw();
+		exp.add(PROP_132).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
+		exp.add(PROP_133).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_200).rawStrings("%NAME%=" + "  \" space_n_quotes \" ")
+		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
 				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
-		exp.add(PROP_210).rawStrings("%NAME%=" + " \" upperCaseMe \" ")
+		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
+				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
+
+		return exp;
+	}
+
+
+	public static PropExpectations buildExpectationsUnset() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_0).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+
+		// Null OK | Has Default | No Validations
+		exp.add(PROP_10).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+
+		//
+		// Null OK | No Default | Has Validations
+		exp.add(PROP_20).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_21).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_22).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_23).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
+
+		//
+		// Null OK | Has Default | Has Validations
+		exp.add(PROP_30).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_31).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_32).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_33).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+
+		//
+		// Not Null
+
+		// Not Null | No Default | No Validations
+		exp.add(PROP_100).raw(SKIP.toString()).trimResult(RequirementProblem.NonNullPropertyProblem.class).noTrimSameAsTrim();
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+
+		//
+		// Not Null | No Default | Has Validations
+		exp.add(PROP_120).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(RequirementProblem.NonNullPropertyProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_121).raw(SKIP.toString()).trimResult(RequirementProblem.NonNullPropertyProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_122).raw(NO_VALUE.toString()).trimResult(RequirementProblem.NonNullPropertyProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_123).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(RequirementProblem.NonNullPropertyProblem.class).noTrimSameAsTrim();
+
+
+		//
+		// Not Null | Has Default | Has Validations
+		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inging \t\b\n\r\f ").trimResult("StaRs star inging").noTrimSameAsRaw();
+		exp.add(PROP_131).raw(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ").trimResult("star star iNgiNG").noTrimSameAsRaw();
+		exp.add(PROP_132).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
+		exp.add(PROP_133).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
+
+		//
+		// Special Trimmers and Types
+		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
+				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
+		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
 				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
 
 		return exp;

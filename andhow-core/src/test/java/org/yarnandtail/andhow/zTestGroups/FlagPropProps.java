@@ -4,6 +4,7 @@ import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.valuetype.BaseValueType;
 import org.yarnandtail.andhow.valuetype.FlagType;
+import static org.yarnandtail.andhow.zTestGroups.RawValueType.*;
 
 /*
  *  Key for values
@@ -41,9 +42,43 @@ public class FlagPropProps {
 			.valueType(new XOParser()).build();
 
 
-	/**
-	 * A custom parser that considers X to be true and O to be false.
-	 */
+	public static PropExpectations buildExpectations1() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_100).raw(NO_VALUE.toString()).trimResult(true).noTrimSameAsTrim();
+
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_111).raw(NO_VALUE.toString()).trimResult(true).noTrimSameAsTrim();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.add(PROP_200).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+	public static PropExpectations buildExpectationsUnset() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_100).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_111).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.add(PROP_200).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+		/**
+		 * A custom parser that considers X to be true and O to be false.
+		 */
 	static public class XOParser extends FlagType {
 
 		public XOParser() {
@@ -52,7 +87,7 @@ public class FlagPropProps {
 
 		@Override
 		public Boolean parse(String sourceValue) {
-			if ("X".equals(sourceValue)) {
+			if (sourceValue == null || "X".equals(sourceValue)) {
 				return true;
 			} else {
 				return false;
@@ -61,7 +96,7 @@ public class FlagPropProps {
 
 		@Override
 		public boolean isParsable(String sourceValue) {
-			return (sourceValue != null) && (sourceValue.equals("X") || sourceValue.equals("O"));
+			return (sourceValue == null) && (sourceValue.equals("X") || sourceValue.equals("O"));
 		}
 	}
 }

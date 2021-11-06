@@ -87,6 +87,71 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		assertEquals(2, config.getRegisteredGroups().size());
 	}
 
+
+	@Test
+	public void assert1() throws IllegalAccessException {
+		StdMainStringPropLoad loader = new StdMainStringPropLoad();
+
+		PropExpectations strExpect = StrPropProps.buildExpectations1();
+		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+
+		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, true);
+		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, true) );
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		// If there were problems, an exception would be thrown
+		AndHowCore core = buildCore(config);
+
+		PropAssertions pas = new PropAssertions(core, core);
+
+		pas.assertAll(strExpect, 0, true, true);
+		pas.assertAll(flagExpect, 0, true, true);
+	}
+
+
+	@Test
+	public void assert1WithAliases() throws IllegalAccessException {
+		StdMainStringPropLoad loader = new StdMainStringPropLoad();
+
+		PropExpectations strExpect = StrPropProps.buildExpectations1();
+		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+
+		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, true);
+		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, true) );
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		// If there were problems, an exception would be thrown
+		AndHowCore core = buildCore(config);
+
+		PropAssertions pas = new PropAssertions(core, core);
+
+		pas.assertAll(strExpect, 0, true, true);
+		pas.assertAll(flagExpect, 0, true, true);
+	}
+
+	@Test
+	public void assertUnset() throws IllegalAccessException {
+		StdMainStringPropLoad loader = new StdMainStringPropLoad();
+
+		PropExpectations strExpect = StrPropProps.buildExpectationsUnset();
+		PropExpectations flagExpect = FlagPropProps.buildExpectationsUnset();
+
+		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, true);
+		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, true) );
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		// If there were problems, an exception would be thrown
+		AndHowCore core = buildCore(config);
+
+		PropAssertions pas = new PropAssertions(core, core);
+
+		pas.assertAll(strExpect, 0, true, true);
+		pas.assertAll(flagExpect, 0, true, true);
+	}
+
 	@Test
 	public void settingNoValuesShouldResultInNonNullPropertyProblems() throws Exception {
 
@@ -118,18 +183,6 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	}
 
-	@Test
-	public void setEveryValue1() throws IllegalAccessException {
-		List<String> args = buildEveryStrPropValue1();
-		args.addAll(buildEveryFlagPropValue1());
-		//
-		config.setCmdLineArgs(args.toArray(new String[args.size()]));
-		AndHowCore core = buildCore(config);
-
-		//printValues(core, StrPropProps.class);
-		assertEveryStrPropValue1(core);
-		assertEveryFlagPropValue1(core);
-	}
 
 	@Test
 	public void setEveryValue2() throws IllegalAccessException {
@@ -212,23 +265,6 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	}
 
-	@Test
-	public void tryOutNewAutoLoadAndAssert() throws IllegalAccessException {
-		StdMainStringPropLoad loader = new StdMainStringPropLoad();
-
-		PropExpectations expectations = StrPropProps.buildEveryStrPropValue1();
-
-		List<String> args = loader.buildSources(StrPropProps.class, expectations, 1, false);
-
-		config.setCmdLineArgs(args.toArray(new String[args.size()]));
-
-		// If there were problems, an exception would be thrown
-		AndHowCore core = buildCore(config);
-
-		PropAssertions pas = new PropAssertions(core, core);
-
-		pas.assertAll(expectations, 1, true);
-	}
 
 	public List<String> buildEveryStrPropValue1() {
 		List<String> args = new ArrayList();
@@ -312,27 +348,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 	}
 
 
-	public List<String> buildEveryFlagPropValue1() {
-		List<String> args = new ArrayList();
-
-		// Not Null | No Default | No Validations
-		args.add("FlagPropProps.PROP_100");
-
-		// Not Null | Has Default | No Validations
-		args.add(FLAGPROP_BASE + "PROP_110");
-		args.add(FLAGPROP_BASE + "PROP_111");
-
-		// Special type is true on 'X' only (though should still be true if present)
-		args.add(FLAGPROP_BASE + "PROP_200");
-
-		return args;
-	}
-
 	public void assertEveryFlagPropValue1(ValidatedValues result) {
 		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_100));
 		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_110));
 		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_111));
-		assertEquals(false, result.getExplicitValue(FlagPropProps.PROP_200));
+		assertEquals(true, result.getExplicitValue(FlagPropProps.PROP_200));
 	}
 
 	public List<String> buildEveryFlagPropValue2() {
