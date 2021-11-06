@@ -355,7 +355,7 @@ public class AndHowTest extends AndHowTestBase {
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ValueProblem.class).size());
-			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty());
+			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getLoaderPropertyCoord().getProperty());
 		}
 	}
 
