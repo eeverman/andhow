@@ -14,7 +14,7 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 
 	private static final LocalDateTimeType instance = new LocalDateTimeType();
 
-	private LocalDateTimeType() {
+	protected LocalDateTimeType() {
 		super(LocalDateTime.class);
 	}
 
@@ -28,6 +28,8 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 	}
 
 	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #LocalDateTimeType()}
 	 */
 	public static LocalDateTimeType instance() {

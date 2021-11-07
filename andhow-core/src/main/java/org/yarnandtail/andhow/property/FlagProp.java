@@ -22,8 +22,8 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * <p>
  * A FlagProp is similar to a BolProp, but with these differences:
  * <ul>
- * <li>A Flag is never null - it will always return true or false.  Thus,
- * A FlagProp will never throw a RequirementProblem error during configuration -
+ * <li>A Flag is never null - {@code FlagProp.getValue()} always return true or false.  Thus,
+ * A FlagProp will never throw a RequirementProblem error during configuration because
  * it always has a value.</li>
  * <li>FlagProp.getDefaultValue() never returns null and defaults to false.
  * Via the constructor or builder, it is possible to set the default to be true.
@@ -37,14 +37,16 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * </ul>
  *
  * <h3>The technical details</h3>
- * When the name refering to a FlagProp is found, the value is first trimmed by the
+ * When the name referring to a FlagProp is found, the value is first trimmed by the
  * TrimToNullTrimmer, which removes all whitespace and ultimately turns the value
  * into null if the value is all whitespace.  Since simply being present counts
  * as 'true' for a flag, finding a null value sets the Flag to true.
  * <p>
  * If after trimming the value is not null, it is parsed by
  * {@link org.yarnandtail.andhow.util.TextUtil#toBoolean(java.lang.String)} to
- * determine if the String is considered true or false.
+ * determine if the String is considered true or false.  Currently, that considers it to be true
+ * if the value is "True", "T", "Yes", "Y" or "On" (case-insensitive) and false otherwise, however
+ * this is also likely to change in version 0.5.0 to have explicit false values.
  */
 public class FlagProp extends PropertyBase<Boolean> {
 

@@ -1,22 +1,21 @@
 package org.yarnandtail.andhow.load.std;
 
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.util.NameUtil;
 
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- *
  * @author eeverman
  */
 public class StdEnvVarLoaderTest {
@@ -59,6 +58,17 @@ public class StdEnvVarLoaderTest {
 
 	protected String getPropName(Property p) throws Exception {
 		return NameUtil.getAndHowName(SimpleParams.class, p);
+	}
+
+	@Test
+	public void verifyBasicGettersAndSetters() {
+		StdEnvVarLoader loader = new StdEnvVarLoader();
+
+		assertTrue(loader instanceof ReadLoader);
+		assertEquals("java.lang.System.getenv()", loader.getSpecificLoadDescription());
+		assertEquals("EnvironmentVariable", loader.getLoaderType());
+		assertFalse(loader.isTrimmingRequiredForStringValues());
+		assertFalse(loader.isUnknownPropertyAProblem());
 	}
 
 	@Test

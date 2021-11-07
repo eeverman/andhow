@@ -1,11 +1,5 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.SimpleParams;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
@@ -13,11 +7,16 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.*;
+import org.yarnandtail.andhow.property.IntProp;
+import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.NameUtil;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 /**
- *
  * @author ericeverman
  */
 public class StdJndiLoaderTest extends AndHowTestBase {
@@ -26,6 +25,17 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		//Strings
 		StrProp STR_XXX = StrProp.builder().endsWith("XXX").build();
 		IntProp INT_TEN = IntProp.builder().greaterThan(10).build();
+
+	}
+
+	@Test
+	public void verifyBasicGettersAndSetters() {
+		StdJndiLoader loader = new StdJndiLoader();
+
+		assertTrue(loader instanceof LookupLoader);
+		assertEquals("JNDI properties in the system-wide JNDI context", loader.getSpecificLoadDescription());
+		assertEquals("JNDI", loader.getLoaderType());
+		assertFalse(loader.isTrimmingRequiredForStringValues());
 
 	}
 
@@ -267,7 +277,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.FLAG_NULL), Boolean.TRUE);
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), -9999);
 		jndi.bind("java:" +
-				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)),9999);
+				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), 9999);
 
 		jndi.activate();
 
@@ -405,7 +415,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void testValidationIsEnforcedWhenConvertsionUsed() throws Exception {
+	public void testValidationIsEnforcedWhenConvertionUsed() throws Exception {
 
 		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
@@ -425,6 +435,6 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 		assertEquals(1, vps.size());
 		assertTrue(vps.get(0) instanceof ValueProblem);
-		assertEquals(ValidParams.INT_TEN, ((ValueProblem)(vps.get(0))).getBadValueCoord().getProperty());
+		assertEquals(ValidParams.INT_TEN, ((ValueProblem) (vps.get(0))).getBadValueCoord().getProperty());
 	}
 }

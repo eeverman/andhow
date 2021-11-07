@@ -1,24 +1,20 @@
 package org.yarnandtail.andhow.load.std;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.yarnandtail.andhow.junit5.ext.RestoreSysPropsAfterEachTestExt;
-import org.yarnandtail.andhow.util.AndHowUtil;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.*;
+import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
+import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
+import org.yarnandtail.andhow.junit5.ext.RestoreSysPropsAfterEachTestExt;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.util.NameUtil;
 
-/**
- *
- * @author eeverman
- */
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(RestoreSysPropsAfterEachTestExt.class)
 public class StdSysPropLoaderTest {
 
@@ -57,6 +53,17 @@ public class StdSysPropLoaderTest {
 
 	protected String getPropName(Property p) throws Exception {
 		return NameUtil.getAndHowName(SimpleParams.class, p);
+	}
+
+	@Test
+	public void verifyBasicGettersAndSetters() {
+		StdSysPropLoader loader = new StdSysPropLoader();
+
+		assertTrue(loader instanceof ReadLoader);
+		assertEquals("java.lang.System.getProperties()", loader.getSpecificLoadDescription());
+		assertEquals("SystemProperty", loader.getLoaderType());
+		assertFalse(loader.isTrimmingRequiredForStringValues());
+		assertFalse(loader.isUnknownPropertyAProblem());
 	}
 
 	@Test

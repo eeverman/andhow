@@ -16,24 +16,26 @@ import org.yarnandtail.andhow.util.TextUtil;
 public class FlagType extends BaseValueType<Boolean> {
 
 	private static final FlagType instance = new FlagType();
-	
-	private FlagType() {
+
+	protected FlagType() {
 		super(Boolean.class);
 	}
 
-    /**
-     * @deprecated since 0.4.1. Use {@link #instance()} instead
-     *
-     * @return An instance of the {@link #FlagType()}
-     */
+	/**
+	 * @return An instance of the {@link #FlagType()}
+	 * @deprecated since 0.4.1. Use {@link #instance()} instead
+	 */
 	@Deprecated
 	public static FlagType get() {
 		return instance();
 	}
 
-    /**
-     * @return An instance of the {@link #FlagType()}
-     */
+	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
+	 *
+	 * @return An instance of the {@link #FlagType()}
+	 */
 	public static FlagType instance() {
 		return instance;
 	}
@@ -48,10 +50,10 @@ public class FlagType extends BaseValueType<Boolean> {
 			return TextUtil.toBoolean(sourceValue);
 		}
 	}
-	
+
 	@Override
 	public Boolean cast(Object o) throws RuntimeException {
-		return (Boolean)o;
+		return (Boolean) o;
 	}
-	
+
 }

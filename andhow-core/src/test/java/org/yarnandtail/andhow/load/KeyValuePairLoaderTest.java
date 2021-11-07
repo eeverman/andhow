@@ -19,8 +19,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * Note:  This directly tests a single loader so it is not possible to
  * test for missing required values.  Loaders can't know if a value is missing -
  * that only can be figured out after all loaders are complete.
- * 
- * @author eeverman
+ *
  */
 public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 

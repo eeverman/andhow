@@ -60,8 +60,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Other loaders which don't implement the {@code StandardLoader} interface can
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
- * 
- * @author ericeverman
+ *
  */
 public class StdMainStringArgsLoader extends KeyValuePairLoader 
 		implements StandardLoader {
