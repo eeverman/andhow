@@ -2,6 +2,7 @@ package org.yarnandtail.andhow.zTestGroups;
 
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
+import org.yarnandtail.andhow.internal.ValueProblem.InvalidValueProblem;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.valuetype.IntType;
 
@@ -172,6 +173,53 @@ public class IntPropProps {
 		//
 		// Special Trimmers and Types
 		exp.add(PROP_210).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+
+	public static PropExpectations buildInvalid1() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimSameAsRaw();
+
+		// Null OK | Has Default | No Validations
+		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimSameAsRaw();
+
+		//
+		// Null OK | No Default | Has Validations
+		exp.add(PROP_20).raw("  -6  ").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+		exp.add(PROP_21).raw("\t1001\t").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+
+		//
+		// Null OK | Has Default | Has Validations
+		exp.add(PROP_30).raw(" \t\b\n\r\f 1000 \t\b\n\r\f ").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+		exp.add(PROP_31).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+
+		//
+		// Not Null
+
+		// Not Null | No Default | No Validations
+		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimSameAsRaw();
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimSameAsRaw();
+
+		//
+		// Not Null | No Default | Has Validations
+		exp.add(PROP_120).raw("\t  1000 \t").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+		exp.add(PROP_121).raw("-5").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+
+		//
+		// Not Null | Has Default | Has Validations
+		exp.add(PROP_130).raw("\t\b\n\r\f 1000 \t\b\n\r\f ").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+		exp.add(PROP_131).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResult(InvalidValueProblem.class).noTrimSameAsRaw();
+
+		//
+		// Special Trimmers and Types
+		exp.add(PROP_210).raw(" 999 ")
+				.trimResult(InvalidValueProblem.class).noTrimResult("xxx");
 
 		return exp;
 	}

@@ -2,6 +2,7 @@ package org.yarnandtail.andhow.zTestGroups;
 
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.internal.RequirementProblem;
+import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.property.TrimToNullTrimmer;
 import org.yarnandtail.andhow.valuetype.StrType;
@@ -212,6 +213,63 @@ public class StrPropProps {
 		// Special Trimmers and Types
 		exp.add(PROP_200).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
 		exp.add(PROP_210).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+	public static PropExpectations buildInvalid1() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_0).raw("  two \nwords  ").trimResult("two \nwords").noTrimSameAsRaw();
+
+		// Null OK | Has Default | No Validations
+		exp.add(PROP_10).raw("  \" words in space \"  ").trimResult(" words in space ").noTrimSameAsRaw();
+
+		//
+		// Null OK | No Default | Has Validations
+		exp.add(PROP_20).raw("  XXX  ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_21).raw("\t\"Star\tInG\"\t").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_22).raw(" \" \"A B\" \" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_23).raw(" \" A B \" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+
+		//
+		// Null OK | Has Default | Has Validations
+		exp.add(PROP_30).raw("  \tStaRs star ingING\t  ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_31).raw("\t  \"STAR star iNgiNG\"  \t").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_32).raw(" \" \"A B\" \" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_33).raw(" \" A b \" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+
+		//
+		// Not Null
+
+		// Not Null | No Default | No Validations
+		exp.add(PROP_100).raw(" \" \" ").trimResult(" ").noTrimSameAsRaw();
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(" \"\" ").trimResult("").noTrimSameAsRaw();
+
+		//
+		// Not Null | No Default | Has Validations
+		exp.add(PROP_120).raw("\t  XStaR\tstar\ting  \t").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_121).raw("\"Xstar\tstar\tiNG\"").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_122).raw("\t\b\n\r\f\" \"zzz\" \"\t\b\n\r\f").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_123).raw(" \t\b\n\r\f \" \"zzz\" \" \t\b\n\r\f ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+
+
+		//
+		// Not Null | Has Default | Has Validations
+		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inginG \t\b\n\r\f ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_131).raw(" \t\b\n\r\f Star star iNgiNG \t\b\n\r\f ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_132).raw(" \" \"A b\" \" ").trimResult(" \"a b\" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+		exp.add(PROP_133).raw(" \" \"xxx\" \" ").trimResult(" \"A b\" ").trimResult(ValueProblem.InvalidValueProblem.class).noTrimSameAsTrim();
+
+		//
+		// Special Trimmers and Types
+		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
+				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
+		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
+				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
 
 		return exp;
 	}

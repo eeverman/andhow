@@ -300,4 +300,22 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		pas.assertAll(false);
 	}
 
+	@Test
+	public void assertInvalidValues1() throws Exception {
+		StdMainStringPropLoad loader = new StdMainStringPropLoad();
+
+		PropExpectations strExpect = StrPropProps.buildInvalid1();
+		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+		PropExpectations intExpect = IntPropProps.buildInvalid1();
+
+		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
+		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
+
+		config.setCmdLineArgs(args.toArray(new String[args.size()]));
+
+		PropProblemAssertions ppa = new PropProblemAssertions(config, 0, true, strExpect, flagExpect, intExpect);
+		ppa.assertErrors(true);
+	}
+
 }

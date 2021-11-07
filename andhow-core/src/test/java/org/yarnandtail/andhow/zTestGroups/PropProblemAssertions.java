@@ -39,25 +39,31 @@ public class PropProblemAssertions {
 
 		AppFatalException afe = afeArray[0];
 
-		List<PropExpectation> expectedProblems;
+		List<PropExpectation> expPropProblems;
 
 		if (useTrimmedValues) {
-			expectedProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
+			expPropProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
 					.filter(e -> isPropertyProblemClass(e.getTrimResults().get(expectIndex))).collect(Collectors.toList());
 		} else {
-			expectedProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
+			expPropProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
 					.filter(e -> isPropertyProblemClass(e.getNoTrimResults().get(expectIndex))).collect(Collectors.toList());
 		}
 
 
 		if (verbose) {
-			System.out.println("Expecting " + expectedProblems.size() + " PropertyProblem's");
+			System.out.println("Expecting " + expPropProblems.size() + " PropertyProblem's");
 		}
 
-		assertEquals(expectedProblems.size(), afe.getProblems().size(),
-				"The number of Property problems does not match the actual number");
+		List<PropertyProblem> actualPropProblems = afe.getProblems().stream()
+				.filter(p -> p instanceof PropertyProblem).map(p -> (PropertyProblem)p).collect(Collectors.toList());
 
-		for (PropExpectation exp : expectedProblems) {
+		assertTrue(actualPropProblems.size() >= expPropProblems.size(),
+				"The actual number of PropertyProblem should >= the actual number" +
+						"(some values may have multiple validation errors)");
+
+		int actualProbsAccountedFor = 0;
+
+		for (PropExpectation exp : expPropProblems) {
 
 			Class<? extends PropertyProblem> expProbClass = (Class<? extends PropertyProblem>)
 					((useTrimmedValues)?exp.getTrimResults().get(expectIndex):exp.getNoTrimResults().get(expectIndex));
@@ -67,22 +73,28 @@ public class PropProblemAssertions {
 			Property prop = exp.getProperty();
 			String propName = findPropName(prop, config);
 
-			Optional<? extends PropertyProblem> actualProb =
-					afe.getProblems().stream()
+			List<? extends PropertyProblem> actualProb =
+					actualPropProblems.stream()
 							.filter(p -> expProbClass.isInstance(p))
 							.map(p -> (PropertyProblem)p)
-							.filter(p -> p.getPropertyCoord().getProperty().equals(prop)).findFirst();
+							.filter(p -> p.getPropertyCoord().getProperty().equals(prop)).collect(Collectors.toList());
+
+			actualProbsAccountedFor+= actualProb.size();		// cross these off the list as accounted for
 
 			if (verbose) {
-				System.out.println("Expecting " + propName + " to have a problem of type " + expProbClassName);
+				System.out.println("Expecting " + propName + " to have a problem of type "
+						+ expProbClassName + " - actually found " + actualProb.size());
 			}
 
-			assertTrue(actualProb != null, "The Property '" + propName + "' should have had" +
+			assertTrue(actualProb.size() > 0, "The Property '" + propName + "' should have had" +
 					" a Problem of type " + expProbClassName + ", but none was found");
 
 			assertTrue(outText.contains(propName), "The message displayed to the user should" +
 					"contain the property class name '" + propName +"'");
 		}
+
+		assertEquals(actualPropProblems.size(), actualProbsAccountedFor,
+				"Should have matched all the PropertyProblems, but some did not match expected errors");
 
 	}
 
