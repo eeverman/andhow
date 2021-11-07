@@ -29,16 +29,14 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
-	protected static final String STRPROP_BASE = StrPropProps.class.getCanonicalName() + ".";
-	protected static final String FLAGPROP_BASE = FlagPropProps.class.getCanonicalName() + ".";
-
 	AndHowTestConfig.AndHowTestConfigImpl config;
 
 	@BeforeEach
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
 		config.setStandardLoaders(StdMainStringArgsLoader.class)
-				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class);
+				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class)
+				.addOverrideGroup(IntPropProps.class);
 	}
 
 	protected AndHowCore buildCore(BaseConfig aConfig) {
@@ -57,7 +55,7 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		assertEquals(1, config.buildLoaders().size());
 		assertTrue(config.buildLoaders().get(0) instanceof StdMainStringArgsLoader);
 		assertTrue(config.getNamingStrategy() instanceof CaseInsensitiveNaming);
-		assertEquals(2, config.getRegisteredGroups().size());
+		assertEquals(3, config.getRegisteredGroups().size());
 	}
 
 
@@ -68,9 +66,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, true, false) );
 		args.add("foo=bar");	// Unknown argument
 
 
@@ -85,18 +85,20 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void assertUnsetStringsCauseProblems() throws Exception {
+	public void assertUnsetNonFlagsCauseProblems() throws Exception {
 		StdMainStringPropLoad loader = new StdMainStringPropLoad();
 
 		PropExpectations strExpect = StrPropProps.buildExpectationsUnset();
-		PropExpectations flagExpect = FlagPropProps.buildExpectationsUnset();
+		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+		PropExpectations intExpect = IntPropProps.buildExpectationsUnset();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
-		PropProblemAssertions ppa = new PropProblemAssertions(config, 0, true, strExpect, flagExpect);
+		PropProblemAssertions ppa = new PropProblemAssertions(config, 0, true, strExpect, flagExpect, intExpect);
 		ppa.assertErrors(false);
 	}
 
@@ -105,10 +107,12 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		StdMainStringPropLoad loader = new StdMainStringPropLoad();
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
-		PropExpectations flagExpect = FlagPropProps.buildExpectationsUnset();
+		PropExpectations flagExpect = FlagPropProps.buildExpectationsUnset();	// <- only one unset
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
-		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
-		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
+		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -126,9 +130,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -146,9 +152,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, true, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -166,9 +174,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations2();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -186,9 +196,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations2();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, true, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -206,9 +218,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations3();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -226,9 +240,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations3();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, true, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -246,9 +262,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations4();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, false, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, false, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, false, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 
@@ -266,9 +284,11 @@ public class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations4();
+		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		List<String> args = loader.buildSources(StrPropProps.class, strExpect, 0, true, false);
 		args.addAll( loader.buildSources(FlagPropProps.class, flagExpect, 0, true, false) );
+		args.addAll( loader.buildSources(IntPropProps.class, intExpect, 0, true, false) );
 
 		config.setCmdLineArgs(args.toArray(new String[args.size()]));
 

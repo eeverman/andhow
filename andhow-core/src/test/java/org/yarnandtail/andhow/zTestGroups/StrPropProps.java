@@ -203,17 +203,15 @@ public class StrPropProps {
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inging \t\b\n\r\f ").trimResult("StaRs star inging").noTrimSameAsRaw();
-		exp.add(PROP_131).raw(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ").trimResult("star star iNgiNG").noTrimSameAsRaw();
-		exp.add(PROP_132).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
-		exp.add(PROP_133).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
+		exp.add(PROP_130).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_131).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_132).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_133).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
-				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
-		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
-				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
+		exp.add(PROP_200).raw(NO_VALUE.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_210).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimSameAsTrim();
 
 		return exp;
 	}
