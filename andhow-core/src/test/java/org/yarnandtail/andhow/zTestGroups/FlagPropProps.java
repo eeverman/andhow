@@ -59,19 +59,74 @@ public class FlagPropProps {
 		return exp;
 	}
 
-	public static PropExpectations buildExpectationsUnset() {
+	public static PropExpectations buildExpectations2() {
 
 		PropExpectations exp = new PropExpectations();
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_100).raw(" \t\b\n\r\f ").trimResult(true).noTrimSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
-		exp.add(PROP_111).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_110).raw("\t\b\n\r\f ").trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_111).raw(" \t\b\n\r\f").trimResult(true).noTrimSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(SKIP.toString()).trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_200).raw(" \t\b\n\r\f\t\b\n\r\f ").trimResult(true).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+	public static PropExpectations buildExpectations3() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_100).raw(" true ").trimResult(true).noTrimSameAsTrim();
+
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(" yes ").trimResult(true).noTrimSameAsTrim();
+		exp.add(PROP_111).raw(" y ").trimResult(true).noTrimSameAsTrim();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.add(PROP_200).raw(" X ").trimResult(true).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+	public static PropExpectations buildExpectations4() {
+
+		PropExpectations exp = new PropExpectations();
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_100).raw(" false ").trimResult(false).noTrimSameAsTrim();
+
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(" xxx ").trimResult(false).noTrimSameAsTrim();
+		exp.add(PROP_111).raw("  1234.5725\"  ").trimResult(false).noTrimSameAsTrim();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.add(PROP_200).raw(" O ").trimResult(false).noTrimSameAsTrim();
+
+		return exp;
+	}
+
+	public static PropExpectations buildExpectationsUnset() {
+
+		PropExpectations exp = new PropExpectations();
+
+		//
+		// Nulls are returned b/c we are checking the explicit value.
+		// Defaults are considered when calling getValue().
+
+		// Null OK | No Default | No Validations
+		exp.add(PROP_100).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+
+		// Not Null | Has Default | No Validations
+		exp.add(PROP_110).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+		exp.add(PROP_111).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.add(PROP_200).raw(SKIP.toString()).trimResult(null).noTrimSameAsTrim();
 
 		return exp;
 	}

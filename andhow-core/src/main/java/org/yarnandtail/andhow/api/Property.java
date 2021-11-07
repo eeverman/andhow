@@ -25,11 +25,10 @@ import java.util.stream.Collectors;
  * easy base class to extend that provide nearly all needed functionality.
  * <li>Builders should provide easy access to Validators for their appropriate type.
  * For instance the StrProp has a value type of String and has an
- * associated StringRegex Validator.  By convention, the builder methods to add
- * validators use the 'must' terminology, as in:  mustMatchRegex(String regex),
- * or mustStartWith(String prefix).
+ * associated Regex Validator.
+ * <li>Please follow existing naming conventions for Properties and the builder
+ * methods: https://www.andhowconfig.org/developer-guide/conventions</li>
  * </ul>
- * @author eeverman
  */
 public interface Property<T> {
 	

@@ -43,8 +43,13 @@ public class StdMainStringPropLoad {
 
 			String effectiveName = propCanonName;
 
-			if (useAliasIfAvailable && expect.getProperty().getInAliases().size() > 0) {
-				effectiveName = expect.getProperty().getInAliases().get(0);
+			if (useAliasIfAvailable) {
+				List<Name> aliases = expect.getProperty().getRequestedAliases();
+				Name alias = aliases.stream().filter(n -> n.isIn()).findFirst().orElse(null);
+
+				if (alias != null) {
+					effectiveName = alias.getActualName();
+				}
 			}
 
 			String rawValString = expect.getRawStrings().get(expectIndex);
