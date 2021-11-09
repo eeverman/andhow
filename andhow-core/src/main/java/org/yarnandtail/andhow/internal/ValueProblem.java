@@ -5,50 +5,38 @@ import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  * Problems with invalid values, values that cannot be converted to their destination type.
- * 
- * @author eeverman
  */
-public abstract class ValueProblem implements Problem {
+public abstract class ValueProblem extends PropertyProblem {
 	
-	protected LoaderValueCoord badValueCoord;
-	
-	public LoaderValueCoord getBadValueCoord() {
-		return badValueCoord;
+	public LoaderPropertyCoord getLoaderPropertyCoord() {
+		return (LoaderPropertyCoord) propertyCoord;
 	}
-	
-	
-	@Override
-	public String getFullMessage() {
-		return getProblemContext() + ": " + getProblemDescription();
-	}
-	
+
 	@Override
 	public String getProblemContext() {
-		
-		if (badValueCoord != null) {
-			
-			String loadDesc = UNKNOWN;
-			
-			if (badValueCoord.getLoader() != null && 
-					badValueCoord.getLoader().getSpecificLoadDescription() != null) {
-				loadDesc = badValueCoord.getLoader().getSpecificLoadDescription();
-			}
-			return TextUtil.format("Property {} loaded from {}", 
-						badValueCoord.getPropName(), loadDesc);
-		} else {
-			return UNKNOWN;
+
+		LoaderPropertyCoord badValueCoord = (LoaderPropertyCoord) propertyCoord;
+
+		String loadDesc = UNKNOWN;
+
+		if (badValueCoord.getLoader() != null &&
+				badValueCoord.getLoader().getSpecificLoadDescription() != null) {
+			loadDesc = badValueCoord.getLoader().getSpecificLoadDescription();
 		}
+		return TextUtil.format("Property {} loaded from {}",
+					badValueCoord.getPropName(), loadDesc);
+
 	}
 	
 	public static class InvalidValueProblem<T> extends ValueProblem {
-		LoaderValueCoord def;
+		LoaderPropertyCoord def;
 		Validator<T> validator;
 		T value;
 		
 		public InvalidValueProblem(
 				Loader loader, Class<?> group, Property<T> prop, 
 				T value, Validator<T> validator) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			propertyCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.validator = validator;
 			this.value = value;
 		}

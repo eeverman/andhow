@@ -12,7 +12,7 @@ import org.yarnandtail.andhow.util.TextUtil;
 public abstract class LoaderProblem implements Problem {
 	
 	/** The Property that actually has the problem */
-	protected LoaderValueCoord badValueCoord;
+	protected LoaderPropertyCoord badValueCoord;
 	
 	/**
 	 * The Property that has the problem.
@@ -80,7 +80,7 @@ public abstract class LoaderProblem implements Problem {
 		String resourcePath;
 		
 		public IOLoaderProblem(Loader loader, Exception exception, String resourcePath) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.exception = exception;
 			this.resourcePath = resourcePath;
 		}
@@ -98,7 +98,7 @@ public abstract class LoaderProblem implements Problem {
 		public ParsingLoaderProblem(
 				Loader loader, Class<?> group, Property prop, 
 				Exception exception) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.exception = exception;
 		}
 		
@@ -112,7 +112,7 @@ public abstract class LoaderProblem implements Problem {
 		
 		public DuplicatePropertyLoaderProblem(
 				Loader loader, Class<?> group, Property prop) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 		}
 		
 		@Override
@@ -127,7 +127,7 @@ public abstract class LoaderProblem implements Problem {
 		
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.unknownPropName = unknownPropName;
 		}
 
@@ -146,7 +146,7 @@ public abstract class LoaderProblem implements Problem {
 		String message;
 		
 		public SourceNotFoundLoaderProblem(Loader loader, String message) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.message = message;
 		}
 		
@@ -159,7 +159,7 @@ public abstract class LoaderProblem implements Problem {
 	public static class JndiContextLoaderProblem extends LoaderProblem {
 
 		public JndiContextLoaderProblem(Loader loader) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 		}
 		
 		@Override
@@ -176,7 +176,7 @@ public abstract class LoaderProblem implements Problem {
 		public ObjectConversionValueProblem(
 				Loader loader, Class<?> group, Property prop, 
 				Object obj) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.obj = obj;
 		}
 		
@@ -196,7 +196,7 @@ public abstract class LoaderProblem implements Problem {
 				Loader loader, Class<?> group, Property prop, 
 				String str) {
 			
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.str = str;
 		}
 
