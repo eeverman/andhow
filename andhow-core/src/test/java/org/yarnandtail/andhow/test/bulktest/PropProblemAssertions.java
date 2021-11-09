@@ -1,43 +1,30 @@
-package org.yarnandtail.andhow.zTestGroups;
+package org.yarnandtail.andhow.test.bulktest;
 
 import org.yarnandtail.andhow.BaseConfig;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowCore;
 import org.yarnandtail.andhow.internal.PropertyProblem;
-import org.yarnandtail.andhow.zTestGroups.PropExpectations.PropExpectation;
+import org.yarnandtail.andhow.test.bulktest.PropExpectations.PropExpectation;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErr;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PropProblemAssertions {
-
 
 	BaseConfig config;
 	List<PropExpectations> expects;
 	int expectIndex;
 	boolean useTrimmedValues;
 
-	public PropProblemAssertions(BaseConfig config, int expectIndex, boolean useTrimmedValues, PropExpectations... expects) {
+	public PropProblemAssertions(BaseConfig config, int expectIndex, boolean useTrimmedValues, List<PropExpectations> expects) {
 		this.config = config;
 		this.expectIndex = expectIndex;
 		this.useTrimmedValues = useTrimmedValues;
-		this.expects = Arrays.asList(expects);
+		this.expects = expects;
 	}
 
-	public void assertErrors(boolean verbose) throws Exception {
-
-		//Trick to allow access w/in the lambda
-		final AppFatalException[] afeArray = new AppFatalException[1];
-
-		String outText = tapSystemErr(() -> {
-			afeArray[0] = assertThrows(AppFatalException.class,
-					() -> buildCore(config));
-		});
-
-		AppFatalException afe = afeArray[0];
+	public void assertErrors(AppFatalException afe, String outText, boolean verbose) throws Exception {
 
 		List<PropExpectation> expPropProblems;
 
@@ -116,14 +103,5 @@ public class PropProblemAssertions {
 		return false;
 	}
 
-
-	protected AndHowCore buildCore(BaseConfig aConfig) {
-		AndHowCore core = new AndHowCore(
-				aConfig.getNamingStrategy(),
-				aConfig.buildLoaders(),
-				aConfig.getRegisteredGroups());
-
-		return core;
-	}
 
 }

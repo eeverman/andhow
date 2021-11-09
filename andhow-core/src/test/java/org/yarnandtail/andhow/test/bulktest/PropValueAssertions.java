@@ -1,16 +1,10 @@
-package org.yarnandtail.andhow.zTestGroups;
+package org.yarnandtail.andhow.test.bulktest;
 
-import org.yarnandtail.andhow.BaseConfig;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.internal.PropertyProblem;
-import org.yarnandtail.andhow.zTestGroups.PropExpectations.PropExpectation;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErr;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PropValueAssertions {
 
@@ -21,13 +15,13 @@ public class PropValueAssertions {
 	List<PropExpectations> expects;
 
 	public PropValueAssertions(ValidatedValues values, PropertyConfiguration config,
-			int expectIndex, boolean useTrimmedValues, PropExpectations... expects) {
+			int expectIndex, boolean useTrimmedValues, List<PropExpectations> expects) {
 
 		this.values = values;
 		this.config = config;
 		this.expectIndex = expectIndex;
 		this.useTrimmedValues = useTrimmedValues;
-		this.expects = Arrays.asList(expects);
+		this.expects = expects;
 	}
 
 	public void assertAll(boolean verbose) {
@@ -49,7 +43,7 @@ public class PropValueAssertions {
 		}
 
 		String msg = "Prop " + config.getCanonicalName(p) + " raw string [" + expect.getRawStrings().get(expectIndex) + "] "
-				+ "should load to [" + expected + "] (" + (useTrimmedValues?"Trimmed":"Untrimmed") + ")";
+				+ "should load to [" + expected + "] (" + (useTrimmedValues ? "Trimmed" : "Untrimmed") + ")";
 
 		if (verbose) {
 			System.out.println("Assert: " + msg);

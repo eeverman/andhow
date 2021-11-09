@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.zTestGroups;
+package org.yarnandtail.andhow.test.bulktest;
 
 /**
  * Special raw values that can be used for special behaviors in PropExpectations.
