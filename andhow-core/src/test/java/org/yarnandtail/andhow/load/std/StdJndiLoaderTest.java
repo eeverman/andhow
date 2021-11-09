@@ -435,6 +435,6 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 		assertEquals(1, vps.size());
 		assertTrue(vps.get(0) instanceof ValueProblem);
-		assertEquals(ValidParams.INT_TEN, ((ValueProblem) (vps.get(0))).getBadValueCoord().getProperty());
+		assertEquals(ValidParams.INT_TEN, ((ValueProblem) (vps.get(0))).getLoaderPropertyCoord().getProperty());
 	}
 }

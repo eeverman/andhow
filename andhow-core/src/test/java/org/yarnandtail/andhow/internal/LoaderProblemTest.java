@@ -29,10 +29,10 @@ public class LoaderProblemTest extends LoaderProblem {
 	Loader loader;
 
 	@Mock
-	LoaderValueCoord badValueCoord = new LoaderValueCoord(loader, Integer.class, prop);
+	LoaderPropertyCoord badValueCoord = new LoaderPropertyCoord(loader, Integer.class, prop);
 
 	public class LoaderProblemStub extends LoaderProblem {
-		public void setBadValueCoord(LoaderValueCoord badValueCoord) {
+		public void setBadValueCoord(LoaderPropertyCoord badValueCoord) {
 			this.badValueCoord = badValueCoord;
 		}
 

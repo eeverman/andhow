@@ -235,9 +235,9 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
 
 		assertEquals(3, e.getProblems().filter(ValueProblem.class).size());
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty()));
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(1).getBadValueCoord().getProperty()));
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(2).getBadValueCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(0).getLoaderPropertyCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(1).getLoaderPropertyCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(2).getLoaderPropertyCoord().getProperty()));
 
 		//
 		// Loader problems
