@@ -6,7 +6,7 @@ import org.yarnandtail.andhow.api.Property;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StdMainStringValueLoader extends PropValueLoader {
+public class StdMainStringValueLoader extends PropValueLoader<String> {
 
 	private List<String> args = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class StdMainStringValueLoader extends PropValueLoader {
 	}
 
 	@Override
-	public void addExtraValues(List<Object> extraValues, boolean verbose) {
+	public void addExtraValues(List<String> extraValues, boolean verbose) {
 		for (Object o : extraValues) {
 			args.add(o.toString());
 			if (verbose) {

@@ -87,45 +87,48 @@ public class IntPropProps {
 
 	public static PropExpectations buildExpectations1() {
 
+		// Reminder:  For non-String based Properties, all loaders trim values,
+		// so trim & untrim should be the same.
+		
 		PropExpectations exp = new PropExpectations(IntPropProps.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsParseProb();
+		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsParseProb();
+		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsSameAsOther();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  20  ").trimResult(20).noTrimResultIsParseProb();
-		exp.add(PROP_21).raw("\t21\t").trimResult(21).noTrimResultIsParseProb();
+		exp.add(PROP_20).raw("  20  ").trimResult(20).noTrimResultIsSameAsOther();
+		exp.add(PROP_21).raw("\t21\t").trimResult(21).noTrimResultIsSameAsOther();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(" \t\b\n\r\f 30 \t\b\n\r\f ").trimResult(30).noTrimResultIsParseProb();
-		exp.add(PROP_31).raw(" \t\b\n\r\f 31 \t\b\n\r\f ").trimResult(31).noTrimResultIsParseProb();
+		exp.add(PROP_30).raw(" \t\b\n\r\f 30 \t\b\n\r\f ").trimResult(30).noTrimResultIsSameAsOther();
+		exp.add(PROP_31).raw(" \t\b\n\r\f 31 \t\b\n\r\f ").trimResult(31).noTrimResultIsSameAsOther();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsParseProb();
+		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsSameAsOther();
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsParseProb();
+		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsSameAsOther();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  120 \t").trimResult(120).noTrimResultIsParseProb();
+		exp.add(PROP_120).raw("\t  120 \t").trimResult(120).noTrimResultIsSameAsOther();
 		exp.add(PROP_121).raw("121").trimResult(121).noTrimResultIsSameAsOther();
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f 130 \t\b\n\r\f ").trimResult(130).noTrimResultIsParseProb();
-		exp.add(PROP_131).raw(" \t\b\n\r\f 131 \t\b\n\r\f ").trimResult(131).noTrimResultIsParseProb();
+		exp.add(PROP_130).raw("\t\b\n\r\f 130 \t\b\n\r\f ").trimResult(130).noTrimResultIsSameAsOther();
+		exp.add(PROP_131).raw(" \t\b\n\r\f 131 \t\b\n\r\f ").trimResult(131).noTrimResultIsSameAsOther();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(" 210 ").trimResult(211).noTrimResultIsParseProb();
+		exp.add(PROP_210).raw(" 210 ").trimResult(211).noTrimResultIsSameAsOther();
 
 		return exp;
 	}
@@ -133,6 +136,9 @@ public class IntPropProps {
 
 	public static PropExpectations buildExpectationsUnset() {
 
+		// Reminder:  For non-String based Properties, all loaders trim values,
+		// so trim & untrim should be the same.
+		
 		PropExpectations exp = new PropExpectations(IntPropProps.class);
 
 		// Null OK | No Default | No Validations
@@ -180,45 +186,48 @@ public class IntPropProps {
 
 	public static PropExpectations buildInvalid1() {
 
+		// Reminder:  For non-String based Properties, all loaders trim values,
+		// so trim & untrim should be the same.
+
 		PropExpectations exp = new PropExpectations(IntPropProps.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsParseProb();
+		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsParseProb();
+		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsSameAsOther();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  -6  ").trimResultIsInvalidProb().noTrimResultIsParseProb();
-		exp.add(PROP_21).raw("\t1001\t").trimResultIsInvalidProb().noTrimResultIsParseProb();
+		exp.add(PROP_20).raw("  -6  ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_21).raw("\t1001\t").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(" \t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsParseProb();
-		exp.add(PROP_31).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsParseProb();
+		exp.add(PROP_30).raw(" \t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_31).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsParseProb();
+		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsSameAsOther();
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsParseProb();
+		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsSameAsOther();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  1000 \t").trimResultIsInvalidProb().noTrimResultIsParseProb();
+		exp.add(PROP_120).raw("\t  1000 \t").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 		exp.add(PROP_121).raw("-5").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsParseProb();
-		exp.add(PROP_131).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsParseProb();
+		exp.add(PROP_130).raw("\t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_131).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(" 999 ").trimResultIsInvalidProb().noTrimResultIsParseProb();
+		exp.add(PROP_210).raw(" 999 ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
 
 		return exp;
 	}

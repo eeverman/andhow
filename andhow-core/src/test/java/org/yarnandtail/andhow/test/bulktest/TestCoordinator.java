@@ -11,11 +11,11 @@ import java.util.List;
 import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemErr;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TestCoordinator {
+public class TestCoordinator<T> {
 	protected AndHowTestConfigImpl config;
 	protected PropValueLoader propValueLoader;
 	protected List<PropExpectations> expectations;
-	protected List<Object> extraValues;
+	protected List<T> extraValues;
 
 	public TestCoordinator(AndHowTestConfigImpl config,
 			PropValueLoader propValueLoader, PropExpectations... expectations) {
@@ -25,7 +25,7 @@ public class TestCoordinator {
 	}
 
 	public TestCoordinator(AndHowTestConfigImpl config,
-			PropValueLoader propValueLoader, List<Object> extraValues, PropExpectations... expectations) {
+			PropValueLoader<T> propValueLoader, List<T> extraValues, PropExpectations... expectations) {
 		this.config = config;
 		this.propValueLoader = propValueLoader;
 		this.expectations = Arrays.asList(expectations);
@@ -34,7 +34,14 @@ public class TestCoordinator {
 
 	public void runForValues(boolean useAliasIfAvailable, boolean verbose)
 			throws Exception {
+
 		runForValues(useAliasIfAvailable, true, 0, verbose);
+	}
+
+	public void runForValues(boolean useAliasIfAvailable, boolean useTrimmedValueforAssertions,
+			boolean verbose) throws Exception {
+
+		runForValues(useAliasIfAvailable, useTrimmedValueforAssertions, 0, verbose);
 	}
 
 	public void runForValues(boolean useAliasIfAvailable,
@@ -42,7 +49,7 @@ public class TestCoordinator {
 			throws Exception {
 
 
-		propValueLoader.buildSources(config, expectations, expectIndex,
+		propValueLoader.buildAndAssignLoaderValues(config, expectations, expectIndex,
 				useAliasIfAvailable, extraValues, verbose);
 
 		// This would throw an exception if there were problems
@@ -55,14 +62,19 @@ public class TestCoordinator {
 	}
 
 	public void runForProblems(boolean useAliasIfAvailable, boolean verbose) throws Exception {
-		runForProblems(useAliasIfAvailable, 0, verbose);
+		runForProblems(useAliasIfAvailable, true, 0, verbose);
+	}
+
+	public void runForProblems(boolean useAliasIfAvailable, boolean useTrimmedValueforAssertions,
+			boolean verbose) throws Exception {
+		runForProblems(useAliasIfAvailable, useTrimmedValueforAssertions, 0, verbose);
 	}
 
 	public void runForProblems(boolean useAliasIfAvailable,
-			int expectIndex, boolean verbose) throws Exception {
+			boolean useTrimmedValueforAssertions, int expectIndex, boolean verbose) throws Exception {
 
 
-		propValueLoader.buildSources(config, expectations, expectIndex,
+		propValueLoader.buildAndAssignLoaderValues(config, expectations, expectIndex,
 				useAliasIfAvailable, extraValues, verbose);
 
 		//Trick to allow access w/in the lambda
@@ -74,7 +86,9 @@ public class TestCoordinator {
 		});
 
 
-		PropProblemAssertions ppa = new PropProblemAssertions(config, 0, true, expectations);
+		PropProblemAssertions ppa = new PropProblemAssertions(config, expectIndex,
+				useTrimmedValueforAssertions, expectations);
+
 		ppa.assertErrors(afeArray[0], outText, verbose);
 	}
 

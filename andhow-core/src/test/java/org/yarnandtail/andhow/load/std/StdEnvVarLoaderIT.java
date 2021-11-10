@@ -8,42 +8,40 @@ import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.test.bulktest.*;
 import org.yarnandtail.andhow.test.props.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Tests the KeyValuePairLoader as the only loader in a completely configured
+ * Tests the StdEnvVarLoader as the only loader with a completely configured
  * AndHowCore.
  * <p>
  * This is close to how AndHow runs in production, except:
  * * No auto-discovery / registry of Properties
  * * No auto-discovery of AndHowInit
  */
-public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
+public class StdEnvVarLoaderIT extends BaseForLoaderTests {
 
 	AndHowTestConfig.AndHowTestConfigImpl config;
-	PropValueLoader<String> propValueLoader;
+	PropValueLoader<AbstractMap.SimpleEntry<String, String>> propValueLoader;
 
 	@BeforeEach
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
-		config.setStandardLoaders(StdMainStringArgsLoader.class)
+		config.setStandardLoaders(StdEnvVarLoader.class)
 				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class)
 				.addOverrideGroup(IntPropProps.class);
 
-		propValueLoader = new StdMainStringValueLoader();
+		propValueLoader = new StdEnvVarValueLoader();
 	}
 
 	@Test
 	public void testTest() {
-		config.setCmdLineArgs(new String[]{"foo=bar"});
 
 		assertEquals(1, config.buildLoaders().size());
-		assertTrue(config.buildLoaders().get(0) instanceof StdMainStringArgsLoader);
+		assertTrue(config.buildLoaders().get(0) instanceof StdEnvVarLoader);
 		assertTrue(config.getNamingStrategy() instanceof CaseInsensitiveNaming);
 		assertEquals(3, config.getRegisteredGroups().size());
 	}
@@ -57,13 +55,12 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 
-		List<String> extraArgs = new ArrayList<>(1);
-		extraArgs.add("foo=bar");	// Unknown argument
+		List<SimpleEntry<String, String>> extraArgs = new ArrayList<>(1);
+		extraArgs.add(new SimpleEntry<>("foo", "bar"));	// Unknown argument
 
-		TestCoordinator<String> coord = new TestCoordinator<>(config, propValueLoader, extraArgs,
-				strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true);
-
+		TestCoordinator<SimpleEntry<String, String>> coord = new TestCoordinator<>(
+				config, propValueLoader, extraArgs, strExpect, flagExpect, intExpect);
+		coord.runForProblems(true, false, true);
 	}
 
 	@Test
@@ -74,7 +71,7 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectationsUnset();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false);
+		coord.runForProblems(false, false, false);
 	}
 
 	@Test
@@ -85,7 +82,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, false);
+		coord.runForProblems(true, false, false);
+
 	}
 
 	@Test
@@ -96,7 +94,7 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, false);
+		coord.runForProblems(false, false, false);
 	}
 
 	@Test
@@ -107,7 +105,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, false);
+		coord.runForProblems(true, false, false);
+
 	}
 
 	@Test
@@ -118,7 +117,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, false);
+		coord.runForProblems(false, false, false);
+
 	}
 
 	@Test
@@ -130,7 +130,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, false);
+		coord.runForProblems(true, false, false);
+
 	}
 
 	@Test
@@ -142,7 +143,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, false);
+		coord.runForProblems(false, false, false);
+
 	}
 
 	@Test
@@ -154,7 +156,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, false);
+		coord.runForProblems(true, false, false);
+
 	}
 
 	@Test
@@ -166,7 +169,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, false);
+		coord.runForProblems(false, false, false);
+
 	}
 
 	@Test
@@ -178,7 +182,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, false);
+		coord.runForProblems(true, false, false);
+
 	}
 
 	@Test
@@ -190,7 +195,7 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 		PropExpectations intExpect = IntPropProps.buildInvalid1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false);
+		coord.runForProblems(true, false, false);
 	}
 
 }

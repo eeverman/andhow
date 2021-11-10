@@ -6,7 +6,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 
 import java.util.List;
 
-public abstract class PropValueLoader {
+public abstract class PropValueLoader<T> {
 
 	public abstract void addPropertyValue(Property property, String effectiveName,
 			String canonName, String rawValString, boolean verbose);
@@ -19,12 +19,12 @@ public abstract class PropValueLoader {
 	 * @param extraValues
 	 * @param verbose
 	 */
-	public abstract void addExtraValues(List<Object> extraValues, boolean verbose);
+	public abstract void addExtraValues(List<T> extraValues, boolean verbose);
 
 	public abstract void completeConfiguration(AndHowTestConfigImpl config);
 
-	public void buildSources(AndHowTestConfigImpl config, List<PropExpectations> expectList, int expectIndex,
-			boolean useAliasIfAvailable, List<Object> extraValues, boolean verbose) throws IllegalAccessException {
+	public void buildAndAssignLoaderValues(AndHowTestConfigImpl config, List<PropExpectations> expectList, int expectIndex,
+			boolean useAliasIfAvailable, List<T> extraValues, boolean verbose) throws IllegalAccessException {
 
 		for (PropExpectations expects : expectList) {
 

@@ -2,8 +2,10 @@ package org.yarnandtail.andhow.test.bulktest;
 
 import org.yarnandtail.andhow.BaseConfig;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyProblem;
 import org.yarnandtail.andhow.test.bulktest.PropExpectations.PropExpectation;
+import org.yarnandtail.andhow.util.AndHowUtilTest;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,19 +38,16 @@ public class PropProblemAssertions {
 					.filter(e -> isPropertyProblemClass(e.getNoTrimResults().get(expectIndex))).collect(Collectors.toList());
 		}
 
-
 		if (verbose) {
 			System.out.println("Expecting " + expPropProblems.size() + " PropertyProblem's");
 		}
 
-		List<PropertyProblem> actualPropProblems = afe.getProblems().stream()
+		List<PropertyProblem> orgActualPropProblems = afe.getProblems().stream()
 				.filter(p -> p instanceof PropertyProblem).map(p -> (PropertyProblem)p).collect(Collectors.toList());
 
-		assertTrue(actualPropProblems.size() >= expPropProblems.size(),
-				"The actual number of PropertyProblem should >= the actual number" +
-						"(some values may have multiple validation errors)");
+		List<PropertyProblem> actualPropProblems = new ArrayList<>();
+		actualPropProblems.addAll(orgActualPropProblems);
 
-		int actualProbsAccountedFor = 0;
 
 		for (PropExpectation exp : expPropProblems) {
 
@@ -66,21 +65,28 @@ public class PropProblemAssertions {
 							.map(p -> (PropertyProblem)p)
 							.filter(p -> p.getPropertyCoord().getProperty().equals(prop)).collect(Collectors.toList());
 
-			actualProbsAccountedFor+= actualProb.size();		// cross these off the list as accounted for
+			// Remove the actual problems from the list so there is a short list at the end if mis-matched
+			actualPropProblems.removeAll(actualProb);
 
 			if (verbose) {
 				System.out.println("Expecting " + propName + " to have a problem of type "
 						+ expProbClassName + " - actually found " + actualProb.size());
 			}
 
-			assertTrue(actualProb.size() > 0, "The Property '" + propName + "' should have had" +
-					" a Problem of type " + expProbClassName + ", but none was found");
+			assertTrue(actualProb.size() > 0, "The Property '" + propName + "' should have had " +
+					"a Problem of type " + expProbClassName + ", but none was found");
 
-			assertTrue(outText.contains(propName), "The message displayed to the user should" +
+			assertTrue(outText.contains(propName), "The message displayed to the user should " +
 					"contain the property class name '" + propName +"'");
 		}
 
-		assertEquals(actualPropProblems.size(), actualProbsAccountedFor,
+		if (actualPropProblems.size() > 0) {
+			// Uh oh, not all the actual problems were matches - Log the list of unmatched ones
+			System.out.println("Some actual PropertyProblems were unexpected - here is the list of them:");
+			logPropertyProblems(actualPropProblems);
+		}
+
+		assertEquals(0, actualPropProblems.size(),
 				"Should have matched all the PropertyProblems, but some did not match expected errors");
 
 	}
@@ -101,6 +107,22 @@ public class PropProblemAssertions {
 		}
 
 		return false;
+	}
+
+	protected boolean isStringConversionProblem(Object obj) {
+		if (obj instanceof Class<?>) {
+			Class<?> clazz = (Class<?>)obj;
+
+			return LoaderProblem.StringConversionLoaderProblem.class.isAssignableFrom(clazz);
+		}
+
+		return false;
+	}
+
+	public void logPropertyProblems(List<? extends PropertyProblem> probs) {
+		for (PropertyProblem p : probs) {
+			System.out.println(" - " + p.getFullMessage());
+		}
 	}
 
 

@@ -115,17 +115,17 @@ public class StrPropProps {
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  StaR\tT ing  ").trimResult("StaR\tT ing").noTrimSameAsRaw();
-		exp.add(PROP_21).raw("\t\"star\tInG\"\t").trimResult("star\tInG").noTrimSameAsRaw();
-		exp.add(PROP_22).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
-		exp.add(PROP_23).raw(" \" \"A B\" \" ").trimResult(" \"A B\" ").noTrimSameAsRaw();
+		exp.add(PROP_20).raw("  StaR\tT ing  ").trimResult("StaR\tT ing").noTrimResultIsInvalidProb();
+		exp.add(PROP_21).raw("\t\"star\tInG\"\t").trimResult("star\tInG").noTrimResultIsInvalidProb();
+		exp.add(PROP_22).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
+		exp.add(PROP_23).raw(" \" \"A B\" \" ").trimResult(" \"A B\" ").noTrimResultIsInvalidProb();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw("  \tStaRs star inging\t  ").trimResult("StaRs star inging").noTrimSameAsRaw();
-		exp.add(PROP_31).raw("\t  \"star star iNgiNG\"  \t").trimResult("star star iNgiNG").noTrimSameAsRaw();
-		exp.add(PROP_32).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
-		exp.add(PROP_33).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
+		exp.add(PROP_30).raw("  \tStaRs star inging\t  ").trimResult("StaRs star inging").noTrimResultIsInvalidProb();
+		exp.add(PROP_31).raw("\t  \"star star iNgiNG\"  \t").trimResult("star star iNgiNG").noTrimResultIsInvalidProb();
+		exp.add(PROP_32).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
+		exp.add(PROP_33).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimResultIsInvalidProb();
 
 		//
 		// Not Null
@@ -137,25 +137,25 @@ public class StrPropProps {
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  StaR\tstar\ting  \t").trimResult("StaR\tstar\ting").noTrimSameAsRaw();
-		exp.add(PROP_121).raw("\"star\tstar\tiNG\"").trimResult("star\tstar\tiNG").noTrimSameAsRaw();
-		exp.add(PROP_122).raw("\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f").trimResult(" \"a b\" ").noTrimSameAsRaw();
-		exp.add(PROP_123).raw(" \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ").trimResult(" \"a B\" ").noTrimSameAsRaw();
+		exp.add(PROP_120).raw("\t  StaR\tstar\ting  \t").trimResult("StaR\tstar\ting").noTrimResultIsInvalidProb();
+		exp.add(PROP_121).raw("\"star\tstar\tiNG\"").trimResult("star\tstar\tiNG").noTrimResultIsInvalidProb();
+		exp.add(PROP_122).raw("\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
+		exp.add(PROP_123).raw(" \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ").trimResult(" \"a B\" ").noTrimResultIsInvalidProb();
 
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inging \t\b\n\r\f ").trimResult("StaRs star inging").noTrimSameAsRaw();
-		exp.add(PROP_131).raw(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ").trimResult("star star iNgiNG").noTrimSameAsRaw();
-		exp.add(PROP_132).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimSameAsRaw();
-		exp.add(PROP_133).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimSameAsRaw();
+		exp.add(PROP_130).raw("\t\b\n\r\f StaRs star inging \t\b\n\r\f ").trimResult("StaRs star inging").noTrimResultIsInvalidProb();
+		exp.add(PROP_131).raw(" \t\b\n\r\f star star iNgiNG \t\b\n\r\f ").trimResult("star star iNgiNG").noTrimResultIsInvalidProb();
+		exp.add(PROP_132).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
+		exp.add(PROP_133).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimResultIsInvalidProb();
 
 		//
 		// Special Trimmers and Types
 		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
 				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
 		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
-				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
+				.trimResult(" UPPERCASEME ").noTrimResultIsInvalidProb();
 
 		return exp;
 	}
@@ -268,7 +268,7 @@ public class StrPropProps {
 		exp.add(PROP_200).raw("  \" space_n_quotes \" ")
 				.trimResult("\" space_n_quotes \"").noTrimResult("  \" space_n_quotes \" ");
 		exp.add(PROP_210).raw(" \" upperCaseMe \" ")
-				.trimResult(" UPPERCASEME ").noTrimResult(" \" UPPERCASEME \" ");
+				.trimResult(" UPPERCASEME ").noTrimResultIsInvalidProb();
 
 		return exp;
 	}
