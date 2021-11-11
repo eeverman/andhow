@@ -60,7 +60,7 @@ public class StdEnvVarLoaderIT {
 
 		TestCoordinator<SimpleEntry<String, String>> coord = new TestCoordinator<>(
 				config, propValueLoader, extraArgs, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, true);
+		coord.runForProblems(true, false, false);
 	}
 
 	@Test

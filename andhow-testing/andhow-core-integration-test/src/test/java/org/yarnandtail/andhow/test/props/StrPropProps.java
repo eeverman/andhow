@@ -117,14 +117,14 @@ public class StrPropProps {
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  StaR\tT ing  ").trimResult("StaR\tT ing").noTrimResultIsInvalidProb();
+		exp.add(PROP_20).raw("StaR\tT ing").trimResult("StaR\tT ing").noTrimResultIsSameAsOther();
 		exp.add(PROP_21).raw("\t\"star\tInG\"\t").trimResult("star\tInG").noTrimResultIsInvalidProb();
 		exp.add(PROP_22).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
 		exp.add(PROP_23).raw(" \" \"A B\" \" ").trimResult(" \"A B\" ").noTrimResultIsInvalidProb();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw("  \tStaRs star inging\t  ").trimResult("StaRs star inging").noTrimResultIsInvalidProb();
+		exp.add(PROP_30).raw("StaRs star inging").trimResult("StaRs star inging").noTrimResultIsSameAsOther();
 		exp.add(PROP_31).raw("\t  \"star star iNgiNG\"  \t").trimResult("star star iNgiNG").noTrimResultIsInvalidProb();
 		exp.add(PROP_32).raw(" \" \"a b\" \" ").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
 		exp.add(PROP_33).raw(" \" \"A b\" \" ").trimResult(" \"A b\" ").noTrimResultIsInvalidProb();
@@ -139,7 +139,7 @@ public class StrPropProps {
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  StaR\tstar\ting  \t").trimResult("StaR\tstar\ting").noTrimResultIsInvalidProb();
+		exp.add(PROP_120).raw("StaR\tstar\ting").trimResult("StaR\tstar\ting").noTrimResultIsSameAsOther();
 		exp.add(PROP_121).raw("\"star\tstar\tiNG\"").trimResult("star\tstar\tiNG").noTrimResultIsInvalidProb();
 		exp.add(PROP_122).raw("\t\b\n\r\f\" \"a b\" \"\t\b\n\r\f").trimResult(" \"a b\" ").noTrimResultIsInvalidProb();
 		exp.add(PROP_123).raw(" \t\b\n\r\f \" \"a B\" \" \t\b\n\r\f ").trimResult(" \"a B\" ").noTrimResultIsInvalidProb();

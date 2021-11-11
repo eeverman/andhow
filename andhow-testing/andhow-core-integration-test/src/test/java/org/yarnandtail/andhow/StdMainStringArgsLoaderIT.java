@@ -60,7 +60,7 @@ public class StdMainStringArgsLoaderIT {
 
 		TestCoordinator<String> coord = new TestCoordinator<>(config, propValueLoader, extraArgs,
 				strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true);
+		coord.runForValues(true, false);
 
 	}
 
