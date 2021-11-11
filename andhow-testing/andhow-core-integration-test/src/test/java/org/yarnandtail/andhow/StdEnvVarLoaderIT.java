@@ -48,7 +48,7 @@ public class StdEnvVarLoaderIT {
 
 
 	@Test
-	public void anUnrecognizedPropertyShouldNotCauseAProblem() throws Exception {
+	public void anUnrecognizedPropertyShouldNotCauseProblems() throws Exception {
 
 		PropExpectations strExpect = StrPropProps.buildExpectations1();
 		PropExpectations flagExpect = FlagPropProps.buildExpectations1();
@@ -60,7 +60,7 @@ public class StdEnvVarLoaderIT {
 
 		TestCoordinator<SimpleEntry<String, String>> coord = new TestCoordinator<>(
 				config, propValueLoader, extraArgs, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectationsUnset();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false, false);
+		coord.runForProblems(false, true, false);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 
 	}
 
@@ -94,7 +94,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false, false);
+		coord.runForValues(false, true, false);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 
 	}
 
@@ -117,7 +117,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false, false);
+		coord.runForValues(false, true, false);
 
 	}
 
@@ -130,7 +130,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 
 	}
 
@@ -143,7 +143,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false, false);
+		coord.runForValues(false, true, false);
 
 	}
 
@@ -156,7 +156,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 
 	}
 
@@ -169,7 +169,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(false, false, false);
+		coord.runForValues(false, true, false);
 
 	}
 
@@ -182,7 +182,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForValues(true, true, false);
 
 	}
 
@@ -195,7 +195,7 @@ public class StdEnvVarLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildInvalid1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, false, false);
+		coord.runForProblems(true, true, false);
 	}
 
 }

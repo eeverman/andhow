@@ -13,12 +13,10 @@ public abstract class MapValueLoader extends PropValueLoader<AbstractMap.SimpleE
 		if (rawValString.equals(RawValueType.NO_VALUE.toString()) ||
 				rawValString.equals(RawValueType.NO_VALUE_OR_DELIMITER.toString())) {
 
-			// Env Vars have no delimiters and cannot contain a null value, so the only corollary
-			// to NO_VALUE or NO_VALUE_OR_DELIMITER is just to skip the value.  Otherwise
-			// it would be an empty string value, which currently the EnvVar loader does not trim.
+			args.put(effectiveName, "");
 
 			if (verbose) {
-				System.out.println("Prop " + canonName + " [ !!SKIPPING by request!! ]");
+				System.out.println("Prop " + canonName + " [ Placing an empty value by request ]");
 			}
 
 		} else {

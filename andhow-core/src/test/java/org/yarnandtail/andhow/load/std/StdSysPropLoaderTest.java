@@ -62,7 +62,7 @@ public class StdSysPropLoaderTest {
 		assertTrue(loader instanceof ReadLoader);
 		assertEquals("java.lang.System.getProperties()", loader.getSpecificLoadDescription());
 		assertEquals("SystemProperty", loader.getLoaderType());
-		assertFalse(loader.isTrimmingRequiredForStringValues());
+		assertTrue(loader.isTrimmingRequiredForStringValues());
 		assertFalse(loader.isUnknownPropertyAProblem());
 	}
 
@@ -106,8 +106,8 @@ public class StdSysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -129,9 +129,9 @@ public class StdSysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		//String value coming from this loader do not require trimming by default
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_NULL));
+		//String value coming from this loader are trimmed
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 
 		//Non-string values still get trimmed
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -155,10 +155,10 @@ public class StdSysPropLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getValue(SimpleParams.STR_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("", result.getValue(SimpleParams.STR_NULL));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 	}
 
 	@Test

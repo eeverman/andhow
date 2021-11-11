@@ -67,7 +67,7 @@ public class StdEnvVarLoaderTest {
 		assertTrue(loader instanceof ReadLoader);
 		assertEquals("java.lang.System.getenv()", loader.getSpecificLoadDescription());
 		assertEquals("EnvironmentVariable", loader.getLoaderType());
-		assertFalse(loader.isTrimmingRequiredForStringValues());
+		assertTrue(loader.isTrimmingRequiredForStringValues());
 		assertFalse(loader.isUnknownPropertyAProblem());
 	}
 
@@ -130,7 +130,6 @@ public class StdEnvVarLoaderTest {
 	@Test
 	public void testEmptyValuesUnix() throws Exception {
 
-
 		envVars.put(getPropName(SimpleParams.STR_BOB), "");
 		envVars.put(getPropName(SimpleParams.STR_NULL), "");
 		envVars.put(getPropName(SimpleParams.FLAG_FALSE), "");
@@ -145,8 +144,8 @@ public class StdEnvVarLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -170,8 +169,8 @@ public class StdEnvVarLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
@@ -196,8 +195,8 @@ public class StdEnvVarLoaderTest {
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
 		//String value coming from this loader do not require trimming by default
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("\t\t\t\t", result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 
 		//Non-string values still get trimmed
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
@@ -223,10 +222,10 @@ public class StdEnvVarLoaderTest {
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getExplicitValue(SimpleParams.STR_BOB));
-		assertEquals("\"  two_spaces_&_two_tabs\t\t\" ", result.getValue(SimpleParams.STR_BOB));
-		assertEquals("", result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals("", result.getValue(SimpleParams.STR_NULL));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getExplicitValue(SimpleParams.STR_BOB));
+		assertEquals("  two_spaces_&_two_tabs\t\t", result.getValue(SimpleParams.STR_BOB));
+		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
+		assertNull(result.getValue(SimpleParams.STR_NULL));
 	}
 
 	@Test
