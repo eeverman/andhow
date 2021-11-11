@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.test.bulktest.PropExpectations;
 import org.yarnandtail.andhow.valuetype.IntType;
 
 import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
+import static org.yarnandtail.andhow.test.props.IntPropProps.Conf.*;
 
 /*
  *  Key for values
@@ -28,61 +29,62 @@ import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
  */
 public class IntPropProps {
 
-	//
-	// Null OK | No Default | No Validations
-	public static final IntProp PROP_0 = IntProp.builder().aliasIn("IntPropProps.PROP_0").build();
+	public static interface Conf {
+		//
+		// Null OK | No Default | No Validations
+		IntProp PROP_0 = IntProp.builder().aliasIn("IntPropProps.PROP_0").build();
 
-	//
-	// Null OK | Has Default | No Validations
-	public static final IntProp PROP_10 = IntProp.builder().defaultValue(10).build();
+		//
+		// Null OK | Has Default | No Validations
+		IntProp PROP_10 = IntProp.builder().defaultValue(10).build();
 
-	//
-	// Null OK | No Default | Has Validations
-	public static final IntProp PROP_20 = IntProp.builder().greaterThanOrEqualTo(-5).lessThan(1000)
-			.aliasIn("IntPropProps.PROP_20").build();
-	public static final IntProp PROP_21 = IntProp.builder().greaterThan(-5).lessThanOrEqualTo(1000)
-			.build();
+		//
+		// Null OK | No Default | Has Validations
+		IntProp PROP_20 = IntProp.builder().greaterThanOrEqualTo(-5).lessThan(1000)
+				.aliasIn("IntPropProps.PROP_20").build();
+		IntProp PROP_21 = IntProp.builder().greaterThan(-5).lessThanOrEqualTo(1000)
+				.build();
 
-	//
-	// Null OK | Has Default | Has Validations
-	public static final IntProp PROP_30 = IntProp.builder().defaultValue(30)
-			.greaterThanOrEqualTo(-5).lessThan(1000)
-			.aliasIn("IntPropProps.PROP_30").build();
-	public static final IntProp PROP_31 = IntProp.builder().defaultValue(31)
-			.greaterThan(-5).lessThanOrEqualTo(1000).build();
+		//
+		// Null OK | Has Default | Has Validations
+		IntProp PROP_30 = IntProp.builder().defaultValue(30)
+				.greaterThanOrEqualTo(-5).lessThan(1000)
+				.aliasIn("IntPropProps.PROP_30").build();
+		IntProp PROP_31 = IntProp.builder().defaultValue(31)
+				.greaterThan(-5).lessThanOrEqualTo(1000).build();
 
-	//
-	// Not Null
+		//
+		// Not Null
 
-	//
-	// Not Null | No Default | No Validations
-	public static final IntProp PROP_100 = IntProp.builder().notNull().aliasIn("IntPropProps.PROP_100").build();
+		//
+		// Not Null | No Default | No Validations
+		IntProp PROP_100 = IntProp.builder().notNull().aliasIn("IntPropProps.PROP_100").build();
 
-	//
-	// Not Null | Has Default | No Validations
-	public static final IntProp PROP_110 = IntProp.builder().notNull().defaultValue(110).build();
+		//
+		// Not Null | Has Default | No Validations
+		IntProp PROP_110 = IntProp.builder().notNull().defaultValue(110).build();
 
-	//
-	// Not Null | No Default | Has Validations
-	public static final IntProp PROP_120 = IntProp.builder().notNull()
-			.greaterThanOrEqualTo(-5).lessThan(1000).aliasIn("IntPropProps.PROP_120").build();
-	public static final IntProp PROP_121 = IntProp.builder().notNull()
-			.greaterThan(-5).lessThanOrEqualTo(1000).build();
+		//
+		// Not Null | No Default | Has Validations
+		IntProp PROP_120 = IntProp.builder().notNull()
+				.greaterThanOrEqualTo(-5).lessThan(1000).aliasIn("IntPropProps.PROP_120").build();
+		IntProp PROP_121 = IntProp.builder().notNull()
+				.greaterThan(-5).lessThanOrEqualTo(1000).build();
 
 
-	//
-	// Not Null | Has Default | Has Validations
-	public static final IntProp PROP_130 = IntProp.builder().notNull().defaultValue(130)
-			.greaterThanOrEqualTo(-5).lessThan(1000)
-			.aliasIn("IntPropProps.PROP_130").build();
-	public static final IntProp PROP_131 = IntProp.builder().notNull().defaultValue(131)
-			.greaterThan(-5).lessThanOrEqualTo(1000).build();
+		//
+		// Not Null | Has Default | Has Validations
+		IntProp PROP_130 = IntProp.builder().notNull().defaultValue(130)
+				.greaterThanOrEqualTo(-5).lessThan(1000)
+				.aliasIn("IntPropProps.PROP_130").build();
+		IntProp PROP_131 = IntProp.builder().notNull().defaultValue(131)
+				.greaterThan(-5).lessThanOrEqualTo(1000).build();
 
-	//
-	// Special Trimmers and Types
-	public static final IntProp PROP_210 = IntProp.builder().valueType(new PlusOneType())
-			.greaterThanOrEqualTo(-5).lessThan(1000).aliasIn("IntPropProps.PROP_210").build();
-
+		//
+		// Special Trimmers and Types
+		IntProp PROP_210 = IntProp.builder().valueType(new PlusOneType())
+				.greaterThanOrEqualTo(-5).lessThan(1000).aliasIn("IntPropProps.PROP_210").build();
+	}
 
 
 	public static PropExpectations buildExpectations1() {
@@ -90,7 +92,7 @@ public class IntPropProps {
 		// Reminder:  For non-String based Properties, all loaders trim values,
 		// so trim & untrim should be the same.
 		
-		PropExpectations exp = new PropExpectations(IntPropProps.class);
+		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();
@@ -138,8 +140,8 @@ public class IntPropProps {
 
 		// Reminder:  For non-String based Properties, all loaders trim values,
 		// so trim & untrim should be the same.
-		
-		PropExpectations exp = new PropExpectations(IntPropProps.class);
+
+		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
@@ -189,7 +191,7 @@ public class IntPropProps {
 		// Reminder:  For non-String based Properties, all loaders trim values,
 		// so trim & untrim should be the same.
 
-		PropExpectations exp = new PropExpectations(IntPropProps.class);
+		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();

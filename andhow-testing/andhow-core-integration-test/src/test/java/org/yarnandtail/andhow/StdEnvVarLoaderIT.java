@@ -1,15 +1,15 @@
-package org.yarnandtail.andhow.load.std;
+package org.yarnandtail.andhow;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.AndHowTestConfig;
-import org.yarnandtail.andhow.load.BaseForLoaderTests;
+import org.yarnandtail.andhow.load.std.StdEnvVarLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.test.bulktest.*;
 import org.yarnandtail.andhow.test.props.*;
 
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,17 +22,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * * No auto-discovery / registry of Properties
  * * No auto-discovery of AndHowInit
  */
-public class StdEnvVarLoaderIT extends BaseForLoaderTests {
+public class StdEnvVarLoaderIT {
 
 	AndHowTestConfig.AndHowTestConfigImpl config;
-	PropValueLoader<AbstractMap.SimpleEntry<String, String>> propValueLoader;
+	PropValueLoader<SimpleEntry<String, String>> propValueLoader;
 
 	@BeforeEach
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
 		config.setStandardLoaders(StdEnvVarLoader.class)
-				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class)
-				.addOverrideGroup(IntPropProps.class);
+				.addOverrideGroup(StrPropProps.Conf.class).addOverrideGroup(FlagPropProps.Conf.class)
+				.addOverrideGroup(IntPropProps.Conf.class);
 
 		propValueLoader = new StdEnvVarValueLoader();
 	}

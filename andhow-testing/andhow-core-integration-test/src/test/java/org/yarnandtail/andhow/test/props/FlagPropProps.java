@@ -4,6 +4,7 @@ import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.test.bulktest.PropExpectations;
 import org.yarnandtail.andhow.valuetype.FlagType;
 import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
+import static org.yarnandtail.andhow.test.props.FlagPropProps.Conf.*;
 
 /*
  *  Key for values
@@ -23,27 +24,28 @@ import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
  */
 public class FlagPropProps {
 
-	//
-	// Not Null
+	public static interface Conf {
+		//
+		// Not Null
 
-	//
-	// Not Null | No Default | No Validations
-	public static final FlagProp PROP_100 = FlagProp.builder().aliasIn("FlagPropProps.PROP_100").build();
+		//
+		// Not Null | No Default | No Validations
+		FlagProp PROP_100 = FlagProp.builder().aliasIn("FlagPropProps.PROP_100").build();
 
-	//
-	// Not Null | Has Default | No Validations
-	public static final FlagProp PROP_110 = FlagProp.builder().defaultValue(true).build();
-	public static final FlagProp PROP_111 = FlagProp.builder().defaultValue(false).build();
+		//
+		// Not Null | Has Default | No Validations
+		FlagProp PROP_110 = FlagProp.builder().defaultValue(true).build();
+		FlagProp PROP_111 = FlagProp.builder().defaultValue(false).build();
 
-	//
-	// Special Trimmers and Types
-	public static final FlagProp PROP_200 = FlagProp.builder()
-			.valueType(new XOParser()).build();
-
+		//
+		// Special Trimmers and Types
+		FlagProp PROP_200 = FlagProp.builder()
+				.valueType(new XOParser()).build();
+	}
 
 	public static PropExpectations buildExpectations1() {
 
-		PropExpectations exp = new PropExpectations(FlagPropProps.class);
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_100).raw(NO_VALUE.toString()).trimResult(true).noTrimResultIsSameAsOther();
@@ -60,7 +62,7 @@ public class FlagPropProps {
 
 	public static PropExpectations buildExpectations2() {
 
-		PropExpectations exp = new PropExpectations(FlagPropProps.class);
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_100).raw(" \t\b\n\r\f ").trimResult(true).noTrimResultIsSameAsOther();
@@ -77,7 +79,7 @@ public class FlagPropProps {
 
 	public static PropExpectations buildExpectations3() {
 
-		PropExpectations exp = new PropExpectations(FlagPropProps.class);
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_100).raw(" true ").trimResult(true).noTrimResultIsSameAsOther();
@@ -94,7 +96,7 @@ public class FlagPropProps {
 
 	public static PropExpectations buildExpectations4() {
 
-		PropExpectations exp = new PropExpectations(FlagPropProps.class);
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_100).raw(" false ").trimResult(false).noTrimResultIsSameAsOther();
@@ -111,7 +113,7 @@ public class FlagPropProps {
 
 	public static PropExpectations buildExpectationsUnset() {
 
-		PropExpectations exp = new PropExpectations(FlagPropProps.class);
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		//
 		// Nulls are returned b/c we are checking the explicit value.

@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.property.TrimToNullTrimmer;
 import org.yarnandtail.andhow.test.bulktest.PropExpectations;
 import org.yarnandtail.andhow.valuetype.StrType;
 import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
+import static org.yarnandtail.andhow.test.props.StrPropProps.Conf.*;
 
 /*
  *  Key for values
@@ -28,84 +29,85 @@ import static org.yarnandtail.andhow.test.bulktest.RawValueType.*;
  */
 public class StrPropProps {
 
-	//
-	// Null OK | No Default | No Validations
-	public static final StrProp PROP_0 = StrProp.builder().aliasIn("StrPropProps.PROP_0").build();
+	public static interface Conf {
+		//
+		// Null OK | No Default | No Validations
+		StrProp PROP_0 = StrProp.builder().aliasIn("StrPropProps.PROP_0").build();
 
-	//
-	// Null OK | Has Default | No Validations
-	public static final StrProp PROP_10 = StrProp.builder().defaultValue(" prop 10 ").build();
+		//
+		// Null OK | Has Default | No Validations
+		StrProp PROP_10 = StrProp.builder().defaultValue(" prop 10 ").build();
 
-	//
-	// Null OK | No Default | Has Validations
-	public static final StrProp PROP_20 = StrProp.builder().startsWithIgnoringCase("star").endsWith("ing")
-			.matches("[starSTARing \t]+").aliasIn("StrPropProps.PROP_20").build();
-	public static final StrProp PROP_21 = StrProp.builder().startsWith("star").endsWithIgnoringCase("ing")
-			.matches("[staringING \t]+").build();
-	public static final StrProp PROP_22 = StrProp.builder().oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-	public static final StrProp PROP_23 = StrProp.builder().oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-
-
-	//
-	// Null OK | Has Default | Has Validations
-	public static final StrProp PROP_30 = StrProp.builder().defaultValue("Star t ing")
-			.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+")
-			.aliasIn("StrPropProps.PROP_30").build();
-	public static final StrProp PROP_31 = StrProp.builder().defaultValue("star t InG")
-			.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
-	public static final StrProp PROP_32 = StrProp.builder().defaultValue(" \"a b\" ")
-			.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-	public static final StrProp PROP_33 = StrProp.builder().defaultValue(" \"A B\" ")
-			.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-
-	//
-	// Not Null
-
-	//
-	// Not Null | No Default | No Validations
-	public static final StrProp PROP_100 = StrProp.builder().notNull().aliasIn("StrPropProps.PROP_100").build();
-
-	//
-	// Not Null | Has Default | No Validations
-	public static final StrProp PROP_110 = StrProp.builder().notNull().defaultValue(" \"prop 110\" ").build();
-
-	//
-	// Not Null | No Default | Has Validations
-	public static final StrProp PROP_120 = StrProp.builder().notNull()
-			.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+").aliasIn("StrPropProps.PROP_120").build();
-	public static final StrProp PROP_121 = StrProp.builder().notNull()
-			.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
-	public static final StrProp PROP_122 = StrProp.builder().notNull()
-			.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-	public static final StrProp PROP_123 = StrProp.builder().notNull()
-			.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		//
+		// Null OK | No Default | Has Validations
+		StrProp PROP_20 = StrProp.builder().startsWithIgnoringCase("star").endsWith("ing")
+				.matches("[starSTARing \t]+").aliasIn("StrPropProps.PROP_20").build();
+		StrProp PROP_21 = StrProp.builder().startsWith("star").endsWithIgnoringCase("ing")
+				.matches("[staringING \t]+").build();
+		StrProp PROP_22 = StrProp.builder().oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		StrProp PROP_23 = StrProp.builder().oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
 
 
-	//
-	// These won't need much testing since they have default
-	// Not Null | Has Default | Has Validations
-	public static final StrProp PROP_130 = StrProp.builder().notNull().defaultValue("Star t ing")
-			.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+")
-			.aliasIn("StrPropProps.PROP_130").build();
-	public static final StrProp PROP_131 = StrProp.builder().notNull().defaultValue("star t InG")
-			.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
-	public static final StrProp PROP_132 = StrProp.builder().notNull().defaultValue(" \"a b\" ")
-			.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
-	public static final StrProp PROP_133 = StrProp.builder().notNull().defaultValue(" \"A B\" ")
-			.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		//
+		// Null OK | Has Default | Has Validations
+		StrProp PROP_30 = StrProp.builder().defaultValue("Star t ing")
+				.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+")
+				.aliasIn("StrPropProps.PROP_30").build();
+		StrProp PROP_31 = StrProp.builder().defaultValue("star t InG")
+				.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
+		StrProp PROP_32 = StrProp.builder().defaultValue(" \"a b\" ")
+				.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		StrProp PROP_33 = StrProp.builder().defaultValue(" \"A B\" ")
+				.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
 
-	//
-	// Special Trimmers and Types
-	public static final StrProp PROP_200 = StrProp.builder().trimmer(TrimToNullTrimmer.instance())
-			.aliasIn("StrPropProps.PROP_200").build();
-	public static final StrProp PROP_210 = StrProp.builder().valueType(new UpperCaseParser())
-			.matches("[A-Z ]+").aliasIn("StrPropProps.PROP_210").build();
+		//
+		// Not Null
 
+		//
+		// Not Null | No Default | No Validations
+		StrProp PROP_100 = StrProp.builder().notNull().aliasIn("StrPropProps.PROP_100").build();
+
+		//
+		// Not Null | Has Default | No Validations
+		StrProp PROP_110 = StrProp.builder().notNull().defaultValue(" \"prop 110\" ").build();
+
+		//
+		// Not Null | No Default | Has Validations
+		StrProp PROP_120 = StrProp.builder().notNull()
+				.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+").aliasIn("StrPropProps.PROP_120").build();
+		StrProp PROP_121 = StrProp.builder().notNull()
+				.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
+		StrProp PROP_122 = StrProp.builder().notNull()
+				.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		StrProp PROP_123 = StrProp.builder().notNull()
+				.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+
+
+		//
+		// These won't need much testing since they have default
+		// Not Null | Has Default | Has Validations
+		StrProp PROP_130 = StrProp.builder().notNull().defaultValue("Star t ing")
+				.startsWithIgnoringCase("star").endsWith("ing").matches("[starSTARing \t]+")
+				.aliasIn("StrPropProps.PROP_130").build();
+		StrProp PROP_131 = StrProp.builder().notNull().defaultValue("star t InG")
+				.startsWith("star").endsWithIgnoringCase("ing").matches("[staringING \t]+").build();
+		StrProp PROP_132 = StrProp.builder().notNull().defaultValue(" \"a b\" ")
+				.oneOf(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+		StrProp PROP_133 = StrProp.builder().notNull().defaultValue(" \"A B\" ")
+				.oneOfIgnoringCase(" \"a b\" ", " cd ", "\"\"", " \"' ").build();
+
+		//
+		// Special Trimmers and Types
+		StrProp PROP_200 = StrProp.builder().trimmer(TrimToNullTrimmer.instance())
+				.aliasIn("StrPropProps.PROP_200").build();
+		StrProp PROP_210 = StrProp.builder().valueType(new UpperCaseParser())
+				.matches("[A-Z ]+").aliasIn("StrPropProps.PROP_210").build();
+	}
 
 
 	public static PropExpectations buildExpectations1() {
 
-		PropExpectations exp = new PropExpectations(StrPropProps.class);
+		PropExpectations exp = new PropExpectations(StrPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw("  two \nwords  ").trimResult("two \nwords").noTrimSameAsRaw();
@@ -163,7 +165,7 @@ public class StrPropProps {
 
 	public static PropExpectations buildExpectationsUnset() {
 
-		PropExpectations exp = new PropExpectations(StrPropProps.class);
+		PropExpectations exp = new PropExpectations(StrPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
@@ -218,7 +220,7 @@ public class StrPropProps {
 
 	public static PropExpectations buildInvalid1() {
 
-		PropExpectations exp = new PropExpectations(StrPropProps.class);
+		PropExpectations exp = new PropExpectations(StrPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
 		exp.add(PROP_0).raw("  two \nwords  ").trimResult("two \nwords").noTrimSameAsRaw();

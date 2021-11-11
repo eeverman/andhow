@@ -1,9 +1,8 @@
-package org.yarnandtail.andhow.load.std;
+package org.yarnandtail.andhow;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.AndHowTestConfig;
-import org.yarnandtail.andhow.load.BaseForLoaderTests;
+import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.test.bulktest.*;
 import org.yarnandtail.andhow.test.props.*;
@@ -11,9 +10,8 @@ import org.yarnandtail.andhow.test.props.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests the KeyValuePairLoader as the only loader in a completely configured
@@ -23,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * * No auto-discovery / registry of Properties
  * * No auto-discovery of AndHowInit
  */
-public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
+public class StdMainStringArgsLoaderIT {
 
 	AndHowTestConfig.AndHowTestConfigImpl config;
 	PropValueLoader<String> propValueLoader;
@@ -32,8 +30,8 @@ public class StdMainStringArgsLoaderIT extends BaseForLoaderTests {
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
 		config.setStandardLoaders(StdMainStringArgsLoader.class)
-				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class)
-				.addOverrideGroup(IntPropProps.class);
+				.addOverrideGroup(StrPropProps.Conf.class).addOverrideGroup(FlagPropProps.Conf.class)
+				.addOverrideGroup(IntPropProps.Conf.class);
 
 		propValueLoader = new StdMainStringValueLoader();
 	}

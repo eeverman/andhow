@@ -1,9 +1,8 @@
-package org.yarnandtail.andhow.load.std;
+package org.yarnandtail.andhow;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.AndHowTestConfig;
-import org.yarnandtail.andhow.load.BaseForLoaderTests;
+import org.yarnandtail.andhow.load.std.StdSysPropLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.test.bulktest.*;
 import org.yarnandtail.andhow.test.props.*;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * * No auto-discovery / registry of Properties
  * * No auto-discovery of AndHowInit
  */
-public class StdSysPropLoaderIT extends BaseForLoaderTests {
+public class StdSysPropLoaderIT {
 
 	AndHowTestConfig.AndHowTestConfigImpl config;
 	PropValueLoader<SimpleEntry<String, String>> propValueLoader;
@@ -32,8 +31,8 @@ public class StdSysPropLoaderIT extends BaseForLoaderTests {
 	public void init() throws Exception {
 		config = AndHowTestConfig.instance();
 		config.setStandardLoaders(StdSysPropLoader.class)
-				.addOverrideGroup(StrPropProps.class).addOverrideGroup(FlagPropProps.class)
-				.addOverrideGroup(IntPropProps.class);
+				.addOverrideGroup(StrPropProps.Conf.class).addOverrideGroup(FlagPropProps.Conf.class)
+				.addOverrideGroup(IntPropProps.Conf.class);
 
 		propValueLoader = new StdSysPropValueLoader();
 	}
