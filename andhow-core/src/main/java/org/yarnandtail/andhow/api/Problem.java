@@ -22,7 +22,7 @@ public interface Problem {
 	 * The context for the problem, for the user.
 	 * 
 	 * For a construction problem for a property, this would be the Property
-	 * canonical name.  For a invalid value, it might be the Property name
+	 * canonical name.  For an invalid value, it might be the Property name
 	 * and where it was loaded from.
 	 * 
 	 * 

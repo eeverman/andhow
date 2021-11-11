@@ -23,7 +23,8 @@ public abstract class RequirementProblem extends PropertyProblem {
 		
 		@Override
 		public String getProblemDescription() {
-			return "This Property must be non-null - It must have a non-null default or be loaded by one of the loaders to a non-null value";
+			return "This Property must be non-null - It does not have a default value, " +
+					"so one of the configuration sources must provide a non-null value for it";
 		}
 	}
 
