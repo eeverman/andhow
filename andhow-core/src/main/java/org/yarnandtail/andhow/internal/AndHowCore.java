@@ -1,30 +1,26 @@
 package org.yarnandtail.andhow.internal;
 
-import java.io.*;
-
-import org.yarnandtail.andhow.export.PropertyExport;
-import org.yarnandtail.andhow.internal.export.ManualExportService;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.util.AndHowUtil;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.export.PropertyExport;
+import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
 import org.yarnandtail.andhow.util.AndHowLog;
+import org.yarnandtail.andhow.util.AndHowUtil;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Actual central instance of AndHow's state after a successful initialization.
- *
+ * <p>
  * The AndHow class is really a proxy for this class, which allows
  * abstraction of the implementation and re-initialization during unit testing
  * by swapping out the AndHowCore implementation while maintaining the AndHow
  * singleton so references to it are stable.
- *
  */
 public class AndHowCore implements PropertyConfigurationInternal, ValidatedValues {
 	private static final AndHowLog LOG = AndHowLog.getLogger(AndHowCore.class);
@@ -41,11 +37,11 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
 
-		NamingStrategy namingStrategy = (naming != null)?naming:new CaseInsensitiveNaming();
+		NamingStrategy namingStrategy = (naming != null) ? naming : new CaseInsensitiveNaming();
 
 		if (loaders != null) {
 			for (Loader loader : loaders) {
-				if (! this.loaders.contains(loader)) {
+				if (!this.loaders.contains(loader)) {
 					this.loaders.add(loader);
 				} else {
 					problems.add(new ConstructionProblem.DuplicateLoader(loader));
@@ -79,9 +75,9 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 		//load values.
 		if (problems.size() > 0) {
 			AppFatalException afe = new AppFatalException(
-				"There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
-				"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +
-				"See System.err, out or the log files for more details.",
+					"There is a problem with the basic setup of the " + AndHow.ANDHOW_INLINE_NAME + " framework. " +
+							"Since it is the framework itself that is misconfigured, no attempt was made to load values. " +
+							"See System.err, out or the log files for more details.",
 					problems);
 			printFailedStartupDetails(afe);
 			throw afe;
@@ -116,13 +112,13 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	/**
 	 * Determine the 'Groups' (classes or interfaces containing AndHow Properties) that should be in
 	 * scope of AndHow.
-	 *
+	 * <p>
 	 * In special situations (testing and exotic use cases), a non-null list of configuredGroups may
 	 * be passed in to bypass automatic discovery.  If the passed groups is null, use auto-discovery.
 	 * If non-null, use the passed list, even if empty.
 	 *
 	 * @param configuredGroups A list of groups to use instead of the normal auto-discovery.
-	 *   If null, auto-discovery is used.  If non-null (even empty) configuredGroups is used.
+	 *                         If null, auto-discovery is used.  If non-null (even empty) configuredGroups is used.
 	 * @return A list of groups that are in-scope for AndHow.  Not null.
 	 */
 	private static List<GroupProxy> findGroups(List<GroupProxy> configuredGroups) {
@@ -142,7 +138,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	private void printFailedStartupDetails(AppFatalException afe) {
 
 		File sampleDir = ReportGenerator.printConfigSamples(staticConfig, loaders, true);
-		String sampleDirStr = (sampleDir != null)?sampleDir.getAbsolutePath():"";
+		String sampleDirStr = (sampleDir != null) ? sampleDir.getAbsolutePath() : "";
 		afe.setSampleDirectory(sampleDirStr);
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -154,7 +150,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 			//Add separator prefix to prevent log prefixes from indenting 1st line
 			System.err.println(System.lineSeparator() + message);
 		} catch (UnsupportedEncodingException ex) {
-			ReportGenerator.printProblems(System.err, afe, staticConfig);	//shouldn't happen
+			ReportGenerator.printProblems(System.err, afe, staticConfig);  //shouldn't happen
 		}
 
 	}
@@ -174,14 +170,61 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 		return loadedValues.isExplicitlySet(prop);
 	}
 
+	/**
+	 * The value found and loaded for this value by a Loader.
+	 * <p>
+	 * If no non-null value was found by a loader for this property, null is returned.
+	 * If the Property is not recognized, an IllegalArgumentException is thrown.
+	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
+	 * an unrecoverable state.
+	 *
+	 * @param <T>  The return type of the Property.
+	 * @param prop The property to get the value for
+	 * @return The value, if explicitly set, or null if not explicity set.
+	 * @throws IllegalArgumentException if the Property is not recognized by AndHow.
+	 */
 	@Override
-	public <T> T getExplicitValue(Property<T> prop) {
-		return loadedValues.getExplicitValue(prop);
+	public <T> T getExplicitValue(Property<T> prop) throws IllegalArgumentException {
+
+		T val = loadedValues.getExplicitValue(prop);
+
+		if (val == null && staticConfig.getCanonicalName(prop) == null) {
+			throw new IllegalArgumentException("Unrecognized Property of type " +
+					"'" + prop.getValueType().getDestinationType() + "'. Likely caused by one of:" + System.lineSeparator() +
+					" - AndHow error'ed on startup, but the error was caught and did not cause app " +
+					"startup to abort.  Check the logs and remove try-catch that intercepts RuntimeExceptions." +
+					System.lineSeparator() +
+					" - Code was compiled without AndHow's annotation processor." + System.lineSeparator() +
+					" - The Property was created in some exotic way that was not detected by the AndHow " +
+					"annotation processor.  Review the creation of this Property and make sure it follows " +
+					"AndHow guidelines.");
+		}
+
+		return val;
 	}
 
+	/**
+	 * The effective value of the Property.
+	 * <p>
+	 * The effective value is the explicitly configured value, or if that is null, the default value.
+	 * If the Property is not recognized, an IllegalArgumentException is thrown.
+	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
+	 * an unrecoverable state.
+	 * <p>
+	 * @param <T> The return type of the Property.
+	 * @param prop The property to get the value for.
+	 * @return The explicit value or, if no explicit, the default value.  Otherwise null.
+	 * @throws IllegalArgumentException if the Property is not recognized by AndHow.
+	 */
 	@Override
-	public <T> T getValue(Property<T> prop) {
-		return loadedValues.getValue(prop);
+	public <T> T getValue(Property<T> prop) throws IllegalArgumentException {
+		T val = getExplicitValue(prop);
+
+		if (val != null) {
+			return val;
+		} else {
+			return prop.getDefaultValue();
+		}
 	}
 
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
@@ -202,13 +245,13 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	/**
 	 * Validates all Property values.
 	 *
-	 * @param config Needed bc validation is done while construction is
-	 *	not complete, thus the as-is definition is needed prior to it being complete.
+	 * @param config       Needed bc validation is done while construction is
+	 *                     not complete, thus the as-is definition is needed prior to it being complete.
 	 * @param loadedValues The values to be validated.
-	 * @param problems Add any new problems to this list
+	 * @param problems     Add any new problems to this list
 	 */
 	private void doPropertyValidations(PropertyConfigurationInternal config,
-                                       ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
+			ValidatedValuesWithContext loadedValues, ProblemList<Problem> problems) {
 
 		for (LoaderValues lvs : loadedValues.getAllLoaderValues()) {
 			for (ValidatedValue pv : lvs.getValues()) {
@@ -220,20 +263,20 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	/**
 	 * Does validation on a single Property value as loaded by a single loader.
 	 *
-	 * @param <T> The shared type of the Property and Value.
-	 * @param config Needed bc validation is done while construction is
-	 *	not complete, thus the as-is definition is needed prior to it being complete.
-	 * @param loader The loader used to load the value, for context when creating a Problem.
-	 * @param problems Add any new problems to this list
+	 * @param <T>          The shared type of the Property and Value.
+	 * @param config       Needed bc validation is done while construction is
+	 *                     not complete, thus the as-is definition is needed prior to it being complete.
+	 * @param loader       The loader used to load the value, for context when creating a Problem.
+	 * @param problems     Add any new problems to this list
 	 * @param propValue<T> The Property and its value, both of type 'T'.
 	 */
 	private <T> void doPropertyValidation(PropertyConfigurationInternal config,
-                                          Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
+			Loader loader, ProblemList<Problem> problems, ValidatedValue<T> propValue) {
 
 		Property<T> prop = propValue.getProperty();
 
 		for (Validator<T> v : prop.getValidators()) {
-			if (! v.isValid(propValue.getValue())) {
+			if (!v.isValid(propValue.getValue())) {
 
 				ValueProblem.InvalidValueProblem problem =
 						new ValueProblem.InvalidValueProblem(loader,
@@ -254,7 +297,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 				if (getValue(prop) == null) {
 
 					problems.add(new RequirementProblem.NonNullPropertyProblem(
-								config.getGroupForProperty(prop).getProxiedGroup(), prop));
+							config.getGroupForProperty(prop).getProxiedGroup(), prop));
 				}
 			}
 		}

@@ -7,10 +7,9 @@ package org.yarnandtail.andhow.api;
  * values.  Not all Properties will be in the map, only the ones which have a
  * value specified.  During runtime, an immutable instance of this class contains
  * all the needed information to map Properties to their values.
- * 
- * @author eeverman
  */
 public interface ValidatedValues {
+
 	/**
 	 * The value found and loaded for this value by a Loader.
 	 * 

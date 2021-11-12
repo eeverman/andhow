@@ -249,7 +249,7 @@ public abstract class ConstructionProblem implements Problem {
 		@Override
 		public String getProblemDescription() {
 			return TextUtil.format(
-				"An error occured while initiating the value export.  The message was: {}",
+				"An error occurred while initiating the value export.  The message was: {}",
 				message);
 		}
 	}
