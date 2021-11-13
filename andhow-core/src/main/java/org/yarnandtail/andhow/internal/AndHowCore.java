@@ -87,7 +87,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 
 		loadedValues = loadValues(staticConfig, problems).getValueMapWithContextImmutable();
 		doPropertyValidations(staticConfig, loadedValues, problems);
-		checkForValuesWhichMustBeNonNull(staticConfig, problems);
+		checkForValuesWhichMustBeNonNull(staticConfig, loadedValues, problems);
 
 		if (problems.size() > 0) {
 			AppFatalException afe = AndHowUtil.buildFatalException(problems);
@@ -128,6 +128,30 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 		} else {
 			return configuredGroups;
 		}
+	}
+
+	/**
+	 * Adds a NonNullPropertyProblem for each null valued Property that is required to be non-null.
+	 * <p>
+	 * All parameters are required to be non-null and will throw a null-pointer otherwise.
+	 * <p>
+	 * @param config Configuration and metadata for all known Properties
+	 * @param values Values loaded for the Properties
+	 * @param problems A list of Problems to append to
+	 */
+	public static void checkForValuesWhichMustBeNonNull(PropertyConfigurationInternal config,
+			ValidatedValues values, ProblemList<Problem> problems) {
+
+		for (Property<?> prop : config.getProperties()) {
+			if (prop.isNonNullRequired()) {
+				if (values.getValue(prop) == null) {
+
+					problems.add(new RequirementProblem.NonNullPropertyProblem(
+							config.getGroupForProperty(prop).getProxiedGroup(), prop));
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -287,21 +311,6 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 				problems.add(problem);
 			}
 		}
-	}
-
-
-	private void checkForValuesWhichMustBeNonNull(PropertyConfigurationInternal config, ProblemList<Problem> problems) {
-
-		for (Property<?> prop : config.getProperties()) {
-			if (prop.isNonNullRequired()) {
-				if (getValue(prop) == null) {
-
-					problems.add(new RequirementProblem.NonNullPropertyProblem(
-							config.getGroupForProperty(prop).getProxiedGroup(), prop));
-				}
-			}
-		}
-
 	}
 
 
