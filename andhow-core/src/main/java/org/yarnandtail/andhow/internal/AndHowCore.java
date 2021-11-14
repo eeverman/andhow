@@ -3,6 +3,7 @@ package org.yarnandtail.andhow.internal;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.Options;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.AndHowIllegalStateException.UnrecognizedPropertyException;
 import org.yarnandtail.andhow.export.PropertyExport;
 import org.yarnandtail.andhow.internal.export.ManualExportService;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
@@ -189,68 +190,6 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 		}
 	}
 
-	@Override
-	public boolean isExplicitlySet(Property<?> prop) {
-		return loadedValues.isExplicitlySet(prop);
-	}
-
-	/**
-	 * The value found and loaded for this value by a Loader.
-	 * <p>
-	 * If no non-null value was found by a loader for this property, null is returned.
-	 * If the Property is not recognized, an IllegalArgumentException is thrown.
-	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
-	 * an unrecoverable state.
-	 *
-	 * @param <T>  The return type of the Property.
-	 * @param prop The property to get the value for
-	 * @return The value, if explicitly set, or null if not explicity set.
-	 * @throws IllegalArgumentException if the Property is not recognized by AndHow.
-	 */
-	@Override
-	public <T> T getExplicitValue(Property<T> prop) throws IllegalArgumentException {
-
-		T val = loadedValues.getExplicitValue(prop);
-
-		if (val == null && staticConfig.getCanonicalName(prop) == null) {
-			throw new IllegalArgumentException("Unrecognized Property of type " +
-					"'" + prop.getValueType().getDestinationType() + "'. Likely caused by one of:" + System.lineSeparator() +
-					" - AndHow error'ed on startup, but the error was caught and did not cause app " +
-					"startup to abort.  Check the logs and remove try-catch that intercepts RuntimeExceptions." +
-					System.lineSeparator() +
-					" - Code was compiled without AndHow's annotation processor." + System.lineSeparator() +
-					" - The Property was created in some exotic way that was not detected by the AndHow " +
-					"annotation processor.  Review the creation of this Property and make sure it follows " +
-					"AndHow guidelines.");
-		}
-
-		return val;
-	}
-
-	/**
-	 * The effective value of the Property.
-	 * <p>
-	 * The effective value is the explicitly configured value, or if that is null, the default value.
-	 * If the Property is not recognized, an IllegalArgumentException is thrown.
-	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
-	 * an unrecoverable state.
-	 * <p>
-	 * @param <T> The return type of the Property.
-	 * @param prop The property to get the value for.
-	 * @return The explicit value or, if no explicit, the default value.  Otherwise null.
-	 * @throws IllegalArgumentException if the Property is not recognized by AndHow.
-	 */
-	@Override
-	public <T> T getValue(Property<T> prop) throws IllegalArgumentException {
-		T val = getExplicitValue(prop);
-
-		if (val != null) {
-			return val;
-		} else {
-			return prop.getDefaultValue();
-		}
-	}
-
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
 	private ValidatedValuesWithContext loadValues(PropertyConfigurationInternal config, ProblemList<Problem> problems) {
 		ValidatedValuesWithContextMutable existingValues = new ValidatedValuesWithContextMutable();
@@ -315,7 +254,64 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 
 
 	//
-	//ConstructionDefinition Interface
+	// ValidatedValue Interface
+
+	@Override
+	public boolean isExplicitlySet(Property<?> prop) {
+		return loadedValues.isExplicitlySet(prop);
+	}
+
+	/**
+	 * The value found and loaded for this value by a Loader.
+	 * <p>
+	 * If no non-null value was found by a loader for this property, null is returned.
+	 * If the Property is not recognized, an IllegalArgumentException is thrown.
+	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
+	 * an unrecoverable state.
+	 *
+	 * @param <T>  The return type of the Property.
+	 * @param prop The property to get the value for
+	 * @return The value, if explicitly set, or null if not explicity set.
+	 * @throws UnrecognizedPropertyException if the Property is not recognized by AndHow.
+	 */
+	@Override
+	public <T> T getExplicitValue(Property<T> prop) throws UnrecognizedPropertyException {
+
+		T val = loadedValues.getExplicitValue(prop);
+
+		if (val == null && staticConfig.getCanonicalName(prop) == null) {
+			throw new UnrecognizedPropertyException(prop);
+		}
+
+		return val;
+	}
+
+	/**
+	 * The effective value of the Property.
+	 * <p>
+	 * The effective value is the explicitly configured value, or if that is null, the default value.
+	 * If the Property is not recognized, an IllegalArgumentException is thrown.
+	 * In normal usage, AndHow would not expect an unrecognized Property, so this would indicate
+	 * an unrecoverable state.
+	 * <p>
+	 * @param <T> The return type of the Property.
+	 * @param prop The property to get the value for.
+	 * @return The explicit value or, if no explicit, the default value.  Otherwise null.
+	 * @throws UnrecognizedPropertyException if the Property is not recognized by AndHow.
+	 */
+	@Override
+	public <T> T getValue(Property<T> prop) throws UnrecognizedPropertyException {
+		T val = getExplicitValue(prop);
+
+		if (val != null) {
+			return val;
+		} else {
+			return prop.getDefaultValue();
+		}
+	}
+
+	//
+	// ConstructionDefinition Interface
 
 	@Override
 	public List<EffectiveName> getAliases(Property<?> property) {
