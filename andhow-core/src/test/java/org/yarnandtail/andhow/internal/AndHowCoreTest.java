@@ -196,9 +196,11 @@ class AndHowCoreTest {
 		config.addFixedValue(Conf1.PROP_100, "anything");
 		core = initCore(config);
 
-		assertThrows(UnrecognizedPropertyException.class,
+		UnrecognizedPropertyException upe = assertThrows(UnrecognizedPropertyException.class,
 				() -> core.getValue(Conf2.PROP_0)
 		);
+
+		assertSame(Conf2.PROP_0, upe.getProperty());
 
 	}
 

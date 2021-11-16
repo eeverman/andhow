@@ -11,7 +11,7 @@ public abstract class AndHowIllegalStateException extends RuntimeException {
 	}
 
 	public static class UnrecognizedPropertyException extends AndHowIllegalStateException {
-		final Property<?> _property;
+		private final Property<?> _property;
 
 		public UnrecognizedPropertyException(Property<?> property) {
 
