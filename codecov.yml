@@ -6,3 +6,4 @@ coverage:
   precision: 2
 ignore:
   - "andhow-testing/andhow-annotation-processor-test-harness"
+  - "andhow-test-stubs"
