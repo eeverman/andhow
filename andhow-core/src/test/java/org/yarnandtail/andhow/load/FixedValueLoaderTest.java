@@ -118,7 +118,7 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(123.456D, result.getExplicitValue(DBL_NUMBER), .00001D);
 		assertEquals(Boolean.FALSE, result.getExplicitValue(FLAG_TRUE));
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
+		assertNull(result.getExplicitValue(FLAG_NULL));
 	}
 
 	@Test

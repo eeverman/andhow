@@ -171,6 +171,9 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	}
 
 	@Override
+	public boolean isFlaggable() { return false; }
+
+	@Override
 	public String getSpecificLoadDescription() {
 		return "JNDI properties in the system-wide JNDI context";
 	}

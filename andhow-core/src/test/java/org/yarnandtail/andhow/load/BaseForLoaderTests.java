@@ -17,8 +17,8 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @author eeverman
  */
 public class BaseForLoaderTests {
-	PropertyConfigurationMutable appDef;
-	ValidatedValuesWithContextMutable appValuesBuilder;
+	protected PropertyConfigurationMutable appDef;
+	protected ValidatedValuesWithContextMutable appValuesBuilder;
 
 	@BeforeEach
 	public void init() throws Exception {

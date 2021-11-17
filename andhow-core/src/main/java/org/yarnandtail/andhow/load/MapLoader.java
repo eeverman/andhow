@@ -15,9 +15,6 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 
 	protected boolean unknownPropertyAProblem = true;
 
-	public MapLoader() {
-	}
-
 	public void setMap(Map<?, ?> map) {
 		this.map = map == null ? null : new HashMap<>(map);
 	}
@@ -64,6 +61,11 @@ public class MapLoader extends BaseLoader implements ReadLoader {
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
+
+	// false is a reasonable default, since its only a special case (the command line loader) that
+	// would ever set this true.
+	@Override
+	public boolean isFlaggable() { return false; }
 
 	@Override
 	public void setUnknownPropertyAProblem(boolean isAProblem) {

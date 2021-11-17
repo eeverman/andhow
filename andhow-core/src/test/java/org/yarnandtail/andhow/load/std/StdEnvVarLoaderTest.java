@@ -146,9 +146,9 @@ public class StdEnvVarLoaderTest {
 
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -171,9 +171,9 @@ public class StdEnvVarLoaderTest {
 
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -199,9 +199,9 @@ public class StdEnvVarLoaderTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 
 		//Non-string values still get trimmed
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test

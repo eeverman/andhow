@@ -37,10 +37,6 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 
 	private List<String> keyValuePairs;
 
-	public KeyValuePairLoader() {
-
-	}
-
 	/**
 	 * Sets the list of string arguments, each string containing a key-value pair
 	 * or just a key for flag type values.
@@ -108,6 +104,11 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 	public boolean isTrimmingRequiredForStringValues() {
 		return true;
 	}
+
+	// false is a reasonable default, since its only a special case (the command line loader) that
+	// would ever set this true.
+	@Override
+	public boolean isFlaggable() { return false; }
 
 	@Override
 	public String getLoaderType() {

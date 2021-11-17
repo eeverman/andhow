@@ -1,22 +1,19 @@
 package org.yarnandtail.andhow.load;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.*;
+import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.util.AndHowUtil;
+
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
-import org.yarnandtail.andhow.internal.LoaderProblem;
-import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.property.FlagProp;
-import org.yarnandtail.andhow.util.AndHowUtil;
-
 /**
- *
  * @author eeverman
  */
 public class PropFileOnClasspathLoaderUnitTest {
@@ -131,9 +128,9 @@ public class PropFileOnClasspathLoaderUnitTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -156,9 +153,9 @@ public class PropFileOnClasspathLoaderUnitTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -200,19 +197,19 @@ public class PropFileOnClasspathLoaderUnitTest {
 		LoaderValues result = pfl.load(appDef, appValuesBuilder);
 
 		//These are the two bad property names in the file
-		List<String> badPropNames = Arrays.asList(new String[] {
-			"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
-			"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
+		List<String> badPropNames = Arrays.asList(new String[]{
+				"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleParams.XXX",
+				"org.yarnandtail.andhow.load.PropFileOnClasspathLoaderUnitTest.SimpleXXXXXX.STR_BOB"});
 
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
 			assertTrue(lp instanceof LoaderProblem.UnknownPropertyLoaderProblem);
 
-			LoaderProblem.UnknownPropertyLoaderProblem uplp = (LoaderProblem.UnknownPropertyLoaderProblem)lp;
+			LoaderProblem.UnknownPropertyLoaderProblem uplp = (LoaderProblem.UnknownPropertyLoaderProblem) lp;
 
 			//The problem description should contain one of the bad names
 			assertTrue(
-				badPropNames.stream().anyMatch(n -> uplp.getProblemDescription().contains(n)));
+					badPropNames.stream().anyMatch(n -> uplp.getProblemDescription().contains(n)));
 		}
 
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
