@@ -30,7 +30,7 @@ public abstract class PropValueLoader<T> {
 
 			GroupProxy proxy = AndHowUtil.buildGroupProxy(expects.getClazz());
 
-			for (PropExpectations.PropExpectation expect : expects.getExpectations()) {
+			for (PropExpectation expect : expects.getExpectations()) {
 
 				String propCanonName = proxy.getCanonicalName(expect.getProperty());
 

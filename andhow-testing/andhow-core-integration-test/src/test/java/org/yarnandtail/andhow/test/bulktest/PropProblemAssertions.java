@@ -4,7 +4,6 @@ import org.yarnandtail.andhow.BaseConfig;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyProblem;
-import org.yarnandtail.andhow.test.bulktest.PropExpectations.PropExpectation;
 
 import java.util.*;
 import java.util.stream.Collectors;

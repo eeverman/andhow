@@ -30,7 +30,7 @@ public class PropValueAssertions {
 		);
 	}
 
-	public void assertOne(PropExpectations.PropExpectation expect, int expectIndex, boolean useTrimmedValues, boolean verbose) {
+	public void assertOne(PropExpectation expect, int expectIndex, boolean useTrimmedValues, boolean verbose) {
 		Property<?> p = expect.getProperty();
 		Object val = values.getExplicitValue(p);
 

@@ -48,14 +48,14 @@ public class FlagPropProps {
 		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(NO_VALUE.toString()).trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_100).raw(NO_VALUE.toString()).trimResult(true).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).noTrimResultIsSameAsOther();
-		exp.add(PROP_111).raw(NO_VALUE.toString()).trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_110).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw(NO_VALUE.toString()).trimResult(true).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_200).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(true).flagResultIsSameAsTrim();
 
 		return exp;
 	}
@@ -65,14 +65,14 @@ public class FlagPropProps {
 		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(" \t\b\n\r\f ").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_100).raw(" \t\b\n\r\f ").trimResult(true).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw("\t\b\n\r\f ").trimResult(true).noTrimResultIsSameAsOther();
-		exp.add(PROP_111).raw(" \t\b\n\r\f").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_110).raw("\t\b\n\r\f ").trimResult(true).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw(" \t\b\n\r\f").trimResult(true).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(" \t\b\n\r\f\t\b\n\r\f ").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_200).raw(" \t\b\n\r\f\t\b\n\r\f ").trimResult(true).flagResultIsSameAsTrim();
 
 		return exp;
 	}
@@ -82,14 +82,14 @@ public class FlagPropProps {
 		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(" true ").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_100).raw(" true ").trimResult(true).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" yes ").trimResult(true).noTrimResultIsSameAsOther();
-		exp.add(PROP_111).raw(" y ").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_110).raw(" yes ").trimResult(true).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw(" y ").trimResult(true).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(" X ").trimResult(true).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_200).raw(" X ").trimResult(true).flagResultIsSameAsTrim();
 
 		return exp;
 	}
@@ -99,14 +99,14 @@ public class FlagPropProps {
 		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(" false ").trimResult(false).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_100).raw(" false ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" xxx ").trimResult(false).noTrimResultIsSameAsOther();
-		exp.add(PROP_111).raw("  1234.5725\"  ").trimResult(false).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_110).raw(" xxx ").trimResult(false).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw("  1234.5725\"  ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(" O ").trimResult(false).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_200).raw(" O ").trimResult(false).flagResultIsSameAsTrim();
 
 		return exp;
 	}
@@ -120,14 +120,14 @@ public class FlagPropProps {
 		// Defaults are considered when calling getValue().
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_100).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_100).raw(SKIP.toString()).trimResult(null).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
-		exp.add(PROP_111).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_110).raw(SKIP.toString()).trimResult(null).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw(SKIP.toString()).trimResult(null).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
-		exp.add(PROP_200).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.addFlag(PROP_200).raw(SKIP.toString()).trimResult(null).flagResultIsSameAsTrim();
 
 		return exp;
 	}
