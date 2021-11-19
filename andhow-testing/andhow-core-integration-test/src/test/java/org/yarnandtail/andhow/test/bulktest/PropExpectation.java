@@ -6,13 +6,13 @@ import java.util.*;
 
 public class PropExpectation {
 	private Property<?> property;
-	private String rawString;
+	private Object rawString;
 	private Object trimResult;
 	private Object noTrimResult;
 	private Object flagResult;
 	private int index;  //Just for debugging in logged messages
 
-	public PropExpectation(Property<?> property, String rawString, Object trimResult,
+	public PropExpectation(Property<?> property, Object rawString, Object trimResult,
 			Object noTrimResult, Object flagResult, int index) {
 
 		this.index = index;
@@ -28,7 +28,7 @@ public class PropExpectation {
 		this.flagResult = flagResult;
 	}
 
-	public String getRawString() {
+	public Object getRawString() {
 		return rawString;
 	}
 
@@ -52,6 +52,6 @@ public class PropExpectation {
 	@Override
 	public String toString() {
 		return "Type: " + property.getClass().getSimpleName() +
-				" Property Index: " + index + ", 1st raw val: " + rawString;
+				" Property Index: " + index + ", raw val: " + rawString;
 	}
 }

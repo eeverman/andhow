@@ -168,52 +168,52 @@ public class StrPropProps {
 		PropExpectations exp = new PropExpectations(StrPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.addStr(PROP_0).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_0).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
 
 		// Null OK | Has Default | No Validations
-		exp.addStr(PROP_10).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_10).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.addStr(PROP_20).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_21).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_22).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_23).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_20).raw(NO_VALUE_OR_DELIMITER).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_21).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_22).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_23).raw(NO_VALUE_OR_DELIMITER).trimIsNull().noTrimResultIsSameAsTrim();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.addStr(PROP_30).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_31).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_32).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_33).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_30).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_31).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_32).raw(NO_VALUE_OR_DELIMITER).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_33).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.addStr(PROP_100).raw(SKIP.toString()).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_100).raw(SKIP).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
 		// Not Null | Has Default | No Validations
-		exp.addStr(PROP_110).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_110).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.addStr(PROP_120).raw(NO_VALUE_OR_DELIMITER.toString()).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_121).raw(SKIP.toString()).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_122).raw(NO_VALUE.toString()).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_123).raw(NO_VALUE_OR_DELIMITER.toString()).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_120).raw(NO_VALUE_OR_DELIMITER).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_121).raw(SKIP).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_122).raw(NO_VALUE).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_123).raw(NO_VALUE_OR_DELIMITER).trimResultIsMissingProb().noTrimResultIsSameAsTrim();
 
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.addStr(PROP_130).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_131).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_132).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_133).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_130).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_131).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_132).raw(NO_VALUE_OR_DELIMITER).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_133).raw(SKIP).trimIsNull().noTrimResultIsSameAsTrim();
 
 		//
 		// Special Trimmers and Types
-		exp.addStr(PROP_200).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsTrim();
-		exp.addStr(PROP_210).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_200).raw(NO_VALUE).trimIsNull().noTrimResultIsSameAsTrim();
+		exp.addStr(PROP_210).raw(NO_VALUE_OR_DELIMITER).trimIsNull().noTrimResultIsSameAsTrim();
 
 		return exp;
 	}

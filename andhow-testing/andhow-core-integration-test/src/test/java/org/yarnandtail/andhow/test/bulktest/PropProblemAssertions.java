@@ -14,12 +14,10 @@ public class PropProblemAssertions {
 
 	BaseConfig config;
 	List<PropExpectations> expects;
-	int expectIndex;
 	boolean useTrimmedValues;
 
-	public PropProblemAssertions(BaseConfig config, int expectIndex, boolean useTrimmedValues, List<PropExpectations> expects) {
+	public PropProblemAssertions(BaseConfig config, boolean useTrimmedValues, List<PropExpectations> expects) {
 		this.config = config;
-		this.expectIndex = expectIndex;
 		this.useTrimmedValues = useTrimmedValues;
 		this.expects = expects;
 	}
@@ -30,10 +28,10 @@ public class PropProblemAssertions {
 
 		if (useTrimmedValues) {
 			expPropProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
-					.filter(e -> isPropertyProblemClass(e.getTrimResults().get(expectIndex))).collect(Collectors.toList());
+					.filter(e -> isPropertyProblemClass(e.getTrimResult())).collect(Collectors.toList());
 		} else {
 			expPropProblems = expects.stream().flatMap(es -> es.getExpectations().stream())
-					.filter(e -> isPropertyProblemClass(e.getNoTrimResults().get(expectIndex))).collect(Collectors.toList());
+					.filter(e -> isPropertyProblemClass(e.getNoTrimResult())).collect(Collectors.toList());
 		}
 
 		if (verbose) {
@@ -50,7 +48,7 @@ public class PropProblemAssertions {
 		for (PropExpectation exp : expPropProblems) {
 
 			Class<? extends PropertyProblem> expProbClass = (Class<? extends PropertyProblem>)
-					((useTrimmedValues)?exp.getTrimResults().get(expectIndex):exp.getNoTrimResults().get(expectIndex));
+					((useTrimmedValues)?exp.getTrimResult():exp.getNoTrimResult());
 
 			String expProbClassName = expProbClass.getSimpleName();
 

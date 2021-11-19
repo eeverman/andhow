@@ -60,7 +60,7 @@ public class StdSysPropLoaderIT {
 
 		TestCoordinator<SimpleEntry<String, String>> coord = new TestCoordinator<>(
 				config, propValueLoader, extraArgs, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true, false);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true, false);
 
 	}
 
@@ -94,7 +94,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, true, false);
+		coord.runForValues(false,false);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true,false);
 
 	}
 
@@ -117,7 +117,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, true, false);
+		coord.runForValues(false, false);
 
 	}
 
@@ -130,7 +130,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true, false);
 
 	}
 
@@ -143,7 +143,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, true, false);
+		coord.runForValues(false, false);
 
 	}
 
@@ -156,7 +156,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true, false);
 
 	}
 
@@ -169,7 +169,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(false, true, false);
+		coord.runForValues(false,false);
 
 	}
 
@@ -182,7 +182,7 @@ public class StdSysPropLoaderIT {
 		PropExpectations intExpect = IntPropProps.buildExpectations1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForValues(true, true, false);
+		coord.runForValues(true, false);
 
 	}
 

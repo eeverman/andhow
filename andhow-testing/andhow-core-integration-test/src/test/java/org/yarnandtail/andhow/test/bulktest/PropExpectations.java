@@ -39,17 +39,19 @@ public class PropExpectations {
 		protected PropExpectations parent;
 		protected Property<?> property;
 
-		protected String rawString;
-		protected Object trimResult;
-
-		protected ResultType trimResultType = ResultType.UNSPECIFIED;
+		protected Object rawString = ResultType.UNSPECIFIED;
+		protected Object trimResult = ResultType.UNSPECIFIED;
 
 		public SimpleBuilder(PropExpectations parent, Property<?> property) {
 			this.parent = parent;
 			this.property = property;
 		}
 
-		public T raw(String raw) {
+		public T raw(Object raw) {
+			if (raw == null) {
+				throw new IllegalArgumentException("Raw cannot be set to null");
+			}
+
 			rawString = raw;
 
 			checkAutoBuild();
@@ -63,16 +65,17 @@ public class PropExpectations {
 		 * <p>
 		 * Note that for skipped values with a default, the explicit value will be null (not the default)
 		 *
-		 * @param result Expected object value, which could be null.
+		 * @param result Expected object value.
 		 * @return
 		 */
 		public T trimResult(Object result) {
-			if (trimResultType != ResultType.UNSPECIFIED) {
+			if (trimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set trimResult - " +
-						"trim value is already set to: " + trimResultType);
+						"trim value is already set to: " + trimResult);
+			} else if (result == null) {
+				throw new IllegalArgumentException("trimResult cannot be null");
 			}
 
-			trimResultType = ResultType.EXPLICIT;
 			trimResult = result;
 
 			checkAutoBuild();
@@ -80,47 +83,60 @@ public class PropExpectations {
 		}
 
 		public T trimSameAsRaw() {
-			if (trimResultType != ResultType.UNSPECIFIED) {
+			if (trimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set trimSameAsRaw - " +
-						"trim value is already set to: " + trimResultType);
+						"trim value is already set to: " + trimResult);
 			}
-			trimResultType = ResultType.SAME_AS_SOURCE;
+
+			trimResult = ResultType.SAME_AS_SOURCE;
+
+			checkAutoBuild();
+			return (T)this;
+		}
+
+		public T trimIsNull() {
+			if (trimResult != ResultType.UNSPECIFIED) {
+				throw new IllegalStateException("Cannot set trimSameAsRaw - " +
+						"trim value is already set to: " + trimResult);
+			}
+
+			trimResult = ResultType.NULL;
 
 			checkAutoBuild();
 			return (T)this;
 		}
 
 		public T trimResultIsInvalidProb() {
-			if (trimResultType != ResultType.UNSPECIFIED) {
+			if (trimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set trimResult - " +
-						"trim value is already set to: " + trimResultType);
+						"trim value is already set to: " + trimResult);
 			}
 
-			trimResultType = ResultType.INVALID_PROB;
+			trimResult = ResultType.INVALID_PROB;
 
 			checkAutoBuild();
 			return (T)this;
 		}
 
 		public T trimResultIsMissingProb() {
-			if (trimResultType != ResultType.UNSPECIFIED) {
+			if (trimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set trimResult - " +
-						"trim value is already set to: " + trimResultType);
+						"trim value is already set to: " + trimResult);
 			}
 
-			trimResultType = ResultType.MISSING_REQUIRED_PROB;
+			trimResult = ResultType.MISSING_REQUIRED_PROB;
 
 			checkAutoBuild();
 			return (T)this;
 		}
 
 		public T trimResultIsParseProb() {
-			if (trimResultType != ResultType.UNSPECIFIED) {
+			if (trimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set trimResult - " +
-						"trim value is already set to: " + trimResultType);
+						"trim value is already set to: " + trimResult);
 			}
 
-			trimResultType = ResultType.STRING_PARSE_PROB;
+			trimResult = ResultType.STRING_PARSE_PROB;
 
 			checkAutoBuild();
 			return (T)this;
@@ -137,25 +153,28 @@ public class PropExpectations {
 				throw new IllegalStateException(
 						"This builder was already auto-built, now attempting to modify state.");
 			} else {
-				return (rawString != null && ! trimResultType.isUnspecified());
+				return (rawString != ResultType.UNSPECIFIED && trimResult != ResultType.UNSPECIFIED);
 			}
 		}
 
 		protected Object getFinalTrimResult() {
 			Object result = trimResult;
 
-			switch (trimResultType) {
-				case EXPLICIT:
-					break;	// Nothing to do - already assigned
-				case SAME_AS_SOURCE:
-					result = rawString;
-					break;
-				default:
-					if (trimResultType.isProblem()) {
-						result = trimResultType.getProblemType();
-					} else {
-						throw new IllegalArgumentException("Unrecognized ResultType: " + trimResultType);
-					}
+			if (trimResult instanceof ResultType) {
+				ResultType trimResultType = (ResultType)trimResult;
+				switch (trimResultType) {
+					case SAME_AS_SOURCE:
+						result = rawString;
+						break;
+					case NULL:
+						break;	// Just pass this value along
+					default:
+						if (trimResultType.isProblem()) {
+							result = trimResultType.getProblemType();
+						} else {
+							throw new IllegalArgumentException("Unrecognized ResultType: " + trimResultType);
+						}
+				}
 			}
 
 			return result;
@@ -183,14 +202,11 @@ public class PropExpectations {
 
 	public static class StrBuilder extends SimpleBuilder<StrBuilder> {
 
-		protected Object noTrimResult;
-		protected ResultType noTrimResultType = ResultType.UNSPECIFIED;
-
+		protected Object noTrimResult = ResultType.UNSPECIFIED;
 
 		public StrBuilder(final PropExpectations parent, final Property<?> property) {
 			super(parent, property);
 		}
-
 
 		/**
 		 * The expected result of getExplicitValue() when set w/ the raw value w/ a loader that does not
@@ -198,16 +214,17 @@ public class PropExpectations {
 		 * <p>
 		 * Note that for skipped values with a default, the explicit value will be null (not the default)
 		 *
-		 * @param result Expected object value, which could be null.
+		 * @param result Expected object value.
 		 * @return
 		 */
 		public StrBuilder noTrimResult(Object result) {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimResult - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
+			} else if (noTrimResult == null) {
+				throw new IllegalArgumentException("Cannot set noTrimResult to null");
 			}
 
-			noTrimResultType = ResultType.EXPLICIT;
 			noTrimResult = result;
 
 			checkAutoBuild();
@@ -215,22 +232,23 @@ public class PropExpectations {
 		}
 
 		public StrBuilder noTrimResultIsSameAsTrim() {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimSameAsTrim - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
 			}
-			noTrimResultType = ResultType.SAME_AS_TRIM_RESULT;
+			noTrimResult = ResultType.SAME_AS_TRIM_RESULT;
 
 			checkAutoBuild();
 			return this;
 		}
 
 		public StrBuilder noTrimSameAsRaw() {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimSameAsRaw - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
 			}
-			noTrimResultType = ResultType.SAME_AS_SOURCE;
+
+			noTrimResult = ResultType.SAME_AS_SOURCE;
 
 			checkAutoBuild();
 			return this;
@@ -238,64 +256,69 @@ public class PropExpectations {
 
 
 		public StrBuilder noTrimResultIsInvalidProb() {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimResult - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
 			}
 
-			noTrimResultType = ResultType.INVALID_PROB;
+			noTrimResult = ResultType.INVALID_PROB;
 
 			checkAutoBuild();
 			return this;
 		}
 
 		public StrBuilder noTrimResultIsMissingProb() {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimResult - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
 			}
 
-			noTrimResultType = ResultType.MISSING_REQUIRED_PROB;
+			noTrimResult = ResultType.MISSING_REQUIRED_PROB;
 
 			checkAutoBuild();
 			return this;
 		}
 
 		public StrBuilder noTrimResultIsParseProb() {
-			if (noTrimResultType != ResultType.UNSPECIFIED) {
+			if (noTrimResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set noTrimResult - " +
-						"no-trim value is already set to: " + noTrimResultType);
+						"no-trim value is already set to: " + noTrimResult);
 			}
 
-			noTrimResultType = ResultType.STRING_PARSE_PROB;
+			noTrimResult = ResultType.STRING_PARSE_PROB;
 
 			checkAutoBuild();
 			return this;
 		}
 
 		protected boolean isReadyToBuild() {
-			return (super.isReadyToBuild() && ! noTrimResultType.isUnspecified());
+			return (super.isReadyToBuild() && noTrimResult != ResultType.UNSPECIFIED);
 		}
 
 		protected Object getFinalNoTrimResult(Object trimResult) {
 			Object result = noTrimResult;
 
-			switch (noTrimResultType) {
-				case EXPLICIT:
-					break;	// Nothing to do - already assigned
-				case SAME_AS_SOURCE:
-					result = rawString;
-					break;
-				case SAME_AS_TRIM_RESULT:
-					result = trimResult;
-					break;
-				default:
-					if (noTrimResultType.isProblem()) {
-						result = noTrimResultType.getProblemType();
-					} else {
-						throw new IllegalArgumentException("Unrecognized ResultType: " + noTrimResultType);
-					}
+			if (trimResult instanceof ResultType) {
+				ResultType noTrimResultType = (ResultType) noTrimResult;
+
+				switch (noTrimResultType) {
+					case SAME_AS_SOURCE:
+						result = rawString;
+						break;
+					case NULL:
+						break;	// Just pass this value along
+					case SAME_AS_TRIM_RESULT:
+						result = trimResult;
+						break;
+					default:
+						if (noTrimResultType.isProblem()) {
+							result = noTrimResultType.getProblemType();
+						} else {
+							throw new IllegalArgumentException("Unrecognized ResultType: " + noTrimResultType);
+						}
+				}
 			}
+
 
 			return result;
 		}
@@ -324,20 +347,20 @@ public class PropExpectations {
 
 	public static class FlagBuilder extends SimpleBuilder<FlagBuilder> {
 
-		protected Object flagResult;
-		protected ResultType flagResultType = ResultType.UNSPECIFIED;
+		protected Object flagResult = ResultType.UNSPECIFIED;
 
 		public FlagBuilder(final PropExpectations parent, final Property<?> property) {
 			super(parent, property);
 		}
 
 		public FlagBuilder flagResult(Boolean result) {
-			if (flagResultType != ResultType.UNSPECIFIED) {
+			if (flagResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set flagResult - " +
-						"flag value is already set to: " + flagResultType);
+						"flag value is already set to: " + flagResult);
+			} else if (result == null) {
+				throw new IllegalArgumentException("Cannot set flagResult to null");
 			}
 
-			flagResultType = ResultType.EXPLICIT;
 			flagResult = result;
 
 			checkAutoBuild();
@@ -345,23 +368,23 @@ public class PropExpectations {
 		}
 
 		public FlagBuilder flagResultIsSameAsTrim() {
-			if (flagResultType != ResultType.UNSPECIFIED) {
+			if (flagResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set flagSameAsTrim - " +
-						"flag value is already set to: " + flagResultType);
+						"flag value is already set to: " + flagResult);
 			}
-			flagResultType = ResultType.SAME_AS_TRIM_RESULT;
+			flagResult = ResultType.SAME_AS_TRIM_RESULT;
 
 			checkAutoBuild();
 			return this;
 		}
 
 		public FlagBuilder flagResultIsParseProb() {
-			if (flagResultType != ResultType.UNSPECIFIED) {
+			if (flagResult != ResultType.UNSPECIFIED) {
 				throw new IllegalStateException("Cannot set flagResult - " +
-						"flag value is already set to: " + flagResultType);
+						"flag value is already set to: " + flagResult);
 			}
 
-			flagResultType = ResultType.STRING_PARSE_PROB;
+			flagResult = ResultType.STRING_PARSE_PROB;
 
 			checkAutoBuild();
 			return this;
@@ -369,24 +392,26 @@ public class PropExpectations {
 
 
 		protected boolean isReadyToBuild() {
-			return (super.isReadyToBuild() && ! flagResultType.isUnspecified());
+			return (super.isReadyToBuild() && flagResult != ResultType.UNSPECIFIED);
 		}
 
 		protected Object getFinalFlagResult(Object trimResult) {
 			Object result = flagResult;
 
-			switch (flagResultType) {
-				case EXPLICIT:
-					break;	// Nothing to do - already assigned
-				case SAME_AS_TRIM_RESULT:
-					result = trimResult;
-					break;
-				default:
-					if (flagResultType.isProblem()) {
-						result = flagResultType.getProblemType();
-					} else {
-						throw new IllegalArgumentException("Unrecognized ResultType: " + flagResultType);
-					}
+			if (flagResult instanceof ResultType) {
+				ResultType flagResultType = (ResultType)flagResult;
+
+				switch (flagResultType) {
+					case SAME_AS_TRIM_RESULT:
+						result = trimResult;
+						break;
+					default:
+						if (flagResultType.isProblem()) {
+							result = flagResultType.getProblemType();
+						} else {
+							throw new IllegalArgumentException("Unrecognized ResultType: " + flagResultType);
+						}
+				}
 			}
 
 			return result;

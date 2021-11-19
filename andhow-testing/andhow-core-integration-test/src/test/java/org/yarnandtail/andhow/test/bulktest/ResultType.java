@@ -8,6 +8,7 @@ enum ResultType {
 	EXPLICIT(false, true, false, false, false, null),
 	SAME_AS_SOURCE(false, false, true, false, false, null),
 	SAME_AS_TRIM_RESULT(false, false, false, true, false, null),
+	NULL(false, false, false, false, false, null),
 	MISSING_REQUIRED_PROB(false, false, false, false, true, RequirementProblem.NonNullPropertyProblem.class),
 	INVALID_PROB(false, false, false, false, true, ValueProblem.InvalidValueProblem.class),
 	STRING_PARSE_PROB(false, false, false, false, true, LoaderProblem.StringConversionLoaderProblem.class);

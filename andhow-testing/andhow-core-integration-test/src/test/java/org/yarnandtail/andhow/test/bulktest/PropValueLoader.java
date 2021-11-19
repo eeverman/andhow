@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class PropValueLoader<T> {
 
 	public abstract void addPropertyValue(Property property, String effectiveName,
-			String canonName, String rawValString, boolean verbose);
+			String canonName, Object rawValue, boolean verbose);
 
 	/**
 	 * Inject non-recognized values into the loader.
@@ -23,7 +23,7 @@ public abstract class PropValueLoader<T> {
 
 	public abstract void completeConfiguration(AndHowTestConfigImpl config);
 
-	public void buildAndAssignLoaderValues(AndHowTestConfigImpl config, List<PropExpectations> expectList, int expectIndex,
+	public void buildAndAssignLoaderValues(AndHowTestConfigImpl config, List<PropExpectations> expectList,
 			boolean useAliasIfAvailable, List<T> extraValues, boolean verbose) throws IllegalAccessException {
 
 		for (PropExpectations expects : expectList) {
@@ -52,9 +52,9 @@ public abstract class PropValueLoader<T> {
 					}
 				}
 
-				String rawValString = expect.getRawStrings().get(expectIndex);
+				Object rawValString = expect.getRawString();
 
-				if (rawValString != null && !rawValString.equals(RawValueType.SKIP.toString())) {
+				if (!rawValString.equals(RawValueType.SKIP)) {
 
 					addPropertyValue(expect.getProperty(), effectiveName, propCanonName, rawValString, verbose);
 

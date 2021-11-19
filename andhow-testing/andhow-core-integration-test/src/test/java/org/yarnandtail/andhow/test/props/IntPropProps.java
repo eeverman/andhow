@@ -144,43 +144,43 @@ public class IntPropProps {
 		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw(SKIP.toString()).trimResult(null);
+		exp.add(PROP_0).raw(SKIP).trimIsNull();
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw(NO_VALUE.toString()).trimResult(null);
+		exp.add(PROP_10).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null);
-		exp.add(PROP_21).raw(SKIP.toString()).trimResult(null);
+		exp.add(PROP_20).raw(NO_VALUE_OR_DELIMITER).trimIsNull();
+		exp.add(PROP_21).raw(SKIP).trimIsNull();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(SKIP.toString()).trimResult(null);
-		exp.add(PROP_31).raw(NO_VALUE.toString()).trimResult(null);
+		exp.add(PROP_30).raw(SKIP).trimIsNull();
+		exp.add(PROP_31).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(SKIP.toString()).trimResultIsMissingProb();
+		exp.add(PROP_100).raw(SKIP).trimResultIsMissingProb();
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(NO_VALUE.toString()).trimResult(null);
+		exp.add(PROP_110).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw(NO_VALUE_OR_DELIMITER.toString()).trimResultIsMissingProb();
-		exp.add(PROP_121).raw(SKIP.toString()).trimResultIsMissingProb();
+		exp.add(PROP_120).raw(NO_VALUE_OR_DELIMITER).trimResultIsMissingProb();
+		exp.add(PROP_121).raw(SKIP).trimResultIsMissingProb();
 
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw(NO_VALUE.toString()).trimResult(null);
-		exp.add(PROP_131).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null);
+		exp.add(PROP_130).raw(NO_VALUE).trimIsNull();
+		exp.add(PROP_131).raw(NO_VALUE_OR_DELIMITER).trimIsNull();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(SKIP.toString()).trimResult(null);
+		exp.add(PROP_210).raw(SKIP).trimIsNull();
 
 		return exp;
 	}
