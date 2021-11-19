@@ -34,7 +34,7 @@ class StdPropFileOnFilesystemLoaderTest {
 	@Test
 	public void updateFilePath() {
 		loader.setFilePath("/my/path/file.properties");
-		assertEquals("file on the file system at path : /my/path/file.properties (/my/path/file.properties)", loader.getSpecificLoadDescription());
+		assertTrue(loader.getSpecificLoadDescription().startsWith("file on the file system at path : /my/path/file.properties "));
 	}
 
 }
