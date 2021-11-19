@@ -2,8 +2,7 @@ package org.yarnandtail.andhow.load.std;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.yarnandtail.andhow.api.LoaderValues;
-import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.load.BaseForLoaderTests;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
@@ -24,13 +23,13 @@ class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 
 	@Test
 	public void reflexiveValuesReturnExpectedValues() {
-
+		assertTrue(loader instanceof ReadLoader);
 		assertEquals("main(String[] args)", loader.getSpecificLoadDescription());
+		assertEquals("main(String[] args)", loader.getLoaderDialect());
+		assertEquals("KeyValuePair", loader.getLoaderType());
 		assertTrue(loader.isFlaggable());
 		assertFalse(loader.isUnknownPropertyAProblem());
 		assertTrue(loader.isTrimmingRequiredForStringValues());
-		assertEquals("main(String[] args)", loader.getLoaderDialect());
-		assertEquals("KeyValuePair", loader.getLoaderType());
 		assertNull(loader.getClassConfig());
 		assertNull(loader.getConfigSamplePrinter());
 		assertTrue(loader.getInstanceConfig().isEmpty());

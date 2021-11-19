@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load.std;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
@@ -9,6 +10,7 @@ import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
+import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.NameUtil;
 
 import java.time.LocalDateTime;
@@ -28,20 +30,29 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 	}
 
-	@Test
-	public void verifyBasicGettersAndSetters() {
-		StdJndiLoader loader = new StdJndiLoader();
+	private StdJndiLoader loader;
 
+	@BeforeEach
+	public void initLoader() {
+		this.loader = new StdJndiLoader();
+	}
+
+	@Test
+	public void reflexiveValuesReturnExpectedValues() {
 		assertTrue(loader instanceof LookupLoader);
 		assertEquals("JNDI properties in the system-wide JNDI context", loader.getSpecificLoadDescription());
+		assertNull(loader.getLoaderDialect());
 		assertEquals("JNDI", loader.getLoaderType());
+		assertFalse(loader.isFlaggable());
 		assertFalse(loader.isTrimmingRequiredForStringValues());
-
+		assertEquals(StdJndiLoader.CONFIG.class, loader.getClassConfig());
+		assertTrue(loader.getConfigSamplePrinter() instanceof JndiLoaderSamplePrinter);
+		assertTrue(loader.getInstanceConfig().isEmpty());
+		loader.releaseResources();	// should cause no error
 	}
 
 	@Test
 	public void testSplit() {
-		StdJndiLoader loader = new StdJndiLoader();
 
 		//This is the default
 		List<String> result = loader.split("java:comp/env/, \"\",");

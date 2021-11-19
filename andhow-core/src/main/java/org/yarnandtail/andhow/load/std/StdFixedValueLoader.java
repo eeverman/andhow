@@ -60,8 +60,6 @@ import org.yarnandtail.andhow.load.FixedValueLoader;
  * Other loaders which don't implement the {@code StandardLoader} interface can
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
- * 
- * @author ericeverman
  */
 public class StdFixedValueLoader extends FixedValueLoader implements StandardLoader {
 
