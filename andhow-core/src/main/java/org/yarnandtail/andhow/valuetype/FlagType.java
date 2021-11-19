@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.valuetype;
 
-import org.yarnandtail.andhow.util.TextUtil;
+import org.yarnandtail.andhow.api.FlaggableType;
+import org.yarnandtail.andhow.api.ParsingException;
 
 /**
  * Metadata and parsing for a Boolean type which is never null, similar to a 'nix flag behavior.
@@ -13,25 +14,14 @@ import org.yarnandtail.andhow.util.TextUtil;
  * This class is threadsafe and uses a singleton pattern to prevent multiple
  * instances since all users can safely use the same instance.
  */
-public class FlagType extends BaseValueType<Boolean> {
+public class FlagType extends BolType implements FlaggableType<Boolean> {
 
 	private static final FlagType instance = new FlagType();
 
-	protected FlagType() {
-		super(Boolean.class);
-	}
+	protected FlagType() {	}
 
 	/**
-	 * @return An instance of the {@link #FlagType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static FlagType get() {
-		return instance();
-	}
-
-	/**
-	 * Fetch the single, shared instace of this ValueType
+	 * Fetch the single, shared instance of this ValueType
 	 * <p>
 	 *
 	 * @return An instance of the {@link #FlagType()}
@@ -41,19 +31,14 @@ public class FlagType extends BaseValueType<Boolean> {
 	}
 
 	@Override
-	public Boolean parse(String sourceValue) throws IllegalArgumentException {
-
+	public Boolean parseFlag(final String sourceValue) throws ParsingException {
 		if (sourceValue == null) {
 			//Just the presence of the flag is enough to set true
 			return true;
 		} else {
-			return TextUtil.toBoolean(sourceValue);
+			return parse(sourceValue);
 		}
 	}
 
-	@Override
-	public Boolean cast(Object o) throws RuntimeException {
-		return (Boolean) o;
-	}
 
 }

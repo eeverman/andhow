@@ -12,9 +12,9 @@ package org.yarnandtail.andhow.test.bulktest;
  * a raw value.
  */
 public enum RawValueType {
-	SKIP("[[RAWVALUE_SKIP_KEY]]"), // Do not assign this property value - leave it missing completely.  Same as a null raw.
-	NO_VALUE("[[RAWVALUE_NO_VALUE_KEY]]"), // Don't include a value, eg: "org.corp.PROPERTY="
-	NO_VALUE_OR_DELIMITER("[[RAWVALUE_NO_VALUE_OR_DELIMITER_KEY]]"); // Nothing after the property name, eg: "or.corp.PROPERTY"
+	SKIP("[[RAWVALUE_SKIP]]"), // Do not assign this property value - leave it missing completely.  Same as a null raw.
+	NO_VALUE("[[RAWVALUE_NO_VALUE]]"), // Don't include a value, eg: "org.corp.PROPERTY="
+	NO_VALUE_OR_DELIMITER("[[RAWVALUE_NO_VALUE_OR_DELIMITER]]"); // Nothing after the property name, eg: "or.corp.PROPERTY"
 
 	private String _key;  // String ID to recognize an instance by
 

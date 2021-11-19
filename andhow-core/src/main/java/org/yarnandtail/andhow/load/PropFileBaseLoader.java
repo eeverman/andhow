@@ -103,6 +103,9 @@ public abstract class PropFileBaseLoader extends BaseLoader
 	}
 
 	@Override
+	public boolean isFlaggable() { return false; }
+
+	@Override
 	public SamplePrinter getConfigSamplePrinter() {
 		return new PropFileLoaderSamplePrinter();
 	}

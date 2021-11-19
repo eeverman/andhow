@@ -221,7 +221,10 @@ public abstract class BaseLoader implements Loader {
 			effectiveString = prop.getTrimmer().trim(untrimmedString);
 		}
 
-		if (effectiveString != null || prop.getPropertyType().isFlag()) {
+		if (isFlaggable() && prop.getValueType() instanceof FlaggableType) {
+			FlaggableType<T> ft = (FlaggableType) prop.getValueType();
+			value = ft.parseFlag(effectiveString);
+		} else if (effectiveString != null) {
 			value = prop.getValueType().parse(effectiveString);
 		} else {
 			return null;  //No value to create

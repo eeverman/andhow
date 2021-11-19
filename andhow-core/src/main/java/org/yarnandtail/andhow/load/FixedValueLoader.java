@@ -95,6 +95,9 @@ public class FixedValueLoader extends BaseLoader implements ReadLoader {
 	}
 
 	@Override
+	public boolean isFlaggable() { return false; }
+
+	@Override
 	public String getSpecificLoadDescription() {
 		return "a list of fixed values passed in during startup (not dynamically loaded)";
 	}

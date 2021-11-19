@@ -15,14 +15,12 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author eeverman
- */
 public class StdEnvVarLoaderTest {
 
 	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	HashMap<String, String> envVars = new HashMap();
+	StdEnvVarLoader loader;
 
 	public interface SimpleParams {
 		//Strings
@@ -37,6 +35,8 @@ public class StdEnvVarLoaderTest {
 
 	@BeforeEach
 	public void init() throws Exception {
+
+		loader = new StdEnvVarLoader();
 
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
@@ -61,19 +61,22 @@ public class StdEnvVarLoaderTest {
 	}
 
 	@Test
-	public void verifyBasicGettersAndSetters() {
-		StdEnvVarLoader loader = new StdEnvVarLoader();
-
+	public void reflexiveValuesReturnExpectedValues() {
 		assertTrue(loader instanceof ReadLoader);
 		assertEquals("java.lang.System.getenv()", loader.getSpecificLoadDescription());
+		assertNull(loader.getLoaderDialect());
 		assertEquals("EnvironmentVariable", loader.getLoaderType());
-		assertTrue(loader.isTrimmingRequiredForStringValues());
+		assertFalse(loader.isFlaggable());
 		assertFalse(loader.isUnknownPropertyAProblem());
+		assertTrue(loader.isTrimmingRequiredForStringValues());
+		assertNull(loader.getClassConfig());
+		assertNull(loader.getConfigSamplePrinter());
+		assertTrue(loader.getInstanceConfig().isEmpty());
+		loader.releaseResources();	// should cause no error
 	}
 
 	@Test
 	public void testHappyPathUnix() throws Exception {
-
 
 		envVars.put(getPropName(SimpleParams.STR_BOB), "aaa");
 		envVars.put(getPropName(SimpleParams.STR_NULL), "bbb");
@@ -81,10 +84,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "y");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -99,17 +101,15 @@ public class StdEnvVarLoaderTest {
 	@Test
 	public void testHappyPathWindows() throws Exception {
 
-
 		envVars.put(getPropName(SimpleParams.STR_BOB).toUpperCase(), "aaa");
 		envVars.put(getPropName(SimpleParams.STR_NULL).toUpperCase(), "bbb");
 		envVars.put(getPropName(SimpleParams.FLAG_FALSE).toUpperCase(), "t");
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -136,24 +136,22 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
 	public void testEmptyValuesWindows() throws Exception {
-
 
 		envVars.put(getPropName(SimpleParams.STR_BOB).toUpperCase(), "");
 		envVars.put(getPropName(SimpleParams.STR_NULL).toUpperCase(), "");
@@ -161,24 +159,22 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
 	public void testAllWhitespaceValues() throws Exception {
-
 
 		envVars.put(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
 		envVars.put(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
@@ -186,10 +182,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -199,14 +194,13 @@ public class StdEnvVarLoaderTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 
 		//Non-string values still get trimmed
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
 	public void testQuotedStringValues() throws Exception {
-
 
 		envVars.put(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
 		envVars.put(getPropName(SimpleParams.STR_NULL), "");
@@ -214,10 +208,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -233,10 +226,9 @@ public class StdEnvVarLoaderTest {
 
 		envVars.put("XXX", "aaa");
 
-		StdEnvVarLoader spl = new StdEnvVarLoader();
-		spl.setMap(envVars);
+		loader.setMap(envVars);
 
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

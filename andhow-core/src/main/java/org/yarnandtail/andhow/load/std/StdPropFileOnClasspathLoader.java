@@ -108,8 +108,6 @@ import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
  * Other loaders which don't implement the {@code StandardLoader} interface can
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
- *
- * @author eeverman
  */
 public class StdPropFileOnClasspathLoader extends PropFileOnClasspathLoader
 		implements StandardLoader {

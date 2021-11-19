@@ -11,9 +11,9 @@ public class StdMainStringValueLoader extends PropValueLoader<String> {
 	private List<String> args = new ArrayList<>();
 
 	public void addPropertyValue(Property property, String effectiveName,
-			String canonName, String rawValString, boolean verbose) {
+			String canonName, Object rawValue, boolean verbose) {
 
-		String singleSrcStr = buildSingleSource(effectiveName, rawValString);
+		String singleSrcStr = buildSingleSource(effectiveName, rawValue);
 		args.add(singleSrcStr);
 
 		if (verbose) {
@@ -36,19 +36,26 @@ public class StdMainStringValueLoader extends PropValueLoader<String> {
 	}
 
 
-	public String buildSingleSource(String key, String value) {
+	public String buildSingleSource(String key, Object rawValue) {
 
 		// NO_VALUE & NO_VALUE_OR_DELIMITER are both valid ways to set a FlagProp,
 		// which activated by the presence of the property name on cmd line.
 
-		if (value.equals(RawValueType.NO_VALUE.toString())) {
-			return key + "=";
-		} else if (value.equals(RawValueType.NO_VALUE_OR_DELIMITER.toString())) {
-			return key;
+		if (rawValue instanceof RawValueType) {
+			RawValueType type = (RawValueType)rawValue;
+
+			switch (type) {
+				case NO_VALUE:
+					return key + "=";
+				case NO_VALUE_OR_DELIMITER:
+					return key;
+				default:
+					throw new IllegalStateException("Unexpected RawValueType: " + type);
+			}
+
 		} else {
-			return key + "=" + value;
+			return key + "=" + rawValue;
 		}
 	}
-
 
 }

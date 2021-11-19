@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(RestoreSysPropsAfterEachTestExt.class)
 public class StdSysPropLoaderTest {
 
+	StdSysPropLoader loader;
 	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	GroupProxy simpleProxy;
@@ -35,6 +36,8 @@ public class StdSysPropLoaderTest {
 
 	@BeforeEach
 	public void init() throws Exception {
+
+		loader = new StdSysPropLoader();
 
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
@@ -56,19 +59,22 @@ public class StdSysPropLoaderTest {
 	}
 
 	@Test
-	public void verifyBasicGettersAndSetters() {
-		StdSysPropLoader loader = new StdSysPropLoader();
-
+	public void reflexiveValuesReturnExpectedValues() {
 		assertTrue(loader instanceof ReadLoader);
 		assertEquals("java.lang.System.getProperties()", loader.getSpecificLoadDescription());
+		assertNull(loader.getLoaderDialect());
 		assertEquals("SystemProperty", loader.getLoaderType());
-		assertTrue(loader.isTrimmingRequiredForStringValues());
+		assertFalse(loader.isFlaggable());
 		assertFalse(loader.isUnknownPropertyAProblem());
+		assertTrue(loader.isTrimmingRequiredForStringValues());
+		assertNull(loader.getClassConfig());
+		assertNull(loader.getConfigSamplePrinter());
+		assertTrue(loader.getInstanceConfig().isEmpty());
+		loader.releaseResources();	// should cause no error
 	}
 
 	@Test
 	public void testHappyPath() throws Exception {
-
 
 		System.setProperty(getPropName(SimpleParams.STR_BOB), "aaa");
 		System.setProperty(getPropName(SimpleParams.STR_NULL), "bbb");
@@ -76,9 +82,7 @@ public class StdSysPropLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "f");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "y");
 
-		StdSysPropLoader spl = new StdSysPropLoader();
-
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -99,18 +103,16 @@ public class StdSysPropLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
 
-		StdSysPropLoader spl = new StdSysPropLoader();
-
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 
 		assertNull(result.getExplicitValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -122,9 +124,7 @@ public class StdSysPropLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 
-		StdSysPropLoader spl = new StdSysPropLoader();
-
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -134,9 +134,9 @@ public class StdSysPropLoaderTest {
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 
 		//Non-string values still get trimmed
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_TRUE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_FALSE));
-		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_TRUE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_FALSE));
+		assertNull(result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
 	@Test
@@ -148,9 +148,7 @@ public class StdSysPropLoaderTest {
 		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
 		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
 
-		StdSysPropLoader spl = new StdSysPropLoader();
-
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -166,9 +164,7 @@ public class StdSysPropLoaderTest {
 
 		System.setProperty("XXX", "aaa");
 
-		StdSysPropLoader spl = new StdSysPropLoader();
-
-		LoaderValues result = spl.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

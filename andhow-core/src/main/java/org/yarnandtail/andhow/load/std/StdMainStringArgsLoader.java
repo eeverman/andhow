@@ -77,4 +77,12 @@ public class StdMainStringArgsLoader extends KeyValuePairLoader
 	public String getSpecificLoadDescription() {
 		return "main(String[] args)";
 	}
+
+	@Override
+	public String getLoaderDialect() {
+		return "main(String[] args)";
+	}
+
+	@Override
+	public boolean isFlaggable() { return true; }
 }

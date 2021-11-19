@@ -4,51 +4,69 @@ import org.yarnandtail.andhow.api.*;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropValueAssertions {
 
 	ValidatedValues values;
 	PropertyConfiguration config;
-	int expectIndex;
 	boolean useTrimmedValues;
+	boolean useFlagValuesForFlags;
 	List<PropExpectations> expects;
 
 	public PropValueAssertions(ValidatedValues values, PropertyConfiguration config,
-			int expectIndex, boolean useTrimmedValues, List<PropExpectations> expects) {
+			boolean useTrimmedValues, boolean useFlagValuesIfFlags, List<PropExpectations> expects) {
 
 		this.values = values;
 		this.config = config;
-		this.expectIndex = expectIndex;
 		this.useTrimmedValues = useTrimmedValues;
+		this.useFlagValuesForFlags = useFlagValuesIfFlags;
 		this.expects = expects;
 	}
 
 	public void assertAll(boolean verbose) {
 		expects.stream().flatMap(es -> es.getExpectations().stream()).forEach(
-				e -> assertOne(e, expectIndex, useTrimmedValues, verbose)
+				e -> assertOne(e, verbose)
 		);
 	}
 
-	public void assertOne(PropExpectations.PropExpectation expect, int expectIndex, boolean useTrimmedValues, boolean verbose) {
+	public void assertOne(PropExpectation expect, boolean verbose) {
 		Property<?> p = expect.getProperty();
-		Object val = values.getExplicitValue(p);
+		Object actualValue = values.getExplicitValue(p);
 
-		Object expected;
+		Object expectedValue;
+		String valueType;	// just for debug
 
-		if (useTrimmedValues) {
-			expected = expect.getTrimResults().get(expectIndex);
+		if (p.getValueType() instanceof FlaggableType && this.useFlagValuesForFlags) {
+			expectedValue = expect.getFlagResult();
+			valueType = "Flag";
+		} else if (useTrimmedValues) {
+			expectedValue = expect.getTrimResult();
+			valueType = "Trimmed";
 		} else {
-			expected = expect.getNoTrimResults().get(expectIndex);
+			expectedValue = expect.getNoTrimResult();
+			valueType = "Untrimmed";
 		}
 
-		String msg = "Prop " + config.getCanonicalName(p) + " raw string [" + expect.getRawStrings().get(expectIndex) + "] "
-				+ "should load to [" + expected + "] (" + (useTrimmedValues ? "Trimmed" : "Untrimmed") + ")";
+		String msg = "Prop " + config.getCanonicalName(p) + " raw string [" + expect.getRawString() + "] "
+				+ "should load to [" + expectedValue + "] (" + valueType + ")";
 
 		if (verbose) {
 			System.out.println("Assert: " + msg);
 		}
 
-		assertEquals(expected, val, msg);
+		if (expectedValue instanceof ResultType) {
+			ResultType type = (ResultType)expectedValue;
+			switch (type) {
+				case NULL:
+					assertNull(actualValue, msg);
+					break;
+				default:
+					throw new IllegalStateException("Unexpected ResultType: " + type);
+			}
+		} else {
+			assertEquals(expectedValue, actualValue, msg);
+		}
+
 	}
 }

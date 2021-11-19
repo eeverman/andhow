@@ -95,42 +95,42 @@ public class IntPropProps {
 		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();
+		exp.add(PROP_0).raw("  0  ").trimResult(0);
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsSameAsOther();
+		exp.add(PROP_10).raw("  10  ").trimResult(10);
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  20  ").trimResult(20).noTrimResultIsSameAsOther();
-		exp.add(PROP_21).raw("\t21\t").trimResult(21).noTrimResultIsSameAsOther();
+		exp.add(PROP_20).raw("  20  ").trimResult(20);
+		exp.add(PROP_21).raw("\t21\t").trimResult(21);
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(" \t\b\n\r\f 30 \t\b\n\r\f ").trimResult(30).noTrimResultIsSameAsOther();
-		exp.add(PROP_31).raw(" \t\b\n\r\f 31 \t\b\n\r\f ").trimResult(31).noTrimResultIsSameAsOther();
+		exp.add(PROP_30).raw(" \t\b\n\r\f 30 \t\b\n\r\f ").trimResult(30);
+		exp.add(PROP_31).raw(" \t\b\n\r\f 31 \t\b\n\r\f ").trimResult(31);
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsSameAsOther();
+		exp.add(PROP_100).raw(" 100 ").trimResult(100);
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsSameAsOther();
+		exp.add(PROP_110).raw(" 110 ").trimResult(110);
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  120 \t").trimResult(120).noTrimResultIsSameAsOther();
-		exp.add(PROP_121).raw("121").trimResult(121).noTrimResultIsSameAsOther();
+		exp.add(PROP_120).raw("\t  120 \t").trimResult(120);
+		exp.add(PROP_121).raw("121").trimResult(121);
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f 130 \t\b\n\r\f ").trimResult(130).noTrimResultIsSameAsOther();
-		exp.add(PROP_131).raw(" \t\b\n\r\f 131 \t\b\n\r\f ").trimResult(131).noTrimResultIsSameAsOther();
+		exp.add(PROP_130).raw("\t\b\n\r\f 130 \t\b\n\r\f ").trimResult(130);
+		exp.add(PROP_131).raw(" \t\b\n\r\f 131 \t\b\n\r\f ").trimResult(131);
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(" 210 ").trimResult(211).noTrimResultIsSameAsOther();
+		exp.add(PROP_210).raw(" 210 ").trimResult(211);
 
 		return exp;
 	}
@@ -144,43 +144,43 @@ public class IntPropProps {
 		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_0).raw(SKIP).trimIsNull();
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_10).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsOther();
-		exp.add(PROP_21).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_20).raw(NO_VALUE_OR_DELIMITER).trimIsNull();
+		exp.add(PROP_21).raw(SKIP).trimIsNull();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
-		exp.add(PROP_31).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_30).raw(SKIP).trimIsNull();
+		exp.add(PROP_31).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(SKIP.toString()).trimResultIsMissingProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_100).raw(SKIP).trimResultIsMissingProb();
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_110).raw(NO_VALUE).trimIsNull();
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw(NO_VALUE_OR_DELIMITER.toString()).trimResultIsMissingProb().noTrimResultIsSameAsOther();
-		exp.add(PROP_121).raw(SKIP.toString()).trimResultIsMissingProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_120).raw(NO_VALUE_OR_DELIMITER).trimResultIsMissingProb();
+		exp.add(PROP_121).raw(SKIP).trimResultIsMissingProb();
 
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw(NO_VALUE.toString()).trimResult(null).noTrimResultIsSameAsOther();
-		exp.add(PROP_131).raw(NO_VALUE_OR_DELIMITER.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_130).raw(NO_VALUE).trimIsNull();
+		exp.add(PROP_131).raw(NO_VALUE_OR_DELIMITER).trimIsNull();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(SKIP.toString()).trimResult(null).noTrimResultIsSameAsOther();
+		exp.add(PROP_210).raw(SKIP).trimIsNull();
 
 		return exp;
 	}
@@ -194,42 +194,42 @@ public class IntPropProps {
 		PropExpectations exp = new PropExpectations(IntPropProps.Conf.class);
 
 		// Null OK | No Default | No Validations
-		exp.add(PROP_0).raw("  0  ").trimResult(0).noTrimResultIsSameAsOther();
+		exp.add(PROP_0).raw("  0  ").trimResult(0);
 
 		// Null OK | Has Default | No Validations
-		exp.add(PROP_10).raw("  10  ").trimResult(10).noTrimResultIsSameAsOther();
+		exp.add(PROP_10).raw("  10  ").trimResult(10);
 
 		//
 		// Null OK | No Default | Has Validations
-		exp.add(PROP_20).raw("  -6  ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
-		exp.add(PROP_21).raw("\t1001\t").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_20).raw("  -6  ").trimResultIsInvalidProb();
+		exp.add(PROP_21).raw("\t1001\t").trimResultIsInvalidProb();
 
 		//
 		// Null OK | Has Default | Has Validations
-		exp.add(PROP_30).raw(" \t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
-		exp.add(PROP_31).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_30).raw(" \t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb();
+		exp.add(PROP_31).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb();
 
 		//
 		// Not Null
 
 		// Not Null | No Default | No Validations
-		exp.add(PROP_100).raw(" 100 ").trimResult(100).noTrimResultIsSameAsOther();
+		exp.add(PROP_100).raw(" 100 ").trimResult(100);
 		// Not Null | Has Default | No Validations
-		exp.add(PROP_110).raw(" 110 ").trimResult(110).noTrimResultIsSameAsOther();
+		exp.add(PROP_110).raw(" 110 ").trimResult(110);
 
 		//
 		// Not Null | No Default | Has Validations
-		exp.add(PROP_120).raw("\t  1000 \t").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
-		exp.add(PROP_121).raw("-5").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_120).raw("\t  1000 \t").trimResultIsInvalidProb();
+		exp.add(PROP_121).raw("-5").trimResultIsInvalidProb();
 
 		//
 		// Not Null | Has Default | Has Validations
-		exp.add(PROP_130).raw("\t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
-		exp.add(PROP_131).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_130).raw("\t\b\n\r\f 1000 \t\b\n\r\f ").trimResultIsInvalidProb();
+		exp.add(PROP_131).raw(" \t\b\n\r\f -5 \t\b\n\r\f ").trimResultIsInvalidProb();
 
 		//
 		// Special Trimmers and Types
-		exp.add(PROP_210).raw(" 999 ").trimResultIsInvalidProb().noTrimResultIsSameAsOther();
+		exp.add(PROP_210).raw(" 999 ").trimResultIsInvalidProb();
 
 		return exp;
 	}

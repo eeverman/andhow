@@ -8,23 +8,32 @@ public abstract class MapValueLoader extends PropValueLoader<AbstractMap.SimpleE
 	protected Map<String, String> args = new HashMap<>();
 
 	public void addPropertyValue(Property property, String effectiveName,
-			String canonName, String rawValString, boolean verbose) {
+			String canonName, Object rawValue, boolean verbose) {
 
-		if (rawValString.equals(RawValueType.NO_VALUE.toString()) ||
-				rawValString.equals(RawValueType.NO_VALUE_OR_DELIMITER.toString())) {
+		if (rawValue instanceof RawValueType) {
+			RawValueType type = (RawValueType)rawValue;
 
-			args.put(effectiveName, "");
+			switch (type) {
+				case NO_VALUE:
+				case NO_VALUE_OR_DELIMITER:
 
-			if (verbose) {
-				System.out.println("Prop " + canonName + " [ Placing an empty value by request ]");
+					args.put(effectiveName, "");
+
+					if (verbose) {
+						System.out.println("Prop " + canonName + " [ Placing an empty value by request ]");
+					}
+
+					break;
+
+				default:
+					throw new IllegalStateException("Unexpected RawValueType: " + type);
 			}
 
 		} else {
-
-			args.put(effectiveName, rawValString);
+			args.put(effectiveName, rawValue.toString());
 
 			if (verbose) {
-				System.out.println("Prop " + canonName + " source: [" + effectiveName + "/" + rawValString + "]");
+				System.out.println("Prop " + canonName + " source: [" + effectiveName + "/" + rawValue + "]");
 			}
 		}
 

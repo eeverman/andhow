@@ -22,8 +22,6 @@ import java.util.List;
  *
  * Instances should not hold state because they are held in memory for the life
  * of the application.
- *
- * @author eeverman
  */
 public interface Loader {
 
@@ -118,6 +116,27 @@ public interface Loader {
 	 */
 	boolean isTrimmingRequiredForStringValues();
 
+	/**
+	 * Returns true if this loader supports {@link FlaggableType}'s.
+	 * <p>
+	 * Loaders that support FlaggableType give special 'is present' meaning to a property being
+	 * present without a value, similar to a 'nix command line flag.  If a Loader supports
+	 * flags, it should call {@link FlaggableType#parseFlag(String)} instead of
+	 * {@link ValueType#parse(String)} when a Property's ValueType is a {@link FlaggableType}.
+	 * See {@link org.yarnandtail.andhow.property.FlagProp} for an example type.
+	 * <p>
+	 * Note: Returning true from this method is only potentially applicable to Loaders that parse
+	 * strings.  Loaders that directly load from rich values do not parse, so the loader logic
+	 * would ignore the value here.
+	 * <p>
+	 * Examples:<br/>
+	 * Loading a non-null value from the properties file entry {@code 'name = '} would be unexpected,
+	 * so a properties file Loader should return 'false' here.<br/>
+	 * However, a command line loader would be expected to support flags, so should return 'true'.
+	 * <p>
+	 * @return true if this loader support 'nix style flag semantics for FlaggableType Properties.
+	 */
+	boolean isFlaggable();
 
 	/**
 	 * Returns a ConfigSamplePrinter, which can be used to print a configuration

@@ -32,49 +32,70 @@ public class TestCoordinator<T> {
 		this.extraValues = extraValues;
 	}
 
+
 	public void runForValues(boolean useAliasIfAvailable, boolean verbose)
 			throws Exception {
 
-		runForValues(useAliasIfAvailable, true, 0, verbose);
+		runForValues(useAliasIfAvailable, true, false, verbose);
 	}
 
-	public void runForValues(boolean useAliasIfAvailable, boolean useTrimmedValueforAssertions,
-			boolean verbose) throws Exception {
+	/**
+	 * Run and check values, using flagResults if a Property is a FlaggableType.
+	 * @param useAliasIfAvailable
+	 * @param verbose
+	 * @throws Exception
+	 */
+	public void runForFlagValues(boolean useAliasIfAvailable, boolean verbose)
+			throws Exception {
 
-		runForValues(useAliasIfAvailable, useTrimmedValueforAssertions, 0, verbose);
+		runForValues(useAliasIfAvailable, true, true, verbose);
 	}
 
+	/**
+	 * Run with the expectation that the values were loadable and the validation is confirming
+	 * set value match expected values.
+	 *
+	 * @param useAliasIfAvailable
+	 * @param useTrimmedValueforAssertions
+	 * @param useFlagValuesForFlags Use the flagResult if a Property is a FlaggableType.
+	 * @param verbose
+	 * @throws Exception
+	 */
 	public void runForValues(boolean useAliasIfAvailable,
-			boolean useTrimmedValueforAssertions, int expectIndex, boolean verbose)
+			boolean useTrimmedValueforAssertions, boolean useFlagValuesForFlags, boolean verbose)
 			throws Exception {
 
 
-		propValueLoader.buildAndAssignLoaderValues(config, expectations, expectIndex,
+		propValueLoader.buildAndAssignLoaderValues(config, expectations,
 				useAliasIfAvailable, extraValues, verbose);
 
 		// This would throw an exception if there were problems
 		AndHowCore core = initCore(config);
 
 		PropValueAssertions pas = new PropValueAssertions(
-				core, core, expectIndex, useTrimmedValueforAssertions, expectations);
+				core, core, useTrimmedValueforAssertions, useFlagValuesForFlags, expectations);
 
 		pas.assertAll(verbose);
 	}
 
 	public void runForProblems(boolean useAliasIfAvailable, boolean verbose) throws Exception {
-		runForProblems(useAliasIfAvailable, true, 0, verbose);
+		runForProblems(useAliasIfAvailable, true, verbose);
 	}
 
-	public void runForProblems(boolean useAliasIfAvailable, boolean useTrimmedValueforAssertions,
-			boolean verbose) throws Exception {
-		runForProblems(useAliasIfAvailable, useTrimmedValueforAssertions, 0, verbose);
-	}
-
+	/**
+	 * Run w/ the expectation that the load caused problems.  Not checking values, instead confirming
+	 * the expected Problems are present.
+	 *
+	 * @param useAliasIfAvailable
+	 * @param useTrimmedValueforAssertions
+	 * @param verbose
+	 * @throws Exception
+	 */
 	public void runForProblems(boolean useAliasIfAvailable,
-			boolean useTrimmedValueforAssertions, int expectIndex, boolean verbose) throws Exception {
+			boolean useTrimmedValueforAssertions, boolean verbose) throws Exception {
 
 
-		propValueLoader.buildAndAssignLoaderValues(config, expectations, expectIndex,
+		propValueLoader.buildAndAssignLoaderValues(config, expectations,
 				useAliasIfAvailable, extraValues, verbose);
 
 		//Trick to allow access w/in the lambda
@@ -86,7 +107,7 @@ public class TestCoordinator<T> {
 		});
 
 
-		PropProblemAssertions ppa = new PropProblemAssertions(config, expectIndex,
+		PropProblemAssertions ppa = new PropProblemAssertions(config,
 				useTrimmedValueforAssertions, expectations);
 
 		ppa.assertErrors(afeArray[0], outText, verbose);
