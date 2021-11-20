@@ -131,7 +131,6 @@ public class PropFileLoaderSamplePrinterTest {
 		assertEquals("# Default Value: false", lines[2]);
 
 		assertEquals(
-				"# " +
 						PropFileLoaderSamplePrinterTest.Config.class.getCanonicalName() +
 						".MY_PROP3 = ",
 				lines[3]);
@@ -156,7 +155,7 @@ public class PropFileLoaderSamplePrinterTest {
 	}
 
 	//
-	// The tests below hit a few of the untest edge cases in the
+	// The tests below hit a few of the untested edge cases in the
 	// abstract base class BaseSamplePrinter.
 	@Test
 	public void printShouldPrintABlankLineBeforeIfRequested() throws UnsupportedEncodingException {
