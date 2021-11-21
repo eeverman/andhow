@@ -46,7 +46,6 @@ public class DblTypeTest {
 	@Test
 	public void testParseNotANumber() {
 		DblType type = DblType.instance();
-		assertFalse(type.isParsable("apple"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("apple")
@@ -64,7 +63,6 @@ public class DblTypeTest {
 	@Test
 	public void testParseEmpty() {
 		DblType type = DblType.instance();
-		assertFalse(type.isParsable(""));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("")

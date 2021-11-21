@@ -294,11 +294,6 @@ public class LoaderProblemTest extends LoaderProblem {
 			}
 
 			@Override
-			public boolean isParsable(String sourceValue) {
-				return false;
-			}
-
-			@Override
 			public Object cast(Object o) throws RuntimeException {
 				return null;
 			}
@@ -329,11 +324,6 @@ public class LoaderProblemTest extends LoaderProblem {
 			@Override
 			public String toString(Object value) {
 				return null;
-			}
-
-			@Override
-			public boolean isParsable(String sourceValue) {
-				return false;
 			}
 
 			@Override

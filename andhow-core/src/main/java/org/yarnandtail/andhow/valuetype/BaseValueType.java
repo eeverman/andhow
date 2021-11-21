@@ -22,16 +22,6 @@ public abstract class BaseValueType<T> implements ValueType<T> {
 	}
 
 	@Override
-	public boolean isParsable(String sourceValue) {
-		try {
-			parse(sourceValue);
-			return true;
-		} catch (ParsingException e) {
-			return false;
-		}
-	}
-
-	@Override
 	public String toString(T value) {
 		if (value != null) {
 			return value.toString();

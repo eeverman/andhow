@@ -30,7 +30,6 @@ public class IntTypeTest {
 	@Test
 	public void testParseDecimalNumber() {
 		IntType type = IntType.instance();
-		assertFalse(type.isParsable("1234.1234"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("1234.1234")
@@ -40,7 +39,6 @@ public class IntTypeTest {
 	@Test
 	public void testParseNotANumber() {
 		IntType type = IntType.instance();
-		assertFalse(type.isParsable("apple"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("apple")
@@ -50,7 +48,6 @@ public class IntTypeTest {
 	@Test
 	public void testParseEmpty() throws ParsingException {
 		IntType type = IntType.instance();
-		assertFalse(type.isParsable(""));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("")
@@ -60,7 +57,6 @@ public class IntTypeTest {
 	@Test
 	public void testParseTooBig() {
 		IntType type = IntType.instance();
-		assertFalse(type.isParsable("9999999999999999999999999999999999999999"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("9999999999999999999999999999999999999999")
@@ -70,7 +66,6 @@ public class IntTypeTest {
 	@Test
 	public void testParseTooSmall() {
 		IntType type = IntType.instance();
-		assertFalse(type.isParsable("-9999999999999999999999999999999999999999"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("-9999999999999999999999999999999999999999")

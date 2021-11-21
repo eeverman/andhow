@@ -32,7 +32,6 @@ public class BigDecTypeTest {
 
 	@Test
 	public void testParseEmpty() throws ParsingException {
-		assertFalse(type.isParsable(""));
 
 		Exception e = assertThrows(ParsingException.class, () ->
 																													 type.parse("")
@@ -42,7 +41,6 @@ public class BigDecTypeTest {
 
 	@Test
 	public void testParseNotANumber() throws ParsingException {
-		assertFalse(type.isParsable("apple"));
 
 		Exception e = assertThrows(ParsingException.class, () ->
 																													 type.parse("apple")
