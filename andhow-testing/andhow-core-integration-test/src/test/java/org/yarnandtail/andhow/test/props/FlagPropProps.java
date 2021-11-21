@@ -150,9 +150,5 @@ public class FlagPropProps {
 			}
 		}
 
-		@Override
-		public boolean isParsable(String sourceValue) {
-			return (sourceValue == null) && (sourceValue.equals("X") || sourceValue.equals("O"));
-		}
 	}
 }

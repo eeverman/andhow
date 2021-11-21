@@ -28,7 +28,6 @@ public class LngTypeTest {
 	@Test
 	public void testParseDecimalNumber() {
 		LngType type = LngType.instance();
-		assertFalse(type.isParsable("1234.1234"));
 
 		assertThrows(ParsingException.class, () ->
 			type.parse("1234.1234")
@@ -38,7 +37,6 @@ public class LngTypeTest {
 	@Test
 	public void testParseNotANumber() throws ParsingException {
 		LngType type = LngType.instance();
-		assertFalse(type.isParsable("apple"));
 
 		assertThrows(ParsingException.class, () ->
 			type.parse("apple")
@@ -48,7 +46,6 @@ public class LngTypeTest {
 	@Test
 	public void testParseEmpty() throws ParsingException {
 		LngType type = LngType.instance();
-		assertFalse(type.isParsable(""));
 
 		assertThrows(ParsingException.class, () ->
 			type.parse("")
@@ -66,7 +63,6 @@ public class LngTypeTest {
 	@Test
 	public void testParseTooBig() {
 		LngType type = LngType.instance();
-		assertFalse(type.isParsable("9999999999999999999999999999999999999999"));
 
 		assertThrows(ParsingException.class, () ->
 			type.parse("9999999999999999999999999999999999999999")
@@ -76,7 +72,6 @@ public class LngTypeTest {
 	@Test
 	public void testParseTooSmall() {
 		LngType type = LngType.instance();
-		assertFalse(type.isParsable("-9999999999999999999999999999999999999999"));
 
 		assertThrows(ParsingException.class, () ->
 			type.parse("-9999999999999999999999999999999999999999")

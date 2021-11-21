@@ -16,6 +16,9 @@ public interface ValueType<T> {
 	 * 
 	 * All trimming (removing whitespace from around a value) should be assumed
 	 * to already have happened for the incoming sourceValue by a Trimmer.
+	 * It is also assumed that null values are not passed to this method, however, since user Loaders
+	 * with custom behaviors are possible, a null should not be considered an error, it just returns
+	 * a null.
 	 * 
 	 * Implementations should be careful to ONLY throw a ParsingException -
 	 * Integers and other types may throw other unchecked exceptions when trying
@@ -45,18 +48,6 @@ public interface ValueType<T> {
 	 * @return null if the passed value is null.
 	 */
 	String toString(T value);
-		
-	/**
-	 * Returns true if the string can safely be parsed into the destination type
-	 * by the parse() method.
-	 * <p>
-	 * Currently, this generally true for null values, which doesn't seem to matter since
-	 * parse is not called if a value is null.
-	 * <p>
-	 * @param sourceValue
-	 * @return true or false - this should never throw an exception.
-	 */
-	boolean isParsable(String sourceValue);
 	
 	/**
 	 * Attempt to cast the object to the generic type T, which is a concrete class in subclasses.
