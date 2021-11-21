@@ -1,9 +1,5 @@
 package org.yarnandtail.andhow.api;
 
-/**
- *
- * @author eeverman
- */
 public interface Validator<T> {
 	
 	boolean isValid(T value);
