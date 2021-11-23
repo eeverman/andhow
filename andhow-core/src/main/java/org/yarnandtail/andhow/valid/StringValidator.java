@@ -7,6 +7,8 @@ import java.util.Arrays;
  */
 public class StringValidator {
 
+	private StringValidator() { /* No instances */ }
+
 	/**
 	 * Validate that a string is one from the specified set.
 	 */

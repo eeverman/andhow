@@ -143,15 +143,20 @@ public class IntValidatorTest {
 	public void invalidMessages() {
 		IntValidator.GreaterThan greaterThan = new IntValidator.GreaterThan(4);
 		assertEquals("be greater than 4", greaterThan.getTheValueMustDescription());
+		assertEquals("The value '3' must be greater than 4", greaterThan.getInvalidMessage(3));
 
 		IntValidator.GreaterThanOrEqualTo greaterThanOrEqualTo = new IntValidator.GreaterThanOrEqualTo(4);
 		assertEquals("be greater than or equal to 4", greaterThanOrEqualTo.getTheValueMustDescription());
+		assertEquals("The value '3' must be greater than or equal to 4", greaterThanOrEqualTo.getInvalidMessage(3));
 
 		IntValidator.LessThan lessThan = new IntValidator.LessThan(4);
 		assertEquals("be less than 4", lessThan.getTheValueMustDescription());
+		assertEquals("The value '5' must be less than 4", lessThan.getInvalidMessage(5));
+
 
 		IntValidator.LessThanOrEqualTo lessThanOrEqualTo = new IntValidator.LessThanOrEqualTo(4);
 		assertEquals("be less than or equal to 4", lessThanOrEqualTo.getTheValueMustDescription());
+		assertEquals("The value '5' must be less than or equal to 4", lessThanOrEqualTo.getInvalidMessage(5));
 	}
 
 	@Test

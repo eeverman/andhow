@@ -34,6 +34,12 @@ public class BigDecValidatorTest {
 	}
 
 	@Test
+	public void greaterThan_getInvalidMessage() {
+		BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
+		assertEquals("The value '3' must be greater than " + FIVE, instance.getInvalidMessage(new BigDecimal("3")));
+	}
+
+	@Test
 	public void greaterThan_IsValid() {
 		BigDecValidator.GreaterThan instance = new BigDecValidator.GreaterThan(FIVE);
 		assertFalse(instance.isValid(FOUR));

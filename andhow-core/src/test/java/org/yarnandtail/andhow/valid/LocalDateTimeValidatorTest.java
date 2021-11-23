@@ -27,6 +27,8 @@ public class LocalDateTimeValidatorTest {
 		assertEquals(INVALID_SPECIFICATION_MESSAGE, instance.getInvalidSpecificationMessage());
 
 		assertEquals("be before 2007-12-03T17:00", instance.getTheValueMustDescription());
+		assertEquals("The value '" + DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS).toString() + "' must be before 2007-12-03T17:00",
+				instance.getInvalidMessage(DEC_03_2007_AT_5PM.minus(1, ChronoUnit.NANOS)));
 	}
 
 	@Test

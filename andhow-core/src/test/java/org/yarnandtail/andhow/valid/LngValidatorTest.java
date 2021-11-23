@@ -2,6 +2,8 @@ package org.yarnandtail.andhow.valid;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LngValidatorTest {
@@ -49,9 +51,14 @@ public class LngValidatorTest {
 
 	@Test
 	public void greaterThanGetTheValueMustDescription() {
-		final long ref = 5;
-		LngValidator.GreaterThan instance = new LngValidator.GreaterThan(ref);
-		assertEquals("be greater than " + ref, instance.getTheValueMustDescription());
+		LngValidator.GreaterThan instance = new LngValidator.GreaterThan(5L);
+		assertEquals("be greater than " + 5L, instance.getTheValueMustDescription());
+	}
+
+	@Test
+	public void greaterThanGetInvalidMessage() {
+		LngValidator.GreaterThan instance = new LngValidator.GreaterThan(5L);
+		assertEquals("The value '3' must be greater than 5", instance.getInvalidMessage(3L));
 	}
 
 	@Test

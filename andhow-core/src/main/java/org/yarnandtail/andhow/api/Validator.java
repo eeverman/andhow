@@ -25,33 +25,19 @@ public interface Validator<T> {
 	boolean isValid(T value) throws IllegalArgumentException;
 
 	/**
-	 * If the value is not valid, this will create a user message explaining
-	 * why the value is not valid.
+	 * A user message explaining why the value is not valid if it fails this validation rule.
 	 * <p>
-	 * This message should only refer to the value and the criteria and assume
-	 * that it is included in a larger message that identifies the property
-	 * and other context.
-	 * <p>
-	 * This method should be prepared to handle nulls.
-	 * <p>
-	 * Ending punctuation should not be included.
+	 * The message should only refer to the value and rule criteria, and assume it is presented in
+	 * a context that has already indicated an error and the Property.  No leading or trailing
+	 * punctuation should not be included.
 	 * <p>
 	 * Example:  The value '999999999' is larger than the max value of 9999
 	 * <p>
-	 * The default implementation in the Validator Interface provides a reasonable
-	 * default if the conventions are followed correction in the
-	 * getTheValueMustDescription method.
 	 *
-	 * @param value
-	 * @return
+	 * @param value The value which failed validation.  Not null.
+	 * @return A message explaining how the value violates the validation rule.
 	 */
-	default String getInvalidMessage(T value) {
-		if (value != null) {
-			return "The value '" + value.toString() + "' must " + getTheValueMustDescription();
-		} else {
-			return "The value [[null]] must " + getTheValueMustDescription();
-		}
-	}
+	String getInvalidMessage(T value);
 
 	/**
 	 * If the specification itself is invalid (such as a bad regex string), this

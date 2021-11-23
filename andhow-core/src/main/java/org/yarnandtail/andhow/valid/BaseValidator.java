@@ -21,4 +21,9 @@ public abstract class BaseValidator<T> implements Validator<T> {
 	 * @return Is the value valid according to the rule this Validator enforces?
 	 */
 	public abstract boolean isValidWithoutNull(final T value);
+
+	@Override
+	public String getInvalidMessage(T value) {
+		return "The value '" + value.toString() + "' must " + getTheValueMustDescription();
+	}
 }

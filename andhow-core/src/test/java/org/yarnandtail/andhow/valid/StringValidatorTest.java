@@ -59,13 +59,16 @@ public class StringValidatorTest {
 				new StringValidator.StartsWith("A", false).getInvalidSpecificationMessage());
 	}
 
-	/**
-	 * Test of getInvalidSpecificationMessage method, of class StartsWith.
-	 */
 	@Test
 	public void startsWithGetTheValueMustDescriptionTest() {
 		assertEquals("start with 'A'",
 				new StringValidator.StartsWith("A", false).getTheValueMustDescription());
+	}
+
+	@Test
+	public void startsWithGetInvalidMessage() {
+		assertEquals("The value 'B' must start with 'A'",
+				new StringValidator.StartsWith("A", false).getInvalidMessage("B"));
 	}
 
 

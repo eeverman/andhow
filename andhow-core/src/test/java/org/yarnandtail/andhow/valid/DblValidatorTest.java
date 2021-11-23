@@ -42,6 +42,18 @@ public class DblValidatorTest {
 	}
 
 	@Test
+	public void greaterThanGetTheValueMustDescription() {
+		final DblValidator.GreaterThan instance = new DblValidator.GreaterThan(5d);
+		assertEquals("be greater than 5.0", instance.getTheValueMustDescription());
+	}
+
+	@Test
+	public void greaterThanGetInvalidMessage() {
+		final DblValidator.GreaterThan instance = new DblValidator.GreaterThan(5d);
+		assertEquals("The value '3.0' must be greater than 5.0", instance.getInvalidMessage(3D));
+	}
+
+	@Test
 	public void greaterThanOrEqualToIsSpecificationValid() {
 		DblValidator.GreaterThanOrEqualTo instance = new DblValidator.GreaterThanOrEqualTo(5d);
 		assertTrue(instance.isSpecificationValid());
