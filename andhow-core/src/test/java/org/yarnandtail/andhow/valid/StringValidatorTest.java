@@ -1,12 +1,9 @@
 package org.yarnandtail.andhow.valid;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-/**
- *
- * @author ericeverman
- */
+import static org.junit.jupiter.api.Assertions.*;
+
 public class StringValidatorTest {
 
 	public StringValidatorTest() {
@@ -16,7 +13,7 @@ public class StringValidatorTest {
 	 * Test of isSpecificationValid method, of class StartsWith.
 	 */
 	@Test
-	public void testStartsWithIsSpecificationValid() {
+	public void startsWithIsSpecificationValid() {
 		StringValidator.StartsWith instance = new StringValidator.StartsWith("abc", true);
 		assertTrue(instance.isSpecificationValid());
 
@@ -31,14 +28,13 @@ public class StringValidatorTest {
 	 * Test of isValid method, of class StartsWith.
 	 */
 	@Test
-	public void testStartsWithIsValid() {
+	public void startsWithIsValid() {
 		StringValidator.StartsWith instance = new StringValidator.StartsWith("abc", true);
 		assertTrue(instance.isValid("abc"));
 		assertTrue(instance.isValid("aBcxxx"));
 		assertTrue(instance.isValid("ABCXYZ"));
 		assertFalse(instance.isValid("\tabc"));
 		assertFalse(instance.isValid("cba"));
-		assertFalse(instance.isValid(null));
 
 		instance = new StringValidator.StartsWith("abc", false);
 		assertTrue(instance.isValid("abc"));
@@ -46,7 +42,12 @@ public class StringValidatorTest {
 		assertTrue(instance.isValid("abcXYZ"));
 		assertFalse(instance.isValid("\tabc"));
 		assertFalse(instance.isValid("cba"));
-		assertFalse(instance.isValid(null));
+	}
+
+	@Test
+	public void startsWithIsValidThrowsExceptionForNull() {
+		final StringValidator.StartsWith instance = new StringValidator.StartsWith("abc", true);
+		assertThrows(IllegalArgumentException.class, () -> instance.isValid(null));
 	}
 
 	/**
@@ -58,13 +59,16 @@ public class StringValidatorTest {
 				new StringValidator.StartsWith("A", false).getInvalidSpecificationMessage());
 	}
 
-	/**
-	 * Test of getInvalidSpecificationMessage method, of class StartsWith.
-	 */
 	@Test
 	public void startsWithGetTheValueMustDescriptionTest() {
 		assertEquals("start with 'A'",
 				new StringValidator.StartsWith("A", false).getTheValueMustDescription());
+	}
+
+	@Test
+	public void startsWithGetInvalidMessage() {
+		assertEquals("The value 'B' must start with 'A'",
+				new StringValidator.StartsWith("A", false).getInvalidMessage("B"));
 	}
 
 
@@ -72,7 +76,7 @@ public class StringValidatorTest {
 	 * Test of isSpecificationValid method, of class EndsWith.
 	 */
 	@Test
-	public void testEndsWithIsSpecificationValid() {
+	public void endsWithIsSpecificationValid() {
 		StringValidator.EndsWith instance = new StringValidator.EndsWith("abc", true);
 		assertTrue(instance.isSpecificationValid());
 
@@ -87,14 +91,13 @@ public class StringValidatorTest {
 	 * Test of isValid method, of class EndsWith.
 	 */
 	@Test
-	public void testEndsWithIsValid() {
+	public void endsWithIsValid() {
 		StringValidator.EndsWith instance = new StringValidator.EndsWith("abc", true);
 		assertTrue(instance.isValid("abc"));
 		assertTrue(instance.isValid("xxxaBc"));
 		assertTrue(instance.isValid("XYZABC"));
 		assertFalse(instance.isValid("abc\t"));
 		assertFalse(instance.isValid("cba"));
-		assertFalse(instance.isValid(null));
 
 		instance = new StringValidator.EndsWith("abc", false);
 		assertTrue(instance.isValid("abc"));
@@ -102,7 +105,12 @@ public class StringValidatorTest {
 		assertTrue(instance.isValid("XYZabc"));
 		assertFalse(instance.isValid("abc\t"));
 		assertFalse(instance.isValid("cba"));
-		assertFalse(instance.isValid(null));
+	}
+
+	@Test
+	public void endsWithIsValidThrowsExceptionForNull() {
+		final StringValidator.EndsWith instance = new StringValidator.EndsWith("abc", true);
+		assertThrows(IllegalArgumentException.class, () -> instance.isValid(null));
 	}
 
 	/**
@@ -127,7 +135,7 @@ public class StringValidatorTest {
 	 * Test of isSpecificationValid method, of class StringRegex.
 	 */
 	@Test
-	public void testRegexIsSpecificationValid() {
+	public void regexIsSpecificationValid() {
 		StringValidator.Regex instance = new StringValidator.Regex("abc.*");
 		assertTrue(instance.isSpecificationValid());
 
@@ -142,12 +150,17 @@ public class StringValidatorTest {
 	 * Test of isValid method, of class StringRegex.
 	 */
 	@Test
-	public void testRegexIsValid() {
+	public void regexIsValid() {
 		StringValidator.Regex instance = new StringValidator.Regex("abc.*");
 		assertTrue(instance.isValid("abc"));
 		assertTrue(instance.isValid("abcXYZ"));
 		assertFalse(instance.isValid("cba"));
-		assertFalse(instance.isValid(null));
+	}
+
+	@Test
+	public void regexIsValidThrowsExceptionForNull() {
+		final StringValidator.Regex instance = new StringValidator.Regex("abc.*");
+		assertThrows(IllegalArgumentException.class, () -> instance.isValid(null));
 	}
 
 	/**
@@ -198,9 +211,6 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("A"));
 
 		instance = new StringValidator.OneOf("A");
-		assertFalse(instance.isValid(null));
-
-		instance = new StringValidator.OneOf("A");
 		assertFalse(instance.isValid("B"));
 
 		instance = new StringValidator.OneOf("A");
@@ -211,6 +221,12 @@ public class StringValidatorTest {
 
 		instance = new StringValidator.OneOf("A", "B", "C");
 		assertTrue(instance.isValid("B"));
+	}
+
+	@Test
+	public void oneOfIsValidThrowsExceptionForNull() {
+		final StringValidator.OneOf instance = new StringValidator.OneOf("A");
+		assertThrows(IllegalArgumentException.class, () -> instance.isValid(null));
 	}
 
 	/**
@@ -261,9 +277,6 @@ public class StringValidatorTest {
 		assertFalse(instance.isValid("A"));
 
 		instance = new StringValidator.OneOfIgnoringCase("A");
-		assertFalse(instance.isValid(null));
-
-		instance = new StringValidator.OneOfIgnoringCase("A");
 		assertFalse(instance.isValid("b"));
 
 		instance = new StringValidator.OneOfIgnoringCase("A");
@@ -274,6 +287,12 @@ public class StringValidatorTest {
 
 		instance = new StringValidator.OneOfIgnoringCase("A", "B", "C");
 		assertTrue(instance.isValid("b"));
+	}
+
+	@Test
+	public void oneOfIgnoringCaseIsValidThrowsExceptionForNull() {
+		final StringValidator.OneOfIgnoringCase instance = new StringValidator.OneOfIgnoringCase("A");
+		assertThrows(IllegalArgumentException.class, () -> instance.isValid(null));
 	}
 
 	/**

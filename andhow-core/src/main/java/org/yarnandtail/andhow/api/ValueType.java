@@ -13,21 +13,20 @@ public interface ValueType<T> {
 	
 	/**
 	 * Attempts to parse the passed String into the destinationType.
-	 * 
+	 * <p>
 	 * All trimming (removing whitespace from around a value) should be assumed
 	 * to already have happened for the incoming sourceValue by a Trimmer.
-	 * It is also assumed that null values are not passed to this method, however, since user Loaders
-	 * with custom behaviors are possible, a null should not be considered an error, it just returns
-	 * a null.
-	 * 
+	 * A null sourceValue always parses to null, so callers may optionally skip calling parse with
+	 * a null value.
+	 * <p>
 	 * Implementations should be careful to ONLY throw a ParsingException -
 	 * Integers and other types may throw other unchecked exceptions when trying
 	 * to convert values, which should be handled in this method and rethrown as
 	 * a ParsingException.
-	 * 
+	 * <p>
 	 * This method and toString(T) should be reversible:  The object generated here
 	 * should be toString-able to a String equal to the one passed this method.
-	 * 
+	 * <p>
 	 * @param sourceValue
 	 * @return null if null, or a value of type T
 	 * @throws ParsingException for any type of failure.
@@ -42,7 +41,7 @@ public interface ValueType<T> {
 	 * be needed.
 	 * 
 	 * This method and parse() should be reversible:  The string generated here
-	 * should be parsable to an object equal to the one passed this methond.
+	 * should be parsable to an object equal to the one passed this method.
 	 * 
 	 * @param value
 	 * @return null if the passed value is null.
