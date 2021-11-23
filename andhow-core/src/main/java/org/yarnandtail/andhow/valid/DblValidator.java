@@ -1,24 +1,20 @@
 package org.yarnandtail.andhow.valid;
 
-import org.yarnandtail.andhow.api.Validator;
-
 /**
- * A collection of Double validation types
- * 
- * @author ericeverman
+ * Validator implementations for Double ValueTypes.
  */
-public abstract class DblValidator implements Validator<Double> {
-	
+public abstract class DblValidator extends BaseValidator<Double> {
+
 	@Override
 	public boolean isSpecificationValid() {
 		return true;
 	}
-		
+
 	@Override
 	public String getInvalidSpecificationMessage() {
 		return "THIS VALIDATION IS ALWAYS VALID";
 	}
-	
+
 	/**
 	 * Validate that a long is greater than a specified reference.
 	 */
@@ -31,19 +27,16 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
-			if (value != null) {
-				return (value > ref);
-			}
-			return false;
+		public boolean isValidWithoutNull(final Double value) {
+			return value > ref;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "be greater than " + Double.toString(ref);
 		}
 	}
-	
+
 
 	/**
 	 * Validate that an long is greater than or equal to a specified reference.
@@ -57,19 +50,16 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
-			if (value != null) {
-				return (value >= ref);
-			}
-			return false;
+		public boolean isValidWithoutNull(final Double value) {
+			return value >= ref;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "be greater than or equal to " + Double.toString(ref);
 		}
 	}
-	
+
 
 	/**
 	 * Validate that an long is less than a specified reference.
@@ -83,19 +73,16 @@ public abstract class DblValidator implements Validator<Double> {
 		}
 
 		@Override
-		public boolean isValid(Double value) {
-			if (value != null) {
-				return (value < ref);
-			}
-			return false;
+		public boolean isValidWithoutNull(final Double value) {
+			return value < ref;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "be less than " + Double.toString(ref);
 		}
 	}
-	
+
 
 	/**
 	 * Validate that a long is less than or equal to a specified reference.
@@ -107,19 +94,16 @@ public abstract class DblValidator implements Validator<Double> {
 		public LessThanOrEqualTo(double ref) {
 			this.ref = ref;
 		}
-		
+
 		@Override
-		public boolean isValid(Double value) {
-			if (value != null) {
-				return (value <= ref);
-			}
-			return false;
+		public boolean isValidWithoutNull(final Double value) {
+			return value <= ref;
 		}
-		
+
 		@Override
 		public String getTheValueMustDescription() {
 			return "be less than or equal to " + Double.toString(ref);
 		}
 	}
-	
+
 }
