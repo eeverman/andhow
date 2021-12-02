@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.load;
 
+import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.LoaderEnvironment;
 
 import java.util.*;
@@ -14,7 +15,8 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	final Map<String, String> _envVars;
 	final Map<String, String> _sysProps;
 	final List<String> _mainArgs;
-	final Map<String, Object> _fixedValues;
+	final Map<String, Object> _fixedNamedValues;
+	final List<PropertyValue<?>> _fixedPropertyValues;
 
 	/**
 	 * A new LoaderEnvironmentImm instance.
@@ -23,19 +25,25 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	 * for the {@link org.yarnandtail.andhow.api.Loader}s.  Thus, to have the actual values of
 	 * {@code System.getenv()} available to the Loaders, the return value of
 	 * {@code System.getenv()} must be passed in this constructor, and so on.
+	 * <p>
+	 * {@code fixedNamedValues} and {@code fixedPropertyValues} are different ways of specifying fixed
+	 * values, both of which will be used.  See the related get methods for more details.
 	 *
 	 * @param envVars The environment vars (System.getenv()) that the Loaders will see.
 	 * @param sysProps The system properties (System.getProperties()) that the Loaders will see.
 	 * @param mainArgs The command line arguments (passed to main(String[] args) that the Loaders will see.
-	 * @param fixedValues The hard-coded/fixed Property values that the Loaders will see.
+	 * @param fixedNamedValues The hard-coded/fixed named Property values that the Loaders will see.
+	 * @param fixedPropertyValues The hard-coded/fixed PropertyValues that the Loaders will see.
 	 */
 	public LoaderEnvironmentImm(final Map<String, String> envVars, final Properties sysProps,
-			final List<String> mainArgs, final Map<String, Object> fixedValues) {
+			final List<String> mainArgs, final Map<String, Object> fixedNamedValues,
+			List<PropertyValue<?>> fixedPropertyValues) {
 
 		_envVars = (envVars != null)?Collections.unmodifiableMap(envVars):Collections.emptyMap();
 		_sysProps = buildPropertyMap(sysProps);
 		_mainArgs = (mainArgs != null)?Collections.unmodifiableList(mainArgs):Collections.emptyList();
-		_fixedValues = (fixedValues != null)?Collections.unmodifiableMap(fixedValues):Collections.emptyMap();
+		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
+		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();
 	}
 
 	static Map<String, String> buildPropertyMap(Properties props) {
@@ -68,7 +76,10 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	}
 
 	@Override
-	public Map<String, Object> getFixedValues() {
-		return _fixedValues;
+	public Map<String, Object> getFixedNamedValues() {
+		return _fixedNamedValues;
 	}
+
+	@Override
+	public List<PropertyValue<?>> getFixedPropertyValues() { return _fixedPropertyValues;	}
 }

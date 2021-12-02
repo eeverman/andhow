@@ -1,5 +1,8 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.PropertyValue;
+import org.yarnandtail.andhow.load.FixedValueLoader;
+
 import java.util.*;
 
 /**
@@ -11,7 +14,9 @@ import java.util.*;
  * Loader to pull the appropriate environment from.
  * <p>
  * This interface also simplifies testing by providing a central place to set the environment that
- * Loaders see when they run.
+ * Loaders see when they run.  The two 'fixedValue' systems (name vs Property reference) cannot be
+ * reconciled without a complete AndHow initialization, which will be available in the Loader,
+ * but not necessarily before.
  */
 public interface LoaderEnvironment {
 
@@ -20,7 +25,7 @@ public interface LoaderEnvironment {
 	 * <p>
 	 * Nominally the same as {@code System.getenv()}, but may be customized for testing.
 	 *
-	 * @return The environment as a map of variable names to values
+	 * @return The environment as a map of variable names to values.  Never null, but possibly empty.
 	 */
 	public Map<String, String> getEnvironmentVariables();
 
@@ -29,7 +34,7 @@ public interface LoaderEnvironment {
 	 * <p>
 	 * Nominally the same as {@code System.getProperties()}, but may be customized for testing.
 	 *
-	 * @return A snapshot of the system properties, as a Map<String, String>.
+	 * @return A snapshot of the system properties, as a Map<String, String>.  Never null, but possibly empty.
 	 */
 	public Map<String, String> getSystemProperties();
 
@@ -45,20 +50,33 @@ public interface LoaderEnvironment {
 	 * Nominally this returns the same as the cmd line arguments converted to a List,
 	 * but may be customized for testing.
 	 *
-	 * @return A list of the command line arguments if available, or an empty List.
+	 * @return A list of the command line arguments if available, or an empty List.  Never null.
 	 */
 	public List<String> getMainArgs();
 
 	/**
-	 * Returns a Map of hard-coded / fixed values for some properties, set by application code
-	 * prior to AndHow initialization.
+	 * Returns a Map of hard-coded / fixed values for some properties referenced by name and set by
+	 * application code prior to AndHow initialization.
 	 * <p>
-	 * {@link Property} values set are intended to be loaded by the FixedValueLoader, which nominally
-	 * loads prior to any other loader. First loaded value for a Property 'wins', effectively making
-	 * the value non-configurable.
+	 * The referenced Properties and values returned by this method and {@link #getFixedPropertyValues()}
+	 * are intended to be loaded by the {@link FixedValueLoader}, which nominally loads prior to any
+	 * other loader, effectively making the value non-configurable.
 	 *
 	 * @return A map of property names (canonical or aliases) to property values,
 	 * which may be Strings or the destination type of the named Property.
+	 * Never null, but possibly empty.
 	 */
-	public Map<String, Object> getFixedValues();
+	public Map<String, Object> getFixedNamedValues();
+
+	/**
+	 * Returns a List of hard-coded / fixed values for some properties in the form of a List of
+	 * {@link PropertyValue}s, set application code prior to AndHow initialization.
+	 * <p>
+	 * The referenced Properties and values returned by this method and {@link #getFixedNamedValues()}
+	 * are intended to be loaded by the {@link FixedValueLoader}, which nominally loads prior to any
+	 * other loader, effectively making the value non-configurable.
+	 *
+	 * @return A list of PropertyValue's.  Never null, but possibly empty.
+	 */
+	public List<PropertyValue<?>> getFixedPropertyValues();
 }

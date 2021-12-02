@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.load.KeyObjectPair;
+import org.yarnandtail.andhow.load.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
@@ -32,7 +33,10 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	multiple custom instances to insert. */
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertBefore = new HashMap();
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertAfter = new HashMap();
-	
+
+	// Builder for the LoaderEnvironment
+	protected LoaderEnvironmentBuilder loadEnvBuilder = new LoaderEnvironmentBuilder();
+
 	//A list of hardcoded values used by the StdFixedValueLoader.
 	//Provided w/ live Property references
 	protected final List<PropertyValue> _fixedVals = new ArrayList();
