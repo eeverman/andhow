@@ -31,6 +31,8 @@ public class StdConfig {
 		@Override
 		public <T> S addFixedValue(Property<T> property, T value) {
 
+			loadEnvBuilder.addFixedValue(property, value);
+
 			if (property == null) {
 				throw new IllegalArgumentException("The property cannot be null");
 			}
@@ -50,12 +52,17 @@ public class StdConfig {
 
 		@Override
 		public S removeFixedValue(Property<?> property) {
+
+			loadEnvBuilder.removeFixedValue(property);
+
 			_fixedVals.removeIf(f -> f.getProperty().equals(property));
 			return (S) this;
 		}
 
 		@Override
 		public S addFixedValue(final String propertyNameOrAlias, final Object value) {
+
+			loadEnvBuilder.addFixedValue(propertyNameOrAlias, value);
 
 			try {
 				KeyObjectPair kop = new KeyObjectPair(propertyNameOrAlias, value);
@@ -78,6 +85,9 @@ public class StdConfig {
 
 		@Override
 		public S removeFixedValue(final String propertyNameOrAlias) {
+
+			loadEnvBuilder.removeFixedValue(propertyNameOrAlias);
+
 			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
 			_fixedKeyObjectPairVals.removeIf(k -> k.getName().equals(cleanName));
 			return (S) this;
@@ -85,6 +95,9 @@ public class StdConfig {
 
 		@Override
 		public S setCmdLineArgs(String[] commandLineArgs) {
+
+			loadEnvBuilder.setMainArgs(commandLineArgs);
+
 			_cmdLineArgs.clear();
 			if (commandLineArgs != null && commandLineArgs.length > 0) {
 				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));

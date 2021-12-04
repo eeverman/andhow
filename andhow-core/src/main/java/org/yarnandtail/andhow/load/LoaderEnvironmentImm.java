@@ -12,11 +12,11 @@ import java.util.*;
 public class LoaderEnvironmentImm implements LoaderEnvironment {
 
 	// All fields are never null, only potentially empty
-	final Map<String, String> _envVars;
-	final Map<String, String> _sysProps;
-	final List<String> _mainArgs;
-	final Map<String, Object> _fixedNamedValues;
-	final List<PropertyValue<?>> _fixedPropertyValues;
+	final private Map<String, String> _envVars;
+	final private Map<String, String> _sysProps;
+	final private List<String> _mainArgs;
+	final private Map<String, Object> _fixedNamedValues;
+	final private List<PropertyValue<?>> _fixedPropertyValues;
 
 	/**
 	 * A new LoaderEnvironmentImm instance.
@@ -41,6 +41,17 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 
 		_envVars = (envVars != null)?Collections.unmodifiableMap(envVars):Collections.emptyMap();
 		_sysProps = buildPropertyMap(sysProps);
+		_mainArgs = (mainArgs != null)?Collections.unmodifiableList(mainArgs):Collections.emptyList();
+		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
+		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();
+	}
+
+	public LoaderEnvironmentImm(final Map<String, String> envVars, final Map<String, String> sysProps,
+			final List<String> mainArgs, final Map<String, Object> fixedNamedValues,
+			List<PropertyValue<?>> fixedPropertyValues) {
+
+		_envVars = (envVars != null)?Collections.unmodifiableMap(envVars):Collections.emptyMap();
+		_sysProps = (sysProps != null)?Collections.unmodifiableMap(sysProps):Collections.emptyMap();
 		_mainArgs = (mainArgs != null)?Collections.unmodifiableList(mainArgs):Collections.emptyList();
 		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
 		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();

@@ -12,28 +12,64 @@ import java.util.*;
 public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 
 	// All fields are never null, only potentially empty
-	final Map<String, String> _envVars = new HashMap<>();
-	final Map<String, String> _sysProps = new HashMap<>();
-	final List<String> _mainArgs = new ArrayList();
-	final Map<String, Object> _fixedNamedValues = new HashMap<>();
-	final List<PropertyValue<?>> _fixedPropertyValues = new ArrayList<>();
+	final protected Map<String, String> _envVars = new HashMap<>();
+	final protected Map<String, String> _sysProps = new HashMap<>();
+	final protected List<String> _mainArgs = new ArrayList();
+	final protected Map<String, Object> _fixedNamedValues = new HashMap<>();
+	final protected List<PropertyValue<?>> _fixedPropertyValues = new ArrayList<>();
 
+	// If true, replace empty collections w/ canonical values in toImmutable().
+	protected boolean _replaceEmptyEnvVars = true;
+	protected boolean _replaceEmptySysProps = true;
 
+	/**
+	 * Set the environment vars, overriding any previously set values.
+	 * <p>
+	 * Setting any values at all results in replacing the system provided env. vars.
+	 *
+	 * @param envVars The new env vars to use
+	 */
 	public void setEnvVars(Map<String, String> envVars) {
 		_envVars.clear();
 		_envVars.putAll(envVars);
 	}
 
+	/**
+	 * Set the java system properties, overriding any previously set values.
+	 * <p>
+	 * Setting any values at all results in replacing the system provided sys. props.
+	 *
+	 * @param sysProps The new sys props to use
+	 */
 	public void setSysProps(Map<String, String> sysProps) {
 		_sysProps.clear();
 		_sysProps.putAll(sysProps);
 	}
 
-	public void setMainArgs(List<String> args) {
+	/**
+	 * Set the commandline arguments, overriding any previously set values.
+	 * <p>
+	 * @param commandLineArgs The new cmd line args to use
+	 */
+	public void setMainArgs(String[] commandLineArgs) {
 		_mainArgs.clear();
-		_mainArgs.addAll(args);
+		if (commandLineArgs != null && commandLineArgs.length > 0) {
+			_mainArgs.addAll(Arrays.asList(commandLineArgs));
+		}
 	}
 
+	/**
+	 * Set the fixed / hardcoded named property values, overriding any previously set values.
+	 * <p>
+	 * FixedNamedValues and FixedPropertyValues are handled separately, but accomplish the same
+	 * thing.  Both result in setting the value of the reference Property to a value in code.
+	 * {@code setFixedNamedValues} will only affect named values (it does not overwrite
+	 * FixedPropertyValues).  See {@link LoaderEnvironment#getFixedNamedValues()}.
+	 *
+	 * @param fixedVals A map of fixed values, using either canonical or alias names for keys
+	 * 		and correctly typed objects or Strings that can be parsed to the correct type for
+	 * 		the referenced Property.
+	 */
 	public void setFixedNamedValues(Map<String, Object> fixedVals) {
 		_fixedNamedValues.clear();
 		_fixedNamedValues.putAll(fixedVals);
@@ -90,11 +126,52 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		return _fixedNamedValues.remove(propertyNameOrAlias);
 	}
 
+	/**
+	 * Set the fixed / hardcoded property values, overriding any previously set values.
+	 * <p>
+	 * FixedNamedValues and FixedPropertyValues are handled separately, but accomplish the same
+	 * thing.  Both result in setting the value of the reference Property to a value in code.
+	 * {@code setFixedPropertyValues} will only affect PropertyValues (it does not overwrite
+	 * FixedNamedValues).  See {@link LoaderEnvironment#getFixedPropertyValues()}.
+	 *
+	 * @param fixedVals A list of fixed PropertyValue's.
+	 */
 	public void setFixedPropertyValues(List<PropertyValue<?>> fixedVals) {
 		_fixedPropertyValues.clear();
 		_fixedPropertyValues.addAll(fixedVals);
 	}
-	
+
+	public boolean isReplaceEmptyEnvVars() {
+		return _replaceEmptyEnvVars;
+	}
+
+	public void setReplaceEmptyEnvVars(final boolean replaceEmptyEnvVars) {
+		_replaceEmptyEnvVars = replaceEmptyEnvVars;
+	}
+
+	public boolean isReplaceEmptySysProps() {
+		return _replaceEmptySysProps;
+	}
+
+	public void setReplaceEmptySysProps(final boolean replaceEmptySysProps) {
+		_replaceEmptySysProps = replaceEmptySysProps;
+	}
+
+	public LoaderEnvironmentImm toImmutable() {
+		Map<String, String> envVars = (_envVars.isEmpty() && _replaceEmptyEnvVars)?
+				System.getenv() : _envVars;
+
+		if (_sysProps.isEmpty() && _replaceEmptySysProps) {
+			return new LoaderEnvironmentImm(
+					envVars, System.getProperties(), _mainArgs, _fixedNamedValues, _fixedPropertyValues
+			);
+		} else {
+			return new LoaderEnvironmentImm(
+					envVars, _sysProps, _mainArgs, _fixedNamedValues, _fixedPropertyValues
+			);
+		}
+	}
+
 	//
 	// The LoaderEnvironment interface
 
@@ -107,6 +184,7 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	@Override
 	public List<String> getMainArgs() {	return _mainArgs;	}
 
+	@Override
 	public Map<String, Object> getFixedNamedValues() { return _fixedNamedValues;	}
 
 	@Override

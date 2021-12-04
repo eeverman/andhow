@@ -1,11 +1,13 @@
 package org.yarnandtail.andhow.load;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.property.StrProp;
 
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoaderEnvironmentImmTest {
@@ -32,26 +34,19 @@ class LoaderEnvironmentImmTest {
 
 		LoaderEnvironmentImm le = new LoaderEnvironmentImm(envVars, sysProps, mainArgs, fixedNamedVals, fixedPropertyVals);
 
-		assertEquals("vars", le.getEnvironmentVariables().get("env"));
-		assertEquals(1, le.getEnvironmentVariables().size());
+		assertTrue(envVars.equals(le.getEnvironmentVariables()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getEnvironmentVariables().put("a", "b"));
 
-		assertEquals("props", le.getSystemProperties().get("sys"));
-		assertEquals(1, le.getSystemProperties().size());
+		assertTrue(sysProps.equals(le.getSystemProperties()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getSystemProperties().put("a", "b"));
 
-		assertEquals("main=args", le.getMainArgs().get(0));
-		assertEquals(1, le.getMainArgs().size());
+		assertThat(le.getMainArgs(), Matchers.containsInAnyOrder(mainArgs));
 		assertThrows(UnsupportedOperationException.class, () -> le.getMainArgs().add("a=b"));
 
-		assertEquals("vals", le.getFixedNamedValues().get("fixed"));
-		assertSame(this, le.getFixedNamedValues().get("object"));
-		assertEquals(2, le.getFixedNamedValues().size());
+		assertTrue(fixedNamedVals.equals(le.getFixedNamedValues()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getFixedNamedValues().put("a", "b"));
 
-		assertEquals("str1", le.getFixedPropertyValues().get(0).getValue());
-		assertSame(STR_1, le.getFixedPropertyValues().get(0).getProperty());
-		assertEquals(1, le.getFixedPropertyValues().size());
+		assertTrue(fixedPropertyVals.equals(le.getFixedPropertyValues()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getFixedPropertyValues().add(new PropertyValue<>(STR_1, "blah")));
 	}
 
@@ -59,7 +54,7 @@ class LoaderEnvironmentImmTest {
 	@Test
 	public void nullValuesShouldResultInEmptyCollections() {
 
-		LoaderEnvironmentImm le = new LoaderEnvironmentImm(null, null, null, null, null);
+		LoaderEnvironmentImm le = new LoaderEnvironmentImm(null, (Properties)null, null, null, null);
 
 		assertEquals(0, le.getEnvironmentVariables().size());
 		assertThrows(UnsupportedOperationException.class, () -> le.getEnvironmentVariables().put("a", "b"));
