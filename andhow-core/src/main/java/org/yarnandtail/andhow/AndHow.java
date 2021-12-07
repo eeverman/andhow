@@ -94,6 +94,7 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 			core = new AndHowCore(
 					config.getNamingStrategy(),
 					config.buildLoaders(),
+					config.getLoaderEnvironment(),
 					config.getRegisteredGroups());
 		}
 	}
@@ -357,6 +358,7 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 						AndHowCore newCore = new AndHowCore(
 								config.getNamingStrategy(),
 								config.buildLoaders(),
+								config.getLoaderEnvironment(),
 								config.getRegisteredGroups());
 
 						singleInstance.core = newCore;

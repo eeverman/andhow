@@ -245,4 +245,9 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 		return loaders;
 	}
 
+	@Override
+	public LoaderEnvironment getLoaderEnvironment() {
+		return loadEnvBuilder.toImmutable();
+	}
+
 }

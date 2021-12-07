@@ -92,6 +92,7 @@ public final class AndHowNonProductionUtil {
 			AndHowCore core = new AndHowCore(
 					config.getNamingStrategy(),
 					config.buildLoaders(),
+					config.getLoaderEnvironment(),
 					findGroups(config.getRegisteredGroups()));
 
 			AndHowNonProductionUtil.setAndHowCore(core);

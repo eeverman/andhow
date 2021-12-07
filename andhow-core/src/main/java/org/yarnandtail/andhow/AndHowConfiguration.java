@@ -275,6 +275,16 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 */
 	List<Class<? extends StandardLoader>> getDefaultLoaderList();
 
+	/**
+	 * The environment for {@link Loader}s when they load values.
+	 * <p>
+	 * Though this may be editable in the {@link AndHowConfiguration}, the instance returned
+	 * here should be immutable.
+	 *
+	 * @return An immutable {@link LoaderEnvironment}.
+	 */
+	LoaderEnvironment getLoaderEnvironment();
+
 	C setStandardLoaders(List<Class<? extends StandardLoader>> newStandardLoaders);
 
 	C setStandardLoaders(Class<? extends StandardLoader>... newStandardLoaders);
