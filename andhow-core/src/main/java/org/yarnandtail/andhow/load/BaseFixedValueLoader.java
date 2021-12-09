@@ -30,11 +30,20 @@ public abstract class BaseFixedValueLoader extends BaseLoader implements ReadLoa
 
 	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
-		return load(runtimeDef, existingValues, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
+		return load(runtimeDef, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
 	}
 
+	/**
+	 * Load from the passed collections of fixed values.
+	 *
+	 * @param runtimeDef The definition of all known Properties and naming metadata.
+	 * @param fixedNamedValues Fixed values referenced by name
+	 * @param fixedPropertyValues Fixed values reference by Property reference
+	 * @return The Property values loaded by this loader and/or the problems discovered while
+	 * 		attempting to load those Property values.
+	 */
 	public LoaderValues load(
-			PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues,
+			PropertyConfigurationInternal runtimeDef,
 			Map<String, Object> fixedNamedValues, List<PropertyValue<?>> fixedPropertyValues) {
 
 		List<ValidatedValue> vvs = new ArrayList<>(fixedNamedValues.size() + fixedPropertyValues.size());
@@ -45,14 +54,14 @@ public abstract class BaseFixedValueLoader extends BaseLoader implements ReadLoa
 		//not match the Property, so use 'attemptToAdd' to verify.
 
 		fixedPropertyValues.stream().forEach(
-				v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getProperty(), v.getValue())
+				v -> this.attemptToAdd(runtimeDef, vvs, problems, v.getProperty(), v.getValue())
 		);
 
 
 		//Add all the named property values
 
 		fixedNamedValues.entrySet().stream().forEach(
-				v -> this.attemptToAdd(appConfigDef, vvs, problems, v.getKey(), v.getValue())
+				v -> this.attemptToAdd(runtimeDef, vvs, problems, v.getKey(), v.getValue())
 		);
 
 		return new LoaderValues(this, vvs, problems);

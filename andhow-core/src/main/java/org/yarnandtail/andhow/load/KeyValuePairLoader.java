@@ -26,14 +26,8 @@ import java.util.*;
  * means the QuotedSpacePreservingTrimmer for strings and the TrimToNullTrimmer
  * for everything else.
  */
-public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
+public class KeyValuePairLoader extends BaseKeyValuePairLoader {
 
-	protected boolean unknownPropertyAProblem = true;
-
-	/**
-	 * The default delimiter between a key and a value.
-	 */
-	public static final String KVP_DELIMITER = "=";
 
 	private List<String> keyValuePairs;
 
@@ -52,84 +46,18 @@ public class KeyValuePairLoader extends BaseLoader implements ReadLoader {
 		this.keyValuePairs = keyValuePairs == null ? null : new ArrayList<>(keyValuePairs);
 	}
 
-	/**
-	 * Sets the list of string arguments, each string containing a key-value pair
-	 * or just a key for flag type values.
-	 *
-	 * Values are copied, so changes to the passed array are not tracked.
-	 *
-	 * KVPs are split by KVP.splitKVP using '=' as the delimiter, as defined in
-	 * AndHow.KVP_DELIMITER.
-	 *
-	 * @deprecated Use {@code KeyValuePairLoader.setKeyValuePairs(List<String>)} instead.
-	 * @param keyValuePairs
-	 */
-	@Deprecated
-	public void setKeyValuePairs(String... keyValuePairs) {
-		this.setKeyValuePairs(keyValuePairs != null ? Arrays.asList(keyValuePairs) : null);
+	@Override
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
+		return load(runtimeDef, keyValuePairs, KVP_DELIMITER);
 	}
 
 	@Override
-	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
 
-		ArrayList<ValidatedValue> values = new ArrayList();
-		ProblemList<Problem> problems = new ProblemList();
-
-		if (keyValuePairs != null) {
-			for (String s : keyValuePairs) {
-				try {
-					KVP kvp = KVP.splitKVP(s, KVP_DELIMITER);
-
-					attemptToAdd(appConfigDef, values, problems, kvp.getName(), kvp.getValue());
-
-				} catch (ParsingException e) {
-					//thrown by KVP.split - this is aloader level problem if we cannot
-					//determine even what the Property is.
-					problems.add(new LoaderProblem.ParsingLoaderProblem(this, null, null, e));
-				}
-			}
-
-			values.trimToSize();
-		}
-
-		return new LoaderValues(this, values, problems);
+		return load(runtimeDef, keyValuePairs, KVP_DELIMITER);
 	}
-
-	@Override
-	public String getSpecificLoadDescription() {
-		return "string key value pairs";
-	}
-
-	@Override
-	public boolean isTrimmingRequiredForStringValues() {
-		return true;
-	}
-
-	// false is a reasonable default, since its only a special case (the command line loader) that
-	// would ever set this true.
-	@Override
-	public boolean isFlaggable() { return false; }
-
-	@Override
-	public String getLoaderType() {
-		return "KeyValuePair";
-	}
-
-	@Override
-	public String getLoaderDialect() {
-		return null;
-	}
-
-	@Override
-	public void setUnknownPropertyAProblem(boolean isAProblem) {
-		unknownPropertyAProblem = isAProblem;
-	}
-
-	@Override
-	public boolean isUnknownPropertyAProblem() {
-		return unknownPropertyAProblem;
-	}
-
+	
 	@Override
 	public void releaseResources() {
 		keyValuePairs = null;

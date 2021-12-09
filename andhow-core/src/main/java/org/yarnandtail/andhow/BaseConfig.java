@@ -37,9 +37,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	// Builder for the LoaderEnvironment
 	protected LoaderEnvironmentBuilder loadEnvBuilder = new LoaderEnvironmentBuilder();
 
-	//A list of command line arguments
-	protected final List<String> _cmdLineArgs = new ArrayList();
-
 	//Prop file on classpath
 	protected String classpathPropFilePathStr;	//mutually XOR
 	protected StrProp classpathPropFilePathProp;	//mutually XOR
@@ -96,7 +93,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdMainStringArgsLoader buildStdMainStringArgsLoader() {
 		StdMainStringArgsLoader loader = new StdMainStringArgsLoader();
-		loader.setKeyValuePairs(_cmdLineArgs);
 		return loader;
 	}
 
