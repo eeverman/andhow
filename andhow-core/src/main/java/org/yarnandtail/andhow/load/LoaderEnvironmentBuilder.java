@@ -68,11 +68,13 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	 *
 	 * @param fixedVals A map of fixed values, using either canonical or alias names for keys
 	 * 		and correctly typed objects or Strings that can be parsed to the correct type for
-	 * 		the referenced Property.
+	 * 		the referenced Property.  If null or empty, the resulting fixedNamedValue map will be empty.
 	 */
 	public void setFixedNamedValues(Map<String, Object> fixedVals) {
 		_fixedNamedValues.clear();
-		_fixedNamedValues.putAll(fixedVals);
+		if (fixedVals != null) {
+			_fixedNamedValues.putAll(fixedVals);
+		}
 	}
 
 	public <T> void addFixedValue(Property<T> property, T value) {
@@ -134,11 +136,14 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	 * {@code setFixedPropertyValues} will only affect PropertyValues (it does not overwrite
 	 * FixedNamedValues).  See {@link LoaderEnvironment#getFixedPropertyValues()}.
 	 *
-	 * @param fixedVals A list of fixed PropertyValue's.
+	 * @param fixedVals A list of fixed PropertyValue's.  If null or empty, the resulting
+	 * 		fixedPropertyValue list will be empty.
 	 */
 	public void setFixedPropertyValues(List<PropertyValue<?>> fixedVals) {
 		_fixedPropertyValues.clear();
-		_fixedPropertyValues.addAll(fixedVals);
+		if (fixedVals != null) {
+			_fixedPropertyValues.addAll(fixedVals);
+		}
 	}
 
 	public boolean isReplaceEmptyEnvVars() {

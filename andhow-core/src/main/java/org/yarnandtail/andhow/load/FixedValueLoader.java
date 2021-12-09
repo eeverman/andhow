@@ -6,8 +6,7 @@ import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
 
 /**
- * A utility loader that is used internally to put fixed values into the effective
- * list of configured values.
+ * A utility loader that can be used to load fixed values from set methods.
  *
  * This loader does not trim incoming values for String type properties - they are
  * assumed to already be in final form.
@@ -16,15 +15,14 @@ import org.yarnandtail.andhow.api.*;
  * false to allow fixed values set via name to be ignored if the name is not
  * recognized.
  *
- * @author eeverman
  */
-public class FixedValueLoader extends BaseLoader implements ReadLoader {
+public class FixedValueLoader extends BaseFixedValueLoader {
 
 	protected boolean unknownPropertyAProblem = true;
 
-	protected List<PropertyValue> values;
+	protected List<PropertyValue> values = new ArrayList<>();
 
-	protected List<KeyObjectPair> keyObjectPairValues;
+	protected List<KeyObjectPair> keyObjectPairValues = new ArrayList<>();
 
 	public FixedValueLoader() {
 	}

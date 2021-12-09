@@ -1,6 +1,8 @@
 package org.yarnandtail.andhow.load.std;
 
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
+import org.yarnandtail.andhow.load.BaseFixedValueLoader;
 import org.yarnandtail.andhow.load.FixedValueLoader;
 
 /**
@@ -61,7 +63,7 @@ import org.yarnandtail.andhow.load.FixedValueLoader;
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
  */
-public class StdFixedValueLoader extends FixedValueLoader implements StandardLoader {
+public class StdFixedValueLoader extends BaseFixedValueLoader implements StandardLoader {
 
 	/**
 	 * There is no reason to use the constructor in production application code
@@ -70,4 +72,8 @@ public class StdFixedValueLoader extends FixedValueLoader implements StandardLoa
 	public StdFixedValueLoader() {
 	}
 
+	@Override
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
+		return null;
+	}
 }

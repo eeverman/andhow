@@ -92,8 +92,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdFixedValueLoader buildStdFixedValueLoader() {
 		StdFixedValueLoader loader = new StdFixedValueLoader();
-		loader.setPropertyValues(_fixedVals);
-		loader.setKeyObjectPairValues(_fixedKeyObjectPairVals);
 		return loader;
 	}
 
