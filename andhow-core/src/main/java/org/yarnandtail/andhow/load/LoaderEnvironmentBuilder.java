@@ -2,6 +2,7 @@ package org.yarnandtail.andhow.load;
 
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.util.TextUtil;
 
 import java.util.*;
 
@@ -77,6 +78,15 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		}
 	}
 
+
+	/**
+	 * Sets a fixed, non-configurable value for a Property.
+	 *
+	 * @param <T> The type of Property and value
+	 * @param property The property to set a value for
+	 * @param value The value to set.
+	 * @return
+	 */
 	public <T> void addFixedValue(Property<T> property, T value) {
 
 		if (property == null || value == null) {
@@ -94,6 +104,15 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		_fixedPropertyValues.add(pv);
 	}
 
+	/**
+	 * Removes a fixed Property value set <em>only</em> via addFixedValue(Property<T>, T value) or
+	 * {@link #setFixedPropertyValues(List)}.
+	 *
+	 * It is not an error to attempt to remove a property that is not in this fixed value list.
+	 *
+	 * @param property A non-null property.
+	 * @return The fixed value previously associated with this Property or null if there was none.
+	 */
 	public Object removeFixedValue(Property<?> property) {
 		Iterator<PropertyValue<?>> it = _fixedPropertyValues.iterator();
 
@@ -109,10 +128,23 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		return null;
 	}
 
-	public void addFixedValue(final String propertyNameOrAlias, final Object value) {
+
+	/**
+	 * Sets a fixed, non-configurable value for a named Property.
+	 *
+	 * @param propertyNameOrAlias The canonical or alias name of Property, which is trimmed to null.
+	 * @param value The Object value to set, which must match the type of the Property.
+	 * @return
+	 * @throws IllegalArgumentException if the name trims to null, the value is null,
+	 * 	or the name is already associated w/ a value (use remove).
+	 */
+	public void addFixedValue(String propertyNameOrAlias, final Object value) {
+
+		propertyNameOrAlias = TextUtil.trimToNull(propertyNameOrAlias);
 
 		if (propertyNameOrAlias == null || value == null) {
-			throw new IllegalArgumentException("The property name and value must be non-null");
+			throw new IllegalArgumentException(
+					"The property name must contain a non-empty name and value must be non-null");
 		}
 
 		//Simple check for duplicates (doesn't consider aliases or _fixedPropertyValues)
@@ -124,6 +156,21 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		_fixedNamedValues.put(propertyNameOrAlias, value);
 	}
 
+
+	/**
+	 * Removes a Property value set <em>only</em> via addFixedValue(String name, Object value)
+	 * or {@link #setFixedNamedValues(Map)}.
+	 *
+	 * Note that to successfully remove a fixed value from this list, the name must exactly
+	 * match the name used to set the property via addFixedValue(String, Object).  Since
+	 * Properties can have aliases, you must know the exact name to set the property.
+	 * <p>
+	 * It is not an error to attempt to remove a property that is not in this fixed value list,
+	 * or to attempt to remove a property value that does not exist - these are just no-ops.
+	 *
+	 * @param propertyNameOrAlias The name or alias of a property.
+	 * @return The value previously associated w/ the name.
+	 */
 	public Object removeFixedValue(final String propertyNameOrAlias) {
 		return _fixedNamedValues.remove(propertyNameOrAlias);
 	}

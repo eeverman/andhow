@@ -37,14 +37,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	// Builder for the LoaderEnvironment
 	protected LoaderEnvironmentBuilder loadEnvBuilder = new LoaderEnvironmentBuilder();
 
-	//A list of hardcoded values used by the StdFixedValueLoader.
-	//Provided w/ live Property references
-	protected final List<PropertyValue> _fixedVals = new ArrayList();
-
-	//A list of hardcoded values used by the StdFixedValueLoader.
-	//Provided as key name (string) and value (object)
-	protected final List<KeyObjectPair> _fixedKeyObjectPairVals = new ArrayList();
-
 	//A list of command line arguments
 	protected final List<String> _cmdLineArgs = new ArrayList();
 

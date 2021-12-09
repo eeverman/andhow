@@ -30,66 +30,25 @@ public class StdConfig {
 
 		@Override
 		public <T> S addFixedValue(Property<T> property, T value) {
-
 			loadEnvBuilder.addFixedValue(property, value);
-
-			if (property == null) {
-				throw new IllegalArgumentException("The property cannot be null");
-			}
-
-			//simple check for duplicates doesn't consider KOP values
-			for (PropertyValue pv : _fixedVals) {
-				if (property.equals(pv.getProperty())) {
-					throw new IllegalArgumentException("A fixed value for this property has been assigned twice.");
-				}
-			}
-
-			PropertyValue pv = new PropertyValue(property, value);
-			_fixedVals.add(pv);
-
 			return (S) this;
 		}
 
 		@Override
 		public S removeFixedValue(Property<?> property) {
-
 			loadEnvBuilder.removeFixedValue(property);
-
-			_fixedVals.removeIf(f -> f.getProperty().equals(property));
 			return (S) this;
 		}
 
 		@Override
 		public S addFixedValue(final String propertyNameOrAlias, final Object value) {
-
 			loadEnvBuilder.addFixedValue(propertyNameOrAlias, value);
-
-			try {
-				KeyObjectPair kop = new KeyObjectPair(propertyNameOrAlias, value);
-
-				//Simple check for duplicates
-				if (_fixedKeyObjectPairVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(kop.getName()))) {
-					throw new IllegalArgumentException(
-							"A fixed value for the Property '" + kop.getName() + "' has been assigned twice.");
-				}
-
-				_fixedKeyObjectPairVals.add(kop);
-
-				return (S) this;
-
-			} catch (ParsingException e) {
-				throw new IllegalArgumentException(e);
-			}
-
+			return (S) this;
 		}
 
 		@Override
 		public S removeFixedValue(final String propertyNameOrAlias) {
-
 			loadEnvBuilder.removeFixedValue(propertyNameOrAlias);
-
-			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
-			_fixedKeyObjectPairVals.removeIf(k -> k.getName().equals(cleanName));
 			return (S) this;
 		}
 

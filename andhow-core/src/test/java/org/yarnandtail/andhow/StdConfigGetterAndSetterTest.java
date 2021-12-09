@@ -188,9 +188,6 @@ public class StdConfigGetterAndSetterTest {
 	public void FixedValuesBasedOnNamesTest() {
 		MyStdConfig config = new MyStdConfig();
 
-		//These properties don't really exist - no checking is done until loading, when
-		//the Loader attempts to match up the name w/ a property.  For now this just tests
-		//the logic in StdConfig.
 		config.addFixedValue("MY_STR_1", "ABC");
 		config.addFixedValue("MY_LNG_2", 23L);
 
@@ -204,7 +201,7 @@ public class StdConfigGetterAndSetterTest {
 		});
 
 		assertEquals("ABC",
-				config.getFixedKeyObjectPairValues().stream().filter(k -> k.getName().equals("MY_STR_1")).findFirst().get()
+				config.getFixedKeyObjectPairValues().entrySet().stream().filter(k -> k.getKey().equals("MY_STR_1")).findFirst().get()
 						.getValue().toString(),
 				"The value set for this Property should be unchanged");
 
@@ -420,26 +417,26 @@ public class StdConfigGetterAndSetterTest {
 		assertTrue(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem());
 	}
 
-	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
+	<T> boolean containsPropertyAndValue(List<PropertyValue<?>> propertyValues, Property<T> property, T value) {
 		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
 		return pv != null && pv.getValue().equals(value);
 	}
 
-	boolean containsNameAndValue(List<KeyObjectPair> keyObjectPairs, String name, Object value) {
-		KeyObjectPair kop = keyObjectPairs.stream().filter(p -> p.getName().equals(name)).findFirst().get();
-		return kop != null && kop.getValue().equals(value);
+	boolean containsNameAndValue(Map<String, Object> valueMap, String name, Object value) {
+		Object valueInMap = valueMap.entrySet().stream().filter(p -> p.getKey().equals(name)).findFirst().get().getValue();
+		return valueInMap != null && valueInMap.equals(value);
 	}
 
 	/**
 	 * Custom StdConfig class that has access methods for fields not otherwise accessable.
 	 */
 	public static final class MyStdConfig extends StdConfig.StdConfigAbstract<MyStdConfig> {
-		public List<PropertyValue> getFixedValues() {
-			return _fixedVals;
+		public List<PropertyValue<?>> getFixedValues() {
+			return getLoaderEnvironment().getFixedPropertyValues();
 		}
 
-		public List<KeyObjectPair> getFixedKeyObjectPairValues() {
-			return _fixedKeyObjectPairVals;
+		public Map<String, Object> getFixedKeyObjectPairValues() {
+			return getLoaderEnvironment().getFixedNamedValues();
 		}
 
 		public List<String> getCmdLineArgs() {
