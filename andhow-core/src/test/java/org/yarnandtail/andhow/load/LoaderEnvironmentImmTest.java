@@ -40,8 +40,8 @@ class LoaderEnvironmentImmTest {
 		assertTrue(sysProps.equals(le.getSystemProperties()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getSystemProperties().put("a", "b"));
 
-		assertThat(le.getMainArgs(), Matchers.containsInAnyOrder(mainArgs.toArray(new String[1])));
-		assertThrows(UnsupportedOperationException.class, () -> le.getMainArgs().add("a=b"));
+		assertThat(le.getCmdLineArgs(), Matchers.containsInAnyOrder(mainArgs.toArray(new String[1])));
+		assertThrows(UnsupportedOperationException.class, () -> le.getCmdLineArgs().add("a=b"));
 
 		assertTrue(fixedNamedVals.equals(le.getFixedNamedValues()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getFixedNamedValues().put("a", "b"));
@@ -62,8 +62,8 @@ class LoaderEnvironmentImmTest {
 		assertEquals(0, le.getSystemProperties().size());
 		assertThrows(UnsupportedOperationException.class, () -> le.getSystemProperties().put("a", "b"));
 
-		assertEquals(0, le.getMainArgs().size());
-		assertThrows(UnsupportedOperationException.class, () -> le.getMainArgs().add("a=b"));
+		assertEquals(0, le.getCmdLineArgs().size());
+		assertThrows(UnsupportedOperationException.class, () -> le.getCmdLineArgs().add("a=b"));
 
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertThrows(UnsupportedOperationException.class, () -> le.getFixedNamedValues().put("a", "b"));

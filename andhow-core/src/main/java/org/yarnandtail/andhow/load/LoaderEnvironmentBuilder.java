@@ -15,7 +15,7 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	// All fields are never null, only potentially empty
 	final protected Map<String, String> _envVars = new HashMap<>();
 	final protected Map<String, String> _sysProps = new HashMap<>();
-	final protected List<String> _mainArgs = new ArrayList();
+	final protected List<String> _cmdLineArgs = new ArrayList();
 	final protected Map<String, Object> _fixedNamedValues = new HashMap<>();
 	final protected List<PropertyValue<?>> _fixedPropertyValues = new ArrayList<>();
 
@@ -52,10 +52,10 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	 * <p>
 	 * @param commandLineArgs The new cmd line args to use
 	 */
-	public void setMainArgs(String[] commandLineArgs) {
-		_mainArgs.clear();
+	public void setCmdLineArgs(String[] commandLineArgs) {
+		_cmdLineArgs.clear();
 		if (commandLineArgs != null && commandLineArgs.length > 0) {
-			_mainArgs.addAll(Arrays.asList(commandLineArgs));
+			_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
 		}
 	}
 
@@ -215,11 +215,11 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 
 		if (_sysProps.isEmpty() && _replaceEmptySysProps) {
 			return new LoaderEnvironmentImm(
-					envVars, System.getProperties(), _mainArgs, _fixedNamedValues, _fixedPropertyValues
+					envVars, System.getProperties(), _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
 			);
 		} else {
 			return new LoaderEnvironmentImm(
-					envVars, _sysProps, _mainArgs, _fixedNamedValues, _fixedPropertyValues
+					envVars, _sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
 			);
 		}
 	}
@@ -234,7 +234,7 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	public Map<String, String> getSystemProperties() { return _sysProps; }
 
 	@Override
-	public List<String> getMainArgs() {	return _mainArgs;	}
+	public List<String> getCmdLineArgs() {	return _cmdLineArgs;	}
 
 	@Override
 	public Map<String, Object> getFixedNamedValues() { return _fixedNamedValues;	}

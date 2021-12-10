@@ -39,24 +39,6 @@ public class NonProductionConfigTest {
 	}
 	
 	@Test
-	public void testAddCmdLineArg() {
-		NonProductionConfigImpl config = NonProductionConfig.instance();
-		config.addCmdLineArg("ONE", "one");
-		config.addCmdLineArg("TWO", "two");
-		config.addCmdLineArg("NULL", null);
-		
-		//
-		//This is a hack:  To see if this worked, we will check the internal
-		//state of the StdMainStringArgsLoader.
-		StdMainStringArgsLoader loader = config.buildStdMainStringArgsLoader();
-		List<String> kvps = getStdMainStringArgsLoaderVals(loader);
-		
-		assertEquals("ONE=one", kvps.get(0));
-		assertEquals("TWO=two", kvps.get(1));
-		assertEquals("NULL", kvps.get(2));
-	}
-	
-	@Test
 	public void testAddCmdLineArgWithNull() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
 

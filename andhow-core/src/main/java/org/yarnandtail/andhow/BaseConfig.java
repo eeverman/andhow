@@ -13,7 +13,6 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 /**
  * Basic abstract implementation for AndHowConfiguration instances.
  *
- * @author ericeverman
  * @param <C> The class to return from each of the fluent builder methods, which
  * will be the implementation class in each case.  See StdConfig for an example.
  */

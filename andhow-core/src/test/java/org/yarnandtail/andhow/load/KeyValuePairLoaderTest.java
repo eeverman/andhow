@@ -73,7 +73,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
 
 
-		loader.setKeyValuePairs(args.toArray(new String[5]));
+		loader.setKeyValuePairs(args);
 		
 		LoaderValues result = loader.load(appDef, appValuesBuilder);
 		

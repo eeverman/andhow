@@ -237,11 +237,8 @@ public class StdConfigGetterAndSetterTest {
 		String[] args = new String[] {"arg1", "arg2"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
+		assertThat(config.getLoaderEnvironment().getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
-		List<String> kvps = ReflectionTestUtils.getInstanceFieldValue(config.buildStdMainStringArgsLoader(), "keyValuePairs", List.class);
-
-		assertEquals(2, kvps.size());
-		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
 
 		// Set new values - they should replace the old
 		String[] args2 = new String[]{"arg3", "arg4", "arg5"};
@@ -251,21 +248,17 @@ public class StdConfigGetterAndSetterTest {
 
 		assertEquals(args2.length, actualArgs.size());
 		assertThat(actualArgs.toArray(), arrayContainingInAnyOrder(args2));
+		assertThat(config.getLoaderEnvironment().getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args2));
+
 
 		// Set empty array
 		config.setCmdLineArgs(new String[0]);
-
-		actualArgs = config.getCmdLineArgs();
-
-		assertEquals(0, actualArgs.size());
+		assertEquals(0, config.getCmdLineArgs().size());
 
 		// Set null
 		config.setCmdLineArgs(new String[]{"arg6"});
 		config.setCmdLineArgs(null);
-
-		actualArgs = config.getCmdLineArgs();
-
-		assertEquals(0, actualArgs.size());
+		assertEquals(0, config.getCmdLineArgs().size());
 	}
 
 	@Test
@@ -440,7 +433,7 @@ public class StdConfigGetterAndSetterTest {
 		}
 
 		public List<String> getCmdLineArgs() {
-			return _cmdLineArgs;
+			return getLoaderEnvironment().getCmdLineArgs();
 		}
 
 		public Map<String, String> getEnvironmentProperties() {

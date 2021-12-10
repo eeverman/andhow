@@ -52,7 +52,7 @@ public interface LoaderEnvironment {
 	 *
 	 * @return A list of the command line arguments if available, or an empty List.  Never null.
 	 */
-	public List<String> getMainArgs();
+	public List<String> getCmdLineArgs();
 
 	/**
 	 * Returns a Map of hard-coded / fixed values for some properties referenced by name and set by

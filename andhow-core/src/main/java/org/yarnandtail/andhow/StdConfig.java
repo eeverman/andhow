@@ -2,7 +2,6 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.KeyObjectPair;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -54,14 +53,7 @@ public class StdConfig {
 
 		@Override
 		public S setCmdLineArgs(String[] commandLineArgs) {
-
-			loadEnvBuilder.setMainArgs(commandLineArgs);
-
-			_cmdLineArgs.clear();
-			if (commandLineArgs != null && commandLineArgs.length > 0) {
-				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
-			}
-
+			loadEnvBuilder.setCmdLineArgs(commandLineArgs);
 			return (S) this;
 		}
 

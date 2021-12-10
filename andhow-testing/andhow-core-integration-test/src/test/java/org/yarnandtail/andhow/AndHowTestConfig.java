@@ -78,9 +78,9 @@ public class AndHowTestConfig {
 			}
 
 			if (value != null) {
-				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + KeyValuePairLoader.KVP_DELIMITER + value);
 			} else {
-				_cmdLineArgs.add(key);
+				loadEnvBuilder.getCmdLineArgs().add(key);
 			}
 
 			return (N) this;

@@ -4,7 +4,6 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
-import org.yarnandtail.andhow.StdConfigGetterAndSetterTest;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -12,6 +11,7 @@ import org.yarnandtail.andhow.property.StrProp;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoaderEnvironmentBuilderTest {
@@ -55,13 +55,13 @@ class LoaderEnvironmentBuilderTest {
 
 		leb.setEnvVars(envVars);
 		leb.setSysProps(sysProps);
-		leb.setMainArgs(mainArgs);
+		leb.setCmdLineArgs(mainArgs);
 		leb.setFixedNamedValues(fixedNamedVals);
 		leb.setFixedPropertyValues(fixedPropertyVals);
 
 		assertTrue(envVars.equals(leb.getEnvironmentVariables()));
 		assertTrue(sysProps.equals(leb.getSystemProperties()));
-		assertThat(leb.getMainArgs(), Matchers.containsInAnyOrder(mainArgs));
+		assertThat(leb.getCmdLineArgs(), Matchers.containsInAnyOrder(mainArgs));
 		assertTrue(fixedNamedVals.equals(leb.getFixedNamedValues()));
 		assertTrue(fixedPropertyVals.equals(leb.getFixedPropertyValues()));
 
@@ -72,7 +72,7 @@ class LoaderEnvironmentBuilderTest {
 
 		assertTrue(envVars.equals(le.getEnvironmentVariables()));
 		assertTrue(sysProps.equals(le.getSystemProperties()));
-		assertThat(le.getMainArgs(), Matchers.containsInAnyOrder(mainArgs));
+		assertThat(le.getCmdLineArgs(), Matchers.containsInAnyOrder(mainArgs));
 		assertTrue(fixedNamedVals.equals(le.getFixedNamedValues()));
 		assertTrue(fixedPropertyVals.equals(le.getFixedPropertyValues()));
 
@@ -89,7 +89,7 @@ class LoaderEnvironmentBuilderTest {
 
 		assertTrue(System.getenv().equals(le.getEnvironmentVariables()));
 		assertTrue(System.getProperties().equals(le.getSystemProperties()));
-		assertEquals(0, le.getMainArgs().size());
+		assertEquals(0, le.getCmdLineArgs().size());
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertEquals(0, le.getFixedPropertyValues().size());
 	}
@@ -149,6 +149,33 @@ class LoaderEnvironmentBuilderTest {
 		assertEquals(0, leb.getFixedNamedValues().size());
 		assertNull(leb.removeFixedValue(INT_1), "Should be a no-op");
 	}
+
+
+	@Test
+	public void setCmdLineArgsTest() {
+
+		String[] args = new String[] {"arg1", "arg2"};
+		leb.setCmdLineArgs(args);
+		assertThat(leb.getCmdLineArgs(), containsInAnyOrder(args));
+
+		// Set new values - they should replace the old
+		String[] args2 = new String[]{"arg3", "arg4", "arg5"};
+		leb.setCmdLineArgs(args2);
+
+		List<String> actualArgs = leb.getCmdLineArgs();
+
+		assertThat(actualArgs, containsInAnyOrder(args2));
+
+		// Set empty array
+		leb.setCmdLineArgs(new String[0]);
+		assertEquals(0, leb.getCmdLineArgs().size());
+
+		// Set null
+		leb.setCmdLineArgs(new String[]{"arg6"});
+		leb.setCmdLineArgs(null);
+		assertEquals(0, leb.getCmdLineArgs().size());
+	}
+
 
 
 	<T> boolean containsPropertyAndValue(List<PropertyValue<?>> propertyValues, Property<T> property, T value) {

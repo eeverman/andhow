@@ -294,7 +294,7 @@ public class AndHowTest extends AndHowTestBase {
 	public void testBlowingUpWithDuplicateLoaders() {
 
 		KeyValuePairLoader kvpl = new KeyValuePairLoader();
-		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
+		kvpl.setKeyValuePairs(Arrays.asList(cmdLineArgsWFullClassName));
 
 		try {
 

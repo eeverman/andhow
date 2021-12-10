@@ -3,7 +3,6 @@ package org.yarnandtail.andhow.load.std;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import org.yarnandtail.andhow.load.BaseKeyValuePairLoader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * Reads an array of Strings containing key value pairs in the form <em>key=value</em>,
@@ -84,7 +83,7 @@ public class StdMainStringArgsLoader extends BaseKeyValuePairLoader
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
 
-		return load(runtimeDef, environment.getMainArgs(), KVP_DELIMITER);
+		return load(runtimeDef, environment.getCmdLineArgs(), KVP_DELIMITER);
 	}
 
 	@Override

@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
-import org.yarnandtail.andhow.api.GroupProxy;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.util.AndHowUtil;
+
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.load.KeyValuePairLoader;
@@ -80,9 +78,9 @@ public class NonProductionConfig {
 			}
 
 			if (value != null) {
-				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + KeyValuePairLoader.KVP_DELIMITER + value);
 			} else {
-				_cmdLineArgs.add(key);
+				loadEnvBuilder.getCmdLineArgs().add(key);
 			}
 
 			return (N) this;
