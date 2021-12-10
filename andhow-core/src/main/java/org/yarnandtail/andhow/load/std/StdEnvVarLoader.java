@@ -1,7 +1,10 @@
 package org.yarnandtail.andhow.load.std;
 
 import java.util.*;
-import org.yarnandtail.andhow.api.StandardLoader;
+
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
+import org.yarnandtail.andhow.load.BaseMapLoader;
 import org.yarnandtail.andhow.load.MapLoader;
 
 /**
@@ -62,7 +65,7 @@ import org.yarnandtail.andhow.load.MapLoader;
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
  */
-public class StdEnvVarLoader extends MapLoader implements StandardLoader {
+public class StdEnvVarLoader extends BaseMapLoader implements StandardLoader {
 	
 	/**
 	 * There is no reason to use the constructor in production application code
@@ -71,16 +74,18 @@ public class StdEnvVarLoader extends MapLoader implements StandardLoader {
 	public StdEnvVarLoader() {
 		unknownPropertyAProblem = false;
 	}
-	
+
 	@Override
-	public Map<?, ?> getMap() {
-		if (map != null) {
-			return map;
-		} else {
-			return System.getenv();
-		}
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
+		return null;
 	}
-	
+
+	@Override
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+		return load(runtimeDef, existingValues, environment.getEnvironmentVariables());
+	}
+
 	@Override
 	public String getSpecificLoadDescription() {
 		return "java.lang.System.getenv()";

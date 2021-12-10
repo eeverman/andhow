@@ -104,7 +104,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdSysPropLoader buildStdSysPropLoader() {
 		StdSysPropLoader loader = new StdSysPropLoader();
-		loader.setMap(systemProperties);
 		return loader;
 	}
 
@@ -129,7 +128,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdEnvVarLoader buildStdEnvVarLoader() {
 		StdEnvVarLoader loader = new StdEnvVarLoader();
-		loader.setMap(envProperties);
 		return loader;
 	}
 
