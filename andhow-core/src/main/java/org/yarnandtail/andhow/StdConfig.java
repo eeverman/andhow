@@ -128,11 +128,26 @@ public class StdConfig {
 		 * Allows system properties to be overridden.
 		 *
 		 * @deprecated
-		 * @param properties
+		 * @param newProperties
 		 */
 		@Deprecated
-		public S setSystemProperties(Properties properties) {
-			systemProperties = properties;
+		public S setSystemProperties(Properties newProperties) {
+			if (newProperties != null) {
+				if (! newProperties.isEmpty()) {
+					final Map<String, String> map = new HashMap<>();
+					newProperties.entrySet().stream().forEach(
+							e -> map.put(e.getKey().toString(), e.getValue().toString())
+					);
+					loadEnvBuilder.setSysProps(map);
+				} else {
+					loadEnvBuilder.setSysProps(Collections.emptyMap());
+					loadEnvBuilder.setReplaceEmptySysProps(false);	// keep the empty values (don't replace)
+				}
+			} else {	// null
+				loadEnvBuilder.setSysProps(Collections.emptyMap());
+				loadEnvBuilder.setReplaceEmptySysProps(true);	// replace w/ actual Sys Props
+			}
+
 			return (S) this;
 		}
 
@@ -157,13 +172,18 @@ public class StdConfig {
 		 * @return
 		 */
 		@Deprecated
-		public S setEnvironmentProperties(Map<String, String> newEnvProperties) {
+		public S setEnvironmentVariables(Map<String, String> newEnvProperties) {
 
 			if (newEnvProperties != null) {
-				this.envProperties = new HashMap<>();
-				this.envProperties.putAll(newEnvProperties);
-			} else {
-				this.envProperties = null;
+				if (! newEnvProperties.isEmpty()) {
+					loadEnvBuilder.setEnvVars(newEnvProperties);
+				} else {
+					loadEnvBuilder.setEnvVars(newEnvProperties);
+					loadEnvBuilder.setReplaceEmptyEnvVars(false);	// keep the empty values (don't replace)
+				}
+			} else {	// null
+				loadEnvBuilder.setEnvVars(Collections.emptyMap());
+				loadEnvBuilder.setReplaceEmptyEnvVars(true);	// replace w/ actual env vars
 			}
 			return (S) this;
 		}

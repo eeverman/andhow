@@ -128,7 +128,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SampleRestClientGroup.class)
-				.setEnvironmentProperties(envvars)
+				.setEnvironmentVariables(envvars)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
 

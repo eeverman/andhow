@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
+import org.yarnandtail.andhow.load.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -19,8 +20,9 @@ public class StdEnvVarLoaderTest {
 
 	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
-	HashMap<String, String> envVars = new HashMap();
+	HashMap<String, String> envVars;
 	StdEnvVarLoader loader;
+	LoaderEnvironmentBuilder leb;
 
 	public interface SimpleParams {
 		//Strings
@@ -37,6 +39,7 @@ public class StdEnvVarLoaderTest {
 	public void init() throws Exception {
 
 		loader = new StdEnvVarLoader();
+		leb = new LoaderEnvironmentBuilder();
 
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
@@ -51,8 +54,8 @@ public class StdEnvVarLoaderTest {
 		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 
-		envVars.clear();
-		envVars.putAll(System.getenv());
+		envVars = new HashMap();
+		envVars.putAll(System.getenv());	// Just to have some other values set
 	}
 
 
@@ -84,9 +87,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "y");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -107,9 +110,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "f");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "y");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -121,11 +124,6 @@ public class StdEnvVarLoaderTest {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(SimpleParams.FLAG_NULL));
 	}
 
-	/*  The HashTable that System.properties uses does not allow null values, so
-		no need (or way) to test nulls here. */
-//	@Test
-//	public void testNullValues() throws Exception {
-//	}
 
 	@Test
 	public void testEmptyValuesUnix() throws Exception {
@@ -136,9 +134,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -159,9 +157,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE).toUpperCase(), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL).toUpperCase(), "");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -182,9 +180,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -208,9 +206,9 @@ public class StdEnvVarLoaderTest {
 		envVars.put(getPropName(SimpleParams.FLAG_TRUE), "");
 		envVars.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -226,9 +224,9 @@ public class StdEnvVarLoaderTest {
 
 		envVars.put("XXX", "aaa");
 
-		loader.setMap(envVars);
+		leb.setEnvVars(envVars);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

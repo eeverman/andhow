@@ -7,11 +7,14 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.junit5.ext.RestoreSysPropsAfterEachTestExt;
+import org.yarnandtail.andhow.load.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.util.NameUtil;
+
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StdSysPropLoaderTest {
 
 	StdSysPropLoader loader;
+	LoaderEnvironmentBuilder leb;
+	HashMap<String, String> sysProps = new HashMap();
 	PropertyConfigurationMutable appDef;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	GroupProxy simpleProxy;
@@ -38,6 +43,7 @@ public class StdSysPropLoaderTest {
 	public void init() throws Exception {
 
 		loader = new StdSysPropLoader();
+		leb = new LoaderEnvironmentBuilder();
 
 		appValuesBuilder = new ValidatedValuesWithContextMutable();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
@@ -52,6 +58,8 @@ public class StdSysPropLoaderTest {
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 
+		sysProps = new HashMap();
+		sysProps.putAll(System.getenv());	// Just to have some other values set
 	}
 
 	protected String getPropName(Property p) throws Exception {
@@ -76,13 +84,15 @@ public class StdSysPropLoaderTest {
 	@Test
 	public void testHappyPath() throws Exception {
 
-		System.setProperty(getPropName(SimpleParams.STR_BOB), "aaa");
-		System.setProperty(getPropName(SimpleParams.STR_NULL), "bbb");
-		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "t");
-		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "f");
-		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "y");
+		sysProps.put(getPropName(SimpleParams.STR_BOB), "aaa");
+		sysProps.put(getPropName(SimpleParams.STR_NULL), "bbb");
+		sysProps.put(getPropName(SimpleParams.FLAG_FALSE), "t");
+		sysProps.put(getPropName(SimpleParams.FLAG_TRUE), "f");
+		sysProps.put(getPropName(SimpleParams.FLAG_NULL), "y");
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		leb.setSysProps(sysProps);
+
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -97,13 +107,15 @@ public class StdSysPropLoaderTest {
 	@Test
 	public void testEmptyValues() throws Exception {
 
-		System.setProperty(getPropName(SimpleParams.STR_BOB), "");
-		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
+		sysProps.put(getPropName(SimpleParams.STR_BOB), "");
+		sysProps.put(getPropName(SimpleParams.STR_NULL), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_FALSE), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_TRUE), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		leb.setSysProps(sysProps);
+
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -118,13 +130,15 @@ public class StdSysPropLoaderTest {
 	@Test
 	public void testAllWhitespaceValues() throws Exception {
 
-		System.setProperty(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
-		System.setProperty(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
-		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
-		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
-		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
+		sysProps.put(getPropName(SimpleParams.STR_BOB), "\t\t\t\t");
+		sysProps.put(getPropName(SimpleParams.STR_NULL), "\t\t\t\t");
+		sysProps.put(getPropName(SimpleParams.FLAG_FALSE), "\t\t\t\t");
+		sysProps.put(getPropName(SimpleParams.FLAG_TRUE), "\t\t\t\t");
+		sysProps.put(getPropName(SimpleParams.FLAG_NULL), "\t\t\t\t");
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		leb.setSysProps(sysProps);
+
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -142,13 +156,15 @@ public class StdSysPropLoaderTest {
 	@Test
 	public void testQuotedStringValues() throws Exception {
 
-		System.setProperty(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
-		System.setProperty(getPropName(SimpleParams.STR_NULL), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_FALSE), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_TRUE), "");
-		System.setProperty(getPropName(SimpleParams.FLAG_NULL), "");
+		sysProps.put(getPropName(SimpleParams.STR_BOB), "\"  two_spaces_&_two_tabs\t\t\" ");
+		sysProps.put(getPropName(SimpleParams.STR_NULL), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_FALSE), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_TRUE), "");
+		sysProps.put(getPropName(SimpleParams.FLAG_NULL), "");
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		leb.setSysProps(sysProps);
+
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -162,9 +178,11 @@ public class StdSysPropLoaderTest {
 	@Test
 	public void testNoRecognizedValues() throws Exception {
 
-		System.setProperty("XXX", "aaa");
+		sysProps.put("XXX", "aaa");
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		leb.setSysProps(sysProps);
+
+		LoaderValues result = loader.load(appDef, leb.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

@@ -5,7 +5,7 @@ import org.yarnandtail.andhow.AndHowTestConfig.AndHowTestConfigImpl;
 public class StdEnvVarValueLoader extends MapValueLoader {
 
 	public void completeConfiguration(AndHowTestConfigImpl config) {
-		config.setEnvironmentProperties(args);
+		config.setEnvironmentVariables(args);
 	}
 
 }

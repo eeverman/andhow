@@ -262,32 +262,69 @@ public class StdConfigGetterAndSetterTest {
 	}
 
 	@Test
-	public void setEnvironmentPropertiesTest() {
+	public void setEnvironmentVariablesTest() {
 		MyStdConfig config = new MyStdConfig();
 
 		Map<String, String> envVars = new HashMap<>();
 		envVars.put("abc", "123");
 		envVars.put("xyz", "456");
 
-		config.setEnvironmentProperties(envVars);
+		config.setEnvironmentVariables(envVars);
 
-		assertEquals(2, config.getEnvironmentProperties().size());
-		assertTrue(envVars.equals(config.getEnvironmentProperties()));
-		assertFalse(envVars == config.getEnvironmentProperties(), "Should be disconnected object");
+		assertEquals(2, config.getLoaderEnvironment().getEnvironmentVariables().size());
+		assertTrue(envVars.equals(config.getLoaderEnvironment().getEnvironmentVariables()));
+		assertFalse(envVars == config.loadEnvBuilder.toImmutable().getEnvironmentVariables(), "Should be disconnected object");
 
 		//Now try setting new values - they should replace the old
 		Map<String, String> envVars2 = new HashMap<>();
 		envVars2.put("bob", "bob_val");
-		config.setEnvironmentProperties(envVars2);
+		config.setEnvironmentVariables(envVars2);
 
-		assertEquals(1, config.getEnvironmentProperties().size());
-		assertTrue(envVars2.equals(config.getEnvironmentProperties()));
+		assertEquals(1, config.getLoaderEnvironment().getEnvironmentVariables().size());
+		assertTrue(envVars2.equals(config.getLoaderEnvironment().getEnvironmentVariables()));
 
-		//Now set to null
-		config.setEnvironmentProperties(null);
-		assertNull(config.getEnvironmentProperties());
+		//Set to null - should be empty and marked for replacement
+		config.setEnvironmentVariables(null);
+		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().isEmpty());
+		assertTrue(config.loadEnvBuilder.isReplaceEmptyEnvVars());
 
+		//Set to empty - should be empty and marked for non-replacement
+		config.setEnvironmentVariables(Collections.emptyMap());
+		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().isEmpty());
+		assertFalse(config.loadEnvBuilder.isReplaceEmptyEnvVars());
 	}
+
+	public void setSystemPropertiesTest() {
+		MyStdConfig config = new MyStdConfig();
+
+		Properties sysProps = new Properties();
+		sysProps.put("abc", "123");
+		sysProps.put("xyz", "456");
+
+		config.setSystemProperties(sysProps);
+
+		assertEquals(2, config.getLoaderEnvironment().getSystemProperties().size());
+		assertTrue(sysProps.equals(config.getLoaderEnvironment().getSystemProperties()));
+
+		//Now try setting new values - they should replace the old
+		Properties sysProps2 = new Properties();
+		sysProps2.put("bob", "bob_val");
+		config.setSystemProperties(sysProps2);
+
+		assertEquals(1, config.getLoaderEnvironment().getSystemProperties().size());
+		assertTrue(sysProps2.equals(config.getLoaderEnvironment().getSystemProperties()));
+
+		//Set to null - should be empty and marked for replacement
+		config.setSystemProperties(null);
+		assertTrue(config.getLoaderEnvironment().getSystemProperties().isEmpty());
+		assertTrue(config.loadEnvBuilder.isReplaceEmptySysProps());
+
+		//Set to empty - should be empty and marked for non-replacement
+		config.setSystemProperties(new Properties());
+		assertTrue(config.getLoaderEnvironment().getSystemProperties().isEmpty());
+		assertFalse(config.loadEnvBuilder.isReplaceEmptySysProps());
+	}
+
 
 	@Test
 	public void setClasspathPropFilePathViaStringTest() throws Exception {
@@ -436,9 +473,6 @@ public class StdConfigGetterAndSetterTest {
 			return getLoaderEnvironment().getCmdLineArgs();
 		}
 
-		public Map<String, String> getEnvironmentProperties() {
-			return envProperties;
-		}
 
 		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }
 

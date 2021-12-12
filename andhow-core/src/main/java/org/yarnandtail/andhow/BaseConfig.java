@@ -44,12 +44,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	//Prop file on filesystem path
 	protected StrProp filesystemPropFilePathProp;
 	protected boolean _missingFilesystemPropFileAProblem = false;
-
-	//System Properties
-	protected Properties systemProperties;
-
-	//System Environment
-	protected Map<String, String> envProperties;
 	
 	protected NamingStrategy naming = new CaseInsensitiveNaming();
 
@@ -230,7 +224,7 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 
 	@Override
 	public LoaderEnvironment getLoaderEnvironment() {
-		return loadEnvBuilder.toImmutable();
+		return loadEnvBuilder;
 	}
 
 }
