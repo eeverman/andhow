@@ -10,7 +10,7 @@ import java.util.*;
  * <p>
  * Loaders can load values from anywhere (JNDI, LDAP, filesystem, etc), however some sources are
  * well defined and make up the environment the Loaders operate within.  Rather than trying to
- * inject those into the each loader as needed, this environment object is available to the
+ * inject those into each loader as needed, this environment object is available to the
  * Loader to pull the appropriate environment from.
  * <p>
  * This interface also simplifies testing by providing a central place to set the environment that

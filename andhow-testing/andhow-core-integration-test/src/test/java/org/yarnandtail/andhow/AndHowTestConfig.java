@@ -85,6 +85,18 @@ public class AndHowTestConfig {
 
 			return (N) this;
 		}
+
+		public N setEnvironmentVariables(Map<String, String> envVars) {
+			loadEnvBuilder.setEnvVars(envVars);
+
+			return (N)this;
+		}
+
+		public N setSystemProperties(Map<String, String> envVars) {
+			loadEnvBuilder.setSysProps(envVars);
+
+			return (N)this;
+		}
 		
 
 		//

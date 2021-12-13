@@ -7,9 +7,7 @@ import java.util.Properties;
 public class StdSysPropValueLoader extends MapValueLoader {
 
 	public void completeConfiguration(AndHowTestConfigImpl config) {
-		Properties props = new Properties();
-		props.putAll(args);
-		config.setSystemProperties(props);
+		config.setSystemProperties(args);
 	}
 
 }

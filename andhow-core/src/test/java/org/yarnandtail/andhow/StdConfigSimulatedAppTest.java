@@ -117,6 +117,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		assertEquals(98, SampleRestClientGroup.REST_PORT.getValue(), "Fixed value should override prop file");
 	}
 
+
 	@Test
 	public void testAllValuesAreSetViaEnvVarAndPropFile() {
 
@@ -142,7 +143,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	@Test
 	public void testAllValuesAreSetViaSystemPropertiesAndPropFile() {
 
-		Properties props = new Properties();
+		Map<String, String> props = new HashMap<>();
 		props.put(
 				GROUP_PATH + ".classpath_prop_file", /* case ignored */
 				CLASSPATH_BEGINNING + "all.props.speced.properties"

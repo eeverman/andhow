@@ -22,8 +22,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Test Harness module.  For examples using the test harness, see the AndHow
  * Sample Usages module and its many sub-modules, which are stand-alone simulated
  * projects complete with testing.
- * 
- * @author ericeverman
+ *
  */
 public class AndHowTestConfig {
 	
@@ -84,6 +83,18 @@ public class AndHowTestConfig {
 			}
 
 			return (N) this;
+		}
+
+		public N setEnvironmentVariables(Map<String, String> envVars) {
+			loadEnvBuilder.setEnvVars(envVars);
+
+			return (N)this;
+		}
+
+		public N setSystemProperties(Map<String, String> envVars) {
+			loadEnvBuilder.setSysProps(envVars);
+
+			return (N)this;
 		}
 		
 

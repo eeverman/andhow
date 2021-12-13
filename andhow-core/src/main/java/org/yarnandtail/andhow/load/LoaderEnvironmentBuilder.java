@@ -24,27 +24,59 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	protected boolean _replaceEmptySysProps = true;
 
 	/**
-	 * Set the environment vars, overriding any previously set values.
+	 * Set the environment vars that the Loaders see, overriding the actual env. vars.
 	 * <p>
-	 * Setting any values at all results in replacing the system provided env. vars.
+	 * Calling this method causes the passed Map to completely replace the values that
+	 * Loaders would have seen coming from the OS provided environment variables.  Passing a null or
+	 * empty Map results in the loaders seeing no env vars.
+	 * Values are overwritten each time this method is called.
 	 *
-	 * @param envVars The new env vars to use
+	 * @param envVars The new env vars to use.  Null and empty both result in the zero env vars.
 	 */
 	public void setEnvVars(Map<String, String> envVars) {
 		_envVars.clear();
-		_envVars.putAll(envVars);
+		if (envVars != null) { _envVars.putAll(envVars); }
+		_replaceEmptyEnvVars = false;
 	}
 
 	/**
-	 * Set the java system properties, overriding any previously set values.
+	 * Forces any previous env. vars. set via {@link #setEnvVars(Map)} to be dumped and the actual
+	 * OS provided env. vars. will be used instead.
 	 * <p>
-	 * Setting any values at all results in replacing the system provided sys. props.
+	 * Note that calling {@link #getEnvironmentVariables()} will return an empty collection after this
+	 * method is called.  The real env. vars. will be injected when {@link #toImmutable()} is called.
+	 */
+	public void setEnvVarsToUseActualEnvVars() {
+		_envVars.clear();
+		_replaceEmptyEnvVars = true;
+	}
+
+	/**
+	 * Set the java system properties that the Loaders see, overriding the actual sys. props.
+	 * <p>
+	 * Calling this method causes the passed Map to completely replace the values that
+	 * Loaders would have seen coming from {@code System.getProperties()}.  Passing a null or
+	 * empty Map results in the loaders seeing no sys. props.
+	 * Values are overwritten each time this method is called.
 	 *
-	 * @param sysProps The new sys props to use
+	 * @param sysProps The new sys props to use.   Null and empty both result in the zero sys. props.
 	 */
 	public void setSysProps(Map<String, String> sysProps) {
 		_sysProps.clear();
-		_sysProps.putAll(sysProps);
+		if (sysProps != null) { _sysProps.putAll(sysProps); }
+		_replaceEmptySysProps = false;
+	}
+
+	/**
+	 * Forces any previous sys. props. set via {@link #setSysProps(Map)}} to be dumped and the actual
+	 * {@code System.getProperties()} will be used instead.
+	 * <p>
+	 * Note that calling {@link #getSystemProperties()} will return an empty collection after this
+	 * method is called.  The real sys. props. will be injected when {@link #toImmutable()} is called.
+	 */
+	public void setSysPropsToUseActualEnvVars() {
+		_sysProps.clear();
+		_replaceEmptySysProps = true;
 	}
 
 	/**
@@ -191,22 +223,6 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		if (fixedVals != null) {
 			_fixedPropertyValues.addAll(fixedVals);
 		}
-	}
-
-	public boolean isReplaceEmptyEnvVars() {
-		return _replaceEmptyEnvVars;
-	}
-
-	public void setReplaceEmptyEnvVars(final boolean replaceEmptyEnvVars) {
-		_replaceEmptyEnvVars = replaceEmptyEnvVars;
-	}
-
-	public boolean isReplaceEmptySysProps() {
-		return _replaceEmptySysProps;
-	}
-
-	public void setReplaceEmptySysProps(final boolean replaceEmptySysProps) {
-		_replaceEmptySysProps = replaceEmptySysProps;
 	}
 
 	public LoaderEnvironmentImm toImmutable() {
