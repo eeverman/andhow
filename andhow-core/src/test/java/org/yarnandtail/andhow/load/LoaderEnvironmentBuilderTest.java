@@ -47,6 +47,12 @@ class LoaderEnvironmentBuilderTest {
 		fixedPropertyVals.add(new PropertyValue(INT_1, "int1"));
 	}
 
+	@Test
+	public void testTheTest() {
+		// Preconditions - assuming this is true in several tests
+		assertTrue(System.getenv().size() > 0);
+		assertTrue(System.getProperties().size() > 0);
+	}
 
 	@Test
 	public void happyPathToImmutable() {
@@ -80,7 +86,7 @@ class LoaderEnvironmentBuilderTest {
 
 
 	@Test
-	public void nullValuesHandledCorrectlyForToImmutable() {
+	public void defaultValuesHandledCorrectlyForToImmutable() {
 
 		//
 		//  Check conversion to immutable
@@ -95,7 +101,103 @@ class LoaderEnvironmentBuilderTest {
 	}
 
 	@Test
-	public void AddNamedFixedValueShouldThrowErrorForDuplicateNames() {
+	public void nullValuesHandledCorrectlyForToImmutable() {
+
+		// Initially set non-null values
+		populateCollections();
+		leb.setEnvVars(envVars);
+		leb.setCmdLineArgs(mainArgs);
+		leb.setSysProps(sysProps);
+		leb.setFixedNamedValues(fixedNamedVals);
+		leb.setFixedPropertyValues(fixedPropertyVals);
+
+		// Overwrite w/ null
+		leb.setEnvVars(null);
+		leb.setCmdLineArgs(null);
+		leb.setSysProps(null);
+		leb.setFixedNamedValues(null);
+		leb.setFixedPropertyValues(null);
+
+		assertTrue(leb.getEnvironmentVariables().isEmpty());
+		assertTrue(leb.getCmdLineArgs().isEmpty());
+		assertTrue(leb.getSystemProperties().isEmpty());
+		assertTrue(leb.getFixedNamedValues().isEmpty());
+		assertTrue(leb.getFixedPropertyValues().isEmpty());
+
+		//
+		//  Check conversion to immutable
+
+		LoaderEnvironmentImm le = leb.toImmutable();
+
+		assertTrue(le.getEnvironmentVariables().isEmpty());
+		assertTrue(le.getSystemProperties().isEmpty());
+		assertEquals(0, le.getCmdLineArgs().size());
+		assertEquals(0, le.getFixedNamedValues().size());
+		assertEquals(0, le.getFixedPropertyValues().size());
+	}
+
+
+	@Test
+	public void emptyValuesHandledCorrectlyForToImmutable() {
+
+		// Initially set non-null values
+		populateCollections();
+		leb.setEnvVars(envVars);
+		leb.setCmdLineArgs(mainArgs);
+		leb.setSysProps(sysProps);
+		leb.setFixedNamedValues(fixedNamedVals);
+		leb.setFixedPropertyValues(fixedPropertyVals);
+
+		// Overwrite w/ empty
+		leb.setEnvVars(Collections.emptyMap());
+		leb.setCmdLineArgs(new String[0]);
+		leb.setSysProps(Collections.emptyMap());
+		leb.setFixedNamedValues(Collections.emptyMap());
+		leb.setFixedPropertyValues(Collections.emptyList());
+
+		assertTrue(leb.getEnvironmentVariables().isEmpty());
+		assertTrue(leb.getCmdLineArgs().isEmpty());
+		assertTrue(leb.getSystemProperties().isEmpty());
+		assertTrue(leb.getFixedNamedValues().isEmpty());
+		assertTrue(leb.getFixedPropertyValues().isEmpty());
+
+		//
+		//  Check conversion to immutable
+
+		LoaderEnvironmentImm le = leb.toImmutable();
+
+		assertTrue(le.getEnvironmentVariables().isEmpty());
+		assertTrue(le.getSystemProperties().isEmpty());
+		assertEquals(0, le.getCmdLineArgs().size());
+		assertEquals(0, le.getFixedNamedValues().size());
+		assertEquals(0, le.getFixedPropertyValues().size());
+
+	}
+
+
+	@Test
+	public void resettingToUseSystemProvidedValuesWorks() {
+
+		// Initially set non-null values
+		populateCollections();
+		leb.setEnvVars(envVars);
+		leb.setSysProps(sysProps);
+
+		//
+		// Reset to actual system provided values for sys props and env vars
+		leb.setEnvVarsToUseActualEnvVars();
+		leb.setSysPropsToUseActualEnvVars();
+
+		LoaderEnvironmentImm le = leb.toImmutable();
+
+		assertTrue(System.getenv().equals(le.getEnvironmentVariables()));
+		assertTrue(System.getProperties().equals(le.getSystemProperties()));
+
+	}
+
+
+	@Test
+	public void addNamedFixedValueShouldThrowErrorForDuplicateNames() {
 		leb.addFixedValue("MY_STR_1", "AAA");
 
 		//Try to add a duplicate property
@@ -105,21 +207,25 @@ class LoaderEnvironmentBuilderTest {
 	}
 
 	@Test
-	public void AddNamedFixedValueShouldThrowErrorForNullName() {
+	public void addNamedFixedValueShouldThrowErrorForNullNameOrValue() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			leb.addFixedValue((String)null, "ZZZ");
+		});
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			leb.addFixedValue("MY_STR_1", null);
 		});
 	}
 
 	@Test
-	public void AddNamedFixedValueShouldThrowErrorForWhitespaceName() {
+	public void addNamedFixedValueShouldThrowErrorForWhitespaceName() {
 		assertThrows(IllegalArgumentException.class, () -> {
 			leb.addFixedValue("   ", "ZZZ");
 		});
 	}
 
 	@Test
-	public void AddAndRemoveNamedFixedValueShouldWork() {
+	public void addAndRemoveNamedFixedValueShouldWork() {
 		leb.addFixedValue("AAA", 99);
 		leb.addFixedValue("BBB", "Foo");
 
@@ -135,7 +241,7 @@ class LoaderEnvironmentBuilderTest {
 	}
 
 	@Test
-	public void AddAndRemoveFixedValueShouldWork() {
+	public void addAndRemoveFixedValueShouldWork() {
 		leb.addFixedValue(STR_1, "bob");
 		leb.addFixedValue(INT_1, 99);
 
@@ -150,6 +256,17 @@ class LoaderEnvironmentBuilderTest {
 		assertNull(leb.removeFixedValue(INT_1), "Should be a no-op");
 	}
 
+
+	@Test
+	public void addFixedPropertyShouldThrowErrorForNullNameOrValue() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			leb.addFixedValue((Property<String>)null, "ZZZ");
+		});
+
+		assertThrows(IllegalArgumentException.class, () -> {
+			leb.addFixedValue(STR_1, (String)null);
+		});
+	}
 
 	@Test
 	public void setCmdLineArgsTest() {
@@ -174,18 +291,6 @@ class LoaderEnvironmentBuilderTest {
 		leb.setCmdLineArgs(new String[]{"arg6"});
 		leb.setCmdLineArgs(null);
 		assertEquals(0, leb.getCmdLineArgs().size());
-	}
-
-
-
-	<T> boolean containsPropertyAndValue(List<PropertyValue<?>> propertyValues, Property<T> property, T value) {
-		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
-		return pv != null && pv.getValue().equals(value);
-	}
-
-	boolean containsNameAndValue(Map<String, Object> valueMap, String name, Object value) {
-		Object valueInMap = valueMap.entrySet().stream().filter(p -> p.getKey().equals(name)).findFirst().get().getValue();
-		return valueInMap != null && valueInMap.equals(value);
 	}
 
 }
