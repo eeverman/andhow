@@ -222,9 +222,20 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 		return loaders;
 	}
 
+	/**
+	 * Returns an immutable LoaderEnvironment with all collections fully expanded.
+	 * <p>
+	 * Collections like environmental vars and system props, which may have been empty
+	 * because they were not explicitly set, will be replaced with the actual env vars or
+	 * sys props in the returned immutable version.  Thus, the LoaderEnvironment returned
+	 * from this method may not match the individual accessor methods of the
+	 * {@link LoaderEnvironmentBuilder}.
+	 *
+	 * @return An immutable and fully expanded LoaderEnvironment.
+	 */
 	@Override
 	public LoaderEnvironment getLoaderEnvironment() {
-		return loadEnvBuilder;
+		return loadEnvBuilder.toImmutable();
 	}
 
 }

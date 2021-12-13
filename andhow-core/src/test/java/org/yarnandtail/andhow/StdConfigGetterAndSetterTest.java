@@ -237,7 +237,7 @@ public class StdConfigGetterAndSetterTest {
 		String[] args = new String[] {"arg1", "arg2"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
-		assertThat(config.getLoaderEnvironment().getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
+		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
 
 		// Set new values - they should replace the old
@@ -248,7 +248,7 @@ public class StdConfigGetterAndSetterTest {
 
 		assertEquals(args2.length, actualArgs.size());
 		assertThat(actualArgs.toArray(), arrayContainingInAnyOrder(args2));
-		assertThat(config.getLoaderEnvironment().getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args2));
+		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args2));
 
 
 		// Set empty array
@@ -271,27 +271,34 @@ public class StdConfigGetterAndSetterTest {
 
 		config.setEnvironmentVariables(envVars);
 
-		assertEquals(2, config.getLoaderEnvironment().getEnvironmentVariables().size());
+		assertEquals(2, config.getEnvironmentVariables().size());
+		assertTrue(envVars.equals(config.getEnvironmentVariables()));
 		assertTrue(envVars.equals(config.getLoaderEnvironment().getEnvironmentVariables()));
 		assertFalse(envVars == config.loadEnvBuilder.toImmutable().getEnvironmentVariables(), "Should be disconnected object");
+		assertFalse(envVars == config.getLoaderEnvironment().getEnvironmentVariables(), "Should be disconnected object");
 
 		//Now try setting new values - they should replace the old
 		Map<String, String> envVars2 = new HashMap<>();
 		envVars2.put("bob", "bob_val");
 		config.setEnvironmentVariables(envVars2);
 
-		assertEquals(1, config.getLoaderEnvironment().getEnvironmentVariables().size());
+		assertEquals(1, config.getEnvironmentVariables().size());
+		assertTrue(envVars2.equals(config.getEnvironmentVariables()));
 		assertTrue(envVars2.equals(config.getLoaderEnvironment().getEnvironmentVariables()));
 
 		//Set to null - should be empty and marked for replacement
 		config.setEnvironmentVariables(null);
-		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().isEmpty());
+		assertTrue(config.getEnvironmentVariables().isEmpty());
 		assertTrue(config.loadEnvBuilder.isReplaceEmptyEnvVars());
+		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().size() > 0,
+				"The immutable version should fill in the system env vars.");
 
 		//Set to empty - should be empty and marked for non-replacement
 		config.setEnvironmentVariables(Collections.emptyMap());
-		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().isEmpty());
+		assertTrue(config.getEnvironmentVariables().isEmpty());
 		assertFalse(config.loadEnvBuilder.isReplaceEmptyEnvVars());
+		assertTrue(config.getLoaderEnvironment().getEnvironmentVariables().isEmpty(),
+				"The immutable version should NOT have filled in w/ sys env vars.");
 	}
 
 	public void setSystemPropertiesTest() {
@@ -303,26 +310,33 @@ public class StdConfigGetterAndSetterTest {
 
 		config.setSystemProperties(sysProps);
 
-		assertEquals(2, config.getLoaderEnvironment().getSystemProperties().size());
+		assertEquals(2, config.getSystemProperties().size());
+		assertTrue(sysProps.equals(config.getSystemProperties()));
 		assertTrue(sysProps.equals(config.getLoaderEnvironment().getSystemProperties()));
+
 
 		//Now try setting new values - they should replace the old
 		Properties sysProps2 = new Properties();
 		sysProps2.put("bob", "bob_val");
 		config.setSystemProperties(sysProps2);
 
-		assertEquals(1, config.getLoaderEnvironment().getSystemProperties().size());
+		assertEquals(1, config.getSystemProperties().size());
+		assertTrue(sysProps2.equals(config.getSystemProperties()));
 		assertTrue(sysProps2.equals(config.getLoaderEnvironment().getSystemProperties()));
 
 		//Set to null - should be empty and marked for replacement
 		config.setSystemProperties(null);
-		assertTrue(config.getLoaderEnvironment().getSystemProperties().isEmpty());
+		assertTrue(config.getSystemProperties().isEmpty());
 		assertTrue(config.loadEnvBuilder.isReplaceEmptySysProps());
+		assertFalse(config.getLoaderEnvironment().getSystemProperties().isEmpty(),
+				"Should have been filled in w/ actual sys props");
 
 		//Set to empty - should be empty and marked for non-replacement
 		config.setSystemProperties(new Properties());
-		assertTrue(config.getLoaderEnvironment().getSystemProperties().isEmpty());
+		assertTrue(config.getSystemProperties().isEmpty());
 		assertFalse(config.loadEnvBuilder.isReplaceEmptySysProps());
+		assertTrue(config.getLoaderEnvironment().getSystemProperties().isEmpty(),
+				"Should NOT have been filled in w/ actual sys props");
 	}
 
 
@@ -462,17 +476,24 @@ public class StdConfigGetterAndSetterTest {
 	 */
 	public static final class MyStdConfig extends StdConfig.StdConfigAbstract<MyStdConfig> {
 		public List<PropertyValue<?>> getFixedValues() {
-			return getLoaderEnvironment().getFixedPropertyValues();
+			return loadEnvBuilder.getFixedPropertyValues();
 		}
 
 		public Map<String, Object> getFixedKeyObjectPairValues() {
-			return getLoaderEnvironment().getFixedNamedValues();
+			return loadEnvBuilder.getFixedNamedValues();
 		}
 
 		public List<String> getCmdLineArgs() {
-			return getLoaderEnvironment().getCmdLineArgs();
+			return loadEnvBuilder.getCmdLineArgs();
 		}
 
+		public Map<String, String> getEnvironmentVariables() {
+			return loadEnvBuilder.getEnvironmentVariables();
+		}
+
+		public Map<String, String> getSystemProperties() {
+			return loadEnvBuilder.getSystemProperties();
+		}
 
 		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }
 
