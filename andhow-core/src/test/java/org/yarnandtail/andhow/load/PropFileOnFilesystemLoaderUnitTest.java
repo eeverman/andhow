@@ -19,15 +19,12 @@ import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
-/**
- *
- * @author eeverman
- */
 public class PropFileOnFilesystemLoaderUnitTest {
 
 	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropFileOnFilesystemLoaderUnitTest.properties";
 
 	PropertyConfigurationMutable appDef;
+	LoaderEnvironmentBuilder leb;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 
@@ -71,6 +68,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
 
+		leb = new LoaderEnvironmentBuilder();
 	}
 
 	@AfterEach
@@ -93,7 +91,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -117,7 +115,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(1, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -144,7 +142,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 	}

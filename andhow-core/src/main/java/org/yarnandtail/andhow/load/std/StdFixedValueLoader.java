@@ -1,9 +1,7 @@
 package org.yarnandtail.andhow.load.std;
 
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import org.yarnandtail.andhow.load.BaseFixedValueLoader;
-import org.yarnandtail.andhow.load.FixedValueLoader;
 
 /**
  * Sets values directly in code.
@@ -72,8 +70,4 @@ public class StdFixedValueLoader extends BaseFixedValueLoader implements Standar
 	public StdFixedValueLoader() {
 	}
 
-	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
-		return null;
-	}
 }

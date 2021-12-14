@@ -26,24 +26,6 @@ import java.util.List;
 public interface Loader {
 
 	/**
-	 * Builds up a list of LoaderValues by loading property values from a
-	 * configuration source.
-	 *
-	 * Loaders find and load values and associate them with the correct Property.
-	 * If there is a problem while doing that, they register one or more
-	 * LoaderProblems in the returned LoaderValues.
-	 *
-	 * Validation of Property values is not Loader's responsibility and will be
-	 * handled outside this method.
-	 *
-	 * @param runtimeDef
-	 * @param existingValues
-	 * @return
-	 */
-	LoaderValues load(PropertyConfigurationInternal runtimeDef,
-                      ValidatedValuesWithContext existingValues);
-
-	/**
 	 * Builds up a list of LoaderValues by loading property values from a configuration source.
 	 * <p>
 	 * Loaders find and load values and associate them with the correct Property.
@@ -61,10 +43,8 @@ public interface Loader {
 	 * @return The Property values loaded by this loader and/or the problems discovered while
 	 * 		attempting to load those Property values.
 	 */
-	default LoaderValues load(PropertyConfigurationInternal runtimeDef,
-			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
-		return load(runtimeDef, existingValues);
-	}
+	LoaderValues load(PropertyConfigurationInternal runtimeDef,
+			LoaderEnvironment environment, ValidatedValuesWithContext existingValues);
 
 	/**
 	 * Returns a PropertyGroup used to globally configure a class of Loader.

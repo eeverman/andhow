@@ -15,12 +15,10 @@ import static org.yarnandtail.andhow.load.BaseForLoaderTests.SimpleParams.*;
 public class BaseFixedValueLoaderTest extends BaseForLoaderTests {
 
 	protected MyFixedLoader loader;
-	protected  LoaderEnvironmentBuilder loadEnv;
 
 	@BeforeEach
 	public void beforeEach() {
 		loader = new MyFixedLoader();
-		loadEnv = new LoaderEnvironmentBuilder();
 	}
 
 
@@ -291,8 +289,10 @@ public class BaseFixedValueLoaderTest extends BaseForLoaderTests {
 	// Temp class to make a non-abstract class
 	public static class MyFixedLoader extends BaseFixedValueLoader {
 		@Override
-		public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
-			return null;
+		public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+				final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+
+			return load(runtimeDef, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
 		}
 	}
 }

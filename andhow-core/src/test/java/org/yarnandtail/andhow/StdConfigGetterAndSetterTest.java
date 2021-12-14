@@ -91,7 +91,7 @@ public class StdConfigGetterAndSetterTest {
 		Loader loader2 = new KeyValuePairLoader();
 		Loader loader3 = new PropFileOnClasspathLoader();
 		Loader loader4 = new PropFileOnFilesystemLoader();
-		Loader loader5 = new FixedValueLoader();
+		Loader loader5 = new MapLoader();
 		Loader loader6 = new MapLoader();
 		Loader loader7 = new KeyValuePairLoader();
 		Loader loader8 = new PropFileOnClasspathLoader();
@@ -316,7 +316,7 @@ public class StdConfigGetterAndSetterTest {
 		List<ValidatedValue> vvList = new ArrayList<>();
 		vvList.add(validatedValue);
 
-		LoaderValues loaderValues = new LoaderValues(new FixedValueLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
+		LoaderValues loaderValues = new LoaderValues(new MapLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
 		ValidatedValuesWithContextMutable validatedValues = new ValidatedValuesWithContextMutable();
 		validatedValues.addValues(loaderValues);
 		Class<?> vvsClass = ValidatedValuesWithContext.class;	//class of getEffectivePath argument

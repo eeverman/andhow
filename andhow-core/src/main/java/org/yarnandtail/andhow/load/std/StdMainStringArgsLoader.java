@@ -75,11 +75,6 @@ public class StdMainStringArgsLoader extends BaseKeyValuePairLoader
 	}
 
 	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
-		return null;	//TODO Remove me
-	}
-
-	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
 

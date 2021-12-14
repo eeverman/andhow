@@ -21,11 +21,6 @@ public class MapLoader extends BaseMapLoader {
 	}
 
 	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
-		return null;
-	}
-
-	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
 		return load(runtimeDef, existingValues, map);

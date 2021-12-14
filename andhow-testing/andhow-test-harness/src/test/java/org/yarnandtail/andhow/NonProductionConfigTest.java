@@ -11,7 +11,6 @@ import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.Loader;
 import org.yarnandtail.andhow.load.*;
 import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
-import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
 import org.yarnandtail.andhow.property.StrProp;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,15 +77,15 @@ public class NonProductionConfigTest {
 	@Test
 	public void testSetLoaders() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
-		FixedValueLoader fvl = new FixedValueLoader();
-		MapLoader ml = new MapLoader();
-		config.setLoaders(fvl, ml);
+		MapLoader ml1 = new MapLoader();
+		MapLoader ml2 = new MapLoader();
+		config.setLoaders(ml1, ml2);
 		
 		List<Loader> loaders = config.buildLoaders();
 		
 		assertEquals(2, loaders.size());
-		assertEquals(fvl, loaders.get(0));
-		assertEquals(ml, loaders.get(1));
+		assertEquals(ml1, loaders.get(0));
+		assertEquals(ml2, loaders.get(1));
 	}
 	
 	@Test

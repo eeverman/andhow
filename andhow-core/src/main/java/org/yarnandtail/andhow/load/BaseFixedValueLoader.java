@@ -7,18 +7,18 @@ import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.util.*;
 
 /**
- * Basic abstract utility loader that can load fixed values into the effective
+ * Abstract utility loader that can load fixed values into the effective
  * list of configured values.
- *
- * The {@link Loader#load(PropertyConfigurationInternal, ValidatedValuesWithContext)} implementation
- * implemented here uses the fixed values from the {@link LoaderEnvironment}, but
- * that can easily be overriden to bring fixed values from somewhere else.
- * This loader does not trim incoming values for String type properties - they are
- * assumed to already be in final form.
- * This loader considers it a problem to be passed unrecognized properties
- * and will throw a RuntimeException if that happens, though this can be set
- * false to allow fixed values set via name to be ignored if the name is not
- * recognized.
+ * <p>
+ * To implement a non-abstract class, override the
+ * {@link #load(PropertyConfigurationInternal, LoaderEnvironment, ValidatedValuesWithContext)}
+ * method with a all to {@link #load(PropertyConfigurationInternal, Map, List)} and supply your own
+ * values for one or both of the two collections.
+ * <p>
+ * By default, this loader does not trim incoming values for String type properties and will
+ * throw a RuntimeException if passed unrecognized properties.  Both of these behaviours
+ * can be changed the return values of {@link #isTrimmingRequiredForStringValues} and
+ * {@link #isUnknownPropertyAProblem}.
  *
  */
 public abstract class BaseFixedValueLoader extends BaseLoader implements ReadLoader {
@@ -29,14 +29,18 @@ public abstract class BaseFixedValueLoader extends BaseLoader implements ReadLoa
 	}
 
 	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+
 		return load(runtimeDef, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
 	}
 
 	/**
-	 * Load from the passed collections of fixed values.
+	 * Load from the passed collections of property values.
+	 * <p>
+	 * All arguements must be non-null.
 	 *
-	 * @param runtimeDef The definition of all known Properties and naming metadata.
+	 * @param runtimeDef The definition of all known Properties and naming metadata
 	 * @param fixedNamedValues Fixed values referenced by name
 	 * @param fixedPropertyValues Fixed values reference by Property reference
 	 * @return The Property values loaded by this loader and/or the problems discovered while

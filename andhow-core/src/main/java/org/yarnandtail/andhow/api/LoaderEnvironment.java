@@ -1,7 +1,7 @@
 package org.yarnandtail.andhow.api;
 
 import org.yarnandtail.andhow.PropertyValue;
-import org.yarnandtail.andhow.load.FixedValueLoader;
+import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
 
 import java.util.*;
 
@@ -59,7 +59,7 @@ public interface LoaderEnvironment {
 	 * application code prior to AndHow initialization.
 	 * <p>
 	 * The referenced Properties and values returned by this method and {@link #getFixedPropertyValues()}
-	 * are intended to be loaded by the {@link FixedValueLoader}, which nominally loads prior to any
+	 * are intended to be loaded by the {@link StdFixedValueLoader}, which nominally loads prior to any
 	 * other loader, effectively making the value non-configurable.
 	 *
 	 * @return A map of property names (canonical or aliases) to property values,
@@ -73,7 +73,7 @@ public interface LoaderEnvironment {
 	 * {@link PropertyValue}s, set application code prior to AndHow initialization.
 	 * <p>
 	 * The referenced Properties and values returned by this method and {@link #getFixedNamedValues()}
-	 * are intended to be loaded by the {@link FixedValueLoader}, which nominally loads prior to any
+	 * are intended to be loaded by the {@link StdFixedValueLoader}, which nominally loads prior to any
 	 * other loader, effectively making the value non-configurable.
 	 *
 	 * @return A list of PropertyValue's.  Never null, but possibly empty.

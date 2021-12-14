@@ -13,14 +13,12 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author eeverman
- */
 public class PropFileOnClasspathLoaderUnitTest {
 
 	private static final String CLASSPATH_BASE = "/org/yarnandtail/andhow/load/PropFileOnClasspathLoaderUnitTest_SimpleParams";
 
 	PropertyConfigurationMutable appDef;
+	LoaderEnvironmentBuilder leb;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 
 	public static interface TestProps {
@@ -57,6 +55,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(simpleProxy, SimpleParams.FLAG_NULL);
 
+		leb = new LoaderEnvironmentBuilder();
 	}
 
 	@Test
@@ -71,7 +70,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -96,7 +95,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -120,7 +119,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -145,7 +144,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -171,7 +170,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -194,7 +193,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		//These are the two bad property names in the file
 		List<String> badPropNames = Arrays.asList(new String[]{
@@ -228,7 +227,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(1, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -255,7 +254,7 @@ public class PropFileOnClasspathLoaderUnitTest {
 		pfl.setFilePath(TestProps.CLAZZ_PATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 	}

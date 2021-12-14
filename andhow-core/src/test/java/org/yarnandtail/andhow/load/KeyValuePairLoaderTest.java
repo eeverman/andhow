@@ -10,11 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.std.StdMainStringArgsLoader;
-import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.FlagProp;
-import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.util.AndHowUtil;
 
 /**
  * Note:  This directly tests a single loader, so it is not possible to
@@ -47,7 +42,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
 		loader.setKeyValuePairs(args);
 		
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -75,7 +70,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
 		loader.setKeyValuePairs(args);
 		
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -102,7 +97,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
 		loader.setKeyValuePairs(args);
 		
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -127,7 +122,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		loader.setKeyValuePairs(args);
 		loader.setKeyValuePairs((List<String>) null);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 
 
 		assertEquals(0, result.getProblems().size());
@@ -148,7 +143,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		loader.setKeyValuePairs(args);
 		loader.setKeyValuePairs(Collections.emptyList());
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -168,7 +163,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		loader.setKeyValuePairs(args);
 
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 
 		assertEquals("something_YYY", result.getValue(SimpleParams.STR_ENDS_WITH_XXX));
 		assertEquals(0, result.getProblems().size());
@@ -188,7 +183,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
 		loader.setKeyValuePairs(args);
 		
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 		
 		assertEquals(3, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -210,7 +205,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 
 		loader.setKeyValuePairs(args);
 		
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 
 		assertTrue(loader.isUnknownPropertyAProblem());
 		assertEquals(2, result.getProblems().size());
@@ -233,7 +228,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		loader.setUnknownPropertyAProblem(false);
 		loader.setKeyValuePairs(args);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, loadEnv, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());

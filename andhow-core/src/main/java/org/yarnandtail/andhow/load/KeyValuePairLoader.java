@@ -47,11 +47,6 @@ public class KeyValuePairLoader extends BaseKeyValuePairLoader {
 	}
 
 	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef, final ValidatedValuesWithContext existingValues) {
-		return load(runtimeDef, keyValuePairs, KVP_DELIMITER);
-	}
-
-	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
 
