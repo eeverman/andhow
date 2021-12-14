@@ -12,11 +12,11 @@ public class KVPTest {
 	
 	@Test
 	public void splitKVPGoodEmptyArgs() throws Exception {
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("", KeyValuePairLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("    ", KeyValuePairLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t ", KeyValuePairLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t\n\r\f ", KeyValuePairLoader.KVP_DELIMITER));
-		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \b ", KeyValuePairLoader.KVP_DELIMITER));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("", "="));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("    ", "="));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t ", "="));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \t\n\r\f ", "="));
+		assertEquals(KVP.NULL_KVP, KVP.splitKVP("   \b ", "="));
 	}
 	
 	@Test
@@ -24,35 +24,35 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag", "=");
 		assertEquals("flag", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("1", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("1", "=");
 		assertEquals("1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("1a1", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("1a1", "=");
 		assertEquals("1a1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  1a1   ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  1a1   ", "=");
 		assertEquals("1a1", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("\"1\"", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("\"1\"", "=");
 		assertEquals("\"1\"", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("\'1\'", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("\'1\'", "=");
 		assertEquals("\'1\'", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP(" \t!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|  \t\n\r\f ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP(" \t!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|  \t\n\r\f ", "=");
 		assertEquals("!@#$%^&*()_+-{var}[OPTION]\\~`<br>,.?/|", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  1\t1   ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  1\t1   ", "=");
 		assertEquals("1\t1", kvp.getName());
 		assertNull(kvp.getValue());
 	}
@@ -62,19 +62,19 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag=value", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=value", "=");
 		assertEquals("flag", kvp.getName());
 		assertEquals("value", kvp.getValue());
 		
-		kvp = KVP.splitKVP("  \t flag \t  =  \t value \t  ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  \t flag \t  =  \t value \t  ", "=");
 		assertEquals("flag", kvp.getName());
 		assertEquals("value", kvp.getValue());
 		
-		kvp = KVP.splitKVP("   flag   =    ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("   flag   =    ", "=");
 		assertEquals("flag", kvp.getName());
 		assertNull(kvp.getValue());
 		
-		kvp = KVP.splitKVP("  fl \t ag \r = \n val \t ue  ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("  fl \t ag \r = \n val \t ue  ", "=");
 		assertEquals("fl \t ag", kvp.getName());
 		assertEquals("val \t ue", kvp.getValue());
 	}
@@ -84,15 +84,15 @@ public class KVPTest {
 		
 		KVP kvp = null;
 		
-		kvp = KVP.splitKVP("flag=val=ue", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=val=ue", "=");
 		assertEquals("flag", kvp.getName());
 		assertEquals("val=ue", kvp.getValue());
 		
-		kvp = KVP.splitKVP("flag=v=a=l=u=e", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag=v=a=l=u=e", "=");
 		assertEquals("flag", kvp.getName());
 		assertEquals("v=a=l=u=e", kvp.getValue());
 		
-		kvp = KVP.splitKVP("flag = v = a = l = u = e ", KeyValuePairLoader.KVP_DELIMITER);
+		kvp = KVP.splitKVP("flag = v = a = l = u = e ", "=");
 		assertEquals("flag", kvp.getName());
 		assertEquals("v = a = l = u = e", kvp.getValue());
 		
@@ -101,42 +101,42 @@ public class KVPTest {
 	@Test
 	public void splitKVPBadEmptyFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("=value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("=value", "=")
 		);
 	}
 	
 	@Test
 	public void splitKVPBadSpaceOnlyFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("  =value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("  =value", "=")
 		);
 	}
 	
 	@Test
 	public void splitKVPBadAllSpaceAndTabFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("   \t =value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("   \t =value", "=")
 		);
 	}
 	
 	@Test
 	public void splitKVPBadAllWhitespaceAndNewLinesFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("   \t\n\r\f = value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("   \t\n\r\f = value", "=")
 		);
 	}
 	
 	@Test
 	public void splitKVPBadAllBackspaceFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("\b =value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("\b =value", "=")
 		);
 	}
 	
 	@Test
 	public void splitKVPBadAllWhitespaceAndBackspaceFlagName() {
 		assertThrows(ParsingException.class, () ->
-			KVP.splitKVP("   \b  =value", KeyValuePairLoader.KVP_DELIMITER)
+			KVP.splitKVP("   \b  =value", "=")
 		);
 	}
 	

@@ -11,7 +11,7 @@ import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.EffectiveName;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
+import org.yarnandtail.andhow.load.MapLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -61,11 +61,11 @@ public class AndHowTest extends AndHowTestBase {
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
+			paramFullPath + "STR_BOB=test",
+			paramFullPath + "STR_NULL=not_null",
+			paramFullPath + "FLAG_TRUE=false",
+			paramFullPath + "FLAG_FALSE=true",
+			paramFullPath + "FLAG_NULL=true"
 		};
 
 	}
@@ -293,31 +293,26 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 
-		KeyValuePairLoader kvpl = new KeyValuePairLoader();
-		kvpl.setKeyValuePairs(Arrays.asList(cmdLineArgsWFullClassName));
+		MapLoader ml = new MapLoader();
 
-		try {
+		AppFatalException ce = assertThrows(AppFatalException.class,
+				() -> {
+					AndHowConfiguration config = AndHowTestConfig.instance().setLoaders(ml, ml);
+					AndHow.setConfig(config);
+					AndHow.instance();
+				});
 
-			AndHowConfiguration config = AndHowTestConfig.instance()
-				.setLoaders(kvpl, kvpl)
-				.addOverrideGroups(configPtGroups);
-
-			AndHow.setConfig(config);
-			AndHow.instance();
-
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ConstructionProblem.class).size());
 			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
 
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
-			assertEquals(kvpl, dl.getLoader());
+			assertEquals(ml, dl.getLoader());
 			assertTrue(ce.getSampleDirectory().length() > 0);
 
 			File sampleDir = new File(ce.getSampleDirectory());
 			assertTrue(sampleDir.exists());
 			assertTrue(sampleDir.listFiles().length > 0);
-		}
+
 	}
 
 	@Test

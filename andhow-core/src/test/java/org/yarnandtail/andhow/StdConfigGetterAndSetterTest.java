@@ -88,12 +88,12 @@ public class StdConfigGetterAndSetterTest {
 		StdConfigImpl std = StdConfig.instance();
 
 		Loader loader1 = new MapLoader();
-		Loader loader2 = new KeyValuePairLoader();
+		Loader loader2 = new MapLoader();
 		Loader loader3 = new PropFileOnClasspathLoader();
 		Loader loader4 = new PropFileOnFilesystemLoader();
 		Loader loader5 = new MapLoader();
 		Loader loader6 = new MapLoader();
-		Loader loader7 = new KeyValuePairLoader();
+		Loader loader7 = new MapLoader();
 		Loader loader8 = new PropFileOnClasspathLoader();
 		Loader loader9 = new PropFileOnFilesystemLoader();
 

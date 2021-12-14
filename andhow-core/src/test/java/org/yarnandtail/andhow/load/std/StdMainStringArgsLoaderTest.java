@@ -40,11 +40,11 @@ class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		String basePath = BaseForLoaderTests.SimpleParams.class.getCanonicalName() + ".";
 
 		String[] args = {
-			basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "",
-			basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "",
-			basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "",
-			basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "",
-			basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + ""
+			basePath + "STR_BOB=",
+			basePath + "STR_NULL=",
+			basePath + "FLAG_TRUE=",
+			basePath + "FLAG_FALSE=",
+			basePath + "FLAG_NULL="
 		};
 
 		leb.setCmdLineArgs(args);
@@ -68,8 +68,8 @@ class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
 		String[] args = {
-				basePath + "XXX" + KeyValuePairLoader.KVP_DELIMITER + "1",
-				basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2"
+				basePath + "XXX=1",
+				basePath + "YYY=2"
 		};
 
 		leb.setCmdLineArgs(args);
@@ -86,8 +86,8 @@ class StdMainStringArgsLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
 		String[] args = {
-				basePath + "XXX" + KeyValuePairLoader.KVP_DELIMITER + "1",
-				basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2"
+				basePath + "XXX=1",
+				basePath + "YYY=2"
 		};
 
 		leb.setCmdLineArgs(args);

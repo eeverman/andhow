@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 import org.yarnandtail.andhow.api.NamingStrategy;
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * This class is an AndHowConfiguration implementation that lets you do things
@@ -77,7 +76,7 @@ public class AndHowTestConfig {
 			}
 
 			if (value != null) {
-				loadEnvBuilder.getCmdLineArgs().add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + "=" + value);
 			} else {
 				loadEnvBuilder.getCmdLineArgs().add(key);
 			}

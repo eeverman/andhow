@@ -84,7 +84,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		evl.add(new ValidatedValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
@@ -108,7 +108,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
@@ -135,7 +135,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		//evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();

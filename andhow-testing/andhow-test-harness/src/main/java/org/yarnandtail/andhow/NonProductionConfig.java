@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * An {@code AndHowConfiguration} implementation that allows 'breaking the rules'
@@ -78,7 +77,7 @@ public class NonProductionConfig {
 			}
 
 			if (value != null) {
-				loadEnvBuilder.getCmdLineArgs().add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + "=" + value);
 			} else {
 				loadEnvBuilder.getCmdLineArgs().add(key);
 			}

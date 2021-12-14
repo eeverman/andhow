@@ -17,13 +17,13 @@ import org.yarnandtail.andhow.internal.*;
  * that only can be figured out after all loaders are complete.
  *
  */
-public class KeyValuePairLoaderTest extends BaseForLoaderTests {
+public class BaseKeyValuePairLoaderTest extends BaseForLoaderTests {
 
-	private KeyValuePairLoader loader;
+	private MyKVPLoader loader;
 
 	@BeforeEach
 	public void initLoader() {
-		loader = new KeyValuePairLoader();
+		loader = new MyKVPLoader();
 	}
 
 	@Test
@@ -32,12 +32,12 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "XXX");
-		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB=test");
+		args.add(basePath + "STR_NULL=not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX=XXX");
+		args.add(basePath + "FLAG_TRUE=false");
+		args.add(basePath + "FLAG_FALSE=true");
+		args.add(basePath + "FLAG_NULL=true");
 		
 
 		loader.setKeyValuePairs(args);
@@ -60,12 +60,12 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null");
-		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_XXX");
-		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false");
-		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
+		args.add(basePath + "STR_BOB=test");
+		args.add(basePath + "STR_NULL=not_null");
+		args.add(basePath + "STR_ENDS_WITH_XXX=something_XXX");
+		args.add(basePath + "FLAG_TRUE=false");
+		args.add(basePath + "FLAG_FALSE=true");
+		args.add(basePath + "FLAG_NULL=true");
 
 
 		loader.setKeyValuePairs(args);
@@ -89,11 +89,11 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "");
+		args.add(basePath + "STR_BOB=");
+		args.add(basePath + "STR_NULL=");
+		args.add(basePath + "FLAG_TRUE=");
+		args.add(basePath + "FLAG_FALSE=");
+		args.add(basePath + "FLAG_NULL=");
 
 		loader.setKeyValuePairs(args);
 		
@@ -117,7 +117,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_BOB=test");
 
 		loader.setKeyValuePairs(args);
 		loader.setKeyValuePairs((List<String>) null);
@@ -138,7 +138,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test");
+		args.add(basePath + "STR_BOB=test");
 
 		loader.setKeyValuePairs(args);
 		loader.setKeyValuePairs(Collections.emptyList());
@@ -158,7 +158,7 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_ENDS_WITH_XXX" + KeyValuePairLoader.KVP_DELIMITER + "something_YYY");
+		args.add(basePath + "STR_ENDS_WITH_XXX=something_YYY");
 
 		loader.setKeyValuePairs(args);
 
@@ -175,11 +175,11 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "1");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "2");
-		args.add(basePath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "3");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true");
-		args.add(basePath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "false");
+		args.add(basePath + "STR_NULL=1");
+		args.add(basePath + "STR_NULL=2");
+		args.add(basePath + "STR_NULL=3");
+		args.add(basePath + "FLAG_NULL=true");
+		args.add(basePath + "FLAG_NULL=false");
 
 		loader.setKeyValuePairs(args);
 		
@@ -200,8 +200,8 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 		
 		List<String> args = new ArrayList();
-		args.add(basePath + "XXX" + KeyValuePairLoader.KVP_DELIMITER + "1");
-		args.add(basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2");
+		args.add(basePath + "XXX=1");
+		args.add(basePath + "YYY=2");
 
 		loader.setKeyValuePairs(args);
 		
@@ -222,8 +222,8 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
 		List<String> args = new ArrayList();
-		args.add(basePath + "XXX" + KeyValuePairLoader.KVP_DELIMITER + "1");
-		args.add(basePath + "YYY" + KeyValuePairLoader.KVP_DELIMITER + "2");
+		args.add(basePath + "XXX=1");
+		args.add(basePath + "YYY=2");
 
 		loader.setUnknownPropertyAProblem(false);
 		loader.setKeyValuePairs(args);
@@ -238,9 +238,26 @@ public class KeyValuePairLoaderTest extends BaseForLoaderTests {
 	public void getSpecificLoadDescriptionTest() {
 		String expectedDescription = "string key value pairs";
 
-		KeyValuePairLoader cll = new KeyValuePairLoader();
+		assertEquals(expectedDescription, loader.getSpecificLoadDescription());
+	}
 
-		assertEquals(expectedDescription, cll.getSpecificLoadDescription());
+	/**
+	 * A concrete implementation to verify behaviour of BaseKeyValuePairLoader
+	 */
+	protected class MyKVPLoader extends BaseKeyValuePairLoader {
+
+		protected List<String> keyValuePairs;
+
+		public void setKeyValuePairs(List<String> keyValuePairs) {
+			this.keyValuePairs = keyValuePairs == null ? null : new ArrayList<>(keyValuePairs);
+		}
+
+		@Override
+		public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+				final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+
+			return load(runtimeDef, keyValuePairs, KVP_DELIMITER);
+		}
 	}
 
 }

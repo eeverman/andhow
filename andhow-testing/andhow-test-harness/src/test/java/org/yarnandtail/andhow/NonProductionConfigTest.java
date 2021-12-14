@@ -95,20 +95,5 @@ public class NonProductionConfigTest {
 		assertTrue(loaders.get(0) instanceof StdFixedValueLoader);
 		//and a bunch more
 	}
-	
-	public static List<String> getStdMainStringArgsLoaderVals(KeyValuePairLoader loader) {
 
-		try {
-
-			Field kbps = KeyValuePairLoader.class.getDeclaredField("keyValuePairs");
-			kbps.setAccessible(true);
-
-			List<String> keyValuePairs = (List<String>)(kbps.get(loader));
-
-			return keyValuePairs;
-
-		} catch (Exception ex) {
-			throw new RuntimeException(PERMISSION_MSG, ex);
-		}
-	}
 }

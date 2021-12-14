@@ -7,17 +7,21 @@ import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import java.util.*;
 
 /**
- * Abstract utility loader that can load fixed values into the effective
- * list of configured values.
+ * Abstract loader that can load Property values from Property and value pairs.
+ * <p>
+ * Two types of Property-value pairs are supported:  {@link PropertyValue}'s (a direct
+ * reference to a {@link Property} and a typed value) and named properties (a Property canonical
+ * name or alias and a value for it).
  * <p>
  * To implement a non-abstract class, override the
  * {@link #load(PropertyConfigurationInternal, LoaderEnvironment, ValidatedValuesWithContext)}
- * method with a all to {@link #load(PropertyConfigurationInternal, Map, List)} and supply your own
- * values for one or both of the two collections.
+ * method with a call to {@link #load(PropertyConfigurationInternal, Map, List)} and supply your own
+ * values for one or both of the two collections.  For a simple example, see the
+ * {@link org.yarnandtail.andhow.load.std.StdFixedValueLoader}.
  * <p>
  * By default, this loader does not trim incoming values for String type properties and will
  * throw a RuntimeException if passed unrecognized properties.  Both of these behaviours
- * can be changed the return values of {@link #isTrimmingRequiredForStringValues} and
+ * can be changed by modifying the return values of {@link #isTrimmingRequiredForStringValues} and
  * {@link #isUnknownPropertyAProblem}.
  *
  */
@@ -25,15 +29,7 @@ public abstract class BaseFixedValueLoader extends BaseLoader implements ReadLoa
 
 	protected boolean unknownPropertyAProblem = true;
 
-	public BaseFixedValueLoader() {
-	}
-
-	@Override
-	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
-			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
-
-		return load(runtimeDef, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
-	}
+	public BaseFixedValueLoader() {}
 
 	/**
 	 * Load from the passed collections of property values.
