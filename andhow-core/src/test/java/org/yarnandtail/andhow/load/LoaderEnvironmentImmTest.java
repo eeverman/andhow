@@ -19,7 +19,7 @@ class LoaderEnvironmentImmTest {
 		HashMap<String, String> envVars = new HashMap<>();
 		envVars.put("env", "vars");
 
-		Properties sysProps = new Properties();
+		HashMap<String, String> sysProps = new HashMap<>();
 		sysProps.put("sys", "props");
 
 		ArrayList<String> mainArgs = new ArrayList<>();
@@ -54,7 +54,7 @@ class LoaderEnvironmentImmTest {
 	@Test
 	public void nullValuesShouldResultInEmptyCollections() {
 
-		LoaderEnvironmentImm le = new LoaderEnvironmentImm(null, (Properties)null, null, null, null);
+		LoaderEnvironmentImm le = new LoaderEnvironmentImm(null, null, null, null, null);
 
 		assertEquals(0, le.getEnvironmentVariables().size());
 		assertThrows(UnsupportedOperationException.class, () -> le.getEnvironmentVariables().put("a", "b"));

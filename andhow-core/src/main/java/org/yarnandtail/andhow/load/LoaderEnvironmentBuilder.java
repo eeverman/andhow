@@ -229,14 +229,26 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		Map<String, String> envVars = (_envVars.isEmpty() && _replaceEmptyEnvVars)?
 				System.getenv() : _envVars;
 
-		if (_sysProps.isEmpty() && _replaceEmptySysProps) {
-			return new LoaderEnvironmentImm(
-					envVars, System.getProperties(), _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
+		Map<String, String> sysProps = (_sysProps.isEmpty() && _replaceEmptySysProps)?
+				buildPropertyMap(System.getProperties()) : _sysProps;
+
+		return new LoaderEnvironmentImm(
+				envVars, sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
+		);
+
+	}
+
+	protected static Map<String, String> buildPropertyMap(Properties props) {
+		if (props != null) {
+			final Map<String, String> map = new HashMap<>((props.size() / 2) * 2 + 3, 1);
+			props.entrySet().stream().forEach(
+					/* Null keys and values are not allowed in a Properties object */
+					e -> map.put(e.getKey().toString(), e.getValue().toString())
 			);
+
+			return Collections.unmodifiableMap(map);
 		} else {
-			return new LoaderEnvironmentImm(
-					envVars, _sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
-			);
+			return Collections.emptyMap();
 		}
 	}
 

@@ -18,6 +18,7 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	final private Map<String, Object> _fixedNamedValues;
 	final private List<PropertyValue<?>> _fixedPropertyValues;
 
+
 	/**
 	 * A new LoaderEnvironmentImm instance.
 	 * <p>
@@ -28,24 +29,16 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	 * <p>
 	 * {@code fixedNamedValues} and {@code fixedPropertyValues} are different ways of specifying fixed
 	 * values, both of which will be used.  See the related get methods for more details.
+	 * This immutable class wraps the passed collections in an unmodifiable wrapper, but does not
+	 * copy the values to a new collection.  Thus, callers should not hold references to the passed
+	 * collections.
 	 *
 	 * @param envVars The environment vars (System.getenv()) that the Loaders will see.
-	 * @param sysProps The system properties (System.getProperties()) that the Loaders will see.
+	 * @param sysProps The system properties (System.getProperties()) as a Map<String, String> that the Loaders will see.
 	 * @param cmdLineArgs The command line arguments (passed to main(String[] args) that the Loaders will see.
 	 * @param fixedNamedValues The hard-coded/fixed named Property values that the Loaders will see.
 	 * @param fixedPropertyValues The hard-coded/fixed PropertyValues that the Loaders will see.
 	 */
-	public LoaderEnvironmentImm(final Map<String, String> envVars, final Properties sysProps,
-			final List<String> cmdLineArgs, final Map<String, Object> fixedNamedValues,
-			List<PropertyValue<?>> fixedPropertyValues) {
-
-		_envVars = (envVars != null)?Collections.unmodifiableMap(envVars):Collections.emptyMap();
-		_sysProps = buildPropertyMap(sysProps);
-		_cmdLineArgs = (cmdLineArgs != null)?Collections.unmodifiableList(cmdLineArgs):Collections.emptyList();
-		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
-		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();
-	}
-
 	public LoaderEnvironmentImm(final Map<String, String> envVars, final Map<String, String> sysProps,
 			final List<String> cmdLineArgs, final Map<String, Object> fixedNamedValues,
 			List<PropertyValue<?>> fixedPropertyValues) {
@@ -55,20 +48,6 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 		_cmdLineArgs = (cmdLineArgs != null)?Collections.unmodifiableList(cmdLineArgs):Collections.emptyList();
 		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
 		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();
-	}
-
-	static Map<String, String> buildPropertyMap(Properties props) {
-		if (props != null) {
-			final Map<String, String> map = new HashMap<>((props.size() / 2) * 2 + 3, 1);
-			props.entrySet().stream().forEach(
-					/* Null keys and values are not allowed in a Properties object */
-					e -> map.put(e.getKey().toString(), e.getValue().toString())
-			);
-
-			return Collections.unmodifiableMap(map);
-		} else {
-			return Collections.emptyMap();
-		}
 	}
 
 	@Override
