@@ -171,9 +171,28 @@ class LoaderEnvironmentBuilderTest {
 		assertEquals(0, le.getCmdLineArgs().size());
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertEquals(0, le.getFixedPropertyValues().size());
-
 	}
 
+	@Test
+	public void buildPropertyMapShouldCorrectlyMapValues() {
+		Properties props = new Properties();
+		props.put(Integer.valueOf(1), Integer.valueOf(10));
+		props.put("One", "Ten");
+
+		Map<String, String> mapProps = LoaderEnvironmentBuilder.buildPropertyMap(props);
+		assertNotNull(mapProps);
+		assertEquals(2, mapProps.size());
+
+		assertEquals("10", mapProps.get("1"));
+		assertEquals("Ten", mapProps.get("One"));
+	}
+
+	@Test
+	public void buildPropertyMapShouldReturnEmptyForNull() {
+		Map<String, String> props = LoaderEnvironmentBuilder.buildPropertyMap(null);
+		assertNotNull(props);
+		assertTrue(props.isEmpty());
+	}
 
 	@Test
 	public void resettingToUseSystemProvidedValuesWorks() {
