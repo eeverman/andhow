@@ -6,17 +6,17 @@ import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
 import java.util.*;
 
 /**
- * The environment for {@link Loader}s when they load values.
+ * The runtime environment seen by {@link Loader}s when they load values.
  * <p>
- * Loaders can load values from anywhere (JNDI, LDAP, filesystem, etc), however some sources are
- * well defined and make up the environment the Loaders operate within.  Rather than trying to
- * inject those into each loader as needed, this environment object is available to the
- * Loader to pull the appropriate environment from.
+ * Some of the places Loaders load values from are one-of-a-kind / unique resources, such as system
+ * properties, environment variables, command line arguments, etc..  Rather than inject each
+ * loader with it's needed resources, the LoaderEnvironment makes them available to all loaders.
+ * This interface also simplifies testing by providing a central place to set the environment
+ * Loaders will see.
  * <p>
- * This interface also simplifies testing by providing a central place to set the environment that
- * Loaders see when they run.  The two 'fixedValue' systems (name vs Property reference) cannot be
- * reconciled without a complete AndHow initialization, which will be available in the Loader,
- * but not necessarily before.
+ * Note that there are two, parallel 'fixedValue' systems: name and Property.  These are two
+ * equally valid ways to set a fixed value, but they cannot be reconciled until the AndHow
+ * initialization is complete to resolve names.
  */
 public interface LoaderEnvironment {
 
