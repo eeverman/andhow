@@ -117,7 +117,8 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	}
 
 	@Override
-	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
+			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
 
 		AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
 

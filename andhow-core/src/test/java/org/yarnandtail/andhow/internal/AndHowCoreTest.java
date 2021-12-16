@@ -59,6 +59,7 @@ class AndHowCoreTest {
 		core = new AndHowCore(
 				config.getNamingStrategy(),
 				config.buildLoaders(),
+				config.getLoaderEnvironment(),
 				config.getRegisteredGroups());
 
 		return core;

@@ -34,7 +34,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	private final ValidatedValuesWithContext loadedValues;
 	private final ProblemList<Problem> problems = new ProblemList();
 
-	public AndHowCore(NamingStrategy naming, List<Loader> loaders,
+	public AndHowCore(NamingStrategy naming, List<Loader> loaders, LoaderEnvironment loaderEnvironment,
 			List<GroupProxy> registeredGroups)
 			throws AppFatalException {
 
@@ -86,7 +86,7 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 
 		//No Construction problems, so continue on...
 
-		loadedValues = loadValues(staticConfig, problems).getValueMapWithContextImmutable();
+		loadedValues = loadValues(staticConfig, loaderEnvironment, problems).getValueMapWithContextImmutable();
 		doPropertyValidations(staticConfig, loadedValues, problems);
 		checkForValuesWhichMustBeNonNull(staticConfig, loadedValues, problems);
 
@@ -191,11 +191,12 @@ public class AndHowCore implements PropertyConfigurationInternal, ValidatedValue
 	}
 
 	//TODO:  Shouldn't this be stateless and pass in the loader list?
-	private ValidatedValuesWithContext loadValues(PropertyConfigurationInternal config, ProblemList<Problem> problems) {
+	private ValidatedValuesWithContext loadValues(PropertyConfigurationInternal config,
+			LoaderEnvironment loaderEnvironment, ProblemList<Problem> problems) {
 		ValidatedValuesWithContextMutable existingValues = new ValidatedValuesWithContextMutable();
 
 		for (Loader loader : loaders) {
-			LoaderValues result = loader.load(config, existingValues);
+			LoaderValues result = loader.load(config, loaderEnvironment, existingValues);
 			existingValues.addValues(result);
 			problems.addAll(result.getProblems());
 

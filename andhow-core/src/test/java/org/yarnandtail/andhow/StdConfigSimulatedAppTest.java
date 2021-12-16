@@ -9,12 +9,10 @@ import org.yarnandtail.andhow.internal.ValueProblem;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
-import static org.yarnandtail.andhow.load.KeyValuePairLoader.KVP_DELIMITER;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +31,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 		//Prop name case ignored
 		String[] cmdLineArgs = new String[] {
-			GROUP_PATH + ".classpath_prop_file" + KVP_DELIMITER + CLASSPATH_BEGINNING + "all.props.speced.properties"
+			GROUP_PATH + ".classpath_prop_file=" + CLASSPATH_BEGINNING + "all.props.speced.properties"
 		};
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -117,6 +115,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		assertEquals(98, SampleRestClientGroup.REST_PORT.getValue(), "Fixed value should override prop file");
 	}
 
+
 	@Test
 	public void testAllValuesAreSetViaEnvVarAndPropFile() {
 
@@ -128,7 +127,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SampleRestClientGroup.class)
-				.setEnvironmentProperties(envvars)
+				.setEnvironmentVariables(envvars)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
 
@@ -142,7 +141,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	@Test
 	public void testAllValuesAreSetViaSystemPropertiesAndPropFile() {
 
-		Properties props = new Properties();
+		Map<String, String> props = new HashMap<>();
 		props.put(
 				GROUP_PATH + ".classpath_prop_file", /* case ignored */
 				CLASSPATH_BEGINNING + "all.props.speced.properties"
@@ -181,7 +180,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	public void testMinimumPropsAreSetViaCmdLineArgAndPropFile() {
 
 		String[] cmdLineArgs = new String[] {
-				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
+				GROUP_PATH + ".CLASSPATH_PROP_FILE=" + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
 		};
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -211,7 +210,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		jndi.activate();
 
 		String[] cmdLineArgs = new String[] {
-				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "invalid.properties"
+				GROUP_PATH + ".CLASSPATH_PROP_FILE=" + CLASSPATH_BEGINNING + "invalid.properties"
 		};
 
 

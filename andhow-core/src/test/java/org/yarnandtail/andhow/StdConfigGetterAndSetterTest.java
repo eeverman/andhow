@@ -88,12 +88,12 @@ public class StdConfigGetterAndSetterTest {
 		StdConfigImpl std = StdConfig.instance();
 
 		Loader loader1 = new MapLoader();
-		Loader loader2 = new KeyValuePairLoader();
+		Loader loader2 = new MapLoader();
 		Loader loader3 = new PropFileOnClasspathLoader();
 		Loader loader4 = new PropFileOnFilesystemLoader();
-		Loader loader5 = new FixedValueLoader();
+		Loader loader5 = new MapLoader();
 		Loader loader6 = new MapLoader();
-		Loader loader7 = new KeyValuePairLoader();
+		Loader loader7 = new MapLoader();
 		Loader loader8 = new PropFileOnClasspathLoader();
 		Loader loader9 = new PropFileOnFilesystemLoader();
 
@@ -188,9 +188,6 @@ public class StdConfigGetterAndSetterTest {
 	public void FixedValuesBasedOnNamesTest() {
 		MyStdConfig config = new MyStdConfig();
 
-		//These properties don't really exist - no checking is done until loading, when
-		//the Loader attempts to match up the name w/ a property.  For now this just tests
-		//the logic in StdConfig.
 		config.addFixedValue("MY_STR_1", "ABC");
 		config.addFixedValue("MY_LNG_2", 23L);
 
@@ -204,7 +201,7 @@ public class StdConfigGetterAndSetterTest {
 		});
 
 		assertEquals("ABC",
-				config.getFixedKeyObjectPairValues().stream().filter(k -> k.getName().equals("MY_STR_1")).findFirst().get()
+				config.getFixedKeyObjectPairValues().entrySet().stream().filter(k -> k.getKey().equals("MY_STR_1")).findFirst().get()
 						.getValue().toString(),
 				"The value set for this Property should be unchanged");
 
@@ -240,11 +237,8 @@ public class StdConfigGetterAndSetterTest {
 		String[] args = new String[] {"arg1", "arg2"};
 		config.setCmdLineArgs(args);
 		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
+		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args));
 
-		List<String> kvps = ReflectionTestUtils.getInstanceFieldValue(config.buildStdMainStringArgsLoader(), "keyValuePairs", List.class);
-
-		assertEquals(2, kvps.size());
-		assertThat(kvps.toArray(), arrayContainingInAnyOrder(args));
 
 		// Set new values - they should replace the old
 		String[] args2 = new String[]{"arg3", "arg4", "arg5"};
@@ -254,49 +248,17 @@ public class StdConfigGetterAndSetterTest {
 
 		assertEquals(args2.length, actualArgs.size());
 		assertThat(actualArgs.toArray(), arrayContainingInAnyOrder(args2));
+		assertThat(config.getCmdLineArgs().toArray(), arrayContainingInAnyOrder(args2));
+
 
 		// Set empty array
 		config.setCmdLineArgs(new String[0]);
-
-		actualArgs = config.getCmdLineArgs();
-
-		assertEquals(0, actualArgs.size());
+		assertEquals(0, config.getCmdLineArgs().size());
 
 		// Set null
 		config.setCmdLineArgs(new String[]{"arg6"});
 		config.setCmdLineArgs(null);
-
-		actualArgs = config.getCmdLineArgs();
-
-		assertEquals(0, actualArgs.size());
-	}
-
-	@Test
-	public void setEnvironmentPropertiesTest() {
-		MyStdConfig config = new MyStdConfig();
-
-		Map<String, String> envVars = new HashMap<>();
-		envVars.put("abc", "123");
-		envVars.put("xyz", "456");
-
-		config.setEnvironmentProperties(envVars);
-
-		assertEquals(2, config.getEnvironmentProperties().size());
-		assertTrue(envVars.equals(config.getEnvironmentProperties()));
-		assertFalse(envVars == config.getEnvironmentProperties(), "Should be disconnected object");
-
-		//Now try setting new values - they should replace the old
-		Map<String, String> envVars2 = new HashMap<>();
-		envVars2.put("bob", "bob_val");
-		config.setEnvironmentProperties(envVars2);
-
-		assertEquals(1, config.getEnvironmentProperties().size());
-		assertTrue(envVars2.equals(config.getEnvironmentProperties()));
-
-		//Now set to null
-		config.setEnvironmentProperties(null);
-		assertNull(config.getEnvironmentProperties());
-
+		assertEquals(0, config.getCmdLineArgs().size());
 	}
 
 	@Test
@@ -354,7 +316,7 @@ public class StdConfigGetterAndSetterTest {
 		List<ValidatedValue> vvList = new ArrayList<>();
 		vvList.add(validatedValue);
 
-		LoaderValues loaderValues = new LoaderValues(new FixedValueLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
+		LoaderValues loaderValues = new LoaderValues(new MapLoader(), vvList, ProblemList.EMPTY_PROBLEM_LIST);
 		ValidatedValuesWithContextMutable validatedValues = new ValidatedValuesWithContextMutable();
 		validatedValues.addValues(loaderValues);
 		Class<?> vvsClass = ValidatedValuesWithContext.class;	//class of getEffectivePath argument
@@ -420,34 +382,38 @@ public class StdConfigGetterAndSetterTest {
 		assertTrue(config.buildStdPropFileOnFilesystemLoader().isMissingFileAProblem());
 	}
 
-	<T> boolean containsPropertyAndValue(List<PropertyValue> propertyValues, Property<T> property, T value) {
+	<T> boolean containsPropertyAndValue(List<PropertyValue<?>> propertyValues, Property<T> property, T value) {
 		PropertyValue pv = propertyValues.stream().filter(p -> p.getProperty().equals(property)).findFirst().get();
 		return pv != null && pv.getValue().equals(value);
 	}
 
-	boolean containsNameAndValue(List<KeyObjectPair> keyObjectPairs, String name, Object value) {
-		KeyObjectPair kop = keyObjectPairs.stream().filter(p -> p.getName().equals(name)).findFirst().get();
-		return kop != null && kop.getValue().equals(value);
+	boolean containsNameAndValue(Map<String, Object> valueMap, String name, Object value) {
+		Object valueInMap = valueMap.entrySet().stream().filter(p -> p.getKey().equals(name)).findFirst().get().getValue();
+		return valueInMap != null && valueInMap.equals(value);
 	}
 
 	/**
 	 * Custom StdConfig class that has access methods for fields not otherwise accessable.
 	 */
 	public static final class MyStdConfig extends StdConfig.StdConfigAbstract<MyStdConfig> {
-		public List<PropertyValue> getFixedValues() {
-			return _fixedVals;
+		public List<PropertyValue<?>> getFixedValues() {
+			return loadEnvBuilder.getFixedPropertyValues();
 		}
 
-		public List<KeyObjectPair> getFixedKeyObjectPairValues() {
-			return _fixedKeyObjectPairVals;
+		public Map<String, Object> getFixedKeyObjectPairValues() {
+			return loadEnvBuilder.getFixedNamedValues();
 		}
 
 		public List<String> getCmdLineArgs() {
-			return _cmdLineArgs;
+			return loadEnvBuilder.getCmdLineArgs();
 		}
 
-		public Map<String, String> getEnvironmentProperties() {
-			return envProperties;
+		public Map<String, String> getEnvironmentVariables() {
+			return loadEnvBuilder.getEnvironmentVariables();
+		}
+
+		public Map<String, String> getSystemProperties() {
+			return loadEnvBuilder.getSystemProperties();
 		}
 
 		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }

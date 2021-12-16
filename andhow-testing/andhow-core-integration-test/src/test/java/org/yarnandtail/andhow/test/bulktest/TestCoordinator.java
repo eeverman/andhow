@@ -117,6 +117,7 @@ public class TestCoordinator<T> {
 		AndHowCore core = new AndHowCore(
 				aConfig.getNamingStrategy(),
 				aConfig.buildLoaders(),
+				aConfig.getLoaderEnvironment(),
 				aConfig.getRegisteredGroups());
 
 		return core;

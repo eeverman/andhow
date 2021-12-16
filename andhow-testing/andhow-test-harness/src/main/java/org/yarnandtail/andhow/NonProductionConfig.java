@@ -1,12 +1,9 @@
 package org.yarnandtail.andhow;
 
 import java.util.*;
-import org.yarnandtail.andhow.api.GroupProxy;
-import org.yarnandtail.andhow.service.PropertyRegistrarLoader;
-import org.yarnandtail.andhow.util.AndHowUtil;
+
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * An {@code AndHowConfiguration} implementation that allows 'breaking the rules'
@@ -76,13 +73,13 @@ public class NonProductionConfig {
 		public N addCmdLineArg(String key, String value) {
 
 			if (key == null) {
-				throw new RuntimeException("The key cannot be null");
+				throw new IllegalArgumentException("The key cannot be null");
 			}
 
 			if (value != null) {
-				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + "=" + value);
 			} else {
-				_cmdLineArgs.add(key);
+				loadEnvBuilder.getCmdLineArgs().add(key);
 			}
 
 			return (N) this;

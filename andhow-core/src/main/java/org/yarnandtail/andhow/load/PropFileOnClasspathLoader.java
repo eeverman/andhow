@@ -32,7 +32,6 @@ import org.yarnandtail.andhow.internal.LoaderProblem;
  * the file is assigned. This is a basic limitation of the JVM Properties class,
  * which silently ignores multiple entries, each value overwriting the last.
  *
- * @author eeverman
  */
 public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 
@@ -42,7 +41,8 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 		/* empty for easy construction */ }
 
 	@Override
-	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
+			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -50,8 +50,7 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 
 			specificLoadDescription = "file on classpath at: " + path;
 
-			LoaderValues vals = load(appConfigDef, existingValues, path);
-			return vals;
+			return load(appConfigDef, existingValues, path);
 
 		} else {
 			//The classpathProp is not specified, so just ignore
@@ -70,7 +69,7 @@ public class PropFileOnClasspathLoader extends PropFileBaseLoader {
 	 * @return
 	 */
 	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
-                             ValidatedValuesWithContext existingValues, String path) {
+			ValidatedValuesWithContext existingValues, String path) {
 
 		try (InputStream inS = PropFileOnClasspathLoader.class.getResourceAsStream(path)) {
 

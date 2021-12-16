@@ -1,26 +1,31 @@
 package org.yarnandtail.andhow.load;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
-import org.yarnandtail.andhow.api.LoaderValues;
-import org.yarnandtail.andhow.api.ParsingException;
-import org.yarnandtail.andhow.api.Problem;
-import org.yarnandtail.andhow.api.ValidatedValue;
+import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.yarnandtail.andhow.load.BaseForLoaderTests.SimpleParams.*;
 
-public class FixedValueLoaderTest extends BaseForLoaderTests {
+public class BaseFixedValueLoaderTest extends BaseForLoaderTests {
+
+	protected MyFixedLoader loader;
+
+	@BeforeEach
+	public void beforeEach() {
+		loader = new MyFixedLoader();
+	}
+
 
 	@Test
 	public void happyPathViaPropertyValues() {
 
-		List<PropertyValue> props = new ArrayList();
+		List<PropertyValue<?>> props = new ArrayList();
 		props.add(new PropertyValue(STR_BOB, "test"));
 		props.add(new PropertyValue(STR_NULL, "not_null"));
 		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
@@ -33,11 +38,8 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		props.add(new PropertyValue(FLAG_FALSE, " true "));
 		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedPropertyValues(props);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -56,23 +58,21 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
-		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
-		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
-		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
-		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
-		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
-		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
-		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
-		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
+		Map<String, Object> kops = new HashMap<>();
+		kops.put(basePath + "STR_BOB", "test");
+		kops.put(basePath + "STR_NULL", "not_null");
+		kops.put(basePath + "STR_ENDS_WITH_XXX", "XXX");
+		kops.put(basePath + "LNG_TIME", 60L);	//As exact value type (Long)
+		kops.put(basePath + "INT_NUMBER", "30");	//Supply string for conversion
+		kops.put(basePath + "DBL_NUMBER", 123.456D);	//As exact value type (Double)
+		kops.put(basePath + "FLAG_TRUE", false);
+		kops.put(basePath + "FLAG_FALSE", true);
+		kops.put(basePath + "FLAG_NULL", Boolean.TRUE);
 
 
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setKeyObjectPairValues(kops);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
-
+		loadEnv.setFixedNamedValues(kops);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
+		
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 		assertEquals("test", result.getExplicitValue(STR_BOB));
@@ -91,22 +91,20 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", " test "));	// preserve space
-		kops.add(new KeyObjectPair(basePath + "STR_NULL", " not_null "));	// preserve space
-		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", " XXX"));	// preserve space
-		kops.add(new KeyObjectPair(basePath + "LNG_TIME", "  60  "));	// remove space
-		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "  30  "));	// remove space
-		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", "  123.456D  "));	// remove space
-		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", " false ")); // remove space
-		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", "  true  ")); // remove space
-		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", "  ")); // remove space
+		Map<String, Object> kops = new HashMap<>();
+		kops.put(basePath + "STR_BOB", " test ");	// preserve space
+		kops.put(basePath + "STR_NULL", " not_null ");	// preserve space
+		kops.put(basePath + "STR_ENDS_WITH_XXX", " XXX");	// preserve space
+		kops.put(basePath + "LNG_TIME", "  60  ");	// remove space
+		kops.put(basePath + "INT_NUMBER", "  30  ");	// remove space
+		kops.put(basePath + "DBL_NUMBER", "  123.456D  ");	// remove space
+		kops.put(basePath + "FLAG_TRUE", " false "); // remove space
+		kops.put(basePath + "FLAG_FALSE", "  true  "); // remove space
+		kops.put(basePath + "FLAG_NULL", "  "); // remove space
 
 
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setKeyObjectPairValues(kops);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedNamedValues(kops);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -123,39 +121,12 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 	@Test
 	public void duplicatePropertyValuesCauseProblems() {
-		List<PropertyValue> props = new ArrayList();
+		List<PropertyValue<?>> props = new ArrayList();
 		props.add(new PropertyValue(STR_BOB, "test"));
 		props.add(new PropertyValue(STR_BOB, "ignored because its a duplicate property entry"));
 
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
-
-		//Make sure we have a duplicate problem reported
-		assertEquals(1, result.getProblems().size());
-		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());	//No problems at an ind level
-		Problem p = result.getProblems().get(0);
-		assertTrue(p instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
-		assertEquals(STR_BOB, ((LoaderProblem.DuplicatePropertyLoaderProblem) p).getBadValueCoord().getProperty());
-
-		//The initial assignment should have still worked
-		assertEquals("test", result.getExplicitValue(SimpleParams.STR_BOB));
-	}
-
-	@Test
-	public void duplicateKeyObjectPairsCauseProblems() throws ParsingException {
-		String basePath = SimpleParams.class.getCanonicalName() + ".";
-
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "ignored because its a duplicate property entry"));
-
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setKeyObjectPairValues(kops);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedPropertyValues(props);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		//Make sure we have a duplicate problem reported
 		assertEquals(1, result.getProblems().size());
@@ -172,19 +143,17 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	public void duplicateBetweenPVsAndKopsCauseProblems() throws ParsingException {
 
 		//Set based on PropertyValues
-		List<PropertyValue> props = new ArrayList();
+		List<PropertyValue<?>> props = new ArrayList();
 		props.add(new PropertyValue(STR_BOB, "test"));
 
 		//Set based on KeyObjectPair
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "ignored because its a duplicate property entry"));
+		Map<String, Object> kops = new HashMap<>();
+		kops.put(basePath + "STR_BOB", "ignored because its a duplicate property entry");
 
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props);
-		loader.setKeyObjectPairValues(kops);
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedNamedValues(kops);
+		loadEnv.setFixedPropertyValues(props);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		//Make sure we have a duplicate problem reported
 		assertEquals(1, result.getProblems().size());
@@ -198,9 +167,9 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void happyPathViaPropertyValuesAsArrayTest() {
+	public void happyPathViaPropertyValuesAsArrayAndNoStateKeptTest() {
 
-		List<PropertyValue> props = new ArrayList();
+		List<PropertyValue<?>> props = new ArrayList<>();
 		props.add(new PropertyValue(STR_BOB, "test"));
 		props.add(new PropertyValue(STR_NULL, "not_null"));
 		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
@@ -213,11 +182,8 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		props.add(new PropertyValue(FLAG_FALSE, " true "));
 		props.add(new PropertyValue(FLAG_NULL, " true "));
 
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props.toArray(new PropertyValue[0]));
-
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedPropertyValues(props);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -231,9 +197,8 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals(Boolean.TRUE, result.getExplicitValue(FLAG_NULL));
 
 		// set as null
-		loader.setPropertyValues((PropertyValue[]) null);
-
-		result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedPropertyValues(null);
+		result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -242,30 +207,16 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertNull(result.getValue(SimpleParams.STR_NULL));
+
+		// release resources should not error
+		loader.releaseResources();
 	}
 
 	@Test
 	public void setPropertyValuesAsNullTest() {
 
-		List<PropertyValue> props = new ArrayList();
-		props.add(new PropertyValue(STR_BOB, "test"));
-		props.add(new PropertyValue(STR_NULL, "not_null"));
-		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
-
-		//spaces on non-string values should be trimmed and not matter
-		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
-		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
-		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
-		props.add(new PropertyValue(FLAG_TRUE, " false "));
-		props.add(new PropertyValue(FLAG_FALSE, " true "));
-		props.add(new PropertyValue(FLAG_NULL, " true "));
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props);
-
-		loader.setPropertyValues((List<PropertyValue>) null);
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
-
+		loadEnv.setFixedPropertyValues(null);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -284,25 +235,14 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 
 		String basePath = SimpleParams.class.getCanonicalName() + ".";
 
-		List<PropertyValue> props = new ArrayList();
+		List<PropertyValue<?>> props = new ArrayList();
 		props.add(new PropertyValue(STR_BOB, "test"));
 		props.add(new PropertyValue(STR_NULL, "not_null"));
 		props.add(new PropertyValue(STR_ENDS_WITH_XXX, "XXX"));
 
-		//spaces on non-string values should be trimmed and not matter
-		props.add(new PropertyValue(LNG_TIME, "60"));		//as string
-		props.add(new PropertyValue(INT_NUMBER, 30));	//As exact value type (int)
-		props.add(new PropertyValue(DBL_NUMBER, "123.456D"));	//as string
-		props.add(new PropertyValue(FLAG_TRUE, " false "));
-		props.add(new PropertyValue(FLAG_FALSE, " true "));
-		props.add(new PropertyValue(FLAG_NULL, " true "));
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setPropertyValues(props);
-
-		loader.setPropertyValues(Collections.emptyList());
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
-
+		loadEnv.setFixedPropertyValues(props);
+		loadEnv.setFixedPropertyValues(Collections.emptyList());
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -314,27 +254,10 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void setKeyObjectParisAsNullTest() throws ParsingException {
+	public void setNamedValuesAsNullTest() throws ParsingException {
 
-		String basePath = SimpleParams.class.getCanonicalName() + ".";
-
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
-		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
-		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
-		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
-		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
-		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
-		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
-		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
-		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
-
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setKeyObjectPairValues(kops);
-
-		loader.setKeyObjectPairValues(null);
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedNamedValues(null);
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -349,27 +272,10 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 	}
 
 	@Test
-	public void setKeyObjectParisAsEmptyList() throws ParsingException {
+	public void setNamedValuesAsEmptyList() throws ParsingException {
 
-		String basePath = SimpleParams.class.getCanonicalName() + ".";
-
-		List<KeyObjectPair> kops = new ArrayList();
-		kops.add(new KeyObjectPair(basePath + "STR_BOB", "test"));
-		kops.add(new KeyObjectPair(basePath + "STR_NULL", "not_null"));
-		kops.add(new KeyObjectPair(basePath + "STR_ENDS_WITH_XXX", "XXX"));
-		kops.add(new KeyObjectPair(basePath + "LNG_TIME", 60L));	//As exact value type (Long)
-		kops.add(new KeyObjectPair(basePath + "INT_NUMBER", "30"));	//Supply string for conversion
-		kops.add(new KeyObjectPair(basePath + "DBL_NUMBER", 123.456D));	//As exact value type (Double)
-		kops.add(new KeyObjectPair(basePath + "FLAG_TRUE", false));
-		kops.add(new KeyObjectPair(basePath + "FLAG_FALSE", true));
-		kops.add(new KeyObjectPair(basePath + "FLAG_NULL", Boolean.TRUE));
-
-
-		FixedValueLoader loader = new FixedValueLoader();
-		loader.setKeyObjectPairValues(kops);
-
-		loader.setKeyObjectPairValues(Collections.emptyList());
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		loadEnv.setFixedNamedValues(Collections.emptyMap());
+		LoaderValues result = loader.load(appDef, loadEnv.toImmutable(), appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -378,5 +284,15 @@ public class FixedValueLoaderTest extends BaseForLoaderTests {
 		assertEquals("bob", result.getValue(SimpleParams.STR_BOB));
 		assertNull(result.getExplicitValue(SimpleParams.STR_NULL));
 		assertNull(result.getValue(SimpleParams.STR_NULL));
+	}
+
+	// Temp class to make a non-abstract class
+	public static class MyFixedLoader extends BaseFixedValueLoader {
+		@Override
+		public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+				final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+
+			return load(runtimeDef, environment.getFixedNamedValues(), environment.getFixedPropertyValues());
+		}
 	}
 }

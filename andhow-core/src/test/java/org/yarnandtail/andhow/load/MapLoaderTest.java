@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class MapLoaderTest extends BaseForLoaderTests {
 
 	private MapLoader loader;
+	private LoaderEnvironmentBuilder leb;
 
 	@BeforeEach
 	public void initLoader() {
-		this.loader = new MapLoader();
+		loader = new MapLoader();
+		leb = new LoaderEnvironmentBuilder();
 	}
 
 	@Test
@@ -65,7 +67,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 
 		loader.setMap(args);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -91,7 +93,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 
 		loader.setMap(args);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -111,7 +113,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 
 		loader.setMap(args);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -126,7 +128,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 	public void loadNullMapTest() {
 		loader.setMap(null);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());
@@ -172,7 +174,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 		loader.setUnknownPropertyAProblem(true);
 		loader.setMap(args);
 
-		LoaderValues result = loader.load(appDef, appValuesBuilder);
+		LoaderValues result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(2, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -185,7 +187,7 @@ class MapLoaderTest extends BaseForLoaderTests {
 		loader.setUnknownPropertyAProblem(false);
 		loader.setMap(args);
 
-		result = loader.load(appDef, appValuesBuilder);
+		result = loader.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(ValidatedValue::hasProblems).count());

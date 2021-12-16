@@ -18,6 +18,7 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  */
 public class BaseForLoaderTests {
 	protected PropertyConfigurationMutable appDef;
+	protected LoaderEnvironmentBuilder loadEnv;
 	protected ValidatedValuesWithContextMutable appValuesBuilder;
 
 	@BeforeEach
@@ -39,6 +40,7 @@ public class BaseForLoaderTests {
 		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 
+		loadEnv = new LoaderEnvironmentBuilder();
 	}
 
 	public interface SimpleParams {
