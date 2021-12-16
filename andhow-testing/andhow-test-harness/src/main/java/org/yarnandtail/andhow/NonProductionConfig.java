@@ -73,7 +73,7 @@ public class NonProductionConfig {
 		public N addCmdLineArg(String key, String value) {
 
 			if (key == null) {
-				throw new RuntimeException("The key cannot be null");
+				throw new IllegalArgumentException("The key cannot be null");
 			}
 
 			if (value != null) {

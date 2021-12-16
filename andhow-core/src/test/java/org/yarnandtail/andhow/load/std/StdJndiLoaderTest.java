@@ -48,7 +48,16 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(StdJndiLoader.CONFIG.class, loader.getClassConfig());
 		assertTrue(loader.getConfigSamplePrinter() instanceof JndiLoaderSamplePrinter);
 		assertTrue(loader.getInstanceConfig().isEmpty());
+		assertFalse(loader.isFailedEnvironmentAProblem());
 		loader.releaseResources();	// should cause no error
+	}
+
+	@Test
+	public void setFailedEnvironmentAProblemWorks() {
+		loader.setFailedEnvironmentAProblem(true);
+		assertTrue(loader.isFailedEnvironmentAProblem());
+		loader.setFailedEnvironmentAProblem(false);
+		assertFalse(loader.isFailedEnvironmentAProblem());
 	}
 
 	@Test

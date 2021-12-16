@@ -36,12 +36,32 @@ public class NonProductionConfigTest {
 		assertNotNull(NonProductionConfig.instance());
 		assertTrue(NonProductionConfig.instance() instanceof NonProductionConfig.NonProductionConfigImpl);
 	}
-	
+
 	@Test
-	public void testAddCmdLineArgWithNull() {
+	public void addCmdLineArgsHappyPath() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
 
-		assertThrows(RuntimeException.class, () -> {
+		config.addCmdLineArg("one", "1");
+
+		List<String> args = config.getLoaderEnvironment().getCmdLineArgs();
+		assertEquals(1, args.size());
+		assertEquals("one=1", args.get(0));
+
+		config.addCmdLineArg("two", "2");
+		config.addCmdLineArg("three", null);
+
+		args = config.getLoaderEnvironment().getCmdLineArgs();
+		assertEquals(3, args.size());
+		assertEquals("one=1", args.get(0));
+		assertEquals("two=2", args.get(1));
+		assertEquals("three", args.get(2));
+	}
+
+	@Test
+	public void addCmdLineArgWithNullShouldThrowException() {
+		NonProductionConfigImpl config = NonProductionConfig.instance();
+
+		assertThrows(IllegalArgumentException.class, () -> {
 			config.addCmdLineArg(null, "one");
 		});
 	}
