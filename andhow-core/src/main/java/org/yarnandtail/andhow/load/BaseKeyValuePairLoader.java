@@ -1,9 +1,9 @@
 package org.yarnandtail.andhow.load;
 
-import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
+import org.yarnandtail.andhow.load.util.KVP;
 
 import java.util.*;
 

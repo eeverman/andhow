@@ -1,8 +1,11 @@
 package org.yarnandtail.andhow.api;
 
+import org.yarnandtail.andhow.AndHowConfiguration;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
+import org.yarnandtail.andhow.load.util.JndiContextWrapper;
 
+import javax.naming.Context;
 import java.util.*;
 
 /**
@@ -79,4 +82,13 @@ public interface LoaderEnvironment {
 	 * @return A list of PropertyValue's.  Never null, but possibly empty.
 	 */
 	public List<PropertyValue<?>> getFixedPropertyValues();
+
+	/**
+	 * Returns a JNDI Context that can be used by loaders to load from JNDI.
+	 * <p>
+	 * @return A JNDI Context wrapper, which may contain a Jndi context or a null Jndi context
+	 * and an exception.
+	 */
+	public JndiContextWrapper getJndiContext();
+
 }

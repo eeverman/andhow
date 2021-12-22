@@ -7,7 +7,7 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
 import org.yarnandtail.andhow.junit5.ext.RestoreSysPropsAfterEachTestExt;
-import org.yarnandtail.andhow.load.LoaderEnvironmentBuilder;
+import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;

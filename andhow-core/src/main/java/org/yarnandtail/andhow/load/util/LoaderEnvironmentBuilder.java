@@ -1,10 +1,13 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.load.util.LoaderEnvironmentImm;
 import org.yarnandtail.andhow.util.TextUtil;
 
+import javax.naming.*;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * A mutable builder implementation of {@link LoaderEnvironment}.
@@ -22,6 +25,9 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	// If true, replace empty collections w/ canonical values in toImmutable().
 	protected boolean _replaceEmptyEnvVars = true;
 	protected boolean _replaceEmptySysProps = true;
+
+	// Jndi
+	protected Supplier<JndiContextWrapper> _jndiContextSupplier = new DefaultJndiContextSupplier();
 
 	/**
 	 * Set the environment vars that the Loaders see, overriding the actual env. vars.
@@ -207,6 +213,19 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		return _fixedNamedValues.remove(propertyNameOrAlias);
 	}
 
+	public Supplier<JndiContextWrapper> getJndiContextSupplier() {
+		return _jndiContextSupplier;
+	}
+
+	public void setJndiContextSupplier(final Supplier<JndiContextWrapper> jndiContextSupplier) {
+		if (jndiContextSupplier == null) {
+			throw new IllegalArgumentException("The jndiContextSupplier cannot be null. " +
+					"To turn off JNDI loading, remove the StdJndiLoader from the loader list, " +
+					"or set the JndiContextSupplier to the NoJndiContextSupplier");
+		}
+		_jndiContextSupplier = jndiContextSupplier;
+	}
+
 	/**
 	 * Set the fixed / hardcoded property values, overriding any previously set values.
 	 * <p>
@@ -233,7 +252,8 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 				buildPropertyMap(System.getProperties()) : _sysProps;
 
 		return new LoaderEnvironmentImm(
-				envVars, sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues
+				envVars, sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues,
+				_jndiContextSupplier
 		);
 
 	}
@@ -270,4 +290,39 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	@Override
 	public List<PropertyValue<?>> getFixedPropertyValues() { return _fixedPropertyValues;	}
 
+	@Override
+	public JndiContextWrapper getJndiContext() { return _jndiContextSupplier.get(); }
+
+	//
+	// Jndi Context Suppliers
+
+	/**
+	 * JndiContextWrapper Supplier that attempts to initialize a standard {@link InitialContext}.
+	 */
+	public static class DefaultJndiContextSupplier implements Supplier<JndiContextWrapper> {
+
+		@Override
+		public JndiContextWrapper get() {
+
+			JndiContextWrapper wrap = new JndiContextWrapper();
+
+			try {
+				InitialContext ctx = new InitialContext();  //Normally doesn't throw exception, even if no JNDI
+				ctx.getEnvironment();  //Should throw error if JNDI is unavailable
+				wrap.context = ctx;
+			} catch (Exception e) {
+				wrap.exception = e;
+			}
+
+			return wrap;
+		}
+	}
+
+	/**
+	 * JndiContextWrapper Supplier that does not provide a Jndi Context
+	 */
+	public static class NoJndiContextSupplier implements Supplier<JndiContextWrapper> {
+		@Override
+		public JndiContextWrapper get() { return new JndiContextWrapper(); }
+	}
 }
