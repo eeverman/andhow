@@ -386,17 +386,6 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 	/**
 	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
 	 *
-	 * @deprecated This method name was typod.  Please use isInitialized() instead.
-	 * @return
-	 */
-	@Deprecated
-	public static boolean isInitialize() {
-		return isInitialized();
-	}
-
-	/**
-	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
-	 *
 	 * @return
 	 */
 	public static boolean isInitialized() {

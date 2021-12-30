@@ -194,11 +194,9 @@ public class AndHowTest extends AndHowTestBase {
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtils.getAndHow());
 		assertFalse(AndHow.isInitialized());
-		assertFalse(AndHow.isInitialize(), "deprecated, but still tested");
 		assertNotNull(AndHow.instance());
 		assertNotNull(AndHowTestUtils.getAndHow());
 		assertTrue(AndHow.isInitialized());
-		assertTrue(AndHow.isInitialize(), "deprecated, but still tested");
 	}
 
 	/**
