@@ -62,25 +62,9 @@ public class DblProp extends PropertyBase<Double> {
 
 		}
 
-		/**
-		 * @deprecated Use {@code DblBuilder.greaterThan()}
-		 */
-		@Deprecated
-		public DblBuilder mustBeGreaterThan(double reference) {
-			return this.greaterThan(reference);
-		}
-
 		public DblBuilder greaterThan(double reference) {
 			validation(new DblValidator.GreaterThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code DblBuilder.greaterThanOrEqualTo()}
-		 */
-		@Deprecated
-		public DblBuilder mustBeGreaterThanOrEqualTo(double reference) {
-			return this.greaterThanOrEqualTo(reference);
 		}
 
 		public DblBuilder greaterThanOrEqualTo(double reference) {
@@ -88,25 +72,9 @@ public class DblProp extends PropertyBase<Double> {
 			return instance;
 		}
 
-		/**
-		 * @deprecated Use {@code DblBuilder.lessThan()}
-		 */
-		@Deprecated
-		public DblBuilder mustBeLessThan(double reference) {
-			return this.lessThan(reference);
-		}
-
 		public DblBuilder lessThan(double reference) {
 			validation(new DblValidator.LessThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code DblBuilder.lessThanOrEqualTo()}
-		 */
-		@Deprecated
-		public DblBuilder mustBeLessThanOrEqualTo(double reference) {
-			return this.lessThanOrEqualTo(reference);
 		}
 
 		public DblBuilder lessThanOrEqualTo(double reference) {

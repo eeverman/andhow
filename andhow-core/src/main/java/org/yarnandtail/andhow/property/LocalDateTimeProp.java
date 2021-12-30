@@ -59,38 +59,6 @@ public class LocalDateTimeProp extends PropertyBase<LocalDateTime> {
 
 		}
 
-		/**
-		 * @deprecated Use {@code LocalDateTimeBuilder.before()}
-		 */
-		@Deprecated
-		public LocalDateTimeBuilder mustBeBefore(LocalDateTime reference) {
-			return this.before(reference);
-		}
-
-		/**
-		 * @deprecated Use {@code LocalDateTimeBuilder.sameOrBefore()}
-		 */
-		@Deprecated
-		public LocalDateTimeBuilder mustBeSameTimeOrBefore(LocalDateTime reference) {
-			return this.sameOrBefore(reference);
-		}
-
-		/**
-		 * @deprecated Use {@code LocalDateTimeBuilder.after()}
-		 */
-		@Deprecated
-		public LocalDateTimeBuilder mustBeAfter(LocalDateTime reference) {
-			return this.after(reference);
-		}
-
-		/**
-		 * @deprecated Use {@code LocalDateTimeBuilder.sameOrAfter()}
-		 */
-		@Deprecated
-		public LocalDateTimeBuilder mustBeSameTimeOrAfter(LocalDateTime reference) {
-			return this.sameOrAfter(reference);
-		}
-
 		public LocalDateTimeBuilder before(LocalDateTime reference) {
 			validation(new LocalDateTimeValidator.Before(reference));
 			return instance;
