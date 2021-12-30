@@ -1,13 +1,8 @@
 package org.yarnandtail.andhow;
 
 import java.util.Properties;
-import javax.naming.NamingException;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+import org.junit.jupiter.api.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
