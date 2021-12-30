@@ -17,15 +17,6 @@ public class BolType extends BaseValueType<Boolean> {
 	}
 
 	/**
-	 * @return An instance of the {@link #BolType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static BolType get() {
-		return instance();
-	}
-
-	/**
 	 * Fetch the single, shared instace of this ValueType
 	 * <p>
 	 * @return An instance of the {@link #BolType()}

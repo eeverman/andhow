@@ -17,15 +17,6 @@ public class DblType extends BaseValueType<Double> {
 	}
 
 	/**
-	 * @return An instance of the {@link #DblType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static DblType get() {
-		return instance();
-	}
-
-	/**
 	 * Fetch the single, shared instace of this ValueType
 	 * <p>
 	 * @return An instance of the {@link #DblType}

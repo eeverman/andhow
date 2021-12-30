@@ -19,15 +19,6 @@ public class LocalDateTimeType extends BaseValueType<LocalDateTime> {
 	}
 
 	/**
-	 * @return An instance of the {@link #LocalDateTimeType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static LocalDateTimeType get() {
-		return instance();
-	}
-
-	/**
 	 * Fetch the single, shared instace of this ValueType
 	 * <p>
 	 * @return An instance of the {@link #LocalDateTimeType()}
