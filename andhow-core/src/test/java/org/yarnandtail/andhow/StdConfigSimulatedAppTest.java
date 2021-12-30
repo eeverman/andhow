@@ -6,20 +6,19 @@ import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
+import org.yarnandtail.andhow.junit5.EnableJndiUtil;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
+import javax.naming.InitialContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author eeverman
- */
 public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.StdConfigSimulatedAppTest.SampleRestClientGroup";
@@ -204,10 +203,14 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInvalidValuesViaCmdLineArgAndPropFile() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		jndi.activate();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:");
+		//
 
 		String[] cmdLineArgs = new String[] {
 				GROUP_PATH + ".CLASSPATH_PROP_FILE=" + CLASSPATH_BEGINNING + "invalid.properties"

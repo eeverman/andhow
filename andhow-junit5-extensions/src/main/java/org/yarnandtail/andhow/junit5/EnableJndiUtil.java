@@ -1,8 +1,6 @@
 package org.yarnandtail.andhow.junit5;
 
-import javax.naming.Context;
-import javax.naming.NameAlreadyBoundException;
-import javax.naming.NamingException;
+import javax.naming.*;
 
 /**
  * Utility for working with JNDI and the EnableJndiForThisXXX JUnit annotations

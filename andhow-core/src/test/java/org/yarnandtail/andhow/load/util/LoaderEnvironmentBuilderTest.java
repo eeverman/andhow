@@ -5,12 +5,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.Property;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
 import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.load.util.LoaderEnvironmentImm;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
+import javax.naming.NamingException;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -312,6 +315,30 @@ class LoaderEnvironmentBuilderTest {
 		leb.setCmdLineArgs(new String[]{"arg6"});
 		leb.setCmdLineArgs(null);
 		assertEquals(0, leb.getCmdLineArgs().size());
+	}
+
+	@Test
+	@EnableJndiForThisTestMethod
+	public void defaultJndiContextSupplierShouldReturnJndiContextWhenAvailable() {
+		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.DefaultJndiContextSupplier();
+		assertNotNull(supplier.get().context);
+		assertNull(supplier.get().exception);
+	}
+
+	@Test
+	public void defaultJndiContextSupplierShouldReturnExceptionWhenNoJndiContext() {
+		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.DefaultJndiContextSupplier();
+		assertNull(supplier.get().context);
+		assertNotNull(supplier.get().exception);
+		assertTrue(supplier.get().exception instanceof NamingException);
+	}
+
+	@Test
+	@EnableJndiForThisTestMethod
+	public void noJndiContextSupplierShouldReturnAllNull() {
+		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.NoJndiContextSupplier();
+		assertNull(supplier.get().context);
+		assertNull(supplier.get().exception);
 	}
 
 }

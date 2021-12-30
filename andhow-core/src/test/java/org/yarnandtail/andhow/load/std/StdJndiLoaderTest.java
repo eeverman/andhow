@@ -7,21 +7,24 @@ import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.junit5.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.NameUtil;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * @author ericeverman
- */
-public class StdJndiLoaderTest extends AndHowTestBase {
+@KillAndHowBeforeEachTest
+public class StdJndiLoaderTest {
+
+	CaseInsensitiveNaming bns;
 
 	public interface ValidParams {
 		//Strings
@@ -34,7 +37,8 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 	@BeforeEach
 	public void initLoader() {
-		this.loader = new StdJndiLoader();
+		loader = new StdJndiLoader();
+		bns = new CaseInsensitiveNaming();
 	}
 
 	@Test
@@ -84,12 +88,18 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertEquals(" ", result.get(2));
 	}
 
-
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "org/yarnandtail/andhow/SimpleParams/");
+		//
+
 
 		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -113,7 +123,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), "2007-11-02T00:00");
 		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL)), "2007-11-02T00:00");
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -134,9 +144,16 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromStringsCompEnvAsClasspath() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_NULL), "not_null");
@@ -149,7 +166,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_NULL), "999");
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01), "2007-11-02T00:00");
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), "2007-11-02T00:00");
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -172,10 +189,17 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:test/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:/test/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:myapp/root/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:/test/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -187,7 +211,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:myapp/root/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should still work
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addFixedValue(StdJndiLoader.CONFIG.ADDED_JNDI_ROOTS, "java:/test/,    java:test/  ,   java:myapp/root/")
@@ -205,10 +229,19 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromStringsFromAddedAndReplacementNonStdPaths() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:zip/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:xy/z/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:/test/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:test/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:myapp/root/org/yarnandtail/andhow/SimpleParams/");
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:zip/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -220,7 +253,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:myapp/root/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "-999");
 		//This should NOT work
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL), "999");
-		jndi.activate();
+
 
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -240,10 +273,14 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromObjectsCompEnv() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:comp/env/" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "test");
@@ -263,7 +300,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_2007_10_01)), LocalDateTime.parse("2007-11-02T00:00"));
 		jndi.bind("java:comp/env/" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LDT_NULL), LocalDateTime.parse("2007-11-02T00:00"));
 
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -282,10 +319,14 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testHappyPathFromObjectsRoot() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
@@ -299,7 +340,7 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), 9999);
 
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -322,17 +363,20 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	//
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testDuplicateValues() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		//switching values slightly to make sure we are reading the correct ones
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB), "test2");
 		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.STR_BOB)), "not_null2");
 
-		jndi.activate();
 
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -348,18 +392,21 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 		assertTrue(lps.get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
 	}
 
-
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testObjectConversionErrors() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), Long.valueOf(-9999));
 		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), Float.valueOf(22));
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), Integer.valueOf(-9999));
-		jndi.activate();
+
 
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -380,16 +427,20 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testStringConversionErrors() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_TEN), "234.567");
 		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(SimpleParams.class, SimpleParams.INT_NULL)), "Apple");
 		jndi.bind("java:" + NameUtil.getAndHowName(SimpleParams.class, SimpleParams.LNG_TEN), "234.567");
-		jndi.activate();
+
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SimpleParams.class);
@@ -411,15 +462,19 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testValidationIsEnforcedWhenExactTypeUsed() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/load/std/StdJndiLoaderTest/ValidParams/");
+		//
 
 		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), Integer.parseInt("9"));
 		jndi.bind("java:" +
 				bns.getUriName(NameUtil.getAndHowName(ValidParams.class, ValidParams.STR_XXX)), "YYY");
-		jndi.activate();
+
 
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -435,13 +490,17 @@ public class StdJndiLoaderTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testValidationIsEnforcedWhenConvertionUsed() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/SimpleParams/");
+		//
 
 		jndi.bind("java:" + NameUtil.getAndHowName(ValidParams.class, ValidParams.INT_TEN), "9");
-		jndi.activate();
+
 
 
 		AndHowConfiguration config = AndHowTestConfig.instance()

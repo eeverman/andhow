@@ -1,0 +1,23 @@
+<configuration>
+
+	<!--
+	This configuration only applies to the com.github.h-thurow.simple-jndi
+	utility, which is used for testing w/in a JNDI environment.  simple-jndi uses
+	SLF4J for logging, for which Logback is used.  This configures Logback.
+	-->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- encoders are assigned the type
+			 ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- This logs for lookups that don't match, which happens a lot during tests -->
+	<logger name="org.osjava.sj.jndi.MemoryContext" level="NONE" />
+
+	<root level="error">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>
