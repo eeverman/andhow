@@ -77,34 +77,6 @@ public class AndHowTestBaseImpl {
 	}
 
 	/**
-	 * Simple consistent way to get an empty JNDI context.
-	 * <p>
-	 * Call {@code SimpleNamingContextBuilder.bind()} for each variable to add
-	 * to the context, then {@code SimpleNamingContextBuilder.activate()} to
-	 * make the context active.  To fetch values from the context,
-	 * use:
-	 * <pre>{@code
-	 * InitialContext ctx = new InitialContext();
-	 * ctx.lookup("java:comp/some/name");
-	 * }</pre>
-	 * The context is deactivated and cleared after each test and after the
-	 * test class completes.
-	 *
-	 * @deprecated This will be removed in the next major release to avoid
-	 * having JNDI dependencies in a user visible class.  Most user will not
-	 * need to test their apps with JNDI.
-	 * @return A JNDI context for setting properties via JNDI.
-	 * @throws NamingException If JNDI cannot be initiated.
-	 */
-	@Deprecated
-	public SimpleNamingContextBuilder getJndi() throws NamingException {
-		if (builder == null) {
-			builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-		}
-		return builder;
-	}
-
-	/**
 	 * Stores the AndHow Core (its state) and System Properties prior to a test.
 	 * It also sets the logging level for SimpleNamingContextBuilder (a JNDI
 	 * related class) to SEVERE.  If JNDI is used for a test, it's startup
