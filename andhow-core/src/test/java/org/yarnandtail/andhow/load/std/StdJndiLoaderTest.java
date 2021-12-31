@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.load.std;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.LoaderProblem;

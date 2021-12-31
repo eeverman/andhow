@@ -16,10 +16,6 @@
 	<dependencies>
 		<!-- All dependencies are test dependencies only -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
@@ -43,7 +39,6 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.10</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -1,7 +1,6 @@
 package org.yarnandtail.andhow;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
