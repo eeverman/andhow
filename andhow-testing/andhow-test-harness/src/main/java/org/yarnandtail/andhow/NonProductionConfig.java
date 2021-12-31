@@ -107,19 +107,6 @@ public class NonProductionConfig {
 		}
 
 		/**
-		 * Add a group to a custom list of 'Groups' (classes or interfaces containing
-		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
-		 *
-		 * @deprecated Use {@link #addOverrideGroups(Collection)}
-		 * @param group A group (a classe) to add to those known to AndHow.
-		 * @return This configuration instance for fluent configuration.
-		 */
-		@Deprecated
-		public N group(Class<?> group) {
-			return addOverrideGroup(group);
-		}
-
-		/**
 		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
 		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
 		 *
@@ -138,19 +125,6 @@ public class NonProductionConfig {
 
 			overrideGroups.addAll(groups);
 			return (N) this;
-		}
-
-		/**
-		 * Add a collection of groups to a custom list of 'Groups' (classes or interfaces containing
-		 * AndHow Properties) to use instead of allowing the auto-discovery to find the Groups.
-		 *
-		 * @deprecated Use {@link #addOverrideGroups(Collection)}
-		 * @param groups A collection of groups (classes) to add to those known to AndHow.
-		 * @return This configuration instance for fluent configuration.
-		 */
-		@Deprecated
-		public N groups(Collection<Class<?>> groups) {
-			return addOverrideGroups(groups);
 		}
 
 		/**

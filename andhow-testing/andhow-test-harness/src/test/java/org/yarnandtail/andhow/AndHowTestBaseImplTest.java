@@ -39,7 +39,7 @@ class AndHowTestBaseImplTest {
 			System.setProperty(BOB_NAME, BOB_VALUE);
 
 			//Now build w/ the new SystemProperties
-			NonProductionConfig.instance().group(SimpleConfig.class).forceBuild();
+			NonProductionConfig.instance().addOverrideGroup(SimpleConfig.class).forceBuild();
 
 
 			//Are the sysProps messed up just like we did above?
@@ -105,7 +105,7 @@ class AndHowTestBaseImplTest {
 			System.setProperty(BOB_NAME, BOB_VALUE);
 
 			//Now build w/ the new SystemProperties
-			NonProductionConfig.instance().group(SimpleConfig.class).forceBuild();
+			NonProductionConfig.instance().addOverrideGroup(SimpleConfig.class).forceBuild();
 
 
 			//Are the sysProps messed up just like we did above?
@@ -165,7 +165,7 @@ class AndHowTestBaseImplTest {
 
 			//
 			//Now build AndHow - should see JNDI property
-			NonProductionConfig.instance().group(SimpleConfig.class).forceBuild();
+			NonProductionConfig.instance().addOverrideGroup(SimpleConfig.class).forceBuild();
 
 			//Did the AndHow Property get set?
 			assertEquals(BOB_VALUE + "_JNDI", SimpleConfig.BOB.getValue());
@@ -180,7 +180,7 @@ class AndHowTestBaseImplTest {
 
 			//
 			//Now build AndHow again - 'BOB' should be empty- should see JNDI property
-			NonProductionConfig.instance().group(SimpleConfig.class).forceBuild();
+			NonProductionConfig.instance().addOverrideGroup(SimpleConfig.class).forceBuild();
 
 			assertNull(SimpleConfig.BOB.getValue());
 

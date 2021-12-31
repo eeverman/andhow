@@ -21,9 +21,9 @@ import static org.yarnandtail.andhow.AndHowNonProductionUtil.PERMISSION_MSG;
  * @author ericeverman
  */
 public class NonProductionConfigTest {
-	
+
 	StrProp MY_PROP1 = StrProp.builder().build();
-	
+
 	public static interface Inner {
 		StrProp MY_PROP2 = StrProp.builder().build();
 	}
@@ -65,49 +65,49 @@ public class NonProductionConfigTest {
 			config.addCmdLineArg(null, "one");
 		});
 	}
-	
+
 	@Test
 	public void testGroup() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
-		config.group(NonProductionConfigTest.class);
-		config.group(NonProductionConfigTest.Inner.class);
-		
+		config.addOverrideGroup(NonProductionConfigTest.class);
+		config.addOverrideGroup(NonProductionConfigTest.Inner.class);
+
 		List<GroupProxy> proxies = config.getRegisteredGroups();
-		
+
 		assertEquals(2, proxies.size());
 		assertEquals(proxies.get(0).getProxiedGroup(), NonProductionConfigTest.class);
 		assertEquals(proxies.get(1).getProxiedGroup(), NonProductionConfigTest.Inner.class);
 	}
-	
+
 	@Test
 	public void testGroups() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
 		List<Class<?>> groups = new ArrayList();
 		groups.add(NonProductionConfigTest.class);
 		groups.add(NonProductionConfigTest.Inner.class);
-		config.groups(groups);
-		
+		config.addOverrideGroups(groups);
+
 		List<GroupProxy> proxies = config.getRegisteredGroups();
-		
+
 		assertEquals(2, proxies.size());
 		assertEquals(proxies.get(0).getProxiedGroup(), NonProductionConfigTest.class);
 		assertEquals(proxies.get(1).getProxiedGroup(), NonProductionConfigTest.Inner.class);
 	}
-	
+
 	@Test
 	public void testSetLoaders() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
 		MapLoader ml1 = new MapLoader();
 		MapLoader ml2 = new MapLoader();
 		config.setLoaders(ml1, ml2);
-		
+
 		List<Loader> loaders = config.buildLoaders();
-		
+
 		assertEquals(2, loaders.size());
 		assertEquals(ml1, loaders.get(0));
 		assertEquals(ml2, loaders.get(1));
 	}
-	
+
 	@Test
 	public void testBuildLoaders() {
 		NonProductionConfigImpl config = NonProductionConfig.instance();
