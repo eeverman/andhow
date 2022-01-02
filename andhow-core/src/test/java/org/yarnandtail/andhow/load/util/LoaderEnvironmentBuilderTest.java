@@ -4,10 +4,9 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
+import org.yarnandtail.andhow.api.JndiContextWrapper;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
-import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
-import org.yarnandtail.andhow.load.util.LoaderEnvironmentImm;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
@@ -320,25 +319,25 @@ class LoaderEnvironmentBuilderTest {
 	@Test
 	@EnableJndiForThisTestMethod
 	public void defaultJndiContextSupplierShouldReturnJndiContextWhenAvailable() {
-		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.DefaultJndiContextSupplier();
-		assertNotNull(supplier.get().context);
-		assertNull(supplier.get().exception);
+		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.DefaultJndiContextSupplier();
+		assertNotNull(supplier.get().getContext());
+		assertNull(supplier.get().getException());
 	}
 
 	@Test
 	public void defaultJndiContextSupplierShouldReturnExceptionWhenNoJndiContext() {
-		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.DefaultJndiContextSupplier();
-		assertNull(supplier.get().context);
-		assertNotNull(supplier.get().exception);
-		assertTrue(supplier.get().exception instanceof NamingException);
+		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.DefaultJndiContextSupplier();
+		assertNull(supplier.get().getContext());
+		assertNotNull(supplier.get().getException());
+		assertTrue(supplier.get().getException() instanceof NamingException);
 	}
 
 	@Test
 	@EnableJndiForThisTestMethod
 	public void noJndiContextSupplierShouldReturnAllNull() {
-		Supplier<JndiContextWrapper> supplier = new LoaderEnvironmentBuilder.NoJndiContextSupplier();
-		assertNull(supplier.get().context);
-		assertNull(supplier.get().exception);
+		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.NoJndiContextSupplier();
+		assertNull(supplier.get().getContext());
+		assertNull(supplier.get().getException());
 	}
 
 }

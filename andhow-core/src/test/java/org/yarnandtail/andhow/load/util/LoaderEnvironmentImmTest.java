@@ -3,11 +3,9 @@ package org.yarnandtail.andhow.load.util;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
-import org.yarnandtail.andhow.load.util.*;
 import org.yarnandtail.andhow.property.StrProp;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +32,7 @@ class LoaderEnvironmentImmTest {
 		List<PropertyValue<?>> fixedPropertyVals = new ArrayList<>();
 		fixedPropertyVals.add(new PropertyValue(STR_1, "str1"));
 
-		LoaderEnvironmentBuilder.NoJndiContextSupplier jndiSupplier = new LoaderEnvironmentBuilder.NoJndiContextSupplier();
+		JndiContextSupplier.NoJndiContextSupplier jndiSupplier = new JndiContextSupplier.NoJndiContextSupplier();
 
 		LoaderEnvironmentImm le = new LoaderEnvironmentImm(envVars, sysProps, mainArgs, fixedNamedVals, fixedPropertyVals, jndiSupplier);
 
@@ -53,15 +51,15 @@ class LoaderEnvironmentImmTest {
 		assertTrue(fixedPropertyVals.equals(le.getFixedPropertyValues()));
 		assertThrows(UnsupportedOperationException.class, () -> le.getFixedPropertyValues().add(new PropertyValue<>(STR_1, "blah")));
 
-		assertNull(le.getJndiContext().context);
-		assertNull(le.getJndiContext().exception);
+		assertNull(le.getJndiContext().getContext());
+		assertNull(le.getJndiContext().getException());
 	}
 
 
 	@Test
 	public void nullValuesShouldResultInEmptyCollections() {
 
-		LoaderEnvironmentBuilder.DefaultJndiContextSupplier jndiSupplier = new LoaderEnvironmentBuilder.DefaultJndiContextSupplier();
+		JndiContextSupplier.DefaultJndiContextSupplier jndiSupplier = new JndiContextSupplier.DefaultJndiContextSupplier();
 
 		LoaderEnvironmentImm le = new LoaderEnvironmentImm(null, null, null, null, null, jndiSupplier);
 

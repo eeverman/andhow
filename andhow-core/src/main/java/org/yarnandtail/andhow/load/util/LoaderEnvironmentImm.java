@@ -1,9 +1,9 @@
 package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.PropertyValue;
+import org.yarnandtail.andhow.api.JndiContextWrapper;
 import org.yarnandtail.andhow.api.LoaderEnvironment;
 
-import javax.naming.Context;
 import java.util.*;
 import java.util.function.Supplier;
 

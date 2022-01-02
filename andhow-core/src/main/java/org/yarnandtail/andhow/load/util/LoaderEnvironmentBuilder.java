@@ -2,10 +2,8 @@ package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.util.LoaderEnvironmentImm;
 import org.yarnandtail.andhow.util.TextUtil;
 
-import javax.naming.*;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -27,7 +25,7 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	protected boolean _replaceEmptySysProps = true;
 
 	// Jndi
-	protected Supplier<JndiContextWrapper> _jndiContextSupplier = new DefaultJndiContextSupplier();
+	protected Supplier<JndiContextWrapper> _jndiContextSupplier = new JndiContextSupplier.DefaultJndiContextSupplier();
 
 	/**
 	 * Set the environment vars that the Loaders see, overriding the actual env. vars.
@@ -296,33 +294,4 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	//
 	// Jndi Context Suppliers
 
-	/**
-	 * JndiContextWrapper Supplier that attempts to initialize a standard {@link InitialContext}.
-	 */
-	public static class DefaultJndiContextSupplier implements Supplier<JndiContextWrapper> {
-
-		@Override
-		public JndiContextWrapper get() {
-
-			JndiContextWrapper wrap = new JndiContextWrapper();
-
-			try {
-				InitialContext ctx = new InitialContext();  //Normally doesn't throw exception, even if no JNDI
-				ctx.getEnvironment();  //Should throw error if JNDI is unavailable
-				wrap.context = ctx;
-			} catch (Exception e) {
-				wrap.exception = e;
-			}
-
-			return wrap;
-		}
-	}
-
-	/**
-	 * JndiContextWrapper Supplier that does not provide a Jndi Context
-	 */
-	public static class NoJndiContextSupplier implements Supplier<JndiContextWrapper> {
-		@Override
-		public JndiContextWrapper get() { return new JndiContextWrapper(); }
-	}
 }

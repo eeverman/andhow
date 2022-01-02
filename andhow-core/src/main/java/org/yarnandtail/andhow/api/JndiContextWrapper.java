@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.load.util;
+package org.yarnandtail.andhow.api;
 
 import javax.naming.Context;
 
@@ -8,7 +8,7 @@ import javax.naming.Context;
  *
  * If the context is null, there may be an Exception - It is possible for both to be null.
  */
-public class JndiContextWrapper {
-	public Context context;
-	public Exception exception;
+public interface JndiContextWrapper {
+	public Context getContext();
+	public Exception getException();
 }

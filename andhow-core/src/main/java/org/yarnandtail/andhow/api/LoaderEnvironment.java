@@ -1,11 +1,8 @@
 package org.yarnandtail.andhow.api;
 
-import org.yarnandtail.andhow.AndHowConfiguration;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
-import org.yarnandtail.andhow.load.util.JndiContextWrapper;
 
-import javax.naming.Context;
 import java.util.*;
 
 /**

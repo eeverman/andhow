@@ -120,7 +120,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
 			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
 
-		Context ctx = environment.getJndiContext().context;
+		Context ctx = environment.getJndiContext().getContext();
 
 		if (ctx != null) {	// Happy path
 
@@ -129,7 +129,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 		} else if (isFailedEnvironmentAProblem()) {	// No JNDI... and this is a problem
 
 			Problem p = new JndiContextLoaderProblem(this);
-			log.error(p.getProblemDescription(), environment.getJndiContext().exception);
+			log.error(p.getProblemDescription(), environment.getJndiContext().getException());
 			return new LoaderValues(this, p);
 
 		} else {	// No JNDI... but that is OK.
