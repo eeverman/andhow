@@ -35,8 +35,8 @@ public class CheckerFixedValuesTest {
 				.addFixedValue(Checker.Config.PROTOCOL, "https")
 				.addFixedValue(Checker.Config.SERVER, "imgs.xkcd.com")
 				.addFixedValue(Checker.Config.PORT, 80)
-				.addFixedValue(Checker.Config.PATH, "/comics/the_mother_of_all_suspicious_files.png")
-				.build();  //build() initializes AndHow, otherwise it would wait for the 1st Property access.
+				.addFixedValue(Checker.Config.PATH, "/comics/the_mother_of_all_suspicious_files.png");
+		AndHow.instance(); //build() initializes AndHow, otherwise it would wait for the 1st Property access.
 	}
 
 	/**

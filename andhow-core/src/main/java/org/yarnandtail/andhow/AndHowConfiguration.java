@@ -292,18 +292,4 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	C insertLoaderBefore(Class<? extends StandardLoader> insertBeforeThisLoader, Loader loaderToInsert);
 
 	C insertLoaderAfter(Class<? extends StandardLoader> insertAfterThisLoader, Loader loaderToInsert);
-
-	/**
-	 * Force initialization of AndHow using this configuration instance.
-	 *
-	 * AndHow initialization is a one-time event, so further changes to this configuration will
-	 * have no effect and additional calls to build() will throw runtime exceptions.
-	 *
-	 * @see org.yarnandtail.andhow.AndHow#instance
-	 * @see org.yarnandtail.andhow.AndHow#initialize
-	 * @deprecated This method will be removed in the next major release.
-	 * Use AndHow.instance() or AndHow.initialize()
-	 */
-	@Deprecated
-	void build();
 }
