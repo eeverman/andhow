@@ -122,18 +122,6 @@ public final class AndHowNonProductionUtil {
 	}
 
 	/**
-	 * Creates a clone of a Properties object so it can be detached from System.
-	 *
-	 * @deprecated Use <code>(Properties) Properties.clone()</code>
-	 * @param props
-	 * @return
-	 */
-	@Deprecated
-	public static Properties clone(Properties props) {
-		return (Properties)props.clone();
-	}
-
-	/**
 	 * Forces the {@code AndHowCore} to be null.
 	 * <p>
 	 * If AndHow has not been initialized, it will just remain in the uninitialized
