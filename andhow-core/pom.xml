@@ -34,12 +34,11 @@
 		<dependency>
 			<groupId>com.github.h-thurow</groupId>
 			<artifactId>simple-jndi</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<!-- Optional dependency of simple-jndi -->
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>
