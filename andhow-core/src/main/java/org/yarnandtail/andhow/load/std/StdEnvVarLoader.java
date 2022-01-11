@@ -1,11 +1,8 @@
 package org.yarnandtail.andhow.load.std;
 
-import java.util.*;
-
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import org.yarnandtail.andhow.load.BaseMapLoader;
-import org.yarnandtail.andhow.load.MapLoader;
 
 /**
  * Reads the operating system defined environment variables and loads the value
@@ -78,7 +75,7 @@ public class StdEnvVarLoader extends BaseMapLoader implements StandardLoader {
 	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
-		return load(runtimeDef, existingValues, environment.getEnvironmentVariables());
+		return load(runtimeDef, existingValues, environment.getEnvVars());
 	}
 
 	@Override

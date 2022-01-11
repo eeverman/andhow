@@ -2,7 +2,6 @@ package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.api.JndiContextWrapper;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import java.util.function.Supplier;
 
@@ -13,6 +12,8 @@ import java.util.function.Supplier;
 public class JndiContextSupplier {
 	/**
 	 * JndiContextWrapper Supplier that attempts to initialize a standard {@link InitialContext}.
+	 *
+	 * A new JndiContextWrapper instance is returned for each call to get.
 	 */
 	public static class DefaultJndiContextSupplier implements Supplier<JndiContextWrapper> {
 
@@ -24,9 +25,9 @@ public class JndiContextSupplier {
 			try {
 				InitialContext ctx = new InitialContext();  //Normally doesn't throw exception, even if no JNDI
 				ctx.getEnvironment();  //Should throw error if JNDI is unavailable
-				wrap = new JndiContextWrapperWithContext(ctx);
+				wrap = new JndiContextWrapperImpl(ctx);
 			} catch (Exception e) {
-				wrap = new JndiContextWrapperWithoutContext(e);
+				wrap = new JndiContextWrapperImpl(e);
 			}
 
 			return wrap;
@@ -36,50 +37,9 @@ public class JndiContextSupplier {
 	/**
 	 * JndiContextWrapper Supplier that does not provide a Jndi Context
 	 */
-	public static class NoJndiContextSupplier implements Supplier<JndiContextWrapper> {
+	public static class EmptyJndiContextSupplier implements Supplier<JndiContextWrapper> {
 		@Override
-		public JndiContextWrapper get() { return new JndiContextWrapperWithoutContext(null); }
+		public JndiContextWrapper get() { return new JndiContextWrapperImpl(); }
 	}
 
-	/**
-	 * JndiContextWrapper which may have a non-null JNDI context, but no exception.
-	 */
-	public static class JndiContextWrapperWithContext implements JndiContextWrapper {
-		public Context _context;
-
-		public JndiContextWrapperWithContext(final Context context) {
-			_context = context;
-		}
-
-		@Override
-		public Context getContext() {
-			return _context;
-		}
-
-		@Override
-		public Exception getException() {
-			return null;
-		}
-	}
-
-	/**
-	 * JndiContextWrapper which has no JNDI context but may have an exception.
-	 */
-	public static class JndiContextWrapperWithoutContext implements JndiContextWrapper {
-		public Exception _exception;
-
-		public JndiContextWrapperWithoutContext(final Exception exception) {
-			_exception = exception;
-		}
-
-		@Override
-		public Context getContext() {
-			return null;
-		}
-
-		@Override
-		public Exception getException() {
-			return _exception;
-		}
-	}
 }

@@ -63,12 +63,12 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	}
 
 	@Override
-	public Map<String, String> getEnvironmentVariables() {
+	public Map<String, String> getEnvVars() {
 		return _envVars;
 	}
 
 	@Override
-	public Map<String, String> getSystemProperties() {
+	public Map<String, String> getSysProps() {
 		return _sysProps;
 	}
 

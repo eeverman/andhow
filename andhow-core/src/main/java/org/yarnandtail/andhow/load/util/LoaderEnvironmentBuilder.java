@@ -20,9 +20,9 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	final protected Map<String, Object> _fixedNamedValues = new HashMap<>();
 	final protected List<PropertyValue<?>> _fixedPropertyValues = new ArrayList<>();
 
-	// If true, replace empty collections w/ canonical values in toImmutable().
-	protected boolean _replaceEmptyEnvVars = true;
-	protected boolean _replaceEmptySysProps = true;
+	// If true, replace the system provided collections w/ overridden values in toImmutable().
+	protected boolean _replaceEnvVars = false;
+	protected boolean _replaceSysProps = false;
 
 	// Jndi
 	protected Supplier<JndiContextWrapper> _jndiContextSupplier = new JndiContextSupplier.DefaultJndiContextSupplier();
@@ -40,19 +40,32 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	public void setEnvVars(Map<String, String> envVars) {
 		_envVars.clear();
 		if (envVars != null) { _envVars.putAll(envVars); }
-		_replaceEmptyEnvVars = false;
+		_replaceEnvVars = true;
 	}
 
 	/**
 	 * Forces any previous env. vars. set via {@link #setEnvVars(Map)} to be dumped and the actual
 	 * OS provided env. vars. will be used instead.
 	 * <p>
-	 * Note that calling {@link #getEnvironmentVariables()} will return an empty collection after this
+	 * Note that calling {@link #getEnvVars()} will return an empty collection after this
 	 * method is called.  The real env. vars. will be injected when {@link #toImmutable()} is called.
 	 */
-	public void setEnvVarsToUseActualEnvVars() {
+	public void resetToActualEnvVars() {
 		_envVars.clear();
-		_replaceEmptyEnvVars = true;
+		_replaceEnvVars = false;
+	}
+
+	/**
+	 * Returns true if the normal {@code System.getenv()} values are being replaced
+	 * by the contents of {@link #getEnvVars()}.
+	 *
+	 * This is set to true by calling {@link #setEnvVars(Map)}, false by calling
+	 * {@link #resetToActualEnvVars()}.
+	 *
+	 * @return True if replacement will happen.
+	 */
+	public boolean isEnvVarsReplaced() {
+		return _replaceEnvVars;
 	}
 
 	/**
@@ -68,19 +81,32 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	public void setSysProps(Map<String, String> sysProps) {
 		_sysProps.clear();
 		if (sysProps != null) { _sysProps.putAll(sysProps); }
-		_replaceEmptySysProps = false;
+		_replaceSysProps = true;
 	}
 
 	/**
 	 * Forces any previous sys. props. set via {@link #setSysProps(Map)}} to be dumped and the actual
 	 * {@code System.getProperties()} will be used instead.
 	 * <p>
-	 * Note that calling {@link #getSystemProperties()} will return an empty collection after this
+	 * Note that calling {@link #getSysProps()} will return an empty collection after this
 	 * method is called.  The real sys. props. will be injected when {@link #toImmutable()} is called.
 	 */
-	public void setSysPropsToUseActualEnvVars() {
+	public void resetToActualSysProps() {
 		_sysProps.clear();
-		_replaceEmptySysProps = true;
+		_replaceSysProps = false;
+	}
+
+	/**
+	 * Returns true if the normal {@code System.getProperties()} values are being replaced
+	 * by the contents of {@link #getSysProps()}.
+	 *
+	 * This is set to true by calling {@link #setSysProps(Map)}, false by calling
+	 * {@link #resetToActualSysProps()}.
+	 *
+	 * @return True if replacement will happen.
+	 */
+	public boolean isSysPropsReplaced() {
+		return _replaceSysProps;
 	}
 
 	/**
@@ -219,7 +245,7 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 		if (jndiContextSupplier == null) {
 			throw new IllegalArgumentException("The jndiContextSupplier cannot be null. " +
 					"To turn off JNDI loading, remove the StdJndiLoader from the loader list, " +
-					"or set the JndiContextSupplier to the NoJndiContextSupplier");
+					"or set the JndiContextSupplier to the EmptyJndiContextSupplier");
 		}
 		_jndiContextSupplier = jndiContextSupplier;
 	}
@@ -243,11 +269,10 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	}
 
 	public LoaderEnvironmentImm toImmutable() {
-		Map<String, String> envVars = (_envVars.isEmpty() && _replaceEmptyEnvVars)?
-				System.getenv() : _envVars;
+		Map<String, String> envVars = (_replaceEnvVars)?_envVars:System.getenv();
 
-		Map<String, String> sysProps = (_sysProps.isEmpty() && _replaceEmptySysProps)?
-				buildPropertyMap(System.getProperties()) : _sysProps;
+		Map<String, String> sysProps = (_replaceSysProps)?
+				_sysProps:buildPropertyMap(System.getProperties());
 
 		return new LoaderEnvironmentImm(
 				envVars, sysProps, _cmdLineArgs, _fixedNamedValues, _fixedPropertyValues,
@@ -273,11 +298,31 @@ public class LoaderEnvironmentBuilder implements LoaderEnvironment {
 	//
 	// The LoaderEnvironment interface
 
+	/**
+	 * Returns the Map of overridden environment variables, if any.
+	 * <p>
+	 * If {@link #isEnvVarsReplaced()} is true, then the values returned here will be used
+	 * as the env vars when loading configuration values.  If false, the actual
+	 * {@code System.getenv()} will be used.  See {@link #setEnvVars(Map)} and
+	 * {@link #resetToActualEnvVars()} for setting and unsetting these values.
+	 *
+	 * @return A map of variable names to values.  Never null, but possibly empty.
+	 */
 	@Override
-	public Map<String, String> getEnvironmentVariables() { return _envVars;	}
+	public Map<String, String> getEnvVars() { return _envVars;	}
 
+	/**
+	 * Returns the Map of overridden system properties, if any.
+	 * <p>
+	 * If {@link #isSysPropsReplaced()} is true, then the values returned here will be used
+	 * as the system properties when loading configuration values.  If false, the actual
+	 * {@code System.getProperties()} will be used.  See {@link #setSysProps(Map)} and
+	 * {@link #resetToActualSysProps()} for setting and unsetting these values.
+	 *
+	 * @return A map of variable names to values.  Never null, but possibly empty.
+	 */
 	@Override
-	public Map<String, String> getSystemProperties() { return _sysProps; }
+	public Map<String, String> getSysProps() { return _sysProps; }
 
 	@Override
 	public List<String> getCmdLineArgs() {	return _cmdLineArgs;	}

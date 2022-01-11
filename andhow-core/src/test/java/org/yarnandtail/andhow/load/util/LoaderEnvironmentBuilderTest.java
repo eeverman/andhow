@@ -6,11 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.PropertyValue;
 import org.yarnandtail.andhow.api.JndiContextWrapper;
 import org.yarnandtail.andhow.api.Property;
-import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
+import static org.yarnandtail.andhow.load.util.JndiContextSupplier.DefaultJndiContextSupplier;
 
-import javax.naming.NamingException;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -68,24 +67,28 @@ class LoaderEnvironmentBuilderTest {
 		leb.setCmdLineArgs(mainArgs);
 		leb.setFixedNamedValues(fixedNamedVals);
 		leb.setFixedPropertyValues(fixedPropertyVals);
+		leb.setJndiContextSupplier(new TestJndiContextSupplier());
 
-		assertTrue(envVars.equals(leb.getEnvironmentVariables()));
-		assertTrue(sysProps.equals(leb.getSystemProperties()));
+		assertTrue(envVars.equals(leb.getEnvVars()));
+		assertTrue(leb.isEnvVarsReplaced());
+		assertTrue(sysProps.equals(leb.getSysProps()));
+		assertTrue(leb.isSysPropsReplaced());
 		assertThat(leb.getCmdLineArgs(), Matchers.containsInAnyOrder(mainArgs));
 		assertTrue(fixedNamedVals.equals(leb.getFixedNamedValues()));
 		assertTrue(fixedPropertyVals.equals(leb.getFixedPropertyValues()));
+		assertTrue(leb.getJndiContextSupplier() instanceof TestJndiContextSupplier);
 
 		//
 		//  Check conversion to immutable
 
 		LoaderEnvironmentImm le = leb.toImmutable();
 
-		assertTrue(envVars.equals(le.getEnvironmentVariables()));
-		assertTrue(sysProps.equals(le.getSystemProperties()));
+		assertTrue(envVars.equals(le.getEnvVars()));
+		assertTrue(sysProps.equals(le.getSysProps()));
 		assertThat(le.getCmdLineArgs(), Matchers.containsInAnyOrder(mainArgs));
 		assertTrue(fixedNamedVals.equals(le.getFixedNamedValues()));
 		assertTrue(fixedPropertyVals.equals(le.getFixedPropertyValues()));
-
+		assertSame(TestJndiContextSupplier.TEST_EXCEPTION, le.getJndiContext().getException());
 	}
 
 
@@ -97,11 +100,12 @@ class LoaderEnvironmentBuilderTest {
 
 		LoaderEnvironmentImm le = leb.toImmutable();
 
-		assertTrue(System.getenv().equals(le.getEnvironmentVariables()));
-		assertTrue(System.getProperties().equals(le.getSystemProperties()));
+		assertTrue(System.getenv().equals(le.getEnvVars()));
+		assertTrue(System.getProperties().equals(le.getSysProps()));
 		assertEquals(0, le.getCmdLineArgs().size());
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertEquals(0, le.getFixedPropertyValues().size());
+		assertNotNull(le.getJndiContext());
 	}
 
 	@Test
@@ -122,9 +126,11 @@ class LoaderEnvironmentBuilderTest {
 		leb.setFixedNamedValues(null);
 		leb.setFixedPropertyValues(null);
 
-		assertTrue(leb.getEnvironmentVariables().isEmpty());
+		assertTrue(leb.getEnvVars().isEmpty());
+		assertTrue(leb.isEnvVarsReplaced());
 		assertTrue(leb.getCmdLineArgs().isEmpty());
-		assertTrue(leb.getSystemProperties().isEmpty());
+		assertTrue(leb.getSysProps().isEmpty());
+		assertTrue(leb.isSysPropsReplaced());
 		assertTrue(leb.getFixedNamedValues().isEmpty());
 		assertTrue(leb.getFixedPropertyValues().isEmpty());
 
@@ -133,8 +139,8 @@ class LoaderEnvironmentBuilderTest {
 
 		LoaderEnvironmentImm le = leb.toImmutable();
 
-		assertTrue(le.getEnvironmentVariables().isEmpty());
-		assertTrue(le.getSystemProperties().isEmpty());
+		assertTrue(le.getEnvVars().isEmpty());
+		assertTrue(le.getSysProps().isEmpty());
 		assertEquals(0, le.getCmdLineArgs().size());
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertEquals(0, le.getFixedPropertyValues().size());
@@ -159,9 +165,11 @@ class LoaderEnvironmentBuilderTest {
 		leb.setFixedNamedValues(Collections.emptyMap());
 		leb.setFixedPropertyValues(Collections.emptyList());
 
-		assertTrue(leb.getEnvironmentVariables().isEmpty());
+		assertTrue(leb.getEnvVars().isEmpty());
+		assertTrue(leb.isEnvVarsReplaced());
 		assertTrue(leb.getCmdLineArgs().isEmpty());
-		assertTrue(leb.getSystemProperties().isEmpty());
+		assertTrue(leb.getSysProps().isEmpty());
+		assertTrue(leb.isSysPropsReplaced());
 		assertTrue(leb.getFixedNamedValues().isEmpty());
 		assertTrue(leb.getFixedPropertyValues().isEmpty());
 
@@ -170,8 +178,8 @@ class LoaderEnvironmentBuilderTest {
 
 		LoaderEnvironmentImm le = leb.toImmutable();
 
-		assertTrue(le.getEnvironmentVariables().isEmpty());
-		assertTrue(le.getSystemProperties().isEmpty());
+		assertTrue(le.getEnvVars().isEmpty());
+		assertTrue(le.getSysProps().isEmpty());
 		assertEquals(0, le.getCmdLineArgs().size());
 		assertEquals(0, le.getFixedNamedValues().size());
 		assertEquals(0, le.getFixedPropertyValues().size());
@@ -201,20 +209,31 @@ class LoaderEnvironmentBuilderTest {
 	@Test
 	public void resettingToUseSystemProvidedValuesWorks() {
 
+		// Initially false
+		assertFalse(leb.isEnvVarsReplaced());
+		assertFalse(leb.isSysPropsReplaced());
+
+
 		// Initially set non-null values
 		populateCollections();
 		leb.setEnvVars(envVars);
 		leb.setSysProps(sysProps);
 
+		assertTrue(leb.isEnvVarsReplaced());
+		assertTrue(leb.isSysPropsReplaced());
+
 		//
 		// Reset to actual system provided values for sys props and env vars
-		leb.setEnvVarsToUseActualEnvVars();
-		leb.setSysPropsToUseActualEnvVars();
+		leb.resetToActualEnvVars();
+		leb.resetToActualSysProps();
+
+		assertFalse(leb.isEnvVarsReplaced());
+		assertFalse(leb.isSysPropsReplaced());
 
 		LoaderEnvironmentImm le = leb.toImmutable();
 
-		assertTrue(System.getenv().equals(le.getEnvironmentVariables()));
-		assertTrue(System.getProperties().equals(le.getSystemProperties()));
+		assertTrue(System.getenv().equals(le.getEnvVars()));
+		assertTrue(System.getProperties().equals(le.getSysProps()));
 
 	}
 
@@ -317,27 +336,36 @@ class LoaderEnvironmentBuilderTest {
 	}
 
 	@Test
-	@EnableJndiForThisTestMethod
-	public void defaultJndiContextSupplierShouldReturnJndiContextWhenAvailable() {
-		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.DefaultJndiContextSupplier();
-		assertNotNull(supplier.get().getContext());
-		assertNull(supplier.get().getException());
+	public void setGetJndiContextSupplierWorks() {
+
+		Supplier<JndiContextWrapper> mySupplier = new TestJndiContextSupplier();
+
+		assertTrue(leb.getJndiContextSupplier() instanceof DefaultJndiContextSupplier);
+		assertThrows(IllegalArgumentException.class,
+				() -> leb.setJndiContextSupplier(null));
+		assertTrue(leb.getJndiContextSupplier() instanceof DefaultJndiContextSupplier);
+
+		leb.setJndiContextSupplier(mySupplier);
+		assertSame(mySupplier, leb.getJndiContextSupplier());
+
 	}
 
-	@Test
-	public void defaultJndiContextSupplierShouldReturnExceptionWhenNoJndiContext() {
-		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.DefaultJndiContextSupplier();
-		assertNull(supplier.get().getContext());
-		assertNotNull(supplier.get().getException());
-		assertTrue(supplier.get().getException() instanceof NamingException);
-	}
+	/**
+	 * A JndiContextSupplier that can be used in the LoaderEnvironmentBuilder that
+	 * uses a distinct Exception in the JndiContextWrapper so its use can be
+	 * detected in the LoaderEnvironmentImm when the Supplier is no longer present
+	 * (only the wrapper returned from get is present, which will have the distinct
+	 * exception).
+	 */
+	public static class TestJndiContextSupplier implements Supplier<JndiContextWrapper> {
 
-	@Test
-	@EnableJndiForThisTestMethod
-	public void noJndiContextSupplierShouldReturnAllNull() {
-		Supplier<JndiContextWrapper> supplier = new JndiContextSupplier.NoJndiContextSupplier();
-		assertNull(supplier.get().getContext());
-		assertNull(supplier.get().getException());
+		//Marker exception to verify a TestJndiContextSupplier is in use.
+		public static final Exception TEST_EXCEPTION = new Exception();
+
+		@Override
+		public JndiContextWrapper get() {
+			return new JndiContextWrapperImpl(TEST_EXCEPTION);
+		}
 	}
 
 }
