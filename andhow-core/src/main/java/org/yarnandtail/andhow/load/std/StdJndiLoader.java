@@ -6,7 +6,7 @@ import java.util.List;
 import javax.naming.*;
 import org.yarnandtail.andhow.GroupInfo;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextLoaderProblem;
+import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextMissing;
 import org.yarnandtail.andhow.load.BaseLoader;
 import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import org.yarnandtail.andhow.property.StrProp;
@@ -128,7 +128,7 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 
 		} else if (isFailedEnvironmentAProblem()) {	// No JNDI... and this is a problem
 
-			Problem p = new JndiContextLoaderProblem(this);
+			Problem p = new JndiContextMissing(this);
 			log.error(p.getProblemDescription(), environment.getJndiContext().getException());
 			return new LoaderValues(this, p);
 

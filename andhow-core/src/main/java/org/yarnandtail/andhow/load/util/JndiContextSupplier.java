@@ -9,13 +9,13 @@ import java.util.function.Supplier;
  * Dedicated {@link java.util.function.Supplier} implementations to return a JndiContextWrapper
  * implementation.
  */
-public class JndiContextSupplier {
+public abstract class JndiContextSupplier implements Supplier<JndiContextWrapper> {
 	/**
 	 * JndiContextWrapper Supplier that attempts to initialize a standard {@link InitialContext}.
 	 *
 	 * A new JndiContextWrapper instance is returned for each call to get.
 	 */
-	public static class DefaultJndiContextSupplier implements Supplier<JndiContextWrapper> {
+	public static class DefaultJndiContextSupplier extends JndiContextSupplier {
 
 		@Override
 		public JndiContextWrapper get() {
@@ -37,7 +37,7 @@ public class JndiContextSupplier {
 	/**
 	 * JndiContextWrapper Supplier that does not provide a Jndi Context
 	 */
-	public static class EmptyJndiContextSupplier implements Supplier<JndiContextWrapper> {
+	public static class EmptyJndiContextSupplier extends JndiContextSupplier {
 		@Override
 		public JndiContextWrapper get() { return new JndiContextWrapperImpl(); }
 	}
