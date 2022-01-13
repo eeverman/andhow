@@ -2,16 +2,19 @@ package org.yarnandtail.andhow.load.std;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.load.util.JndiContextSupplier;
 import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
-import org.yarnandtail.andhow.property.*;
+import org.yarnandtail.andhow.property.FlagProp;
+import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
-import java.util.HashMap;
+import javax.naming.Name;
+import javax.naming.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -124,5 +127,22 @@ public class StdJndiLoaderTest {
 
 		assertEquals(1, result.getProblems().size());
 		assertTrue(result.getProblems().get(0) instanceof LoaderProblem.JndiContextMissing);
+	}
+
+	@Test
+	public void notAnErrorIfJndiContextReturnsNullForLookup() throws NamingException {
+		Context context = Mockito.mock(Context.class);
+		Mockito.when(context.lookup(Mockito.anyString())).thenReturn(null);
+		Mockito.when(context.lookup(Mockito.any(Name.class))).thenReturn(null);
+
+		JndiContextWrapper wrap = Mockito.mock(JndiContextWrapper.class);
+		Mockito.when(wrap.getContext()).thenReturn(context);
+
+		LoaderEnvironment le = Mockito.mock(LoaderEnvironment.class);
+		Mockito.when(le.getJndiContext()).thenReturn(wrap);
+
+		LoaderValues result = loader.load(appDef, le, appValuesBuilder);
+		assertEquals(0, result.getProblems().size());
+		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
 	}
 }
