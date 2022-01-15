@@ -3,16 +3,14 @@ package org.yarnandtail.andhow.load.std;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.junit5.EnableJndiUtil;
 import org.yarnandtail.andhow.load.util.JndiContextSupplier;
 import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.sample.JndiLoaderSamplePrinter;
 import org.yarnandtail.andhow.util.AndHowUtil;
-import org.yarnandtail.andhow.util.NameUtil;
 
 import javax.naming.Name;
 import javax.naming.*;
@@ -259,6 +257,29 @@ public class StdJndiLoaderTest {
 	}
 
 	@Test
+	public void testHappyPathFromObjectsRoot() throws Exception {
+
+		//switching values slightly to make sure we are reading the correct ones
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.STR_BOB", "test2");
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/STR_NULL", "not_null2");
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.FLAG_TRUE", Boolean.FALSE);
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/FLAG_FALSE", Boolean.TRUE);
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.FLAG_NULL", Boolean.TRUE);
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.INT_TEN", -9999);
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/INT_NULL", 9999);
+
+		LoaderValues result = loader.load(appDef, le, appValuesBuilder);
+
+		assertEquals("test2", result.getValue(SimpleParams.STR_BOB));
+		assertEquals("not_null2", result.getValue(SimpleParams.STR_NULL));
+		assertEquals(false, result.getValue(SimpleParams.FLAG_TRUE));
+		assertEquals(true, result.getValue(SimpleParams.FLAG_FALSE));
+		assertEquals(true, result.getValue(SimpleParams.FLAG_NULL));
+		assertEquals(-9999, result.getValue(SimpleParams.INT_TEN));
+		assertEquals(9999, result.getValue(SimpleParams.INT_NULL));
+	}
+
+	@Test
 	public void testHappyPathFromStringsFromAddedNonStdPaths() throws Exception {
 
 		mockJndiBind(context, "java:/test/org/yarnandtail/andhow/SimpleParams/STR_BOB", "test");
@@ -329,4 +350,68 @@ public class StdJndiLoaderTest {
 		assertEquals(-999, result.getValue(SimpleParams.INT_TEN));
 		assertNull(result.getValue(SimpleParams.INT_NULL));
 	}
+
+	//
+	//
+	// Non-HappyPath
+	//
+
+	@Test
+	public void testDuplicateValues() throws Exception {
+
+		//switching values slightly to make sure we are reading the correct ones
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.STR_BOB", "test2");
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/STR_BOB", "not_null2");
+
+		LoaderValues result = loader.load(appDef, le, appValuesBuilder);
+
+		assertEquals(1, result.getProblems().size());
+		assertTrue(result.getProblems().get(0) instanceof LoaderProblem.DuplicatePropertyLoaderProblem);
+	}
+	
+	@Test
+	public void testObjectConversionErrors() throws Exception {
+
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.INT_TEN", Long.valueOf(-9999));
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/INT_NULL", Float.valueOf(22));
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.LNG_TEN", Integer.valueOf(-9999));
+
+
+		LoaderValues result = loader.load(appDef, le, appValuesBuilder);
+
+		List<LoaderProblem> lps = result.getProblems().filter(LoaderProblem.class);
+
+		assertEquals(3, result.getProblems().size());
+		assertEquals(3, lps.size());
+		
+		assertTrue(lps.get(0) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.INT_TEN, lps.get(0).getBadValueCoord().getProperty());
+		assertTrue(lps.get(1) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.INT_NULL, lps.get(1).getBadValueCoord().getProperty());
+		assertTrue(lps.get(2) instanceof LoaderProblem.ObjectConversionValueProblem);
+		assertEquals(SimpleParams.LNG_TEN, lps.get(2).getBadValueCoord().getProperty());
+	}
+	
+	@Test
+	public void testStringConversionErrors() throws Exception {
+
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.INT_TEN", "234.567");
+		mockJndiBind(context, "java:org/yarnandtail/andhow/SimpleParams/INT_NULL", "Apple");
+		mockJndiBind(context, "java:org.yarnandtail.andhow.SimpleParams.LNG_TEN", "234.567");
+
+		LoaderValues result = loader.load(appDef, le, appValuesBuilder);
+
+		List<LoaderProblem> vps = result.getProblems().filter(LoaderProblem.class);
+
+		assertEquals(3, result.getProblems().size());
+		assertEquals(3, vps.size());
+
+		assertTrue(vps.get(0) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.INT_TEN, vps.get(0).getBadValueCoord().getProperty());
+		assertTrue(vps.get(1) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.INT_NULL, vps.get(1).getBadValueCoord().getProperty());
+		assertTrue(vps.get(2) instanceof LoaderProblem.StringConversionLoaderProblem);
+		assertEquals(SimpleParams.LNG_TEN, vps.get(2).getBadValueCoord().getProperty());
+	}
+
 }
