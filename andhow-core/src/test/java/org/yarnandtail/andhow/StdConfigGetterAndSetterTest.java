@@ -409,11 +409,11 @@ public class StdConfigGetterAndSetterTest {
 		}
 
 		public Map<String, String> getEnvironmentVariables() {
-			return loadEnvBuilder.getEnvironmentVariables();
+			return loadEnvBuilder.getEnvVars();
 		}
 
 		public Map<String, String> getSystemProperties() {
-			return loadEnvBuilder.getSystemProperties();
+			return loadEnvBuilder.getSysProps();
 		}
 
 		public String getClasspathPropFilePath() { return classpathPropFilePathStr; }

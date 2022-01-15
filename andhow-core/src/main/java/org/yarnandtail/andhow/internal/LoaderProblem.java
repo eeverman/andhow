@@ -5,9 +5,6 @@ import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
- * 
- * 
- * @author ericeverman
  */
 public abstract class LoaderProblem implements Problem {
 	
@@ -156,17 +153,17 @@ public abstract class LoaderProblem implements Problem {
 		}
 	}
 	
-	public static class JndiContextLoaderProblem extends LoaderProblem {
+	public static class JndiContextMissing extends LoaderProblem {
 
-		public JndiContextLoaderProblem(Loader loader) {
+		public JndiContextMissing(Loader loader) {
 			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return "Attempting to read from the JNDI InitialContext threw an unexpected exception.  " +
-				"If there is no JNDI Context available for this application entry point, " +
-				"ensure it is marked as optional (the default) or removed from the list of Loaders.";
+			return "Unable to initialize a JNDI InitialContext and the StdJndiLoader is configured to  " +
+				"require one.  Either provide a JNDI Context in this environment, set the StdJndiLoader " +
+				"to ignore a missing JNDI Context, or remove the StdJndiLoader from the list of Loaders.";
 		}
 	}
 	

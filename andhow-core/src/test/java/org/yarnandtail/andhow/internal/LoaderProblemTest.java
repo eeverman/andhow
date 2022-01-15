@@ -342,13 +342,8 @@ public class LoaderProblemTest extends LoaderProblem {
 	@Test
 	public void testJndiContextLoaderProblem() {
 		MockitoAnnotations.initMocks(this);
-		JndiContextLoaderProblem problem = new JndiContextLoaderProblem(loader);
-		String expected = "Attempting to read from the JNDI InitialContext threw an unexpected exception.  " +
-				"If there is no JNDI Context available for this application entry point, " +
-				"ensure it is marked as optional (the default) or removed from the list of Loaders.";
+		JndiContextMissing problem = new JndiContextMissing(loader);
 		assertNotNull(problem.getProblemDescription());
-		assertEquals(expected, problem.getProblemDescription());
-
 	}
 
 	@Test

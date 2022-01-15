@@ -24,6 +24,16 @@
 			<artifactId>andhow-default-behavior-dep2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<!-- Optional of andhow-junit5-extensions for JNDI testing -->
+			<groupId>com.github.h-thurow</groupId>
+			<artifactId>simple-jndi</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Optional dependency of simple-jndi -->
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>
