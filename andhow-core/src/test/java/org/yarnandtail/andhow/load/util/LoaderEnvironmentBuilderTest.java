@@ -347,7 +347,7 @@ class LoaderEnvironmentBuilderTest {
 
 		leb.setJndiContextSupplier(mySupplier);
 		assertSame(mySupplier, leb.getJndiContextSupplier());
-
+		assertSame(TestJndiContextSupplier.TEST_EXCEPTION, leb.getJndiContext().getException());
 	}
 
 	/**
