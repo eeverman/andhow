@@ -58,4 +58,13 @@ public class CaseInsensitiveNamingTest {
 		assertNull(naming.getUriName(null));	//shouldn't happen, unless part of a chain of conversions
 	}
 
+	@Test
+	public void testIsUriNameDistinct() {
+		CaseInsensitiveNaming naming = new CaseInsensitiveNaming();
+
+		assertTrue(naming.isUriNameDistinct("org.project.Class.Property"));
+		assertFalse(naming.isUriNameDistinct("MyAlias"));
+		assertFalse(naming.isUriNameDistinct(null));
+	}
+
 }

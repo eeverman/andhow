@@ -243,18 +243,15 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value
 
-		//Check the URI name first (more likely), then the classpath style name
-		if (appConfigDef.getNamingStrategy().isUriNameDistinct(appConfigDef.getCanonicalName(prop))) {
-			propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
-		}
-
+		// Add Uri name (org/project/Class/Property) & classpath name (org.project.Class.Property)
+		propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
 		propNames.add(appConfigDef.getCanonicalName(prop));
 
-		//Add all of the 'in' aliases
+		// Add all the 'in' aliases
 		appConfigDef.getAliases(prop).stream().filter(a -> a.isIn()).forEach(a -> {
 			propNames.add(a.getActualName());
 
-			//Add the URI style name if it is different
+			// Add URI version of in-alias if different (my.alias -> my/alias)
 			if (appConfigDef.getNamingStrategy().isUriNameDistinct(a.getActualName())) {
 				propNames.add(appConfigDef.getNamingStrategy().getUriName(a.getActualName()));
 			}
