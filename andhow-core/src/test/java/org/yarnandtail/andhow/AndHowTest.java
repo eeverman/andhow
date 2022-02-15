@@ -185,9 +185,10 @@ public class AndHowTest extends AndHowTestBase {
 	public void callingInstanceWithConfigShouldFailIfAlreadyInitialized() {
 		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
 
-		AndHow.instance(config1);
+		AndHow.setConfig(config1);
+		AndHow.instance();
 
-		assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+		assertThrows(AppFatalException.class, AndHow::findConfig);
 	}
 
 	@Test
@@ -228,11 +229,15 @@ public class AndHowTest extends AndHowTestBase {
 		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
 
 		config1.setGetNamingStrategyCallback(() -> {
-			AndHow.instance(config2);	//Try to initialize again when config.getNamingStrategy is called
+			AndHow.setConfig(config2);
+			AndHow.instance();	//Try to initialize again when config.getNamingStrategy is called
 			return null;
 		});
 
-		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
 
 		assertEquals(1, ex.getProblems().size());
 		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
@@ -248,7 +253,8 @@ public class AndHowTest extends AndHowTestBase {
 				.addOverrideGroups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-		AndHow.instance(config);
+		AndHow.setConfig(config);
+		AndHow.instance();
 
 		assertTrue(AndHow.getInitializationTrace().length > 0);
 		//STR_BOB (Set to 'test')
@@ -322,7 +328,8 @@ public class AndHowTest extends AndHowTestBase {
 					.addOverrideGroup(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -343,7 +350,8 @@ public class AndHowTest extends AndHowTestBase {
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
