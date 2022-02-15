@@ -149,16 +149,5 @@ public class NonProductionConfig {
 				return super.buildLoaders();
 			}
 		}
-
-		/**
-		 * Forces a rebuild, dumping the previous configuration and creating a
-		 * new AndHowCore, which contains all AndHow state, and using that.
-		 * <p>
-		 * This method is not safe for production, but that is obvious from the
-		 * name of this class.
-		 */
-		public void forceBuild() {
-			AndHowNonProductionUtil.forceRebuild(this);
-		}
 	}
 }

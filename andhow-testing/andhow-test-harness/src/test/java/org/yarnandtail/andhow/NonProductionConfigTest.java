@@ -2,7 +2,6 @@
  */
 package org.yarnandtail.andhow;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.yarnandtail.andhow.load.std.StdFixedValueLoader;
 import org.yarnandtail.andhow.property.StrProp;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.yarnandtail.andhow.AndHowNonProductionUtil.PERMISSION_MSG;
 
 /**
  *
