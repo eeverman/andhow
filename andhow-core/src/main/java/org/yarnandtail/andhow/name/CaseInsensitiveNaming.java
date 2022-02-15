@@ -7,8 +7,7 @@ import org.yarnandtail.andhow.api.*;
 
 /**
  * Case insensitive naming.
- * 
- * @author eeverman
+ *
  */
 public class CaseInsensitiveNaming implements NamingStrategy {
 	

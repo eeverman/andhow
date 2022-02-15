@@ -45,8 +45,6 @@ public class EnableJndiForThisTestMethodTest {
 		orgCtx.bind(TEST_NAME, TEST_VAL);
 		orgCtx.bind("java:comp/env/" + TEST_NAME, TEST_VAL + "_java:comp");
 
-		orgCtx.close();
-
 		//
 		// Meanwhile, somewhere deep in the system under test...
 

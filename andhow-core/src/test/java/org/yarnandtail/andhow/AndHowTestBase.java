@@ -1,13 +1,8 @@
 package org.yarnandtail.andhow;
 
 import java.util.Properties;
-import javax.naming.NamingException;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+import org.junit.jupiter.api.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 /**
@@ -22,9 +17,7 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  * Test Harness module.  For examples using the test harness, see the AndHow
  * Sample Usages module and its many sub-modules, which are stand-alone simulated
  * projects complete with testing.
- * 
- * 
- * @author ericeverman
+ *
  */
 public class AndHowTestBase {
 	
@@ -43,12 +36,7 @@ public class AndHowTestBase {
 	 * reinstate to that state.
 	 */
 	private Properties beforeTestSystemProps;
-	
-	
-	/**
-	 * Builder for a temporary JNDI context
-	 */
-	private static SimpleNamingContextBuilder builder;
+
 	
 	@BeforeAll
 	public static void killAndHowStateBeforeClass() {
@@ -76,13 +64,6 @@ public class AndHowTestBase {
 	}
 	
 	@AfterEach
-	public void clearJNDIAfterTest() {
-		if (builder != null) {
-			builder.clear();
-		}
-	}
-	
-	@AfterEach
 	public void restoreSysPropsAfterTest() {
 		System.setProperties(beforeTestSystemProps);
 	}
@@ -96,21 +77,6 @@ public class AndHowTestBase {
 	@AfterAll
 	public static void restoreSysPropsAfterClass() {
 		System.setProperties(beforeClassSystemProps);
-	}
-	
-	/**
-	 * Simple consistent way to get an empty JNDI context.
-	 * 
-	 * bind() each variable, then call build().
-	 * 
-	 * @return
-	 * @throws NamingException 
-	 */
-	public SimpleNamingContextBuilder getJndi() throws NamingException {
-		if (builder == null) {
-			builder = SimpleNamingContextBuilder.emptyActivatedContextBuilder();
-		}
-		return builder;
 	}
 	
 }

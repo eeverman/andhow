@@ -9,10 +9,8 @@ package org.yarnandtail.andhow.api;
  * are converted to upper case.
  * <p>
  * Because of this, the default NamingStrategy is
- * {@link org.yarnandtail.andhow.name.CaseInsensitiveNaming}, however, its pluggable via
- * this interface - A case sensitive strategy could be used on non-windows systems.
- *
- * @author eeverman
+ * {@link org.yarnandtail.andhow.name.CaseInsensitiveNaming}, however, it's pluggable via
+ * this interface - A case-sensitive strategy could be used on non-windows systems.
  */
 public interface NamingStrategy {
 	
@@ -81,7 +79,6 @@ public interface NamingStrategy {
 	 * @return 
 	 */
 	default boolean isUriNameDistinct(String classpathName) {
-
 		if (classpathName == null) return false;
 		
 		return ! classpathName.equals(getUriName(classpathName));

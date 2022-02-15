@@ -48,7 +48,12 @@
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<!-- Optional dependency of simple-jndi -->
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<!-- More traditional test dependencies -->
 		<dependency>
 			<!--

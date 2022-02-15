@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.util.TextUtil;

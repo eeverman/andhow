@@ -1,8 +1,8 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.util;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
+import org.yarnandtail.andhow.load.util.KeyObjectPair;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

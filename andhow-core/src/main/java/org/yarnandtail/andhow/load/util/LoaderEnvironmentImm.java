@@ -1,9 +1,11 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.util;
 
 import org.yarnandtail.andhow.PropertyValue;
+import org.yarnandtail.andhow.api.JndiContextWrapper;
 import org.yarnandtail.andhow.api.LoaderEnvironment;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * An immutable LoaderEnvironment implementation.
@@ -18,6 +20,7 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	final private Map<String, Object> _fixedNamedValues;
 	final private List<PropertyValue<?>> _fixedPropertyValues;
 
+	final private Supplier<JndiContextWrapper> _jndiContextSupplier;
 
 	/**
 	 * A new LoaderEnvironmentImm instance.
@@ -38,25 +41,34 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 	 * @param cmdLineArgs The command line arguments (passed to main(String[] args) that the Loaders will see.
 	 * @param fixedNamedValues The hard-coded/fixed named Property values that the Loaders will see.
 	 * @param fixedPropertyValues The hard-coded/fixed PropertyValues that the Loaders will see.
+	 * @param jndiContextSupplier A lambda that returns a JNDI Context
 	 */
 	public LoaderEnvironmentImm(final Map<String, String> envVars, final Map<String, String> sysProps,
 			final List<String> cmdLineArgs, final Map<String, Object> fixedNamedValues,
-			List<PropertyValue<?>> fixedPropertyValues) {
+			List<PropertyValue<?>> fixedPropertyValues,
+			Supplier<JndiContextWrapper> jndiContextSupplier) {
 
 		_envVars = (envVars != null)?Collections.unmodifiableMap(envVars):Collections.emptyMap();
 		_sysProps = (sysProps != null)?Collections.unmodifiableMap(sysProps):Collections.emptyMap();
 		_cmdLineArgs = (cmdLineArgs != null)?Collections.unmodifiableList(cmdLineArgs):Collections.emptyList();
 		_fixedNamedValues = (fixedNamedValues != null)?Collections.unmodifiableMap(fixedNamedValues):Collections.emptyMap();
 		_fixedPropertyValues = (fixedPropertyValues != null)?Collections.unmodifiableList(fixedPropertyValues):Collections.emptyList();
+		_jndiContextSupplier = jndiContextSupplier;
+
+		if (_jndiContextSupplier == null) {
+			throw new IllegalArgumentException("The jndiContextSupplier cannot be null. " +
+					"To turn off JNDI loading, remove the StdJndiLoader from the loader list, " +
+					"or set the JndiContextSupplier to the NoJndiContextSupplier");
+		}
 	}
 
 	@Override
-	public Map<String, String> getEnvironmentVariables() {
+	public Map<String, String> getEnvVars() {
 		return _envVars;
 	}
 
 	@Override
-	public Map<String, String> getSystemProperties() {
+	public Map<String, String> getSysProps() {
 		return _sysProps;
 	}
 
@@ -72,4 +84,10 @@ public class LoaderEnvironmentImm implements LoaderEnvironment {
 
 	@Override
 	public List<PropertyValue<?>> getFixedPropertyValues() { return _fixedPropertyValues;	}
+
+	@Override
+	public JndiContextWrapper getJndiContext() {
+		return _jndiContextSupplier.get();
+	}
+
 }

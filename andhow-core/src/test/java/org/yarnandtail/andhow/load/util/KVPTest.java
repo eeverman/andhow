@@ -1,8 +1,9 @@
-package org.yarnandtail.andhow.load;
+package org.yarnandtail.andhow.load.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.ParsingException;
+import org.yarnandtail.andhow.load.util.KVP;
 
 /**
  *

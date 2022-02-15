@@ -1,11 +1,8 @@
 package org.yarnandtail.andhow.load.std;
 
-import java.util.*;
-
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
 import org.yarnandtail.andhow.load.BaseMapLoader;
-import org.yarnandtail.andhow.load.MapLoader;
 
 /**
  * Reads the Java system properties and loads the value for any system property
@@ -82,7 +79,7 @@ public class StdSysPropLoader extends BaseMapLoader implements StandardLoader {
 	@Override
 	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
 			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
-		return load(runtimeDef, existingValues, environment.getSystemProperties());
+		return load(runtimeDef, existingValues, environment.getSysProps());
 	}
 	
 	@Override

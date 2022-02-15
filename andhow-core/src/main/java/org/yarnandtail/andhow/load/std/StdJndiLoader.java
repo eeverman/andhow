@@ -6,7 +6,7 @@ import java.util.List;
 import javax.naming.*;
 import org.yarnandtail.andhow.GroupInfo;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextLoaderProblem;
+import org.yarnandtail.andhow.internal.LoaderProblem.JndiContextMissing;
 import org.yarnandtail.andhow.load.BaseLoader;
 import org.yarnandtail.andhow.property.QuotedSpacePreservingTrimmer;
 import org.yarnandtail.andhow.property.StrProp;
@@ -102,10 +102,10 @@ import org.yarnandtail.andhow.util.TextUtil;
  * Other loaders which don't implement the {@code StandardLoader} interface can
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
- *
- * @author eeverman
  */
 public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardLoader {
+
+	protected static AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
 
 	private boolean failedEnvironmentAProblem = false;
 
@@ -120,46 +120,61 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
 			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
 
-		AndHowLog log = AndHowLog.getLogger(StdJndiLoader.class);
+		Context ctx = environment.getJndiContext().getContext();
 
-		ArrayList<ValidatedValue> values = new ArrayList();
+		if (ctx != null) {	// Happy path
+
+			return doLoad(appConfigDef, ctx, existingValues);
+
+		} else if (isFailedEnvironmentAProblem()) {	// No JNDI... and this is a problem
+
+			Problem p = new JndiContextMissing(this);
+			log.error(p.getProblemDescription(), environment.getJndiContext().getException());
+			return new LoaderValues(this, p);
+
+		} else {	// No JNDI... but that is OK.
+
+			log.debug("No JNDI Environment found, or a naming error encountered. " +
+					"The StdJndiLoader is configured to ignore this.");
+			return new LoaderValues(this);
+
+		}
+
+	}
+
+	/**
+	 * The actual loading, called only when there is a non-null Jndi Context.
+	 *
+	 * @param appConfigDef The definition of all known Properties and naming metadata.
+	 * @param ctx The non-null Jndi Context
+	 * @param existingValues The values already set by prior loaders, which may configure
+	 * 		the behavior of this loader.
+	 * @return The Property values loaded by this loader and/or the problems discovered while
+	 * 		attempting to load those Property values.
+	 */
+	protected LoaderValues doLoad(PropertyConfigurationInternal appConfigDef, Context ctx,
+			ValidatedValuesWithContext existingValues) {
+
 		ProblemList<Problem> problems = new ProblemList();
+		ArrayList<ValidatedValue> values = new ArrayList();
 
-		try {
+		List<String> jndiRoots = buildJndiRoots(existingValues);
 
-			InitialContext ctx = new InitialContext();	//Normally doesn't throw exception, even if no JNDI
+		for (Property<?> prop : appConfigDef.getProperties()) {
 
-			ctx.getEnvironment();	//Should throw error if JNDI is unavailable
+			List<String> propJndiNames = buildJndiNames(appConfigDef, jndiRoots, prop);
 
-			List<String> jndiRoots = buildJndiRoots(existingValues);
+			for (String propName : propJndiNames) {
+				try {
+					Object o = ctx.lookup(propName);
 
-			for (Property<?> prop : appConfigDef.getProperties()) {
-
-				List<String> propJndiNames = buildJndiNames(appConfigDef, jndiRoots, prop);
-
-				for (String propName : propJndiNames) {
-					try {
-						Object o = ctx.lookup(propName);
-
-						if (o != null) {
-							attemptToAdd(appConfigDef, values, problems, prop, o);
-						}
-
-					} catch (NamingException ne) {
-						//Ignore - this is expected if a value is not found
+					if (o != null) {
+						attemptToAdd(appConfigDef, values, problems, prop, o);
 					}
+
+				} catch (NamingException ne) {
+					//Ignore - this is expected if a value is not found
 				}
-			}
-
-		} catch (NamingException  ex) {
-
-			if (isFailedEnvironmentAProblem()) {
-				Problem p = new JndiContextLoaderProblem(this);
-				log.error(p.getProblemDescription(), ex);
-				problems.add(p);
-			} else {
-				log.debug("No JNDI Environment found, or a naming error encountered. " +
-					"The JndiLoader is configured to ignore this.");
 			}
 		}
 
@@ -228,18 +243,15 @@ public class StdJndiLoader extends BaseLoader implements LookupLoader, StandardL
 		List<String> propNames = new ArrayList();		// w/o jndi root prefix
 		List<String> propJndiNames = new ArrayList();	// w/ jndi root prefix - return value
 
-		//Check the URI name first (more likely), then the classpath style name
-		if (appConfigDef.getNamingStrategy().isUriNameDistinct(appConfigDef.getCanonicalName(prop))) {
-			propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
-		}
-
+		// Add Uri name (org/project/Class/Property) & classpath name (org.project.Class.Property)
+		propNames.add(appConfigDef.getNamingStrategy().getUriName(appConfigDef.getCanonicalName(prop)));
 		propNames.add(appConfigDef.getCanonicalName(prop));
 
-		//Add all of the 'in' aliases
+		// Add all the 'in' aliases
 		appConfigDef.getAliases(prop).stream().filter(a -> a.isIn()).forEach(a -> {
 			propNames.add(a.getActualName());
 
-			//Add the URI style name if it is different
+			// Add URI version of in-alias if different (my.alias -> my/alias)
 			if (appConfigDef.getNamingStrategy().isUriNameDistinct(a.getActualName())) {
 				propNames.add(appConfigDef.getNamingStrategy().getUriName(a.getActualName()));
 			}

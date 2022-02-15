@@ -16,10 +16,6 @@
 	<dependencies>
 		<!-- All dependencies are test dependencies only -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
@@ -34,6 +30,15 @@
 			<artifactId>andhow-junit5-extensions</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.h-thurow</groupId>
+			<artifactId>simple-jndi</artifactId>
+		</dependency>
+		<dependency>
+			<!-- Optional dependency of simple-jndi -->
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
 		</dependency>
 	</dependencies>
 </project>

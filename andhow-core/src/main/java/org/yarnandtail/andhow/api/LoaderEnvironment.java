@@ -21,13 +21,13 @@ import java.util.*;
 public interface LoaderEnvironment {
 
 	/**
-	 * Returns a string map view of the current system environment.
+	 * Returns a string map view of the current system environment variables.
 	 * <p>
 	 * Nominally the same as {@code System.getenv()}, but may be customized for testing.
 	 *
 	 * @return The environment as a map of variable names to values.  Never null, but possibly empty.
 	 */
-	public Map<String, String> getEnvironmentVariables();
+	public Map<String, String> getEnvVars();
 
 	/**
 	 * Returns a snapshot of current system properties.
@@ -36,7 +36,7 @@ public interface LoaderEnvironment {
 	 *
 	 * @return A snapshot of the system properties, as a Map<String, String>.  Never null, but possibly empty.
 	 */
-	public Map<String, String> getSystemProperties();
+	public Map<String, String> getSysProps();
 
 	/**
 	 * Returns the command line argument strings passed to the {@code main(String[] args)} method,
@@ -79,4 +79,13 @@ public interface LoaderEnvironment {
 	 * @return A list of PropertyValue's.  Never null, but possibly empty.
 	 */
 	public List<PropertyValue<?>> getFixedPropertyValues();
+
+	/**
+	 * Returns a JNDI Context that can be used by loaders to load from JNDI.
+	 * <p>
+	 * @return A JNDI Context wrapper, which may contain a Jndi context or a null Jndi context
+	 * and an exception.
+	 */
+	public JndiContextWrapper getJndiContext();
+
 }

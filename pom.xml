@@ -146,16 +146,23 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
+				<!-- Only used by andhow-testharnass -->
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
 				<version>4.3.18.RELEASE</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<!-- Alt for spring-test which will eventually replace it -->
 				<groupId>com.github.h-thurow</groupId>
 				<artifactId>simple-jndi</artifactId>
 				<version>0.23.0</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<!-- Optional dependency of simple-jndi -->
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>1.2.10</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
