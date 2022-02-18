@@ -288,13 +288,11 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 	 * env. vars., System Props, etc.), then validates all values.
 	 * In normal usage, this method should not be called by application code and
 	 *
-	 * @deprecated Use {@code AndHow.findConfig()} and {@code AndHow.instance()} instead. See notes.
 	 * @param config The non-null configuration to be used to build the new AndHow singleton.
 	 * @return The singleton AndHow instance, newly built from the configuration.
 	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
 	 * 	Property value validation errors.
 	 */
-	@Deprecated
 	private static AndHow initialize(AndHowConfiguration config) throws AppFatalException {
 
 		synchronized (LOCK) {
