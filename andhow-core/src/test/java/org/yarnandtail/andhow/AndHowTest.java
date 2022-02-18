@@ -182,16 +182,6 @@ public class AndHowTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void callingInstanceWithConfigShouldFailIfAlreadyInitialized() {
-		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
-
-		AndHow.setConfig(config1);
-		AndHow.instance();
-
-		assertThrows(AppFatalException.class, AndHow::findConfig);
-	}
-
-	@Test
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtils.getAndHow());
 		assertFalse(AndHow.isInitialized());
