@@ -24,9 +24,9 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>andhow-test-harness</artifactId>
+			<artifactId>andhow-shared-test-utils</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
