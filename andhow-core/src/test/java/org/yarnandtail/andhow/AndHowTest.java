@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.EffectiveName;
@@ -219,8 +220,29 @@ public class AndHowTest extends AndHowTestBase {
 		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
 
 		config1.setGetNamingStrategyCallback(() -> {
-			AndHow.setConfig(config2);
 			AndHow.instance();	//Try to initialize again when config.getNamingStrategy is called
+			return null;
+		});
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
+
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
+		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
+		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
+	}
+
+	@Disabled
+	@Test
+	public void attemptingToSetConfigDuringInitializationShouldBeBlocked() {
+		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
+		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
+
+		config1.setGetNamingStrategyCallback(() -> {
+			AndHow.setConfig(config2); //Try to set config when config.getNamingStrategy is called
 			return null;
 		});
 
