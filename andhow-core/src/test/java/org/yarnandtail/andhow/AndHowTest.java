@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.EffectiveName;
@@ -182,23 +183,12 @@ public class AndHowTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void callingInstanceWithConfigShouldFailIfAlreadyInitialized() {
-		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
-
-		AndHow.instance(config1);
-
-		assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
-	}
-
-	@Test
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtils.getAndHow());
 		assertFalse(AndHow.isInitialized());
-		assertFalse(AndHow.isInitialize(), "deprecated, but still tested");
 		assertNotNull(AndHow.instance());
 		assertNotNull(AndHowTestUtils.getAndHow());
 		assertTrue(AndHow.isInitialized());
-		assertTrue(AndHow.isInitialize(), "deprecated, but still tested");
 	}
 
 	/**
@@ -227,14 +217,38 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void attemptingToInitializeDuringInitializationShouldBeBlocked() {
 		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
-		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
 
 		config1.setGetNamingStrategyCallback(() -> {
-			AndHow.instance(config2);	//Try to initialize again when config.getNamingStrategy is called
+			AndHow.instance();	//Try to initialize again when config.getNamingStrategy is called
 			return null;
 		});
 
-		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
+
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
+		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
+		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
+	}
+
+	@Disabled
+	@Test
+	public void attemptingToSetConfigDuringInitializationShouldBeBlocked() {
+		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
+		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
+
+		config1.setGetNamingStrategyCallback(() -> {
+			AndHow.setConfig(config2); //Try to set config when config.getNamingStrategy is called
+			return null;
+		});
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
 
 		assertEquals(1, ex.getProblems().size());
 		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
@@ -250,7 +264,8 @@ public class AndHowTest extends AndHowTestBase {
 				.addOverrideGroups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-		AndHow.instance(config);
+		AndHow.setConfig(config);
+		AndHow.instance();
 
 		assertTrue(AndHow.getInitializationTrace().length > 0);
 		//STR_BOB (Set to 'test')
@@ -324,7 +339,8 @@ public class AndHowTest extends AndHowTestBase {
 					.addOverrideGroup(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -345,7 +361,8 @@ public class AndHowTest extends AndHowTestBase {
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {

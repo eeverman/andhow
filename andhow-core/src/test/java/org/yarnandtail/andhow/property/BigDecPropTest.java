@@ -108,13 +108,13 @@ public class BigDecPropTest extends PropertyTestBase {
 		}
 	}
 
-	public interface BigDecGroup {
-		BigDecProp NOT_NULL = BigDecProp.builder().notNull().desc(DESCRIPTION).build();
-		BigDecProp NULL = BigDecProp.builder().build();
-		BigDecProp GREATER_THAN = BigDecProp.builder().mustBeGreaterThan(GREATER_THAN_OR_EQUAL_VALUE).aliasInAndOut("alias").build();
-		BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().mustBeGreaterThanOrEqualTo(GREATER_THAN_OR_EQUAL_VALUE).build();
-		BigDecProp LESS_THAN = BigDecProp.builder().mustBeLessThan(GREATER_THAN_OR_EQUAL_VALUE).build();
-		BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().mustBeLessThanOrEqualTo(LESS_THAN_VALUE_OR_EQUAL_VALUE).build();
-		BigDecProp DEFAULT = BigDecProp.builder().defaultValue(DEFAULT_VALUE).build();
-	}
+    public interface BigDecGroup {
+        BigDecProp NOT_NULL = BigDecProp.builder().notNull().desc(DESCRIPTION).build();
+        BigDecProp NULL = BigDecProp.builder().build();
+        BigDecProp GREATER_THAN = BigDecProp.builder().greaterThan(GREATER_THAN_OR_EQUAL_VALUE).aliasInAndOut("alias").build();
+        BigDecProp GREATER_THAN_OR_EQUAL = BigDecProp.builder().greaterThanOrEqualTo(GREATER_THAN_OR_EQUAL_VALUE).build();
+        BigDecProp LESS_THAN = BigDecProp.builder().lessThan(GREATER_THAN_OR_EQUAL_VALUE).build();
+        BigDecProp LESS_THAN_OR_EQUAL = BigDecProp.builder().lessThanOrEqualTo(LESS_THAN_VALUE_OR_EQUAL_VALUE).build();
+        BigDecProp DEFAULT = BigDecProp.builder().defaultValue(DEFAULT_VALUE).build();
+    }
 }

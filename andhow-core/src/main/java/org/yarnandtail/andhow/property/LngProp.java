@@ -55,25 +55,9 @@ public class LngProp extends PropertyBase<Long> {
 
 		}
 
-		/**
-		 * @deprecated Use {@code LngBuilder.greaterThan()}
-		 */
-		@Deprecated
-		public LngBuilder mustBeGreaterThan(long reference) {
-			return this.greaterThan(reference);
-		}
-
 		public LngBuilder greaterThan(long reference) {
 			validation(new LngValidator.GreaterThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code LngBuilder.greaterThanOrEqualTo()}
-		 */
-		@Deprecated
-		public LngBuilder mustBeGreaterThanOrEqualTo(long reference) {
-			return greaterThanOrEqualTo(reference);
 		}
 
 		public LngBuilder greaterThanOrEqualTo(long reference) {
@@ -81,25 +65,9 @@ public class LngProp extends PropertyBase<Long> {
 			return instance;
 		}
 
-		/**
-		 * @deprecated Use {@code LngBuilder.lessThan()}
-		 */
-		@Deprecated
-		public LngBuilder mustBeLessThan(long reference) {
-			return this.lessThan(reference);
-		}
-
 		public LngBuilder lessThan(long reference) {
 			validation(new LngValidator.LessThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code LngBuilder.lessThanOrEqualTo()}
-		 */
-		@Deprecated
-		public LngBuilder mustBeLessThanOrEqualTo(long reference) {
-			return this.lessThanOrEqualTo(reference);
 		}
 
 		public LngBuilder lessThanOrEqualTo(long reference) {

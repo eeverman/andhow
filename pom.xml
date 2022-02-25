@@ -85,7 +85,6 @@
 		<module>andhow-testing/andhow-core-integration-test</module>
 		<module>andhow-testing/andhow-annotation-processor-tests</module>
 		<module>andhow-testing/andhow-simulated-app-tests</module>
-		<module>andhow-testing/andhow-test-harness</module>
 		<module>andhow-testing/andhow-annotation-processor-test-harness</module>
 		<module>andhow-shared-test-utils</module>
 		<module>andhow-junit5-extensions</module>

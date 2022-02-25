@@ -52,25 +52,9 @@ public class IntProp extends PropertyBase<Integer> {
 
 		}
 
-		/**
-		 * @deprecated Use {@code IntBuilder.greaterThan()}
-		 */
-		@Deprecated
-		public IntBuilder mustBeGreaterThan(int reference) {
-			return this.greaterThan(reference);
-		}
-
 		public IntBuilder greaterThan(int reference) {
 			validation(new IntValidator.GreaterThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code IntBuilder.greaterThanOrEqualTo()}
-		 */
-		@Deprecated
-		public IntBuilder mustBeGreaterThanOrEqualTo(int reference) {
-			return this.greaterThanOrEqualTo(reference);
 		}
 
 		public IntBuilder greaterThanOrEqualTo(int reference) {
@@ -78,25 +62,9 @@ public class IntProp extends PropertyBase<Integer> {
 			return instance;
 		}
 
-		/**
-		 * @deprecated Use {@code IntBuilder.lessThan()}
-		 */
-		@Deprecated
-		public IntBuilder mustBeLessThan(int reference) {
-			return this.lessThan(reference);
-		}
-
 		public IntBuilder lessThan(int reference) {
 			validation(new IntValidator.LessThan(reference));
 			return instance;
-		}
-
-		/**
-		 * @deprecated Use {@code IntBuilder.lessThanOrEqualTo()}
-		 */
-		@Deprecated
-		public IntBuilder mustBeLessThanOrEqualTo(int reference) {
-			return this.lessThanOrEqualTo(reference);
 		}
 
 		public IntBuilder lessThanOrEqualTo(int reference) {

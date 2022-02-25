@@ -286,41 +286,13 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 	 *
 	 * AndHow initialization configures AndHow, loads Property values from all sources (such as
 	 * env. vars., System Props, etc.), then validates all values.
-	 * <p>
-	 * In production, application code never needs to call this method.  See {@link #findConfig()}
-	 * for an example of how to access and modify configuration, and initialize AndHow.
-	 * <p>
-	 * The behaviour of this method is very different from the no-arg instance method.
-	 * {@code instance()} can be called repeatedly to get the AndHow instance, a singleton.
-	 * {@code instance(AndHowConfiguration)} can only be called once to do the one-time
-	 * initialization.  Because of this, this method was deprecated and will be removed.
-	 *
-	 * @deprecated See notes on {@link #findConfig()}.
-	 * @param config The non-null configuration to be used to build the new AndHow singleton.
-	 * @return The singleton AndHow instance, newly built from the configuration.
-	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
-	 * 	Property value validation errors.
-	 */
-	@Deprecated
-	public static AndHow instance(AndHowConfiguration config) throws AppFatalException {
-		return initialize(config);
-	}
-
-	/**
-	 * Initialize AndHow with the passed configuration - This method is not normally needed or used in
-	 * production and will throw a Runtime exception if called more than once, directly or indirectly.
-	 *
-	 * AndHow initialization configures AndHow, loads Property values from all sources (such as
-	 * env. vars., System Props, etc.), then validates all values.
 	 * In normal usage, this method should not be called by application code and
 	 *
-	 * @deprecated Use {@code AndHow.findConfig()} and {@code AndHow.instance()} instead. See notes.
 	 * @param config The non-null configuration to be used to build the new AndHow singleton.
 	 * @return The singleton AndHow instance, newly built from the configuration.
 	 * @throws AppFatalException If AndHow is already initialized, mis-configured or there are
 	 * 	Property value validation errors.
 	 */
-	@Deprecated
 	private static AndHow initialize(AndHowConfiguration config) throws AppFatalException {
 
 		synchronized (LOCK) {
@@ -381,17 +353,6 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 			return singleInstance;
 
 		}	//end sync
-	}
-
-	/**
-	 * Determine if AndHow is initialized or not w/out forcing AndHow to load.
-	 *
-	 * @deprecated This method name was typod.  Please use isInitialized() instead.
-	 * @return
-	 */
-	@Deprecated
-	public static boolean isInitialize() {
-		return isInitialized();
 	}
 
 	/**

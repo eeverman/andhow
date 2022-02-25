@@ -47,25 +47,9 @@ public class StrProp extends PropertyBase<String> {
 					_valueType, _trimmer, _helpText);
 		}
 
-		/**
-		 * @deprecated Use {@code StrBuilder.matches()}
-		 */
-		@Deprecated
-		public StrBuilder mustMatchRegex(String regex) {
-			return this.matches(regex);
-		}
-
 		public StrBuilder matches(String regex) {
 			this.validation(new StringValidator.Regex(regex));
 			return this;
-		}
-
-		/**
-		 * @deprecated Use {@code StrBuilder.startsWith()}
-		 */
-		@Deprecated
-		public StrBuilder mustStartWith(String prefix) {
-			return this.startsWith(prefix);
 		}
 
 		public StrBuilder startsWith(String prefix) {
@@ -73,25 +57,9 @@ public class StrProp extends PropertyBase<String> {
 			return this;
 		}
 
-		/**
-		 * @deprecated Use {@code StrBuilder.startsWithIgnoringCase()}
-		 */
-		@Deprecated
-		public StrBuilder mustStartWithIgnoreCase(String prefix) {
-			return this.startsWithIgnoringCase(prefix);
-		}
-
 		public StrBuilder startsWithIgnoringCase(String prefix) {
 			this.validation(new StringValidator.StartsWith(prefix, true));
 			return this;
-		}
-
-		/**
-		 * @deprecated Use {@code StrBuilder.endsWith()}
-		 */
-		@Deprecated
-		public StrBuilder mustEndWith(String sufix) {
-			return this.endsWith(sufix);
 		}
 
 		public StrBuilder endsWith(String suffix) {
@@ -99,25 +67,9 @@ public class StrProp extends PropertyBase<String> {
 			return this;
 		}
 
-		/**
-		 * @deprecated Use {@code StrBuilder.endsWithIgnoringCase()}
-		 */
-		@Deprecated
-		public StrBuilder mustEndWithIgnoreCase(String sufix) {
-			return this.endsWithIgnoringCase(sufix);
-		}
-
 		public StrBuilder endsWithIgnoringCase(String suffix) {
 			this.validation(new StringValidator.EndsWith(suffix, true));
 			return this;
-		}
-
-		/**
-		 * @deprecated Use {@code StrBuilder.oneOf()}
-		 */
-		@Deprecated
-		public StrBuilder mustEqual(String... values) {
-			return this.oneOf(values);
 		}
 
 		public StrBuilder oneOf(String... values) {
