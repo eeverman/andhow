@@ -217,7 +217,6 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void attemptingToInitializeDuringInitializationShouldBeBlocked() {
 		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
-		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
 
 		config1.setGetNamingStrategyCallback(() -> {
 			AndHow.instance();	//Try to initialize again when config.getNamingStrategy is called
