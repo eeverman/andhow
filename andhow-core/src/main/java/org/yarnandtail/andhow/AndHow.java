@@ -39,6 +39,8 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 	public static final String ANDHOW_NAME = "AndHow!";
 	public static final String ANDHOW_URL = "https://github.com/eeverman/andhow";
 	public static final String ANDHOW_TAG_LINE = "strong.simple.valid.AppConfiguration";
+	private static final String SEE_USER_GUIDE =
+			"  See user guide for configuration docs & examples: https://www.andhowconfig.org/user-guide";
 
 	/** Dedicated object for synchronization of configuration and initialization */
 	private static final Object LOCK = new Object();
@@ -225,19 +227,19 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 			throws AppFatalException {
 
 		if (config == null) {
-			throw new AppFatalException("Cannot set a null configuration");
+			throw new AppFatalException("Cannot set a null configuration." + SEE_USER_GUIDE);
 		}
 
 		synchronized (LOCK) { //Access to the config is sync'ed same as init code
 
 			if (isInitialized()) {
-				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
+				throw new AppFatalException("AndHow is already initialized, so setConfig cannot be called." + SEE_USER_GUIDE);
+			} else if (initializing) {
+				throw new AppFatalException(new ConstructionProblem.SetConfigCalledDuringInitializationException());
 			}
 
 			if (findingConfig.get()) {  //This thread is in a reentrant loop of calling findConfig!
-				throw new AppFatalException(
-						"Cannot call AndHow.setConfig() from inside AndHowInit.getConfiguration(). " +
-						"See the user guide for examples of how to configure AndHow.");
+				throw new AppFatalException(new ConstructionProblem.SetConfigCalledDuringFindConfigException());
 			} else {
 				findingConfig.remove();	//Calling get creates a ThreadLocal, so remove
 			}

@@ -170,7 +170,9 @@ public class AndHowTest extends AndHowTestBase {
 			return config;
 		});
 
-		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof ConstructionProblem.SetConfigCalledDuringFindConfigException);
 	}
 
 	@Test
@@ -234,7 +236,6 @@ public class AndHowTest extends AndHowTestBase {
 		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
 	}
 
-	@Disabled
 	@Test
 	public void attemptingToSetConfigDuringInitializationShouldBeBlocked() {
 		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
@@ -251,10 +252,7 @@ public class AndHowTest extends AndHowTestBase {
 		});
 
 		assertEquals(1, ex.getProblems().size());
-		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
-		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
-		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
-		assertSame(config2, initLoopEx.getSecondInit().getConfig());
+		assertTrue(ex.getProblems().get(0) instanceof ConstructionProblem.SetConfigCalledDuringInitializationException);
 	}
 
 	@Test

@@ -14,7 +14,11 @@ import org.yarnandtail.andhow.util.TextUtil;
  * @author ericeverman
  */
 public abstract class ConstructionProblem implements Problem {
-	
+
+	private static final String SEE_USER_GUIDE =
+			"  See user guide for configuration docs & examples: https://www.andhowconfig.org/user-guide";
+
+
 	/** The Property that actually has the problem */
 	protected PropertyCoord badPropertyCoord;
 	
@@ -350,6 +354,38 @@ public abstract class ConstructionProblem implements Problem {
 					+ "::The first line in the stack trace following this error referring to your application code is likely causing the initiation loop::";
 		}
 		
+		@Override
+		public String getFullMessage() {
+			return getProblemDescription();
+		}
+	}
+
+	public static class SetConfigCalledDuringInitializationException extends ConstructionProblem {
+
+		@Override
+		public String getProblemDescription() {
+
+			return "AndHow is initializing, so AndHow.setConfig() cannot be called. "
+					+ "This is most likely due to a custom AndHowConfiguration instance that "
+					+ "calls AndHow.setConfig() in one of its methods. " + SEE_USER_GUIDE;
+		}
+
+		@Override
+		public String getFullMessage() {
+			return getProblemDescription();
+		}
+	}
+
+	public static class SetConfigCalledDuringFindConfigException extends ConstructionProblem {
+
+		@Override
+		public String getProblemDescription() {
+
+			return "AndHow.setConfig() was called during the invocation of AndHow.findConfig(), " +
+					"which is not allowed.  Likely caused by setConfig() called inside of AndHowInit.getConfiguration(). " +
+					SEE_USER_GUIDE;
+		}
+
 		@Override
 		public String getFullMessage() {
 			return getProblemDescription();
