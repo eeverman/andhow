@@ -5,10 +5,8 @@ import java.util.*;
 
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.internal.ConstructionProblem.TooManyAndHowInitInstances;
-import org.yarnandtail.andhow.internal.NameAndProperty;
+import org.yarnandtail.andhow.internal.*;
+import org.yarnandtail.andhow.internal.InitializationProblem.TooManyAndHowInitInstances;
 import org.yarnandtail.andhow.service.InitLoader;
 import org.yarnandtail.andhow.service.TestInitLoader;
 

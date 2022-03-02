@@ -94,8 +94,7 @@ public class ConstructionProblemTest {
 	public void testSecurityException() {
 		String group = "test class";
 		Exception exception = new Exception("test");
-		ConstructionProblem.SecurityException instance = new ConstructionProblem.
-				SecurityException(exception, group.getClass());
+		ConstructionProblem.SecurityException instance = new ConstructionProblem.SecurityException(exception, group.getClass());
 
 		assertNotNull(instance.getException());
 		assertNotNull(instance.getProblemContext());
@@ -171,8 +170,7 @@ public class ConstructionProblemTest {
 		List<AndHowInit> instances = new ArrayList<AndHowInit>();
 		instances.add(item);
 
-		ConstructionProblem.TooManyAndHowInitInstances instance = new ConstructionProblem.
-				TooManyAndHowInitInstances(instances);
+		InitializationProblem.TooManyAndHowInitInstances instance = new InitializationProblem.TooManyAndHowInitInstances(instances);
 
 		assertNotNull(instance.getInstanceNames());
 		assertNotNull(instance.getProblemDescription());
@@ -183,8 +181,7 @@ public class ConstructionProblemTest {
 		AndHow.Initialization originalInit = mock(AndHow.Initialization.class);
 		AndHow.Initialization secondInit = mock(AndHow.Initialization.class);
 
-		ConstructionProblem.InitiationLoopException instance = new ConstructionProblem.
-				InitiationLoopException(originalInit, secondInit);
+		InitializationProblem.InitiationLoop instance = new InitializationProblem.InitiationLoop(originalInit, secondInit);
 
 		assertNotNull(instance.getOriginalInit());
 		assertNotNull(instance.getSecondInit());

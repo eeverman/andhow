@@ -6,9 +6,9 @@ import java.util.stream.Stream;
 
 import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.export.*;
-import org.yarnandtail.andhow.internal.AndHowCore;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.internal.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
+import static org.yarnandtail.andhow.internal.InitializationProblem.*;
 
 /**
  * Central AndHow singleton class.
@@ -164,7 +164,7 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 		synchronized (LOCK) { //Access to the config is sync'ed same as init code
 
 			if (isInitialized()) {
-				throw new AppFatalException("AndHow is already initialized, so access to configuration is blocked.");
+				throw new AppFatalException(new IllegalMethodCalledAfterInitialization("findConfig"));
 			}
 
 			if (inProcessConfig == null) {	//No config exists, so need to create
@@ -233,13 +233,13 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 		synchronized (LOCK) { //Access to the config is sync'ed same as init code
 
 			if (isInitialized()) {
-				throw new AppFatalException("AndHow is already initialized, so setConfig cannot be called." + SEE_USER_GUIDE);
+				throw new AppFatalException(new IllegalMethodCalledAfterInitialization("setConfig"));
 			} else if (initializing) {
-				throw new AppFatalException(new ConstructionProblem.SetConfigCalledDuringInitializationException());
+				throw new AppFatalException(new SetConfigCalledDuringInitialization());
 			}
 
 			if (findingConfig.get()) {  //This thread is in a reentrant loop of calling findConfig!
-				throw new AppFatalException(new ConstructionProblem.SetConfigCalledDuringFindConfigException());
+				throw new AppFatalException(new SetConfigCalledDuringFindConfig());
 			} else {
 				findingConfig.remove();	//Calling get creates a ThreadLocal, so remove
 			}
@@ -300,8 +300,7 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 		synchronized (LOCK) {
 
 			if (isInitialized()) {
-				throw new AppFatalException("AndHow is already initialized - " +
-						"Cannot re-initialize with new configuration");
+				throw new AppFatalException(new IllegalMethodCalledAfterInitialization("initialize"));
 			}
 
 			if (! initializing) {
@@ -309,7 +308,6 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 				initializing = true;										//Block re-entrant initialization
 				inProcessConfig = null;									//No more configuration changes
 				initialization = new Initialization(config);	//Record initialization time & place
-
 
 				if (singleInstance == null) {
 
@@ -348,8 +346,7 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 			} else {
 				//Oops, code in AndHowInit or AndHowConfiguration forced AndHow initialization
 				throw new AppFatalException(
-						new ConstructionProblem.InitiationLoopException(
-								initialization, new Initialization(config)));
+						new InitiationLoop(initialization, new Initialization(config)));
 			}
 
 			return singleInstance;
