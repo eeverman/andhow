@@ -8,12 +8,26 @@ import org.yarnandtail.andhow.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ConstructionProblemTest {
+
+	@Test
+	public void getProblemContextShouldHandleNull() {
+		ConstructionProblem constructProb = new ConstructionProblem() {
+
+			@Override
+			public String getProblemDescription() {
+				return "desc";
+			}
+		};
+
+		assertNull(constructProb.getBadPropertyCoord());
+		assertNull(constructProb.getRefPropertyCoord());
+		assertEquals(Problem.UNKNOWN, constructProb.getProblemContext());
+	}
 
 	@Test
 	public void testNoUniqueNames() {
@@ -74,7 +88,7 @@ public class ConstructionProblemTest {
 
 		assertNotNull(instance.getLoader());
 		assertNotNull(instance.getProblemContext());
-		assertNotNull(instance.getProblemContext());
+		assertNotNull(instance.getProblemDescription());
 	}
 
 	@Test
@@ -128,6 +142,7 @@ public class ConstructionProblemTest {
 
 		assertEquals(instance.getException().getMessage(), "test");
 		assertNotNull(instance.getProblemDescription());
+		assertNotNull(instance.getProblemContext());
 		assertEquals(instance.getBadPropertyCoord().getGroup(), testClass);
 	}
 

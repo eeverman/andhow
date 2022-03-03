@@ -18,12 +18,12 @@ public abstract class InitializationProblem implements Problem {
 
 	@Override
 	public String getFullMessage() {
-		return getProblemDescription();
+		return getProblemContext() + ": " + getProblemDescription();
 	}
 
 	@Override
 	public String getProblemContext() {
-		return "Invalid initialization operation";
+		return "AndHow was unable to initialize";
 	}
 
 	public static class InitiationLoop extends InitializationProblem {
@@ -47,7 +47,7 @@ public abstract class InitializationProblem implements Problem {
 		@Override
 		public String getProblemDescription() {
 
-			return "AndHow detected a loop during initiation.  "
+			return "An initialization loop was detected (AndHow.initialize was called during execution of AndHow.initialize).  "
 					+ "Likely causes are calls [Property].value() or AndHow.instance() in an unexpected place, such as: " + System.lineSeparator()
 					+ "- Static initiation blocks or static variable initiation values, e.g., 'static int MyVar = [Some AndHow Prop].getValue()'" + System.lineSeparator()
 					+ "- An AndHow Property that refers to the value of another AndHow property in its construction" + System.lineSeparator()
@@ -62,7 +62,7 @@ public abstract class InitializationProblem implements Problem {
 		@Override
 		public String getProblemDescription() {
 
-			return "AndHow is initializing, so AndHow.setConfig() cannot be called. "
+			return "AndHow.setConfig() was called during initialization, which is not allowed. "
 					+ "This is most likely due to a custom AndHowConfiguration instance that "
 					+ "calls AndHow.setConfig() in one of its methods. " + SEE_USER_GUIDE;
 		}
@@ -97,6 +97,11 @@ public abstract class InitializationProblem implements Problem {
 		}
 	}
 
+	/**
+	 * This is really a configuration of AndHow problem - it happens while AndHow tries
+	 * to find its configuration.  So its not really an initialization problem, but this
+	 * seems to be the best place to put this type of problem.
+	 */
 	public static class TooManyAndHowInitInstances extends InitializationProblem {
 		List<String> names = new ArrayList();
 
