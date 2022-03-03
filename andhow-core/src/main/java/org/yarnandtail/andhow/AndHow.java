@@ -319,12 +319,6 @@ public class AndHow implements PropertyConfiguration, ValidatedValues {
 
 				} else if (singleInstance.core == null) {
 
-				/*
-				 In production there is only one AndHow instance and its Core for the life of the app.
-				 During unit testing, however, reflection utilities may replace the Core to allow testing
-				 with different configuration states.  This is possible w/o invalidating app references
-				 to the AndHow singleton.  'singleInstance.core == null' is that special case.
-				*/
 					try {
 
 						AndHowCore newCore = new AndHowCore(
