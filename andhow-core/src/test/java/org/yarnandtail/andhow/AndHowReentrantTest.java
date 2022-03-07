@@ -7,7 +7,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.MethodOrderer;
 import org.yarnandtail.andhow.api.AppFatalException;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.internal.InitializationProblem;
 
 /**
  *
@@ -32,7 +32,7 @@ public class AndHowReentrantTest extends AndHowTestBase {
 		assertTrue(ex.getCause() instanceof AppFatalException);
 		AppFatalException afe = (AppFatalException)ex.getCause();
 		assertEquals(1, afe.getProblems().size());
-		assertTrue(afe.getProblems().get(0) instanceof ConstructionProblem.InitiationLoopException);
+		assertTrue(afe.getProblems().get(0) instanceof InitializationProblem.InitiationLoop);
 
 	}
 	
@@ -62,7 +62,7 @@ public class AndHowReentrantTest extends AndHowTestBase {
 		assertTrue(ex.getCause() instanceof AppFatalException);
 		AppFatalException afe = (AppFatalException)ex.getCause();
 		assertEquals(1, afe.getProblems().size());
-		assertTrue(afe.getProblems().get(0) instanceof ConstructionProblem.InitiationLoopException);
+		assertTrue(afe.getProblems().get(0) instanceof InitializationProblem.InitiationLoop);
 
 	}
 

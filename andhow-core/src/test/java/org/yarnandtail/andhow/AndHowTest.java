@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.EffectiveName;
@@ -18,7 +17,7 @@ import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
-import static org.yarnandtail.andhow.internal.ConstructionProblem.InitiationLoopException;
+import static org.yarnandtail.andhow.internal.InitializationProblem.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,7 +88,11 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void findConfigShouldThrowExceptionIfCalledAfterInitialization() {
 		AndHow.instance();
-		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof IllegalMethodCalledAfterInitialization);
+		assertEquals("findConfig", ((IllegalMethodCalledAfterInitialization)(ex.getProblems().get(0))).getMethodName());
 	}
 
 	@Test
@@ -142,20 +145,28 @@ public class AndHowTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void setConfigShouldThrowAppFatalSometimes() {
+	public void setConfigShouldNotAllowNull() {
 		AndHowConfiguration<? extends AndHowConfiguration> config = StdConfig.instance();
 
 		assertThrows(AppFatalException.class, () -> AndHow.setConfig(null),
 				"Cannot set to null");
-
-		AndHow.instance();	//force initialize
-
-		assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
-				"Cannot access after init");
 	}
 
 	@Test
-	public void setConfigShouldThrowAnExceptionIfCalledFromWithinFindConfig() {
+	public void setConfigShouldNotAllowCallAfterInitialization() {
+		AndHow.instance();	//force initialize
+
+		AndHowConfiguration<? extends AndHowConfiguration> config = StdConfig.instance();
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
+				"Cannot access after init");
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof IllegalMethodCalledAfterInitialization);
+		assertEquals("setConfig", ((IllegalMethodCalledAfterInitialization)(ex.getProblems().get(0))).getMethodName());
+	}
+
+	@Test
+	public void setConfigShouldThrowExceptionIfCalledFromWithinFindConfig() {
 
 		//This situation could happen in application code's implementation of
 		//AndHowInit.getConfiguration().  AndHow.findConfig() was invoked to find configuration,
@@ -170,7 +181,9 @@ public class AndHowTest extends AndHowTestBase {
 			return config;
 		});
 
-		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof SetConfigCalledDuringFindConfig);
 	}
 
 	@Test
@@ -229,12 +242,11 @@ public class AndHowTest extends AndHowTestBase {
 		});
 
 		assertEquals(1, ex.getProblems().size());
-		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
-		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
+		assertTrue(ex.getProblems().get(0) instanceof InitiationLoop);
+		InitiationLoop initLoopEx = (InitiationLoop)ex.getProblems().get(0);
 		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
 	}
 
-	@Disabled
 	@Test
 	public void attemptingToSetConfigDuringInitializationShouldBeBlocked() {
 		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
@@ -251,10 +263,7 @@ public class AndHowTest extends AndHowTestBase {
 		});
 
 		assertEquals(1, ex.getProblems().size());
-		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
-		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
-		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
-		assertSame(config2, initLoopEx.getSecondInit().getConfig());
+		assertTrue(ex.getProblems().get(0) instanceof InitializationProblem.SetConfigCalledDuringInitialization);
 	}
 
 	@Test
