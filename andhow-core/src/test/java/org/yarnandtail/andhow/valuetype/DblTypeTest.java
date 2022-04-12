@@ -23,10 +23,10 @@ public class DblTypeTest {
 
 		DblType type = DblType.instance();
 
-		assertEquals(new Double(34d), type.parse("34D"), COMP_ERR);
-		assertEquals(new Double(34d), type.parse("34f"), COMP_ERR);  //fFdD all ok
-		assertEquals(new Double(-1234.5678d), type.parse("-1234.5678d"), COMP_ERR);
-		assertEquals(new Double(0), type.parse("0"), COMP_ERR);
+		assertEquals(Double.valueOf(34d), type.parse("34D"), COMP_ERR);
+		assertEquals(Double.valueOf(34d), type.parse("34f"), COMP_ERR);  //fFdD all ok
+		assertEquals(Double.valueOf(-1234.5678d), type.parse("-1234.5678d"), COMP_ERR);
+		assertEquals(Double.valueOf(0), type.parse("0"), COMP_ERR);
 		assertNull(type.parse(null));
 	}
 
@@ -74,8 +74,8 @@ public class DblTypeTest {
 
 		DblType type = DblType.instance();
 
-		Object o = new Double(999);
-		assertEquals(new Double(999), type.cast(o), COMP_ERR);
+		Object o = Double.valueOf(999);
+		assertEquals(Double.valueOf(999), type.cast(o), COMP_ERR);
 		assertTrue(type.cast(o) instanceof Double);
 	}
 

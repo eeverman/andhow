@@ -48,7 +48,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 		task.call();
 
-		Object genClass = loader.loadClass(genName(pkg, classSimpleName)).newInstance();
+		Object genClass = loader.loadClass(genName(pkg, classSimpleName)).getDeclaredConstructor().newInstance();
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
 
@@ -101,7 +101,7 @@ public class AndHowCompileProcessor_PropertyTest extends AndHowCompileProcessorT
 		task.setProcessors(Collections.singleton(new AndHowCompileProcessor()));
 		task.call();
 
-		Object genClass = loader.loadClass(genName(pkg, classSimpleName)).newInstance();
+		Object genClass = loader.loadClass(genName(pkg, classSimpleName)).getDeclaredConstructor().newInstance();
 		String genSvsFile = IOUtil.toString(
 				loader.getResourceAsStream(REGISTRAR_SVS_PATH), Charset.forName("UTF-8"));
 

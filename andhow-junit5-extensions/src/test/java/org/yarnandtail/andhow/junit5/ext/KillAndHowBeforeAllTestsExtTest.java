@@ -4,10 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,11 +49,11 @@ class KillAndHowBeforeAllTestsExtTest {
 		// Setup mockito for the test
 
 		store = Mockito.mock(ExtensionContext.Store.class);
-		Mockito.when(store.remove(Matchers.any(), Matchers.any())).thenReturn(andHowCoreCreatedDuringTest);
+		Mockito.when(store.remove(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(andHowCoreCreatedDuringTest);
 
 		extensionContext = Mockito.mock(ExtensionContext.class);
 		Mockito.when(extensionContext.getRequiredTestClass()).thenReturn((Class)(this.getClass()));
-		Mockito.when(extensionContext.getStore(Matchers.any())).thenReturn(store);
+		Mockito.when(extensionContext.getStore(ArgumentMatchers.any())).thenReturn(store);
 	}
 
 	@AfterEach
@@ -90,8 +87,8 @@ class KillAndHowBeforeAllTestsExtTest {
 		ArgumentCaptor<Object> keyForRemove = ArgumentCaptor.forClass(Object.class);
 
 		InOrder orderedStoreCalls = Mockito.inOrder(store);
-		orderedStoreCalls.verify(store).put(keyForPut.capture(), Matchers.eq(andHowCoreCreatedDuringTest));
-		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), Matchers.eq(AndHowTestUtils.getAndHowCoreClass()));
+		orderedStoreCalls.verify(store).put(keyForPut.capture(), ArgumentMatchers.eq(andHowCoreCreatedDuringTest));
+		orderedStoreCalls.verify(store).remove(keyForRemove.capture(), ArgumentMatchers.eq(AndHowTestUtils.getAndHowCoreClass()));
 		Mockito.verifyNoMoreInteractions(store);	//Really don't want any other interaction w/ the store
 
 		assertEquals(keyForPut.getValue(), keyForRemove.getValue(),

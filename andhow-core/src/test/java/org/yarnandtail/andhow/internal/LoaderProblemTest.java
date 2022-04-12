@@ -1,8 +1,9 @@
 package org.yarnandtail.andhow.internal;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.Mockito;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.AndHowInit;
 import org.yarnandtail.andhow.api.*;
@@ -22,15 +23,15 @@ public class LoaderProblemTest extends LoaderProblem {
 		return "description";
 	}
 
-	@Mock
+	// Mocks
 	Property prop;
-
-	@Mock
 	Loader loader;
+	LoaderPropertyCoord badValueCoord;	//Real implementation that is spy'ed.
 
-	@Mock
-	LoaderPropertyCoord badValueCoord = new LoaderPropertyCoord(loader, Integer.class, prop);
+	LoaderPropertyCoord badValueCoordAllSpeced;	//Real implementation that is spy'ed.
+	LoaderPropertyCoord badValueCoordAllNull;	//Real implementation that is spy'ed.
 
+	/* Simple Non-abstract class for testing.  Can't be a mock b/c subclasses use internal fields. */
 	public class LoaderProblemStub extends LoaderProblem {
 		public void setBadValueCoord(LoaderPropertyCoord badValueCoord) {
 			this.badValueCoord = badValueCoord;
@@ -41,13 +42,28 @@ public class LoaderProblemTest extends LoaderProblem {
 			return "description";
 		}
 
-		public void setGroup() {
-			this.badValueCoord.group = (Class<?>) Integer.class;
-		}
-
 		public Class<?> getGroup() {
 			return this.badValueCoord.group;
 		}
+	}
+
+	@BeforeEach
+	void setUp() {
+		prop = Mockito.mock(Property.class);
+		loader = Mockito.mock(Loader.class);
+
+		Mockito.when(loader.getSpecificLoadDescription()).thenReturn("LD");
+
+		// Assume that tests will specify badValueCoord.getX return values as needed
+		badValueCoord = new LoaderPropertyCoord(null, Integer.class, null);
+		badValueCoord = Mockito.spy(badValueCoord);
+
+		badValueCoordAllSpeced = new LoaderPropertyCoord(loader, Integer.class, prop);
+		badValueCoordAllSpeced = Mockito.spy(badValueCoordAllSpeced);
+		Mockito.when(badValueCoordAllSpeced.getPropName()).thenReturn("PropName");
+
+		badValueCoordAllNull = new LoaderPropertyCoord(null, null, null);
+		badValueCoordAllNull = Mockito.spy(badValueCoordAllNull);
 	}
 
 	@Test
@@ -224,55 +240,126 @@ public class LoaderProblemTest extends LoaderProblem {
 		assertNotNull(instance.getFullMessage());
 	}
 
+	// The testAbstractGetProblemContextXXX tests getContext() on the abstract LoaderProblem with
+	// combinations of badValueCoord properties.  The returned value needs to be human readable,
+	// but even more important is that it never throws an exception, which could mask the real problem
+	// for the user.
+	// Table of badValueCoord property values:
+	//
+	// badVal'Coord Prop    | Test 1   | Test 2   | Test 3   | Test 4   | Test 5   | Test 6   | Test 7   |
+	// ==================================================================================================
+	// badValueCoord        | not null | not null | not null | not null | not null | not null | null     |
+	// bvc.Loader           | not null | not null | not null | not null | not null | null     | na       |
+	// bvc.Group            | not null | null     | null     | null     | null     | null     | na       |
+	// bvc.Property         | not null | not null | null     | null     | not null | null     | na       |
+	// bvc.Loader.spec'Desc | not null | not null | not null | null     | null     | na       | na       |
+
 	@Test
-	public void testGetProblemContextInput1() {
-		MockitoAnnotations.initMocks(this);
-		LoaderProblemStub lp = Mockito.mock(LoaderProblemStub.class, CALLS_REAL_METHODS);
-		lp.setBadValueCoord(badValueCoord);
-		Mockito.when(lp.getBadValueCoord()).thenReturn(badValueCoord);
-		Mockito.when(badValueCoord.getLoader()).thenReturn(loader);
-		Mockito.when(loader.getSpecificLoadDescription()).thenReturn("some description");
+	public void testAbstractGetProblemContext1() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllSpeced);
+
 		assertNotNull(lp.getProblemContext());
-		assertEquals(lp.getProblemContext(), TextUtil.format("Reading from {}", "some description"));
+		assertEquals(
+				TextUtil.format("Reading property PropName from loader LD ({})", loader.getClass().getCanonicalName()),
+				lp.getProblemContext());
 	}
 
 	@Test
-	public void testGetProblemContextInput2() {
-		MockitoAnnotations.initMocks(this);
-		LoaderProblemStub lp = Mockito.mock(LoaderProblemStub.class, CALLS_REAL_METHODS);
-		lp.setBadValueCoord(badValueCoord);
-		Mockito.when(lp.getBadValueCoord()).thenReturn(badValueCoord);
-		Mockito.when(badValueCoord.getLoader()).thenReturn(loader);
-		Mockito.when(lp.getBadValueCoord().getProperty()).thenReturn(prop);
-		Mockito.when(badValueCoord.getLoader().getSpecificLoadDescription()).thenReturn("some loader description");
+	public void testAbstractGetProblemContext2() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllSpeced);
+
+		Mockito.when(badValueCoordAllSpeced.getGroup()).thenReturn(null);
+
 		assertNotNull(lp.getProblemContext());
-		assertEquals(lp.getProblemContext(), TextUtil.format("Reading from {}", "some loader description"));
+		assertEquals(
+				TextUtil.format("Reading from LD ({})", loader.getClass().getCanonicalName()),
+				lp.getProblemContext());
 	}
 
 	@Test
-	public void testGetProblemContextInput4() {
-		MockitoAnnotations.initMocks(this);
-		LoaderProblem lp = Mockito.mock(LoaderProblem.class, CALLS_REAL_METHODS);
+	public void testAbstractGetProblemContext3() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllNull);
+
+		Mockito.when(badValueCoordAllNull.getLoader()).thenReturn(loader);
+
 		assertNotNull(lp.getProblemContext());
-		assertEquals(lp.getProblemContext(), "[[Unknown]] context");
+		assertEquals(
+				TextUtil.format("Reading from LD ({})", loader.getClass().getCanonicalName()),
+				lp.getProblemContext());
+	}
+
+
+	@Test
+	public void testAbstractGetProblemContext4() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllNull);
+
+		Mockito.when(badValueCoordAllNull.getLoader()).thenReturn(loader);
+		Mockito.when(loader.getSpecificLoadDescription()).thenReturn(null);
+
+		assertNotNull(lp.getProblemContext());
+		assertEquals(
+				TextUtil.format("Reading from {}", loader.getClass().getCanonicalName()),
+				lp.getProblemContext());
 	}
 
 	@Test
-	public void testGetProblemContextInput5() {
-		MockitoAnnotations.initMocks(this);
-		LoaderProblemStub lp = Mockito.mock(LoaderProblemStub.class, CALLS_REAL_METHODS);
-		lp.setBadValueCoord(badValueCoord);
-		Mockito.when(lp.getBadValueCoord()).thenReturn(badValueCoord);
-		Mockito.when(lp.getBadValueCoord().getProperty()).thenReturn(prop);
-		Mockito.when(badValueCoord.getLoader()).thenReturn(loader);
-		Mockito.when(badValueCoord.getPropName()).thenReturn("some property name");
+	public void testAbstractGetProblemContext5() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllNull);
+
+		Mockito.when(badValueCoordAllNull.getLoader()).thenReturn(loader);
+		Mockito.when(badValueCoordAllNull.getProperty()).thenReturn(prop);
+		Mockito.when(loader.getSpecificLoadDescription()).thenReturn(null);
+
 		assertNotNull(lp.getProblemContext());
-		assertEquals(lp.getProblemContext(), "Reading via loader [[NULL]]");
+		assertEquals(
+				TextUtil.format("Reading from {}", loader.getClass().getCanonicalName()),
+				lp.getProblemContext());
 	}
+
+	@Test
+	public void testAbstractGetProblemContext6() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoordAllNull);
+
+		assertNotNull(lp.getProblemContext());
+		assertEquals("Reading from [[ Unknown Loader ]]", lp.getProblemContext());
+	}
+
+	@Test
+	public void testAbstractGetProblemContext7() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(null);
+
+		assertNotNull(lp.getProblemContext());
+		assertEquals("[[ Unknown context ]]", lp.getProblemContext());
+	}
+
+	//
+	//
+
+	@Test
+	public void testAbstractGetMessage() {
+		LoaderProblemStub lp = new LoaderProblemStub();
+		lp.setBadValueCoord(badValueCoord);
+
+		Mockito.when(badValueCoord.getLoader()).thenReturn(loader);
+		Mockito.when(badValueCoord.getProperty()).thenReturn(prop);
+		Mockito.when(badValueCoord.getPropName()).thenReturn("PropName");
+
+		assertNotNull(lp.getProblemContext());
+		assertEquals(
+				TextUtil.format("Reading property PropName from loader LD ({}): description", loader.getClass().getCanonicalName()),
+				lp.getFullMessage());
+	}
+
 
 	@Test
 	public void testStringConversionLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		StringConversionLoaderProblem problem = new StringConversionLoaderProblem(loader, String.class, prop, "some String");
 		ValueType vType = new ValueType() {
 			@Override
@@ -305,7 +392,6 @@ public class LoaderProblemTest extends LoaderProblem {
 
 	@Test
 	public void testObjectConversionValueProblem() {
-		MockitoAnnotations.initMocks(this);
 		ObjectConversionValueProblem problem = new ObjectConversionValueProblem(loader, String.class, prop, "some String");
 		ValueType vType = new ValueType() {
 			@Override
@@ -338,14 +424,12 @@ public class LoaderProblemTest extends LoaderProblem {
 
 	@Test
 	public void testJndiContextLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		JndiContextMissing problem = new JndiContextMissing(loader);
 		assertNotNull(problem.getProblemDescription());
 	}
 
 	@Test
 	public void testSourceNotFoundLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		String message = "custom message";
 		SourceNotFoundLoaderProblem problem = new SourceNotFoundLoaderProblem(loader, message);
 		String expected = "Expected for find data for this loader to load from: " + message;
@@ -356,18 +440,15 @@ public class LoaderProblemTest extends LoaderProblem {
 
 	@Test
 	public void testUnknownPropertyLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		String unknownPropName = "custom property";
 		UnknownPropertyLoaderProblem problem = new UnknownPropertyLoaderProblem(loader, unknownPropName);
 		String expected = TextUtil.format("The property '{}' is not recognized", unknownPropName);
-		assertNotNull(problem.getProblemDescription());
 		assertEquals(expected, problem.getProblemDescription());
-
+		assertEquals(unknownPropName, problem.getUnknownPropertyName());
 	}
 
 	@Test
 	public void testsDuplicatePropertyLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		DuplicatePropertyLoaderProblem problem = new DuplicatePropertyLoaderProblem(loader, Integer.class, prop);
 		String expected = "There are multiple values assigned to this property";
 		assertNotNull(problem.getProblemDescription());
@@ -376,7 +457,6 @@ public class LoaderProblemTest extends LoaderProblem {
 
 	@Test
 	public void testsParsingLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		String message = "custom message exception";
 		Exception exception = new Exception(message);
 		ParsingLoaderProblem problem = new ParsingLoaderProblem(loader, Integer.class, prop, exception);
@@ -386,7 +466,6 @@ public class LoaderProblemTest extends LoaderProblem {
 
 	@Test
 	public void testsIOLoaderProblem() {
-		MockitoAnnotations.initMocks(this);
 		String message = "custom message exception";
 		String resourcePath = "resource/path";
 		Exception exception = new Exception(message);
