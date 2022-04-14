@@ -110,7 +110,7 @@ public abstract class LoaderProblem implements Problem {
 	
 	public static class UnknownPropertyLoaderProblem extends LoaderProblem {
 		
-		private String unknownPropName;
+		private final String unknownPropName;
 		
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {

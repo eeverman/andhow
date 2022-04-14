@@ -12,8 +12,8 @@ import org.yarnandtail.andhow.util.TextUtil;
  */
 public class KeyObjectPair {
 
-	private String name;
-	private Object value;
+	private final String name;
+	private final Object value;
 
 	/**
 	 * Construct an instance with a null value.

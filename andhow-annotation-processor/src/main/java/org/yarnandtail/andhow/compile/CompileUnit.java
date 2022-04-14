@@ -42,7 +42,7 @@ public class CompileUnit {
 	 * inner is then the normal iteration order of the queue from the head to
 	 * the tail.  Never null.
 	 */
-	private ArrayDeque<SimpleType> innerPathStack = new ArrayDeque();
+	private final ArrayDeque<SimpleType> innerPathStack = new ArrayDeque();
 
 	/**
 	 * Construct a new CompileUnit, which always is for a specific top level

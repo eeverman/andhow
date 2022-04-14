@@ -7,11 +7,11 @@ import java.util.ArrayList;
  */
 public class TextBlock {
 	
-	private boolean wrap;
-	private boolean comment;
+	private final boolean wrap;
+	private final boolean comment;
 	private boolean blankLineBefore = false;
 	private boolean blankLineAfter = false;
-	private ArrayList<TextLine> lines = new ArrayList();
+	private final ArrayList<TextLine> lines = new ArrayList();
 
 	/**
 	 * New instance

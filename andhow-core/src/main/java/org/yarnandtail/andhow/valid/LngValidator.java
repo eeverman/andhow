@@ -43,7 +43,7 @@ public abstract class LngValidator extends BaseValidator<Long> {
 	 */
 	public static class GreaterThanOrEqualTo extends LngValidator {
 
-		private long ref;
+		private final long ref;
 
 		public GreaterThanOrEqualTo(long ref) {
 			this.ref = ref;
@@ -66,7 +66,7 @@ public abstract class LngValidator extends BaseValidator<Long> {
 	 */
 	public static class LessThan extends LngValidator {
 
-		private long ref;
+		private final long ref;
 
 		public LessThan(long ref) {
 			this.ref = ref;
@@ -89,7 +89,7 @@ public abstract class LngValidator extends BaseValidator<Long> {
 	 */
 	public static class LessThanOrEqualTo extends LngValidator {
 
-		private long ref;
+		private final long ref;
 
 		public LessThanOrEqualTo(long ref) {
 			this.ref = ref;
