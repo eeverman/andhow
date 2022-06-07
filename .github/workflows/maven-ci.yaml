@@ -19,4 +19,6 @@ jobs:
       - name: Upload coverage to Codacy
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java $(find -name 'jacoco*.xml' -printf '-r %p ')
+        run: |
+          export CODACY_PROJECT_TOKEN=${{ CODACY_PROJECT_TOKEN }}
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java $(find -name 'jacoco*.xml' -printf '-r %p ')
