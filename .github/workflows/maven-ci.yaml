@@ -16,3 +16,7 @@ jobs:
           cache: maven
       - name: Build test with coverage
         run: mvn --batch-mode --update-snapshots clean test -Djacoco.skip=false
+      - name: Upload coverage to Codacy
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java $(find -name 'jacoco*.xml' -printf '-r %p ')
