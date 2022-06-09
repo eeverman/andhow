@@ -18,11 +18,15 @@ jobs:
 #         run: mvn --batch-mode --update-snapshots clean test -Djacoco.skip=false
       - name: Echo Test
         shell: bash
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
+          export CODACY_PROJECT_TOKEN=${env:CODACY_PROJECT_TOKEN}
           echo "Argblarb line 1"
-          echo "Argblarb line 2"
+          echo "Argblarb line 2 ${CODACY_PROJECT_TOKEN}"
           echo "Argblarb line 1"
       - name: Upload coverage to Codacy
+        shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
