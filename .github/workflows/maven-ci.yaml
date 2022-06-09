@@ -20,12 +20,19 @@ jobs:
         shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+          MY_TOKEN: Blah
         run: |
           echo "Will export...."
           export CODACY_PROJECT_TOKEN=${env:CODACY_PROJECT_TOKEN}
+          export MY_TOKEN_EXPORT=${env:MY_TOKEN}
           echo "Argblarb line 1"
           echo "Argblarb line 2 ${CODACY_PROJECT_TOKEN}"
-          echo "Argblarb line 1"
+          echo "Argblarb line 3 ${MY_TOKEN_EXPORT}"
+          echo "Argblarb line 4 ${env:MY_TOKEN}"
+          echo "Argblarb line 5 $CODACY_PROJECT_TOKEN"
+          echo "Argblarb line 6 $MY_TOKEN_EXPORT"
+          echo "Argblarb line 7 $MY_TOKEN"
+          echo "Argblarb line 8"
       - name: Upload coverage to Codacy
         shell: bash
         env:
