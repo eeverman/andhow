@@ -21,5 +21,7 @@ jobs:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
           export CODACY_PROJECT_TOKEN=${env:CODACY_PROJECT_TOKEN}
+          echo "Argblarb line 1"
           echo "Argblarb ${CODACY_PROJECT_TOKEN}"
+          echo "Argblarb line 3"
           bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java $(find -name 'jacoco*.xml' -printf '-r %p ')
