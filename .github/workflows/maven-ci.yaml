@@ -25,4 +25,4 @@ jobs:
           echo "Argblarb line 1"
           echo "Argblarb $CODACY_PROJECT_TOKEN"
           echo "Argblarb line 3"
-          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java --force-coverage-parser jacoco --project-token $CODACY_PROJECT_TOKEN $(find -name 'jacoco*.xml' -printf '-r %p ')
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java --force-coverage-parser jacoco --commit-uuid $GITHUB_SHA --project-token $CODACY_PROJECT_TOKEN $(find -name 'jacoco*.xml' -printf '-r %p ')
