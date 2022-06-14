@@ -45,7 +45,7 @@ jobs:
           # CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
           CODACY_PROJECT_TOKEN: XYZ
         run: |
-          export CODACY_PROJECT_TOKEN=${env:CODACY_PROJECT_TOKEN}
+          # export CODACY_PROJECT_TOKEN=${env:CODACY_PROJECT_TOKEN}
           echo "Argblarb line 1"
           echo "Argblarb $CODACY_PROJECT_TOKEN"
           echo "Argblarb line 3"
