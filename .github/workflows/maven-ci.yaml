@@ -20,7 +20,6 @@ jobs:
         shell: bash
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          # CODACY_PROJECT_TOKEN: XYZ
         run: |
           echo "Argblarb line 1"
           echo "Argblarb $CODACY_PROJECT_TOKEN"
