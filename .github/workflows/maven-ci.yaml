@@ -32,13 +32,13 @@ jobs:
           echo "Argblarb line 6 $MY_TOKEN_EXPORT"
           echo "Argblarb line 7 $MY_TOKEN"
           echo "Argblarb line 8"
-      - name: Run codacy-coverage-reporter
-        uses: codacy/codacy-coverage-reporter-action@v1
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          # or
-          # api-token: ${{ secrets.CODACY_API_TOKEN }}
-          coverage-reports: jacoco*.xml
+#       - name: Run codacy-coverage-reporter
+#         uses: codacy/codacy-coverage-reporter-action@v1
+#         with:
+#           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+#           # or
+#           # api-token: ${{ secrets.CODACY_API_TOKEN }}
+#           coverage-reports: jacoco*.xml
       - name: Upload coverage to Codacy
         shell: bash
         env:
