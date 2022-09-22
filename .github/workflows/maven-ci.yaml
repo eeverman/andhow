@@ -1,6 +1,14 @@
 name: Java CI
 
-on: [push]
+on:
+  push:
+    branches: '*'
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - '**.gitignore'
+      - '**.gif'
+      - '**.png'
 
 jobs:
   build:
