@@ -20,8 +20,8 @@ public class LngTypeTest {
 		
 		LngType type = LngType.instance();
 		
-		assertEquals(new Long(-1234), type.parse("-1234"));
-		assertEquals(new Long(0), type.parse("0"));
+		assertEquals(Long.valueOf(-1234), type.parse("-1234"));
+		assertEquals(Long.valueOf(0), type.parse("0"));
 		assertNull(type.parse(null));
 	}
 	
@@ -83,8 +83,8 @@ public class LngTypeTest {
 		
 		LngType type = LngType.instance();
 		
-		Object o = new Long(999);
-		assertEquals(new Long(999L), type.cast(o));
+		Object o = Long.valueOf(999);
+		assertEquals(Long.valueOf(999L), type.cast(o));
 		assertTrue(type.cast(o) instanceof Long);
 	}
 	

@@ -365,30 +365,6 @@ public class AndHowUtil {
 		}
 	}
 
-	/**
-	 * Creates a new Object instance from the named class using the default
-	 * no-arg constructor.
-	 *
-	 * No errors are thrown, null if just returned if the class does not exist,
-	 * there is no no-arg constructor, so some other exception occurs.
-	 *
-	 * @param className
-	 * @return
-	 */
-	public static Object getClassInstanceForName(String className) {
-		Class<?> c = getClassForName(className);
-
-		if (c != null) {
-			try {
-				return c.getDeclaredConstructor().newInstance();
-			} catch (Throwable ex) {
-				//ignore
-			}
-		}
-
-		return null;
-	}
-
 	public static AndHowConfiguration<? extends AndHowConfiguration>
 			findConfiguration(AndHowConfiguration<? extends AndHowConfiguration> defaultConfig)
 			throws AppFatalException {

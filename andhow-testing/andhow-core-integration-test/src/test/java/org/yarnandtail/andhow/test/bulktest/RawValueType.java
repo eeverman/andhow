@@ -16,7 +16,7 @@ public enum RawValueType {
 	NO_VALUE("[[RAWVALUE_NO_VALUE]]"), // Don't include a value, eg: "org.corp.PROPERTY="
 	NO_VALUE_OR_DELIMITER("[[RAWVALUE_NO_VALUE_OR_DELIMITER]]"); // Nothing after the property name, eg: "or.corp.PROPERTY"
 
-	private String _key;  // String ID to recognize an instance by
+	private final String _key;  // String ID to recognize an instance by
 
 	private RawValueType(String key) {
 		_key = key;

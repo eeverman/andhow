@@ -5,8 +5,8 @@ package org.yarnandtail.andhow.api;
  *
  */
 public class ExportGroup {
-	private Exporter exporter;
-	private GroupProxy group;
+	private final Exporter exporter;
+	private final GroupProxy group;
 
 	public ExportGroup(Exporter exporter, GroupProxy group) {
 		this.exporter = exporter;

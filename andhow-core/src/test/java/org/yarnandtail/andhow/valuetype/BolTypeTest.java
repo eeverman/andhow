@@ -49,7 +49,7 @@ public class BolTypeTest {
 
 		BolType type = BolType.instance();
 
-		Object o = new Boolean(true);
+		Object o = Boolean.valueOf(true);
 		assertEquals(Boolean.TRUE, type.cast(o));
 		assertTrue(type.cast(o) instanceof Boolean);
 	}

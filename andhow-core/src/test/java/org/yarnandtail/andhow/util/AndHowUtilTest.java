@@ -29,7 +29,7 @@ public class AndHowUtilTest {
 
 		m = AndHowUtil.findMethod(c.getClass(), "twoTimes", Integer.TYPE);
 
-		assertEquals(6, (int) m.invoke(c, new Integer(3)));
+		assertEquals(6, (int) m.invoke(c, Integer.valueOf(3)));
 	}
 
 
@@ -70,19 +70,6 @@ public class AndHowUtilTest {
 		assertEquals(null, AndHowUtil.getClassForName(""));
 		assertEquals(null, AndHowUtil.getClassForName(null));
 		assertEquals(null, AndHowUtil.getClassForName("testClassName"));
-	}
-
-	/**
-	 * Test of getClassInstanceForName method, of class AndHowUtil.
-	 */
-	@Test
-	public void testGetClassInstanceForName() throws IllegalAccessException, InstantiationException {
-		assertEquals(String.class.newInstance(), AndHowUtil.getClassInstanceForName("java.lang.String"));
-
-		assertEquals(null, AndHowUtil.getClassInstanceForName(""));
-		assertEquals(null, AndHowUtil.getClassInstanceForName(null));
-		assertEquals(null, AndHowUtil.getClassInstanceForName("testClassName"));
-
 	}
 
 }

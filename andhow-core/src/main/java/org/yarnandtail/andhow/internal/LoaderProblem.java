@@ -28,45 +28,35 @@ public abstract class LoaderProblem implements Problem {
 	
 	@Override
 	public String getProblemContext() {
-		
-		String loadDesc = null;
+
 		String loadName = null;
 		String propName = null;
 		
 		if (badValueCoord != null) {
 			
-				if (badValueCoord.getGroup() != null && badValueCoord.getProperty() != null) {
+			if (badValueCoord.getGroup() != null && badValueCoord.getProperty() != null) {
 				propName = badValueCoord.getPropName();
 			}
 			
 			if (badValueCoord.getLoader() != null) {
-				
-				loadName = badValueCoord.getLoader().getClass().getCanonicalName();
-				
 				if (badValueCoord.getLoader().getSpecificLoadDescription() != null) {
-					loadDesc = badValueCoord.getLoader().getSpecificLoadDescription();
+					loadName = badValueCoord.getLoader().getSpecificLoadDescription() +
+							" (" + badValueCoord.getLoader().getClass().getCanonicalName() + ")";
+				} else {
+					loadName = badValueCoord.getLoader().getClass().getCanonicalName();
 				}
+			} else {
+				loadName = "[[ Unknown Loader ]]";
 			}
 
-			if (loadDesc != null) {
-				if (propName != null) {
-					return TextUtil.format("Reading property {} from {}", propName, loadDesc);	
-				} else {
-					return TextUtil.format("Reading from {}", loadDesc);	
-				}
-			} else if (loadName != null) {
-				if (propName != null) {
-					return TextUtil.format("Reading property {} via loader {}", propName, loadName);	
-				} else {
-					return TextUtil.format("Reading via loader {}", loadDesc);	
-				}
-			} else if (propName != null) {
-				return TextUtil.format("Reading property {}", loadDesc);
+			if (propName != null) {
+				return TextUtil.format("Reading property {} from loader {}", propName, loadName);
 			} else {
-				return UNKNOWN + " context";
+				return TextUtil.format("Reading from {}", loadName);
 			}
+
 		} else {
-			return UNKNOWN + " context";
+			return "[[ Unknown context ]]";
 		}
 	}
 	
@@ -120,7 +110,7 @@ public abstract class LoaderProblem implements Problem {
 	
 	public static class UnknownPropertyLoaderProblem extends LoaderProblem {
 		
-		private String unknownPropName;
+		private final String unknownPropName;
 		
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {

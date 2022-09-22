@@ -22,8 +22,8 @@ public class IntTypeTest {
 
 		IntType type = IntType.instance();
 
-		assertEquals(new Integer(-1234), type.parse("-1234"));
-		assertEquals(new Integer(0), type.parse("0"));
+		assertEquals(Integer.valueOf(-1234), type.parse("-1234"));
+		assertEquals(Integer.valueOf(0), type.parse("0"));
 		assertNull(type.parse(null));
 	}
 
@@ -77,8 +77,8 @@ public class IntTypeTest {
 
 		IntType type = IntType.instance();
 
-		Object o = new Integer(999);
-		assertEquals(new Integer(999), type.cast(o));
+		Object o = Integer.valueOf(999);
+		assertEquals(Integer.valueOf(999), type.cast(o));
 		assertTrue(type.cast(o) instanceof Integer);
 	}
 
