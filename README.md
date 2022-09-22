@@ -1,5 +1,7 @@
+![example branch parameter](https://github.com/eeverman/andhow/actions/workflows/maven-ci.yaml/badge.svg?branch=main)
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
-[![codecov](https://codecov.io/gh/eeverman/andhow/branch/main/graph/badge.svg)](https://codecov.io/gh/eeverman/andhow)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e306661b53f2463fab9156bf38af58f7)](https://www.codacy.com/gh/eeverman/andhow/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eeverman/andhow&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/e306661b53f2463fab9156bf38af58f7)](https://www.codacy.com/gh/eeverman/andhow/dashboard?utm_source=github.com&utm_medium=referral&utm_content=eeverman/andhow&utm_campaign=Badge_Coverage)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
 &nbsp;&nbsp;&nbsp;&nbsp;
 **[AndHow Home](https://www.andhowconfig.org)** •
