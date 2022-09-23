@@ -9,7 +9,8 @@ on:
       - '**.gitignore'
       - '**.gif'
       - '**.png'
-
+  pull_request
+  
 jobs:
   build:
     runs-on: ubuntu-latest

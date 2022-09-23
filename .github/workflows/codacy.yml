@@ -18,7 +18,8 @@ on:
       - '**.gitignore'
       - '**.gif'
       - '**.png'
-
+  pull_request
+  
 permissions:
   contents: read
 
