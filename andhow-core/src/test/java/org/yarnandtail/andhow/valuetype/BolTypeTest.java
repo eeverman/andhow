@@ -18,7 +18,7 @@ public class BolTypeTest {
 	}
 
 	@Test
-	public void testParseHappyPath() throws ParsingException {
+	public void testParseRecognizedValues() throws ParsingException {
 
 		BolType type = BolType.instance();
 
@@ -29,19 +29,46 @@ public class BolTypeTest {
 		assertTrue(type.parse("y"));
 		assertTrue(type.parse("on"));
 
-		// Extra 'true' values - it turns out the BolType uses the TextUtil.toBoolean
-		// method, which is forgiving in that it trims whitespace.  This is really a
-		// double trim, since the loader should trim these prior to giving to the parse method.
-		assertTrue(type.parse(" true "));
-		assertTrue(type.parse(" yes"));
+		// True values (uppercase is OK)
+		assertTrue(type.parse("TRUE"));
+		assertTrue(type.parse("TrUe"));
+		assertTrue(type.parse("T"));
+		assertTrue(type.parse("YES"));
+		assertTrue(type.parse("Y"));
+		assertTrue(type.parse("ON"));
 
-		// False values
-		assertFalse(type.parse(""));
-		assertFalse(type.parse(" anything "));
-		assertFalse(type.parse("NoWhitespaceIsAlsoFalseIfNotRecognized"));
+		// False values (canonically false according to AndHow)
+		assertFalse(type.parse("false"));
+		assertFalse(type.parse("f"));
+		assertFalse(type.parse("no"));
+		assertFalse(type.parse("n"));
+		assertFalse(type.parse("off"));
 
-		// Null is unset
+		// False values (UPPERCASE is OK)
+		assertFalse(type.parse("FALSE"));
+		assertFalse(type.parse("FaLsE"));
+		assertFalse(type.parse("F"));
+		assertFalse(type.parse("NO"));
+		assertFalse(type.parse("N"));
+		assertFalse(type.parse("OFF"));
+
+		// Null is expected and just returned as null
 		assertNull(type.parse(null));
+	}
+
+
+	@Test
+	public void testParseUnrecognizedValues() throws ParsingException {
+
+		BolType type = BolType.instance();
+
+		// Unrecognized values
+		assertThrows(ParsingException.class, () -> type.parse("XYZ"));
+
+		//Extra spaces are not OK
+		assertThrows(ParsingException.class, () -> type.parse(" true "));
+		assertThrows(ParsingException.class, () -> type.parse(" false "));
+
 	}
 
 	@Test

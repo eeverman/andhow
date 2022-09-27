@@ -118,25 +118,6 @@ public class TextUtilTest {
 	}
 	
 	@Test
-	public void testToBoolean() {
-		assertEquals(true, TextUtil.toBoolean("True"));
-		assertEquals(true, TextUtil.toBoolean("TRUE"));
-		assertEquals(true, TextUtil.toBoolean("YES"));
-		assertEquals(true, TextUtil.toBoolean("yEs"));
-		assertEquals(true, TextUtil.toBoolean("on"));
-		assertEquals(true, TextUtil.toBoolean("oN"));
-		assertEquals(true, TextUtil.toBoolean("t"));
-		assertEquals(true, TextUtil.toBoolean("Y"));
-		
-		//
-		assertEquals(false, TextUtil.toBoolean("false"));
-		assertEquals(false, TextUtil.toBoolean("No"));
-		assertEquals(false, TextUtil.toBoolean(""));
-		assertEquals(false, TextUtil.toBoolean(".asef3"));
-		assertEquals(false, TextUtil.toBoolean(null));
-	}
-	
-	@Test
 	public void testWrapWithObviousBreakLocations() {
 		
 		List<String> result;

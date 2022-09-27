@@ -199,26 +199,6 @@ public class TextUtil {
 			return source.trim();
 		}
 	}
-
-	/**
-	 * Parses a string to a boolean.
-	 * 
-	 * This implementation matches the Commons-lang documentation:
-	 * <i>'true', 'on', 'y', 't' or 'yes' (case insensitive) will return true. Otherwise, false is returned.</i>
-	 * 
-	 * Null returns false.
-	 * @param value
-	 * @return
-	 */
-	public static boolean toBoolean(String value) {
-		String v = trimToNull(value);
-		
-		if (v == null) return false;
-		
-		v = v.toLowerCase();
-		
-		return v.equals("true") || v.equals("t") || v.equals("yes") || v.equals("y") || v.equals("on");
-	}
 	
 	/**
 	 * Wraps text to be no longer than the specified length, if possible, and adds
