@@ -1,7 +1,6 @@
 package org.yarnandtail.andhow.valuetype;
 
 import org.yarnandtail.andhow.api.ParsingException;
-import org.yarnandtail.andhow.util.TextUtil;
 
 import java.util.Arrays;
 
@@ -68,7 +67,7 @@ public class BolType extends BaseValueType<Boolean> {
 	 * @throws ParsingException If the value is not a recognized True or False string.
 	 */
 	@Override
-	public Boolean parse(String sourceValue) throws ParsingException {
+	public Boolean parse(final String sourceValue) throws ParsingException {
 
 		if (sourceValue != null) {
 
@@ -88,7 +87,7 @@ public class BolType extends BaseValueType<Boolean> {
 	}
 
 	@Override
-	public Boolean cast(Object o) throws RuntimeException {
+	public Boolean cast(final Object o) throws RuntimeException {
 		return (Boolean) o;
 	}
 

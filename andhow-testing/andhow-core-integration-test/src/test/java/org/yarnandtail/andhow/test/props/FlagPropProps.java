@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.test.props;
 
+import org.yarnandtail.andhow.api.ParsingException;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.test.bulktest.PropExpectations;
 import org.yarnandtail.andhow.valuetype.FlagType;
@@ -102,8 +103,8 @@ public class FlagPropProps {
 		exp.addFlag(PROP_100).raw(" false ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.addFlag(PROP_110).raw(" xxx ").trimResult(false).flagResultIsSameAsTrim();
-		exp.addFlag(PROP_111).raw("  1234.5725\"  ").trimResult(false).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_110).raw(" On ").trimResult(true).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_111).raw("  oFF  ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
 		exp.addFlag(PROP_200).raw(" O ").trimResult(false).flagResultIsSameAsTrim();
@@ -132,6 +133,23 @@ public class FlagPropProps {
 		return exp;
 	}
 
+	public static PropExpectations buildInvalid1() {
+
+		PropExpectations exp = new PropExpectations(FlagPropProps.Conf.class);
+
+		// Null OK | No Default | No Validations
+		exp.addFlag(PROP_100).raw(" NotBoolean ").trimResultIsParseProb();
+
+		// Not Null | Has Default | No Validations
+		exp.addFlag(PROP_110).raw(" Z ").trimResult(false);
+		exp.addFlag(PROP_111).raw(" Z ").trimResultIsParseProb();
+
+		// Special type is true on 'X' only (though should still be true if present)
+		exp.addFlag(PROP_200).raw(" \t\b\n\r\f XX \t\b\n\r\f ").trimResultIsParseProb();
+
+		return exp;
+	}
+
 		/**
 		 * A custom parser that considers X to be true and O to be false.
 		 */
@@ -142,11 +160,13 @@ public class FlagPropProps {
 		}
 
 		@Override
-		public Boolean parse(String sourceValue) {
+		public Boolean parse(String sourceValue) throws ParsingException {
 			if (sourceValue == null || "X".equals(sourceValue)) {
 				return true;
-			} else {
+			} else if ("O".equals(sourceValue)) {
 				return false;
+			} else {
+				throw new ParsingException("Cant do that!", sourceValue);
 			}
 		}
 

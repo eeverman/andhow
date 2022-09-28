@@ -16,6 +16,9 @@ import org.yarnandtail.andhow.internal.RequirementProblem;
  */
 public class BolPropTest extends PropertyTestBase {
 
+	/*
+	Test that defaults work and other misc properties
+	 */
 	@Test
 	public void happyPathTest() {
 		this.buildConfig(this, "_happyPath", BolGroup.class);
@@ -31,6 +34,23 @@ public class BolPropTest extends PropertyTestBase {
 		assertEquals("iAmAliased", BolGroup.ALIAS_ME.getRequestedAliases().get(0).getActualName());
 	}
 
+	/*
+	All values set to 'true' in prop file.
+	 */
+	@Test
+	public void happyPathSetTrueTest() {
+		this.buildConfig(this, "_happyPathSetTrue", BolGroup.class);
+
+		assertTrue(BolGroup.ENABLE.getValue());
+		assertTrue(BolGroup.ALIAS_ME.getValue());
+		assertTrue(BolGroup.BIG_SWITCH_TRUE.getValue());
+		assertTrue(BolGroup.BIG_SWITCH_FALSE.getValue());
+		assertTrue(BolGroup.BIG_SWITCH_NULL.getValue());
+	}
+
+	/*
+	All values set to false in prop file.
+	 */
 	@Test
 	public void happyPathSetFalseTest() {
 		this.buildConfig(this, "_happyPathSetFalse", BolGroup.class);
@@ -43,7 +63,7 @@ public class BolPropTest extends PropertyTestBase {
 	}
 
 	@Test
-	public void failDueToNotSettingRequiredNonNullTest() {
+	public void verifyFailedStartupDueToNotSettingRequiredPropertyValueTest() {
 
 		try {
 			this.buildConfig(this, "_enableNotSet", BolGroup.class);
