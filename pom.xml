@@ -285,8 +285,8 @@
 									<version>(3.5,4.0)</version>
 								</requireMavenVersion>
 								<requireJavaVersion>
-									<!-- 1.8 thru 16 -->
-									<version>[1.8.0,17)</version>
+									<!-- 1.8 thru 17 -->
+									<version>[1.8.0,18)</version>
 								</requireJavaVersion>
 							</rules>
 						</configuration>
