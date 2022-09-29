@@ -9,7 +9,7 @@
 
 	<artifactId>andhow-core-integration-test</artifactId>
 	<packaging>jar</packaging>
-	<name>AndHow Integration Test</name>
+	<name>AndHow Core Integration Test</name>
 	<description>
 		Bulk testing of andhow-core.  Not _quite_ an integration test, but the highest level
 		test that can be done w/ only andhow-core.  Lots of bulk test combinations of Properties

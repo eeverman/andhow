@@ -191,11 +191,11 @@ public class StdEnvVarLoaderIT {
 		StdMainStringValueLoader loader = new StdMainStringValueLoader();
 
 		PropExpectations strExpect = StrPropProps.buildInvalid1();
-		PropExpectations flagExpect = FlagPropProps.buildExpectations1(); // Flags cannot have invalid vals
+		PropExpectations flagExpect = FlagPropProps.buildInvalid1();
 		PropExpectations intExpect = IntPropProps.buildInvalid1();
 
 		TestCoordinator coord = new TestCoordinator(config, propValueLoader, strExpect, flagExpect, intExpect);
-		coord.runForProblems(true, true, false);
+		coord.runForProblems(true, true, true);
 	}
 
 }

@@ -26,6 +26,8 @@ public interface ValueType<T> {
 	 * <p>
 	 * This method and toString(T) should be reversible:  The object generated here
 	 * should be toString-able to a String equal to the one passed this method.
+	 * Though this may not be possible for Boolean types, which may have multiple
+	 * possible string representations for True or False.
 	 * <p>
 	 * @param sourceValue
 	 * @return null if null, or a value of type T

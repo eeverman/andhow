@@ -110,7 +110,8 @@ public class TestCoordinator<T> {
 		PropProblemAssertions ppa = new PropProblemAssertions(config,
 				useTrimmedValueforAssertions, expectations);
 
-		ppa.assertErrors(afeArray[0], outText, verbose);
+		ppa.assertPropertyErrors(afeArray[0], outText, verbose);
+		ppa.assertLoaderErrors(afeArray[0], outText, verbose);
 	}
 
 	protected AndHowCore initCore(BaseConfig aConfig) throws AppFatalException {
