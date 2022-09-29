@@ -5,9 +5,12 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**
- * A True/False switch that is never null and behaves similarly to a 'nix cmd line switch.
+ * A True/False switch that is never null and behaves similarly to a 'nix
+ * cmd line switch when used on command line.
  * <p>
- * Use a FlagProp when you want a command line argument to turn 'on' just by being present, e.g.:<br>
+ * Use a FlagProp when you want a configuration parameter that is always true or false,
+ * such as toggling a feature on or off.  It can also be used when a configuration parameter should
+ * work like a 'nix command line switch, which is 'on' just by being present, e.g.:<br>
  * {@code java MyClass enableAwesomeMode}<br>
  * If {@code enableAwesomeMode} is the name or alias of a {@code FlagProp}, that FlagProp will set
  * {@code True} simply by having its name as an argument.  You can also explicitly set its value,
@@ -30,7 +33,8 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * </ul>
  *
  * <h3>The technical details</h3>
- * If no name is found by any loader that refers to the FlagProp, it defaults to false.
+ * If no name is found by any loader that refers to the FlagProp, it defaults to false
+ * (unless the default is set to {@code true}).
  * If a name referring to a FlagProp is found in any loader other than the command line loader,
  * the value is parsed and handled exactly as if it were a BolProp.
  * If a name referring to a FlagProp is found on command line loader:
@@ -38,7 +42,7 @@ import org.yarnandtail.andhow.valuetype.FlagType;
  * <li>If the argument is of the form {@code key=value} and the value contains any non-whitespace,
  * the value is handled just as a BolProp would handle the value.</li>
  * <li>If the value is all whitespace or there is no '=' delimiter, the presence of the key
- * without a value set the FlagProp to True.</li>
+ * without a value sets the FlagProp to True.</li>
  * </ul>
  * <p>
  * <em>NOTE:  The behavior of the FlagProp changed in release 0.5.0</em><br>
