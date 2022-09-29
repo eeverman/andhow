@@ -33,8 +33,8 @@ public class BolType extends BaseValueType<Boolean> {
 	/**
 	 * Parses a String to a {@link Boolean}.  The String should already be trimmed.
 	 * <p>
-	 * Returns {@code True} if the String matches one of the 'true' values or
-	 * {@code false} if it matches one of the false values (case-insensitive).
+	 * Returns {@code True} if the String matches one of the 'true-ish' values or
+	 * {@code false} if it matches one of the 'false-ish' values (case-insensitive).
 	 * Recognized {@code True} strings:
 	 * <ul>
 	 *   <li>true</li>

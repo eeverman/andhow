@@ -46,7 +46,8 @@ public class KVP {
 	 * If the delimiter is not found, it is assumed that there is only a name
 	 * and no value, i.e., its a flag type value.  The key and value are only split
 	 * on the first instance, subsequent delimiters are considered part of the
-	 * value.
+	 * value.  The entire passed 'arg' is trimmed prior to splitting on the delimiter,
+	 * which may not be appropriate for some usages.
 	 * 
 	 * An ParsingException is thrown if there is only whitespace before
 	 * the delimiter.
