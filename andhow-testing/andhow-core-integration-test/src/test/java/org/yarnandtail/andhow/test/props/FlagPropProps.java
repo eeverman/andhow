@@ -103,7 +103,7 @@ public class FlagPropProps {
 		exp.addFlag(PROP_100).raw(" false ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Not Null | Has Default | No Validations
-		exp.addFlag(PROP_110).raw(" On ").trimResult(true).flagResultIsSameAsTrim();
+		exp.addFlag(PROP_110).raw(" nO ").trimResult(false).flagResultIsSameAsTrim();
 		exp.addFlag(PROP_111).raw("  oFF  ").trimResult(false).flagResultIsSameAsTrim();
 
 		// Special type is true on 'X' only (though should still be true if present)
