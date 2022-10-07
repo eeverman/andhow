@@ -1,3 +1,4 @@
+### AndHow!  Configurable constants for Java application configuration
 ![example branch parameter](https://github.com/eeverman/andhow/actions/workflows/maven-ci.yaml/badge.svg?branch=main)
 [![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e306661b53f2463fab9156bf38af58f7)](https://www.codacy.com/gh/eeverman/andhow/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eeverman/andhow&amp;utm_campaign=Badge_Grade)
@@ -9,9 +10,8 @@
 **[User forum](https://groups.google.com/d/forum/andhowuser)** •
 **[Live-code Demo](https://www.andhowconfig.org/live-code-quickstart)**
 
+![AndHow animation](https://github.com/eeverman/andhow-assets/blob/main/andhow_0.5_1280x320_highres_24fps.gif?raw=true)
 ---
-### AndHow!  Configurable constants for Java application configuration
-
 #### New Release:  0.4.2, October 24, 2021 - [notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.2).
 <img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's new logo"  align="left">
 
@@ -20,10 +20,8 @@ This release includes several bug fixes and adds a new
 to better support configuring other frameworks that accept configuration as a `Map` or `java.util.Properties`.
 _Special thanks to [Alex Karpov](https://github.com/alex-kar)_ for many high-quality code fixes and
 improvements in this release.
-
 ---
-![Andhow Visual](andhow.gif)
-
+                    
 ### What if you could configure constants?  What if Java application configuration _was_ just constants?
 AndHow configures your application with strongly typed Properties that work just like `static final`
 constants in your code.  Values for Properties are loaded from multiple sources and are validated
