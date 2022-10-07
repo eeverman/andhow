@@ -22,7 +22,7 @@ _Special thanks to [Alex Karpov](https://github.com/alex-kar)_ for many high-qua
 improvements in this release.
 
 ---
-![Andhow Visual](andhow.gif)
+<img src="https://andhowconfig-org-public.s3.us-east-2.amazonaws.com/andhow_0.5_1280x320_highres_24fps.gif" width="1280" height="320" alt="AndHow animation"  align="center">
 
 ### What if you could configure constants?  What if Java application configuration _was_ just constants?
 AndHow configures your application with strongly typed Properties that work just like `static final`
