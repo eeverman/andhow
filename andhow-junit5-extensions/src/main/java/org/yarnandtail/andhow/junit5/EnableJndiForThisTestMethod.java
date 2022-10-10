@@ -12,15 +12,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Annotation that enables JNDI for use in an individual test method.
- *
+ * <p>
  * Within the test method JNDI values can be bound and read, and any invocation of
  * {@code new InitialContext()} in the System Under Test (SUT) will return a JNDI Context
  * containing the bound values.
+ * <p>
+ * This annotation <b>only</b> enables JNDI, so it needs to be combined with either
+ * {@link KillAndHowBeforeThisTest} to allow AndHow to reload a new configured
+ * state using JNDI properties.
  * <p>
  * Here is a complete usage example:
  * <pre>{@code
  *  @Test
  *  @EnableJndiForThisTestMethod
+ *  @KillAndHowBeforeThisTest
  *  void myTest() throws NamingException {
  *
  * 		// Create a context and assign some values
@@ -32,6 +37,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * 		// Meanwhile, somewhere deep in the system under test...
  * 		InitialContext appCtx = new InitialContext();
  * 		assertEquals("ABCD", appCtx.lookup("org/do/good/SECRET"));
+ *
+ * 	  ...On first access, AndHow will reload because of the
+ * 	  @KillAndHowBeforeThisTest annotation, and find the configuration
+ * 	  created in JNDI.
  *  }
  * }</pre>
  * <p>

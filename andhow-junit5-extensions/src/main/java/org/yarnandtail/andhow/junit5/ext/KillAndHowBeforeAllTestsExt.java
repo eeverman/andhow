@@ -26,8 +26,7 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  *   public static void configAndHowForAllTests(){
  * 		AndHow.findConfig()
  * 				.addFixedValue([AndHowProperty reference or name], [Value for that Property])
- * 				.addFixedValue(...)
- * 				.build();
+ * 				.addFixedValue(...);
  *    }
  *
  *   ...tests that will all share the same configuration...
