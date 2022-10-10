@@ -18,9 +18,15 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * containing the bound values.
  * <p>
  * Since the JNDI context spans the complete lifecycle of the test class, best practice is to
- * bind values in a {@code @BeforeAll} block. Here is a complete usage example:
+ * bind values in a {@code @BeforeAll} block.
+ * This annotation <b>only</b> enables JNDI, so it needs to be combined with either
+ * {@link KillAndHowBeforeAllTests} or {@link KillAndHowBeforeEachTest} to allow
+ * AndHow to reload a new configured state using JNDI properties.
+ * <p>
+ * Here is a complete usage example:
  * <pre>{@code
  * @EnableJndiForThisTestClass
+ * @KillAndHowBeforeAllTests
  * public class MyTestClass {
  *
  *  @Test

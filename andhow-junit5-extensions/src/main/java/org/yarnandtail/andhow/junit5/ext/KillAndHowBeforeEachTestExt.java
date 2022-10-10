@@ -23,8 +23,7 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
  *   public void doATest(){
  * 		AndHow.findConfig()
  * 				.addFixedValue([AndHowProperty reference or name], [Value for that Property])
- * 				.addFixedValue(...)
- * 				.build();
+ * 				.addFixedValue(...);
  *
  * 		  ...	code for this test...
  *    }

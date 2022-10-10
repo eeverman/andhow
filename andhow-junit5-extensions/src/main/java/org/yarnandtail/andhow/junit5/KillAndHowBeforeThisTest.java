@@ -13,7 +13,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Annotation that can be placed on an individual test method to reset AndHow to its
  * unconfigured state before the test runs.  When the test is done, the original AndHow configured
- * state is restored, which may be unconfigured.
+ * state is restored, if any.
  * <p>
  * Example usage:
  * <pre>{@code
@@ -21,10 +21,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  *   @Test
  *   @KillAndHowBeforeThisTest
- *   public void aTest() { .... }
+ *   public void myFirstTest(){
+ * 		AndHow.findConfig()
+ *        .setClasspathPropFilePath("/test1-prop-file.properties");
+ *
+ * 		  ...This test will read property values from test1-prop-file.properties...
+ *    }
+ *
+ *    ...All other tests will ignore the AndHow configuration used inside the 'myFirstTest' test.
  *
  * }
  * }</pre>
+ * <p>
+ * The example above uses the {@code setClasspathPropFilePath()} method to specify a properties file
+ * on the classpath.  See {@link org.yarnandtail.andhow.junit5.KillAndHowBeforeEachTest} for other
+ * examples.
  * <p>
  * Note:  Using this annotation on a JUnit test method is the same as using
  * {@code @ExtendWith(KillAndHowBeforeThisTestExtension.class)} on a method, but this annotation is

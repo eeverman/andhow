@@ -21,13 +21,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * public class MyJunit5Test {
  *
  *   @Test
- *   public void doATest(){
+ *   public void myFirstTest(){
+ * 		AndHow.findConfig()
+ *        .setClasspathPropFilePath("/test1-prop-file.properties");
+ *
+ * 		  ...This test will read property values from test1-prop-file.properties...
+ *    }
+ *   @Test
+ *   public void mySecondTest(){
  * 		AndHow.findConfig()
  * 				.addFixedValue([AndHowProperty reference or name], [Value for that Property])
- * 				.addFixedValue(...)
- * 				.build();
+ * 				.addFixedValue(...);
  *
- * 		  ...	code for this test...
+ * 		  ...This test just has some explicitly set values via 'addFixedValue()'...
  *    }
  *
  *   ...other tests that can each configure AndHow...
