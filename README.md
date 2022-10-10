@@ -1,7 +1,5 @@
 ### AndHow!  Configurable constants for Java application configuration
-![example branch parameter](https://github.com/eeverman/andhow/actions/workflows/maven-ci.yaml/badge.svg?branch=main)
-[![Build Status](https://travis-ci.com/eeverman/andhow.svg?branch=master)](https://travis-ci.com/github/eeverman/andhow)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e306661b53f2463fab9156bf38af58f7)](https://www.codacy.com/gh/eeverman/andhow/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eeverman/andhow&amp;utm_campaign=Badge_Grade)
+![Git CI Status](https://github.com/eeverman/andhow/actions/workflows/maven-ci.yaml/badge.svg?branch=main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/e306661b53f2463fab9156bf38af58f7)](https://www.codacy.com/gh/eeverman/andhow/dashboard?utm_source=github.com&utm_medium=referral&utm_content=eeverman/andhow&utm_campaign=Badge_Coverage)
 [![Javadocs](https://www.javadoc.io/badge/org.yarnandtail/andhow.svg)](https://www.javadoc.io/doc/org.yarnandtail/andhow)
 <br/>
