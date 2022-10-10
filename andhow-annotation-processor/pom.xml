@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
-		<version>0.4.3-SNAPSHOT</version>
+		<version>1.5.0</version>
 	</parent>
 
 	<artifactId>andhow-annotation-processor</artifactId>
