@@ -1,9 +1,9 @@
 ## YAML Template.
 ---
 coverage:
-  range: 50..100
+  range: 60..100
   round: down
   precision: 2
 ignore:
   - "andhow-testing/andhow-annotation-processor-test-harness"
-  
+  - "andhow-test-stubs"

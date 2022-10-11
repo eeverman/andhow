@@ -8,13 +8,16 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.util.TextUtil;
 
 /**
- * A problem bootstrapping the AndHow, prior to attempting to load any values.
+ * A problem with the configuration of AndHow itself, invalid Property or Loader
+ * configurations, etc..  Any type of initial configuration that puts AndHow in
+ * an invalid state so that no property value loading can be attempted.
  * 
  * 
  * @author ericeverman
  */
 public abstract class ConstructionProblem implements Problem {
-	
+
+
 	/** The Property that actually has the problem */
 	protected PropertyCoord badPropertyCoord;
 	
@@ -184,10 +187,10 @@ public abstract class ConstructionProblem implements Problem {
 					property.getClass().getSimpleName());
 		}
 	}
-	
+
 	public static class SecurityException extends ConstructionProblem {
 		Exception exception;
-		
+
 		public SecurityException(Exception exception, Class<?> group) {
 			this.exception = exception;
 			badPropertyCoord = new PropertyCoord(group, null);
@@ -196,23 +199,22 @@ public abstract class ConstructionProblem implements Problem {
 		public Exception getException() {
 			return exception;
 		}
-		
+
 		@Override
 		public String getProblemContext() {
 			return TextUtil.format("PropertyGroup {}", badPropertyCoord.getGroup().getCanonicalName());
 		}
-		
+
 		@Override
 		public String getProblemDescription() {
 			return TextUtil.format(
-				"A security exception was thrown while trying to read class members.  " +
-				"{} must read PropertyGroup class members via reflection to build Property names. " +
-				"To fix, Properties must either be public or the JVM security policies " +
-				"that are preventing reflection visibility must be disabled.",
-				AndHow.ANDHOW_INLINE_NAME);
+					"A security exception was thrown while trying to read class members.  " +
+							"{} must read PropertyGroup class members via reflection to build Property names. " +
+							"To fix, Properties must either be public or the JVM security policies " +
+							"that are preventing reflection visibility must be disabled.",
+					AndHow.ANDHOW_INLINE_NAME);
 		}
 	}
-	
 
 	public static class PropertyNotPartOfGroup extends ConstructionProblem {	
 
@@ -249,7 +251,7 @@ public abstract class ConstructionProblem implements Problem {
 		@Override
 		public String getProblemDescription() {
 			return TextUtil.format(
-				"An error occured while initiating the value export.  The message was: {}",
+				"An error occurred while initiating the value export.  The message was: {}",
 				message);
 		}
 	}
@@ -295,64 +297,5 @@ public abstract class ConstructionProblem implements Problem {
 				valid.getClass().getSimpleName(), valid.getInvalidSpecificationMessage());
 		}
 	}
-	
-	public static class TooManyAndHowInitInstances extends ConstructionProblem {
-		List<String> names = new ArrayList();
 
-		public TooManyAndHowInitInstances(List<? extends AndHowInit> instances) {
-			for (AndHowInit init : instances) {
-				names.add(init.getClass().getCanonicalName());
-			}
-		}
-
-		public List<String> getInstanceNames() {
-			return names;
-		}
-		
-		@Override
-		public String getProblemDescription() {
-			String joined = String.join(", ", names);
-			
-			return TextUtil.format(
-					"There can be only be one instance each of {} and AndHowTestInit on "
-						+ "the classpath, but multiple were found: {}",
-					AndHowInit.class.getCanonicalName(), joined);
-		}
-	}
-	
-	public static class InitiationLoopException extends ConstructionProblem {
-		AndHow.Initialization originalInit;
-		AndHow.Initialization secondInit;
-
-		public InitiationLoopException(AndHow.Initialization originalInit, AndHow.Initialization secondInit) {
-			this.originalInit = originalInit;
-			this.secondInit = secondInit;
-		}
-
-		public AndHow.Initialization getOriginalInit() {
-			return originalInit;
-		}
-
-		public AndHow.Initialization getSecondInit() {
-			return secondInit;
-		}
-
-		
-		@Override
-		public String getProblemDescription() {
-			
-			return "AndHow detected a loop during initiation.  "
-					+ "Likely causes are calls [Property].value() or AndHow.instance() in an unexpected place, such as: " + System.lineSeparator()
-					+ "- Static initiation blocks or static variable initiation values, e.g., 'static int MyVar = [Some AndHow Prop].getValue()'" + System.lineSeparator()
-					+ "- An AndHow Property that refers to the value of another AndHow property in its construction" + System.lineSeparator()
-					+ "- An AndHowInit implementation that calls one of these methods in its getConfiguration method" + System.lineSeparator()
-					+ "- A custom AndHowConfiguration instance using one of these methods (likely an exotic test setup)"
-					+ "::The first line in the stack trace following this error referring to your application code is likely causing the initiation loop::";
-		}
-		
-		@Override
-		public String getFullMessage() {
-			return getProblemDescription();
-		}
-	}
 }

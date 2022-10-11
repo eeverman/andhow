@@ -2,7 +2,6 @@ package org.yarnandtail.andhow;
 
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.KeyObjectPair;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.util.TextUtil;
 
@@ -30,66 +29,31 @@ public class StdConfig {
 
 		@Override
 		public <T> S addFixedValue(Property<T> property, T value) {
-
-			if (property == null) {
-				throw new IllegalArgumentException("The property cannot be null");
-			}
-
-			//simple check for duplicates doesn't consider KOP values
-			for (PropertyValue pv : _fixedVals) {
-				if (property.equals(pv.getProperty())) {
-					throw new IllegalArgumentException("A fixed value for this property has been assigned twice.");
-				}
-			}
-
-			PropertyValue pv = new PropertyValue(property, value);
-			_fixedVals.add(pv);
-
+			loadEnvBuilder.addFixedValue(property, value);
 			return (S) this;
 		}
 
 		@Override
 		public S removeFixedValue(Property<?> property) {
-			_fixedVals.removeIf(f -> f.getProperty().equals(property));
+			loadEnvBuilder.removeFixedValue(property);
 			return (S) this;
 		}
 
 		@Override
 		public S addFixedValue(final String propertyNameOrAlias, final Object value) {
-
-			try {
-				KeyObjectPair kop = new KeyObjectPair(propertyNameOrAlias, value);
-
-				//Simple check for duplicates
-				if (_fixedKeyObjectPairVals.stream().map(k -> k.getName()).anyMatch(n -> n.equals(kop.getName()))) {
-					throw new IllegalArgumentException(
-							"A fixed value for the Property '" + kop.getName() + "' has been assigned twice.");
-				}
-
-				_fixedKeyObjectPairVals.add(kop);
-
-				return (S) this;
-
-			} catch (ParsingException e) {
-				throw new IllegalArgumentException(e);
-			}
-
+			loadEnvBuilder.addFixedValue(propertyNameOrAlias, value);
+			return (S) this;
 		}
 
 		@Override
 		public S removeFixedValue(final String propertyNameOrAlias) {
-			final String cleanName = TextUtil.trimToNull(propertyNameOrAlias);
-			_fixedKeyObjectPairVals.removeIf(k -> k.getName().equals(cleanName));
+			loadEnvBuilder.removeFixedValue(propertyNameOrAlias);
 			return (S) this;
 		}
 
 		@Override
 		public S setCmdLineArgs(String[] commandLineArgs) {
-			_cmdLineArgs.clear();
-			if (commandLineArgs != null && commandLineArgs.length > 0) {
-				_cmdLineArgs.addAll(Arrays.asList(commandLineArgs));
-			}
-
+			loadEnvBuilder.setCmdLineArgs(commandLineArgs);
 			return (S) this;
 		}
 
@@ -157,50 +121,6 @@ public class StdConfig {
 		@Override
 		public S filesystemPropFileNotRequired() {
 			_missingFilesystemPropFileAProblem = false;
-			return (S) this;
-		}
-
-		/**
-		 * Allows system properties to be overridden.
-		 *
-		 * @deprecated
-		 * @param properties
-		 */
-		@Deprecated
-		public S setSystemProperties(Properties properties) {
-			systemProperties = properties;
-			return (S) this;
-		}
-
-		/**
-		 * Sets the System environment vars that AndHow will use to load Property values
-		 * from for the {@code StdEnvVarLoader} loader.
-		 *
-		 * If this method is not called or is called with a null Map, the actual env vars
-		 * from {@code System.getenv()} will be used.  Calling this method with an empty
-		 * Map will effectively prevent AndHow from receiving configuration from env vars.
-		 *
-		 * <em></em>This does not actually change actual environment variables or what is
-		 * returned from {@code System.getenv()}. It only replaces what AndHow will see for env vars.
-		 *
-		 * Note: There is no reason to use this method:  Use one of the {@code addFixedValue()}
-		 * methods instead.  Those methods are more clear, don't have to parse values, and
-		 * (unlike this method) are not deprecated.
-		 *
-		 * @deprecated This method will be removed in a future release - it has no meaningful
-		 * 	usage.  Use the addFixedValue() methods instead.
-		 * @param newEnvProperties
-		 * @return
-		 */
-		@Deprecated
-		public S setEnvironmentProperties(Map<String, String> newEnvProperties) {
-
-			if (newEnvProperties != null) {
-				this.envProperties = new HashMap<>();
-				this.envProperties.putAll(newEnvProperties);
-			} else {
-				this.envProperties = null;
-			}
 			return (S) this;
 		}
 

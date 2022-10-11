@@ -1,12 +1,11 @@
 package org.yarnandtail.andhow.api;
 
 /**
- * The type of a Property.
- * 
- * Also handles parsing and casting of Strings and Objects to the destination
+ * The datatype and type conversion handler of a Property.
+ * <p>
+ * Handles parsing and casting of Strings and Objects to the destination
  * type represented by an instance of a ValueType.
- * 
- * @author eeverman
+ *
  */
 public interface ValueType<T> {
 	
@@ -14,18 +13,22 @@ public interface ValueType<T> {
 	
 	/**
 	 * Attempts to parse the passed String into the destinationType.
-	 * 
+	 * <p>
 	 * All trimming (removing whitespace from around a value) should be assumed
 	 * to already have happened for the incoming sourceValue by a Trimmer.
-	 * 
+	 * A null sourceValue always parses to null, so callers may optionally skip calling parse with
+	 * a null value.
+	 * <p>
 	 * Implementations should be careful to ONLY throw a ParsingException -
 	 * Integers and other types may throw other unchecked exceptions when trying
 	 * to convert values, which should be handled in this method and rethrown as
 	 * a ParsingException.
-	 * 
+	 * <p>
 	 * This method and toString(T) should be reversible:  The object generated here
 	 * should be toString-able to a String equal to the one passed this method.
-	 * 
+	 * Though this may not be possible for Boolean types, which may have multiple
+	 * possible string representations for True or False.
+	 * <p>
 	 * @param sourceValue
 	 * @return null if null, or a value of type T
 	 * @throws ParsingException for any type of failure.
@@ -40,32 +43,22 @@ public interface ValueType<T> {
 	 * be needed.
 	 * 
 	 * This method and parse() should be reversible:  The string generated here
-	 * should be parsable to an object equal to the one passed this methond.
+	 * should be parsable to an object equal to the one passed this method.
 	 * 
 	 * @param value
 	 * @return null if the passed value is null.
 	 */
 	String toString(T value);
-		
-	/**
-	 * Returns true if the string can safely be parsed into the destination type
-	 * by the parse() method.
-	 * 
-	 * @param sourceValue
-	 * @return true or false - this should never throw an exception.
-	 */
-	boolean isParsable(String sourceValue);
 	
 	/**
-	 * Attempt to cast the passed object to the generic type T.
-	 * AndHow uses this internally to cast values known to already be of type T,
-	 * but were stored in a generic way.
-	 * If used for unknown types that are not castable to T, it will throw
-	 * a RuntimeException, though this should never happen unless used by
-	 * application code.
-	 * 
-	 * @param o
-	 * @return
+	 * Attempt to cast the object to the generic type T, which is a concrete class in subclasses.
+	 * <p>
+	 * AndHow uses this internally to cast values known to already be of type T, but were stored
+	 * in a generic way.  If used for unknown types that are not castable to T, it will throw
+	 * a RuntimeException, though this should never happen unless used by application code.
+	 * <p>
+	 * @param o Object to cast
+	 * @return A cast obeject
 	 * @throws RuntimeException 
 	 */
 	T cast(Object o) throws RuntimeException;

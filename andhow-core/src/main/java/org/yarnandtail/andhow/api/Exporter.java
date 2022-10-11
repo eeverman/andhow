@@ -26,25 +26,6 @@ public interface Exporter {
 	 */
 	void setExportByOutAliases(EXPORT_OUT_ALIASES option);
 
-
-	/**
-	 * At one time, this was an 'export all properties' feature, however, it was never fully
-	 * implemented and would have broken the application security model.
-	 *
-	 * Subclasses can safely not implement it and rely on the no-op default implementation
-	 * here.  If a subclass does implement it, the AndHow system will never call it.
-	 * This method will be removed from this interface in the next major release.
-	 *
-	 * @deprecated This method violates the security and was never actually called by the
-	 * system.  Removing with no replacement.
-	 * @param definition
-	 * @param values
-	 */
-	@Deprecated
-	default void export(PropertyConfigurationInternal definition, ValidatedValues values) {
-		return;
-	}
-
 	/**
 	 * Exports a Group.
 	 *

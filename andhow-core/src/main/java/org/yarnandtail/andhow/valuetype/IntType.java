@@ -12,20 +12,13 @@ public class IntType extends BaseValueType<Integer> {
 
 	private static final IntType instance = new IntType();
 
-	private IntType() {
+	protected IntType() {
 		super(Integer.class);
 	}
 
 	/**
-	 * @return An instance of the {@link #IntType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static IntType get() {
-		return instance();
-	}
-
-	/**
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
 	 * @return An instance of the {@link #IntType()}
 	 */
 	public static IntType instance() {

@@ -11,13 +11,13 @@ import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.EffectiveName;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.*;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
+import org.yarnandtail.andhow.load.MapLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
-import static org.yarnandtail.andhow.internal.ConstructionProblem.InitiationLoopException;
+import static org.yarnandtail.andhow.internal.InitializationProblem.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,11 +61,11 @@ public class AndHowTest extends AndHowTestBase {
 		startVals.put(SimpleParams.FLAG_NULL, Boolean.TRUE);
 
 		cmdLineArgsWFullClassName = new String[] {
-			paramFullPath + "STR_BOB" + KeyValuePairLoader.KVP_DELIMITER + "test",
-			paramFullPath + "STR_NULL" + KeyValuePairLoader.KVP_DELIMITER + "not_null",
-			paramFullPath + "FLAG_TRUE" + KeyValuePairLoader.KVP_DELIMITER + "false",
-			paramFullPath + "FLAG_FALSE" + KeyValuePairLoader.KVP_DELIMITER + "true",
-			paramFullPath + "FLAG_NULL" + KeyValuePairLoader.KVP_DELIMITER + "true"
+			paramFullPath + "STR_BOB=test",
+			paramFullPath + "STR_NULL=not_null",
+			paramFullPath + "FLAG_TRUE=false",
+			paramFullPath + "FLAG_FALSE=true",
+			paramFullPath + "FLAG_NULL=true"
 		};
 
 	}
@@ -88,7 +88,11 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void findConfigShouldThrowExceptionIfCalledAfterInitialization() {
 		AndHow.instance();
-		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof IllegalMethodCalledAfterInitialization);
+		assertEquals("findConfig", ((IllegalMethodCalledAfterInitialization)(ex.getProblems().get(0))).getMethodName());
 	}
 
 	@Test
@@ -141,20 +145,28 @@ public class AndHowTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void setConfigShouldThrowAppFatalSometimes() {
+	public void setConfigShouldNotAllowNull() {
 		AndHowConfiguration<? extends AndHowConfiguration> config = StdConfig.instance();
 
 		assertThrows(AppFatalException.class, () -> AndHow.setConfig(null),
 				"Cannot set to null");
-
-		AndHow.instance();	//force initialize
-
-		assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
-				"Cannot access after init");
 	}
 
 	@Test
-	public void setConfigShouldThrowAnExceptionIfCalledFromWithinFindConfig() {
+	public void setConfigShouldNotAllowCallAfterInitialization() {
+		AndHow.instance();	//force initialize
+
+		AndHowConfiguration<? extends AndHowConfiguration> config = StdConfig.instance();
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.setConfig(config),
+				"Cannot access after init");
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof IllegalMethodCalledAfterInitialization);
+		assertEquals("setConfig", ((IllegalMethodCalledAfterInitialization)(ex.getProblems().get(0))).getMethodName());
+	}
+
+	@Test
+	public void setConfigShouldThrowExceptionIfCalledFromWithinFindConfig() {
 
 		//This situation could happen in application code's implementation of
 		//AndHowInit.getConfiguration().  AndHow.findConfig() was invoked to find configuration,
@@ -169,7 +181,9 @@ public class AndHowTest extends AndHowTestBase {
 			return config;
 		});
 
-		assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.findConfig());
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof SetConfigCalledDuringFindConfig);
 	}
 
 	@Test
@@ -182,23 +196,12 @@ public class AndHowTest extends AndHowTestBase {
 	}
 
 	@Test
-	public void callingInstanceWithConfigShouldFailIfAlreadyInitialized() {
-		AndHowConfiguration<? extends AndHowConfiguration> config1 = AndHow.findConfig();
-
-		AndHow.instance(config1);
-
-		assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
-	}
-
-	@Test
 	public void initializedMethodShouldAgreeWithNormalInitializationProcess() {
 		assertNull(AndHowTestUtils.getAndHow());
 		assertFalse(AndHow.isInitialized());
-		assertFalse(AndHow.isInitialize(), "deprecated, but still tested");
 		assertNotNull(AndHow.instance());
 		assertNotNull(AndHowTestUtils.getAndHow());
 		assertTrue(AndHow.isInitialized());
-		assertTrue(AndHow.isInitialize(), "deprecated, but still tested");
 	}
 
 	/**
@@ -227,20 +230,40 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void attemptingToInitializeDuringInitializationShouldBeBlocked() {
 		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
-		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
 
 		config1.setGetNamingStrategyCallback(() -> {
-			AndHow.instance(config2);	//Try to initialize again when config.getNamingStrategy is called
+			AndHow.instance();	//Try to initialize again when config.getNamingStrategy is called
 			return null;
 		});
 
-		AppFatalException ex = assertThrows(AppFatalException.class, () -> AndHow.instance(config1));
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
 
 		assertEquals(1, ex.getProblems().size());
-		assertTrue(ex.getProblems().get(0) instanceof InitiationLoopException);
-		InitiationLoopException initLoopEx = (InitiationLoopException)ex.getProblems().get(0);
+		assertTrue(ex.getProblems().get(0) instanceof InitiationLoop);
+		InitiationLoop initLoopEx = (InitiationLoop)ex.getProblems().get(0);
 		assertSame(config1, initLoopEx.getOriginalInit().getConfig());
-		assertSame(config2, initLoopEx.getSecondInit().getConfig());
+	}
+
+	@Test
+	public void attemptingToSetConfigDuringInitializationShouldBeBlocked() {
+		AndHowTestConfig.AndHowTestConfigImpl config1 = AndHowTestConfig.instance();
+		AndHowTestConfig.AndHowTestConfigImpl config2 = AndHowTestConfig.instance();
+
+		config1.setGetNamingStrategyCallback(() -> {
+			AndHow.setConfig(config2); //Try to set config when config.getNamingStrategy is called
+			return null;
+		});
+
+		AppFatalException ex = assertThrows(AppFatalException.class, () -> {
+			AndHow.setConfig(config1);
+			AndHow.instance();
+		});
+
+		assertEquals(1, ex.getProblems().size());
+		assertTrue(ex.getProblems().get(0) instanceof InitializationProblem.SetConfigCalledDuringInitialization);
 	}
 
 	@Test
@@ -250,7 +273,8 @@ public class AndHowTest extends AndHowTestBase {
 				.addOverrideGroups(configPtGroups)
 				.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-		AndHow.instance(config);
+		AndHow.setConfig(config);
+		AndHow.instance();
 
 		assertTrue(AndHow.getInitializationTrace().length > 0);
 		//STR_BOB (Set to 'test')
@@ -293,31 +317,26 @@ public class AndHowTest extends AndHowTestBase {
 	@Test
 	public void testBlowingUpWithDuplicateLoaders() {
 
-		KeyValuePairLoader kvpl = new KeyValuePairLoader();
-		kvpl.setKeyValuePairs(cmdLineArgsWFullClassName);
+		MapLoader ml = new MapLoader();
 
-		try {
+		AppFatalException ce = assertThrows(AppFatalException.class,
+				() -> {
+					AndHowConfiguration config = AndHowTestConfig.instance().setLoaders(ml, ml);
+					AndHow.setConfig(config);
+					AndHow.instance();
+				});
 
-			AndHowConfiguration config = AndHowTestConfig.instance()
-				.setLoaders(kvpl, kvpl)
-				.addOverrideGroups(configPtGroups);
-
-			AndHow.setConfig(config);
-			AndHow.instance();
-
-			fail();	//The line above should throw an error
-		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ConstructionProblem.class).size());
 			assertTrue(ce.getProblems().filter(ConstructionProblem.class).get(0) instanceof ConstructionProblem.DuplicateLoader);
 
 			ConstructionProblem.DuplicateLoader dl = (ConstructionProblem.DuplicateLoader)ce.getProblems().filter(ConstructionProblem.class).get(0);
-			assertEquals(kvpl, dl.getLoader());
+			assertEquals(ml, dl.getLoader());
 			assertTrue(ce.getSampleDirectory().length() > 0);
 
 			File sampleDir = new File(ce.getSampleDirectory());
 			assertTrue(sampleDir.exists());
 			assertTrue(sampleDir.listFiles().length > 0);
-		}
+
 	}
 
 	@Test
@@ -329,7 +348,8 @@ public class AndHowTest extends AndHowTestBase {
 					.addOverrideGroup(RequiredParams.class)
 					.setCmdLineArgs(cmdLineArgsWFullClassName);
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
@@ -350,12 +370,13 @@ public class AndHowTest extends AndHowTestBase {
 					.addCmdLineArg(baseName + "STR_NULL_R", "zzz")
 					.addCmdLineArg(baseName + "FLAG_NULL", "present");
 
-				AndHow.instance(config);
+				AndHow.setConfig(config);
+				AndHow.instance();
 
 			fail();	//The line above should throw an error
 		} catch (AppFatalException ce) {
 			assertEquals(1, ce.getProblems().filter(ValueProblem.class).size());
-			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty());
+			assertEquals(RequiredParams.STR_NULL_R, ce.getProblems().filter(ValueProblem.class).get(0).getLoaderPropertyCoord().getProperty());
 		}
 	}
 

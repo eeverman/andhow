@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
-		<version>0.4.2</version>
+		<version>1.5.0</version>
 	</parent>
 
 	<artifactId>andhow-annotation-processor</artifactId>
@@ -15,28 +15,21 @@
 	</description>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-core</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-annotation-processor-test-harness</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>andhow-test-harness</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		
+
 		<!-- All dependencies are test dependencies only -->
 		<dependency>
 			<groupId>com.google.testing.compile</groupId>

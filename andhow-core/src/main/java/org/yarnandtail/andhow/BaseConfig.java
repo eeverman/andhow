@@ -3,7 +3,7 @@ package org.yarnandtail.andhow;
 import java.lang.reflect.*;
 import java.util.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.load.KeyObjectPair;
+import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
@@ -12,7 +12,6 @@ import org.yarnandtail.andhow.util.AndHowUtil;
 /**
  * Basic abstract implementation for AndHowConfiguration instances.
  *
- * @author ericeverman
  * @param <C> The class to return from each of the fluent builder methods, which
  * will be the implementation class in each case.  See StdConfig for an example.
  */
@@ -32,17 +31,9 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	multiple custom instances to insert. */
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertBefore = new HashMap();
 	protected Map<Class<? extends StandardLoader>, List<Loader>> insertAfter = new HashMap();
-	
-	//A list of hardcoded values used by the StdFixedValueLoader.
-	//Provided w/ live Property references
-	protected final List<PropertyValue> _fixedVals = new ArrayList();
 
-	//A list of hardcoded values used by the StdFixedValueLoader.
-	//Provided as key name (string) and value (object)
-	protected final List<KeyObjectPair> _fixedKeyObjectPairVals = new ArrayList();
-
-	//A list of command line arguments
-	protected final List<String> _cmdLineArgs = new ArrayList();
+	// Builder for the LoaderEnvironment
+	protected LoaderEnvironmentBuilder loadEnvBuilder = new LoaderEnvironmentBuilder();
 
 	//Prop file on classpath
 	protected String classpathPropFilePathStr;	//mutually XOR
@@ -52,12 +43,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	//Prop file on filesystem path
 	protected StrProp filesystemPropFilePathProp;
 	protected boolean _missingFilesystemPropFileAProblem = false;
-
-	//System Properties
-	protected Properties systemProperties;
-
-	//System Environment
-	protected Map<String, String> envProperties;
 	
 	protected NamingStrategy naming = new CaseInsensitiveNaming();
 
@@ -88,8 +73,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdFixedValueLoader buildStdFixedValueLoader() {
 		StdFixedValueLoader loader = new StdFixedValueLoader();
-		loader.setPropertyValues(_fixedVals);
-		loader.setKeyObjectPairValues(_fixedKeyObjectPairVals);
 		return loader;
 	}
 
@@ -102,7 +85,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdMainStringArgsLoader buildStdMainStringArgsLoader() {
 		StdMainStringArgsLoader loader = new StdMainStringArgsLoader();
-		loader.setKeyValuePairs(_cmdLineArgs);
 		return loader;
 	}
 
@@ -115,7 +97,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdSysPropLoader buildStdSysPropLoader() {
 		StdSysPropLoader loader = new StdSysPropLoader();
-		loader.setMap(systemProperties);
 		return loader;
 	}
 
@@ -140,7 +121,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 	 */
 	protected StdEnvVarLoader buildStdEnvVarLoader() {
 		StdEnvVarLoader loader = new StdEnvVarLoader();
-		loader.setMap(envProperties);
 		return loader;
 	}
 
@@ -220,14 +200,6 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 			return null;
 		}
 	}
-	
-	@Override
-	public void build() {
-		System.err.println(
-				"Config.build() is deprecated and will be removed in the next major release. " +
-						"See Javadocs for alternatives.");
-		AndHow.instance(this);
-	}
 
 	@Override
 	public List<Class<? extends StandardLoader>> getDefaultLoaderList() {
@@ -239,6 +211,22 @@ public abstract class BaseConfig<C extends BaseConfig<C>> implements AndHowConfi
 		}
 		
 		return loaders;
+	}
+
+	/**
+	 * Returns an immutable LoaderEnvironment with all collections fully expanded.
+	 * <p>
+	 * Collections like environmental vars and system props, which may have been empty
+	 * because they were not explicitly set, will be replaced with the actual env vars or
+	 * sys props in the returned immutable version.  Thus, the LoaderEnvironment returned
+	 * from this method may not match the individual accessor methods of the
+	 * {@link LoaderEnvironmentBuilder}.
+	 *
+	 * @return An immutable and fully expanded LoaderEnvironment.
+	 */
+	@Override
+	public LoaderEnvironment getLoaderEnvironment() {
+		return loadEnvBuilder.toImmutable();
 	}
 
 }

@@ -8,12 +8,10 @@ import java.util.List;
 /**
  * A {@link Boolean} configuration Property
  * <p>
- * <em>Note: The parsing behavior of this class may change in the 0.5.0 release</em>
- * to have an explicit list of False values.
- * See <a href="https://github.com/eeverman/andhow/issues/658"></a>Issue 658</a>.
- * <p>
  * Parsing values from strings is done by the {@link BolType}.
- * When parsing, the value is considered {@code True} if it case-insensitive matches one of:
+ * When parsing, a string is considered {@code True} if it matches one of the 'true-ish' values or
+ * {@code false} if it matches one of the 'false-ish' values (case-insensitive).
+ * Recognized {@code True} strings:
  * <ul>
  *   <li>true</li>
  *   <li>t</li>
@@ -22,8 +20,20 @@ import java.util.List;
  *   <li>on</li>
  * </ul>
  * <p>
- * If it does not match a value in that list and does not trim to null, it is {@code False}.
- * If the value is null after trimming, the value is considered unset.
+ * Recognized {@code False} strings:
+ * <ul>
+ *   <li>false</li>
+ *   <li>f</li>
+ *   <li>no</li>
+ *   <li>n</li>
+ *   <li>off</li>
+ * </ul>
+ * Unrecognized values will throw a {@code RuntimeException} at startup, values that are empty or
+ * have been trimmed to empty are considered null.
+ * <p>
+ * <em>Note: The parsing behavior of this class changed in the 0.5.0 release</em>
+ * to have an explicit list of {@code False} values.
+ * See <a href="https://github.com/eeverman/andhow/issues/658"></a>Issue 658</a>.
  */
 public class BolProp extends PropertyBase<Boolean> {
 

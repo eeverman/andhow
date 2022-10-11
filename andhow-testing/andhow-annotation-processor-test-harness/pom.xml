@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.yarnandtail</groupId>
 		<artifactId>andhow-parent</artifactId>
-		<version>0.4.2</version>
+		<version>1.5.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -41,6 +41,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration combine.self="override">
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<!--
+				No longer doing aggregate reports, so test in this
+				modules would only refer to the classes in this module.
+				-->
+				<configuration>
 					<skip>true</skip>
 				</configuration>
 			</plugin>

@@ -43,7 +43,8 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 
 
 	@Override
-	public LoaderValues load(PropertyConfigurationInternal appConfigDef, ValidatedValuesWithContext existingValues) {
+	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
+			LoaderEnvironment environment, ValidatedValuesWithContext existingValues) {
 
 		String path = getEffectivePath(existingValues);
 
@@ -64,7 +65,7 @@ public class PropFileOnFilesystemLoader extends PropFileBaseLoader {
 	}
 
 	public LoaderValues load(PropertyConfigurationInternal appConfigDef,
-                             ValidatedValuesWithContext existingValues, String path) {
+			ValidatedValuesWithContext existingValues, String path) {
 
 		if (path != null) {
 

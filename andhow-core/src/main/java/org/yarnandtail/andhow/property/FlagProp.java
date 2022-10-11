@@ -5,46 +5,51 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.valuetype.FlagType;
 
 /**
- * A True/False switch that is never null and behaves similarly to a 'nix cmd line switch.
+ * A True/False switch that is never null and behaves similarly to a 'nix
+ * cmd line switch when used on command line.
  * <p>
- * This would be used for command line arguments that are true by being presence, e.g.:<br>
- * {@code java MyClass launch}<br>
- * If {@code launch} is the name or alias of a {@code FlagProp}, launch will true by its presence,
- * without requiring {@code launch=true} (although that will also work).
+ * Use a FlagProp when you want a configuration parameter that is always true or false,
+ * such as toggling a feature on or off.  It can also be used when a configuration parameter should
+ * work like a 'nix command line switch, which is 'on' just by being present, e.g.:<br>
+ * {@code java MyClass enableAwesomeMode}<br>
+ * If {@code enableAwesomeMode} is the name or alias of a {@code FlagProp}, that FlagProp will set
+ * {@code True} simply by having its name as an argument.  You can also explicitly set its value,
+ * e.g. {@code enableAwesomeMode=true} or {@code enableAwesomeMode=false}.  When set to a value,
+ * a FlagProp behaves exactly like a {@link BolProp}.
  * <p>
- * <em>NOTE:  The behavior of this class may be changing</em><br>
- * The existing behavior causes unexpected values in properties files and will likely
- * <a href="https://github.com/eeverman/andhow/issues/656">change in the 0.5.0 release</a>
- * so that it behaves like a BolProp everywhere except on command line.
- * <p>
- * If unspecified, a Flag defaults to false, however, the default can be set to
- * true (but not to null).
+ * <em>Note:</em> A FlagProp has it's special <i>present == true</i> behavior <strong>only</strong>
+ * for the command line loader (i.e. {@link org.yarnandtail.andhow.load.std.StdMainStringArgsLoader}.
+ * <em>(see note below)</em>
  * <p>
  * A FlagProp is similar to a BolProp, but with these differences:
  * <ul>
- * <li>A Flag is never null - it will always return true or false.  Thus,
- * A FlagProp will never throw a RequirementProblem error during configuration -
+ * <li>A Flag is never null - {@code FlagProp.getValue()} always return true or false.  Thus,
+ * A FlagProp will never throw a RequirementProblem error during configuration because
  * it always has a value.</li>
  * <li>FlagProp.getDefaultValue() never returns null and defaults to false.
  * Via the constructor or builder, it is possible to set the default to be true.
  * In that case a loader would need to find it explicitly set to false to change its value,
  * e.g. {@code propertyName=false}.
- * <li>Currently (prior to 0.5.0), referencing a FlagProp in any configuration source (not just
- * command line args) will set it to true.  For instance, a 'launch' flag will be set true simply
- * by including:<br>
- * {@code launch =}<br>
- * in a properties file.  That will likely change in the 0.5.0 release (see note above).</li>
  * </ul>
  *
  * <h3>The technical details</h3>
- * When the name refering to a FlagProp is found, the value is first trimmed by the
- * TrimToNullTrimmer, which removes all whitespace and ultimately turns the value
- * into null if the value is all whitespace.  Since simply being present counts
- * as 'true' for a flag, finding a null value sets the Flag to true.
+ * If no name is found by any loader that refers to the FlagProp, it defaults to false
+ * (unless the default is set to {@code true}).
+ * If a name referring to a FlagProp is found in any loader other than the command line loader,
+ * the value is parsed and handled exactly as if it were a BolProp.
+ * If a name referring to a FlagProp is found on command line loader:
+ * <ul>
+ * <li>If the argument is of the form {@code key=value} and the value contains any non-whitespace,
+ * the value is handled just as a BolProp would handle the value.</li>
+ * <li>If the value is all whitespace or there is no '=' delimiter, the presence of the key
+ * without a value sets the FlagProp to True.</li>
+ * </ul>
  * <p>
- * If after trimming the value is not null, it is parsed by
- * {@link org.yarnandtail.andhow.util.TextUtil#toBoolean(java.lang.String)} to
- * determine if the String is considered true or false.
+ * <em>NOTE:  The behavior of the FlagProp changed in release 0.5.0</em><br>
+ * Prior to 0.5.0, FlagProps' special <i>present == true</i> behavior applied to all loaders,
+ * so a properties file that included the name of a FlagProp with no value would set it True.
+ * This non-desirable behavior <a href="https://github.com/eeverman/andhow/issues/656">was fixed
+ * for the 0.5.0 release</a>.
  */
 public class FlagProp extends PropertyBase<Boolean> {
 

@@ -2,19 +2,17 @@ package org.yarnandtail.andhow.valid;
 
 import java.util.Arrays;
 
-import org.yarnandtail.andhow.api.Validator;
-
 /**
- * A collection of String validation types
- *
- * @author ericeverman
+ * Validator implementations for String ValueTypes.
  */
 public class StringValidator {
+
+	private StringValidator() { /* No instances */ }
 
 	/**
 	 * Validate that a string is one from the specified set.
 	 */
-	public static class OneOf implements Validator<String> {
+	public static class OneOf extends BaseValidator<String> {
 
 		String[] values;
 
@@ -35,11 +33,8 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
-			if (value != null) {
-				return Arrays.stream(values).anyMatch(value::equals);
-			}
-			return false;
+		public boolean isValidWithoutNull(final String value) {
+			return Arrays.stream(values).anyMatch(value::equals);
 		}
 
 		@Override
@@ -51,7 +46,7 @@ public class StringValidator {
 	/**
 	 * Validate that a string is one from the specified set ignoring case.
 	 */
-	public static class OneOfIgnoringCase implements Validator<String> {
+	public static class OneOfIgnoringCase extends BaseValidator<String> {
 
 		String[] values;
 
@@ -72,11 +67,8 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
-			if (value != null) {
-				return Arrays.stream(values).anyMatch(value::equalsIgnoreCase);
-			}
-			return false;
+		public boolean isValidWithoutNull(final String value) {
+			return Arrays.stream(values).anyMatch(value::equalsIgnoreCase);
 		}
 
 		@Override
@@ -88,7 +80,7 @@ public class StringValidator {
 	/**
 	 * Validate that a string starts with a specific string.
 	 */
-	public static class StartsWith implements Validator<String> {
+	public static class StartsWith extends BaseValidator<String> {
 
 		private String prefix;
 		private boolean ignoreCase;
@@ -109,15 +101,12 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
-			if (value != null) {
-				if (ignoreCase) {
-					return value.toUpperCase().startsWith(prefix.toUpperCase());
-				} else {
-					return value.startsWith(prefix);
-				}
+		public boolean isValidWithoutNull(final String value) {
+			if (ignoreCase) {
+				return value.toUpperCase().startsWith(prefix.toUpperCase());
+			} else {
+				return value.startsWith(prefix);
 			}
-			return false;
 		}
 
 		@Override
@@ -129,19 +118,19 @@ public class StringValidator {
 	/**
 	 * Validate that a string ends with a specific string.
 	 */
-	public static class EndsWith implements Validator<String> {
+	public static class EndsWith extends BaseValidator<String> {
 
-		private String sufix;
+		private String suffix;
 		private boolean ignoreCase;
 
 		public EndsWith(String sufix, boolean ignoreCase) {
-			this.sufix = sufix;
+			this.suffix = sufix;
 			this.ignoreCase = ignoreCase;
 		}
 
 		@Override
 		public boolean isSpecificationValid() {
-			return sufix != null;
+			return suffix != null;
 		}
 
 		@Override
@@ -150,27 +139,24 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
-			if (value != null) {
-				if (ignoreCase) {
-					return value.toUpperCase().endsWith(sufix.toUpperCase());
-				} else {
-					return value.endsWith(sufix);
-				}
+		public boolean isValidWithoutNull(final String value) {
+			if (ignoreCase) {
+				return value.toUpperCase().endsWith(suffix.toUpperCase());
+			} else {
+				return value.endsWith(suffix);
 			}
-			return false;
 		}
 
 		@Override
 		public String getTheValueMustDescription() {
-			return "end with '" + sufix + "'";
+			return "end with '" + suffix + "'";
 		}
 	}
 
 	/**
 	 * Validate based on a regex string.
 	 */
-	public static class Regex implements Validator<String> {
+	public static class Regex extends BaseValidator<String> {
 
 		private String regex;
 
@@ -196,12 +182,8 @@ public class StringValidator {
 		}
 
 		@Override
-		public boolean isValid(String value) {
-			if (value != null && value.matches(regex)) {
-				return true;
-			} else {
-				return false;
-			}
+		public boolean isValidWithoutNull(final String value) {
+			return value.matches(regex);
 		}
 
 		@Override

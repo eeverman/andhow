@@ -2,20 +2,19 @@ package org.yarnandtail.andhow;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.internal.ConstructionProblem;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
+import org.yarnandtail.andhow.junit5.EnableJndiUtil;
 import org.yarnandtail.andhow.load.std.StdJndiLoader;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
 
+import javax.naming.InitialContext;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author ericeverman
- */
 public class AndHow_AliasInTest extends AndHowTestBase {
 
 	//
@@ -114,16 +113,19 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInAliasesViaJndiCompEnvClassPath() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/");
+		//
 
 		jndi.bind("java:comp/env/" + STR_PROP1_IN, STR1);
 		jndi.bind("java:comp/env/" + STR_PROP2_ALIAS, STR2);
 		jndi.bind("java:comp/env/" + INT_PROP1_ALIAS, INT1.toString());
 
-		jndi.activate();
-
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.addOverrideGroup(AliasGroup1.class);
@@ -137,16 +139,18 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInAliasesViaJndiRootClassPath() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:org/yarnandtail/andhow/AndHow_AliasInTest/");
 
 		jndi.bind("java:" + STR_PROP1_IN_AND_OUT_ALIAS, STR1);
 		jndi.bind("java:" + STR_PROP2_IN_ALT1_ALIAS, STR2);
 		jndi.bind("java:" + INT_PROP1_ALT_IN1_ALIAS, INT1.toString());
 
-		jndi.activate();
-
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.addOverrideGroup(AliasGroup1.class);
@@ -160,17 +164,20 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInAliasesViaJndiCompEnvUrlNames() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:comp/env/str/Prop/1/");
 
 		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP1_IN), STR1);
 		jndi.bind("java:comp/env/" + bns.getUriName(STR_PROP2_ALIAS), STR2);
 		jndi.bind("java:comp/env/" + bns.getUriName(INT_PROP1_ALIAS), INT1.toString());
 
-		jndi.activate();
-
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
 				.addOverrideGroup(AliasGroup1.class);
@@ -184,16 +191,20 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInAliasesViaJndiRootUrlNames() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
 		CaseInsensitiveNaming bns = new CaseInsensitiveNaming();
+
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:str/Prop/1/");
 
 		jndi.bind("java:" + bns.getUriName(STR_PROP1_IN), STR1);
 		jndi.bind("java:" + bns.getUriName(STR_PROP2_ALIAS), STR2);
 		jndi.bind("java:" + bns.getUriName(INT_PROP1_ALIAS), INT1.toString());
 
-		jndi.activate();
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.setLoaders(new StdJndiLoader())
@@ -212,7 +223,6 @@ public class AndHow_AliasInTest extends AndHowTestBase {
 
 	@Test
 	public void testSingleInDuplicateOfGroup1InAlias() {
-
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addCmdLineArg(STR_PROP1_IN, STR1)	//minimal values set to ensure no missing value error

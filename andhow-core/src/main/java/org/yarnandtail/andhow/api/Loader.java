@@ -22,28 +22,29 @@ import java.util.List;
  *
  * Instances should not hold state because they are held in memory for the life
  * of the application.
- *
- * @author eeverman
  */
 public interface Loader {
 
 	/**
-	 * Builds up a list of LoaderValues by loading property values from a
-	 * configuration source.
-	 *
+	 * Builds up a list of LoaderValues by loading property values from a configuration source.
+	 * <p>
 	 * Loaders find and load values and associate them with the correct Property.
 	 * If there is a problem while doing that, they register one or more
 	 * LoaderProblems in the returned LoaderValues.
-	 *
+	 * <p>
 	 * Validation of Property values is not Loader's responsibility and will be
 	 * handled outside this method.
 	 *
-	 * @param runtimeDef
-	 * @param existingValues
-	 * @return
+	 * @param runtimeDef The definition of all known Properties and naming metadata.
+	 * @param environment The environment (System Props, Env vars, fixed values) as
+	 * 		known to the Loader.
+	 * @param existingValues The values already set by prior loaders, which may configure
+	 * 		the behavior of this loader.
+	 * @return The Property values loaded by this loader and/or the problems discovered while
+	 * 		attempting to load those Property values.
 	 */
 	LoaderValues load(PropertyConfigurationInternal runtimeDef,
-                      ValidatedValuesWithContext existingValues);
+			LoaderEnvironment environment, ValidatedValuesWithContext existingValues);
 
 	/**
 	 * Returns a PropertyGroup used to globally configure a class of Loader.
@@ -118,6 +119,27 @@ public interface Loader {
 	 */
 	boolean isTrimmingRequiredForStringValues();
 
+	/**
+	 * Returns true if this loader supports {@link FlaggableType}'s.
+	 * <p>
+	 * Loaders that support FlaggableType give special 'is present' meaning to a property being
+	 * present without a value, similar to a 'nix command line flag.  If a Loader supports
+	 * flags, it should call {@link FlaggableType#parseFlag(String)} instead of
+	 * {@link ValueType#parse(String)} when a Property's ValueType is a {@link FlaggableType}.
+	 * See {@link org.yarnandtail.andhow.property.FlagProp} for an example type.
+	 * <p>
+	 * Note: Returning true from this method is only potentially applicable to Loaders that parse
+	 * strings.  Loaders that directly load from rich values do not parse, so the loader logic
+	 * would ignore the value here.
+	 * <p>
+	 * Examples:<br/>
+	 * Loading a non-null value from the properties file entry {@code 'name = '} would be unexpected,
+	 * so a properties file Loader should return 'false' here.<br/>
+	 * However, a command line loader would be expected to support flags, so should return 'true'.
+	 * <p>
+	 * @return true if this loader support 'nix style flag semantics for FlaggableType Properties.
+	 */
+	boolean isFlaggable();
 
 	/**
 	 * Returns a ConfigSamplePrinter, which can be used to print a configuration

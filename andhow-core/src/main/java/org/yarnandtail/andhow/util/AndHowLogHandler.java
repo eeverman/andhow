@@ -215,7 +215,7 @@ public class AndHowLogHandler extends Handler {
 		try {
 			if (val != null) {
 				Class<?> clz = ClassLoader.getSystemClassLoader().loadClass(val);
-				return (Filter) clz.newInstance();
+				return (Filter) clz.getDeclaredConstructor().newInstance();
 			}
 		} catch (Exception ex) {
 			// We got one of a variety of exceptions in creating the
@@ -236,7 +236,7 @@ public class AndHowLogHandler extends Handler {
 		try {
 			if (val != null) {
 				Class<?> clz = ClassLoader.getSystemClassLoader().loadClass(val);
-				return (Formatter) clz.newInstance();
+				return (Formatter) clz.getDeclaredConstructor().newInstance();
 			}
 		} catch (Exception ex) {
 			// We got one of a variety of exceptions in creating the

@@ -27,7 +27,8 @@ class CalculatorDoubleConfigTest {
 	public void testAppInDoubleConfiguration() {
 
 		//Force AndHow to see DOUBLE for the duration of this test
-		AndHow.findConfig().addFixedValue(Calculator.MODE, "DOUBLE").build();
+		AndHow.findConfig().addFixedValue(Calculator.MODE, "DOUBLE");
+		AndHow.instance();
 
 		Calculator mult = new Calculator();
 		Number result = mult.doCalc(1.23D, 4.56D);

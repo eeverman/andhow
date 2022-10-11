@@ -1,27 +1,23 @@
 package org.yarnandtail.andhow;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Property;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValueProblem;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
+import org.yarnandtail.andhow.junit5.EnableJndiUtil;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
-import static org.yarnandtail.andhow.load.KeyValuePairLoader.KVP_DELIMITER;
 
+import javax.naming.InitialContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author eeverman
- */
 public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 	private static final String GROUP_PATH = "org.yarnandtail.andhow.StdConfigSimulatedAppTest.SampleRestClientGroup";
@@ -33,7 +29,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 		//Prop name case ignored
 		String[] cmdLineArgs = new String[] {
-			GROUP_PATH + ".classpath_prop_file" + KVP_DELIMITER + CLASSPATH_BEGINNING + "all.props.speced.properties"
+			GROUP_PATH + ".classpath_prop_file=" + CLASSPATH_BEGINNING + "all.props.speced.properties"
 		};
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -117,6 +113,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		assertEquals(98, SampleRestClientGroup.REST_PORT.getValue(), "Fixed value should override prop file");
 	}
 
+
 	@Test
 	public void testAllValuesAreSetViaEnvVarAndPropFile() {
 
@@ -128,7 +125,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
 				.addOverrideGroup(SampleRestClientGroup.class)
-				.setEnvironmentProperties(envvars)
+				.setEnvironmentVariables(envvars)
 				.setClasspathPropFilePath(SampleRestClientGroup.CLASSPATH_PROP_FILE)
 				.classpathPropertiesRequired();
 
@@ -142,7 +139,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	@Test
 	public void testAllValuesAreSetViaSystemPropertiesAndPropFile() {
 
-		Properties props = new Properties();
+		Map<String, String> props = new HashMap<>();
 		props.put(
 				GROUP_PATH + ".classpath_prop_file", /* case ignored */
 				CLASSPATH_BEGINNING + "all.props.speced.properties"
@@ -181,7 +178,7 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	public void testMinimumPropsAreSetViaCmdLineArgAndPropFile() {
 
 		String[] cmdLineArgs = new String[] {
-				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
+				GROUP_PATH + ".CLASSPATH_PROP_FILE=" + CLASSPATH_BEGINNING + "minimum.props.speced.properties"
 		};
 
 		AndHowConfiguration config = AndHowTestConfig.instance()
@@ -205,13 +202,17 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 	}
 
 	@Test
+	@EnableJndiForThisTestMethod
 	public void testInvalidValuesViaCmdLineArgAndPropFile() throws Exception {
 
-		SimpleNamingContextBuilder jndi = getJndi();
-		jndi.activate();
+		//
+		// Create a context and create subcontexts
+		InitialContext jndi = new InitialContext();
+		EnableJndiUtil.createSubcontexts(jndi, "java:");
+		//
 
 		String[] cmdLineArgs = new String[] {
-				GROUP_PATH + ".CLASSPATH_PROP_FILE" + KVP_DELIMITER + CLASSPATH_BEGINNING + "invalid.properties"
+				GROUP_PATH + ".CLASSPATH_PROP_FILE=" + CLASSPATH_BEGINNING + "invalid.properties"
 		};
 
 
@@ -235,9 +236,9 @@ public class StdConfigSimulatedAppTest extends AndHowTestBase {
 		expectedProblemPoints.add(SampleRestClientGroup.REST_SERVICE_NAME);
 
 		assertEquals(3, e.getProblems().filter(ValueProblem.class).size());
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(0).getBadValueCoord().getProperty()));
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(1).getBadValueCoord().getProperty()));
-		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(2).getBadValueCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(0).getLoaderPropertyCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(1).getLoaderPropertyCoord().getProperty()));
+		assertTrue(expectedProblemPoints.contains(e.getProblems().filter(ValueProblem.class).get(2).getLoaderPropertyCoord().getProperty()));
 
 		//
 		// Loader problems

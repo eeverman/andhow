@@ -1,7 +1,8 @@
 package org.yarnandtail.andhow.load.std;
 
-import org.yarnandtail.andhow.api.StandardLoader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
+import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.internal.PropertyConfigurationInternal;
+import org.yarnandtail.andhow.load.BaseKeyValuePairLoader;
 
 /**
  * Reads an array of Strings containing key value pairs in the form <em>key=value</em>,
@@ -60,10 +61,9 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Other loaders which don't implement the {@code StandardLoader} interface can
  * be inserted into the load order via the
  * {@code AndHowConfiguration.insertLoaderBefore/After()}.
- * 
- * @author ericeverman
+ *
  */
-public class StdMainStringArgsLoader extends KeyValuePairLoader 
+public class StdMainStringArgsLoader extends BaseKeyValuePairLoader
 		implements StandardLoader {
 
 	/**
@@ -75,7 +75,22 @@ public class StdMainStringArgsLoader extends KeyValuePairLoader
 	}
 
 	@Override
+	public LoaderValues load(final PropertyConfigurationInternal runtimeDef,
+			final LoaderEnvironment environment, final ValidatedValuesWithContext existingValues) {
+
+		return load(runtimeDef, environment.getCmdLineArgs(), KVP_DELIMITER);
+	}
+
+	@Override
 	public String getSpecificLoadDescription() {
 		return "main(String[] args)";
 	}
+
+	@Override
+	public String getLoaderDialect() {
+		return "main(String[] args)";
+	}
+
+	@Override
+	public boolean isFlaggable() { return true; }
 }

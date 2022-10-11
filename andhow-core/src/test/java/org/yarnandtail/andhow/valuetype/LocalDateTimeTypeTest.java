@@ -37,7 +37,6 @@ public class LocalDateTimeTypeTest {
 	@Test
 	public void testParseTooManyDecimalPlaces() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
-		assertFalse(type.isParsable("2007-12-03T10:15:30.1234567891"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("2007-12-03T10:15:30.1234567891")
@@ -47,7 +46,6 @@ public class LocalDateTimeTypeTest {
 	@Test
 	public void testParseEmpty() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
-		assertFalse(type.isParsable(""));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("")
@@ -57,7 +55,6 @@ public class LocalDateTimeTypeTest {
 	@Test
 	public void testParseIncorrect24Hour() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
-		assertFalse(type.isParsable("2007-12-03T24:15:30.123456789"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("2007-12-03T24:15:30.123456789")
@@ -67,7 +64,6 @@ public class LocalDateTimeTypeTest {
 	@Test
 	public void testParseMissingZeroPadding() {
 		LocalDateTimeType type = LocalDateTimeType.instance();
-		assertFalse(type.isParsable("2007-12-03T10:15:3"));
 
 		assertThrows(ParsingException.class, () ->
 																						 type.parse("2007-12-03T10:15:3")

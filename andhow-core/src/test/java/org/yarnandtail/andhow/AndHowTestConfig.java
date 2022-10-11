@@ -3,12 +3,9 @@ package org.yarnandtail.andhow;
 import java.util.*;
 import java.util.function.Supplier;
 
-import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.api.NamingStrategy;
-import org.yarnandtail.andhow.util.AndHowUtil;
 import org.yarnandtail.andhow.StdConfig.StdConfigAbstract;
 import org.yarnandtail.andhow.api.Loader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  * This class is an AndHowConfiguration implementation that lets you do things
@@ -24,8 +21,7 @@ import org.yarnandtail.andhow.load.KeyValuePairLoader;
  * Test Harness module.  For examples using the test harness, see the AndHow
  * Sample Usages module and its many sub-modules, which are stand-alone simulated
  * projects complete with testing.
- * 
- * @author ericeverman
+ *
  */
 public class AndHowTestConfig {
 	
@@ -80,12 +76,24 @@ public class AndHowTestConfig {
 			}
 
 			if (value != null) {
-				_cmdLineArgs.add(key + KeyValuePairLoader.KVP_DELIMITER + value);
+				loadEnvBuilder.getCmdLineArgs().add(key + "=" + value);
 			} else {
-				_cmdLineArgs.add(key);
+				loadEnvBuilder.getCmdLineArgs().add(key);
 			}
 
 			return (N) this;
+		}
+
+		public N setEnvironmentVariables(Map<String, String> envVars) {
+			loadEnvBuilder.setEnvVars(envVars);
+
+			return (N)this;
+		}
+
+		public N setSystemProperties(Map<String, String> envVars) {
+			loadEnvBuilder.setSysProps(envVars);
+
+			return (N)this;
 		}
 		
 

@@ -14,20 +14,18 @@ import org.yarnandtail.andhow.api.*;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.LoaderProblem;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
+import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.property.FlagProp;
 import org.yarnandtail.andhow.util.AndHowUtil;
 
-/**
- *
- * @author eeverman
- */
 public class PropFileOnFilesystemLoaderUnitTest {
 
 	private static final String CLASSPATH_OF_PROPS = "/org/yarnandtail/andhow/load/PropFileOnFilesystemLoaderUnitTest.properties";
 
 	PropertyConfigurationMutable appDef;
+	LoaderEnvironmentBuilder leb;
 	ValidatedValuesWithContextMutable appValuesBuilder;
 	File tempPropertiesFile = null;
 
@@ -71,6 +69,7 @@ public class PropFileOnFilesystemLoaderUnitTest {
 		tempPropertiesFile.deleteOnExit();
 		FileUtils.copyURLToFile(inputUrl, tempPropertiesFile);
 
+		leb = new LoaderEnvironmentBuilder();
 	}
 
 	@AfterEach
@@ -86,14 +85,14 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		evl.add(new ValidatedValue(TestProps.FILEPATH, tempPropertiesFile.getAbsolutePath()));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 		assertEquals(0L, result.getValues().stream().filter(p -> p.hasProblems()).count());
@@ -110,14 +109,14 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(1, result.getProblems().size());
 		for (Problem lp : result.getProblems()) {
@@ -137,14 +136,14 @@ public class PropFileOnFilesystemLoaderUnitTest {
 
 		ArrayList<ValidatedValue> evl = new ArrayList();
 		//evl.add(new ValidatedValue(TestProps.FILEPATH, "/org/yarnandtail/andhow/load/XXXXXXX.properties"));
-		LoaderValues existing = new LoaderValues(new KeyValuePairLoader(), evl, new ProblemList<Problem>());
+		LoaderValues existing = new LoaderValues(new MapLoader(), evl, new ProblemList<Problem>());
 		appValuesBuilder.addValues(existing);
 
 		PropFileOnFilesystemLoader pfl = new PropFileOnFilesystemLoader();
 		pfl.setFilePath(TestProps.FILEPATH);
 		pfl.setMissingFileAProblem(true);
 
-		LoaderValues result = pfl.load(appDef, appValuesBuilder);
+		LoaderValues result = pfl.load(appDef, leb, appValuesBuilder);
 
 		assertEquals(0, result.getProblems().size());
 	}

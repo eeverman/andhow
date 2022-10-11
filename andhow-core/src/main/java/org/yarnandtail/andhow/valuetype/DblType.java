@@ -12,21 +12,14 @@ public class DblType extends BaseValueType<Double> {
 
 	private static final DblType instance = new DblType();
 
-	private DblType() {
+	protected DblType() {
 		super(Double.class);
 	}
 
 	/**
-	 * @return An instance of the {@link #DblType()}
-	 * @deprecated since 0.4.1. Use {@link #instance()} instead
-	 */
-	@Deprecated
-	public static DblType get() {
-		return instance();
-	}
-
-	/**
-	 * @return An instance of the {@link Double}
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
+	 * @return An instance of the {@link #DblType}
 	 */
 	public static DblType instance() {
 		return instance;

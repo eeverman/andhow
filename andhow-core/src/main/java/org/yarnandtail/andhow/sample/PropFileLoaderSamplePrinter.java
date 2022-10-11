@@ -50,12 +50,7 @@ public class PropFileLoaderSamplePrinter extends BaseSamplePrinter implements Sa
 		TextBlock tb;
 		String propCanonName = group.getCanonicalName(prop);
 
-		if (! (prop.getValueType() instanceof FlagType)) {
-			tb = new TextBlock(false, false);
-		} else {
-			// Flags are read as True just by being present, so comment out.
-			tb = new TextBlock(false, true);
-		}
+		tb = new TextBlock(false, false);
 
 		tb.addLine(
 				TextUtil.format("{} = ", propCanonName)

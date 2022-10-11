@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.yarnandtail.andhow.SimpleParams;
 import org.yarnandtail.andhow.api.*;
+import org.yarnandtail.andhow.load.MapLoader;
 import org.yarnandtail.andhow.load.PropFileOnClasspathLoader;
-import org.yarnandtail.andhow.load.KeyValuePairLoader;
 
 /**
  *
@@ -22,7 +22,7 @@ public class ValueMapWithContextMutableTest {
 		
 		ValidatedValuesWithContextMutable builder = new ValidatedValuesWithContextMutable();
 		
-		Loader cmdLineLoad = new KeyValuePairLoader();
+		Loader aLoader = new MapLoader();
 		PropFileOnClasspathLoader propFileLoad = new PropFileOnClasspathLoader();
 		propFileLoad.setFilePath(SimpleParams.STR_BOB);
 		propFileLoad.setMissingFileAProblem(true);
@@ -34,7 +34,7 @@ public class ValueMapWithContextMutableTest {
 		firstSet.add(new ValidatedValue(SimpleParams.FLAG_TRUE, Boolean.FALSE));
 		firstSet.add(new ValidatedValue(SimpleParams.FLAG_FALSE, Boolean.TRUE));
 		firstSet.add(new ValidatedValue(SimpleParams.FLAG_NULL, Boolean.TRUE));
-		LoaderValues firstLoaderValues = new LoaderValues(cmdLineLoad, firstSet, new ProblemList<Problem>());
+		LoaderValues firstLoaderValues = new LoaderValues(aLoader, firstSet, new ProblemList<Problem>());
 		
 		List<ValidatedValue> secondSet = new ArrayList();
 		secondSet.add(new ValidatedValue(SimpleParams.STR_BOB, "blah"));
@@ -75,8 +75,8 @@ public class ValueMapWithContextMutableTest {
 		
 		//This should contain all the same as above except KVP_NULL
 		lvsToTest.clear();
-		lvsToTest.add(builder.getAllValuesLoadedByLoader(cmdLineLoad));
-		lvsToTest.add(builder.getValueMapWithContextImmutable().getAllValuesLoadedByLoader(cmdLineLoad));
+		lvsToTest.add(builder.getAllValuesLoadedByLoader(aLoader));
+		lvsToTest.add(builder.getValueMapWithContextImmutable().getAllValuesLoadedByLoader(aLoader));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
 			assertEquals("test", lvs.getExplicitValue(SimpleParams.STR_BOB));
@@ -87,8 +87,8 @@ public class ValueMapWithContextMutableTest {
 		
 		//Again - all the same stuff except KVP_NULL
 		lvsToTest.clear();
-		lvsToTest.add(builder.getEffectiveValuesLoadedByLoader(cmdLineLoad));
-		lvsToTest.add(builder.getValueMapWithContextImmutable().getEffectiveValuesLoadedByLoader(cmdLineLoad));
+		lvsToTest.add(builder.getEffectiveValuesLoadedByLoader(aLoader));
+		lvsToTest.add(builder.getValueMapWithContextImmutable().getEffectiveValuesLoadedByLoader(aLoader));
 		for (LoaderValues lvs : lvsToTest) {
 			assertEquals(4, lvs.getValues().size());
 			assertEquals("test", lvs.getExplicitValue(SimpleParams.STR_BOB));

@@ -14,12 +14,14 @@ public class BigDecType extends BaseValueType<BigDecimal> {
 
 	private static final BigDecType INSTANCE = new BigDecType();
 
-	private BigDecType() {
+	protected BigDecType() {
 		super(BigDecimal.class);
 	}
 
 	/**
-	 * Construct an instance of BigDecType
+	 * Fetch the single, shared instace of this ValueType
+	 * <p>
+	 * @return An instance of the {@link #BigDecType()}
 	 */
 	public static BigDecType instance() {
 		return INSTANCE;
@@ -32,6 +34,7 @@ public class BigDecType extends BaseValueType<BigDecimal> {
 	 * Parsing is done by calling the {@link BigDecimal#BigDecimal(String)} constructor,
 	 * which accepts many different forms - refer there for valid String formats.
 	 * <p>
+	 *
 	 * @param sourceValue The source string, which should already be trimmed and may be null
 	 * @return The parsed value, or null if null is passed.
 	 * @throws ParsingException if unparsable.

@@ -275,6 +275,16 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	 */
 	List<Class<? extends StandardLoader>> getDefaultLoaderList();
 
+	/**
+	 * The environment for {@link Loader}s when they load values.
+	 * <p>
+	 * Though this may be editable in the {@link AndHowConfiguration}, the instance returned
+	 * here should be immutable.
+	 *
+	 * @return An immutable {@link LoaderEnvironment}.
+	 */
+	LoaderEnvironment getLoaderEnvironment();
+
 	C setStandardLoaders(List<Class<? extends StandardLoader>> newStandardLoaders);
 
 	C setStandardLoaders(Class<? extends StandardLoader>... newStandardLoaders);
@@ -282,18 +292,4 @@ public interface AndHowConfiguration<C extends AndHowConfiguration> {
 	C insertLoaderBefore(Class<? extends StandardLoader> insertBeforeThisLoader, Loader loaderToInsert);
 
 	C insertLoaderAfter(Class<? extends StandardLoader> insertAfterThisLoader, Loader loaderToInsert);
-
-	/**
-	 * Force initialization of AndHow using this configuration instance.
-	 *
-	 * AndHow initialization is a one-time event, so further changes to this configuration will
-	 * have no effect and additional calls to build() will throw runtime exceptions.
-	 *
-	 * @see org.yarnandtail.andhow.AndHow#instance
-	 * @see org.yarnandtail.andhow.AndHow#initialize
-	 * @deprecated This method will be removed in the next major release.
-	 * Use AndHow.instance() or AndHow.initialize()
-	 */
-	@Deprecated
-	void build();
 }

@@ -5,14 +5,11 @@ import org.yarnandtail.andhow.util.TextUtil;
 
 /**
  * A problem bootstrapping the AndHow, prior to attempting to load any values.
- * 
- * 
- * @author ericeverman
  */
 public abstract class LoaderProblem implements Problem {
 	
 	/** The Property that actually has the problem */
-	protected LoaderValueCoord badValueCoord;
+	protected LoaderPropertyCoord badValueCoord;
 	
 	/**
 	 * The Property that has the problem.
@@ -31,8 +28,7 @@ public abstract class LoaderProblem implements Problem {
 	
 	@Override
 	public String getProblemContext() {
-		
-		String loadDesc = null;
+
 		String loadName = null;
 		String propName = null;
 		
@@ -43,33 +39,24 @@ public abstract class LoaderProblem implements Problem {
 			}
 			
 			if (badValueCoord.getLoader() != null) {
-				
-				loadName = badValueCoord.getLoader().getClass().getCanonicalName();
-				
 				if (badValueCoord.getLoader().getSpecificLoadDescription() != null) {
-					loadDesc = badValueCoord.getLoader().getSpecificLoadDescription();
+					loadName = badValueCoord.getLoader().getSpecificLoadDescription() +
+							" (" + badValueCoord.getLoader().getClass().getCanonicalName() + ")";
+				} else {
+					loadName = badValueCoord.getLoader().getClass().getCanonicalName();
 				}
+			} else {
+				loadName = "[[ Unknown Loader ]]";
 			}
 
-			if (loadDesc != null) {
-				if (propName != null) {
-					return TextUtil.format("Reading property {} from {}", propName, loadDesc);	
-				} else {
-					return TextUtil.format("Reading from {}", loadDesc);	
-				}
-			} else if (loadName != null) {
-				if (propName != null) {
-					return TextUtil.format("Reading property {} via loader {}", propName, loadName);	
-				} else {
-					return TextUtil.format("Reading via loader {}", loadDesc);	
-				}
-			} else if (propName != null) {
-				return TextUtil.format("Reading property {}", loadDesc);
+			if (propName != null) {
+				return TextUtil.format("Reading property {} from loader {}", propName, loadName);
 			} else {
-				return UNKNOWN + " context";
+				return TextUtil.format("Reading from {}", loadName);
 			}
+
 		} else {
-			return UNKNOWN + " context";
+			return "[[ Unknown context ]]";
 		}
 	}
 	
@@ -80,8 +67,9 @@ public abstract class LoaderProblem implements Problem {
 		String resourcePath;
 		
 		public IOLoaderProblem(Loader loader, Exception exception, String resourcePath) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.exception = exception;
+			this.resourcePath = resourcePath;
 		}
 		
 		@Override
@@ -97,7 +85,7 @@ public abstract class LoaderProblem implements Problem {
 		public ParsingLoaderProblem(
 				Loader loader, Class<?> group, Property prop, 
 				Exception exception) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.exception = exception;
 		}
 		
@@ -111,7 +99,7 @@ public abstract class LoaderProblem implements Problem {
 		
 		public DuplicatePropertyLoaderProblem(
 				Loader loader, Class<?> group, Property prop) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 		}
 		
 		@Override
@@ -122,11 +110,11 @@ public abstract class LoaderProblem implements Problem {
 	
 	public static class UnknownPropertyLoaderProblem extends LoaderProblem {
 		
-		private String unknownPropName;
+		private final String unknownPropName;
 		
 		public UnknownPropertyLoaderProblem(
 				Loader loader, String unknownPropName) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.unknownPropName = unknownPropName;
 		}
 
@@ -145,7 +133,7 @@ public abstract class LoaderProblem implements Problem {
 		String message;
 		
 		public SourceNotFoundLoaderProblem(Loader loader, String message) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 			this.message = message;
 		}
 		
@@ -155,17 +143,17 @@ public abstract class LoaderProblem implements Problem {
 		}
 	}
 	
-	public static class JndiContextLoaderProblem extends LoaderProblem {
+	public static class JndiContextMissing extends LoaderProblem {
 
-		public JndiContextLoaderProblem(Loader loader) {
-			badValueCoord = new LoaderValueCoord(loader, null, null);
+		public JndiContextMissing(Loader loader) {
+			badValueCoord = new LoaderPropertyCoord(loader, null, null);
 		}
 		
 		@Override
 		public String getProblemDescription() {
-			return "Attempting to read from the JNDI InitialContext threw an unexpected exception.  " +
-				"If there is no JNDI Context available for this application entry point, " +
-				"ensure it is marked as optional (the default) or removed from the list of Loaders.";
+			return "Unable to initialize a JNDI InitialContext and the StdJndiLoader is configured to  " +
+				"require one.  Either provide a JNDI Context in this environment, set the StdJndiLoader " +
+				"to ignore a missing JNDI Context, or remove the StdJndiLoader from the list of Loaders.";
 		}
 	}
 	
@@ -175,7 +163,7 @@ public abstract class LoaderProblem implements Problem {
 		public ObjectConversionValueProblem(
 				Loader loader, Class<?> group, Property prop, 
 				Object obj) {
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.obj = obj;
 		}
 		
@@ -195,7 +183,7 @@ public abstract class LoaderProblem implements Problem {
 				Loader loader, Class<?> group, Property prop, 
 				String str) {
 			
-			badValueCoord = new LoaderValueCoord(loader, group, prop);
+			badValueCoord = new LoaderPropertyCoord(loader, group, prop);
 			this.str = str;
 		}
 

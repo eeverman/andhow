@@ -5,10 +5,8 @@ import java.util.*;
 
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.*;
-import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
-import org.yarnandtail.andhow.internal.ConstructionProblem;
-import org.yarnandtail.andhow.internal.ConstructionProblem.TooManyAndHowInitInstances;
-import org.yarnandtail.andhow.internal.NameAndProperty;
+import org.yarnandtail.andhow.internal.*;
+import org.yarnandtail.andhow.internal.InitializationProblem.TooManyAndHowInitInstances;
 import org.yarnandtail.andhow.service.InitLoader;
 import org.yarnandtail.andhow.service.TestInitLoader;
 
@@ -365,30 +363,6 @@ public class AndHowUtil {
 		} catch (Throwable ex) {
 			return null;
 		}
-	}
-
-	/**
-	 * Creates a new Object instance from the named class using the default
-	 * no-arg constructor.
-	 *
-	 * No errors are thrown, null if just returned if the class does not exist,
-	 * there is no no-arg constructor, so some other exception occurs.
-	 *
-	 * @param className
-	 * @return
-	 */
-	public static Object getClassInstanceForName(String className) {
-		Class<?> c = getClassForName(className);
-
-		if (c != null) {
-			try {
-				return c.getDeclaredConstructor().newInstance();
-			} catch (Throwable ex) {
-				//ignore
-			}
-		}
-
-		return null;
 	}
 
 	public static AndHowConfiguration<? extends AndHowConfiguration>

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.yarnandtail.andhow.api.GroupProxy;
 import org.yarnandtail.andhow.internal.PropertyConfigurationMutable;
 import org.yarnandtail.andhow.internal.ValidatedValuesWithContextMutable;
+import org.yarnandtail.andhow.load.util.LoaderEnvironmentBuilder;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.*;
 import org.yarnandtail.andhow.util.AndHowUtil;
@@ -17,8 +18,9 @@ import org.yarnandtail.andhow.util.AndHowUtil;
  * @author eeverman
  */
 public class BaseForLoaderTests {
-	PropertyConfigurationMutable appDef;
-	ValidatedValuesWithContextMutable appValuesBuilder;
+	protected PropertyConfigurationMutable appDef;
+	protected LoaderEnvironmentBuilder loadEnv;
+	protected ValidatedValuesWithContextMutable appValuesBuilder;
 
 	@BeforeEach
 	public void init() throws Exception {
@@ -39,6 +41,7 @@ public class BaseForLoaderTests {
 		appDef.addProperty(proxy, SimpleParams.FLAG_TRUE);
 		appDef.addProperty(proxy, SimpleParams.FLAG_NULL);
 
+		loadEnv = new LoaderEnvironmentBuilder();
 	}
 
 	public interface SimpleParams {
