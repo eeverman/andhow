@@ -10,14 +10,11 @@
 
 ![AndHow animation](https://github.com/eeverman/andhow-assets/blob/main/andhow_0.5_1280x320_highres_24fps.gif?raw=true)
 ---
-#### New Release:  0.4.2, October 24, 2021 - [notes](https://github.com/eeverman/andhow/releases/tag/andhow-0.4.2).
-<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's new logo"  align="left">
+#### New Release:  1.5.0, October 10, 2022 - [notes](https://github.com/eeverman/andhow/releases/tag/andhow-1.5.0).
+<img src="https://github.com/eeverman/andhow/raw/master/logo/AndHow-empty-circle-combination.png" width="55" height="72" alt="AndHow's logo"  align="left">
+<p>
+This release jumps from 0.4.2 to 1.5.0, reflecting that AndHow has been in production long enough to be considered production ready, and includes some API changes.  This release removes deprecated methods, clarifies / subtly changes some behavior, and has general improvements and bug fixes.  See the full [release notes](https://github.com/eeverman/andhow/releases/tag/andhow-1.5.0).
 
-This release includes several bug fixes and adds a new
-[export feature](https://www.andhowconfig.org/user-guide/integration-and-exports#manual-export-to-maps-java.util.properties-and-more)
-to better support configuring other frameworks that accept configuration as a `Map` or `java.util.Properties`.
-_Special thanks to [Alex Karpov](https://github.com/alex-kar)_ for many high-quality code fixes and
-improvements in this release.
 ---
                     
 ### What if you could configure constants?  What if Java application configuration _was_ just constants?
@@ -39,7 +36,7 @@ at startup.
 <dependency>
     <groupId>org.yarnandtail</groupId>
     <artifactId>andhow</artifactId>
-    <version>0.4.2</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
