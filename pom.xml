@@ -89,6 +89,7 @@
 		<module>andhow-shared-test-utils</module>
 		<module>andhow-junit5-extensions</module>
 		<module>andhow-test-stubs</module>
+		<module>junit5-extensions-no-andhow-dependency</module>
 	</modules>
 
 	<repositories>
