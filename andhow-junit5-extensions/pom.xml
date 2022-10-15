@@ -20,7 +20,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-shared-test-utils</artifactId>
 			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!--
@@ -58,7 +57,7 @@
 		<dependency>
 			<!--
 			A minimal stub implementation that can be tested against, providing
-			clases that exist with types that are expected.
+			classes that exist with types that are expected.
 			-->
 			<groupId>org.yarnandtail</groupId>
 			<artifactId>andhow-test-stubs</artifactId>
