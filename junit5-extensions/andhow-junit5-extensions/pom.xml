@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.yarnandtail</groupId>
+		<artifactId>andhow-parent</artifactId>
+		<version>1.5.1-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>andhow-junit5-extensions</artifactId>
+
+	<packaging>jar</packaging>
+	<name>AndHow JUnit 5 Extensions</name>
+	
+	<description>
+		Extensions for JUnit 5 to make testing easier for applications using the AndHow framework.
+	</description>
+
+	<dependencies>
+		<!--
+		This package is designed to be used unit testing utils for apps,
+		so dependencies that would normally be test scope are compile scope.
+		However, they are optional so that the downstream apps can choose which features to enable.
+
+		NOTE:  This list of dependencies should be the union of the user-needed dependencies in:
+		* junit5-extensions-no-andhow-dependency
+		* junit5-extensions-with-andhow-dependency
+		-->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>junit5-extensions-no-andhow-dependency</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>junit5-extensions-with-andhow-dependency</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<!-- This may be an optional dependency, but just to prevent warnings, exclude it. -->
+					<groupId>${project.groupId}</groupId>
+					<artifactId>junit5-extensions-no-andhow-dependency</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>andhow-shared-test-utils</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.github.h-thurow</groupId>
+			<artifactId>simple-jndi</artifactId>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<!-- Optional dependency of simple-jndi -->
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>org.yarnandtail:junit5-extensions-no-andhow-dependency</include>
+									<include>org.yarnandtail:junit5-extensions-with-andhow-dependency</include>
+								</includes>
+							</artifactSet>
+							<filters>
+								<!-- Prevent dup MANIFEST file warning -->
+								<filter>
+									<artifact>org.yarnandtail:junit5-extensions-no-andhow-dependency</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+								<filter>
+									<artifact>org.yarnandtail:junit5-extensions-with-andhow-dependency</artifact>
+									<excludes>
+										<exclude>META-INF/MANIFEST.MF</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<createSourcesJar>true</createSourcesJar>
+							<keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

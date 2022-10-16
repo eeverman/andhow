@@ -6,7 +6,9 @@ import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.internal.ValueProblem;
-import org.yarnandtail.andhow.junit5.*;
+import org.yarnandtail.andhow.junit5.EnableJndiForThisTestMethod;
+import org.yarnandtail.andhow.junit5.EnableJndiUtil;
+import org.yarnandtail.andhow.testutil.KillAndHowBeforeThisTest;
 import org.yarnandtail.andhow.name.CaseInsensitiveNaming;
 import org.yarnandtail.andhow.property.IntProp;
 import org.yarnandtail.andhow.property.StrProp;
@@ -18,7 +20,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@KillAndHowBeforeEachTest
 public class StdJndiLoaderIT {
 
 	CaseInsensitiveNaming bns;
@@ -38,6 +39,7 @@ public class StdJndiLoaderIT {
 	}
 
 	@Test	// Duplicates test in StdJndiLoaderTest, ensuring unit tests works as expected vs entire system.
+	@KillAndHowBeforeThisTest
 	@EnableJndiForThisTestMethod
 	public void testHappyPathFromStringsCompEnvAsURIs() throws Exception {
 
@@ -100,6 +102,7 @@ public class StdJndiLoaderIT {
 
 
 	@Test
+	@KillAndHowBeforeThisTest
 	@EnableJndiForThisTestMethod
 	public void testValidationIsEnforcedWhenExactTypeUsed() throws Exception {
 
@@ -128,6 +131,7 @@ public class StdJndiLoaderIT {
 	}
 
 	@Test
+	@KillAndHowBeforeThisTest
 	@EnableJndiForThisTestMethod
 	public void testValidationIsEnforcedWhenConvertionUsed() throws Exception {
 
