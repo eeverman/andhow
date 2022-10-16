@@ -20,6 +20,14 @@
 	</description>
 
 	<dependencies>
+		<!--
+		This package is designed to be used unit testing utils for apps,
+		so dependencies that would normally be test scope are compile scope.
+		However, they are optional so that the downstream apps can choose which features to enable.
+
+		NOTE:  Any dependency added to this list that would be needed by a user of the module
+		must also be added as a dep' to andhow-junit5-extensions, which bundles this into a jar.
+		-->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-shared-test-utils</artifactId>
@@ -31,15 +39,9 @@
 			<artifactId>junit5-extensions-no-andhow-dependency</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 
-		<!--
-		This package is designed to be used unit testing utils for apps,
-		so dependencies that would normally be test scope are compile scope.
-		However, they are optional so that the downstream app can choose if
-		it wants to use Junit 4 or 5 (and use newer versions than what is
-		used here).
-		-->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
@@ -74,6 +76,18 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<!-- Turn of nexus upload b/c this module is bundled into andhow-junit5-extensions -->
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<configuration>
+					<skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<profiles>
 		<profile>
 			<id>source-and-javadoc-jar</id>
