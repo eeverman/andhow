@@ -87,9 +87,8 @@
 		<module>andhow-testing/andhow-simulated-app-tests</module>
 		<module>andhow-testing/andhow-annotation-processor-test-harness</module>
 		<module>andhow-shared-test-utils</module>
-		<module>andhow-junit5-extensions</module>
 		<module>andhow-test-stubs</module>
-		<module>junit5-extensions-no-andhow-dependency</module>
+		<module>junit5-extensions</module>
 	</modules>
 
 	<repositories>

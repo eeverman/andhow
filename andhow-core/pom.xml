@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>andhow-junit5-extensions</artifactId>
+			<artifactId>junit5-extensions-no-andhow-dependency</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
