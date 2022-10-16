@@ -3,8 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.yarnandtail</groupId>
-		<artifactId>junit5-extensions</artifactId>
+		<artifactId>andhow-parent</artifactId>
 		<version>1.5.1-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>andhow-junit5-extensions</artifactId>

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests of this JUnit Extension.
