@@ -13,7 +13,7 @@ public class ExtensionBase {
 	 *  <li>The test class instance that is invoking this extension</li>
 	 * </ul>
 	 *
-	 * This method should not be called for storate + retrieval related to a test method, since
+	 * This method should not be called for storage + retrieval related to a test method, since
 	 * it will not be unique enough (other methods could overwrite its value).
 	 *
 	 * @param context  The ExtensionContext passed in to one of the callback methods.
