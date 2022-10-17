@@ -48,7 +48,8 @@ public class ConfigFromFileExt extends ExtensionBase
 		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
 		// New config instance created just as needed for testing
-		AndHowConfiguration<? extends AndHowConfiguration> config = buildConfig(_classpathFile);
+		AndHowConfiguration<? extends AndHowConfiguration> config =
+				buildConfig(expandPath(_classpathFile, context));
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestClassStore(context).put(
@@ -77,7 +78,8 @@ public class ConfigFromFileExt extends ExtensionBase
 		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
 		// New config instance created just as needed for testing
-		AndHowConfiguration<? extends AndHowConfiguration> config = buildConfig(_classpathFile);
+		AndHowConfiguration<? extends AndHowConfiguration> config =
+				buildConfig(expandPath(_classpathFile, context));
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestMethodStore(context).put(

@@ -83,6 +83,20 @@ class ConfigFromFileExtTest {
 	}
 
 	@Test
+	public void expandPathShouldReturnPackageOfContainingClassForInnerClasses() {
+		//Set mock test class to an inner class
+		Mockito.when(extensionContext.getRequiredTestClass()).thenReturn((Class)(ConfigFromFileExtSimple.class));
+
+		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+
+		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
+				ext.expandPath("myFile.props", extensionContext));
+	}
+
+	/* NOTE:  Testing building correct paths with the default package are handled
+		 by a separate test in the default package. */
+
+	@Test
 	void completeWorkflow() throws Exception {
 
 		String cp = "my_file.properties";
