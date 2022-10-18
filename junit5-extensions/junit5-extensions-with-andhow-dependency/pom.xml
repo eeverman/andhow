@@ -38,6 +38,11 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-shared-test-utils</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>andhow-test-stubs</artifactId>
+				</exclusion></exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

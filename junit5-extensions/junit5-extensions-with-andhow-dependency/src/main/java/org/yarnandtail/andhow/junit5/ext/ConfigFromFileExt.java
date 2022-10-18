@@ -63,7 +63,7 @@ public class ConfigFromFileExt extends ExtensionBase
 		Object core = getPerTestClassStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 
-		UnaryOperator<?> locator = getPerTestClassStore(context).remove(LOCATOR_KEY, UnaryOperator.class);
+		UnaryOperator locator = getPerTestClassStore(context).remove(LOCATOR_KEY, UnaryOperator.class);
 		AndHowTestUtils.setAndHowConfigLocator(locator);
 	}
 
