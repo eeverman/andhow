@@ -115,7 +115,7 @@ public final class AndHowTestUtils {
 	 * This method is relatively safe for use in application testing and is used by the Junit
 	 * extensions and annotations to set configurations for individual tests.
 	 *
-	 * Note:  This method will fail is AndHow is uninitialized.
+	 * Note:  This method will fail if AndHow is uninitialized.
 	 **
 	 * @param newCore The new core to assign to the AndHow singleton which may be null but must
 	 *                be of type AndHowCore.

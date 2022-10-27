@@ -20,7 +20,11 @@ public class ExtensionBase {
 	 * @return The store that can be used to store and retrieve values.
 	 */
 	protected ExtensionContext.Store getPerTestClassStore(ExtensionContext context) {
-		return context.getStore(ExtensionContext.Namespace.create(getClass(), context.getRequiredTestClass()));
+		return context.getStore(getPerTestNamespace(context));
+	}
+
+	protected ExtensionContext.Namespace getPerTestNamespace(ExtensionContext context) {
+		return ExtensionContext.Namespace.create(getClass(), context.getRequiredTestClass());
 	}
 
 	/**
@@ -41,6 +45,10 @@ public class ExtensionBase {
 	 * @return The store that can be used to store and retrieve values.
 	 */
 	protected ExtensionContext.Store getPerTestMethodStore(ExtensionContext context) {
-		return context.getStore(ExtensionContext.Namespace.create(getClass(), context.getRequiredTestInstance(), context.getRequiredTestMethod()));
+		return context.getStore(getPerTestMethodNamespace(context));
+	}
+
+	protected ExtensionContext.Namespace getPerTestMethodNamespace(ExtensionContext context) {
+		return ExtensionContext.Namespace.create(getClass(), context.getRequiredTestInstance(), context.getRequiredTestMethod());
 	}
 }

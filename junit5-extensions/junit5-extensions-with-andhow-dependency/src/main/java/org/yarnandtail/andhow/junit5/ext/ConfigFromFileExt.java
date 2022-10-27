@@ -15,6 +15,9 @@ public class ConfigFromFileExt extends ExtensionBase
 	/** The complete path to a properties file on the classpath */
 	private String _classpathFile;
 
+	/** The constructed config instance to be used for AndHow */
+	protected AndHowConfiguration<? extends AndHowConfiguration> _config;
+
 	/**
 	 * New instance - validation of the classpathFile is deferred until use.
 	 * @param classpathFile Complete path to a properties file on the classpath
@@ -23,8 +26,14 @@ public class ConfigFromFileExt extends ExtensionBase
 		_classpathFile = classpathFile;
 	}
 
+	/** Key to store the AndHowCore (if any) of AndHow. */
 	protected static final String CORE_KEY = "core_key";
-	protected static final String LOCATOR_KEY = "locator_key";
+
+	/** Key to store the in-process configuration (if any) of the AndHow instance.
+	 * When is the inProcessConfig non-null for AndHow?  Only when findConfig()
+	 * has been called but AndHow has not yet initialized.
+	 */
+	protected static final String CONFIG_KEY = "config_key";
 
 	/**
 	 * Configure AndHow for a unit test class.
@@ -48,13 +57,12 @@ public class ConfigFromFileExt extends ExtensionBase
 		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
 		// New config instance created just as needed for testing
-		AndHowConfiguration<? extends AndHowConfiguration> config =
-				buildConfig(expandPath(_classpathFile, context));
+		_config = buildConfig(expandPath(_classpathFile, context));
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestClassStore(context).put(
-				LOCATOR_KEY,
-				AndHowTestUtils.setAndHowConfigLocator((c) -> config) );
+				CONFIG_KEY,
+				AndHowTestUtils.setAndHowInProcessConfig(_config));
 
 	}
 
@@ -63,8 +71,9 @@ public class ConfigFromFileExt extends ExtensionBase
 		Object core = getPerTestClassStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 
-		UnaryOperator locator = getPerTestClassStore(context).remove(LOCATOR_KEY, UnaryOperator.class);
-		AndHowTestUtils.setAndHowConfigLocator(locator);
+		AndHowConfiguration<? extends AndHowConfiguration> config =
+				getPerTestClassStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
+		AndHowTestUtils.setAndHowInProcessConfig(config);
 	}
 
 
@@ -78,13 +87,12 @@ public class ConfigFromFileExt extends ExtensionBase
 		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
 		// New config instance created just as needed for testing
-		AndHowConfiguration<? extends AndHowConfiguration> config =
-				buildConfig(expandPath(_classpathFile, context));
+		_config = buildConfig(expandPath(_classpathFile, context));
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestMethodStore(context).put(
-				LOCATOR_KEY,
-				AndHowTestUtils.setAndHowConfigLocator((c) -> config) );
+				CONFIG_KEY,
+				AndHowTestUtils.setAndHowInProcessConfig(_config));
 	}
 
 	/**
@@ -97,8 +105,9 @@ public class ConfigFromFileExt extends ExtensionBase
 		Object core = getPerTestMethodStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 
-		UnaryOperator<?> locator = getPerTestMethodStore(context).remove(LOCATOR_KEY, UnaryOperator.class);
-		AndHowTestUtils.setAndHowConfigLocator(locator);
+		AndHowConfiguration<? extends AndHowConfiguration> config =
+				getPerTestMethodStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
+		AndHowTestUtils.setAndHowInProcessConfig(config);
 	}
 
 
