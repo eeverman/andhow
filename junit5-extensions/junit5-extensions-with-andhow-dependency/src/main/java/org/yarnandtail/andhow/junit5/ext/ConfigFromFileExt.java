@@ -23,6 +23,9 @@ public class ConfigFromFileExt extends ExtensionBase
 	 * @param classpathFile Complete path to a properties file on the classpath
 	 */
 	public ConfigFromFileExt(String classpathFile) {
+		if (classpathFile == null) {
+			throw new IllegalArgumentException("The classpath properties file path cannot be null.");
+		}
 		_classpathFile = classpathFile;
 	}
 
@@ -56,8 +59,11 @@ public class ConfigFromFileExt extends ExtensionBase
 		// remove current core and keep to be later restored
 		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
+		String fullPath = expandPath(_classpathFile, context);
+		verifyClassPath(fullPath);
+
 		// New config instance created just as needed for testing
-		_config = buildConfig(expandPath(_classpathFile, context));
+		_config = buildConfig(fullPath);
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestClassStore(context).put(
@@ -86,8 +92,11 @@ public class ConfigFromFileExt extends ExtensionBase
 	public void beforeEach(ExtensionContext context) throws Exception {
 		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
+		String fullPath = expandPath(_classpathFile, context);
+		verifyClassPath(fullPath);
+
 		// New config instance created just as needed for testing
-		_config = buildConfig(expandPath(_classpathFile, context));
+		_config = buildConfig(fullPath);
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestMethodStore(context).put(
@@ -137,7 +146,7 @@ public class ConfigFromFileExt extends ExtensionBase
 	protected AndHowConfiguration<? extends AndHowConfiguration> buildConfig(String classpathFile) {
 		AndHowConfiguration<? extends AndHowConfiguration> config = new StdConfig.StdConfigImpl();
 		removeEnvLoaders(config);
-		config.setClasspathPropFilePath(classpathFile);
+		config.setClasspathPropFilePath(classpathFile).classpathPropertiesRequired();
 
 		return config;
 	}
@@ -168,6 +177,17 @@ public class ConfigFromFileExt extends ExtensionBase
 		}
 
 		return fullPath;
+	}
+
+	/**
+	 * Throws an exception if the passed classpath does not exist
+	 * @param classpath
+	 */
+	protected void verifyClassPath(String classpath) {
+		if (getClass().getResource(classpath) == null) {
+			throw new IllegalArgumentException(
+					"The file '" + classpath + "' could not be found on the classpath.");
+		}
 	}
 }
 

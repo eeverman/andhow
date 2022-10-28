@@ -118,7 +118,7 @@ class ConfigFromFileExtUnitTest {
 
 		/// /// /// ///
 
-		String cp = "my_file.properties";
+		String cp = "MyPropFile.properties";
 
 		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp);
 
@@ -218,7 +218,7 @@ class ConfigFromFileExtUnitTest {
 		/// /// /// ///
 
 
-		String cp = "my_file.properties";
+		String cp = "MyPropFile.properties";
 
 		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp);
 

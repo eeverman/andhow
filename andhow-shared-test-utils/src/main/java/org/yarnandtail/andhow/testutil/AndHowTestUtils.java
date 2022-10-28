@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.testutil;
 
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 /**
@@ -202,6 +203,18 @@ public final class AndHowTestUtils {
 				getAndHowClass(), "configLocator", newLocator);
 	}
 
+	public static List<Class<?>> setConfigurationOverrideGroups(
+			Object configurationInstance, List<Class<?>> classList) {
+
+		return ReflectionTestUtils.setInstanceFieldValue(
+				configurationInstance, "overrideGroups", classList, List.class);
+	}
+
+	public static List<Class<?>> setConfigurationOverrideGroups(
+			Object configurationInstance, Class<?> clazz) {
+		return setConfigurationOverrideGroups(configurationInstance, List.of(clazz));
+	}
+
 	/**
 	 * Forces the AndHow inProcessConfig to a new value.
 	 *
@@ -284,5 +297,4 @@ public final class AndHowTestUtils {
 	public static Class<?> getAndHowConfigurationClass() {
 		return ReflectionTestUtils.getClassByName("org.yarnandtail.andhow.AndHowConfiguration");
 	}
-
 }
