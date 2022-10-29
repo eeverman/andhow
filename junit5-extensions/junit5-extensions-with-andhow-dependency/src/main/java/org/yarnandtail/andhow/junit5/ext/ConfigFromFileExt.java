@@ -169,7 +169,14 @@ public class ConfigFromFileExt extends ExtensionBase
 		String fullPath = classpath.trim();
 
 		if (! fullPath.startsWith("/")) {
-			String pkgName = context.getRequiredTestClass().getPackageName();
+
+			String pkgName = "";	//empty is correct for default pkg
+
+			if (context.getRequiredTestClass().getPackage() != null) {
+				//getPackage() returns null for the default pkg
+				pkgName = context.getRequiredTestClass().getPackage().getName();
+			}
+
 			String pkgPath = pkgName.replace(".", "/");
 			if (pkgPath.length() > 0) pkgPath = "/" + pkgPath;
 

@@ -1,6 +1,6 @@
 package org.yarnandtail.andhow.testutil;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 /**
@@ -212,7 +212,7 @@ public final class AndHowTestUtils {
 
 	public static List<Class<?>> setConfigurationOverrideGroups(
 			Object configurationInstance, Class<?> clazz) {
-		return setConfigurationOverrideGroups(configurationInstance, List.of(clazz));
+		return setConfigurationOverrideGroups(configurationInstance, Arrays.asList(clazz));
 	}
 
 	/**

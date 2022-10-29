@@ -48,99 +48,17 @@ class ConfigFromFileExtUsageTest {
 		assertEquals("Bob", Config.MY_PROP.getValue());
 	}
 
-	@Nested
 	@Order(2)
-	class Nest1 {
-
-		@RegisterExtension
-		ConfigFromFileExt configFromFileExt = new ConfigFromFileExt("MyPropFile2.properties");
-
-		@Test
-		@ExtendWith(TestInterceptor.class)
-		public void test2() throws NoSuchMethodException {
-
-			assertFalse(AndHow.isInitialized());
-			assertNotNull(extensionContextDuringTest);
-
-			ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
-					ConfigFromFileExt.class, (Class)(this.getClass()),
-					getClass().getMethod("test2", null));
-
-			ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
-			assertNotNull(store);
-
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileExtUsageTest.Config.class);
-
-			assertEquals("Bob2", Config.MY_PROP.getValue());
-		}
-	}
-
-	@Nested
-	@Order(3)
-	class Nest2 {
-
-		@RegisterExtension
-		ConfigFromFileExt configFromFileExt = new ConfigFromFileExt("MyPropFile3.properties");
-
-		@Test
-		@ExtendWith(TestInterceptor.class)
-		public void test3() throws NoSuchMethodException {
-
-			assertFalse(AndHow.isInitialized());
-			assertNotNull(extensionContextDuringTest);
-
-			ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
-					ConfigFromFileExt.class, (Class)(this.getClass()),
-					getClass().getMethod("test3", null));
-
-			ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
-			assertNotNull(store);
-
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileExtUsageTest.Config.class);
-
-			assertEquals("Bob3", Config.MY_PROP.getValue());
-		}
-	}
-
-
-	static class NonNested3 {
-		@RegisterExtension
-		ConfigFromFileExt configFromFileExt = new ConfigFromFileExt("MyPropFile.properties");
-
-
-		@Order(4)
-		@Test
-		@ExtendWith(TestInterceptor.class)
-		public void test4() throws NoSuchMethodException {
-
-			assertFalse(AndHow.isInitialized());
-			assertNotNull(extensionContextDuringTest);
-
-			ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
-					ConfigFromFileExt.class, (Class)(this.getClass()),
-					getClass().getMethod("test4", null));
-
-			ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
-			assertNotNull(store);
-
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileExtUsageTest.Config.class);
-
-
-			assertEquals("Bob", Config.MY_PROP.getValue());
-		}
-	}
-
-	@Order(5)
 	@Test
 	@ExtendWith(TestInterceptor.class)
-	public void test5() throws NoSuchMethodException {
+	public void test2() throws NoSuchMethodException {
 
 		assertFalse(AndHow.isInitialized());
 		assertNotNull(extensionContextDuringTest);
 
 		ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
 				ConfigFromFileExt.class, (Class)(this.getClass()),
-				getClass().getMethod("test5", null));
+				getClass().getMethod("test2", null));
 
 		ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
 		assertNotNull(store);
@@ -151,6 +69,59 @@ class ConfigFromFileExtUsageTest {
 		assertEquals("Bob", Config.MY_PROP.getValue());
 	}
 
+	@Nested
+	@Order(1)
+	class Nest1 {
+
+		@RegisterExtension
+		ConfigFromFileExt configFromFileExt = new ConfigFromFileExt("MyPropFileNest1.properties");
+
+		@Test
+		@ExtendWith(TestInterceptor.class)
+		public void test1() throws NoSuchMethodException {
+
+			assertFalse(AndHow.isInitialized());
+			assertNotNull(extensionContextDuringTest);
+
+			ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
+					ConfigFromFileExt.class, (Class)(this.getClass()),
+					getClass().getMethod("test1", null));
+
+			ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
+			assertNotNull(store);
+
+			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileExtUsageTest.Config.class);
+
+			assertEquals("BobNest1", Config.MY_PROP.getValue());
+		}
+	}
+
+	@Nested
+	@Order(2)
+	class Nest2 {
+
+		@RegisterExtension
+		ConfigFromFileExt configFromFileExt = new ConfigFromFileExt("MyPropFileNest2.properties");
+
+		@Test
+		@ExtendWith(TestInterceptor.class)
+		public void test1() throws NoSuchMethodException {
+
+			assertFalse(AndHow.isInitialized());
+			assertNotNull(extensionContextDuringTest);
+
+			ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
+					ConfigFromFileExt.class, (Class)(this.getClass()),
+					getClass().getMethod("test1", null));
+
+			ExtensionContext.Store store = extensionContextDuringTest.getStore(expectedNamespace);
+			assertNotNull(store);
+
+			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileExtUsageTest.Config.class);
+
+			assertEquals("BobNest2", Config.MY_PROP.getValue());
+		}
+	}
 
 	/**
 	 * This Interceptor should capture the ExtensionContext being used during the test and store it
