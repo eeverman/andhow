@@ -3,10 +3,13 @@ package org.yarnandtail.andhow.junit5.ext;
 import org.junit.jupiter.api.extension.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.StandardLoader;
+import org.yarnandtail.andhow.junit5.ConfigFromFile;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class ConfigFromFileExt extends ExtensionBase
@@ -27,6 +30,46 @@ public class ConfigFromFileExt extends ExtensionBase
 			throw new IllegalArgumentException("The classpath properties file path cannot be null.");
 		}
 		_classpathFile = classpathFile;
+	}
+
+	public ConfigFromFileExt() {
+		// Empty constructor used when the @ConfigFromFile annotation is used.
+		// In that case, the classpathFile is found via the annotation filePath property.
+	}
+
+	// Would this be confused, called for BeforeAll and BeforeEach, etc, if there
+	// were both class and test annotations on a test?  How would that be kept straight?
+	// Might need to split up these
+	protected String getClasspathFile(ExtensionContext context) {
+		if (_classpathFile == null) {
+			Class<?> clazz = context.getRequiredTestClass();
+			Optional<Method> method = context.getTestMethod();
+
+			ConfigFromFile cff;
+
+			if (method.isPresent()) {
+				cff = method.get().getAnnotation(ConfigFromFile.class);
+
+				if (cff == null) {
+					throw new IllegalStateException("Expected the @ConfigFromFile annotation on the '" +
+							method.get().getName() + "' method.");
+				}
+
+			} else {
+
+				cff = clazz.getAnnotation(ConfigFromFile.class);
+
+				if (cff == null) {
+					throw new IllegalStateException("Expected the @ConfigFromFile annotation on class '" +
+							clazz.getName() + "'.");
+				}
+
+			}
+
+			_classpathFile = cff.filePath();
+		}
+
+		return _classpathFile;
 	}
 
 	/** Key to store the AndHowCore (if any) of AndHow. */
@@ -59,7 +102,7 @@ public class ConfigFromFileExt extends ExtensionBase
 		// remove current core and keep to be later restored
 		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
-		String fullPath = expandPath(_classpathFile, context);
+		String fullPath = expandPath(getClasspathFile(context), context);
 		verifyClassPath(fullPath);
 
 		// New config instance created just as needed for testing
@@ -92,7 +135,7 @@ public class ConfigFromFileExt extends ExtensionBase
 	public void beforeEach(ExtensionContext context) throws Exception {
 		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
-		String fullPath = expandPath(_classpathFile, context);
+		String fullPath = expandPath(getClasspathFile(context), context);
 		verifyClassPath(fullPath);
 
 		// New config instance created just as needed for testing

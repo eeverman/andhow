@@ -72,6 +72,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
 		<doclint>none</doclint>
 		<jacoco.skip>true</jacoco.skip>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
