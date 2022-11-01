@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
-import org.yarnandtail.andhow.junit5.ext.ConfigFromFileExt;
+import org.yarnandtail.andhow.junit5.ext.ConfigFromFileBaseExt;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * so the only way to refer to such is a class is to also be in the default
  * package, thus this test class.
  */
-class ConfigFromFileExtDefaultPackageTest {
+class ConfigFromFileBaseExtDefaultPackageTest {
 
 	Object andHowCoreCreatedDuringTest;
 
@@ -58,7 +58,7 @@ class ConfigFromFileExtDefaultPackageTest {
 
 	@Test
 	public void expandPathShouldExpandRelativePaths() {
-		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+		ConfigFromFileBaseExtSimple ext = new ConfigFromFileBaseExtSimple();
 
 		assertEquals("/myFile.props",
 				ext.expandPath("myFile.props", extensionContext));
@@ -71,7 +71,7 @@ class ConfigFromFileExtDefaultPackageTest {
 
 	@Test
 	public void expandPathShouldNotExpandAbsPaths() {
-		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+		ConfigFromFileBaseExtSimple ext = new ConfigFromFileBaseExtSimple();
 
 		assertEquals("/myFile.props",
 				ext.expandPath("/myFile.props", extensionContext));
@@ -89,9 +89,13 @@ class ConfigFromFileExtDefaultPackageTest {
 	}
 
 	/* Simple subclass to test protected methods */
-	public static class ConfigFromFileExtSimple extends ConfigFromFileExt {
-		public ConfigFromFileExtSimple() {
+	public static class ConfigFromFileBaseExtSimple extends ConfigFromFileBaseExt {
+		public ConfigFromFileBaseExtSimple() {
 			super("");
+		}
+
+		public String getAnnotationFilePath(ExtensionContext context) {
+			return "";
 		}
 
 		public String expandPath(String classpath, ExtensionContext context) {

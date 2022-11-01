@@ -285,22 +285,25 @@ class ConfigFromFileExtUnitTest {
 	}
 
 	/* Simple subclass to test protected methods */
-	public static class ConfigFromFileExtSimple extends ConfigFromFileExt {
+	public static class ConfigFromFileExtSimple extends ConfigFromFileBaseExt {
 
 		public ConfigFromFileExtSimple() {
 			super("");
 		}
+
+		@Override
+		protected String getAnnotationFilePath(final ExtensionContext context) { return null; }
 
 		public ConfigFromFileExtSimple(String classpathFile) {
 			super(classpathFile);
 		}
 
 		public static String getCoreKey() {
-			return ConfigFromFileExt.CORE_KEY;
+			return ConfigFromFileBaseExt.CORE_KEY;
 		}
 
 		public static String getConfigKey() {
-			return ConfigFromFileExt.CONFIG_KEY;
+			return ConfigFromFileBaseExt.CONFIG_KEY;
 		}
 
 		public String expandPath(String classpath, ExtensionContext context) {
