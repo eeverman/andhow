@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeEachTest;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 
 public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
@@ -24,6 +25,14 @@ public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
 		super(classpathFile);
 	}
 
+	/**
+	 * Find the annotated filePath property in the @ConfigFromFileBeforeThisTest annotation on the
+	 * test class.
+	 * <p>
+	 *
+	 * @param context
+	 * @return
+	 */
 	@Override
 	protected String getAnnotationFilePath(ExtensionContext context) {
 		if (context.getElement().isPresent()) {

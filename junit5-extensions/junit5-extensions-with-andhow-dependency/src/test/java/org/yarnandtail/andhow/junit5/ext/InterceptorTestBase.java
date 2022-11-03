@@ -8,8 +8,7 @@ import java.lang.reflect.Method;
  * used during a test.  Multiple threads executing the test would break this, thus SAME_THREAD.
  */
 @ExtendWith(ConfigFromFileBeforeAllTestsExtUsageTest.TestInterceptor.class)
-public
-class InterceptorTestBase {
+public class InterceptorTestBase {
 
 	protected static ExtensionContext extensionContextDuringTest;
 

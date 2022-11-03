@@ -24,15 +24,30 @@ public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 		super(classpathFile);
 	}
 
+	/**
+	 * Find the annotated filePath property in the @ConfigFromFileBeforeAllTests annotation on the
+	 * test class.
+	 * <p>
+	 * In the case of a @Nested test, the ConfigFromFileBeforeAllTestsExt is invoked again for each
+	 * nested test class so the code recursively hunts up the inheritance chain to find the class
+	 * with the annotation.
+	 *
+	 * @param context
+	 * @return
+	 */
 	@Override
 	protected String getAnnotationFilePath(ExtensionContext context) {
-		if (context.getElement().isPresent()) {
-			ConfigFromFileBeforeAllTests cff = context.getElement().get().getAnnotation(ConfigFromFileBeforeAllTests.class);
+
+		ConfigFromFileBeforeAllTests cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeAllTests.class);
+
+		if (cff != null) {
 			return cff.filePath();
-		} else {
-			throw new IllegalStateException("Expected the @ConfigFromFileBeforeAllTests annotation on the '" +
-					context.getRequiredTestMethod() + "' test method.");
+		} else if (context.getParent().isPresent()) {
+			return getAnnotationFilePath(context.getParent().get());
 		}
+
+		throw new IllegalStateException("Expected the @ConfigFromFileBeforeAllTests annotation on the '" +
+				context.getRequiredTestClass() + "' class or a parent class for a @Nested test.");
 	}
 
 	@Override

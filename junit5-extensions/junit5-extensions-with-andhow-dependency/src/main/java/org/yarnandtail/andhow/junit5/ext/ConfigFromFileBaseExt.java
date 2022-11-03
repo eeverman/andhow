@@ -16,6 +16,18 @@ import java.util.List;
  * <li>BeforeEach/AfterEach Registered on a test method to apply to a single test</li>
  * Mixing purposes (i.e. a single instance registered for use for more than one mode)
  * can result in confused state.
+ *
+ * Note that JUnit has an unexpected handling of nested test classes when the parent class and the
+ * nested test class have the same annotation:  JUnit creates only a single instance of an Extension.
+ * Thus, no state can be kept in the extension other than via the context store mechanism, or, for
+ * config info, read configuration from annotation parameters EACH TIME.  Configuration parameters
+ * cannot be cached (other than on the context store) because the cached values will bleed over from
+ * the parent class to the child class.  For instance, if the parent class is annotated with:
+ * @ConfigFromFileBeforeAllTests(filePath = "parent.properties")
+ * and the nested class is annotated with:
+ * @ConfigFromFileBeforeAllTests(filePath = "child.properties")
+ * storing the config value of the parent in the extension means that the cached value will be found
+ * and used when the child is configured.  Read from the annotation each time!
  */
 public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 
@@ -50,15 +62,6 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 * @return
 	 */
 	protected abstract String getAnnotationFilePath(ExtensionContext context);
-
-	protected String getClasspathFile(ExtensionContext context) {
-		if (_classpathFile == null) {
-			_classpathFile = getAnnotationFilePath(context);
-		}
-
-		System.out.println("CFF: filePath = " + _classpathFile);
-		return _classpathFile;
-	}
 
 	/** Key to store the AndHowCore (if any) of AndHow. */
 	protected static final String CORE_KEY = "core_key";
@@ -100,7 +103,10 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 				CONFIG_KEY,
 				AndHowTestUtils.setAndHowInProcessConfig(_config));
 
-		System.out.println("CFF: beforeAll: filePath = " + fullPath);
+//		System.out.println("CFF:beforeAll = " + getClasspathFile(context) + " for " +
+//				context.getElement().get().toString()
+//						.replaceFirst("org\\.yarnandtail\\.andhow\\.junit5\\.", "") +
+//				" instance: " + this.toString());
 	}
 
 	public void afterAll(ExtensionContext context) throws Exception {
@@ -132,7 +138,11 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 				CONFIG_KEY,
 				AndHowTestUtils.setAndHowInProcessConfig(_config));
 
-		System.out.println("CFF: beforeEach: filePath = " + fullPath);
+//		System.out.println("CFF:beforeEach = " + getClasspathFile(context) + " for " +
+//				context.getElement().get().toString()
+//						//.replaceFirst("org\\.yarnandtail\\.andhow\\.junit5\\.", "")
+//						.replaceFirst("public void org\\.yarnandtail\\.andhow\\.junit5\\.", "")
+//						.replaceFirst("\\(\\).*", "()"));
 	}
 
 	/**
@@ -149,6 +159,20 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 		AndHowTestUtils.setAndHowInProcessConfig(config);
 	}
 
+	/**
+	 * Find the user configured properties file path.
+	 * <p>
+	 * If configured via an annotation, read the annotated value EVERY TIME, DO NOT CACHE THE VALUE.
+	 * @param context
+	 * @return
+	 */
+	protected String getClasspathFile(ExtensionContext context) {
+		if (_classpathFile == null) {
+			return getAnnotationFilePath(context);
+		} else {
+			return _classpathFile;
+		}
+	}
 
 	/**
 	 * Remove the Loaders that are 'environment' related, meaning they could be set
