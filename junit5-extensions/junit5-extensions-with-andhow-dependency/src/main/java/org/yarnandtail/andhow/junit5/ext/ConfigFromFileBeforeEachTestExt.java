@@ -37,14 +37,28 @@ public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
 	 * @return
 	 */
 	@Override
-	protected String getAnnotationFilePath(ExtensionContext context) {
+	protected String getFilePathFromAnnotation(ExtensionContext context) {
 
 		ConfigFromFileBeforeEachTest cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeEachTest.class);
 
 		if (cff != null) {
 			return cff.filePath();
 		} else if (context.getParent().isPresent()) {
-			return getAnnotationFilePath(context.getParent().get());
+			return getFilePathFromAnnotation(context.getParent().get());
+		}
+
+		throw new IllegalStateException("Expected the @ConfigFromFileBeforeEachTest annotation on the '" +
+				context.getRequiredTestClass() + "' class or a parent class for a @Nested test.");
+	}
+
+	@Override
+	protected Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context) {
+		ConfigFromFileBeforeEachTest cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeEachTest.class);
+
+		if (cff != null) {
+			return cff.classesInScope();
+		} else if (context.getParent().isPresent()) {
+			return getClassesInScopeFromAnnotation(context.getParent().get());
 		}
 
 		throw new IllegalStateException("Expected the @ConfigFromFileBeforeEachTest annotation on the '" +

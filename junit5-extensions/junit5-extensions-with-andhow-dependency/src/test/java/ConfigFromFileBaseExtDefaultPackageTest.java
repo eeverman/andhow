@@ -90,12 +90,19 @@ class ConfigFromFileBaseExtDefaultPackageTest {
 
 	/* Simple subclass to test protected methods */
 	public static class ConfigFromFileBaseExtSimple extends ConfigFromFileBaseExt {
+
+		// Only works in limited contexts where the full class is not being invoked
 		public ConfigFromFileBaseExtSimple() {
 			super("");
 		}
 
-		public String getAnnotationFilePath(ExtensionContext context) {
+		public String getFilePathFromAnnotation(ExtensionContext context) {
 			return "";
+		}
+
+		@Override
+		protected Class<?>[] getClassesInScopeFromAnnotation(final ExtensionContext context) {
+			return new Class[0];
 		}
 
 		public String expandPath(String classpath, ExtensionContext context) {

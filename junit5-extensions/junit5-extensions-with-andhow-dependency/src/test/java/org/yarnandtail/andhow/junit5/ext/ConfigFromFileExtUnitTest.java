@@ -120,7 +120,7 @@ class ConfigFromFileExtUnitTest {
 
 		String cp = "MyPropFile.properties";
 
-		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp);
+		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp, new Class<?>[] {this.getClass()});
 
 		// The initial event called on extension by JUnit
 		theExt.beforeAll(extensionContext);
@@ -220,7 +220,7 @@ class ConfigFromFileExtUnitTest {
 
 		String cp = "MyPropFile.properties";
 
-		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp);
+		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp, new Class<?>[] {this.getClass()});
 
 		// The initial event called on extension by JUnit
 		theExt.beforeAll(extensionContext);
@@ -287,15 +287,21 @@ class ConfigFromFileExtUnitTest {
 	/* Simple subclass to test protected methods */
 	public static class ConfigFromFileExtSimple extends ConfigFromFileBaseExt {
 
+		// Only works in limited contexts where the full class is not being invoked
 		public ConfigFromFileExtSimple() {
 			super("");
 		}
 
 		@Override
-		protected String getAnnotationFilePath(final ExtensionContext context) { return null; }
+		protected String getFilePathFromAnnotation(final ExtensionContext context) { return null; }
 
-		public ConfigFromFileExtSimple(String classpathFile) {
-			super(classpathFile);
+		@Override
+		protected Class<?>[] getClassesInScopeFromAnnotation(final ExtensionContext context) {
+			return new Class[0];
+		}
+
+		public ConfigFromFileExtSimple(String classpathFile, Class<?>[] classesInScope) {
+			super(classpathFile, classesInScope);
 		}
 
 		public static String getCoreKey() {

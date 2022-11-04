@@ -204,14 +204,14 @@ public final class AndHowTestUtils {
 	}
 
 	public static List<Class<?>> setConfigurationOverrideGroups(
-			Object configurationInstance, List<Class> classList) {
+			Object configurationInstance, List<Class<?>> classList) {
 
 		return ReflectionTestUtils.setInstanceFieldValue(
 				configurationInstance, "overrideGroups", classList, List.class);
 	}
 
 	public static List<Class<?>> setConfigurationOverrideGroups(
-			Object configurationInstance, Class clazz) {
+			Object configurationInstance, Class<?> clazz) {
 		return setConfigurationOverrideGroups(configurationInstance, Arrays.asList(clazz));
 	}
 

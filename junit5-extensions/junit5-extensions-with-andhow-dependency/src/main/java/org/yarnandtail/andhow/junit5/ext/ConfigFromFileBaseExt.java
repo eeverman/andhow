@@ -6,7 +6,7 @@ import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Implementation of an ExtensionBase that configures AndHow from a single properties
@@ -31,8 +31,33 @@ import java.util.List;
  */
 public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 
+	/** Key to store the AndHowCore (if any) of AndHow. */
+	protected static final String CORE_KEY = "core_key";
+
+	/** Key to store the in-process configuration (if any) of the AndHow instance.
+	 * When is the inProcessConfig non-null for AndHow?  Only when findConfig()
+	 * has been called but AndHow has not yet initialized.
+	 */
+	protected static final String CONFIG_KEY = "config_key";
+
 	/** The complete path to a properties file on the classpath */
 	private String _classpathFile;
+
+	/**
+	 * This Optional has unique usage:
+	 * null:  (Optional not initialized) means that this class was constructed via
+	 * the default constructor, which likely means it is being used via an
+	 * annotation.  The value for this config param should be discovered at runtime
+	 * from the annotation.
+	 * Optional.isPresent() == false:  The value was set to empty in the java
+	 * constructor.  This class was constructed w/ a standard constructor that
+	 * spec'ed this value as empty or null.  DON'T TRY TO FIND A VALUE IN AN
+	 * ANNOTATION - THERE ISN'T ONE.
+	 * Optional.isPresent() == true:  This class was constructed w/ a standard
+	 * constructor that spec'ed this value.  DON'T TRY TO FIND A VALUE IN AN
+	 * ANNOTATION - THERE ISN'T ONE.
+	 */
+	private Optional<Class<?>[]> _classesInScope;
 
 	/** The constructed config instance to be used for AndHow */
 	protected AndHowConfiguration<? extends AndHowConfiguration> _config;
@@ -46,13 +71,28 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 			throw new IllegalArgumentException("The classpath properties file path cannot be null.");
 		}
 		_classpathFile = classpathFile;
+		_classesInScope = Optional.empty();
+	}
+
+	public ConfigFromFileBaseExt(String classpathFile, Class<?>[] configClasses) {
+		if (classpathFile == null) {
+			throw new IllegalArgumentException("The classpath properties file path cannot be null.");
+		}
+
+		_classpathFile = classpathFile;
+		_classesInScope = Optional.of(configClasses);
 	}
 
 	/**
 	 * Empty constructor used when the \@ConfigFromFile annotation is used.
 	 *
-	 * When the empty construct is used, the classpathFile is found via the
-	 * \@ConfigFromFile annotation filePath property.
+	 * When the empty construct is used, the classpathFile and classesInScope are
+	 * found via the \@ConfigFromFile annotation filePath property.
+	 * <p>
+	 * <strong>This constructor cannot be used to create an instance of this class
+	 * other than via the annotation mechanism.</strong>  When this constructor is
+	 * used, the class assumes it will find its configuration in an annotation,
+	 * which will not be present other than within the context of a JUnit test.
 	 */
 	public ConfigFromFileBaseExt() {	}
 
@@ -61,16 +101,14 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 * that class.
 	 * @return
 	 */
-	protected abstract String getAnnotationFilePath(ExtensionContext context);
+	protected abstract String getFilePathFromAnnotation(ExtensionContext context);
 
-	/** Key to store the AndHowCore (if any) of AndHow. */
-	protected static final String CORE_KEY = "core_key";
-
-	/** Key to store the in-process configuration (if any) of the AndHow instance.
-	 * When is the inProcessConfig non-null for AndHow?  Only when findConfig()
-	 * has been called but AndHow has not yet initialized.
+	/**
+	 * When this Extension is being used in association w/ an annotation, this returns
+	 * the optional configClasses List.
+	 * @return
 	 */
-	protected static final String CONFIG_KEY = "config_key";
+	protected abstract Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context);
 
 	/**
 	 * Configure AndHow for a unit test class.
@@ -89,14 +127,11 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 */
 	public void beforeAll(ExtensionContext context) throws Exception {
 
-		// remove current core and keep to be later restored
+		// Store the old core and set the current core to null
 		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
-		String fullPath = expandPath(getClasspathFile(context), context);
-		verifyClassPath(fullPath);
-
-		// New config instance created just as needed for testing
-		_config = buildConfig(fullPath);
+		// New config instance created just as requested for testing
+		_config = buildConfig(context);
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestClassStore(context).put(
@@ -125,13 +160,12 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 * @throws Exception
 	 */
 	public void beforeEach(ExtensionContext context) throws Exception {
+
+		// Store the old core and set the current core to null
 		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
-		String fullPath = expandPath(getClasspathFile(context), context);
-		verifyClassPath(fullPath);
-
-		// New config instance created just as needed for testing
-		_config = buildConfig(fullPath);
+		// New config instance created just as requested for testing
+		_config = buildConfig(context);
 
 		// Remove current locator and replace w/ one that always returns a custom config
 		getPerTestMethodStore(context).put(
@@ -168,10 +202,51 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 */
 	protected String getClasspathFile(ExtensionContext context) {
 		if (_classpathFile == null) {
-			return getAnnotationFilePath(context);
+			return getFilePathFromAnnotation(context);
 		} else {
 			return _classpathFile;
 		}
+	}
+
+	/**
+	 * Find the user configured classes in scope.
+	 * <p>
+	 * If configured via an annotation, read the annotated value EVERY TIME, DO NOT CACHE THE VALUE.
+	 * @param context
+	 * @return A List that is never null but may be empty.
+	 */
+	protected List<Class<?>> getClassesInScope(ExtensionContext context) {
+		if (_classesInScope == null) {
+			//Not initialized, so this is annotation construction
+			return Arrays.asList(getClassesInScopeFromAnnotation(context));
+		} else if (_classesInScope.isPresent()) {
+			return Arrays.asList(_classesInScope.get());	//Std java class construction was used
+		} else {
+			return Collections.emptyList();
+		}
+	}
+
+	/**
+	 * Construct a new AndHowConfiguration instance created as needed for testing
+	 *
+	 * @param context
+	 * @return
+	 */
+	protected AndHowConfiguration<? extends AndHowConfiguration> buildConfig(ExtensionContext context) {
+
+		String fullPath = expandPath(getClasspathFile(context), context);
+		verifyClassPath(fullPath);
+		List<Class<?>> clazzes = getClassesInScope(context);
+
+		AndHowConfiguration<? extends AndHowConfiguration> config = new StdConfig.StdConfigImpl();
+		removeEnvLoaders(config);
+		config.setClasspathPropFilePath(fullPath).classpathPropertiesRequired();
+
+		if (! clazzes.isEmpty()) {
+			AndHowTestUtils.setConfigurationOverrideGroups(config, clazzes);
+		}
+
+		return config;
 	}
 
 	/**
@@ -190,19 +265,6 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 		loaders.remove(StdJndiLoader.class);
 
 		config.setStandardLoaders(loaders).setStandardLoaders(loaders);
-	}
-
-	/**
-	 * Construct a new AndHowConfiguration instance created as needed for testing
-	 * @param classpathFile
-	 * @return
-	 */
-	protected AndHowConfiguration<? extends AndHowConfiguration> buildConfig(String classpathFile) {
-		AndHowConfiguration<? extends AndHowConfiguration> config = new StdConfig.StdConfigImpl();
-		removeEnvLoaders(config);
-		config.setClasspathPropFilePath(classpathFile).classpathPropertiesRequired();
-
-		return config;
 	}
 
 	/**

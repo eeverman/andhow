@@ -3,6 +3,9 @@ package org.yarnandtail.andhow.junit5.ext;
 import org.junit.jupiter.api.extension.*;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 		implements BeforeAllCallback, AfterAllCallback {
 
@@ -36,19 +39,34 @@ public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 	 * @return
 	 */
 	@Override
-	protected String getAnnotationFilePath(ExtensionContext context) {
+	protected String getFilePathFromAnnotation(ExtensionContext context) {
 
 		ConfigFromFileBeforeAllTests cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeAllTests.class);
 
 		if (cff != null) {
 			return cff.filePath();
 		} else if (context.getParent().isPresent()) {
-			return getAnnotationFilePath(context.getParent().get());
+			return getFilePathFromAnnotation(context.getParent().get());
 		}
 
 		throw new IllegalStateException("Expected the @ConfigFromFileBeforeAllTests annotation on the '" +
 				context.getRequiredTestClass() + "' class or a parent class for a @Nested test.");
 	}
+
+	@Override
+	protected Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context) {
+		ConfigFromFileBeforeAllTests cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeAllTests.class);
+
+		if (cff != null) {
+			return cff.classesInScope();
+		} else if (context.getParent().isPresent()) {
+			return getClassesInScopeFromAnnotation(context.getParent().get());
+		}
+
+		throw new IllegalStateException("Expected the @ConfigFromFileBeforeAllTests annotation on the '" +
+				context.getRequiredTestClass() + "' class or a parent class for a @Nested test.");
+	}
+
 
 	@Override
 	public void beforeAll(final ExtensionContext context) throws Exception {
