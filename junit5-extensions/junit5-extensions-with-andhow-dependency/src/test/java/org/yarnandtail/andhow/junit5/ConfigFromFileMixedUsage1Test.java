@@ -20,21 +20,16 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @Execution(SAME_THREAD)
 @ConfigFromFileBeforeAllTests(filePath = "ext/MyPropFile.properties")
 //@TestInstance(Lifecycle.PER_CLASS) // Need to try this
-class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
+class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	private static Object coreFoundInTest1;
-
-	@BeforeAll
-	static public void beforeAll() {
-		System.out.println("ConfigFromFileMixedUsageTest BeforeAll");
-	}
 
 	@Order(1)
 	@Test
 	public void test1() {
 
 		assertFalse(AndHow.isInitialized());
-		AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+		AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 
 		assertEquals("Bob", Config.MY_PROP.getValue());
 
@@ -65,7 +60,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 		assertSame(coreFoundInTest1, store.get("core_key"),
 				"The stored core should be the same one created via BeforeAll in test1 ");
 
-		AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+		AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 
 		assertEquals("Bob2", Config.MY_PROP.getValue());
 	}
@@ -104,7 +99,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 		@Order(1)
 		public void test1() {
 			assertFalse(AndHow.isInitialized());
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 			assertEquals("Bob", Config.MY_PROP.getValue());
 		}
 
@@ -121,7 +116,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Test
 			public void test1() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("Bob", Config.MY_PROP.getValue());
 			}
 		}
@@ -135,7 +130,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Order(1)
 			public void test1() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("BobNest1", Config.MY_PROP.getValue());
 			}
 
@@ -154,7 +149,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Test
 			public void test1() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("Bob", Config.MY_PROP.getValue());
 			}
 		}
@@ -171,7 +166,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Order(1)
 			public void test1() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("BobNest2", Config.MY_PROP.getValue());
 			}
 
@@ -179,7 +174,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Test
 			public void test2() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("BobNest2", Config.MY_PROP.getValue());
 			}
 		}
@@ -190,7 +185,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			@Test
 			public void test1() {
 				assertFalse(AndHow.isInitialized());
-				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+				AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 				assertEquals("Bob", Config.MY_PROP.getValue());
 			}
 		}
@@ -207,7 +202,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 		public void test1() throws NoSuchMethodException {
 
 			assertFalse(AndHow.isInitialized());
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 
 			assertEquals("BobNest1", Config.MY_PROP.getValue());
 
@@ -238,7 +233,7 @@ class ConfigFromFileMixedUsageTest extends InterceptorTestBase {
 			assertNotNull(store);
 			assertNotSame(coreFoundInTest1, store.get("core_key"));
 
-			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsageTest.Config.class);
+			AndHowTestUtils.setConfigurationOverrideGroups(AndHow.findConfig(), ConfigFromFileMixedUsage1Test.Config.class);
 
 			assertEquals("Bob2", Config.MY_PROP.getValue());
 		}

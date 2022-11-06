@@ -6,6 +6,7 @@ import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -218,12 +219,37 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	protected List<Class<?>> getClassesInScope(ExtensionContext context) {
 		if (_classesInScope == null) {
 			//Not initialized, so this is annotation construction
-			return Arrays.asList(getClassesInScopeFromAnnotation(context));
+			return stem(Arrays.asList(getClassesInScopeFromAnnotation(context)));
 		} else if (_classesInScope.isPresent()) {
-			return Arrays.asList(_classesInScope.get());	//Std java class construction was used
+			return stem(Arrays.asList(_classesInScope.get()));	//Std java class construction was used
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	/**
+	 * Generate a comprehensive list of classes that includes inner class which might contain
+	 * AndHow properties.
+	 */
+	protected List<Class<?>> stem(List<Class<?>> clazzes) {
+		final List<Class<?>> stemmed = new ArrayList<>();
+		stemmed.addAll(clazzes);
+
+		int index = 0;
+
+		while (index < stemmed.size()) {
+			Class<?> c = stemmed.get(index);
+
+			Arrays.stream(c.getDeclaredClasses()).forEach( cc -> {
+					if (Modifier.isStatic(cc.getModifiers())) {
+						stemmed.add(cc);
+					}
+			});
+
+			index++;
+		}
+
+		return stemmed;
 	}
 
 	/**
