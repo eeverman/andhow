@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(SAME_THREAD)
 @ConfigFromFileBeforeAllTests(filePath = "ext/MyPropFile.properties")
-//@TestInstance(Lifecycle.PER_CLASS) // Need to try this
 class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	private static Object coreFoundInTest1;

@@ -1,14 +1,11 @@
 package org.yarnandtail.andhow.junit5;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.yarnandtail.andhow.AndHow;
-import org.yarnandtail.andhow.junit5.ext.ConfigFromFileBeforeThisTestExt;
-import org.yarnandtail.andhow.junit5.ext.InterceptorTestBase;
-import org.yarnandtail.andhow.property.StrProp;
-import org.yarnandtail.andhow.testutil.AndHowTestUtils;
+import org.yarnandtail.andhow.api.AppFatalException;
+import org.yarnandtail.andhow.api.Problem;
+import org.yarnandtail.andhow.internal.RequirementProblem;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
@@ -21,12 +18,12 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(SAME_THREAD)
 @ConfigFromFileBeforeAllTests(filePath = "Conf1And2AsBob.properties", classesInScope = {Conf1.class, Conf2.class})
-//@TestInstance(Lifecycle.PER_CLASS) // Need to try this
 class ConfigFromFileMixedUsage2Test {
 
 	@Order(1)
 	@Test
 	public void test1() {
+		assertFalse(AndHow.isInitialized(), "Shouldn't be init before 1st test");
 		assertEquals("Bob", Conf1.MY_PROP.getValue());
 		assertEquals("Bob", Conf1.Inner1.MY_PROP.getValue());
 		assertEquals("Bob", Conf2.MY_PROP.getValue());
@@ -38,7 +35,7 @@ class ConfigFromFileMixedUsage2Test {
 	@ConfigFromFileBeforeThisTest(filePath = "Conf1OnlyAsDeb.properties", classesInScope = {Conf1.class})
 	public void test2() throws NoSuchMethodException {
 
-		assertFalse(AndHow.isInitialized());
+		assertFalse(AndHow.isInitialized(), "Shouldn't be init bc this test forces a new config");
 
 		assertEquals("Deb", Conf1.MY_PROP.getValue());
 		assertEquals("Deb", Conf1.Inner1.MY_PROP.getValue());
@@ -48,7 +45,26 @@ class ConfigFromFileMixedUsage2Test {
 
 	@Order(3)
 	@Test
-	public void test3() {
+	@ConfigFromFileBeforeThisTest(filePath = "Conf1OnlyAsDeb.properties", classesInScope = {Conf1.class, Conf2.class})
+	public void puttingUnconfiguredRequiredPropertiesInScopeShouldError() {
+
+		assertFalse(AndHow.isInitialized(), "Shouldn't be init bc this test forces a new config");
+
+		AppFatalException e = assertThrows(AppFatalException.class, () -> Conf1.MY_PROP.getValue());
+
+		assertEquals(1, e.getProblems().size());
+		Problem p = e.getProblems().get(0);
+		assertTrue(p instanceof RequirementProblem.NonNullPropertyProblem);
+		RequirementProblem.NonNullPropertyProblem nnp = (RequirementProblem.NonNullPropertyProblem)p;
+		assertSame(Conf2.Inner1.MY_PROP, nnp.getPropertyCoord().getProperty());
+	}
+
+	@Order(4)
+	@Test
+	public void test4() {
+
+		assertTrue(AndHow.isInitialized(), "Should be init bc the config state should be restore to post-test1");
+
 		assertEquals("Bob", Conf1.MY_PROP.getValue());
 		assertEquals("Bob", Conf1.Inner1.MY_PROP.getValue());
 		assertEquals("Bob", Conf2.MY_PROP.getValue());
