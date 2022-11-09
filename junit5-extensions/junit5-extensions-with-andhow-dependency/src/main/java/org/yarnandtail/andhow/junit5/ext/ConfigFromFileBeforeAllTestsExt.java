@@ -3,9 +3,6 @@ package org.yarnandtail.andhow.junit5.ext;
 import org.junit.jupiter.api.extension.*;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 		implements BeforeAllCallback, AfterAllCallback {
 
@@ -44,7 +41,7 @@ public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 		ConfigFromFileBeforeAllTests cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeAllTests.class);
 
 		if (cff != null) {
-			return cff.filePath();
+			return cff.value();
 		} else if (context.getParent().isPresent()) {
 			return getFilePathFromAnnotation(context.getParent().get());
 		}
@@ -58,7 +55,7 @@ public class ConfigFromFileBeforeAllTestsExt extends ConfigFromFileBaseExt
 		ConfigFromFileBeforeAllTests cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeAllTests.class);
 
 		if (cff != null) {
-			return cff.classesInScope();
+			return cff.includeClasses();
 		} else if (context.getParent().isPresent()) {
 			return getClassesInScopeFromAnnotation(context.getParent().get());
 		}

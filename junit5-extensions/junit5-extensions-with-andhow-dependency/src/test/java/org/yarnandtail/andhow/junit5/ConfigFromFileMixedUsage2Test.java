@@ -1,23 +1,17 @@
 package org.yarnandtail.andhow.junit5;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.internal.RequirementProblem;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
-/**
- * This class shares a static var 'extensionContextDuringTest' which is the JUnit ExtensionContext
- * used during a test.  Multiple threads executing the test would break this, thus SAME_THREAD.
- */
+
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(SAME_THREAD)
-@ConfigFromFileBeforeAllTests(filePath = "Conf1And2AsBob.properties", classesInScope = {Conf1.class, Conf2.class})
+@ConfigFromFileBeforeAllTests(value = "Conf1And2AsBob.properties", includeClasses = {Conf1.class, Conf2.class})
 class ConfigFromFileMixedUsage2Test {
 
 	@Order(1)
@@ -32,7 +26,7 @@ class ConfigFromFileMixedUsage2Test {
 
 	@Order(2)
 	@Test
-	@ConfigFromFileBeforeThisTest(filePath = "Conf1OnlyAsDeb.properties", classesInScope = {Conf1.class})
+	@ConfigFromFileBeforeThisTest(value = "Conf1OnlyAsDeb.properties", includeClasses = {Conf1.class})
 	public void test2() throws NoSuchMethodException {
 
 		assertFalse(AndHow.isInitialized(), "Shouldn't be init bc this test forces a new config");
@@ -45,7 +39,7 @@ class ConfigFromFileMixedUsage2Test {
 
 	@Order(3)
 	@Test
-	@ConfigFromFileBeforeThisTest(filePath = "Conf1OnlyAsDeb.properties", classesInScope = {Conf1.class, Conf2.class})
+	@ConfigFromFileBeforeThisTest(value = "Conf1OnlyAsDeb.properties", includeClasses = {Conf1.class, Conf2.class})
 	public void puttingUnconfiguredRequiredPropertiesInScopeShouldError() {
 
 		assertFalse(AndHow.isInitialized(), "Shouldn't be init bc this test forces a new config");

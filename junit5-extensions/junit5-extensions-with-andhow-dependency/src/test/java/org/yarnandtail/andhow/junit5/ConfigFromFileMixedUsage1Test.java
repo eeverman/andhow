@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(SAME_THREAD)
-@ConfigFromFileBeforeAllTests(filePath = "ext/MyPropFile.properties")
+@ConfigFromFileBeforeAllTests(value = "ext/MyPropFile.properties")
 class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	private static Object coreFoundInTest1;
@@ -45,7 +45,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	@Order(3)
 	@Test
-	@ConfigFromFileBeforeThisTest(filePath = "ext/MyPropFile2.properties")
+	@ConfigFromFileBeforeThisTest(value = "ext/MyPropFile2.properties")
 	public void test3() throws NoSuchMethodException {
 
 		assertFalse(AndHow.isInitialized());
@@ -123,7 +123,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 		@Nested
 		@Order(2)
-		@ConfigFromFileBeforeAllTests(filePath = "ext/MyPropFileNest1.properties")
+		@ConfigFromFileBeforeAllTests(value = "ext/MyPropFileNest1.properties")
 		class NestAB {
 			@Test
 			@Order(1)
@@ -158,7 +158,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 		 */
 		@Nested
 		@Order(4)
-		@ConfigFromFileBeforeEachTest(filePath = "ext/MyPropFileNest2.properties")
+		@ConfigFromFileBeforeEachTest(value = "ext/MyPropFileNest2.properties")
 		class NestAD {
 
 			@Test
@@ -193,7 +193,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 	@Nested
 	@Order(2)
 	@ExtendWith(TestInterceptor.class)
-	@ConfigFromFileBeforeAllTests(filePath = "ext/MyPropFileNest1.properties")
+	@ConfigFromFileBeforeAllTests(value = "ext/MyPropFileNest1.properties")
 	class Nest1 {
 
 		@Test
@@ -219,7 +219,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 		@Order(3)
 		@Test
-		@ConfigFromFileBeforeThisTest(filePath = "ext/MyPropFile2.properties")
+		@ConfigFromFileBeforeThisTest(value = "ext/MyPropFile2.properties")
 		public void test3() throws NoSuchMethodException {
 
 			assertFalse(AndHow.isInitialized());

@@ -1,7 +1,6 @@
 package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
-import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeEachTest;
 
 public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
@@ -42,7 +41,7 @@ public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
 		ConfigFromFileBeforeEachTest cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeEachTest.class);
 
 		if (cff != null) {
-			return cff.filePath();
+			return cff.value();
 		} else if (context.getParent().isPresent()) {
 			return getFilePathFromAnnotation(context.getParent().get());
 		}
@@ -56,7 +55,7 @@ public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
 		ConfigFromFileBeforeEachTest cff = context.getRequiredTestClass().getAnnotation(ConfigFromFileBeforeEachTest.class);
 
 		if (cff != null) {
-			return cff.classesInScope();
+			return cff.includeClasses();
 		} else if (context.getParent().isPresent()) {
 			return getClassesInScopeFromAnnotation(context.getParent().get());
 		}

@@ -79,6 +79,9 @@ class ConfigFromFileExtUnitTest {
 
 		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
 				ext.expandPath("myFile.props", extensionContext));
+
+		assertEquals("/org/yarnandtail/andhow/junit5/ext/subpkg/myFile.props",
+				ext.expandPath("subpkg/myFile.props", extensionContext));
 	}
 
 	/* NOTE:  Testing building correct paths with the default package are handled
