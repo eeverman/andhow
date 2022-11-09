@@ -2,7 +2,7 @@ package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
 
-public class ExtensionBase {
+public abstract class ExtensionBase {
 
 	/**
 	 * Create or return a unique storage space, which is unique per the test class.

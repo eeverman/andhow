@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(SAME_THREAD)
-@ConfigFromFileBeforeAllTests(value = "ext/MyPropFile.properties")
+@ConfigFromFileBeforeAllTests("ext/MyPropFile.properties")
 class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	private static Object coreFoundInTest1;
@@ -45,7 +45,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	@Order(3)
 	@Test
-	@ConfigFromFileBeforeThisTest(value = "ext/MyPropFile2.properties")
+	@ConfigFromFileBeforeThisTest("ext/MyPropFile2.properties")
 	public void test3() throws NoSuchMethodException {
 
 		assertFalse(AndHow.isInitialized());
@@ -158,7 +158,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 		 */
 		@Nested
 		@Order(4)
-		@ConfigFromFileBeforeEachTest(value = "ext/MyPropFileNest2.properties")
+		@ConfigFromFileBeforeEachTest("ext/MyPropFileNest2.properties")
 		class NestAD {
 
 			@Test

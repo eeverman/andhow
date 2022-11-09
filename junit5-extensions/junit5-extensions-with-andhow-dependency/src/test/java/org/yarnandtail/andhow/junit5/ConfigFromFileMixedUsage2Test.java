@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ConfigFromFileBeforeAllTests(value = "Conf1And2AsBob.properties", includeClasses = {Conf1.class, Conf2.class})
+@ConfigFromFileBeforeAllTests(value = "Conf1And2AsBob.properties", includeClasses = {Conf1.class, Conf2.class, Conf3.class})
 class ConfigFromFileMixedUsage2Test {
 
 	@Order(1)

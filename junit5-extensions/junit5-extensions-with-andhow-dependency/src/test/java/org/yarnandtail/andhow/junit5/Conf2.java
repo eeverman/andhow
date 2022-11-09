@@ -10,4 +10,8 @@ public interface Conf2 {
 		// Required!
 		StrProp MY_PROP = StrProp.builder().aliasInAndOut("CONF2_INNER1_MY_PROP").notNull().build();
 	}
+
+	static interface Inner2 {
+		// I have no config properties...
+	}
 }
