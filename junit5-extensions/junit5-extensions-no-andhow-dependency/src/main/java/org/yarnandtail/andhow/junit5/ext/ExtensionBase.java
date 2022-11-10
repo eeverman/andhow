@@ -1,8 +1,41 @@
 package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
+import static org.yarnandtail.andhow.junit5.ext.ExtensionType.Storage.*;
 
 public abstract class ExtensionBase {
+
+	/**
+	 * The ExtensionType that describes the basic behaviors and attributes of the extension.
+	 *
+	 * @return
+	 */
+	protected abstract ExtensionType getExtensionType();
+
+
+	/**
+	 * Get the appropriate Store based on the getExtensionType() value of the Extension.
+	 *
+	 * @param context
+	 * @return
+	 * @throws IllegalStateException If the subclass's getExtensionType() returns a value that has
+	 * a storage type of Storage.MIXTURE.  Those implementations must determine the appropriate
+	 * storage themselves.
+	 */
+	protected ExtensionContext.Store getStore(ExtensionContext context) {
+		ExtensionType type = getExtensionType();
+
+		switch (type.getStorage()) {
+			case TEST_INSTANCE:
+				return getPerTestClassStore(context);
+			case TEST_METHOD:
+				return getPerTestMethodStore(context);
+			default:
+				throw new IllegalStateException("Cannot call getStore() if the getExtensionType() returns " +
+						"a type that doesn't use TEST_INSTANCE or TEST_METHOD storage.");
+		}
+
+	}
 
 	/**
 	 * Create or return a unique storage space, which is unique per the test class.

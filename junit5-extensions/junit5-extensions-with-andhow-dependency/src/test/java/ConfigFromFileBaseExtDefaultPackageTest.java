@@ -2,6 +2,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
 import org.yarnandtail.andhow.junit5.ext.ConfigFromFileBaseExt;
+import org.yarnandtail.andhow.junit5.ext.ExtensionType;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -107,6 +108,11 @@ class ConfigFromFileBaseExtDefaultPackageTest {
 
 		public String expandPath(String classpath, ExtensionContext context) {
 			return super.expandPath(classpath, context);
+		}
+
+		@Override
+		protected ExtensionType getExtensionType() {
+			return ExtensionType.OTHER;
 		}
 	}
 

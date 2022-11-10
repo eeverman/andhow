@@ -111,12 +111,20 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 */
 	protected abstract Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context);
 
+
+	//
+	//The beforeAll/beforeEach/afterAllAfter each can probably be consolidated into
+	//generic before and after at this point, since the storage choice is abstracted.
+
+
 	/**
-	 * Configure AndHow for a unit test class.
+	 * Configure AndHow for a unit test class or test method.
 	 * <p>
-	 * This does the following:
+	 * The differences between class-level and method level is state storage.
+	 * That is determined by the ExtensionType returned by getExtensionType().
+	 * This method does the following:
 	 * <ul>
-	 * <li>Store the state of AndHow and the configuration locator
+	 * <li>Store the state of AndHow and the configuration locator at the appropriate storage level.
 	 * <li>Destroy the configured state of AndHow so it is unconfigured
 	 * <li>Remove environment related loaders that would be unwanted during unit testing
 	 * <li>Specify the classpath of a properties file to be used for configuration
@@ -126,71 +134,29 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 	 * @param context Passed by JUnit prior to any test in the class
 	 * @throws Exception
 	 */
-	public void beforeAll(ExtensionContext context) throws Exception {
+	public void beforeAllOrEach(ExtensionContext context) throws Exception {
 
 		// Store the old core and set the current core to null
-		getPerTestClassStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
+		getStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 
 		// New config instance created just as requested for testing
 		_config = buildConfig(context);
 
 		// Remove current locator and replace w/ one that always returns a custom config
-		getPerTestClassStore(context).put(
-				CONFIG_KEY,
-				AndHowTestUtils.setAndHowInProcessConfig(_config));
-
-//		System.out.println("CFF:beforeAll = " + getClasspathFile(context) + " for " +
-//				context.getElement().get().toString()
-//						.replaceFirst("org\\.yarnandtail\\.andhow\\.junit5\\.", "") +
-//				" instance: " + this.toString());
-	}
-
-	public void afterAll(ExtensionContext context) throws Exception {
-		Object core = getPerTestClassStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
-		AndHowTestUtils.setAndHowCore(core);
-
-		AndHowConfiguration<? extends AndHowConfiguration> config =
-				getPerTestClassStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
-		AndHowTestUtils.setAndHowInProcessConfig(config);
-	}
-
-
-	/**
-	 * Store the state of AndHow before this test, then destroy the state so AndHow is unconfigured.
-	 * @param context
-	 * @throws Exception
-	 */
-	public void beforeEach(ExtensionContext context) throws Exception {
-
-		// Store the old core and set the current core to null
-		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
-
-		// New config instance created just as requested for testing
-		_config = buildConfig(context);
-
-		// Remove current locator and replace w/ one that always returns a custom config
-		getPerTestMethodStore(context).put(
-				CONFIG_KEY,
-				AndHowTestUtils.setAndHowInProcessConfig(_config));
-
-//		System.out.println("CFF:beforeEach = " + getClasspathFile(context) + " for " +
-//				context.getElement().get().toString()
-//						//.replaceFirst("org\\.yarnandtail\\.andhow\\.junit5\\.", "")
-//						.replaceFirst("public void org\\.yarnandtail\\.andhow\\.junit5\\.", "")
-//						.replaceFirst("\\(\\).*", "()"));
+		getStore(context).put(CONFIG_KEY, AndHowTestUtils.setAndHowInProcessConfig(_config));
 	}
 
 	/**
-	 * Restore the state of AndHow to what it was before this test.
+	 * Restore the state of AndHow to what it was before this test or this test class.
 	 * @param context
 	 * @throws Exception
 	 */
-	public void afterEach(ExtensionContext context) throws Exception {
-		Object core = getPerTestMethodStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
+	public void afterAllOrEach(ExtensionContext context) throws Exception {
+		Object core = getStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 
 		AndHowConfiguration<? extends AndHowConfiguration> config =
-				getPerTestMethodStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
+				getStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
 		AndHowTestUtils.setAndHowInProcessConfig(config);
 	}
 

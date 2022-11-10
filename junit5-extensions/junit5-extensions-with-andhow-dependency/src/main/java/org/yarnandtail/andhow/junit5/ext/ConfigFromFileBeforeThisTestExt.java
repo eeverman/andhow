@@ -24,6 +24,11 @@ public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
 		super(classpathFile);
 	}
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.CONFIG_THIS_TEST;
+	}
+
 	/**
 	 * Find the annotated filePath property in the @ConfigFromFileBeforeThisTest annotation on the
 	 * test class.
@@ -56,11 +61,11 @@ public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
 
 	@Override
 	public void beforeEach(final ExtensionContext context) throws Exception {
-		super.beforeEach(context);
+		super.beforeAllOrEach(context);
 	}
 
 	@Override
 	public void afterEach(final ExtensionContext context) throws Exception {
-		super.afterEach(context);
+		super.afterAllOrEach(context);
 	}
 }

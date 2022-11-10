@@ -80,6 +80,9 @@ class ExtensionBaseTest {
 
 	// Simple implementation to create a real subclass of ExtensionBase.
 	static class SimpleExtensionBase extends ExtensionBase {
-
+		@Override
+		public ExtensionType getExtensionType() {
+			return ExtensionType.OTHER;
+		}
 	}
 }

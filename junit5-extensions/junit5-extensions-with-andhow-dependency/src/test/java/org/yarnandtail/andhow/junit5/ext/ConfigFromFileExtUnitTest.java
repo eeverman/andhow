@@ -6,6 +6,8 @@ import org.mockito.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
+import java.lang.reflect.Method;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 
@@ -19,7 +21,9 @@ class ConfigFromFileExtUnitTest {
 
 
 	@BeforeEach
-	void setUp() {
+	public void setUp() throws NoSuchMethodException {
+
+		Method thisMethod = getClass().getMethod("setUp", null);
 
 		//
 		// Setup mockito for the test
@@ -28,6 +32,8 @@ class ConfigFromFileExtUnitTest {
 
 		extensionContext = Mockito.mock(ExtensionContext.class);
 		Mockito.when(extensionContext.getRequiredTestClass()).thenReturn((Class)(this.getClass()));
+		Mockito.when(extensionContext.getRequiredTestInstance()).thenReturn(this);
+		Mockito.when(extensionContext.getRequiredTestMethod()).thenReturn(thisMethod);
 		Mockito.when(extensionContext.getStore(ArgumentMatchers.any())).thenReturn(store);
 	}
 
@@ -38,7 +44,7 @@ class ConfigFromFileExtUnitTest {
 
 	@Test
 	public void expandPathShouldExpandRelativePaths() {
-		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
 
 		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
 				ext.expandPath("myFile.props", extensionContext));
@@ -52,7 +58,7 @@ class ConfigFromFileExtUnitTest {
 
 	@Test
 	public void expandPathShouldNotExpandAbsPaths() {
-		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
 
 		assertEquals("/myFile.props",
 				ext.expandPath("/myFile.props", extensionContext));
@@ -73,9 +79,9 @@ class ConfigFromFileExtUnitTest {
 	public void expandPathShouldReturnPackageOfContainingClassForInnerClasses() {
 		//Set mock test class to an inner class
 		Mockito.when(extensionContext.getRequiredTestClass())
-				.thenReturn((Class)(ConfigFromFileExtSimple.class));
+				.thenReturn((Class)(ConfigFromFileBeforeAllExtSimple.class));
 
-		ConfigFromFileExtSimple ext = new ConfigFromFileExtSimple();
+		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
 
 		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
 				ext.expandPath("myFile.props", extensionContext));
@@ -112,21 +118,21 @@ class ConfigFromFileExtUnitTest {
 		// Setup mockito for the test
 
 		Mockito.when(store.remove(ArgumentMatchers.matches(
-				ConfigFromFileExtSimple.getCoreKey()), ArgumentMatchers.any())
+				ConfigFromFileBeforeAllExtSimple.getCoreKey()), ArgumentMatchers.any())
 		).thenReturn(andHowCoreCreatedDuringTest);
 
 		Mockito.when(store.remove(ArgumentMatchers.matches(
-				ConfigFromFileExtSimple.getConfigKey()), ArgumentMatchers.any())
+				ConfigFromFileBeforeAllExtSimple.getConfigKey()), ArgumentMatchers.any())
 		).thenReturn(null);
 
 		/// /// /// ///
 
 		String cp = "MyPropFile.properties";
 
-		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp, new Class<?>[] {this.getClass()});
+		ConfigFromFileBeforeAllExtSimple theExt = new ConfigFromFileBeforeAllExtSimple(cp, new Class<?>[] {this.getClass()});
 
 		// The initial event called on extension by JUnit
-		theExt.beforeAll(extensionContext);
+		theExt.beforeAllOrEach(extensionContext);
 
 		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Extension should have killed the core");
@@ -136,7 +142,7 @@ class ConfigFromFileExtUnitTest {
 		// TODO:  This test doesn't actually test that the created Core is as we want it.
 
 		// The final event called on the extension by Junit
-		theExt.afterAll(extensionContext);
+		theExt.afterAllOrEach(extensionContext);
 
 		//
 		// Verify the overall outcome
@@ -183,7 +189,7 @@ class ConfigFromFileExtUnitTest {
 		// so here just check for a specific namespace.
 		//The expected namespace used to store values within the Extension
 		ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
-				ConfigFromFileExtSimple.class,
+				ConfigFromFileBeforeAllExtSimple.class,
 				(Class)(this.getClass()));
 		assertEquals(expectedNamespace, namespace.getValue());
 
@@ -211,11 +217,11 @@ class ConfigFromFileExtUnitTest {
 		AndHowConfiguration<? extends AndHowConfiguration> newConfig = StdConfig.instance();
 
 		Mockito.when(store.remove(ArgumentMatchers.matches(
-				ConfigFromFileExtSimple.getCoreKey()), ArgumentMatchers.any())
+				ConfigFromFileBeforeAllExtSimple.getCoreKey()), ArgumentMatchers.any())
 		).thenReturn(null);
 
 		Mockito.when(store.remove(ArgumentMatchers.matches(
-				ConfigFromFileExtSimple.getConfigKey()), ArgumentMatchers.any())
+				ConfigFromFileBeforeAllExtSimple.getConfigKey()), ArgumentMatchers.any())
 		).thenReturn(existingConfig);
 
 		/// /// /// ///
@@ -223,10 +229,10 @@ class ConfigFromFileExtUnitTest {
 
 		String cp = "MyPropFile.properties";
 
-		ConfigFromFileExtSimple theExt = new ConfigFromFileExtSimple(cp, new Class<?>[] {this.getClass()});
+		ConfigFromFileBeforeEachExtSimple theExt = new ConfigFromFileBeforeEachExtSimple(cp, new Class<?>[] {this.getClass()});
 
 		// The initial event called on extension by JUnit
-		theExt.beforeAll(extensionContext);
+		theExt.beforeAllOrEach(extensionContext);
 
 		assertNull(AndHowTestUtils.getAndHowCore(),
 				"Should still be uninitialized");
@@ -235,7 +241,7 @@ class ConfigFromFileExtUnitTest {
 
 
 		// The final event called on the extension by Junit
-		theExt.afterAll(extensionContext);
+		theExt.afterAllOrEach(extensionContext);
 
 		//
 		// Verify the overall outcome
@@ -281,18 +287,22 @@ class ConfigFromFileExtUnitTest {
 		// Tested class (this class in this case).  There isn't an easy way to test that minimum spec,
 		// so here just check for a specific namespace.
 		ExtensionContext.Namespace expectedNamespace = ExtensionContext.Namespace.create(
-				ConfigFromFileExtSimple.class,
-				(Class)(this.getClass()));
+				ConfigFromFileBeforeEachExtSimple.class,
+				this, getClass().getMethod("setUp", null));
 		assertEquals(expectedNamespace, namespace.getValue());
 
 	}
 
 	/* Simple subclass to test protected methods */
-	public static class ConfigFromFileExtSimple extends ConfigFromFileBaseExt {
+	public static class ConfigFromFileBeforeAllExtSimple extends ConfigFromFileBaseExt {
 
 		// Only works in limited contexts where the full class is not being invoked
-		public ConfigFromFileExtSimple() {
+		public ConfigFromFileBeforeAllExtSimple() {
 			super("");
+		}
+
+		public ConfigFromFileBeforeAllExtSimple(String classpathFile, Class<?>[] classesInScope) {
+			super(classpathFile, classesInScope);
 		}
 
 		@Override
@@ -301,10 +311,6 @@ class ConfigFromFileExtUnitTest {
 		@Override
 		protected Class<?>[] getClassesInScopeFromAnnotation(final ExtensionContext context) {
 			return new Class[0];
-		}
-
-		public ConfigFromFileExtSimple(String classpathFile, Class<?>[] classesInScope) {
-			super(classpathFile, classesInScope);
 		}
 
 		public static String getCoreKey() {
@@ -324,6 +330,26 @@ class ConfigFromFileExtUnitTest {
 		}
 
 
+		@Override
+		protected ExtensionType getExtensionType() {
+			return ExtensionType.CONFIG_ALL_TESTS;
+		}
+	}
+
+	public static class ConfigFromFileBeforeEachExtSimple extends ConfigFromFileBeforeAllExtSimple {
+
+		public ConfigFromFileBeforeEachExtSimple() {
+			super();
+		}
+
+		public ConfigFromFileBeforeEachExtSimple(String classpathFile, Class<?>[] classesInScope) {
+			super(classpathFile, classesInScope);
+		}
+
+		@Override
+		protected ExtensionType getExtensionType() {
+			return ExtensionType.CONFIG_EACH_TEST;
+		}
 	}
 
 
