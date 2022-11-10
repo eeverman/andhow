@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ExtensionBaseTest {
 
-	SimpleExtensionBase extBase;
+	ExtensionBase extBase;
 
 	ExtensionContext.Store store;
 
@@ -25,17 +25,17 @@ class ExtensionBaseTest {
 	public void setUp() throws NoSuchMethodException {
 
 		testInstanceNamespace = ExtensionContext.Namespace.create(
-				SimpleExtensionBase.class, this.getClass()
+				ExtensionBaseOTHERType.class, this.getClass()
 		);
 
 		testMethodNamespace = ExtensionContext.Namespace.create(
-				SimpleExtensionBase.class, this, this.getClass().getMethod("setUp", null)
+				ExtensionBaseOTHERType.class, this, this.getClass().getMethod("setUp", null)
 		);
 
 		//
 		// Setup mockito for the test
 
-		extBase = new SimpleExtensionBase();
+		extBase = new ExtensionBaseOTHERType();
 
 		store = Mockito.mock(ExtensionContext.Store.class);
 
@@ -78,11 +78,85 @@ class ExtensionBaseTest {
 		assertEquals(testMethodNamespace, sut);
 	}
 
+	@Test
+	void getStoreForOTHERTypeShouldThrowException() {
+		extBase = new ExtensionBaseOTHERType();
+
+		assertThrows(IllegalStateException.class, () -> extBase.getStore(extensionContext));
+	}
+
+	@Test
+	void getStoreForALLTypeShouldUseClassLevelStorage() {
+
+		testInstanceNamespace = ExtensionContext.Namespace.create(
+				ExtensionBaseALLType.class, this.getClass()
+		);
+
+		extBase = new ExtensionBaseALLType();
+		ExtensionContext.Store myStore = extBase.getStore(extensionContext);
+		assertNotNull(myStore);
+		Mockito.verify(extensionContext).getStore(ArgumentMatchers.eq(testInstanceNamespace));
+	}
+
+	@Test
+	void getStoreForEACHTypeShouldUseMethodLevelStorage() throws NoSuchMethodException {
+
+		testMethodNamespace = ExtensionContext.Namespace.create(
+				ExtensionBaseEACHType.class, this, this.getClass().getMethod("setUp", null)
+		);
+
+		extBase = new ExtensionBaseEACHType();
+		ExtensionContext.Store myStore = extBase.getStore(extensionContext);
+		assertNotNull(myStore);
+		Mockito.verify(extensionContext).getStore(ArgumentMatchers.eq(testMethodNamespace));
+	}
+
+	@Test
+	void getStoreForTHISTypeShouldUseClassLevelStorage() throws NoSuchMethodException {
+
+		testMethodNamespace = ExtensionContext.Namespace.create(
+				ExtensionBaseTHISType.class, this, this.getClass().getMethod("setUp", null)
+		);
+
+		extBase = new ExtensionBaseTHISType();
+		ExtensionContext.Store myStore = extBase.getStore(extensionContext);
+		assertNotNull(myStore);
+		Mockito.verify(extensionContext).getStore(ArgumentMatchers.eq(testMethodNamespace));
+	}
+
 	// Simple implementation to create a real subclass of ExtensionBase.
-	static class SimpleExtensionBase extends ExtensionBase {
+	// It returns an 'OTHER' type, so the getStore() method will throw an Exception
+	static class ExtensionBaseOTHERType extends ExtensionBase {
 		@Override
 		public ExtensionType getExtensionType() {
 			return ExtensionType.OTHER;
+		}
+	}
+
+	// Simple implementation to create a real subclass of ExtensionBase.
+	// It returns an 'ALL' type, so getStore() should return test-level storage
+	static class ExtensionBaseALLType extends ExtensionBase {
+		@Override
+		public ExtensionType getExtensionType() {
+			return ExtensionType.OTHER_ALL_TESTS;
+		}
+	}
+
+	// Simple implementation to create a real subclass of ExtensionBase.
+	// It returns a 'THIS' type, so getStore() should return method-level storage
+	static class ExtensionBaseEACHType extends ExtensionBase {
+		@Override
+		public ExtensionType getExtensionType() {
+			return ExtensionType.OTHER_EACH_TEST;
+		}
+	}
+
+	// Simple implementation to create a real subclass of ExtensionBase.
+	// It returns a 'THIS' type, so getStore() should return method-level storage
+	static class ExtensionBaseTHISType extends ExtensionBase {
+		@Override
+		public ExtensionType getExtensionType() {
+			return ExtensionType.OTHER_THIS_TEST;
 		}
 	}
 }
