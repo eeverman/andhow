@@ -17,9 +17,20 @@ class ExtensionBaseTest {
 	//The context object that is passed to the test extension
 	ExtensionContext extensionContext;
 
+	ExtensionContext.Namespace testInstanceNamespace;
+
+	ExtensionContext.Namespace testMethodNamespace;
+
 	@BeforeEach
 	public void setUp() throws NoSuchMethodException {
 
+		testInstanceNamespace = ExtensionContext.Namespace.create(
+				SimpleExtensionBase.class, this.getClass()
+		);
+
+		testMethodNamespace = ExtensionContext.Namespace.create(
+				SimpleExtensionBase.class, this, this.getClass().getMethod("setUp", null)
+		);
 
 		//
 		// Setup mockito for the test
@@ -37,6 +48,9 @@ class ExtensionBaseTest {
 
 	@Test
 	void getPerTestClassStore() {
+		ExtensionContext.Store myStore = extBase.getPerTestClassStore(extensionContext);
+		assertNotNull(myStore);
+		Mockito.verify(extensionContext).getStore(ArgumentMatchers.eq(testInstanceNamespace));
 	}
 
 	/**
@@ -47,26 +61,21 @@ class ExtensionBaseTest {
 	void getPerTestNamespace() {
 		ExtensionContext.Namespace sut = extBase.getPerTestNamespace(extensionContext);
 
-		ExtensionContext.Namespace ref = ExtensionContext.Namespace.create(
-				SimpleExtensionBase.class, this.getClass()
-		);
-
-		assertEquals(ref, sut);
+		assertEquals(testInstanceNamespace, sut);
 	}
 
 	@Test
 	void getPerTestMethodStore() {
+		ExtensionContext.Store myStore = extBase.getPerTestMethodStore(extensionContext);
+		assertNotNull(myStore);
+		Mockito.verify(extensionContext).getStore(ArgumentMatchers.eq(testMethodNamespace));
 	}
 
 	@Test
 	void getPerTestMethodNamespace() throws NoSuchMethodException {
 		ExtensionContext.Namespace sut = extBase.getPerTestMethodNamespace(extensionContext);
 
-		ExtensionContext.Namespace ref = ExtensionContext.Namespace.create(
-				SimpleExtensionBase.class, this, this.getClass().getMethod("setUp", null)
-		);
-
-		assertEquals(ref, sut);
+		assertEquals(testMethodNamespace, sut);
 	}
 
 	// Simple implementation to create a real subclass of ExtensionBase.

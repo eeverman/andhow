@@ -23,6 +23,11 @@ public abstract class ExtensionBase {
 		return context.getStore(getPerTestNamespace(context));
 	}
 
+	/**
+	 * This implementation is currently wrong - should be based on test instance.
+	 * @param context
+	 * @return
+	 */
 	protected ExtensionContext.Namespace getPerTestNamespace(ExtensionContext context) {
 		return ExtensionContext.Namespace.create(getClass(), context.getRequiredTestClass());
 	}
