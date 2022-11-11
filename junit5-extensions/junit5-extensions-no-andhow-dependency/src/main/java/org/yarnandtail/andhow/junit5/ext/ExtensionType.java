@@ -58,13 +58,13 @@ public enum ExtensionType {
 	 * events, others at the test method level w/ beforeEach/afterEach events.
 	 */
 	static enum Scope {
-		/** Uses BeforeAll and AfterAll class-level events */
+		/** Uses BeforeAll and AfterAll class-level events.  Associated annotation is on the class. */
 		TEST_CLASS,
-		/** Uses BeforeEach and AfterEach events applied to all tests in the class,
-		 *  (annotated at the class level) */
+		/** Uses BeforeEach and AfterEach events applied to all tests in the class.
+		 *  Associated annotation is on the class. */
 		EACH_TEST,
-		/** Uses BeforeEach and AfterEach events applied to a single test method,
-		 *  (annotated at the method level) */
+		/** Uses BeforeEach and AfterEach events applied to a single test method.
+		 *  Associated annotation is on the method. */
 		SINGLE_TEST,
 		/** Uses a mixture of BeforeAll BeforeEach, etc..  Annotations may be on the class or method */
 		MIXTURE

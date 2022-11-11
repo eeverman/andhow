@@ -1,13 +1,18 @@
 package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Modifier;
 import java.util.*;
+
+import static org.junit.platform.commons.support.SearchOption.INCLUDE_ENCLOSING_CLASSES;
 
 /**
  * Implementation of an ExtensionBase that configures AndHow from a single properties
@@ -158,6 +163,50 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 		AndHowConfiguration<? extends AndHowConfiguration> config =
 				getStore(context).remove(CONFIG_KEY, AndHowConfiguration.class);
 		AndHowTestUtils.setAndHowInProcessConfig(config);
+	}
+
+	protected <A extends Annotation> A findAnnotation(Class<A> annotationClass, ExtensionContext context) {
+
+		Optional<A> ann = null;
+		Optional<AnnotatedElement> ae = context.getElement();
+
+		switch (getExtensionType().getScope()) {
+			case TEST_CLASS:
+			case EACH_TEST:
+
+				// Will EACH_TEST annotation on the class result in method level elements?
+
+				// This method will search superclasses
+				ann = AnnotationSupport.findAnnotation(context.getElement().get(), annotationClass);
+
+				if (! ann.isPresent()) {
+					//This method will hunt nested classes
+					ann = AnnotationSupport.findAnnotation(
+							context.getRequiredTestClass(), annotationClass, INCLUDE_ENCLOSING_CLASSES);
+				}
+
+				if (! ann.isPresent()) {
+					throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
+							context.getRequiredTestClass() + "' class, superclass or a parent class for a @Nested test.");
+				}
+
+				break;
+			case SINGLE_TEST:
+				ann = AnnotationSupport.findAnnotation(context.getElement(), annotationClass);
+
+				if (! ann.isPresent()) {
+					throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
+							context.getRequiredTestMethod().getName() + "' test method of " + context.getRequiredTestClass());
+				}
+
+				break;
+			default:
+				throw new IllegalStateException("Cannot call findAnnotation() if the getExtensionType() returns " +
+						"a type that doesn't use TEST_CLASS, EACH_TEST or SINGLE_TEST scope.");
+		}
+
+ 		return ann.get();
+
 	}
 
 	/**

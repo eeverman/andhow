@@ -1,6 +1,7 @@
 package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 
 public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
@@ -39,24 +40,12 @@ public class ConfigFromFileBeforeThisTestExt extends ConfigFromFileBaseExt
 	 */
 	@Override
 	protected String getFilePathFromAnnotation(ExtensionContext context) {
-		if (context.getElement().isPresent()) {
-			ConfigFromFileBeforeThisTest cff = context.getElement().get().getAnnotation(ConfigFromFileBeforeThisTest.class);
-			return cff.value();
-		} else {
-			throw new IllegalStateException("Expected the @ConfigFromFileBeforeThisTest annotation on the '" +
-					context.getRequiredTestMethod() + "' test method.");
-		}
+		return findAnnotation(ConfigFromFileBeforeThisTest.class, context).value();
 	}
 
 	@Override
 	protected Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context) {
-		if (context.getElement().isPresent()) {
-			ConfigFromFileBeforeThisTest cff = context.getElement().get().getAnnotation(ConfigFromFileBeforeThisTest.class);
-			return cff.includeClasses();
-		} else {
-			throw new IllegalStateException("Expected the @ConfigFromFileBeforeThisTest annotation on the '" +
-					context.getRequiredTestMethod() + "' test method.");
-		}
+		return findAnnotation(ConfigFromFileBeforeThisTest.class, context).includeClasses();
 	}
 
 	@Override

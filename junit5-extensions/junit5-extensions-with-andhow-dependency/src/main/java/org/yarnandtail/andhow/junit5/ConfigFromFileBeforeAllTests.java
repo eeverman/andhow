@@ -10,6 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ TYPE, ANNOTATION_TYPE })
 @Retention(RUNTIME)
+@Inherited
 @ExtendWith(ConfigFromFileBeforeAllTestsExt.class)
 public @interface ConfigFromFileBeforeAllTests {
 
