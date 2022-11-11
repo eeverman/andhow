@@ -15,23 +15,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConfigFromFileBeforeThisTest {
 
 	/**
-	 * The classpath to a properties file containing the {@code property_name : value} entries
-	 * to configure AndHow Property values before the run of this test.
+	 * The path to an AndHow configuration properties file <strong>on the classpath</strong>.
 	 * <p>
+	 * The path follows standard Java classpath syntax and can be absolute or relative.
 	 * If the path starts with a '{@code / }', it is interpreted as an absolute classpath.
 	 * If the path does not start with a '{@code / }', it is interpreted as relative to the current
-	 * test class.  Some examples:
+	 * test class.  If the file name has a 'dot', e.g. {@code myFile.props}, use slashes to separate
+	 * parts of the path.  Some examples, all assuming the test is in the {@code org.people} package:
 	 * <ul>
-	 *   <li>/myFile.props - The file 'myFile.props' expected at the root of the classpath</li>
-	 *   <li>/sub/myFile.props - The file 'myFile.props' expected in the 'sub' package or directory of the classpath</li>
-	 *   <li>myFile.props (for a test in the org.people package) - The file 'myFile.props' expected in the org.people package on the classpath</li>
-	 *   <li>sub/myFile.props (for a test in the org.people package) - The file 'myFile.props' expected in the org.people.sub package on the classpath</li>
+	 *   <li>/myFile.props - Use file at {@code myFile.props} (at the root of the classpath)</li>
+	 *   <li>myFile.props - Use file at {@code /org/people/myFile.props}</li>
+	 *   <li>/sub/myFile.props - Use file at {@code /sub/myFile.props}</li>
+	 *   <li>sub/myFile.props - Use file at {@code /org/people/sub/myFile.props}</li>
+	 *   <li>../myFile.props - Use file at {@code /org/myFile.props}</li>
+	 *   <li>../sub/myFile.props - Use file at {@code /org/sub/myFile.props}</li>
 	 * </ul>
 	 * <p>
 	 * If specifying only the configuration properties file, the shortened annotation syntax can be used:<br>
-	 * {@code @ConfigFromFileBeforeThisTest("myFile.props")}<br>
+	 * {@code @ConfigFromFileBeforeAllTests("myFile.props")}<br>
 	 * Otherwise the full syntax must be used:<br>
-	 * {@code @ConfigFromFileBeforeThisTest(value = "myFile.props"), includeClasses = {Conf1.class, Conf2.class}}<br>
+	 * {@code @ConfigFromFileBeforeAllTests(value = "myFile.props"), includeClasses = {Conf1.class, Conf2.class}}<br>
 	 * <p>
 	 * @return A string containing the path to a properties file.
 	 */

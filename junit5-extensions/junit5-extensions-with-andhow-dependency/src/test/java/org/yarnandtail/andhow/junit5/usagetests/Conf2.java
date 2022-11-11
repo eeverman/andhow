@@ -1,4 +1,4 @@
-package org.yarnandtail.andhow.junit5;
+package org.yarnandtail.andhow.junit5.usagetests;
 
 import org.yarnandtail.andhow.property.StrProp;
 

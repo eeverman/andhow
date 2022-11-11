@@ -52,6 +52,12 @@ class ConfigFromFileExtUnitTest {
 		assertEquals("/org/yarnandtail/andhow/junit5/ext/sub/myFile.props",
 				ext.expandPath("sub/myFile.props", extensionContext));
 
+		assertEquals("/org/yarnandtail/andhow/junit5/ext/../myFile.props",
+				ext.expandPath("../myFile.props", extensionContext));
+
+		assertEquals("/org/yarnandtail/andhow/junit5/ext/../sub/myFile.props",
+				ext.expandPath("../sub/myFile.props", extensionContext));
+
 
 		//Need to test a class at the root somehow (pkg is empty)
 	}
@@ -75,6 +81,7 @@ class ConfigFromFileExtUnitTest {
 		//Need to test a class at the root somehow (pkg is empty)
 	}
 
+	/** Is this really testing an inner class path?? */
 	@Test
 	public void expandPathShouldReturnPackageOfContainingClassForInnerClasses() {
 		//Set mock test class to an inner class

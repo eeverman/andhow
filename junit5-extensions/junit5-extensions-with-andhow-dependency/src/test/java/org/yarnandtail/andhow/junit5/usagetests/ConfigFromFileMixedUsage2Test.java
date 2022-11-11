@@ -1,10 +1,12 @@
-package org.yarnandtail.andhow.junit5;
+package org.yarnandtail.andhow.junit5.usagetests;
 
 import org.junit.jupiter.api.*;
 import org.yarnandtail.andhow.AndHow;
 import org.yarnandtail.andhow.api.AppFatalException;
 import org.yarnandtail.andhow.api.Problem;
 import org.yarnandtail.andhow.internal.RequirementProblem;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

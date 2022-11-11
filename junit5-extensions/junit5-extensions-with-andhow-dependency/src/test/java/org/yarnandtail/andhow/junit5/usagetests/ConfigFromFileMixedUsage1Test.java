@@ -1,9 +1,10 @@
-package org.yarnandtail.andhow.junit5;
+package org.yarnandtail.andhow.junit5.usagetests;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.yarnandtail.andhow.AndHow;
+import org.yarnandtail.andhow.junit5.*;
 import org.yarnandtail.andhow.junit5.ext.*;
 import org.yarnandtail.andhow.property.StrProp;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
@@ -12,13 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 /**
+ * Features of this test:
+ * - Uses relative (../ext/...) classpaths to locate properties files in a different pkg.
+ * - Uses @Nested test classes where some override the parent @ConfigFromFileBeforeAllTests config
+ *
  * This class shares a static var 'extensionContextDuringTest' which is the JUnit ExtensionContext
  * used during a test.  Multiple threads executing the test would break this, thus SAME_THREAD.
  */
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(SAME_THREAD)
-@ConfigFromFileBeforeAllTests("ext/MyPropFile.properties")
+@ConfigFromFileBeforeAllTests("../ext/MyPropFile.properties")
 class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	private static Object coreFoundInTest1;
@@ -45,7 +50,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 	@Order(3)
 	@Test
-	@ConfigFromFileBeforeThisTest("ext/MyPropFile2.properties")
+	@ConfigFromFileBeforeThisTest("../ext/MyPropFile2.properties")
 	public void test3() throws NoSuchMethodException {
 
 		assertFalse(AndHow.isInitialized());
@@ -123,7 +128,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 		@Nested
 		@Order(2)
-		@ConfigFromFileBeforeAllTests(value = "ext/MyPropFileNest1.properties")
+		@ConfigFromFileBeforeAllTests(value = "../ext/MyPropFileNest1.properties")
 		class NestAB {
 			@Test
 			@Order(1)
@@ -158,7 +163,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 		 */
 		@Nested
 		@Order(4)
-		@ConfigFromFileBeforeEachTest("ext/MyPropFileNest2.properties")
+		@ConfigFromFileBeforeEachTest("../ext/MyPropFileNest2.properties")
 		class NestAD {
 
 			@Test
@@ -193,7 +198,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 	@Nested
 	@Order(2)
 	@ExtendWith(TestInterceptor.class)
-	@ConfigFromFileBeforeAllTests(value = "ext/MyPropFileNest1.properties")
+	@ConfigFromFileBeforeAllTests(value = "../ext/MyPropFileNest1.properties")
 	class Nest1 {
 
 		@Test
@@ -219,7 +224,7 @@ class ConfigFromFileMixedUsage1Test extends InterceptorTestBase {
 
 		@Order(3)
 		@Test
-		@ConfigFromFileBeforeThisTest(value = "ext/MyPropFile2.properties")
+		@ConfigFromFileBeforeThisTest(value = "../ext/MyPropFile2.properties")
 		public void test3() throws NoSuchMethodException {
 
 			assertFalse(AndHow.isInitialized());
