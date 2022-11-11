@@ -173,17 +173,12 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 		switch (getExtensionType().getScope()) {
 			case TEST_CLASS:
 			case EACH_TEST:
+				// In both cases, the associated annotation should be at the class level
 
-				// Will EACH_TEST annotation on the class result in method level elements?
-
-				// This method will search superclasses
-				ann = AnnotationSupport.findAnnotation(context.getElement().get(), annotationClass);
-
-				if (! ann.isPresent()) {
-					//This method will hunt nested classes
-					ann = AnnotationSupport.findAnnotation(
-							context.getRequiredTestClass(), annotationClass, INCLUDE_ENCLOSING_CLASSES);
-				}
+				//This method will hunt nested classes, and because the AndHow annotations are marked for
+				//inheritance, the superclass ones as well.
+				ann = AnnotationSupport.findAnnotation(
+						context.getRequiredTestClass(), annotationClass, INCLUDE_ENCLOSING_CLASSES);
 
 				if (! ann.isPresent()) {
 					throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
@@ -192,6 +187,8 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 
 				break;
 			case SINGLE_TEST:
+
+				// Operating at the method level, so the annotation should be in the current test method
 				ann = AnnotationSupport.findAnnotation(context.getElement(), annotationClass);
 
 				if (! ann.isPresent()) {
