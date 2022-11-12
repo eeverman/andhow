@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
-import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
 import java.lang.annotation.Annotation;
@@ -45,60 +44,6 @@ class ConfigFromFileExtUnitTest {
 		AndHowTestUtils.setAndHowCore(null);
 	}
 
-	@Test
-	public void expandPathShouldExpandRelativePaths() {
-		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
-				ext.expandPath("myFile.props", extensionContext));
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/sub/myFile.props",
-				ext.expandPath("sub/myFile.props", extensionContext));
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/../myFile.props",
-				ext.expandPath("../myFile.props", extensionContext));
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/../sub/myFile.props",
-				ext.expandPath("../sub/myFile.props", extensionContext));
-
-
-		//Need to test a class at the root somehow (pkg is empty)
-	}
-
-	@Test
-	public void expandPathShouldNotExpandAbsPaths() {
-		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
-
-		assertEquals("/myFile.props",
-				ext.expandPath("/myFile.props", extensionContext));
-
-		assertEquals("/myFile",
-				ext.expandPath("/myFile", extensionContext));
-
-		assertEquals("/sub/myFile.props",
-				ext.expandPath("/sub/myFile.props", extensionContext));
-
-		assertEquals("/sub/myFile",
-				ext.expandPath("/sub/myFile", extensionContext));
-
-		//Need to test a class at the root somehow (pkg is empty)
-	}
-
-	/** Is this really testing an inner class path?? */
-	@Test
-	public void expandPathShouldReturnPackageOfContainingClassForInnerClasses() {
-		//Set mock test class to an inner class
-		Mockito.when(extensionContext.getRequiredTestClass())
-				.thenReturn((Class)(ConfigFromFileBeforeAllExtSimple.class));
-
-		ConfigFromFileBeforeAllExtSimple ext = new ConfigFromFileBeforeAllExtSimple();
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/myFile.props",
-				ext.expandPath("myFile.props", extensionContext));
-
-		assertEquals("/org/yarnandtail/andhow/junit5/ext/subpkg/myFile.props",
-				ext.expandPath("subpkg/myFile.props", extensionContext));
-	}
 
 	/* NOTE:  Testing building correct paths with the default package are handled
 		 by a separate test in the default package. */
@@ -334,10 +279,6 @@ class ConfigFromFileExtUnitTest {
 
 		public static String getConfigKey() {
 			return ConfigFromFileBaseExt.CONFIG_KEY;
-		}
-
-		public String expandPath(String classpath, ExtensionContext context) {
-			return super.expandPath(classpath, context);
 		}
 
 		public AndHowConfiguration<? extends AndHowConfiguration> getCreatedConfig() {

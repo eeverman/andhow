@@ -20,11 +20,11 @@ public enum ExtensionType {
 	OTHER(Storage.MIXTURE, Scope.MIXTURE, Effect.OTHER),
 	;
 
-	private Storage _storage;
-	private Scope _scope;
-	private Effect _effect;
+	private final Storage _storage;
+	private final Scope _scope;
+	private final Effect _effect;
 
-	private ExtensionType(Storage storage, Scope scope, Effect effect) {
+	private ExtensionType(final Storage storage, final Scope scope, final Effect effect) {
 		_storage = storage;
 		_scope = scope;
 		_effect = effect;
@@ -59,15 +59,31 @@ public enum ExtensionType {
 	 */
 	static enum Scope {
 		/** Uses BeforeAll and AfterAll class-level events.  Associated annotation is on the class. */
-		TEST_CLASS,
+		TEST_CLASS(true, false),
 		/** Uses BeforeEach and AfterEach events applied to all tests in the class.
 		 *  Associated annotation is on the class. */
-		EACH_TEST,
+		EACH_TEST(true, false),
 		/** Uses BeforeEach and AfterEach events applied to a single test method.
 		 *  Associated annotation is on the method. */
-		SINGLE_TEST,
+		SINGLE_TEST(false, true),
 		/** Uses a mixture of BeforeAll BeforeEach, etc..  Annotations may be on the class or method */
-		MIXTURE
+		MIXTURE(true, true);
+
+		private final boolean _classAnnotation;
+		private final boolean _methodAnnotation;
+
+		Scope(final boolean classAnnotation, final boolean methodAnnotation) {
+			_classAnnotation = classAnnotation;
+			_methodAnnotation = methodAnnotation;
+		}
+
+		public boolean isClassAnnotation() {
+			return _classAnnotation;
+		}
+
+		public boolean isMethodAnnotation() {
+			return _methodAnnotation;
+		}
 	}
 
 	/**
