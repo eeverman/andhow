@@ -4,6 +4,8 @@ import org.junit.jupiter.api.extension.*;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
 import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeEachTest;
 
+import java.lang.annotation.Annotation;
+
 public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
 		implements BeforeEachCallback, AfterEachCallback {
 
@@ -30,25 +32,9 @@ public class ConfigFromFileBeforeEachTestExt extends ConfigFromFileBaseExt
 		return ExtensionType.CONFIG_EACH_TEST;
 	}
 
-	/**
-	 * Find the annotated filePath property in the @ConfigFromFileBeforeEachTest annotation on the
-	 * test class.
-	 * <p>
-	 * In the case of a @Nested test, the ConfigFromFileBeforeEachTestExt is invoked again for each
-	 * nested test class so the code recursively hunts up the inheritance chain to find the class
-	 * with the annotation.
-	 *
-	 * @param context
-	 * @return
-	 */
 	@Override
-	protected String getFilePathFromAnnotation(ExtensionContext context) {
-		return findAnnotation(ConfigFromFileBeforeEachTest.class, context).value();
-	}
-
-	@Override
-	protected Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context) {
-		return findAnnotation(ConfigFromFileBeforeEachTest.class, context).includeClasses();
+	public Class<? extends Annotation> getAssociatedAnnotation() {
+		return ConfigFromFileBeforeEachTest.class;
 	}
 
 	@Override

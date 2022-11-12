@@ -4,8 +4,11 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
 import org.yarnandtail.andhow.*;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeAllTests;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -318,6 +321,11 @@ class ConfigFromFileExtUnitTest {
 		@Override
 		protected Class<?>[] getClassesInScopeFromAnnotation(final ExtensionContext context) {
 			return new Class[0];
+		}
+
+		@Override
+		public Class<? extends Annotation> getAssociatedAnnotation() {
+			return ConfigFromFileBeforeAllTests.class;
 		}
 
 		public static String getCoreKey() {

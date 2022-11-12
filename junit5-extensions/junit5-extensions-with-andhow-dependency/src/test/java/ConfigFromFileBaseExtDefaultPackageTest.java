@@ -1,9 +1,12 @@
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.*;
+import org.yarnandtail.andhow.junit5.ConfigFromFileBeforeThisTest;
 import org.yarnandtail.andhow.junit5.ext.ConfigFromFileBaseExt;
 import org.yarnandtail.andhow.junit5.ext.ExtensionType;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
+
+import java.lang.annotation.Annotation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -104,6 +107,11 @@ class ConfigFromFileBaseExtDefaultPackageTest {
 		@Override
 		protected Class<?>[] getClassesInScopeFromAnnotation(final ExtensionContext context) {
 			return new Class[0];
+		}
+
+		@Override
+		public Class<? extends Annotation> getAssociatedAnnotation() {
+			return ConfigFromFileBeforeThisTest.class;
 		}
 
 		public String expandPath(String classpath, ExtensionContext context) {

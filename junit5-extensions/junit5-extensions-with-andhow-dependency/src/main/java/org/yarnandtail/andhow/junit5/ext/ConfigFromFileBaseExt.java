@@ -2,17 +2,19 @@ package org.yarnandtail.andhow.junit5.ext;
 
 import org.junit.jupiter.api.extension.*;
 import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.util.Preconditions;
 import org.yarnandtail.andhow.*;
 import org.yarnandtail.andhow.api.StandardLoader;
 import org.yarnandtail.andhow.load.std.*;
 import org.yarnandtail.andhow.testutil.AndHowTestUtils;
+import sun.reflect.annotation.AnnotationType;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 import static org.junit.platform.commons.support.SearchOption.INCLUDE_ENCLOSING_CLASSES;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 /**
  * Implementation of an ExtensionBase that configures AndHow from a single properties
@@ -104,17 +106,62 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 
 	/**
 	 * When this Extension is being used in association w/ an annotation, this returns
-	 * that class.
+	 * the filePath from the annotation.
+	 *
+	 * @param context
 	 * @return
 	 */
-	protected abstract String getFilePathFromAnnotation(ExtensionContext context);
+	protected String getFilePathFromAnnotation(ExtensionContext context) {
+		Annotation a = findAnnotation(getAssociatedAnnotation(), context);
+		Method method = getClasspathFileMethod();
+		method.setAccessible(true);
+		try {
+			return (String)(method.invoke(a));
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to use reflection to access annotation values.", e);
+		}
+	}
 
 	/**
 	 * When this Extension is being used in association w/ an annotation, this returns
-	 * the optional configClasses List.
+	 * the includedClasses from the annotation.
+	 *
 	 * @return
 	 */
-	protected abstract Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context);
+	protected Class<?>[] getClassesInScopeFromAnnotation(ExtensionContext context) {
+		Annotation a = findAnnotation(getAssociatedAnnotation(), context);
+		Method method = getIncludeClassesMethod();
+		method.setAccessible(true);
+		try {
+			return (Class<?>[])(method.invoke(a));
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to use reflection to access annotation values.", e);
+		}
+	}
+
+	/**
+	 * The annotation associated with the implementation.
+	 * <p>
+	 * See existing annotations w/ similar names for example, e.g. ConfigFromFileBeforeAllTests.
+	 * The annotation must have two property methods:
+	 * <ul>
+	 *   <li>String value:  The classpath to the property file to use for configuration</li>
+	 *   <li>Class<?>[] includeClasses:  Array of classes that are in scope for AndHow</li>
+	 * </ul>
+	 * The actual names of the methods can be overridden by overriding getClasspathFileMethod() and/or
+	 * getIncludeClassesMethod().
+	 *
+	 * @return
+	 */
+	public abstract Class<? extends Annotation> getAssociatedAnnotation();
+
+	public Method getClasspathFileMethod() {
+		return AnnotationType.getInstance(getAssociatedAnnotation()).members().get("value");
+	}
+
+	public Method getIncludeClassesMethod() {
+		return AnnotationType.getInstance(getAssociatedAnnotation()).members().get("includeClasses");
+	}
 
 
 	//
@@ -167,44 +214,78 @@ public abstract class ConfigFromFileBaseExt extends ExtensionBase {
 
 	protected <A extends Annotation> A findAnnotation(Class<A> annotationClass, ExtensionContext context) {
 
-		Optional<A> ann = null;
 		Optional<AnnotatedElement> ae = context.getElement();
 
 		switch (getExtensionType().getScope()) {
 			case TEST_CLASS:
-			case EACH_TEST:
-				// In both cases, the associated annotation should be at the class level
+			case EACH_TEST: {
+					// In both cases, the associated annotation should be at the class level
 
-				//This method will hunt nested classes, and because the AndHow annotations are marked for
-				//inheritance, the superclass ones as well.
-				ann = AnnotationSupport.findAnnotation(
-						context.getRequiredTestClass(), annotationClass, INCLUDE_ENCLOSING_CLASSES);
 
-				if (! ann.isPresent()) {
-					throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
-							context.getRequiredTestClass() + "' class, superclass or a parent class for a @Nested test.");
+					//This method will hunt nested classes, and because the AndHow annotations are marked for
+					//inheritance, the superclass ones as well.
+				
+					//Note:  Could use the JUnit AnnotationSupport.findAnnotation(Class<?>, Class<?>, SearchOption)
+					//method here, but its experimental and only added in recent versions of Junit.
+					Optional<A> ann = findAnnotation(context.getRequiredTestClass(), annotationClass);
+
+					if (!ann.isPresent()) {
+						throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
+								context.getRequiredTestClass() + "' class, superclass or a parent class for a @Nested test.");
+					}
+
+					return ann.get();
 				}
+			case SINGLE_TEST: {
+					// Operating at the method level, so the annotation should be in the current test method
+					Optional<A> ann = AnnotationSupport.findAnnotation(context.getElement(), annotationClass);
 
-				break;
-			case SINGLE_TEST:
+					if (!ann.isPresent()) {
+						throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
+								context.getRequiredTestMethod().getName() + "' test method of " + context.getRequiredTestClass());
+					}
 
-				// Operating at the method level, so the annotation should be in the current test method
-				ann = AnnotationSupport.findAnnotation(context.getElement(), annotationClass);
-
-				if (! ann.isPresent()) {
-					throw new IllegalStateException("Expected the @" + annotationClass.getName() + " annotation on the '" +
-							context.getRequiredTestMethod().getName() + "' test method of " + context.getRequiredTestClass());
+					return ann.get();
 				}
-
-				break;
 			default:
 				throw new IllegalStateException("Cannot call findAnnotation() if the getExtensionType() returns " +
 						"a type that doesn't use TEST_CLASS, EACH_TEST or SINGLE_TEST scope.");
 		}
-
- 		return ann.get();
-
 	}
+
+	/**
+	 * Copied from JUnit AnnotationUtils
+	 *
+	 * ref:  AnnotationUtils.findAnnotation(Class<?> clazz, Class<A> annotationType,
+	 * 			boolean searchEnclosingClasses)
+	 * @param clazz
+	 * @param annotationType
+	 * @return
+	 * @param <A>
+	 */
+	public static <A extends Annotation> Optional<A> findAnnotation(Class<?> clazz, Class<A> annotationType) {
+
+		Class<?> candidate = clazz;
+		while (candidate != null) {
+			Optional<A> annotation = AnnotationSupport.findAnnotation(candidate, annotationType);
+			if (annotation.isPresent()) {
+				return annotation;
+			}
+			candidate = (isInnerClass(candidate) ? candidate.getEnclosingClass() : null);
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Is this a non-static innerClass?
+	 *
+	 * @param clazz
+	 * @return
+	 */
+	public static boolean isInnerClass(Class<?> clazz) {
+		return !(Modifier.isStatic(clazz.getModifiers())) && clazz.isMemberClass();
+	}
+
 
 	/**
 	 * Find the user configured properties file path.
