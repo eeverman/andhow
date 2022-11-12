@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Beyond unit testing, the extension is used in many of the simulated app tests
  * (see that module for usage examples).
  */
-class KillAndHowBeforeAllTestsExtTest {
+class KillAndHowBeforeAllTestsExtUnitTest {
 
 	Object andHowCoreCreatedDuringTest;
 
@@ -53,6 +53,16 @@ class KillAndHowBeforeAllTestsExtTest {
 	@AfterEach
 	void tearDown() {
 		AndHowTestUtils.setAndHowCore(null);
+	}
+
+	@Test
+	void getExtensionType() {
+		KillAndHowBeforeAllTestsExt ext = new KillAndHowBeforeAllTestsExt();
+		ExtensionType type = ext.getExtensionType();
+
+		assertEquals(ExtensionType.Storage.TEST_INSTANCE, type.getStorage());
+		assertEquals(ExtensionType.Effect.KILL, type.getEffect());
+		assertEquals(ExtensionType.Scope.TEST_CLASS, type.getScope());
 	}
 
 	@Test

@@ -29,16 +29,25 @@
 		must also be added as a dep' to andhow-junit5-extensions, which bundles this into a jar.
 		-->
 		<dependency>
+			<groupId>org.yarnandtail</groupId>
+			<artifactId>andhow-core</artifactId>
+			<version>${project.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>andhow-shared-test-utils</artifactId>
 			<version>${project.version}</version>
-			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>${project.groupId}</groupId>
+					<artifactId>andhow-test-stubs</artifactId>
+				</exclusion></exclusions>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>junit5-extensions-no-andhow-dependency</artifactId>
 			<version>${project.version}</version>
-			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -65,14 +74,6 @@
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<!-- More traditional test dependencies -->
-		<dependency>
-			<groupId>org.yarnandtail</groupId>
-			<artifactId>andhow-core</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

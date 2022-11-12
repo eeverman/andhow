@@ -15,6 +15,11 @@ public class RestoreSysPropsAfterEachTestExt extends ExtensionBase
 
 	protected final static String KEY = "KEY";
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.OTHER;
+	}
+
 	/**
 	 * Store the original Sys Props prior to any testing.
 	 *

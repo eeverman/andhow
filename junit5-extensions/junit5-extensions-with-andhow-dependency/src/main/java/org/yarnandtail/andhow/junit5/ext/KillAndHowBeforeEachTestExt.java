@@ -36,6 +36,13 @@ import org.yarnandtail.andhow.testutil.AndHowTestUtils;
 public class KillAndHowBeforeEachTestExt extends KillAndHowBeforeAllTestsExt
 		implements BeforeEachCallback {
 
+	// This isn't really the correct type, but based on the super class it works for now.
+	// See https://github.com/eeverman/andhow/issues/745
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.KILL_ALL_TESTS;
+	}
+
 	/**
 	 * Destroy the AndHow state before each test so that each starts with AndHow unconfigured.
 	 * @param context

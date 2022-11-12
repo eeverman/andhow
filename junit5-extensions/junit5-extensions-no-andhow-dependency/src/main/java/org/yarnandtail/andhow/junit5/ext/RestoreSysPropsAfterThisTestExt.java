@@ -14,6 +14,11 @@ public class RestoreSysPropsAfterThisTestExt extends ExtensionBase
 
 	protected final static String KEY = "KEY";
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.OTHER_THIS_TEST;
+	}
+
 	/**
 	 * Store the Sys Props as they were prior to this test.
 	 *
@@ -25,7 +30,7 @@ public class RestoreSysPropsAfterThisTestExt extends ExtensionBase
 	 */
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
-		getPerTestMethodStore(context).put(KEY, System.getProperties().clone());
+		getStore(context).put(KEY, System.getProperties().clone());
 	}
 
 	/**
@@ -39,7 +44,7 @@ public class RestoreSysPropsAfterThisTestExt extends ExtensionBase
 	 */
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		Properties p = getPerTestMethodStore(context).remove(KEY, Properties.class);
+		Properties p = getStore(context).remove(KEY, Properties.class);
 		System.setProperties(p);
 	}
 

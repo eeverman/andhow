@@ -29,6 +29,11 @@ public class KillAndHowBeforeThisTestExt extends ExtensionBase
 
 	public static final String CORE_KEY = "core_key";
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.KILL_THIS_TEST;
+	}
+
 	/**
 	 * Store the state of AndHow before this test, then destroy the state so AndHow is unconfigured.
 	 * @param context
@@ -36,7 +41,7 @@ public class KillAndHowBeforeThisTestExt extends ExtensionBase
 	 */
 	@Override
 	public void beforeEach(ExtensionContext context) throws Exception {
-		getPerTestMethodStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
+		getStore(context).put(CORE_KEY, AndHowTestUtils.setAndHowCore(null));
 	}
 
 	/**
@@ -46,7 +51,7 @@ public class KillAndHowBeforeThisTestExt extends ExtensionBase
 	 */
 	@Override
 	public void afterEach(ExtensionContext context) throws Exception {
-		Object core = getPerTestMethodStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
+		Object core = getStore(context).remove(CORE_KEY, AndHowTestUtils.getAndHowCoreClass());
 		AndHowTestUtils.setAndHowCore(core);
 	}
 

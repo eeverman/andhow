@@ -37,6 +37,11 @@ public class KillAndHowBeforeAllTestsExt extends ExtensionBase
 
 	protected static final String CORE_KEY = "core_key";
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.KILL_ALL_TESTS;
+	}
+
 	/**
 	 * Store the state of AndHow before any test is run, then destroy the state
 	 * so AndHow is unconfigured.

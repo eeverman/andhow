@@ -17,6 +17,11 @@ public class EnableJndiForThisTestClassExt extends ExtensionBase
 
 	protected final static String KEY = "KEY";
 
+	@Override
+	public ExtensionType getExtensionType() {
+		return ExtensionType.MODIFY_ENV_ALL_TESTS;
+	}
+
 	/**
 	 * Enable JNDI for use in an individual test method.
 	 *
@@ -33,7 +38,7 @@ public class EnableJndiForThisTestClassExt extends ExtensionBase
 
 		//
 		// Store sys props as they were before this method
-		getPerTestClassStore(context).put(KEY, System.getProperties().clone());
+		getStore(context).put(KEY, System.getProperties().clone());
 
 		System.setProperty("java.naming.factory.initial", "org.osjava.sj.SimpleJndiContextFactory");
 		System.setProperty("org.osjava.sj.delimiter", "/");
@@ -60,7 +65,7 @@ public class EnableJndiForThisTestClassExt extends ExtensionBase
 		//
 		// Restore Sys Props
 
-		Properties p = getPerTestClassStore(context).remove(KEY, Properties.class);
+		Properties p = getStore(context).remove(KEY, Properties.class);
 		System.setProperties(p);
 	}
 

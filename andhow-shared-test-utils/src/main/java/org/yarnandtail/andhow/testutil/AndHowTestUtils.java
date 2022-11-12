@@ -1,5 +1,6 @@
 package org.yarnandtail.andhow.testutil;
 
+import java.util.*;
 import java.util.function.UnaryOperator;
 
 /**
@@ -115,7 +116,7 @@ public final class AndHowTestUtils {
 	 * This method is relatively safe for use in application testing and is used by the Junit
 	 * extensions and annotations to set configurations for individual tests.
 	 *
-	 * Note:  This method will fail is AndHow is uninitialized.
+	 * Note:  This method will fail if AndHow is uninitialized.
 	 **
 	 * @param newCore The new core to assign to the AndHow singleton which may be null but must
 	 *                be of type AndHowCore.
@@ -163,17 +164,27 @@ public final class AndHowTestUtils {
 	}
 
 	/**
-	 * Set a locator to find AndHowConfiguration.
-	 *
-	 * The locator is used in AndHow.findConfig().  If no config exists, the normal path is
-	 * for AndHow to call {@code AndHowUtil.findConfiguration(c)}, however, if a locator
-	 * is set to nonnull, it will be used instead.
+	 * Specify the Locator used to find a AndHowConfiguration instance.
 	 * <p>
-	 * The locator takes a default Configuration to return if a configuration cannot
-	 * be found otherwise.  See <code></code>org.yarnandtail.AndHow#findConfig()</code> for details.
+	 * This can be used for testing when you want to carefully control how AndHow
+	 * is configured and do not want AndHow to auto-locate an AndHowConfiguration
+	 * class from the classpath.
+	 * <p>
+	 * The locator is used when the AndHow.findConfig() method is used to find
+	 * AndHow's configuration.  If no AndHowConfiguration instance has been
+	 * discovered up to this point in the AndHow lifecycle (or if AndHow has been
+	 * reset to it's unconfigured state for the purposes of a test), AndHow will
+	 * use the Locator to find an AndHowConfiguration instance.  If the Locator is
+	 * null, a default classpath search is used.
+	 * <p>
+	 * The Locator is a UnaryOperator that takes a default AndHowConfiguration
+	 * instance as a default instance to return if the locator cannot find an
+	 * instance otherwise.  The Locator can choose to ignore the default and
+	 * simply return a hard-coded AndHowConfiguration instance (which is typically
+	 * what happens for testing).
 	 * <p>
 	 * Example setting to a custom locator:
-	 * <pre>{@code setAndHowConfigLocator(c -> return MyConfig); }</pre>
+	 * <pre>{@code setAndHowConfigLocator( (c) -> new MyAndHowConfig() ) }</pre>
 	 * Example setting back to null:
 	 * <pre>{@code setAndHowConfigLocator(null); }</pre>
 	 * <p>
@@ -190,6 +201,18 @@ public final class AndHowTestUtils {
 	public static <T> UnaryOperator<T> setAndHowConfigLocator(UnaryOperator<T> newLocator) {
 		return ReflectionTestUtils.setStaticFieldValue(
 				getAndHowClass(), "configLocator", newLocator);
+	}
+
+	public static List<Class<?>> setConfigurationOverrideGroups(
+			Object configurationInstance, List<Class<?>> classList) {
+
+		return ReflectionTestUtils.setInstanceFieldValue(
+				configurationInstance, "overrideGroups", classList, List.class);
+	}
+
+	public static List<Class<?>> setConfigurationOverrideGroups(
+			Object configurationInstance, Class<?> clazz) {
+		return setConfigurationOverrideGroups(configurationInstance, Arrays.asList(clazz));
 	}
 
 	/**
@@ -274,5 +297,4 @@ public final class AndHowTestUtils {
 	public static Class<?> getAndHowConfigurationClass() {
 		return ReflectionTestUtils.getClassByName("org.yarnandtail.andhow.AndHowConfiguration");
 	}
-
 }
